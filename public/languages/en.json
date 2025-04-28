@@ -1,0 +1,617 @@
+{
+  "sidebar": {
+    "trending": "Trending",
+    "recentcalls": "Recent Calls",
+    "memescope": "Memescope",
+    "holdings": "Holdings",
+    "leaderboard": "Leaderboard",
+    "referral": "Referral",
+    "alphapicks": "Alpha Picks",
+    "wallettracker": "Wallet Tracker",
+    "prowallets": "Pro Wallets",
+    "settings": "Settings"
+  },
+  "tredingPage": {
+    "mainHeader": {
+      "trending": "Trending",
+      "desc": "Top 100 trending token pairs by transactions within selected timeframe",
+      "timeframeFilter": {
+        "1m": "1m",
+        "5m": "5m",
+        "1h": "1h",
+        "6h": "6h",
+        "24h": "24h"
+      },
+      "filter": {
+        "filter": "Filter",
+        "mintauth": "Mint Auth",
+        "mintauthtooltip": "The token can’t be minted anymore — no one can create new tokens.",
+        "freezeauth": "Freeze Auth",
+        "freezeauthtooltip": "No one can freeze token transfers.",
+        "lpburned": "LP Burned",
+        "lpburnedtooltip": "Liquidity Pool tokens were burned — this helps lock the liquidity in place.",
+        "withatleast1social": "With at least 1 social",
+        "bycurrentliquidity": "By Current Liquidity",
+        "byvolume": "By Volume",
+        "byage": "By Age (mins)",
+        "bymc": "By MKT Cap",
+        "bytxns": "By TXNS",
+        "bybuys": "By Buys",
+        "bysells": "By Sells",
+        "reset": "Reset",
+        "apply": "Apply"
+      },
+      "ordersetting": {
+        "ordersetting": "Order setting",
+        "quantity": "Quantity",
+        "buy": "Buy",
+        "sell": "Sell",
+        "resetpreset": "Reset preset",
+        "sllippagetooltip": "The maximum % you're willing to tolerate between the expected and actual execution price. If the price moves more than this before the trade is confirmed, it will fail.",
+        "priorityfeetooltip": "A tip paid to validators/miners to prioritize your transaction. Higher fees make your transaction process faster during times of network congestion.",
+        "mevtooltip": "Protection against front-running and sandwich attacks by hiding your transaction details from public mempools, typically by routing through private relays or block builders."
+      },
+      "buy": "BUY",
+      "advanced": "Advanced"
+    },
+    "tableheaders": {
+      "pairinfo": "Pair Info",
+      "pairinfotooltip": "Shows time since the token contract was created.",
+      "created": "Created",
+      "liquidity": "Liquidity",
+      "liquiditytooltip": "Shows how much money is available to trade this token. Low liquidity can mean high risk or hard to sell.",
+      "mcap": "MKT Cap",
+      "mcaptooltip": "Market Cap: Estimated total value of this token: price × supply. High market cap = more established.",
+      "swaps": "SWAPS",
+      "swapstooltip": "How many times people bought (green) or sold (red) this token in the selected time frame",
+      "volume": "Volume",
+      "auditres": "Audit Results",
+      "auditrestooltip": "Quick safety checks: shows if token can be minted again, frozen, or if token has 10 Holders.",
+      "quickbuy": "QUICK BUY"
+    }
+  },
+  "recentcalls": {
+    "mainHeader": {
+      "title": "Recent Calls"
+    },
+    "tableheaders": {
+      "token": "TOKEN",
+      "before": "BEFORE",
+      "beforetooltip": "Shows time since token was called",
+      "calledby": "CALLED BY",
+      "calledmc": "CALLED MC",
+      "calledmctooltip": "Shows time since token was called",
+      "mcnow": "MC NOW",
+      "mcnowtooltip": "Market Cap Now",
+      "growth": "GROWTH",
+      "ath": "ATH",
+      "athtooltip": "All time high of the token",
+      "audit": "AUDIT",
+      "audittooltip": "Quick safety checks: shows if token can be minted again, frozen, or if token has 10 Holders.",
+      "action": "ACTION"
+    }
+  },
+  "memescope": {
+    "mainHeader": {
+      "title": "Memescope",
+      "desc": "Find the best meme tokens",
+      "buy": "BUY",
+      "filters": {
+        "newcreation": {
+          "newcreationsfilter": "New Creations Filter",
+          "top10holders": "Top 10 Holders",
+          "withatleast1social": "With at least 1 social",
+          "bypumpprogress": "By Pump progress",
+          "byholderscount": "By Holders Count",
+          "bydevholding": "By Dev holding",
+          "bysnipers": "By Snipers",
+          "byage": "By Age",
+          "bycurrentliquidity": "By Current Liquidity",
+          "byvolume": "By Volume",
+          "bymCap": "By MKT Cap",
+          "bytx": "By TXNS",
+          "bybuys": "By Buys",
+          "bysells": "By Sells",
+          "reset": "Reset",
+          "apply": "Apply"
+        },
+        "graduated": "Graduated",
+        "abouttograduate": "About to Graduate"
+      }
+    },
+    "tableheaders": {
+      "newcreations": "New Creations",
+      "newcreationstooltip": "Tokens that were just launched and are still extremely new. These might be experimental, highly volatile, or unverified. Enter at your own risk — DYOR (do your own research)!",
+      "abouttogra": "About to Graduate",
+      "abouttogratooltip": "Tokens gaining traction and engagement, showing signs of growth. They're not fully established yet, but they're moving toward higher recognition or adoption.",
+      "graduated": "Graduated",
+      "graduatedtooltip": "Tokens that have achieved a certain level of credibility or performance. They’ve passed initial phases and show stronger price action, volume, or community activity."
+    }
+  },
+  "holdings": {
+    "mainHeader": {
+      "title": "Holdings",
+      "desc": "Track and manage your holdings",
+      "withremainingtokens": "With remaining tokens"
+    },
+    "tableheaders": {
+      "token": "TOKEN",
+      "quantity": "Quantity",
+      "pnlusdtooltip": "Your Profit or Loss from this token, shown in US dollars. Green = you’re up, Red = you’re down.",
+      "pnlpertooltip": "Percentage change in the value of your holdings since purchase.",
+      "quicksell": "QUICK SELL",
+      "quickselltooltip": "Instantly sell your entire position in t,his token with one click."
+    },
+    "noconnectwallet": "Please connect wallet to see your holdings.",
+    "noholdingsmsg": "You currently do not have any token holdings in your Wave trading wallet."
+  },
+  "leaderboard": {
+    "mainHeader": {
+      "title": "Leaderboard",
+      "yourstats": "Your stats",
+      "ranking": "Ranking",
+      "totalpoints": "Total Points",
+      "tradingpoints": "Trading Points",
+      "tradingpointstooltip": "Points gained from Trading",
+      "referralpoints": "Referral Points",
+      "referralpointstooltip": "Points gained from Referral",
+      "weeklyleaderboard": "Weekly Leaderboard"
+    },
+    "stage": {
+      "totaltrades": "Total Trades",
+      "value": "Value"
+    },
+    "table": {
+      "trading": {
+        "trading": "Trading",
+        "wallet": "Wallet",
+        "totaltrads": "Total Trades",
+        "value": "Value",
+        "referralid": "ReferralId"
+      },
+      "referral": "Referral"
+    }
+  },
+  "referral": {
+    "mainHeader": {
+      "title": "Referral",
+      "yourstats": "Your stats",
+      "referralpoints": "Referral Points"
+    },
+    "pageData": {
+      "title": "Unlock More Referral Tier with Wave Referral Program!",
+      "desc": "Friends you refer get early access to Wave with a 10% Fee Discount",
+      "shareto": "Share to",
+      "nodata": "No Refferal Data",
+      "copy": "Copy",
+      "copied": "Copied"
+    },
+    "table": {
+      "user": "User",
+      "date": "DATE",
+      "trades": "TRADES",
+      "tradestool": "The amount this referrer has traded in USD.",
+      "earning": "EARNING",
+      "earningtool": "The amount you can claim from this user's referral.",
+      "status": "STATUS",
+      "statustool": "Indicates whether you're eligible to claim your referral bonus."
+    }
+  },
+  "alphapicks": {
+    "mainHeader": {
+      "title": "Alpha Picks",
+      "title2": "Top Alphas",
+      "desc": "Find the best traders and copy their strategies"
+    },
+    "cards": {
+      "topCard": {
+        "winrate": "Win Rate",
+        "calls": "Calls",
+        "averagegains": "Average Gains",
+        "topcall": "Top Call",
+        "follow": "Follow"
+      },
+      "restcard": {
+        "winrate": "Win Rate",
+        "calls": "Calls",
+        "averagegains": "Average Gains",
+        "topcall": "Top Call",
+        "follow": "Follow",
+        "details": "Details",
+        "seeall": "See all",
+        "allalpha": "All Alpha"
+      },
+      "siderightbar": {
+        "bestcalls": "Best Calls",
+        "bestcallstooltip": "Displays the highest-gaining calls during the selected interval and the Alpha group who made them.",
+        "recentalphas": "Recent Alphas",
+        "recentalphastooltip": "Shows the most recently joined Alpha groups in Wave Scan.",
+        "risingstar": "Rising Star",
+        "risingstartooltip": "Alpha groups that are quickly gaining momentum, either through a recent surge in popularity or a sharp increase in their performance score.",
+        "boostedalphas": "Boosted Alphas",
+        "contactus": "Contact Us"
+      }
+    }
+  },
+  "wallettracker": {
+    "mainHeader": {
+      "title": "Wallet Tracker",
+      "desc": "Tag, track, and analyze multiple wallets"
+    },
+    "rightide": {
+      "title": "Wallet Alert",
+      "tableHeaders": {
+        "wallet": "WALLET",
+        "token": "TOKEN",
+        "amount": "AMOUNT",
+        "amounttooltip": "Amount of Token",
+        "price": "Price",
+        "pricetooltip": "Price of USD per Token",
+        "value": "value",
+        "valuetooltip": "Value of Token sold or bought in USD",
+        "type": "TYPE",
+        "action": "ACTION"
+      }
+    },
+    "leftsidebar": {
+      "title": "Wallet Tracker",
+      "importwallets": {
+        "importwallets": "Import wallets",
+        "desc": "Please enter the wallet addresses for wave pro import",
+        "cancel": "Cencel",
+        "add": "Add"
+      },
+      "addnew": {
+        "addnewwallet": {
+          "addnewwallet": "Add new wallet",
+          "addwallet": "Add wallet",
+          "walletname": "Wallet Name",
+          "entername": "Enter Wallet name",
+          "walletaddress": "Wallet Address",
+          "enteraddress": "Enter Wallet address",
+          "cancel": "Cencel"
+        }
+      },
+      "nodataavailable": "No Data Available"
+    },
+    "pnlpopup": {
+      "top": {
+        "balance": {
+          "balance": "Balance",
+          "totalvalue": "TOTAL VALUE",
+          "totalvaluetool": "The current total market value of all assets held in the wallet. This includes both realized and unrealized gains/losses.",
+          "unrealizedpnl": "UNREALIZED PNL",
+          "unrealizedpnltool": "Profit or loss from assets that are still being held and not yet sold. These values fluctuate with market prices and are not finalized.",
+          "avabalance": "AVAILABLE BALANCE",
+          "avabalancetool": "The amount of capital currently not locked in positions and available for new trades or withdrawals."
+        },
+        "pnl": "Pnl",
+        "performance": {
+          "performance": "Performance",
+          "totalpnl": "TOTAL PNL",
+          "totalpnltool": "The overall profit or loss from all transactions, including both realized and unrealized values. A negative number indicates a net loss.",
+          "totaltx": "TOTAL TXNS",
+          "totaltxtool": "The combined value of all transactions processed by the wallet, showing total volume across buys and sells."
+        }
+      },
+      "bottom": {
+        "activeposition": {
+          "activeposition": "Active Position",
+          "token": "Token",
+          "bought": "Bought",
+          "sold": "Sold",
+          "remaining": "Remaining",
+          "pnl": "pnl"
+        },
+        "history": {
+          "history": "History",
+          "token": "Token",
+          "bought": "Bought",
+          "sold": "Sold",
+          "remaining": "Remaining",
+          "pnl": "pnl"
+        },
+        "Top100": {
+          "top100": "Top 100",
+          "token": "Token",
+          "bought": "Bought",
+          "sold": "Sold",
+          "remaining": "Remaining",
+          "pnl": "pnl"
+        },
+        "activity": {
+          "activity": "Activity",
+          "token": "Token",
+          "bought": "Bought",
+          "sold": "Sold",
+          "remaining": "Remaining",
+          "pnl": "pnl"
+        }
+      }
+    }
+  },
+  "prowallets": {
+    "mainHeader": {
+      "title": "Pro Wallet",
+      "left": {
+        "gainers": "Gainers",
+        "gainerstool": "Wallets that have achieved the highest profits (PnL) over a specified time period based on their trading performance."
+      },
+      "right": {
+        "losers": "Losers",
+        "loserstool": "Wallets that have incurred the most significant losses (PnL) over a specified time period from their trading activity."
+      },
+      "filter": "Filter"
+    }
+  },
+  "settings": {
+    "mainHeader": {
+      "title": "SETTINGS"
+    },
+    "wavetradingwallet": "Wave Trading Wallet",
+    "quickbuy": {
+      "quickbuy": "Quick Buy",
+      "slippage": "slippage",
+      "slippagedesc": "How much less tokens you're willing to receive from a trade due to price volatility.",
+      "maxgas": "Max Gas Limit",
+      "maxgasdesc": "The maximum amount of gas you are willing to offer for ANY transaction. We highly recommend that you refrain from adjusting this setting.",
+      "priorityfee": "Priority Fee",
+      "priorityfeedesc": "Extra 'tip' to have your transaction completed faster. The higher the priority fee, the higher the chance of getting your transaction processed sooner.",
+      "mevprotection": "Mev Protection",
+      "mevprotectiondesc": "Enable this for protection against sandwich attacks from MEV bots and save on gas fees in the event of a failed transaction.",
+      "briberyamount": "Bribery Amount",
+      "briberyamountdesc": "Set an additional bribe amount on top of your priority fee for the block builder to place your transaction as soon as possible.",
+      "customize": "Customize",
+      "customizedesc": "Customize your Quick Buy buttons with your own preset amounts."
+    },
+    "quicksell": {
+      "quicksell": "Quick Sell",
+      "slippage": "slippage",
+      "slippagedesc": "How much less tokens you're willing to receive from a trade due to price volatility.",
+      "maxgas": "Max Gas Limit",
+      "maxgasdesc": "The maximum amount of gas you are willing to offer for ANY transaction. We highly recommend that you refrain from adjusting this setting.",
+      "priorityfee": "Priority Fee",
+      "priorityfeedesc": "Extra 'tip' to have your transaction completed faster. The higher the priority fee, the higher the chance of getting your transaction processed sooner.",
+      "mevprotection": "Mev Protection",
+      "mevprotectiondesc": "Enable this for protection against sandwich attacks from MEV bots and save on gas fees in the event of a failed transaction.",
+      "briberyamount": "Bribery Amount",
+      "briberyamountdesc": "Set an additional bribe amount on top of your priority fee for the block builder to place your transaction as soon as possible.",
+      "customize": "Customize",
+      "customizedesc": "Customize your Quick Buy buttons with your own preset amounts."
+    },
+    "approve": {
+      "approve": "Approve",
+      "autoapprove": "Auto Approve",
+      "autoapprovedesc": "EFF Enable this to automatically approve selling your tokens with 1 click.",
+      "maxgas": "Max Gas Limit",
+      "maxgasdesc": "The maximum amount of gas you are willing to offer for ANY transaction. We highly recommend that you refrain from adjusting this setting.",
+      "priorityfee": "Priority Fee",
+      "priorityfeedesc": "Extra 'tip' to have your transaction completed faster. The higher the priority fee, the higher the chance of getting your transaction processed sooner."
+    },
+    "autobuy": {
+      "autobuy": "Auto-Buy",
+      "slippage": "slippage",
+      "slippagedesc": "How much less tokens you're willing to receive from a trade due to price volatility.",
+      "maxgas": "Max Gas Limit",
+      "maxgasdesc": "The maximum amount of gas you are willing to offer for ANY transaction. We highly recommend that you refrain from adjusting this setting.",
+      "priorityfee": "Priority Fee",
+      "priorityfeedesc": "Extra 'tip' to have your transaction completed faster. The higher the priority fee, the higher the chance of getting your transaction processed sooner.",
+      "mevprotection": "Mev Protection",
+      "mevprotectiondesc": "Enable this for protection against sandwich attacks from MEV bots and save on gas fees in the event of a failed transaction.",
+      "briberyamount": "Bribery Amount",
+      "briberyamountdesc": "Set an additional bribe amount on top of your priority fee for the block builder to place your transaction as soon as possible.",
+      "customize": "Customize",
+      "customizedesc": "Customize your Quick Buy buttons with your own preset amounts."
+    },
+    "autosell": {
+      "autosell": "Auto-Sell",
+      "slippage": "slippage",
+      "slippagedesc": "How much less tokens you're willing to receive from a trade due to price volatility.",
+      "maxgas": "Max Gas Limit",
+      "maxgasdesc": "The maximum amount of gas you are willing to offer for ANY transaction. We highly recommend that you refrain from adjusting this setting.",
+      "priorityfee": "Priority Fee",
+      "priorityfeedesc": "Extra 'tip' to have your transaction completed faster. The higher the priority fee, the higher the chance of getting your transaction processed sooner.",
+      "mevprotection": "Mev Protection",
+      "mevprotectiondesc": "Enable this for protection against sandwich attacks from MEV bots and save on gas fees in the event of a failed transaction.",
+      "briberyamount": "Bribery Amount",
+      "briberyamountdesc": "Set an additional bribe amount on top of your priority fee for the block builder to place your transaction as soon as possible.",
+      "customize": "Customize",
+      "customizedesc": "Customize your Quick Buy buttons with your own preset amounts."
+    },
+    "save": "save"
+  },
+  "notifications": {
+    "wallettracking": "Wallet Tracking",
+    "wallettrackingtool": "View wallet tracker alerts you've received.",
+    "alphapicks": "Alpha Picks",
+    "alphapickstool": "View past Alpha calls from groups you're following."
+  },
+  "profile": {
+    "follow": "Follow",
+    "share": "Share",
+    "left": {
+      "last7dpnL": "Last 7D PnL",
+      "last7dpnLtool": "The total profit or loss (in % and USD) generated by the wallet over the past 7 days from all trading activities.",
+      "winrate": "Win Rate",
+      "liquidity": "Liquidity",
+      "liquiditytool": "The total value of tokens currently provided as liquidity in DeFi pools by the wallet."
+    },
+    "middle": {
+      "pnl": "PnL",
+      "pnltool": "Summary of your trading performance including profits, costs, and balance metrics.",
+      "winrate": "Win Rate",
+      "unrealizedprofits": "Unrealized Profits",
+      "unrealizedprofitstool": "Estimated gains or losses from tokens still held, based on their current market price and acquisition cost.",
+      "7dcost": "7D Total Cost",
+      "7dcosttool": "The total amount spent on buying tokens in the past 7 days.",
+      "7davgcost": "7D Token Avg Cost",
+      "7davgcosttool": "The average purchase price of tokens acquired within the last 7 days.",
+      "7drealizedprofits": "7D Token Avg Realized Profits",
+      "7drealizedprofitstool": "The average profit or loss made per token that was sold in the past 7 days.",
+      "balance": "Balance"
+    },
+    "right": {
+      "distribution": "Distribution",
+      "distributiontool": "Breakdown of positions by profit/loss percentages. Helps visualize how many holdings fall into profit/loss ranges."
+    },
+    "tableHeader": {
+      "recentPnL": {
+        "recentPnL": "Recent PnL",
+        "token/lastactive": "Token/Last Active",
+        "token/lastactivetool": "The specific token held and the last time it was actively traded or interacted with by the wallet.",
+        "unrealized": "Unrealized",
+        "unrealizedtool": "Current profit or loss from tokens that are still held and not yet sold.",
+        "30drealizedprofit": "30D Realized Profit",
+        "30drealizedprofittool": "Net profit or loss from tokens sold in the past 30 days. Realized means the position was closed.",
+        "totalprofit": "Total Profit",
+        "totalprofittool": "Net profit or loss from tokens sold in the past 30 days. Realized means the position was closed.",
+        "balanceUSD": "Balance USD",
+        "position": "Potision",
+        "positiontool": "The percentage of the wallet’s total portfolio value allocated to a specific token.",
+        "bought/avg": "Bought/Avg",
+        "sold/avg": "Sold/Avg",
+        "30dtx": "30D TXs",
+        "30dtxtool": "The number of times this token was bought or sold in the past 30 days."
+      },
+      "holdings": {
+        "holdings": "Holdings",
+        "token/lastactive": "Token/Last Active",
+        "token/lastactivetool": "The specific token held and the last time it was actively traded or interacted with by the wallet.",
+        "unrealized": "Unrealized",
+        "unrealizedtool": "Current profit or loss from tokens that are still held and not yet sold.",
+        "30drealizedprofit": "30D Realized Profit",
+        "30drealizedprofittool": "Net profit or loss from tokens sold in the past 30 days. Realized means the position was closed.",
+        "totalprofit": "Total Profit",
+        "totalprofittool": "Net profit or loss from tokens sold in the past 30 days. Realized means the position was closed.",
+        "balanceUSD": "Balance USD",
+        "position": "Potision",
+        "positiontool": "The percentage of the wallet’s total portfolio value allocated to a specific token.",
+        "bought/avg": "Bought/Avg",
+        "sold/avg": "Sold/Avg",
+        "30dtx": "30D TXs",
+        "30dtxtool": "The number of times this token was bought or sold in the past 30 days."
+      },
+      "activity": {
+        "activity": "Activity",
+        "type": "TYPE",
+        "token": "Token",
+        "totalusd": "Total USD",
+        "amount": "Amount",
+        "price": "Price",
+        "profit": "Profit",
+        "age": "Age"
+      }
+    },
+    "noData": "No buying or selling in the last 30 days"
+  },
+  "tragindViewPage": {
+    "right": {
+      "stats": {
+        "tx": "TXNS",
+        "txtool": "Total number of buy or sell actions that occurred.",
+        "buys": "BUYS",
+        "sells": "SELLS",
+        "vol": "VOL",
+        "voltool": "Total Buy and Sell Volume",
+        "buyvol": "BUY VOL",
+        "sellvol": "SELL VOL",
+        "makers": "MAKERS",
+        "makerstool": "Unique wallets/users who initiated buys (not sells), often meaning first-time buyers or liquidity participants.",
+        "buyers": "BUYERS",
+        "sellers": "SELLERS"
+      },
+      "buysell": {
+        "qty": "Quantity",
+        "buy": "Buy",
+        "sell": "Sell",
+        "advancedsettings": {
+          "advancedsettings": "Advanced Settings",
+          "autoapprove": "Auto Approve",
+          "slippage": "Slippage",
+          "priority": "Priority Fee",
+          "deafult": "Default"
+        },
+        "btnbuy": "Quick Buy",
+        "btnsell": "Quick Sell"
+      },
+      "tokeninfo": {
+        "tokeninfo":"Token info",
+        "price": "PRICE",
+        "supply": "SUPPLY",
+        "liq": "LIQUIDITY",
+        "liqtool": "Total value locked in the token's trading pool.",
+        "fdvtool": "Fully Diluted Valuation Market cap if all tokens were in circulation. FDV = Price x Total Supply",
+        "mc": "MKT CAP",
+        "mctool": "Market cap based on current circulating tokens (same as FDV if all tokens are unlocked)."
+      },
+      "datasecurity": {
+        "data":"Data & Security",
+        "minttool": "Controls whether new tokens can be minted. Disabled = No more tokens can be created (good for trust).",
+        "freezetool": "Ability to freeze or restrict token transfers. Disabled = Transfers cannot be frozen (safer for holders).",
+        "lptool": "Shows whether the liquidity tokens were burned. 100% Burned = Dev can’t rug-pull liquidity.",
+        "top10tool": "Number of wallets in the top 10 that hold this token. Can indicate centralization risk if just a few holders own most of the supply.",
+        "pooled1": "Amount of this token in the trading pool, and its USD value.",
+        "pooled2": "Amount of SOL paired with the token in the liquidity pool, and its total value."
+      }
+    },
+    "table": {
+      "transactions": {
+        "transactions": "Transactions",
+        "tableHeaders": {
+          "time": "TIME",
+          "type": "TYPE",
+          "qty": "QTY",
+          "qtytool": "Quantity of the main token being traded.",
+          "currency": "CURRENCY",
+          "sideqty": "SIDE QTY",
+          "sideqtytool": "Amount of the opposite token used in the trade. For Sell: This is how much SOL was received. For Buy: This is how much SOL was spent.",
+          "sidecurrency": "SIDE CURRENCY",
+          "sidecurrencytool": "The paired currency in the transaction.",
+          "price": "PRICE",
+          "pricetool": "Effective price per unit for the main token in side currency.",
+          "values": "VALUES",
+          "valuestool": "Total USD value of the transaction based on the side currency.",
+          "pool": "POOL",
+          "pooltool": "The liquidity pool or market where the trade happened. Shortened wallet address of the pool's creator or owner.",
+          "hash": "HASH",
+          "hashtool": "The SolScan transaction hash."
+        }
+      },
+      "topholders": {
+        "topholders": "Top holders",
+        "tableHeaders": {
+          "addresses": "ADDRESSES",
+          "value": "VALUE"
+        }
+      },
+      "toptraders": {
+        "toptraders": "Top Traders",
+        "tableHeaders": {
+          "rank": "RANK",
+          "owner": "OWNER",
+          "dex": "DEX MARKET",
+          "dextool": "The decentralized exchange or platform where the token was launched or traded",
+          "invest": "INVEST",
+          "investtool": "The total amount of funds this wallet has spent on launching or buying tokens. This reflects their upfront investment.",
+          "sold": "SOLD",
+          "soldtool": "The total value this wallet has made by selling tokens. High values mean strong exit or realized profit.",
+          "volume": "VOLUME",
+          "volumetool": "Combined total of buys and sells across this wallet’s tokens. Useful for seeing wallet activity or traction.",
+          "exp": "EXP",
+          "exptool": "View this wallet on Solscan, the Solana blockchain explorer."
+        }
+      },
+      "myholding": {
+        "myholding": "My Holdings",
+        "tableHeaders": {
+          "tokenname": "TOKEN NAME",
+          "qty": "QTY",
+          "remaining": "REMAINING",
+          "sold": "SOLD",
+          "pnl": "CHNAGE IN P&L",
+          "quicksell": "QUICK SELL"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,617 @@
+{
+  "sidebar": {
+    "trending": "Tendencias",
+    "recentcalls": "Llamadas recientes",
+    "memescope": "Memescope",
+    "holdings": "Posiciones",
+    "leaderboard": "Tabla de clasificación",
+    "referral": "Referencia",
+    "alphapicks": "Selecciones Alpha",
+    "wallettracker": "Rastreador de billeteras",
+    "prowallets": "Billeteras Pro",
+    "settings": "Ajustes"
+  },
+  "tredingPage": {
+    "mainHeader": {
+      "trending": "Tendencias",
+      "desc": "Los 100 pares de tokens más populares por transacciones dentro del marco de tiempo seleccionado",
+      "timeframeFilter": {
+        "1m": "1m",
+        "5m": "5m",
+        "1h": "1h",
+        "6h": "6h",
+        "24h": "24h"
+      },
+      "filter": {
+        "filter": "Filtrar",
+        "mintauth": "Autorización de creación",
+        "mintauthtooltip": "El token ya no puede ser creado — nadie puede generar nuevos tokens.",
+        "freezeauth": "Autorización de congelación",
+        "freezeauthtooltip": "Nadie puede congelar las transferencias de tokens.",
+        "lpburned": "LP Quemado",
+        "lpburnedtooltip": "Los tokens del pool de liquidez fueron quemados — esto ayuda a bloquear la liquidez.",
+        "withatleast1social": "Con al menos 1 social",
+        "bycurrentliquidity": "Por Liquidez actual",
+        "byvolume": "Por Volumen",
+        "byage": "Por Edad (minutos)",
+        "bymc": "Por Capitalización de mercado",
+        "bytxns": "Por Transacciones",
+        "bybuys": "Por Compras",
+        "bysells": "Por Ventas",
+        "reset": "Restablecer",
+        "apply": "Aplicar"
+      },
+      "ordersetting": {
+        "ordersetting": "Ajustes de orden",
+        "quantity": "Cantidad",
+        "buy": "Comprar",
+        "sell": "Vender",
+        "resetpreset": "Restablecer predeterminado",
+        "sllippagetooltip": "El % máximo que estás dispuesto a tolerar entre el precio esperado y el precio real de ejecución. Si el precio se mueve más de esto antes de que la transacción sea confirmada, fallará.",
+        "priorityfeetooltip": "Una propina pagada a validadores/mineros para priorizar tu transacción. Tarifas más altas hacen que tu transacción se procese más rápido durante la congestión de la red.",
+        "mevtooltip": "Protección contra ataques de front-running y sandwich ocultando los detalles de tu transacción de los mempools públicos, generalmente mediante el enrutamiento a través de relés privados o constructores de bloques."
+      },
+      "buy": "COMPRAR",
+      "advanced": "Avanzado"
+    },
+    "tableheaders": {
+      "pairinfo": "Información del par",
+      "pairinfotooltip": "Muestra el tiempo desde que se creó el contrato del token.",
+      "created": "Creado",
+      "liquidity": "Liquidez",
+      "liquiditytooltip": "Muestra cuánta dinero está disponible para negociar este token. Baja liquidez puede significar alto riesgo o difícil de vender.",
+      "mcap": "Capitalización de mercado",
+      "mcaptooltip": "Capitalización de mercado: Valor estimado total de este token: precio × suministro. Alta capitalización de mercado = más establecido.",
+      "swaps": "Intercambios",
+      "swapstooltip": "Cuántas veces las personas compraron (verde) o vendieron (rojo) este token en el marco de tiempo seleccionado",
+      "volume": "Volumen",
+      "auditres": "Resultados de auditoría",
+      "auditrestooltip": "Comprobaciones rápidas de seguridad: muestra si el token puede ser creado de nuevo, congelado, o si el token tiene 10 titulares.",
+      "quickbuy": "COMPRA RÁPIDA"
+    }
+  },
+  "recentcalls": {
+    "mainHeader": {
+      "title": "Llamadas recientes"
+    },
+    "tableheaders": {
+      "token": "TOKEN",
+      "before": "ANTES",
+      "beforetooltip": "Muestra el tiempo desde que el token fue llamado",
+      "calledby": "LLAMADO POR",
+      "calledmc": "MC LLAMADO",
+      "calledmctooltip": "Muestra el tiempo desde que el token fue llamado",
+      "mcnow": "MC AHORA",
+      "mcnowtooltip": "Capitalización de mercado actual",
+      "growth": "CRECIMIENTO",
+      "ath": "ATH",
+      "athtooltip": "El máximo histórico del token",
+      "audit": "AUDITORÍA",
+      "audittooltip": "Comprobaciones rápidas de seguridad: muestra si el token puede ser creado de nuevo, congelado, o si el token tiene 10 titulares.",
+      "action": "ACCIÓN"
+    }
+  },
+  "memescope": {
+    "mainHeader": {
+      "title": "Memescope",
+      "desc": "Encuentra los mejores tokens meme",
+      "buy": "COMPRAR",
+      "filters": {
+        "newcreation": {
+          "newcreationsfilter": "Filtro de Nuevas Creaciones",
+          "top10holders": "Top 10 Titulares",
+          "withatleast1social": "Con al menos 1 social",
+          "bypumpprogress": "Por Progreso de Pump",
+          "byholderscount": "Por Número de Titulares",
+          "bydevholding": "Por Tenencia de Desarrolladores",
+          "bysnipers": "Por Snipers",
+          "byage": "Por Edad",
+          "bycurrentliquidity": "Por Liquidez actual",
+          "byvolume": "Por Volumen",
+          "bymCap": "Por Capitalización de Mercado",
+          "bytx": "Por Transacciones",
+          "bybuys": "Por Compras",
+          "bysells": "Por Ventas",
+          "reset": "Restablecer",
+          "apply": "Aplicar"
+        },
+        "graduated": "Graduado",
+        "abouttograduate": "A punto de graduarse"
+      }
+    },
+    "tableheaders": {
+      "newcreations": "Nuevas Creaciones",
+      "newcreationstooltip": "Tokens que fueron lanzados recientemente y aún son extremadamente nuevos. Pueden ser experimentales, altamente volátiles o no verificados. ¡Entra bajo tu propio riesgo — DYOR (haz tu propia investigación)!",
+      "abouttogra": "A punto de graduarse",
+      "abouttogratooltip": "Tokens que están ganando tracción y participación, mostrando señales de crecimiento. Aún no están completamente establecidos, pero se mueven hacia un mayor reconocimiento o adopción.",
+      "graduated": "Graduado",
+      "graduatedtooltip": "Tokens que han alcanzado un nivel determinado de credibilidad o rendimiento. Han pasado las fases iniciales y muestran una acción de precio, volumen o actividad comunitaria más fuerte."
+    }
+  },
+  "holdings": {
+    "mainHeader": {
+      "title": "Posiciones",
+      "desc": "Rastrear y gestionar tus posiciones",
+      "withremainingtokens": "Con tokens restantes"
+    },
+    "tableheaders": {
+      "token": "TOKEN",
+      "quantity": "Cantidad",
+      "pnlusdtooltip": "Tu ganancia o pérdida de este token, mostrada en dólares estadounidenses. Verde = ganancias, Rojo = pérdidas.",
+      "pnlpertooltip": "Cambio porcentual en el valor de tus posiciones desde la compra.",
+      "quicksell": "VENTA RÁPIDA",
+      "quickselltooltip": "Vende instantáneamente toda tu posición en este token con un solo clic."
+    },
+    "noconnectwallet": "Por favor, conecta tu billetera para ver tus posiciones.",
+    "noholdingsmsg": "Actualmente no tienes posiciones de tokens en tu billetera de Wave."
+  },
+  "leaderboard": {
+    "mainHeader": {
+      "title": "Tabla de clasificación",
+      "yourstats": "Tus estadísticas",
+      "ranking": "Clasificación",
+      "totalpoints": "Puntos Totales",
+      "tradingpoints": "Puntos de Trading",
+      "tradingpointstooltip": "Puntos ganados por Trading",
+      "referralpoints": "Puntos de Referencia",
+      "referralpointstooltip": "Puntos ganados por Referencia",
+      "weeklyleaderboard": "Tabla de clasificación semanal"
+    },
+    "stage": {
+      "totaltrades": "Total de operaciones",
+      "value": "Valor"
+    },
+    "table": {
+      "trading": {
+        "trading": "Trading",
+        "wallet": "Billetera",
+        "totaltrads": "Total de operaciones",
+        "value": "Valor",
+        "referralid": "ID de referencia"
+      },
+      "referral": "Referencia"
+    }
+  },
+  "referral": {
+    "mainHeader": {
+      "title": "Referencias",
+      "yourstats": "Tus estadísticas",
+      "referralpoints": "Puntos de Referencia"
+    },
+    "pageData": {
+      "title": "¡Desbloquea más niveles de referencia con el programa de Referidos de Wave!",
+      "desc": "Los amigos que refieras obtendrán acceso anticipado a Wave con un 10% de descuento en comisiones.",
+      "shareto": "Compartir en",
+      "nodata": "No hay datos de referencia",
+      "copy": "copiar",
+      "copied": "copiado"
+    },
+    "table": {
+      "user": "Usuario",
+      "date": "Fecha",
+      "trades": "Operaciones",
+      "tradestool": "La cantidad que este referidor ha operado en USD.",
+      "earning": "Ganancia",
+      "earningtool": "La cantidad que puedes reclamar de la referencia de este usuario.",
+      "status": "Estado",
+      "statustool": "Indica si eres elegible para reclamar tu bonificación de referido."
+    }
+  },
+  "alphapicks": {
+    "mainHeader": {
+      "title": "Selecciones Alpha",
+      "title2": "Top Alphas",
+      "desc": "Encuentra los mejores traders y copia sus estrategias"
+    },
+    "cards": {
+      "topCard": {
+        "winrate": "Tasa de Ganancias",
+        "calls": "Llamadas",
+        "averagegains": "Ganancias Promedio",
+        "topcall": "Mejor Llamada",
+        "follow": "Seguir"
+      },
+      "restcard": {
+        "winrate": "Tasa de Ganancias",
+        "calls": "Llamadas",
+        "averagegains": "Ganancias Promedio",
+        "topcall": "Mejor Llamada",
+        "follow": "Seguir",
+        "details": "Detalles",
+        "seeall": "Ver todo",
+        "allalpha": "Todos Alpha"
+      },
+      "siderightbar": {
+        "bestcalls": "Mejores Llamadas",
+        "bestcallstooltip": "Muestra las llamadas con mayor ganancia durante el intervalo seleccionado y el grupo Alpha que las hizo.",
+        "recentalphas": "Alphas recientes",
+        "recentalphastooltip": "Muestra los grupos Alpha más recientes que se unieron a Wave Scan.",
+        "risingstar": "Estrella en ascenso",
+        "risingstartooltip": "Grupos Alpha que están ganando rápidamente impulso, ya sea por un reciente aumento en popularidad o un aumento repentino en su puntuación de rendimiento.",
+        "boostedalphas": "Alphas impulsados",
+        "contactus": "Contáctanos"
+      }
+    }
+  },
+  "wallettracker": {
+    "mainHeader": {
+      "title": "Rastreador de Cartera",
+      "desc": "Etiqueta, rastrea y analiza múltiples carteras"
+    },
+    "rightide": {
+      "title": "Alerta de Cartera",
+      "tableHeaders": {
+        "wallet": "CARTERA",
+        "token": "TOKEN",
+        "amount": "CANTIDAD",
+        "amounttooltip": "Cantidad del Token",
+        "price": "Precio",
+        "pricetool": "Precio en USD por Token",
+        "value": "valor",
+        "valuetooltip": "Valor del Token comprado o vendido en USD",
+        "type": "TIPO",
+        "action": "ACCIÓN"
+      }
+    },
+    "leftsidebar": {
+      "title": "Rastreador de Cartera",
+      "importwallets": {
+        "importwallets": "Importar carteras",
+        "desc": "Por favor ingresa las direcciones de las carteras para importar en Wave Pro",
+        "cancel": "Cancelar",
+        "add": "Agregar"
+      },
+      "addnew": {
+        "addnewwallet": {
+          "addnewwallet": "Agregar nueva cartera",
+          "addwallet": "Agregar cartera",
+          "walletname": "Nombre de la cartera",
+          "entername": "Ingresa el nombre de la cartera",
+          "walletaddress": "Dirección de la cartera",
+          "enteraddress": "Ingresa la dirección de la cartera",
+          "cancel": "Cancelar"
+        }
+      },
+      "nodataavailable": "No hay datos disponibles"
+    },
+    "pnlpopup": {
+      "top": {
+        "balance": {
+          "balance": "Balance",
+          "totalvalue": "VALOR TOTAL",
+          "totalvaluetool": "El valor actual total del mercado de todos los activos mantenidos en la cartera. Esto incluye tanto ganancias/pérdidas realizadas como no realizadas.",
+          "unrealizedpnl": "PNL NO REALIZADO",
+          "unrealizedpnltool": "Ganancia o pérdida de los activos que aún se mantienen y no han sido vendidos. Estos valores fluctúan con los precios del mercado y no están finalizados.",
+          "avabalance": "BALANCE DISPONIBLE",
+          "avabalancetool": "La cantidad de capital que actualmente no está bloqueada en posiciones y está disponible para nuevos intercambios o retiros."
+        },
+        "pnl": "Pnl",
+        "performance": {
+          "performance": "Rendimiento",
+          "totalpnl": "PNL TOTAL",
+          "totalpnltool": "La ganancia o pérdida general de todas las transacciones, incluyendo tanto valores realizados como no realizados. Un número negativo indica una pérdida neta.",
+          "totaltx": "TOTAL TXNS",
+          "totaltxtool": "El valor combinado de todas las transacciones procesadas por la cartera, mostrando el volumen total de compras y ventas."
+        }
+      },
+      "bottom": {
+        "activeposition": {
+          "activeposition": "Posición activa",
+          "token": "Token",
+          "bought": "Comprado",
+          "sold": "Vendido",
+          "remaining": "Restante",
+          "pnl": "pnl"
+        },
+        "history": {
+          "history": "Historial",
+          "token": "Token",
+          "bought": "Comprado",
+          "sold": "Vendido",
+          "remaining": "Restante",
+          "pnl": "pnl"
+        },
+        "Top100": {
+          "top100": "Top 100",
+          "token": "Token",
+          "bought": "Comprado",
+          "sold": "Vendido",
+          "remaining": "Restante",
+          "pnl": "pnl"
+        },
+        "activity": {
+          "activity": "Actividad",
+          "token": "Token",
+          "bought": "Comprado",
+          "sold": "Vendido",
+          "remaining": "Restante",
+          "pnl": "pnl"
+        }
+      }
+    }
+  },
+  "prowallets": {
+    "mainHeader": {
+      "title": "Cartera Pro",
+      "left": {
+        "gainers": "Ganadores",
+        "gainerstool": "Carteras que han obtenido las mayores ganancias (PnL) durante un período de tiempo específico, basándose en su rendimiento de trading."
+      },
+      "right": {
+        "losers": "Perdedores",
+        "loserstool": "Carteras que han sufrido las pérdidas más significativas (PnL) durante un período de tiempo específico debido a su actividad de trading."
+      },
+      "filter": "Filtrar"
+    }
+  },
+  "settings": {
+    "mainHeader": {
+      "title": "AJUSTES"
+    },
+    "wavetradingwallet": "Cartera Wave Trading",
+    "quickbuy": {
+      "quickbuy": "Compra Rápida",
+      "slippage": "Deslizamiento",
+      "slippagedesc": "Cuánto menos tokens estás dispuesto a recibir de una transacción debido a la volatilidad del precio.",
+      "maxgas": "Límite Máximo de Gas",
+      "maxgasdesc": "La cantidad máxima de gas que estás dispuesto a ofrecer por CUALQUIER transacción. Recomendamos encarecidamente que no ajustes esta configuración.",
+      "priorityfee": "Tarifa Prioritaria",
+      "priorityfeedesc": "Propina extra para que tu transacción se procese más rápido. Cuanto más alta sea la tarifa prioritaria, más probabilidades habrá de que tu transacción se procese antes.",
+      "mevprotection": "Protección MEV",
+      "mevprotectiondesc": "Activa esto para protegerte de ataques de sándwich de bots MEV y ahorrar en tarifas de gas en caso de una transacción fallida.",
+      "briberyamount": "Monto de Soborno",
+      "briberyamountdesc": "Establece un monto adicional de soborno encima de tu tarifa prioritaria para que el constructor de bloques coloque tu transacción lo antes posible.",
+      "customize": "Personalizar",
+      "customizedesc": "Personaliza tus botones de Compra Rápida con tus propios montos predefinidos."
+    },
+    "quicksell": {
+      "quicksell": "Venta Rápida",
+      "slippage": "Deslizamiento",
+      "slippagedesc": "Cuánto menos tokens estás dispuesto a recibir de una transacción debido a la volatilidad del precio.",
+      "maxgas": "Límite Máximo de Gas",
+      "maxgasdesc": "La cantidad máxima de gas que estás dispuesto a ofrecer por CUALQUIER transacción. Recomendamos encarecidamente que no ajustes esta configuración.",
+      "priorityfee": "Tarifa Prioritaria",
+      "priorityfeedesc": "Propina extra para que tu transacción se procese más rápido. Cuanto más alta sea la tarifa prioritaria, más probabilidades habrá de que tu transacción se procese antes.",
+      "mevprotection": "Protección MEV",
+      "mevprotectiondesc": "Activa esto para protegerte de ataques de sándwich de bots MEV y ahorrar en tarifas de gas en caso de una transacción fallida.",
+      "briberyamount": "Monto de Soborno",
+      "briberyamountdesc": "Establece un monto adicional de soborno encima de tu tarifa prioritaria para que el constructor de bloques coloque tu transacción lo antes posible.",
+      "customize": "Personalizar",
+      "customizedesc": "Personaliza tus botones de Venta Rápida con tus propios montos predefinidos."
+    },
+    "approve": {
+      "approve": "Aprobar",
+      "autoapprove": "Aprobación Automática",
+      "autoapprovedesc": "Habilita esto para aprobar automáticamente la venta de tus tokens con un solo clic.",
+      "maxgas": "Límite Máximo de Gas",
+      "maxgasdesc": "La cantidad máxima de gas que estás dispuesto a ofrecer por CUALQUIER transacción. Recomendamos encarecidamente que no ajustes esta configuración.",
+      "priorityfee": "Tarifa Prioritaria",
+      "priorityfeedesc": "Propina extra para que tu transacción se procese más rápido. Cuanto más alta sea la tarifa prioritaria, más probabilidades habrá de que tu transacción se procese antes."
+    },
+    "autobuy": {
+      "autobuy": "Compra Automática",
+      "slippage": "Deslizamiento",
+      "slippagedesc": "Cuánto menos tokens estás dispuesto a recibir de una transacción debido a la volatilidad del precio.",
+      "maxgas": "Límite Máximo de Gas",
+      "maxgasdesc": "La cantidad máxima de gas que estás dispuesto a ofrecer por CUALQUIER transacción. Recomendamos encarecidamente que no ajustes esta configuración.",
+      "priorityfee": "Tarifa Prioritaria",
+      "priorityfeedesc": "Propina extra para que tu transacción se procese más rápido. Cuanto más alta sea la tarifa prioritaria, más probabilidades habrá de que tu transacción se procese antes.",
+      "mevprotection": "Protección MEV",
+      "mevprotectiondesc": "Activa esto para protegerte de ataques de sándwich de bots MEV y ahorrar en tarifas de gas en caso de una transacción fallida.",
+      "briberyamount": "Monto de Soborno",
+      "briberyamountdesc": "Establece un monto adicional de soborno encima de tu tarifa prioritaria para que el constructor de bloques coloque tu transacción lo antes posible.",
+      "customize": "Personalizar",
+      "customizedesc": "Personaliza tus botones de Compra Automática con tus propios montos predefinidos."
+    },
+    "autosell": {
+      "autosell": "Venta Automática",
+      "slippage": "Deslizamiento",
+      "slippagedesc": "Cuánto menos tokens estás dispuesto a recibir de una transacción debido a la volatilidad del precio.",
+      "maxgas": "Límite Máximo de Gas",
+      "maxgasdesc": "La cantidad máxima de gas que estás dispuesto a ofrecer por CUALQUIER transacción. Recomendamos encarecidamente que no ajustes esta configuración.",
+      "priorityfee": "Tarifa Prioritaria",
+      "priorityfeedesc": "Propina extra para que tu transacción se procese más rápido. Cuanto más alta sea la tarifa prioritaria, más probabilidades habrá de que tu transacción se procese antes.",
+      "mevprotection": "Protección MEV",
+      "mevprotectiondesc": "Activa esto para protegerte de ataques de sándwich de bots MEV y ahorrar en tarifas de gas en caso de una transacción fallida.",
+      "briberyamount": "Monto de Soborno",
+      "briberyamountdesc": "Establece un monto adicional de soborno encima de tu tarifa prioritaria para que el constructor de bloques coloque tu transacción lo antes posible.",
+      "customize": "Personalizar",
+      "customizedesc": "Personaliza tus botones de Venta Automática con tus propios montos predefinidos."
+    },
+    "save": "guardar"
+  },
+  "notifications": {
+    "wallettracking": "Seguimiento de Cartera",
+    "wallettrackingtool": "Ver las alertas de seguimiento de cartera que has recibido.",
+    "alphapicks": "Elecciones Alpha",
+    "alphapickstool": "Ver las llamadas Alpha pasadas de los grupos que estás siguiendo."
+  },
+  "profile": {
+    "follow": "Seguir",
+    "share": "Compartir",
+    "left": {
+      "last7dpnL": "PnL de los Últimos 7 Días",
+      "last7dpnLtool": "El beneficio o pérdida total (en % y USD) generado por la cartera durante los últimos 7 días de todas las actividades comerciales.",
+      "winrate": "Tasa de Éxito",
+      "liquidity": "Liquidez",
+      "liquiditytool": "El valor total de los tokens actualmente proporcionados como liquidez en los grupos DeFi por la cartera."
+    },
+    "middle": {
+      "pnl": "PnL",
+      "pnltool": "Resumen de tu desempeño comercial, incluidos beneficios, costos y métricas de saldo.",
+      "winrate": "Tasa de Éxito",
+      "unrealizedprofits": "Beneficios No Realizados",
+      "unrealizedprofitstool": "Ganancias o pérdidas estimadas de los tokens que aún se mantienen, basadas en su precio de mercado actual y costo de adquisición.",
+      "7dcost": "Costo Total en 7D",
+      "7dcosttool": "La cantidad total gastada en la compra de tokens en los últimos 7 días.",
+      "7davgcost": "Costo Promedio de Tokens en 7D",
+      "7davgcosttool": "El precio promedio de compra de los tokens adquiridos en los últimos 7 días.",
+      "7drealizedprofits": "Ganancias Realizadas Promedio de Tokens en 7D",
+      "7drealizedprofitstool": "El beneficio o pérdida promedio por token que se vendió en los últimos 7 días.",
+      "balance": "Saldo"
+    },
+    "right": {
+      "distribution": "Distribución",
+      "distributiontool": "Desglose de las posiciones por porcentajes de ganancia/pérdida. Ayuda a visualizar cuántas posiciones están en ganancias/pérdidas."
+    },
+    "tableHeader": {
+      "recentPnL": {
+        "recentPnL": "PnL Reciente",
+        "token/lastactive": "Token/Última Actividad",
+        "token/lastactivetool": "El token específico mantenido y la última vez que fue activamente comercializado o interactuado con la cartera.",
+        "unrealized": "No Realizado",
+        "unrealizedtool": "Beneficio o pérdida actual de los tokens que aún se mantienen y no se han vendido.",
+        "30drealizedprofit": "Beneficio Realizado en 30D",
+        "30drealizedprofittool": "Beneficio neto o pérdida de los tokens vendidos en los últimos 30 días. Realizado significa que la posición se cerró.",
+        "totalprofit": "Beneficio Total",
+        "totalprofittool": "Beneficio neto o pérdida de los tokens vendidos en los últimos 30 días. Realizado significa que la posición se cerró.",
+        "balanceUSD": "Saldo USD",
+        "position": "Posición",
+        "positiontool": "El porcentaje del valor total del portafolio de la cartera asignado a un token específico.",
+        "bought/avg": "Comprado/Promedio",
+        "sold/avg": "Vendido/Promedio",
+        "30dtx": "Transacciones en 30D",
+        "30dtxtool": "La cantidad de veces que este token fue comprado o vendido en los últimos 30 días."
+      },
+      "holdings": {
+        "holdings": "Posiciones",
+        "token/lastactive": "Token/Última Actividad",
+        "token/lastactivetool": "El token específico mantenido y la última vez que fue activamente comercializado o interactuado con la cartera.",
+        "unrealized": "No Realizado",
+        "unrealizedtool": "Beneficio o pérdida actual de los tokens que aún se mantienen y no se han vendido.",
+        "30drealizedprofit": "Beneficio Realizado en 30D",
+        "30drealizedprofittool": "Beneficio neto o pérdida de los tokens vendidos en los últimos 30 días. Realizado significa que la posición se cerró.",
+        "totalprofit": "Beneficio Total",
+        "totalprofittool": "Beneficio neto o pérdida de los tokens vendidos en los últimos 30 días. Realizado significa que la posición se cerró.",
+        "balanceUSD": "Saldo USD",
+        "position": "Posición",
+        "positiontool": "El porcentaje del valor total del portafolio de la cartera asignado a un token específico.",
+        "bought/avg": "Comprado/Promedio",
+        "sold/avg": "Vendido/Promedio",
+        "30dtx": "Transacciones en 30D",
+        "30dtxtool": "La cantidad de veces que este token fue comprado o vendido en los últimos 30 días."
+      },
+      "activity": {
+        "activity": "Actividad",
+        "type": "TIPO",
+        "token": "Token",
+        "totalusd": "Total USD",
+        "amount": "Cantidad",
+        "price": "Precio",
+        "profit": "Beneficio",
+        "age": "Edad"
+      }
+    },
+    "noData": "No hubo compras o ventas en los últimos 30 días"
+  },
+  "tragindViewPage": {
+    "right": {
+      "stats": {
+        "tx": "Transacciones",
+        "txtool": "Número total de compras o ventas.",
+        "buys": "Compras",
+        "sells": "Ventas",
+        "vol": "Volumen",
+        "voltool": "Volumen total de compras y ventas.",
+        "buyvol": "Volumen de Compra",
+        "sellvol": "Volumen de Venta",
+        "makers": "Creadores",
+        "makerstool": "Carteras que solo han comprado sin vender. Pueden ser compradores iniciales o proveedores de liquidez.",
+        "buyers": "Compradores",
+        "sellers": "Vendedores"
+      },
+      "buysell": {
+        "qty": "Cantidad",
+        "buy": "Comprar",
+        "sell": "Vender",
+        "advancedsettings": {
+          "advancedsettings": "Configuración Avanzada",
+          "autoapprove": "Aprobación Automática",
+          "slippage": "Deslizamiento",
+          "priority": "Tarifa Prioritaria",
+          "deafult": "Por Defecto"
+        },
+        "btnbuy": "Compra Rápida",
+        "btnsell": "Venta Rápida"
+      },
+      "tokeninfo": {
+        "tokeninfo": "Información del token",
+        "price": "Precio",
+        "supply": "Suministro",
+        "liq": "Liquidez",
+        "liqtool": "Valor total bloqueado en el pool de liquidez de este token.",
+        "fdvtool": "Valor totalmente diluido = Precio × Suministro total.",
+        "mc": "Capitalización de Mercado",
+        "mctool": "Valor basado en los tokens actualmente en circulación."
+      },
+      "datasecurity": {
+        "data": "Datos y seguridad",
+        "minttool": "Indica si se pueden crear nuevos tokens. Falso = no se pueden emitir más (más seguro).",
+        "freezetool": "Indica si las transferencias pueden bloquearse. Falso = más seguro para los holders.",
+        "lptool": "Indica si los tokens de liquidez están quemados. 100% quemado = el desarrollador no puede retirar.",
+        "top10tool": "Número de carteras que tienen el token en el top 10.",
+        "pooled1": "Cantidad de este token en el pool y su valor en USD.",
+        "pooled2": "Cantidad de SOL en el pool y su valor."
+      }
+    },
+    "table": {
+      "transactions": {
+        "transactions": "Transacciones",
+        "tableHeaders": {
+          "time": "Hora",
+          "type": "Tipo",
+          "qty": "Cantidad",
+          "qtytool": "Cantidad del token principal negociado.",
+          "currency": "Moneda",
+          "sideqty": "Cantidad secundaria",
+          "sideqtytool": "Cantidad de la moneda usada como par.",
+          "sidecurrency": "Moneda secundaria",
+          "sidecurrencytool": "La moneda emparejada.",
+          "price": "Precio",
+          "pricetool": "Precio por unidad en la moneda secundaria.",
+          "values": "Valor",
+          "valuestool": "Valor total en USD.",
+          "pool": "Pool",
+          "pooltool": "Pool de liquidez o cartera del creador.",
+          "hash": "Hash",
+          "hashtool": "Hash de transacción en SolScan."
+        }
+      },
+      "topholders": {
+        "topholders": "Principales Poseedores",
+        "tableHeaders": {
+          "addresses": "Direcciones",
+          "value": "Valor"
+        }
+      },
+      "toptraders": {
+        "toptraders": "Mejores Comerciantes",
+        "tableHeaders": {
+          "rank": "Rango",
+          "owner": "Propietario",
+          "dex": "DEX",
+          "dextool": "Plataforma de negociación",
+          "invest": "Invertido",
+          "investtool": "Cantidad total invertida para comprar.",
+          "sold": "Vendido",
+          "soldtool": "Valor obtenido por ventas.",
+          "volume": "Volumen",
+          "volumetool": "Total de actividad de compra y venta.",
+          "exp": "Ver",
+          "exptool": "Ver en SolScan"
+        }
+      },
+      "myholding": {
+        "myholding": "Mis Participaciones",
+        "tableHeaders": {
+          "tokenname": "Nombre del Token",
+          "qty": "Cantidad",
+          "remaining": "Restante",
+          "sold": "Vendido",
+          "pnl": "Pérdidas/Ganancias",
+          "quicksell": "Venta Rápida"
+        }
+      }
+    }
+  }
+}

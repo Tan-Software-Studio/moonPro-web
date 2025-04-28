@@ -1,0 +1,617 @@
+{
+  "sidebar": {
+    "trending": "Trender",
+    "recentcalls": "Senaste samtal",
+    "memescope": "Memescope",
+    "holdings": "Innehav",
+    "leaderboard": "Leaderboard",
+    "referral": "Referens",
+    "alphapicks": "Alpha Picks",
+    "wallettracker": "Plånbok Tracker",
+    "prowallets": "Pro Plånböcker",
+    "settings": "Inställningar"
+  },
+  "tredingPage": {
+    "mainHeader": {
+      "trending": "Trender",
+      "desc": "Topp 100 mest trendiga tokenpar baserat på transaktioner inom vald tidsram",
+      "timeframeFilter": {
+        "1m": "1m",
+        "5m": "5m",
+        "1h": "1h",
+        "6h": "6h",
+        "24h": "24h"
+      },
+      "filter": {
+        "filter": "Filter",
+        "mintauth": "Mint Auth",
+        "mintauthtooltip": "Token kan inte längre mintas — ingen kan skapa nya tokens.",
+        "freezeauth": "Freeze Auth",
+        "freezeauthtooltip": "Ingen kan frysa tokenöverföringar.",
+        "lpburned": "LP Bränd",
+        "lpburnedtooltip": "Likviditetspool-token har bränts — detta hjälper till att låsa likviditeten på plats.",
+        "withatleast1social": "Med minst 1 social",
+        "bycurrentliquidity": "Efter nuvarande likviditet",
+        "byvolume": "Efter volym",
+        "byage": "Efter ålder (min)",
+        "bymc": "Efter MKT Cap",
+        "bytxns": "Efter TXNS",
+        "bybuys": "Efter Köp",
+        "bysells": "Efter Försäljningar",
+        "reset": "Återställ",
+        "apply": "Tillämpa"
+      },
+      "ordersetting": {
+        "ordersetting": "Orderinställning",
+        "quantity": "Kvantity",
+        "buy": "Köp",
+        "sell": "Sälj",
+        "resetpreset": "Återställ förinställning",
+        "sllippagetooltip": "Den maximala % du är villig att tolerera mellan förväntat och faktiskt utförandepris. Om priset rör sig mer än detta innan handeln bekräftas, kommer den att misslyckas.",
+        "priorityfeetooltip": "Ett tips som betalas till validators/miners för att prioritera din transaktion. Högre avgifter gör att din transaktion behandlas snabbare under perioder av nätverksbelastning.",
+        "mevtooltip": "Skydd mot front-running och sandwich-attacker genom att dölja dina transaktionsdetaljer från offentliga mempooler, vanligtvis genom att ruttas via privata reläer eller blockbyggare."
+      },
+      "buy": "KÖP",
+      "advanced": "Avancerad"
+    },
+    "tableheaders": {
+      "pairinfo": "Parinfo",
+      "pairinfotooltip": "Visar tiden sedan token-kontraktet skapades.",
+      "created": "Skapad",
+      "liquidity": "Likviditet",
+      "liquiditytooltip": "Visar hur mycket pengar som finns tillgängliga för att handla denna token. Låg likviditet kan innebära hög risk eller svårt att sälja.",
+      "mcap": "MKT Cap",
+      "mcaptooltip": "Marknadsvärde: Estimerat totalt värde på denna token: pris × utbud. Högt marknadsvärde = mer etablerad.",
+      "swaps": "SWAPS",
+      "swapstooltip": "Hur många gånger folk köpte (grön) eller sålde (röd) denna token under den valda tidsramen",
+      "volume": "Volym",
+      "auditres": "Granskning Resultat",
+      "auditrestooltip": "Snabba säkerhetskontroller: visar om token kan mintas igen, frysas eller om token har 10 innehavare.",
+      "quickbuy": "SNABBT KÖP"
+    }
+  },
+  "recentcalls": {
+    "mainHeader": {
+      "title": "Senaste samtal"
+    },
+    "tableheaders": {
+      "token": "TOKEN",
+      "before": "FÖRE",
+      "beforetooltip": "Visar tiden sedan token kallades",
+      "calledby": "KALLAD AV",
+      "calledmc": "KALLAD MC",
+      "calledmctooltip": "Visar tiden sedan token kallades",
+      "mcnow": "MC NU",
+      "mcnowtooltip": "Marknadsvärde nu",
+      "growth": "VÄXT",
+      "ath": "ATH",
+      "athtooltip": "Högsta någonsin för token",
+      "audit": "GRANSKNING",
+      "audittooltip": "Snabba säkerhetskontroller: visar om token kan mintas igen, frysas eller om token har 10 innehavare.",
+      "action": "ÅTGÄRD"
+    }
+  },
+  "memescope": {
+    "mainHeader": {
+      "title": "Memescope",
+      "desc": "Hitta de bästa meme-tokens",
+      "buy": "KÖP",
+      "filters": {
+        "newcreation": {
+          "newcreationsfilter": "Filter för nya skapelser",
+          "top10holders": "Top 10 Innehavare",
+          "withatleast1social": "Med minst 1 social",
+          "bypumpprogress": "Efter pumpprogression",
+          "byholderscount": "Efter antal innehavare",
+          "bydevholding": "Efter Dev-innehav",
+          "bysnipers": "Efter Snipers",
+          "byage": "Efter ålder",
+          "bycurrentliquidity": "Efter nuvarande likviditet",
+          "byvolume": "Efter volym",
+          "bymCap": "Efter MKT Cap",
+          "bytx": "Efter TXNS",
+          "bybuys": "Efter Köp",
+          "bysells": "Efter Försäljningar",
+          "reset": "Återställ",
+          "apply": "Tillämpa"
+        },
+        "graduated": "Examen",
+        "abouttograduate": "Snart examen"
+      }
+    },
+    "tableheaders": {
+      "newcreations": "Nya skapelser",
+      "newcreationstooltip": "Tokens som just lanserats och är fortfarande mycket nya. Dessa kan vara experimentella, mycket volatila eller oidentifierade. Gå in på egen risk — DYOR (gör din egen forskning)!",
+      "abouttogra": "Snart examen",
+      "abouttogratooltip": "Tokens som får fart och engagemang, visar tecken på tillväxt. De är inte helt etablerade än, men de rör sig mot högre erkännande eller adoption.",
+      "graduated": "Examen",
+      "graduatedtooltip": "Tokens som har uppnått en viss nivå av trovärdighet eller prestation. De har passerat initiala faser och visar starkare prisrörelser, volym eller samhällsaktivitet."
+    }
+  },
+  "holdings": {
+    "mainHeader": {
+      "title": "Innehav",
+      "desc": "Spåra och hantera dina innehav",
+      "withremainingtokens": "Med kvarvarande tokens"
+    },
+    "tableheaders": {
+      "token": "TOKEN",
+      "quantity": "Kvantitet",
+      "pnlusdtooltip": "Din vinst eller förlust från denna token, visad i US-dollar. Grön = du är upp, Röd = du är ner.",
+      "pnlpertooltip": "Procentuell förändring i värdet på dina innehav sedan inköp.",
+      "quicksell": "SNABB SÄLJ",
+      "quickselltooltip": "Sälj omedelbart hela din position i denna token med ett klick."
+    },
+    "noconnectwallet": "Vänligen anslut plånbok för att se dina innehav.",
+    "noholdingsmsg": "Du har för närvarande inga tokeninnehav i din Wave-handelsplånbok."
+  },
+  "leaderboard": {
+    "mainHeader": {
+      "title": "Leaderboard",
+      "yourstats": "Dina stats",
+      "ranking": "Rankning",
+      "totalpoints": "Totala poäng",
+      "tradingpoints": "Handels poäng",
+      "tradingpointstooltip": "Poäng som erhållits från handel",
+      "referralpoints": "Referenspoäng",
+      "referralpointstooltip": "Poäng som erhållits från referens",
+      "weeklyleaderboard": "Veckans Leaderboard"
+    },
+    "stage": {
+      "totaltrades": "Totala handelstransaktioner",
+      "value": "Värde"
+    },
+    "table": {
+      "trading": {
+        "trading": "Handel",
+        "wallet": "Plånbok",
+        "totaltrads": "Totala handelsstransaktioner",
+        "value": "Värde",
+        "referralid": "ReferensId"
+      },
+      "referral": "Referens"
+    }
+  },
+  "referral": {
+    "mainHeader": {
+      "title": "Referens",
+      "yourstats": "Dina stats",
+      "referralpoints": "Referenspoäng"
+    },
+    "pageData": {
+      "title": "Lås upp fler referensteg med Wave Referensprogram!",
+      "desc": "Vänner du refererar får tidig åtkomst till Wave med 10% rabatt på avgiften",
+      "shareto": "Dela till",
+      "nodata": "Ingen referensdata",
+      "copy": "kopiera",
+      "copied": "kopierad"
+    },
+    "table": {
+      "user": "Användare",
+      "date": "Datum",
+      "trades": "Affärer",
+      "tradestool": "Det belopp som denna referens har handlat för i USD.",
+      "earning": "Inkomst",
+      "earningtool": "Det belopp du kan kräva från denna användares referral.",
+      "status": "Status",
+      "statustool": "Anger om du är berättigad att begära din referral bonus."
+    }
+  },
+  "alphapicks": {
+    "mainHeader": {
+      "title": "Alpha Picks",
+      "title2": "Topp Alphas",
+      "desc": "Hitta de bästa traders och kopiera deras strategier"
+    },
+    "cards": {
+      "topCard": {
+        "winrate": "Vinstprocent",
+        "calls": "Calls",
+        "averagegains": "Genomsnittlig vinst",
+        "topcall": "Topp Call",
+        "follow": "Följ"
+      },
+      "restcard": {
+        "winrate": "Vinstprocent",
+        "calls": "Calls",
+        "averagegains": "Genomsnittlig vinst",
+        "topcall": "Topp Call",
+        "follow": "Följ",
+        "details": "Detaljer",
+        "seeall": "Visa alla",
+        "allalpha": "Alla Alpha"
+      },
+      "siderightbar": {
+        "bestcalls": "Bästa Calls",
+        "bestcallstooltip": "Visar de högsta vinstgivande samtalen under den valda tidsintervallet och den Alpha-grupp som gjorde dem.",
+        "recentalphas": "Nyaste Alphas",
+        "recentalphastooltip": "Visar de senaste Alpha-grupperna som gick med i Wave Scan.",
+        "risingstar": "Stigande Stjärna",
+        "risingstartooltip": "Alpha-grupper som snabbt vinner i popularitet, antingen genom en nyligen ökning i popularitet eller ett kraftigt ökat prestationsbetyg.",
+        "boostedalphas": "Boostade Alphas",
+        "contactus": "Kontakta oss"
+      }
+    }
+  },
+  "wallettracker": {
+    "mainHeader": {
+      "title": "Plånbok Tracker",
+      "desc": "Tagga, spåra och analysera flera plånböcker"
+    },
+    "rightide": {
+      "title": "Plånbok Alert",
+      "tableHeaders": {
+        "wallet": "PLÅNBOK",
+        "token": "TOKEN",
+        "amount": "MÄNGD",
+        "amounttooltip": "Mängd Token",
+        "price": "Pris",
+        "pricetool": "Pris per Token i USD",
+        "value": "Värde",
+        "valuetooltip": "Värde på den sålda eller köpta token i USD",
+        "type": "TYP",
+        "action": "ÅTGÄRD"
+      }
+    },
+    "leftsidebar": {
+      "title": "Plånbok Tracker",
+      "importwallets": {
+        "importwallets": "Importera plånböcker",
+        "desc": "Vänligen ange plånboksadresser för wave pro import",
+        "cancel": "Avbryt",
+        "add": "Lägg till"
+      },
+      "addnew": {
+        "addnewwallet": {
+          "addnewwallet": "Lägg till ny plånbok",
+          "addwallet": "Lägg till plånbok",
+          "walletname": "Plånbokens namn",
+          "entername": "Ange plånbokens namn",
+          "walletaddress": "Plånboksadress",
+          "enteraddress": "Ange plånboksadress",
+          "cancel": "Avbryt"
+        }
+      },
+      "nodataavailable": "Ingen data tillgänglig"
+    },
+    "pnlpopup": {
+      "top": {
+        "balance": {
+          "balance": "Balans",
+          "totalvalue": "TOTALT VÄRDE",
+          "totalvaluetool": "Det aktuella totala marknadsvärdet av alla tillgångar som hålls i plånboken. Detta inkluderar både realiserade och orealiserade vinster/förluster.",
+          "unrealizedpnl": "Orealiserad PNL",
+          "unrealizedpnltool": "Vinst eller förlust från tillgångar som fortfarande hålls och inte har sålts. Dessa värden fluktuerar med marknadspriser och är inte slutgiltiga.",
+          "avabalance": "TILLGÄNGLIG BALANS",
+          "avabalancetool": "Det belopp av kapital som för närvarande inte är låst i positioner och är tillgängligt för nya affärer eller uttag."
+        },
+        "pnl": "Pnl",
+        "performance": {
+          "performance": "Prestanda",
+          "totalpnl": "TOTAL PNL",
+          "totalpnltool": "Den totala vinsten eller förlusten från alla transaktioner, inklusive både realiserade och orealiserade värden. Ett negativt tal innebär en nettoförlust.",
+          "totaltx": "TOTALA TXNS",
+          "totaltxtool": "Det sammanlagda värdet av alla transaktioner som behandlats av plånboken, som visar totalvolymen över köp och försäljningar."
+        }
+      },
+      "bottom": {
+        "activeposition": {
+          "activeposition": "Aktiv Position",
+          "token": "Token",
+          "bought": "Köpt",
+          "sold": "Sålt",
+          "remaining": "Återstående",
+          "pnl": "pnl"
+        },
+        "history": {
+          "history": "Historik",
+          "token": "Token",
+          "bought": "Köpt",
+          "sold": "Sålt",
+          "remaining": "Återstående",
+          "pnl": "pnl"
+        },
+        "Top100": {
+          "top100": "Topp 100",
+          "token": "Token",
+          "bought": "Köpt",
+          "sold": "Sålt",
+          "remaining": "Återstående",
+          "pnl": "pnl"
+        },
+        "activity": {
+          "activity": "Aktivitet",
+          "token": "Token",
+          "bought": "Köpt",
+          "sold": "Sålt",
+          "remaining": "Återstående",
+          "pnl": "pnl"
+        }
+      }
+    }
+  },
+  "prowallets": {
+    "mainHeader": {
+      "title": "Pro Plånbok",
+      "left": {
+        "gainers": "Vinnare",
+        "gainerstool": "Plånböcker som har uppnått högsta vinster (PnL) under en angiven tidsperiod baserat på deras handelsresultat."
+      },
+      "right": {
+        "losers": "Förlorare",
+        "loserstool": "Plånböcker som har drabbats av de största förlusterna (PnL) under en angiven tidsperiod från deras handelsaktivitet."
+      },
+      "filter": "Filtrera"
+    }
+  },
+  "settings": {
+    "mainHeader": {
+      "title": "INSTÄLLNINGAR"
+    },
+    "wavetradingwallet": "Wave Trading Plånbok",
+    "quickbuy": {
+      "quickbuy": "Snabbköp",
+      "slippage": "Slippage",
+      "slippagedesc": "Hur mycket mindre tokens du är villig att ta emot från en affär på grund av prisvolatilitet.",
+      "maxgas": "Max Gas Limit",
+      "maxgasdesc": "Det maximala belopp gas som du är villig att erbjuda för EN TRANSAKTION. Vi rekommenderar starkt att du avstår från att justera denna inställning.",
+      "priorityfee": "Priority Fee",
+      "priorityfeedesc": "Extra 'tips' för att få din transaktion bearbetad snabbare. Ju högre priority fee, desto större chans att få din transaktion behandlad snabbare.",
+      "mevprotection": "Mev Protection",
+      "mevprotectiondesc": "Aktivera detta för skydd mot sandwich-attacker från MEV bots och spara på gasavgifter vid en misslyckad transaktion.",
+      "briberyamount": "Bestickningsbelopp",
+      "briberyamountdesc": "Ställ in ett extra bestickningsbelopp ovanpå din priority fee för att blockbuilder ska placera din transaktion så snart som möjligt.",
+      "customize": "Anpassa",
+      "customizedesc": "Anpassa dina Snabbköp-knappar med dina egna förinställda belopp."
+    },
+    "quicksell": {
+      "quicksell": "Snabbförsäljning",
+      "slippage": "Slippage",
+      "slippagedesc": "Hur mycket mindre tokens du är villig att ta emot från en affär på grund av prisvolatilitet.",
+      "maxgas": "Max Gas Limit",
+      "maxgasdesc": "Det maximala belopp gas som du är villig att erbjuda för EN TRANSAKTION. Vi rekommenderar starkt att du avstår från att justera denna inställning.",
+      "priorityfee": "Priority Fee",
+      "priorityfeedesc": "Extra 'tips' för att få din transaktion bearbetad snabbare. Ju högre priority fee, desto större chans att få din transaktion behandlad snabbare.",
+      "mevprotection": "Mev Protection",
+      "mevprotectiondesc": "Aktivera detta för skydd mot sandwich-attacker från MEV bots och spara på gasavgifter vid en misslyckad transaktion.",
+      "briberyamount": "Bestickningsbelopp",
+      "briberyamountdesc": "Ställ in ett extra bestickningsbelopp ovanpå din priority fee för att blockbuilder ska placera din transaktion så snart som möjligt.",
+      "customize": "Anpassa",
+      "customizedesc": "Anpassa dina Snabbköp-knappar med dina egna förinställda belopp."
+    },
+    "approve": {
+      "approve": "Godkänn",
+      "autoapprove": "Auto Godkänn",
+      "autoapprovedesc": "EFF Aktivera detta för att automatiskt godkänna försäljning av dina tokens med 1 klick.",
+      "maxgas": "Max Gas Limit",
+      "maxgasdesc": "Det maximala belopp gas som du är villig att erbjuda för EN TRANSAKTION. Vi rekommenderar starkt att du avstår från att justera denna inställning.",
+      "priorityfee": "Priority Fee",
+      "priorityfeedesc": "Extra 'tips' för att få din transaktion bearbetad snabbare. Ju högre priority fee, desto större chans att få din transaktion behandlad snabbare."
+    },
+    "autobuy": {
+      "autobuy": "Auto-Köp",
+      "slippage": "Slippage",
+      "slippagedesc": "Hur mycket mindre tokens du är villig att ta emot från en affär på grund av prisvolatilitet.",
+      "maxgas": "Max Gas Limit",
+      "maxgasdesc": "Det maximala belopp gas som du är villig att erbjuda för EN TRANSAKTION. Vi rekommenderar starkt att du avstår från att justera denna inställning.",
+      "priorityfee": "Priority Fee",
+      "priorityfeedesc": "Extra 'tips' för att få din transaktion bearbetad snabbare. Ju högre priority fee, desto större chans att få din transaktion behandlad snabbare.",
+      "mevprotection": "Mev Protection",
+      "mevprotectiondesc": "Aktivera detta för skydd mot sandwich-attacker från MEV bots och spara på gasavgifter vid en misslyckad transaktion.",
+      "briberyamount": "Bestickningsbelopp",
+      "briberyamountdesc": "Ställ in ett extra bestickningsbelopp ovanpå din priority fee för att blockbuilder ska placera din transaktion så snart som möjligt.",
+      "customize": "Anpassa",
+      "customizedesc": "Anpassa dina Snabbköp-knappar med dina egna förinställda belopp."
+    },
+    "autosell": {
+      "autosell": "Auto-Försäljning",
+      "slippage": "Slippage",
+      "slippagedesc": "Hur mycket mindre tokens du är villig att ta emot från en affär på grund av prisvolatilitet.",
+      "maxgas": "Max Gas Limit",
+      "maxgasdesc": "Det maximala belopp gas som du är villig att erbjuda för EN TRANSAKTION. Vi rekommenderar starkt att du avstår från att justera denna inställning.",
+      "priorityfee": "Priority Fee",
+      "priorityfeedesc": "Extra 'tips' för att få din transaktion bearbetad snabbare. Ju högre priority fee, desto större chans att få din transaktion behandlad snabbare.",
+      "mevprotection": "Mev Protection",
+      "mevprotectiondesc": "Aktivera detta för skydd mot sandwich-attacker från MEV bots och spara på gasavgifter vid en misslyckad transaktion.",
+      "briberyamount": "Bestickningsbelopp",
+      "briberyamountdesc": "Ställ in ett extra bestickningsbelopp ovanpå din priority fee för att blockbuilder ska placera din transaktion så snart som möjligt.",
+      "customize": "Anpassa",
+      "customizedesc": "Anpassa dina Snabbköp-knappar med dina egna förinställda belopp."
+    },
+    "save": "Spara"
+  },
+  "notifications": {
+    "wallettracking": "Plånboksövervakning",
+    "wallettrackingtool": "Visa plånboksspårningsvarningar som du har mottagit.",
+    "alphapicks": "Alpha Picks",
+    "alphapickstool": "Visa tidigare Alpha-anrop från grupper du följer."
+  },
+  "profile": {
+    "follow": "Följ",
+    "share": "Dela",
+    "left": {
+      "last7dpnL": "Senaste 7D PnL",
+      "last7dpnLtool": "Den totala vinsten eller förlusten (i % och USD) som genererats av plånboken under de senaste 7 dagarna från alla handelsaktiviteter.",
+      "winrate": "Win Rate",
+      "liquidity": "Likviditet",
+      "liquiditytool": "Det totala värdet av tokens som för närvarande tillhandahålls som likviditet i DeFi-pooler av plånboken."
+    },
+    "middle": {
+      "pnl": "PnL",
+      "pnltool": "Sammanfattning av din handelsperformance inklusive vinster, kostnader och balansmått.",
+      "winrate": "Win Rate",
+      "unrealizedprofits": "Orealiserade vinster",
+      "unrealizedprofitstool": "Beräknade vinster eller förluster från tokens som fortfarande hålls, baserat på deras nuvarande marknadspris och förvärvskostnad.",
+      "7dcost": "7D Total Kostnad",
+      "7dcosttool": "Det totala beloppet som spenderats på att köpa tokens under de senaste 7 dagarna.",
+      "7davgcost": "7D Token Genomsnittlig Kostnad",
+      "7davgcosttool": "Det genomsnittliga köppriset för tokens som förvärvats under de senaste 7 dagarna.",
+      "7drealizedprofits": "7D Token Genomsnittlig Realiserad Vinst",
+      "7drealizedprofitstool": "Den genomsnittliga vinst eller förlust per token som såldes under de senaste 7 dagarna.",
+      "balance": "Balans"
+    },
+    "right": {
+      "distribution": "Fördelning",
+      "distributiontool": "Fördelning av positioner efter vinst/förlust procent. Hjälper till att visualisera hur många innehav som faller inom vinst/förlust intervaller."
+    },
+    "tableHeader": {
+      "recentPnL": {
+        "recentPnL": "Senaste PnL",
+        "token/lastactive": "Token/Senast Aktiv",
+        "token/lastactivetool": "Den specifika token som hålls och den senaste gången den aktivt handlades eller interagerades med av plånboken.",
+        "unrealized": "Orealiserad",
+        "unrealizedtool": "Nuvarande vinst eller förlust från tokens som fortfarande hålls och inte har sålts.",
+        "30drealizedprofit": "30D Realiserad Vinst",
+        "30drealizedprofittool": "Nettovinst eller förlust från tokens sålda under de senaste 30 dagarna. Realiserad innebär att positionen stängdes.",
+        "totalprofit": "Total Vinst",
+        "totalprofittool": "Nettovinst eller förlust från tokens sålda under de senaste 30 dagarna. Realiserad innebär att positionen stängdes.",
+        "balanceUSD": "Balans USD",
+        "position": "Position",
+        "positiontool": "Procentandelen av plånbokens totala portföljvärde som tilldelas en specifik token.",
+        "bought/avg": "Köpt/Genomsnitt",
+        "sold/avg": "Såld/Genomsnitt",
+        "30dtx": "30D Transaktioner",
+        "30dtxtool": "Antalet gånger denna token köptes eller såldes under de senaste 30 dagarna."
+      },
+      "holdings": {
+        "holdings": "Innehav",
+        "token/lastactive": "Token/Senast Aktiv",
+        "token/lastactivetool": "Den specifika token som hålls och den senaste gången den aktivt handlades eller interagerades med av plånboken.",
+        "unrealized": "Orealiserad",
+        "unrealizedtool": "Nuvarande vinst eller förlust från tokens som fortfarande hålls och inte har sålts.",
+        "30drealizedprofit": "30D Realiserad Vinst",
+        "30drealizedprofittool": "Nettovinst eller förlust från tokens sålda under de senaste 30 dagarna. Realiserad innebär att positionen stängdes.",
+        "totalprofit": "Total Vinst",
+        "totalprofittool": "Nettovinst eller förlust från tokens sålda under de senaste 30 dagarna. Realiserad innebär att positionen stängdes.",
+        "balanceUSD": "Balans USD",
+        "position": "Position",
+        "positiontool": "Procentandelen av plånbokens totala portföljvärde som tilldelas en specifik token.",
+        "bought/avg": "Köpt/Genomsnitt",
+        "sold/avg": "Såld/Genomsnitt",
+        "30dtx": "30D Transaktioner",
+        "30dtxtool": "Antalet gånger denna token köptes eller såldes under de senaste 30 dagarna."
+      },
+      "activity": {
+        "activity": "Aktivitet",
+        "type": "TYP",
+        "token": "Token",
+        "totalusd": "Total USD",
+        "amount": "Belopp",
+        "price": "Pris",
+        "profit": "Vinst",
+        "age": "Ålder"
+      }
+    },
+    "noData": "Ingen köp eller försäljning de senaste 30 dagarna"
+  },
+  "tragindViewPage": {
+    "right": {
+      "stats": {
+        "tx": "Transaktioner",
+        "txtool": "Totalt antal köp eller försäljningar.",
+        "buys": "Köp",
+        "sells": "Sälj",
+        "vol": "Volym",
+        "voltool": "Total volym av köp och försäljningar.",
+        "buyvol": "Köpsvolym",
+        "sellvol": "Säljsvolym",
+        "makers": "Makers",
+        "makerstool": "Plånböcker som bara har köpt utan att sälja. T.ex. tidiga investerare eller likviditetsleverantörer.",
+        "buyers": "Köpare",
+        "sellers": "Säljare"
+      },
+      "buysell": {
+        "qty": "Antal",
+        "buy": "Köp",
+        "sell": "Sälj",
+        "advancedsettings": {
+          "advancedsettings": "Avancerade Inställningar",
+          "autoapprove": "Godkänn automatiskt",
+          "slippage": "Glidning",
+          "priority": "Prioritetsavgift",
+          "deafult": "Standard"
+        },
+        "btnbuy": "Snabbköp",
+        "btnsell": "Snabbsälj"
+      },
+      "tokeninfo": {
+        "tokeninfo": "Tokeninformation",
+        "price": "Pris",
+        "supply": "Utbud",
+        "liq": "Likviditet",
+        "liqtool": "Totalt värde låst i tokenets likviditetspool.",
+        "fdvtool": "Fullt utspädd värdering = Pris × Totalt utbud.",
+        "mc": "Marknadsvärde",
+        "mctool": "Värde baserat på cirkulerande tokens."
+      },
+      "datasecurity": {
+        "data": "Data och säkerhet",
+        "minttool": "Om nya tokens kan skapas. Falskt = kan inte skapas längre (säkrare).",
+        "freezetool": "Om överföringar kan blockeras. Falskt = säkrare för innehavare.",
+        "lptool": "Visar om likviditetstokens har bränts. 100% bränt = utvecklaren kan inte ta ut.",
+        "top10tool": "Antal plånböcker som tillhör topp 10 innehavare.",
+        "pooled1": "Mängd av denna token i poolen och dess USD-värde.",
+        "pooled2": "SOL i poolen och dess värde."
+      }
+    },
+    "table": {
+      "transactions": {
+        "transactions": "Transaktioner",
+        "tableHeaders": {
+          "time": "Tid",
+          "type": "Typ",
+          "qty": "Antal",
+          "qtytool": "Antal huvudtoken som handlats.",
+          "currency": "Valuta",
+          "sideqty": "Motpartens mängd",
+          "sideqtytool": "Belopp av den använda motvalutan.",
+          "sidecurrency": "Motvaluta",
+          "sidecurrencytool": "Valutan som används som par.",
+          "price": "Pris",
+          "pricetool": "Pris per enhet i motvalutan.",
+          "values": "Värde",
+          "valuestool": "Totalt värde i USD.",
+          "pool": "Pool",
+          "pooltool": "Likviditetspool eller skapare-plånbok.",
+          "hash": "Hash",
+          "hashtool": "Transaktionshash på SolScan."
+        }
+      },
+      "topholders": {
+        "topholders": "Toppinnehavare",
+        "tableHeaders": {
+          "addresses": "Adresser",
+          "value": "Värde"
+        }
+      },
+      "toptraders": {
+        "toptraders": "Topphandlare",
+        "tableHeaders": {
+          "rank": "Rang",
+          "owner": "Ägare",
+          "dex": "DEX-marknad",
+          "dextool": "Plattform där handeln skedde",
+          "invest": "Investerat",
+          "investtool": "Totalt investerat belopp.",
+          "sold": "Sålt",
+          "soldtool": "Värde från försäljning.",
+          "volume": "Volym",
+          "volumetool": "Total aktivitet (köp och sälj).",
+          "exp": "Visa",
+          "exptool": "Visa på SolScan"
+        }
+      },
+      "myholding": {
+        "myholding": "Min Innehav",
+        "tableHeaders": {
+          "tokenname": "Tokennamn",
+          "qty": "Antal",
+          "remaining": "Återstår",
+          "sold": "Sålt",
+          "pnl": "Resultat",
+          "quicksell": "Snabbsälj"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,617 @@
+{
+  "sidebar": {
+    "trending": "Xu hướng",
+    "recentcalls": "Lượt gọi gần đây",
+    "memescope": "Memescope",
+    "holdings": "Danh mục",
+    "leaderboard": "Bảng xếp hạng",
+    "referral": "Giới thiệu",
+    "alphapicks": "Lựa chọn Alpha",
+    "wallettracker": "Theo dõi ví",
+    "prowallets": "Ví chuyên nghiệp",
+    "settings": "Cài đặt"
+  },
+  "tredingPage": {
+    "mainHeader": {
+      "trending": "Xu hướng",
+      "desc": "Top 100 cặp token có số giao dịch cao nhất trong khung thời gian được chọn",
+      "timeframeFilter": {
+        "1m": "1 phút",
+        "5m": "5 phút",
+        "1h": "1 giờ",
+        "6h": "6 giờ",
+        "24h": "24 giờ"
+      },
+      "filter": {
+        "filter": "Lọc",
+        "mintauth": "Ủy quyền Mint",
+        "mintauthtooltip": "Token không thể được mint thêm — không ai có thể tạo thêm token mới.",
+        "freezeauth": "Ủy quyền Đóng băng",
+        "freezeauthtooltip": "Không ai có thể đóng băng giao dịch token.",
+        "lpburned": "Đã đốt LP",
+        "lpburnedtooltip": "Token LP đã bị đốt — giúp khóa thanh khoản.",
+        "withatleast1social": "Có ít nhất 1 mạng xã hội",
+        "bycurrentliquidity": "Theo thanh khoản hiện tại",
+        "byvolume": "Theo khối lượng",
+        "byage": "Theo tuổi (phút)",
+        "bymc": "Theo Vốn hóa",
+        "bytxns": "Theo giao dịch",
+        "bybuys": "Theo lệnh mua",
+        "bysells": "Theo lệnh bán",
+        "reset": "Đặt lại",
+        "apply": "Áp dụng"
+      },
+      "ordersetting": {
+        "ordersetting": "Cài đặt lệnh",
+        "quantity": "Số lượng",
+        "buy": "Mua",
+        "sell": "Bán",
+        "resetpreset": "Đặt lại cấu hình",
+        "sllippagetooltip": "Phần trăm trượt giá tối đa bạn chấp nhận giữa giá kỳ vọng và giá thực tế. Nếu chênh lệch vượt quá mức này trước khi giao dịch được xác nhận, giao dịch sẽ thất bại.",
+        "priorityfeetooltip": "Phí tip cho validator/miner để ưu tiên giao dịch của bạn. Phí cao giúp giao dịch xử lý nhanh hơn khi mạng tắc nghẽn.",
+        "mevtooltip": "Bảo vệ khỏi tấn công front-running và sandwich bằng cách ẩn chi tiết giao dịch khỏi mempool công khai."
+      },
+      "buy": "MUA",
+      "advanced": "Nâng cao"
+    },
+    "tableheaders": {
+      "pairinfo": "Thông tin cặp",
+      "pairinfotooltip": "Hiển thị thời gian kể từ khi token được tạo.",
+      "created": "Tạo lúc",
+      "liquidity": "Thanh khoản",
+      "liquiditytooltip": "Số tiền có sẵn để giao dịch token. Thanh khoản thấp = rủi ro cao hoặc khó bán.",
+      "mcap": "Vốn hóa",
+      "mcaptooltip": "Giá trị ước tính của token: giá × cung. Vốn hóa cao = ổn định hơn.",
+      "swaps": "GIAO DỊCH",
+      "swapstooltip": "Số lượt mua (xanh) hoặc bán (đỏ) token trong khung thời gian đã chọn",
+      "volume": "Khối lượng",
+      "auditres": "Kết quả kiểm tra",
+      "auditrestooltip": "Kiểm tra nhanh tính an toàn: token có thể được mint lại, bị đóng băng hoặc có 10 holder hay không.",
+      "quickbuy": "MUA NHANH"
+    }
+  },
+  "recentcalls": {
+    "mainHeader": {
+      "title": "Lượt gọi gần đây"
+    },
+    "tableheaders": {
+      "token": "TOKEN",
+      "before": "TRƯỚC ĐÓ",
+      "beforetooltip": "Thời gian kể từ khi token được gọi",
+      "calledby": "ĐƯỢC GỌI BỞI",
+      "calledmc": "VỐN HÓA KHI GỌI",
+      "calledmctooltip": "Thời gian kể từ khi token được gọi",
+      "mcnow": "VỐN HÓA HIỆN TẠI",
+      "mcnowtooltip": "Vốn hóa thị trường hiện tại",
+      "growth": "TĂNG TRƯỞNG",
+      "ath": "ATH",
+      "athtooltip": "Mức cao nhất mọi thời đại của token",
+      "audit": "KIỂM TRA",
+      "audittooltip": "Kiểm tra nhanh: token có thể mint lại, bị đóng băng hoặc có 10 holder.",
+      "action": "HÀNH ĐỘNG"
+    }
+  },
+  "memescope": {
+    "mainHeader": {
+      "title": "Memescope",
+      "desc": "Tìm các token meme tốt nhất",
+      "buy": "MUA",
+      "filters": {
+        "newcreation": {
+          "newcreationsfilter": "Lọc token mới",
+          "top10holders": "Top 10 Holder",
+          "withatleast1social": "Có ít nhất 1 mạng xã hội",
+          "bypumpprogress": "Theo tiến trình tăng giá",
+          "byholderscount": "Theo số lượng Holder",
+          "bydevholding": "Theo số lượng nắm giữ của Dev",
+          "bysnipers": "Theo Snipers",
+          "byage": "Theo tuổi",
+          "bycurrentliquidity": "Theo thanh khoản",
+          "byvolume": "Theo khối lượng",
+          "bymCap": "Theo Vốn hóa",
+          "bytx": "Theo giao dịch",
+          "bybuys": "Theo mua",
+          "bysells": "Theo bán",
+          "reset": "Đặt lại",
+          "apply": "Áp dụng"
+        },
+        "graduated": "Đã tốt nghiệp",
+        "abouttograduate": "Sắp tốt nghiệp"
+      }
+    },
+    "tableheaders": {
+      "newcreations": "Token mới",
+      "newcreationstooltip": "Token mới ra mắt, còn rất mới và chưa được xác minh. Rất biến động. DYOR!",
+      "abouttogra": "Sắp tốt nghiệp",
+      "abouttogratooltip": "Token đang thu hút sự chú ý, có tiềm năng tăng trưởng. Chưa ổn định nhưng đang phát triển tốt.",
+      "graduated": "Đã tốt nghiệp",
+      "graduatedtooltip": "Token có uy tín hoặc hiệu suất nhất định. Đã vượt qua giai đoạn đầu và có hoạt động mạnh."
+    }
+  },
+  "holdings": {
+    "mainHeader": {
+      "title": "Danh mục",
+      "desc": "Theo dõi và quản lý tài sản của bạn",
+      "withremainingtokens": "Có token còn lại"
+    },
+    "tableheaders": {
+      "token": "TOKEN",
+      "quantity": "Số lượng",
+      "pnlusdtooltip": "Lợi nhuận hoặc thua lỗ của bạn (USD). Xanh = lời, Đỏ = lỗ.",
+      "pnlpertooltip": "Phần trăm thay đổi giá trị danh mục kể từ khi mua.",
+      "quicksell": "BÁN NHANH",
+      "quickselltooltip": "Bán toàn bộ token này ngay lập tức với 1 cú nhấp."
+    },
+    "noconnectwallet": "Vui lòng kết nối ví để xem danh mục.",
+    "noholdingsmsg": "Bạn hiện không có token nào trong ví giao dịch Wave."
+  },
+  "leaderboard": {
+    "mainHeader": {
+      "title": "Bảng xếp hạng",
+      "yourstats": "Thống kê của bạn",
+      "ranking": "Xếp hạng",
+      "totalpoints": "Tổng điểm",
+      "tradingpoints": "Điểm giao dịch",
+      "tradingpointstooltip": "Điểm nhận từ giao dịch",
+      "referralpoints": "Điểm giới thiệu",
+      "referralpointstooltip": "Điểm nhận từ giới thiệu",
+      "weeklyleaderboard": "BXH hàng tuần"
+    },
+    "stage": {
+      "totaltrades": "Tổng giao dịch",
+      "value": "Giá trị"
+    },
+    "table": {
+      "trading": {
+        "trading": "Giao dịch",
+        "wallet": "Ví",
+        "totaltrads": "Tổng giao dịch",
+        "value": "Giá trị",
+        "referralid": "Mã giới thiệu"
+      },
+      "referral": "Giới thiệu"
+    }
+  },
+  "referral": {
+    "mainHeader": {
+      "title": "Giới thiệu",
+      "yourstats": "Thống kê của bạn",
+      "referralpoints": "Điểm giới thiệu"
+    },
+    "pageData": {
+      "title": "Mở khóa nhiều cấp giới thiệu hơn với Chương trình giới thiệu Wave!",
+      "desc": "Bạn bè được giới thiệu sẽ được quyền truy cập sớm vào Wave và giảm 10% phí",
+      "shareto": "Chia sẻ tới",
+      "nodata": "Không có dữ liệu giới thiệu",
+      "copy": "sao chép",
+      "copied": "đã sao chép"
+    },
+    "table": {
+      "user": "Người dùng",
+      "date": "Ngày",
+      "trades": "Giao dịch",
+      "tradestool": "Số tiền mà người giới thiệu này đã giao dịch bằng USD.",
+      "earning": "Thu nhập",
+      "earningtool": "Số tiền bạn có thể yêu cầu từ giới thiệu của người dùng này.",
+      "status": "Trạng thái",
+      "statustool": "Chỉ ra liệu bạn có đủ điều kiện nhận thưởng giới thiệu hay không."
+    }
+  },
+  "alphapicks": {
+    "mainHeader": {
+      "title": "Alpha Picks",
+      "title2": "Top Alpha",
+      "desc": "Tìm những trader giỏi nhất và sao chép chiến lược của họ"
+    },
+    "cards": {
+      "topCard": {
+        "winrate": "Tỷ lệ thắng",
+        "calls": "Lệnh giao dịch",
+        "averagegains": "Lợi nhuận trung bình",
+        "topcall": "Lệnh tốt nhất",
+        "follow": "Theo dõi"
+      },
+      "restcard": {
+        "winrate": "Tỷ lệ thắng",
+        "calls": "Lệnh giao dịch",
+        "averagegains": "Lợi nhuận trung bình",
+        "topcall": "Lệnh tốt nhất",
+        "follow": "Theo dõi",
+        "details": "Chi tiết",
+        "seeall": "Xem tất cả",
+        "allalpha": "Tất cả Alpha"
+      },
+      "siderightbar": {
+        "bestcalls": "Lệnh tốt nhất",
+        "bestcallstooltip": "Hiển thị các lệnh có lợi nhuận cao nhất trong khoảng thời gian đã chọn và nhóm Alpha đã đưa ra chúng.",
+        "recentalphas": "Alpha mới",
+        "recentalphastooltip": "Hiển thị các nhóm Alpha mới gia nhập Wave Scan gần đây.",
+        "risingstar": "Ngôi sao đang lên",
+        "risingstartooltip": "Các nhóm Alpha đang nổi lên nhanh chóng, có thể do sự tăng đột biến gần đây về độ phổ biến hoặc điểm hiệu suất.",
+        "boostedalphas": "Alpha được đẩy mạnh",
+        "contactus": "Liên hệ"
+      }
+    }
+  },
+  "wallettracker": {
+    "mainHeader": {
+      "title": "Theo dõi ví",
+      "desc": "Gắn thẻ, theo dõi và phân tích nhiều ví"
+    },
+    "rightide": {
+      "title": "Cảnh báo ví",
+      "tableHeaders": {
+        "wallet": "VÍ",
+        "token": "TOKEN",
+        "amount": "SỐ LƯỢNG",
+        "amounttooltip": "Số lượng Token",
+        "price": "Giá",
+        "pricetool": "Giá mỗi Token (USD)",
+        "value": "Giá trị",
+        "valuetooltip": "Giá trị Token mua hoặc bán tính theo USD",
+        "type": "LOẠI",
+        "action": "HÀNH ĐỘNG"
+      }
+    },
+    "leftsidebar": {
+      "title": "Theo dõi ví",
+      "importwallets": {
+        "importwallets": "Nhập ví",
+        "desc": "Vui lòng nhập địa chỉ ví để nhập vào Wave Pro",
+        "cancel": "Hủy",
+        "add": "Thêm"
+      },
+      "addnew": {
+        "addnewwallet": {
+          "addnewwallet": "Thêm ví mới",
+          "addwallet": "Thêm ví",
+          "walletname": "Tên ví",
+          "entername": "Nhập tên ví",
+          "walletaddress": "Địa chỉ ví",
+          "enteraddress": "Nhập địa chỉ ví",
+          "cancel": "Hủy"
+        }
+      },
+      "nodataavailable": "Không có dữ liệu"
+    },
+    "pnlpopup": {
+      "top": {
+        "balance": {
+          "balance": "Số dư",
+          "totalvalue": "TỔNG GIÁ TRỊ",
+          "totalvaluetool": "Tổng giá trị thị trường hiện tại của tất cả tài sản trong ví, bao gồm cả lãi/lỗ đã và chưa thực hiện.",
+          "unrealizedpnl": "PNL CHƯA THỰC HIỆN",
+          "unrealizedpnltool": "Lợi nhuận hoặc thua lỗ từ tài sản đang được giữ chưa bán ra. Các giá trị này thay đổi theo giá thị trường và chưa được chốt.",
+          "avabalance": "SỐ DƯ KHẢ DỤNG",
+          "avabalancetool": "Số vốn hiện không bị khóa trong các vị thế và có thể dùng cho giao dịch mới hoặc rút tiền."
+        },
+        "pnl": "PNL",
+        "performance": {
+          "performance": "Hiệu suất",
+          "totalpnl": "TỔNG PNL",
+          "totalpnltool": "Tổng lợi nhuận hoặc thua lỗ từ tất cả giao dịch, bao gồm giá trị đã và chưa thực hiện. Số âm biểu thị thua lỗ.",
+          "totaltx": "TỔNG GIAO DỊCH",
+          "totaltxtool": "Tổng giá trị của tất cả các giao dịch được thực hiện bởi ví, bao gồm cả mua và bán."
+        }
+      },
+      "bottom": {
+        "activeposition": {
+          "activeposition": "Vị thế đang mở",
+          "token": "Token",
+          "bought": "Đã mua",
+          "sold": "Đã bán",
+          "remaining": "Còn lại",
+          "pnl": "PNL"
+        },
+        "history": {
+          "history": "Lịch sử",
+          "token": "Token",
+          "bought": "Đã mua",
+          "sold": "Đã bán",
+          "remaining": "Còn lại",
+          "pnl": "PNL"
+        },
+        "Top100": {
+          "top100": "Top 100",
+          "token": "Token",
+          "bought": "Đã mua",
+          "sold": "Đã bán",
+          "remaining": "Còn lại",
+          "pnl": "PNL"
+        },
+        "activity": {
+          "activity": "Hoạt động",
+          "token": "Token",
+          "bought": "Đã mua",
+          "sold": "Đã bán",
+          "remaining": "Còn lại",
+          "pnl": "PNL"
+        }
+      }
+    }
+  },
+  "prowallets": {
+    "mainHeader": {
+      "title": "Ví Pro",
+      "left": {
+        "gainers": "Người lãi",
+        "gainerstool": "Ví đạt được lợi nhuận (PnL) cao nhất trong một khoảng thời gian nhất định dựa trên hiệu suất giao dịch của họ."
+      },
+      "right": {
+        "losers": "Người lỗ",
+        "loserstool": "Ví chịu khoản lỗ (PnL) lớn nhất trong một khoảng thời gian nhất định do hoạt động giao dịch của họ."
+      },
+      "filter": "Lọc"
+    }
+  },
+  "settings": {
+    "mainHeader": {
+      "title": "CÀI ĐẶT"
+    },
+    "wavetradingwallet": "Ví giao dịch Wave",
+    "quickbuy": {
+      "quickbuy": "Mua nhanh",
+      "slippage": "Trượt giá",
+      "slippagedesc": "Lượng token tối đa bạn sẵn sàng chấp nhận mất do biến động giá.",
+      "maxgas": "Giới hạn Gas tối đa",
+      "maxgasdesc": "Lượng gas tối đa bạn sẵn sàng dùng cho BẤT KỲ giao dịch nào. Không nên thay đổi cài đặt này.",
+      "priorityfee": "Phí ưu tiên",
+      "priorityfeedesc": "Phí 'tip' để đẩy nhanh giao dịch. Phí càng cao, giao dịch càng được xử lý nhanh.",
+      "mevprotection": "Bảo vệ MEV",
+      "mevprotectiondesc": "Bật tính năng này để tránh bị tấn công sandwich bởi bot MEV và tiết kiệm gas nếu giao dịch thất bại.",
+      "briberyamount": "Khoản hối lộ",
+      "briberyamountdesc": "Thêm khoản hối lộ ngoài phí ưu tiên để block builder xử lý giao dịch nhanh hơn.",
+      "customize": "Tùy chỉnh",
+      "customizedesc": "Tùy chỉnh các nút mua nhanh với số lượng bạn mong muốn."
+    },
+    "quicksell": {
+      "quicksell": "Bán nhanh",
+      "slippage": "Trượt giá",
+      "slippagedesc": "Lượng token tối đa bạn sẵn sàng chấp nhận mất do biến động giá.",
+      "maxgas": "Giới hạn Gas tối đa",
+      "maxgasdesc": "Lượng gas tối đa bạn sẵn sàng dùng cho BẤT KỲ giao dịch nào. Không nên thay đổi cài đặt này.",
+      "priorityfee": "Phí ưu tiên",
+      "priorityfeedesc": "Phí 'tip' để đẩy nhanh giao dịch. Phí càng cao, giao dịch càng được xử lý nhanh.",
+      "mevprotection": "Bảo vệ MEV",
+      "mevprotectiondesc": "Bật tính năng này để tránh bị tấn công sandwich bởi bot MEV và tiết kiệm gas nếu giao dịch thất bại.",
+      "briberyamount": "Khoản hối lộ",
+      "briberyamountdesc": "Thêm khoản hối lộ ngoài phí ưu tiên để block builder xử lý giao dịch nhanh hơn.",
+      "customize": "Tùy chỉnh",
+      "customizedesc": "Tùy chỉnh các nút bán nhanh với số lượng bạn mong muốn."
+    },
+    "approve": {
+      "approve": "Phê duyệt",
+      "autoapprove": "Tự động phê duyệt",
+      "autoapprovedesc": "Bật để tự động phê duyệt bán token chỉ với 1 lần nhấp.",
+      "maxgas": "Giới hạn Gas tối đa",
+      "maxgasdesc": "Lượng gas tối đa bạn sẵn sàng dùng cho BẤT KỲ giao dịch nào. Không nên thay đổi cài đặt này.",
+      "priorityfee": "Phí ưu tiên",
+      "priorityfeedesc": "Phí 'tip' để đẩy nhanh giao dịch. Phí càng cao, giao dịch càng được xử lý nhanh."
+    },
+    "autobuy": {
+      "autobuy": "Tự động mua",
+      "slippage": "Trượt giá",
+      "slippagedesc": "Lượng token tối đa bạn sẵn sàng chấp nhận mất do biến động giá.",
+      "maxgas": "Giới hạn Gas tối đa",
+      "maxgasdesc": "Lượng gas tối đa bạn sẵn sàng dùng cho BẤT KỲ giao dịch nào. Không nên thay đổi cài đặt này.",
+      "priorityfee": "Phí ưu tiên",
+      "priorityfeedesc": "Phí 'tip' để đẩy nhanh giao dịch. Phí càng cao, giao dịch càng được xử lý nhanh.",
+      "mevprotection": "Bảo vệ MEV",
+      "mevprotectiondesc": "Bật tính năng này để tránh bị tấn công sandwich bởi bot MEV và tiết kiệm gas nếu giao dịch thất bại.",
+      "briberyamount": "Khoản hối lộ",
+      "briberyamountdesc": "Thêm khoản hối lộ ngoài phí ưu tiên để block builder xử lý giao dịch nhanh hơn.",
+      "customize": "Tùy chỉnh",
+      "customizedesc": "Tùy chỉnh các nút mua nhanh với số lượng bạn mong muốn."
+    },
+    "autosell": {
+      "autosell": "Tự động bán",
+      "slippage": "Trượt giá",
+      "slippagedesc": "Lượng token tối đa bạn sẵn sàng chấp nhận mất do biến động giá.",
+      "maxgas": "Giới hạn Gas tối đa",
+      "maxgasdesc": "Lượng gas tối đa bạn sẵn sàng dùng cho BẤT KỲ giao dịch nào. Không nên thay đổi cài đặt này.",
+      "priorityfee": "Phí ưu tiên",
+      "priorityfeedesc": "Phí 'tip' để đẩy nhanh giao dịch. Phí càng cao, giao dịch càng được xử lý nhanh.",
+      "mevprotection": "Bảo vệ MEV",
+      "mevprotectiondesc": "Bật tính năng này để tránh bị tấn công sandwich bởi bot MEV và tiết kiệm gas nếu giao dịch thất bại.",
+      "briberyamount": "Khoản hối lộ",
+      "briberyamountdesc": "Thêm khoản hối lộ ngoài phí ưu tiên để block builder xử lý giao dịch nhanh hơn.",
+      "customize": "Tùy chỉnh",
+      "customizedesc": "Tùy chỉnh các nút bán nhanh với số lượng bạn mong muốn."
+    },
+    "save": "Lưu"
+  },
+  "notifications": {
+    "wallettracking": "Theo dõi ví",
+    "wallettrackingtool": "Xem các cảnh báo theo dõi ví mà bạn đã nhận được.",
+    "alphapicks": "Lựa chọn Alpha",
+    "alphapickstool": "Xem các đề xuất Alpha trước đó từ các nhóm bạn đang theo dõi."
+  },
+  "profile": {
+    "follow": "Theo dõi",
+    "share": "Chia sẻ",
+    "left": {
+      "last7dpnL": "Lãi/Lỗ 7 ngày qua",
+      "last7dpnLtool": "Tổng lợi nhuận hoặc thua lỗ (theo % và USD) do ví tạo ra trong 7 ngày qua từ tất cả các hoạt động giao dịch.",
+      "winrate": "Tỷ lệ thắng",
+      "liquidity": "Thanh khoản",
+      "liquiditytool": "Tổng giá trị token hiện đang được cung cấp làm thanh khoản trong các pool DeFi bởi ví này."
+    },
+    "middle": {
+      "pnl": "Lãi/Lỗ",
+      "pnltool": "Tổng kết hiệu suất giao dịch của bạn bao gồm lợi nhuận, chi phí và các chỉ số số dư.",
+      "winrate": "Tỷ lệ thắng",
+      "unrealizedprofits": "Lợi nhuận chưa thực hiện",
+      "unrealizedprofitstool": "Ước tính lãi hoặc lỗ từ các token vẫn đang được giữ, dựa trên giá thị trường hiện tại và giá mua vào.",
+      "7dcost": "Tổng chi phí 7 ngày",
+      "7dcosttool": "Tổng số tiền đã chi để mua token trong 7 ngày qua.",
+      "7davgcost": "Giá mua trung bình 7 ngày",
+      "7davgcosttool": "Giá mua trung bình của các token được mua trong 7 ngày qua.",
+      "7drealizedprofits": "Lợi nhuận trung bình đã thực hiện 7 ngày",
+      "7drealizedprofitstool": "Lợi nhuận hoặc thua lỗ trung bình trên mỗi token đã bán trong 7 ngày qua.",
+      "balance": "Số dư"
+    },
+    "right": {
+      "distribution": "Phân bổ",
+      "distributiontool": "Phân tích các vị thế theo phần trăm lãi/lỗ. Giúp hình dung có bao nhiêu khoản đầu tư đang trong trạng thái lãi/lỗ."
+    },
+    "tableHeader": {
+      "recentPnL": {
+        "recentPnL": "Lãi/Lỗ gần đây",
+        "token/lastactive": "Token/Lần hoạt động cuối",
+        "token/lastactivetool": "Token cụ thể được nắm giữ và lần gần nhất ví thực hiện giao dịch hoặc tương tác với nó.",
+        "unrealized": "Chưa thực hiện",
+        "unrealizedtool": "Lãi hoặc lỗ hiện tại từ các token vẫn còn được giữ và chưa bán.",
+        "30drealizedprofit": "Lợi nhuận thực hiện 30 ngày",
+        "30drealizedprofittool": "Lãi hoặc lỗ ròng từ các token đã bán trong 30 ngày qua. 'Thực hiện' có nghĩa là vị thế đã được đóng.",
+        "totalprofit": "Tổng lợi nhuận",
+        "totalprofittool": "Lãi hoặc lỗ ròng từ các token đã bán trong 30 ngày qua. 'Thực hiện' có nghĩa là vị thế đã được đóng.",
+        "balanceUSD": "Số dư USD",
+        "position": "Vị thế",
+        "positiontool": "Phần trăm giá trị tổng danh mục đầu tư của ví được phân bổ cho token cụ thể.",
+        "bought/avg": "Mua/Trung bình",
+        "sold/avg": "Bán/Trung bình",
+        "30dtx": "Giao dịch 30 ngày",
+        "30dtxtool": "Số lần token này được mua hoặc bán trong 30 ngày qua."
+      },
+      "holdings": {
+        "holdings": "Nắm giữ",
+        "token/lastactive": "Token/Lần hoạt động cuối",
+        "token/lastactivetool": "Token cụ thể được nắm giữ và lần gần nhất ví thực hiện giao dịch hoặc tương tác với nó.",
+        "unrealized": "Chưa thực hiện",
+        "unrealizedtool": "Lãi hoặc lỗ hiện tại từ các token vẫn còn được giữ và chưa bán.",
+        "30drealizedprofit": "Lợi nhuận thực hiện 30 ngày",
+        "30drealizedprofittool": "Lãi hoặc lỗ ròng từ các token đã bán trong 30 ngày qua. 'Thực hiện' có nghĩa là vị thế đã được đóng.",
+        "totalprofit": "Tổng lợi nhuận",
+        "totalprofittool": "Lãi hoặc lỗ ròng từ các token đã bán trong 30 ngày qua. 'Thực hiện' có nghĩa là vị thế đã được đóng.",
+        "balanceUSD": "Số dư USD",
+        "position": "Vị thế",
+        "positiontool": "Phần trăm giá trị tổng danh mục đầu tư của ví được phân bổ cho token cụ thể.",
+        "bought/avg": "Mua/Trung bình",
+        "sold/avg": "Bán/Trung bình",
+        "30dtx": "Giao dịch 30 ngày",
+        "30dtxtool": "Số lần token này được mua hoặc bán trong 30 ngày qua."
+      },
+      "activity": {
+        "activity": "Hoạt động",
+        "type": "LOẠI",
+        "token": "Token",
+        "totalusd": "Tổng USD",
+        "amount": "Số lượng",
+        "price": "Giá",
+        "profit": "Lợi nhuận",
+        "age": "Thời gian"
+      }
+    },
+    "noData": "Không có giao dịch mua hoặc bán nào trong 30 ngày qua"
+  },
+  "tragindViewPage": {
+    "right": {
+      "stats": {
+        "tx": "Giao dịch",
+        "txtool": "Tổng số lượng mua hoặc bán.",
+        "buys": "Mua",
+        "sells": "Bán",
+        "vol": "Khối lượng",
+        "voltool": "Tổng khối lượng giao dịch mua và bán.",
+        "buyvol": "Khối lượng mua",
+        "sellvol": "Khối lượng bán",
+        "makers": "Người tạo",
+        "makerstool": "Ví chỉ mua mà không bán. Có thể là nhà đầu tư sớm hoặc nhà cung cấp thanh khoản.",
+        "buyers": "Người mua",
+        "sellers": "Người bán"
+      },
+      "buysell": {
+        "qty": "Số lượng",
+        "buy": "Mua",
+        "sell": "Bán",
+        "advancedsettings": {
+          "advancedsettings": "Cài đặt nâng cao",
+          "autoapprove": "Tự động phê duyệt",
+          "slippage": "Độ trượt giá",
+          "priority": "Phí ưu tiên",
+          "deafult": "Mặc định"
+        },
+        "btnbuy": "Mua nhanh",
+        "btnsell": "Bán nhanh"
+      },
+      "tokeninfo": {
+        "tokeninfo": "Thông tin token",
+        "price": "Giá",
+        "supply": "Nguồn cung",
+        "liq": "Thanh khoản",
+        "liqtool": "Tổng giá trị bị khóa trong pool thanh khoản của token này.",
+        "fdvtool": "Giá trị pha loãng hoàn toàn = Giá × Tổng cung.",
+        "mc": "Vốn hóa thị trường",
+        "mctool": "Giá trị dựa trên số token đang lưu hành."
+      },
+      "datasecurity": {
+        "data": "Dữ liệu & Bảo mật",
+        "minttool": "Cho biết có thể tạo thêm token mới hay không. Sai = không thể (an toàn hơn).",
+        "freezetool": "Cho biết giao dịch có thể bị chặn hay không. Sai = an toàn hơn cho holder.",
+        "lptool": "Cho biết token thanh khoản đã bị đốt hay chưa. 100% bị đốt = dev không thể rút.",
+        "top10tool": "Số lượng ví nằm trong top 10 holder.",
+        "pooled1": "Số lượng token trong pool và giá trị USD.",
+        "pooled2": "Số lượng SOL trong pool và giá trị tương ứng."
+      }
+    },
+    "table": {
+      "transactions": {
+        "transactions": "Giao dịch",
+        "tableHeaders": {
+          "time": "Thời gian",
+          "type": "Loại",
+          "qty": "Số lượng",
+          "qtytool": "Số lượng token chính được giao dịch.",
+          "currency": "Tiền tệ",
+          "sideqty": "Số lượng phụ",
+          "sideqtytool": "Số lượng đồng tiền được dùng làm cặp.",
+          "sidecurrency": "Tiền phụ",
+          "sidecurrencytool": "Tiền được sử dụng làm cặp.",
+          "price": "Giá",
+          "pricetool": "Giá mỗi đơn vị tính theo tiền phụ.",
+          "values": "Giá trị",
+          "valuestool": "Tổng giá trị tính theo USD.",
+          "pool": "Pool",
+          "pooltool": "Pool thanh khoản hoặc ví tạo token.",
+          "hash": "Hash",
+          "hashtool": "Hash giao dịch trên SolScan."
+        }
+      },
+      "topholders": {
+        "topholders": "Người nắm giữ hàng đầu",
+        "tableHeaders": {
+          "addresses": "Địa chỉ",
+          "value": "Giá trị"
+        }
+      },
+      "toptraders": {
+        "toptraders": "Nhà giao dịch hàng đầu",
+        "tableHeaders": {
+          "rank": "Xếp hạng",
+          "owner": "Chủ sở hữu",
+          "dex": "DEX",
+          "dextool": "Nơi giao dịch diễn ra",
+          "invest": "Đầu tư",
+          "investtool": "Tổng số tiền dùng để mua.",
+          "sold": "Đã bán",
+          "soldtool": "Giá trị bán được.",
+          "volume": "Khối lượng",
+          "volumetool": "Tổng hoạt động mua và bán.",
+          "exp": "Xem",
+          "exptool": "Xem trên SolScan"
+        }
+      },
+      "myholding": {
+        "myholding": "Tài sản của tôi",
+        "tableHeaders": {
+          "tokenname": "Tên token",
+          "qty": "Số lượng",
+          "remaining": "Còn lại",
+          "sold": "Đã bán",
+          "pnl": "Lãi/Lỗ",
+          "quicksell": "Bán nhanh"
+        }
+      }
+    }
+  }
+}

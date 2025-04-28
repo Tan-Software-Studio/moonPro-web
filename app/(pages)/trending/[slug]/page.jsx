@@ -1,0 +1,401 @@
+"use client";
+/* eslint-disable @next/next/no-img-element */
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Filter,
+  Advanced,
+  buyIcon,
+  bitcoinIcon,
+  TrendingImg,
+  baseIcon,
+  ethereum,
+  solana,
+} from "@/app/Images";
+import { useDispatch, useSelector } from "react-redux";
+import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
+import TableHeaderData from "@/components/common/TableHeader/TableHeaderData";
+import { setTableScroll } from "@/app/redux/CommonUiData";
+import TableBody from "@/components/common/TableBody/TableBody";
+// import TrendingEvm from "@/components/common/TableBody/TrendingEvm";
+// import fetchTrendingBuySallData from "@/app/redux/trending/fetchTrendingBuySallData";
+import axios from "axios";
+import handleSort from "@/utils/sortTokenData";
+import { FilterSidebarData } from "@/components/common/filter/FilterSidebarData";
+import { addSolTrendingData } from "@/app/redux/trending/solTrending.slice";
+import { useTranslation } from "react-i18next";
+
+const Trending = () => {
+  const { t, ready } = useTranslation();
+  const tredingPage = t("tredingPage");
+  const dispatch = useDispatch();
+  const tableRef = useRef(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  // const [data, setData] = useState([]);
+  // const [ethAndBaseData, setEthAndBaseData] = useState([]);
+  const [sortColumn, setSortColumn] = useState("");
+  const [sortOrder, setSortOrder] = useState("");
+  // const [eTH_And_BaseData, setETH_And_BaseData] = useState([]);
+  const data = useSelector(
+    (state) => state?.solTrendingData?.solanaTrendingData
+  );
+  const Trendings = {
+    Title: tredingPage?.mainHeader?.filter?.filter,
+    FilterInput: [
+      {
+        id: "1",
+        name: tredingPage?.mainHeader?.filter?.mintauth,
+        type: "checkbox",
+        infotipString: tredingPage?.mainHeader?.filter?.mintauthtooltip,
+      },
+      {
+        id: "2",
+        name: tredingPage?.mainHeader?.filter?.freezeauth,
+        type: "checkbox",
+        infotipString: tredingPage?.mainHeader?.filter?.freezeauthtooltip,
+      },
+      {
+        id: "3",
+        name: tredingPage?.mainHeader?.filter?.lpburned,
+        type: "checkbox",
+        infotipString: tredingPage?.mainHeader?.filter?.lpburnedtooltip,
+      },
+      {
+        id: "4",
+        name: tredingPage?.mainHeader?.filter?.withatleast1social,
+        type: "checkbox",
+      },
+    ],
+    FromToFilter: [
+      {
+        id: "5",
+        title: "Liquidity",
+        name: `${tredingPage?.mainHeader?.filter?.bycurrentliquidity}($)`,
+        firstInputName: "Min",
+        firstInputIcon: "$",
+        secondInputName: "Max",
+        secondInputIcon: "$",
+        type: "number",
+      },
+      {
+        id: "6",
+        title: "Volume",
+        name: tredingPage?.mainHeader?.filter?.byvolume,
+        firstInputName: "Min",
+        firstInputIcon: "%",
+        secondInputName: "Max",
+        secondInputIcon: "",
+        type: "number",
+      },
+      {
+        id: "7",
+        title: "Age",
+        name: `${tredingPage?.mainHeader?.filter?.byage}`,
+        firstInputName: "Min",
+        firstInputIcon: "",
+        secondInputName: "Max",
+        secondInputIcon: "",
+        type: "number",
+      },
+      {
+        id: "8",
+        title: "MKT",
+        name: tredingPage?.mainHeader?.filter?.bymc,
+        firstInputName: "Min",
+        firstInputIcon: "",
+        secondInputName: "Max",
+        secondInputIcon: "",
+        type: "number",
+      },
+      {
+        id: "9",
+        title: "TXNS",
+        name: tredingPage?.mainHeader?.filter?.bytxns,
+        firstInputName: "Min",
+        firstInputIcon: "",
+        secondInputName: "Max",
+        secondInputIcon: "",
+        type: "number",
+      },
+      {
+        id: "10",
+        title: "Buys",
+        name: tredingPage?.mainHeader?.filter?.bybuys,
+        firstInputName: "Min",
+        firstInputIcon: "",
+        secondInputName: "Max",
+        secondInputIcon: "",
+        type: "number",
+      },
+      {
+        id: "11",
+        title: tredingPage?.mainHeader?.filter?.sells,
+        name: "By Sells",
+        firstInputName: "Min",
+        firstInputIcon: "",
+        secondInputName: "Max",
+        secondInputIcon: "",
+        type: "number",
+      },
+    ],
+  };
+  // const headersData = [
+  //   { title: "Pair Info" },
+  //   { title: "Created" },
+  //   { title: "Liquidity" },
+  //   { title: "MKT Cap" },
+  //   { title: "Swaps" },
+  //   { title: "Volume" },
+  //   { title: "Holders" },
+  //   { title: "Audit Results" },
+  //   { title: "Quick Buy" },
+  // ];
+  const headersDataSol = [
+    {
+      title: tredingPage?.tableheaders?.pairinfo,
+      className: "!text-left",
+      sortable: false,
+      key: "pairInfo",
+      sortingKey: "",
+      infoTipString: tredingPage?.tableheaders?.pairinfotooltip,
+    },
+    {
+      title: tredingPage?.tableheaders?.created,
+      sortable: true,
+      key: "created",
+      sortingKey: "date",
+    },
+    {
+      title: tredingPage?.tableheaders?.liquidity,
+      sortable: true,
+      key: "liquidity",
+      sortingKey: "liquidity",
+      infoTipString: tredingPage?.tableheaders?.liquiditytooltip,
+    },
+    {
+      title: tredingPage?.tableheaders?.mcap,
+      sortable: true,
+      key: "marketCap",
+      sortingKey: "marketCap",
+      infoTipString: tredingPage?.tableheaders?.mcaotooltip,
+    },
+    {
+      title: tredingPage?.tableheaders?.swaps,
+      sortable: true,
+      key: "swaps",
+      sortingKey: "trades",
+      infoTipString: tredingPage?.tableheaders?.swapstooltip,
+    },
+    {
+      title: tredingPage?.tableheaders?.volume,
+      sortable: true,
+      key: "volume",
+      sortingKey: "traded_volume",
+    },
+    {
+      title: tredingPage?.tableheaders?.auditres,
+      sortable: false,
+      key: "auditResults",
+      sortingKey: "",
+      infoTipString: tredingPage?.tableheaders?.auditrestooltip,
+    },
+    {
+      title: tredingPage?.tableheaders?.quickbuy,
+      sortable: false,
+      key: "quickBuy",
+      sortingKey: "",
+    },
+  ];
+
+  const HeaderData = {
+    newPairsIcon: {
+      menuIcon: TrendingImg,
+      headTitle: tredingPage?.mainHeader?.trending,
+      discription: tredingPage?.mainHeader?.desc,
+    },
+    timeDuration: ["1m", "5m", "1h", "6h", "24h"],
+    Filter: {
+      menuIcon: Filter,
+      menuTitle: tredingPage?.mainHeader?.filter?.filter,
+    },
+    Advanced: {
+      menuIcon: Advanced,
+      menuTitle: tredingPage?.mainHeader?.advanced,
+    },
+    Buy: {
+      menuIcon: buyIcon,
+      menuTitle: tredingPage?.mainHeader?.buy,
+      placeHolder: "0$",
+    },
+    coin: {
+      menuIcon: bitcoinIcon,
+    },
+  };
+
+  const sortedData = handleSort(sortColumn, data, sortOrder);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (tableRef.current.scrollTop > 0) {
+        dispatch(setTableScroll(true));
+      } else {
+        dispatch(setTableScroll(false));
+      }
+    };
+
+    const table = tableRef.current;
+    table?.addEventListener("scroll", handleScroll);
+
+    return () => {
+      table?.removeEventListener("scroll", handleScroll); // cleanup event listener
+    };
+  }, [dispatch]);
+
+  const filterTime = useSelector(
+    (state) => state?.AllthemeColorData?.filterTime
+  );
+
+  // const selectToken = useSelector(
+  //   (state) => state?.AllthemeColorData?.selectToken
+  // );
+
+  const URL = process.env.NEXT_PUBLIC_BASE_URLS;
+  const fetchData = async (time) => {
+    try {
+      if (data.length == 0) {
+        setLoading(true);
+      }
+      setError(null);
+
+      // Call the backend API endpoint
+      const response = await axios.post(`${URL}SolTrendingTokenData`, {
+        time,
+      });
+
+      // Validate response structure
+      const newData = response?.data?.data || [];
+
+      // Handle empty data case
+      if (!newData.length) {
+        dispatch(addSolTrendingData([]));
+        setLoading(false);
+        return;
+      }
+
+      const filteredData = await newData.filter((row) => row.name);
+      // Limit to 100 items
+      // setData(filteredData.slice(0, 100));
+      dispatch(addSolTrendingData(filteredData.slice(0, 100)));
+    } catch (err) {
+      console.error("Error fetching data:", err);
+      setError(err.message || "Failed to fetch data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  // ---------- filter data in trending ------
+  useEffect(() => {
+    const fetchTimeData = async () => {
+      if (filterTime === "1m") {
+        await fetchData("1+min");
+      } else if (filterTime === "5m") {
+        await fetchData("5+min");
+      } else if (filterTime === "1h") {
+        await fetchData("1+hr");
+      } else if (filterTime === "6h") {
+        await fetchData("6+hr");
+      } else if (filterTime === "24h") {
+        await fetchData("24+hr");
+      }
+    };
+    fetchTimeData();
+  }, [filterTime]);
+
+  // ------- eTH_And_BaseData data featch in bitquiry API -------
+  // useEffect(() => {
+  //   let network = selectToken === "Base" ? "base" : selectToken;
+  //   const currentTimeUTC = new Date(Date.now());
+
+  //   const oneHourAgoUTC = new Date(Date.now() - 6 * 60 * 60 * 1000); // Subtract 1 hour (in milliseconds)
+  //   const formattedOneHourAgo = oneHourAgoUTC.toISOString().split(".")[0] + "Z";
+
+  //   // const fetchEthAndBaseData = async () => {
+  //   //   try {
+  //   //     const data = await fetchTrendingBuySallData(
+  //   //       network == "Ethereum" ? "eth" : network,
+  //   //       formattedOneHourAgo
+  //   //     );
+  //   //     setETH_And_BaseData(data);
+  //   //   } catch (error) {
+  //   //     console.error("Error fetching query data:", error);
+  //   //   }
+  //   // };
+  //   // if (network != "Solana") {
+  //   //   fetchEthAndBaseData();
+  //   // } else {
+  //   fetchData("24+hr");
+  //   // }
+  // }, []);
+
+  return (
+      <>
+        <div className="relative">
+          <AllPageHeader
+            FilterData={Trendings}
+            HeaderData={HeaderData}
+            duration={true}
+          />
+          <div className="flex flex-col">
+            <div className="overflow-x-auto">
+              <div className="inline-block min-w-full -mt-0.5">
+                <div
+                  className="xl:h-[85vh] md:h-[78vh] h-[80vh] overflow-y-auto visibleScroll"
+                  ref={tableRef}
+                >
+                  <table className="min-w-full !text-xs ">
+                    {/* <TableHeaderData
+                    headers={
+                      selectToken === "Solana" ? headersDataSol : headersData
+                    }
+                    // onSort={handleSort}
+                    onSort={(key, order) => {
+                      setSortColumn(key);
+                      setSortOrder(order);
+                    }}
+                    sortColumn={sortColumn}
+                    sortOrder={sortOrder}
+                  /> */}
+                    <TableHeaderData
+                      headers={headersDataSol}
+                      // onSort={handleSort}
+                      onSort={(key, order) => {
+                        setSortColumn(key);
+                        setSortOrder(order);
+                      }}
+                      sortColumn={sortColumn}
+                      sortOrder={sortOrder}
+                    />
+                    <TableBody data={sortedData} img={solana} />
+                    {/* {selectToken === "Solana" ? (
+                    <>
+                      <TableBody data={sortedData} img={solana} />
+                    </>
+                  ) : (
+                    <>
+                      <TrendingEvm
+                        data={eTH_And_BaseData}
+                        img={selectToken === "Base" ? baseIcon : ethereum}
+                      />
+                    </>
+                  )} */}
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    )
+};
+
+export default Trending;

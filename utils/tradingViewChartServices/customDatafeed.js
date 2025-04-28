@@ -1,0 +1,14 @@
+import { resolveSymbol } from "./resolveSymbol";
+import { getBars, subscribeBars, unsubscribeBars } from "./getBars";
+import { onReady } from "./onReady";
+
+// Datafeed object for TradingView
+const Datafeed = {
+    onReady,
+    resolveSymbol,
+    getBars,
+    subscribeBars,
+    unsubscribeBars,
+};
+
+export default Datafeed;

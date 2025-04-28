@@ -1,0 +1,491 @@
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import { BiSolidCopy } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { usePathname, useSearchParams } from "next/navigation";
+import { setselectToken, setselectTokenLogo } from "@/app/redux/CommonUiData";
+import Table from "@/components/TradingChart/Table";
+import { solana, ethereum, baseIcon } from "@/app/Images";
+import {
+  useAppKitAccount,
+  useAppKitProvider,
+  useAppKitState,
+} from "@reown/appkit/react";
+import { getSoalanaTokenBalance } from "@/utils/solanaNativeBalance";
+import { decimalConvert } from "@/utils/basicFunctions";
+import axiosInstance from "@/components/axiosIntance/axiosInstance";
+import TVChartContainer from "@/components/TradingChart/TradingChart";
+import TokenDetails from "@/components/common/tradingview/TokenDetails";
+import TradingStats from "@/components/common/tradingview/TradingStats";
+import TradingPopup from "@/components/common/tradingview/TradingPopup";
+import TokenInfo from "@/components/common/tradingview/TokenInfo";
+import DataSecurity from "@/components/common/tradingview/DataSecurity";
+import { useTranslation } from "react-i18next";
+
+const Tradingview = () => {
+  const { t, ready } = useTranslation();
+  const tragindViewPage = t("tragindViewPage");
+  const [activeTab, setActiveTab] = useState("buy");
+  const [dataLoaderForChart, setDataLoaderForChart] = useState(false);
+  const latestTradesData = useSelector((state) => state.allCharTokenData);
+  const [copied, setCopied] = useState(false);
+  const [decimal, setDecimal] = useState("");
+  const dispatch = useDispatch();
+  const [tokenBalance, setTokenBalance] = useState(0);
+  const { address, isConnected } = useAppKitAccount();
+  const { walletProvider } = useAppKitProvider("solana");
+  const searchParams = useSearchParams();
+  const [chartTokenData, setchartTokenData] = useState({});
+  const tokenaddress = searchParams.get("tokenaddress");
+  const tokenSymbol = searchParams.get("symbol");
+  let pairAddress = searchParams?.get("pair") || null;
+  const { selectedNetworkId } = useAppKitState();
+  const pathname = usePathname();
+  const getNetwork = pathname.split("/")[2];
+  const containerRef = useRef(null);
+  const tvChartRef = useRef(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const scrollableDivRef4 = useRef(null);
+
+  useEffect(() => {
+    if (selectToken == "Solana") {
+      dispatch(setselectToken("Solana"));
+      dispatch(setselectTokenLogo(solana));
+    } else if (selectToken == "Ethereum") {
+      dispatch(setselectToken("Ethereum"));
+      dispatch(setselectTokenLogo(ethereum));
+    } else if (selectToken == "Base") {
+      dispatch(setselectToken("Base"));
+      dispatch(setselectTokenLogo(baseIcon));
+    }
+  }, [selectedNetworkId]);
+
+  useEffect(() => {
+    localStorage.setItem("chartTokenAddress", tokenaddress);
+    const handleScroll = () => {
+      if (containerRef.current) {
+        const scrollAmount = containerRef.current.scrollTop;
+        setScrollPosition(scrollAmount);
+      }
+    };
+
+    const currentRef = containerRef.current;
+    if (currentRef) {
+      currentRef.addEventListener("scroll", handleScroll);
+    }
+    return () => {
+      if (currentRef) {
+        currentRef.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const fetchTokenMeta = async () => {
+      try {
+        if (getNetwork == "solana") {
+          const singleTokenBalance = await getSoalanaTokenBalance(
+            address,
+            tokenaddress,
+            getNetwork
+          ).catch((err) => {});
+          setTokenBalance(singleTokenBalance || 0);
+        } else {
+          const tokenData = await getTokenBalance(
+            tokenaddress,
+            address,
+            selectToken
+          );
+          setTokenBalance(tokenData?.tokenBalance);
+          setDecimal(tokenData?.decimals);
+        }
+      } catch (error) {
+        console.error(error?.message);
+      }
+    };
+    fetchTokenMeta();
+  }, [address, getNetwork, tokenaddress]);
+  const handleCopy = (mintAddress) => {
+    setCopied(true);
+    // toast.success("TokenAddress copied to clipboard!", {
+    //   position: "top-center",
+    // });
+    if (mintAddress) {
+      const formattedAddress = mintAddress;
+      navigator.clipboard
+        ?.writeText(formattedAddress)
+        .then(() => {})
+        .catch((err) => {
+          console.error("Failed to copy: ", err?.message);
+        });
+    }
+    setTimeout(() => {
+      setCopied(false);
+    }, 3000);
+  };
+
+  const TokenDetailsNumberData = [
+    {
+      label: "Price USD",
+      price: latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+    },
+    {
+      label: "Liqudity",
+      price: chartTokenData?.Liqudity || 0,
+    },
+    {
+      label: "FDV",
+      price: `$${chartTokenData?.marketCap || 0}`,
+    },
+    {
+      label: "MKT CAP",
+      price: `$${chartTokenData?.marketCap || 0}`,
+    },
+  ];
+
+  const tradeData = {
+    "5M": {
+      txns:
+        chartTokenData?.totalTxns5min == "NaN"
+          ? 0
+          : chartTokenData?.totalTxns5min || 0,
+      buys:
+        chartTokenData?.buys_5min == "NaN" ? 0 : chartTokenData?.buys_5min || 0,
+      sells:
+        chartTokenData?.sells_5min == "NaN"
+          ? 0
+          : chartTokenData?.sells_5min || 0,
+      vol:
+        chartTokenData?.totalVol5min == "$NaN"
+          ? 0
+          : chartTokenData?.totalVol5min || 0,
+      buyVol:
+        chartTokenData?.buy_volume_5min == "$NaN"
+          ? 0
+          : chartTokenData?.buy_volume_5min || 0,
+      sellVol:
+        chartTokenData?.sell_volume_5min == "$NaN"
+          ? 0
+          : chartTokenData?.sell_volume_5min || 0,
+      makers:
+        chartTokenData?.totalMakers5min == "NaN"
+          ? 0
+          : chartTokenData?.totalMakers5min || 0,
+      buyers:
+        chartTokenData?.buyers_5min == "NaN"
+          ? 0
+          : chartTokenData?.buyers_5min || 0,
+      sellers:
+        chartTokenData?.sellers_5min == "NaN"
+          ? 0
+          : chartTokenData?.sellers_5min || 0,
+    },
+    "1H": {
+      txns:
+        chartTokenData?.totalTxns1h == "NaN"
+          ? 0
+          : chartTokenData?.totalTxns1h || 0,
+      buys: chartTokenData?.buys_1h == "NaN" ? 0 : chartTokenData?.buys_1h || 0,
+      sells:
+        chartTokenData?.sells_1h == "NaN" ? 0 : chartTokenData?.sells_1h || 0,
+      vol:
+        chartTokenData?.totalVol1h == "$NaN"
+          ? 0
+          : chartTokenData?.totalVol1h || 0,
+      buyVol:
+        chartTokenData?.buy_volume_1h == "$NaN"
+          ? 0
+          : chartTokenData?.buy_volume_1h || 0,
+      sellVol:
+        chartTokenData?.sell_volume_1h == "$NaN"
+          ? 0
+          : chartTokenData?.sell_volume_1h || 0,
+      makers:
+        chartTokenData?.totalMakers1h == "NaN"
+          ? 0
+          : chartTokenData?.totalMakers1h || 0,
+      buyers:
+        chartTokenData?.buyers_1h == "NaN" ? 0 : chartTokenData?.buyers_1h || 0,
+      sellers:
+        chartTokenData?.sellers_1h == "NaN"
+          ? 0
+          : chartTokenData?.sellers_1h || 0,
+    },
+    "6H": {
+      txns:
+        chartTokenData?.totalTxns6h == "NaN"
+          ? 0
+          : chartTokenData?.totalTxns6h || 0,
+      buys: chartTokenData?.buys_6h == "NaN" ? 0 : chartTokenData?.buys_6h || 0,
+      sells:
+        chartTokenData?.sells_6h == "NaN" ? 0 : chartTokenData?.sells_6h || 0,
+      vol:
+        chartTokenData?.totalVol6h == "$NaN"
+          ? 0
+          : chartTokenData?.totalVol6h || 0,
+      buyVol:
+        chartTokenData?.buy_volume_6h == "$NaN"
+          ? 0
+          : chartTokenData?.buy_volume_6h || 0,
+      sellVol:
+        chartTokenData?.sell_volume_6h == "$NaN"
+          ? 0
+          : chartTokenData?.sell_volume_6h || 0,
+      makers:
+        chartTokenData?.totalMakers6h == "NaN"
+          ? 0
+          : chartTokenData?.totalMakers6h || 0,
+      buyers:
+        chartTokenData?.buyers_6h == "NaN" ? 0 : chartTokenData?.buyers_6h || 0,
+      sellers:
+        chartTokenData?.sellers_6h == "NaN"
+          ? 0
+          : chartTokenData?.sellers_6h || 0,
+    },
+    "24H": {
+      txns:
+        chartTokenData?.totalTxns24h == "NaN"
+          ? 0
+          : chartTokenData?.totalTxns24h || 0,
+      buys:
+        chartTokenData?.buys_24h == "NaN" ? 0 : chartTokenData?.buys_24h || 0,
+      sells:
+        chartTokenData?.sells_24h == "NaN" ? 0 : chartTokenData?.sells_24h || 0,
+      vol:
+        chartTokenData?.totalVol24h == "$NaN"
+          ? 0
+          : chartTokenData?.totalVol24h || 0,
+      buyVol:
+        chartTokenData?.buy_volume_24h == "$NaN"
+          ? 0
+          : chartTokenData?.buy_volume_24h || 0,
+      sellVol:
+        chartTokenData?.sell_volume_24h == "$NaN"
+          ? 0
+          : chartTokenData?.sell_volume_24h || 0,
+      makers:
+        chartTokenData?.totalMakers24h == "NaN"
+          ? 0
+          : chartTokenData?.totalMakers24h || 0,
+      buyers:
+        chartTokenData?.buyers_24h == "NaN"
+          ? 0
+          : chartTokenData?.buyers_24h || 0,
+      sellers:
+        chartTokenData?.sellers_24h == "NaN"
+          ? 0
+          : chartTokenData?.sellers_24h || 0,
+    },
+  };
+
+  const timeframesTrade = [
+    {
+      label: "5M",
+      value:
+        chartTokenData?.perfomancePertnage_5min == "NaN"
+          ? 0
+          : `${Number(chartTokenData?.perfomancePertnage_5min).toFixed(2)}` ||
+            "N/A",
+    },
+    {
+      label: "1H",
+      value:
+        chartTokenData?.perfomancePertnage_1h == "NaN"
+          ? 0
+          : `${Number(chartTokenData?.perfomancePertnage_1h).toFixed(2)}` ||
+            "N/A",
+    },
+    {
+      label: "6H",
+      value:
+        chartTokenData?.perfomancePertnage_6h == "NaN"
+          ? 0
+          : `${Number(chartTokenData?.perfomancePertnage_6h).toFixed(2)}` ||
+            "N/A",
+    },
+    {
+      label: "24H",
+      value:
+        chartTokenData?.perfomancePertnage_24h == "NaN"
+          ? 0
+          : `${Number(chartTokenData?.perfomancePertnage_24h).toFixed(2)}` ||
+            "N/A",
+    },
+  ];
+
+  const tokenInfo = [
+    {
+      label: `${tragindViewPage?.right?.tokeninfo?.price} USD`,
+      price: `$${decimalConvert(
+        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD || 0
+      )}`,
+    },
+    {
+      label: `${tragindViewPage?.right?.tokeninfo?.price} ${
+        getNetwork == "solana" ? "SOL" : "WETH"
+      }`,
+      price: `$${decimalConvert(chartTokenData?.price_in_sol || 0)}`,
+    },
+    {
+      label: tragindViewPage?.right?.tokeninfo?.supply,
+      price: chartTokenData?.currentSupply,
+    },
+    {
+      label: tragindViewPage?.right?.tokeninfo?.liq,
+      price: chartTokenData?.Liqudity || 0,
+    },
+    {
+      label: "FDV",
+      price: `$${chartTokenData?.marketCap || 0}`,
+    },
+    {
+      label: tragindViewPage?.right?.tokeninfo?.mc,
+      price: `$${chartTokenData?.marketCap || 0}`,
+    },
+  ];
+
+  const dataAndSecurity = [
+    {
+      label: "Mint Authority",
+      value: chartTokenData?.mint_authority ? "Available" : "Disabled",
+    },
+    {
+      label: "Freeze Authority",
+      value: chartTokenData?.freeze_authority ? "Available" : "Disabled",
+    },
+    {
+      label: "LP Burned",
+      value: `${Number(chartTokenData?.lp).toFixed(2) || 100}%`,
+    },
+    {
+      label: "Top 10 Holders",
+      value: Number(chartTokenData?.TopHolders),
+    },
+    {
+      label: `Pooled ${tokenSymbol}`,
+      value: `${chartTokenData?.Pooled_Base} | ${chartTokenData?.Pooled_Base_format}`,
+    },
+    {
+      label: "Pooled SOL",
+      value: `${chartTokenData?.Pooled_Quote_Native} | ${chartTokenData?.Pooled_Quote_Native_format}`,
+    },
+  ];
+  const selectToken = useSelector(
+    (state) => state?.AllthemeColorData?.selectToken
+  );
+  // Token Chart Data (Right Side)
+  const chartTokenDataAPI = async () => {
+    setDataLoaderForChart(true);
+    await axiosInstance
+      .post("combineData", {
+        address: tokenaddress,
+        pair: pairAddress || null,
+      })
+      .then((res) => {
+        setDataLoaderForChart(false);
+        setchartTokenData(res?.data?.data);
+      })
+      .catch((err) => {
+        console.log("🚀 ~ chartTokenDataAPI ~ err:", err?.message);
+      });
+  };
+
+  useEffect(() => {
+    chartTokenDataAPI();
+  }, [tokenaddress]);
+
+  const isSidebarOpen = useSelector(
+    (state) => state?.AllthemeColorData?.isSidebarOpen
+  );
+
+  return (
+    <div
+      className={`lg:flex relative overflow-y-auto h-[86vh] md:h-[91vh] lg:h-[100vh] ${
+        isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5 ml-2 mr-2"
+      }`}
+    >
+      {/* left side */}
+      <div className="lg:!h-[91vh] mb-2 lg:w-[80%] grid place-items-center text-[#8d93b752] overflow-y-auto w-full">
+        {/* original live chart */}
+        <div ref={containerRef} className="h-screen w-full overflow-y-auto">
+          <div ref={tvChartRef}>
+            <TokenDetails
+              tokenSymbol={tokenSymbol}
+              tokenaddress={tokenaddress}
+              copied={copied}
+              handleCopy={handleCopy}
+              TokenDetailsNumberData={TokenDetailsNumberData}
+              chartTokenData={chartTokenData}
+              walletAddress={address}
+              isConnected={isConnected}
+            />
+          </div>
+
+          <div className="h-[600px] w-full">
+            <TVChartContainer
+              tokenSymbol={tokenSymbol}
+              tokenaddress={tokenaddress}
+            />
+          </div>
+          <div className="overflow-y-auto border-t border-t-[#4D4D4D]">
+            <Table
+              tokenCA={tokenaddress}
+              networkName={getNetwork}
+              address={address}
+              scrollPosition={scrollPosition}
+              tvChartRef={tvChartRef}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* right side */}
+      <div
+        ref={scrollableDivRef4}
+        className="lg:h-[91.5vh] overflow-y-auto w-full lg:w-[25%] border-b border-b-[#404040] md:border-l md:border-l-[#404040] space-y-2 md:space-y-0"
+      >
+        <div className="p-1 w-full border border-[#4D4D4D] md:border-t-0 md:border-l-0 md:border-r-0 md:border-b-0">
+          <TradingStats
+            tragindViewPage={tragindViewPage}
+            data={tradeData}
+            timeframes={timeframesTrade}
+          />
+        </div>
+
+        <div className="p-1 w-full border border-[#4D4D4D] md:border-l-0 md:border-r-0 md:border-b-0">
+          <TradingPopup
+            tragindViewPage={tragindViewPage}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            token={tokenaddress}
+            walletAddress={address}
+            isConnected={isConnected}
+            walletProvider={walletProvider}
+            setTokenBalance={setTokenBalance}
+            tokenBalance={tokenBalance}
+            tokenName={tokenSymbol}
+          />
+        </div>
+
+        <div className="w-full border border-[#4D4D4D] md:border-l-0 md:border-r-0 md:border-b-0">
+          <TokenInfo
+            tragindViewPage={tragindViewPage?.right?.tokeninfo}
+            tokenInfo={tokenInfo}
+            dataLoaderForChart={dataLoaderForChart}
+          />
+        </div>
+
+        <div className="w-full border border-[#4D4D4D] md:border-l-0 md:border-r-0">
+          <DataSecurity
+            tragindViewPage={tragindViewPage?.right?.datasecurity}
+            activeTab={activeTab}
+            dataAndSecurity={dataAndSecurity}
+            dataLoaderForChart={dataLoaderForChart}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Tradingview;

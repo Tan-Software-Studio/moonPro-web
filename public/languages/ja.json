@@ -1,0 +1,617 @@
+{
+  "sidebar": {
+    "trending": "トレンド",
+    "recentcalls": "最近のコール",
+    "memescope": "ミームスコープ",
+    "holdings": "ホールディング",
+    "leaderboard": "リーダーボード",
+    "referral": "紹介",
+    "alphapicks": "アルファピックス",
+    "wallettracker": "ウォレットトラッカー",
+    "prowallets": "プロウォレット",
+    "settings": "設定"
+  },
+  "tredingPage": {
+    "mainHeader": {
+      "trending": "トレンド",
+      "desc": "選択した時間枠内での取引によるトップ100のトレンドトークンペア",
+      "timeframeFilter": {
+        "1m": "1分",
+        "5m": "5分",
+        "1h": "1時間",
+        "6h": "6時間",
+        "24h": "24時間"
+      },
+      "filter": {
+        "filter": "フィルター",
+        "mintauth": "ミント認証",
+        "mintauthtooltip": "トークンはもうミントできません — 新しいトークンを作成することはできません。",
+        "freezeauth": "フリーズ認証",
+        "freezeauthtooltip": "トークンの転送をフリーズすることはできません。",
+        "lpburned": "LP焼却",
+        "lpburnedtooltip": "流動性プールのトークンが焼却されました — これにより流動性がロックされます。",
+        "withatleast1social": "少なくとも1つのソーシャルメディアを持つ",
+        "bycurrentliquidity": "現在の流動性で",
+        "byvolume": "取引量で",
+        "byage": "年齢（分）で",
+        "bymc": "時価総額で",
+        "bytxns": "取引数で",
+        "bybuys": "購入数で",
+        "bysells": "売却数で",
+        "reset": "リセット",
+        "apply": "適用"
+      },
+      "ordersetting": {
+        "ordersetting": "注文設定",
+        "quantity": "数量",
+        "buy": "購入",
+        "sell": "売却",
+        "resetpreset": "プリセットリセット",
+        "sllippagetooltip": "予想と実際の執行価格の間で許容する最大%です。この価格が取引確認前にこれ以上変動すると、取引は失敗します。",
+        "priorityfeetooltip": "ネットワークの混雑時に取引を優先的に処理するために、バリデーター/マイナーに支払うチップ。高い手数料は取引を迅速に処理します。",
+        "mevtooltip": "フロントランニングやサンドイッチ攻撃から保護するために、公開メンプールから取引の詳細を隠します。通常、プライベートリレーやブロックビルダーを経由してルーティングされます。"
+      },
+      "buy": "購入",
+      "advanced": "上級"
+    },
+    "tableheaders": {
+      "pairinfo": "ペア情報",
+      "pairinfotooltip": "トークン契約が作成されてからの時間を表示します。",
+      "created": "作成日",
+      "liquidity": "流動性",
+      "liquiditytooltip": "このトークンを取引するために利用できるお金の量を表示します。流動性が低いと、リスクが高いか、売却が難しいことがあります。",
+      "mcap": "時価総額",
+      "mcaptooltip": "時価総額：このトークンの推定総価値：価格 × 供給量。高い時価総額 = より確立されたトークン。",
+      "swaps": "スワップ",
+      "swapstooltip": "選択した時間枠内でこのトークンを購入（緑）または売却（赤）した回数",
+      "volume": "取引量",
+      "auditres": "監査結果",
+      "auditrestooltip": "トークンが再度ミント可能か、フリーズ可能か、または10人以上の保有者がいるかどうかの簡単な安全チェックを表示します。",
+      "quickbuy": "クイック購入"
+    }
+  },
+  "recentcalls": {
+    "mainHeader": {
+      "title": "最近のコール"
+    },
+    "tableheaders": {
+      "token": "トークン",
+      "before": "前",
+      "beforetooltip": "トークンがコールされてからの時間を表示します。",
+      "calledby": "コール元",
+      "calledmc": "コール時の時価総額",
+      "calledmctooltip": "トークンがコールされてからの時間を表示します。",
+      "mcnow": "現在の時価総額",
+      "mcnowtooltip": "現在の時価総額",
+      "growth": "成長",
+      "ath": "ATH",
+      "athtooltip": "トークンの過去最高価格",
+      "audit": "監査",
+      "audittooltip": "トークンが再度ミント可能か、フリーズ可能か、または10人以上の保有者がいるかどうかの簡単な安全チェックを表示します。",
+      "action": "アクション"
+    }
+  },
+  "memescope": {
+    "mainHeader": {
+      "title": "ミームスコープ",
+      "desc": "最高のミームトークンを見つけよう",
+      "buy": "購入",
+      "filters": {
+        "newcreation": {
+          "newcreationsfilter": "新作フィルター",
+          "top10holders": "トップ10の保有者",
+          "withatleast1social": "少なくとも1つのソーシャルメディアを持つ",
+          "bypumpprogress": "ポンプの進行状況で",
+          "byholderscount": "保有者数で",
+          "bydevholding": "開発者の保有で",
+          "bysnipers": "スナイパーで",
+          "byage": "年齢で",
+          "bycurrentliquidity": "現在の流動性で",
+          "byvolume": "取引量で",
+          "bymCap": "時価総額で",
+          "bytx": "取引数で",
+          "bybuys": "購入数で",
+          "bysells": "売却数で",
+          "reset": "リセット",
+          "apply": "適用"
+        },
+        "graduated": "卒業済み",
+        "abouttograduate": "卒業間近"
+      }
+    },
+    "tableheaders": {
+      "newcreations": "新作",
+      "newcreationstooltip": "これから始めたばかりで、非常に新しいトークンです。実験的、高いボラティリティ、または未確認の可能性があります。自己責任でご確認ください。",
+      "abouttogra": "卒業間近",
+      "abouttogratooltip": "勢いとエンゲージメントを増しているトークン。まだ完全には確立されていませんが、認知度や採用に向けて進展しています。",
+      "graduated": "卒業済み",
+      "graduatedtooltip": "一定の信頼性やパフォーマンスを達成したトークン。初期段階を超え、より強い価格動向、取引量、またはコミュニティ活動を示しています。"
+    }
+  },
+  "holdings": {
+    "mainHeader": {
+      "title": "ホールディング",
+      "desc": "あなたのホールディングを追跡し、管理する",
+      "withremainingtokens": "残りのトークンと共に"
+    },
+    "tableheaders": {
+      "token": "トークン",
+      "quantity": "数量",
+      "pnlusdtooltip": "このトークンでの利益または損失を米ドルで表示します。緑はプラス、赤はマイナス。",
+      "pnlpertooltip": "購入からの保有価値の変化率。",
+      "quicksell": "クイック売却",
+      "quickselltooltip": "このトークンのポジションを一度に即座に売却する。"
+    },
+    "noconnectwallet": "ウォレットを接続してください。あなたのホールディングを見るためには接続が必要です。",
+    "noholdingsmsg": "現在、Wave取引ウォレットにトークン保有がありません。"
+  },
+  "leaderboard": {
+    "mainHeader": {
+      "title": "リーダーボード",
+      "yourstats": "あなたの統計",
+      "ranking": "ランキング",
+      "totalpoints": "総ポイント",
+      "tradingpoints": "取引ポイント",
+      "tradingpointstooltip": "取引から得たポイント",
+      "referralpoints": "紹介ポイント",
+      "referralpointstooltip": "紹介から得たポイント",
+      "weeklyleaderboard": "週間リーダーボード"
+    },
+    "stage": {
+      "totaltrades": "総取引数",
+      "value": "価値"
+    },
+    "table": {
+      "trading": {
+        "trading": "取引",
+        "wallet": "ウォレット",
+        "totaltrads": "総取引数",
+        "value": "価値",
+        "referralid": "紹介ID"
+      },
+      "referral": "紹介"
+    }
+  },
+  "referral": {
+    "mainHeader": {
+      "title": "紹介",
+      "yourstats": "あなたの統計",
+      "referralpoints": "紹介ポイント"
+    },
+    "pageData": {
+      "title": "Wave紹介プログラムでさらに紹介階層を解放！",
+      "desc": "紹介した友達は、Waveに早期アクセスし、10％の手数料割引を受けられます。",
+      "shareto": "共有先",
+      "nodata": "紹介データがありません",
+      "copy": "コピー",
+      "copied": "コピーしました"
+    },
+    "table": {
+      "user": "ユーザー",
+      "date": "日付",
+      "trades": "取引",
+      "tradestool": "この紹介者がUSDで取引した金額。",
+      "earning": "収益",
+      "earningtool": "このユーザーの紹介からあなたが請求できる金額。",
+      "status": "ステータス",
+      "statustool": "あなたが紹介ボーナスを受け取る資格があるかどうかを示します。"
+    }
+  },
+  "alphapicks": {
+    "mainHeader": {
+      "title": "アルファピック",
+      "title2": "トップアルファ",
+      "desc": "最高のトレーダーを見つけて、彼らの戦略をコピーしよう"
+    },
+    "cards": {
+      "topCard": {
+        "winrate": "勝率",
+        "calls": "コール数",
+        "averagegains": "平均利益",
+        "topcall": "トップコール",
+        "follow": "フォロー"
+      },
+      "restcard": {
+        "winrate": "勝率",
+        "calls": "コール数",
+        "averagegains": "平均利益",
+        "topcall": "トップコール",
+        "follow": "フォロー",
+        "details": "詳細",
+        "seeall": "すべて見る",
+        "allalpha": "すべてのアルファ"
+      },
+      "siderightbar": {
+        "bestcalls": "ベストコール",
+        "bestcallstooltip": "選択したインターバルで最も利益を上げたコールと、それを行ったアルファグループを表示します。",
+        "recentalphas": "最近のアルファ",
+        "recentalphastooltip": "Wave Scanに最近参加したアルファグループを表示します。",
+        "risingstar": "ライジングスター",
+        "risingstartooltip": "人気が急上昇している、またはパフォーマンススコアが急激に向上しているアルファグループ。",
+        "boostedalphas": "ブーストされたアルファ",
+        "contactus": "お問い合わせ"
+      }
+    }
+  },
+  "wallettracker": {
+    "mainHeader": {
+      "title": "ウォレットトラッカー",
+      "desc": "複数のウォレットをタグ付け、トラッキング、分析"
+    },
+    "rightide": {
+      "title": "ウォレットアラート",
+      "tableHeaders": {
+        "wallet": "ウォレット",
+        "token": "トークン",
+        "amount": "数量",
+        "amounttooltip": "トークンの数量",
+        "price": "価格",
+        "pricetool": "1トークンあたりの価格（USD）",
+        "value": "価値",
+        "valuetooltip": "購入または売却したトークンのUSD価値",
+        "type": "タイプ",
+        "action": "アクション"
+      }
+    },
+    "leftsidebar": {
+      "title": "ウォレットトラッカー",
+      "importwallets": {
+        "importwallets": "ウォレットをインポート",
+        "desc": "Wave Pro用にウォレットアドレスを入力してください",
+        "cancel": "キャンセル",
+        "add": "追加"
+      },
+      "addnew": {
+        "addnewwallet": {
+          "addnewwallet": "新しいウォレットを追加",
+          "addwallet": "ウォレットを追加",
+          "walletname": "ウォレット名",
+          "entername": "ウォレット名を入力",
+          "walletaddress": "ウォレットアドレス",
+          "enteraddress": "ウォレットアドレスを入力",
+          "cancel": "キャンセル"
+        }
+      },
+      "nodataavailable": "データがありません"
+    },
+    "pnlpopup": {
+      "top": {
+        "balance": {
+          "balance": "残高",
+          "totalvalue": "総価値",
+          "totalvaluetool": "ウォレット内のすべての資産の現在の市場総価値。これは実現済みおよび未実現の利益/損失を含みます。",
+          "unrealizedpnl": "未実現PNL",
+          "unrealizedpnltool": "現在保持しているがまだ売却されていない資産からの利益または損失。市場価格に応じて変動し、最終的な数字ではありません。",
+          "avabalance": "利用可能残高",
+          "avabalancetool": "現在、ポジションにロックされていない、取引または引き出しに利用可能な資本の金額"
+        },
+        "pnl": "PNL",
+        "performance": {
+          "performance": "パフォーマンス",
+          "totalpnl": "総PNL",
+          "totalpnltool": "すべての取引からの総利益または損失。負の数はネット損失を示します。",
+          "totaltx": "総取引",
+          "totaltxtool": "ウォレットで処理されたすべての取引の合計。買いと売りを含む総取引量を表示します。"
+        }
+      },
+      "bottom": {
+        "activeposition": {
+          "activeposition": "アクティブポジション",
+          "token": "トークン",
+          "bought": "購入済み",
+          "sold": "売却済み",
+          "remaining": "残り",
+          "pnl": "PNL"
+        },
+        "history": {
+          "history": "履歴",
+          "token": "トークン",
+          "bought": "購入済み",
+          "sold": "売却済み",
+          "remaining": "残り",
+          "pnl": "PNL"
+        },
+        "Top100": {
+          "top100": "トップ100",
+          "token": "トークン",
+          "bought": "購入済み",
+          "sold": "売却済み",
+          "remaining": "残り",
+          "pnl": "PNL"
+        },
+        "activity": {
+          "activity": "アクティビティ",
+          "token": "トークン",
+          "bought": "購入済み",
+          "sold": "売却済み",
+          "remaining": "残り",
+          "pnl": "PNL"
+        }
+      }
+    }
+  },
+  "prowallets": {
+    "mainHeader": {
+      "title": "プロウォレット",
+      "left": {
+        "gainers": "利益上位者",
+        "gainerstool": "指定された期間内で取引実績に基づき最も高い利益（PnL）を達成したウォレット。"
+      },
+      "right": {
+        "losers": "損失上位者",
+        "loserstool": "指定された期間内で取引活動により最も大きな損失（PnL）を被ったウォレット。"
+      },
+      "filter": "フィルター"
+    }
+  },
+  "settings": {
+    "mainHeader": {
+      "title": "設定"
+    },
+    "wavetradingwallet": "ウェーブトレーディングウォレット",
+    "quickbuy": {
+      "quickbuy": "クイック購入",
+      "slippage": "スリッページ",
+      "slippagedesc": "価格の変動により、取引で受け取るトークンがどれだけ少なくなるか。",
+      "maxgas": "最大ガス制限",
+      "maxgasdesc": "すべての取引に対して提供する最大ガス量。この設定を調整しないことを強くお勧めします。",
+      "priorityfee": "優先手数料",
+      "priorityfeedesc": "取引が早く処理されるように追加する「チップ」。優先手数料が高いほど、取引が早く処理される可能性が高くなります。",
+      "mevprotection": "MEV保護",
+      "mevprotectiondesc": "これを有効にすると、MEVボットからのサンドイッチ攻撃から保護され、失敗した取引時にガス代を節約できます。",
+      "briberyamount": "賄賂額",
+      "briberyamountdesc": "取引をできるだけ早く処理するために、優先手数料に追加で賄賂額を設定します。",
+      "customize": "カスタマイズ",
+      "customizedesc": "独自のプリセット額でクイック購入ボタンをカスタマイズします。"
+    },
+    "quicksell": {
+      "quicksell": "クイック売却",
+      "slippage": "スリッページ",
+      "slippagedesc": "価格の変動により、取引で受け取るトークンがどれだけ少なくなるか。",
+      "maxgas": "最大ガス制限",
+      "maxgasdesc": "すべての取引に対して提供する最大ガス量。この設定を調整しないことを強くお勧めします。",
+      "priorityfee": "優先手数料",
+      "priorityfeedesc": "取引が早く処理されるように追加する「チップ」。優先手数料が高いほど、取引が早く処理される可能性が高くなります。",
+      "mevprotection": "MEV保護",
+      "mevprotectiondesc": "これを有効にすると、MEVボットからのサンドイッチ攻撃から保護され、失敗した取引時にガス代を節約できます。",
+      "briberyamount": "賄賂額",
+      "briberyamountdesc": "取引をできるだけ早く処理するために、優先手数料に追加で賄賂額を設定します。",
+      "customize": "カスタマイズ",
+      "customizedesc": "独自のプリセット額でクイック売却ボタンをカスタマイズします。"
+    },
+    "approve": {
+      "approve": "承認",
+      "autoapprove": "自動承認",
+      "autoapprovedesc": "EFF: これを有効にすると、1回のクリックでトークンの売却を自動的に承認します。",
+      "maxgas": "最大ガス制限",
+      "maxgasdesc": "すべての取引に対して提供する最大ガス量。この設定を調整しないことを強くお勧めします。",
+      "priorityfee": "優先手数料",
+      "priorityfeedesc": "取引が早く処理されるように追加する「チップ」。優先手数料が高いほど、取引が早く処理される可能性が高くなります。"
+    },
+    "autobuy": {
+      "autobuy": "自動購入",
+      "slippage": "スリッページ",
+      "slippagedesc": "価格の変動により、取引で受け取るトークンがどれだけ少なくなるか。",
+      "maxgas": "最大ガス制限",
+      "maxgasdesc": "すべての取引に対して提供する最大ガス量。この設定を調整しないことを強くお勧めします。",
+      "priorityfee": "優先手数料",
+      "priorityfeedesc": "取引が早く処理されるように追加する「チップ」。優先手数料が高いほど、取引が早く処理される可能性が高くなります。",
+      "mevprotection": "MEV保護",
+      "mevprotectiondesc": "これを有効にすると、MEVボットからのサンドイッチ攻撃から保護され、失敗した取引時にガス代を節約できます。",
+      "briberyamount": "賄賂額",
+      "briberyamountdesc": "取引をできるだけ早く処理するために、優先手数料に追加で賄賂額を設定します。",
+      "customize": "カスタマイズ",
+      "customizedesc": "独自のプリセット額でクイック購入ボタンをカスタマイズします。"
+    },
+    "autosell": {
+      "autosell": "自動売却",
+      "slippage": "スリッページ",
+      "slippagedesc": "価格の変動により、取引で受け取るトークンがどれだけ少なくなるか。",
+      "maxgas": "最大ガス制限",
+      "maxgasdesc": "すべての取引に対して提供する最大ガス量。この設定を調整しないことを強くお勧めします。",
+      "priorityfee": "優先手数料",
+      "priorityfeedesc": "取引が早く処理されるように追加する「チップ」。優先手数料が高いほど、取引が早く処理される可能性が高くなります。",
+      "mevprotection": "MEV保護",
+      "mevprotectiondesc": "これを有効にすると、MEVボットからのサンドイッチ攻撃から保護され、失敗した取引時にガス代を節約できます。",
+      "briberyamount": "賄賂額",
+      "briberyamountdesc": "取引をできるだけ早く処理するために、優先手数料に追加で賄賂額を設定します。",
+      "customize": "カスタマイズ",
+      "customizedesc": "独自のプリセット額でクイック売却ボタンをカスタマイズします。"
+    },
+    "save": "保存"
+  },
+  "notifications": {
+    "wallettracking": "ウォレット追跡",
+    "wallettrackingtool": "受け取ったウォレット追跡アラートを見る。",
+    "alphapicks": "アルファピック",
+    "alphapickstool": "フォローしているグループの過去のアルファコールを見る。"
+  },
+  "profile": {
+    "follow": "フォロー",
+    "share": "シェア",
+    "left": {
+      "last7dpnL": "過去7日間のPnL",
+      "last7dpnLtool": "過去7日間のすべての取引活動から得られたウォレットの総利益または損失（％およびUSD）。",
+      "winrate": "勝率",
+      "liquidity": "流動性",
+      "liquiditytool": "ウォレットがDeFiプールに提供している現在の流動性のトークンの合計価値。"
+    },
+    "middle": {
+      "pnl": "PnL",
+      "pnltool": "取引パフォーマンスの概要（利益、コスト、バランスメトリック）。",
+      "winrate": "勝率",
+      "unrealizedprofits": "未実現利益",
+      "unrealizedprofitstool": "現在の市場価格と取得コストに基づく、まだ保有しているトークンの推定利益または損失。",
+      "7dcost": "7日間の総コスト",
+      "7dcosttool": "過去7日間でトークンを購入した総額。",
+      "7davgcost": "7日間トークンの平均コスト",
+      "7davgcosttool": "過去7日間で取得したトークンの平均購入価格。",
+      "7drealizedprofits": "7日間トークンの平均実現利益",
+      "7drealizedprofitstool": "過去7日間に売却したトークンの平均利益または損失。",
+      "balance": "バランス"
+    },
+    "right": {
+      "distribution": "分布",
+      "distributiontool": "利益/損失のパーセンテージによるポジションの内訳。どの保有が利益/損失範囲に入っているかを可視化します。"
+    },
+    "tableHeader": {
+      "recentPnL": {
+        "recentPnL": "最近のPnL",
+        "token/lastactive": "トークン/最終アクティブ",
+        "token/lastactivetool": "ウォレットによって最後に取引または操作された特定のトークン。",
+        "unrealized": "未実現",
+        "unrealizedtool": "まだ売却していないトークンからの現在の利益または損失。",
+        "30drealizedprofit": "30日間実現利益",
+        "30drealizedprofittool": "過去30日間に売却したトークンからの純利益または損失。実現とはポジションが閉じられたことを意味します。",
+        "totalprofit": "総利益",
+        "totalprofittool": "過去30日間に売却したトークンからの総利益または損失。実現とはポジションが閉じられたことを意味します。",
+        "balanceUSD": "残高USD",
+        "position": "ポジション",
+        "positiontool": "特定のトークンに対してウォレットの総ポートフォリオ価値の中で占める割合。",
+        "bought/avg": "購入/平均",
+        "sold/avg": "売却/平均",
+        "30dtx": "30日間取引数",
+        "30dtxtool": "過去30日間でこのトークンを購入または売却した回数。"
+      },
+      "holdings": {
+        "holdings": "保有",
+        "token/lastactive": "トークン/最終アクティブ",
+        "token/lastactivetool": "ウォレットによって最後に取引または操作された特定のトークン。",
+        "unrealized": "未実現",
+        "unrealizedtool": "まだ売却していないトークンからの現在の利益または損失。",
+        "30drealizedprofit": "30日間実現利益",
+        "30drealizedprofittool": "過去30日間に売却したトークンからの純利益または損失。実現とはポジションが閉じられたことを意味します。",
+        "totalprofit": "総利益",
+        "totalprofittool": "過去30日間に売却したトークンからの総利益または損失。実現とはポジションが閉じられたことを意味します。",
+        "balanceUSD": "残高USD",
+        "position": "ポジション",
+        "positiontool": "特定のトークンに対してウォレットの総ポートフォリオ価値の中で占める割合。",
+        "bought/avg": "購入/平均",
+        "sold/avg": "売却/平均",
+        "30dtx": "30日間取引数",
+        "30dtxtool": "過去30日間でこのトークンを購入または売却した回数。"
+      },
+      "activity": {
+        "activity": "アクティビティ",
+        "type": "タイプ",
+        "token": "トークン",
+        "totalusd": "総USD",
+        "amount": "金額",
+        "price": "価格",
+        "profit": "利益",
+        "age": "経過時間"
+      }
+    },
+    "noData": "過去30日間の購入または売却はありません"
+  },
+  "tragindViewPage": {
+    "right": {
+      "stats": {
+        "tx": "取引数",
+        "txtool": "購入または売却の合計数。",
+        "buys": "購入",
+        "sells": "売却",
+        "vol": "ボリューム",
+        "voltool": "購入と売却の合計ボリューム。",
+        "buyvol": "購入ボリューム",
+        "sellvol": "売却ボリューム",
+        "makers": "メイカー",
+        "makerstool": "一度も売却せずに購入のみを行ったウォレット。初期購入者や流動性提供者。",
+        "buyers": "買い手",
+        "sellers": "売り手"
+      },
+      "buysell": {
+        "qty": "数量",
+        "buy": "購入",
+        "sell": "売却",
+        "advancedsettings": {
+          "advancedsettings": "詳細設定",
+          "autoapprove": "自動承認",
+          "slippage": "スリッページ",
+          "priority": "優先手数料",
+          "deafult": "デフォルト"
+        },
+        "btnbuy": "クイック購入",
+        "btnsell": "クイック売却"
+      },
+      "tokeninfo": {
+        "tokeninfo": "トークン情報",
+        "price": "価格",
+        "supply": "供給量",
+        "liq": "流動性",
+        "liqtool": "このトークンの流動性プールにロックされた合計価値。",
+        "fdvtool": "完全希薄化後評価額（FDV）= 価格 × 総供給量。",
+        "mc": "時価総額",
+        "mctool": "現在流通しているトークンに基づく評価額。"
+      },
+      "datasecurity": {
+        "data": "データとセキュリティ",
+        "minttool": "新しいトークンを作成できるかどうか。有効でない場合、新しいトークンは作成できません（信頼性が高い）。",
+        "freezetool": "転送をブロックできるかどうか。有効でない場合、転送はブロックされません（ホルダーにとって安全）。",
+        "lptool": "流動性トークンがバーンされているかを表示します。100%バーン = 開発者が引き出しできません。",
+        "top10tool": "上位10ホルダーウォレットの数。",
+        "pooled1": "このトークンのプールにある数量とUSD価値。",
+        "pooled2": "プール内のSOLの量とその価値。"
+      }
+    },
+    "table": {
+      "transactions": {
+        "transactions": "取引履歴",
+        "tableHeaders": {
+          "time": "時間",
+          "type": "タイプ",
+          "qty": "数量",
+          "qtytool": "取引されたトークンの数量。",
+          "currency": "通貨",
+          "sideqty": "相手数量",
+          "sideqtytool": "使用された相手通貨の数量。",
+          "sidecurrency": "相手通貨",
+          "sidecurrencytool": "取引ペアとなる通貨。",
+          "price": "価格",
+          "pricetool": "相手通貨での1単位あたりの価格。",
+          "values": "取引額",
+          "valuestool": "USD換算の合計取引額。",
+          "pool": "プール",
+          "pooltool": "流動性プールまたはクリエイターウォレット。",
+          "hash": "トランザクションハッシュ",
+          "hashtool": "SolScan 上のトランザクションリンク。"
+        }
+      },
+      "topholders": {
+        "topholders": "トップホルダー",
+        "tableHeaders": {
+          "addresses": "アドレス",
+          "value": "価値"
+        }
+      },
+      "toptraders": {
+        "toptraders": "トップトレーダー",
+        "tableHeaders": {
+          "rank": "ランク",
+          "owner": "保有者",
+          "dex": "DEX市場",
+          "dextool": "取引が行われたプラットフォーム",
+          "invest": "投資額",
+          "investtool": "購入に使用された総額。",
+          "sold": "売却額",
+          "soldtool": "売却により得た価値。",
+          "volume": "ボリューム",
+          "volumetool": "合計アクティビティ（売買）。",
+          "exp": "表示",
+          "exptool": "SolScanで表示。"
+        }
+      },
+      "myholding": {
+        "myholding": "保有資産",
+        "tableHeaders": {
+          "tokenname": "トークン名",
+          "qty": "数量",
+          "remaining": "残高",
+          "sold": "売却済み",
+          "pnl": "損益",
+          "quicksell": "即売"
+        }
+      }
+    }
+  }
+}

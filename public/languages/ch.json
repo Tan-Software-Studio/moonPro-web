@@ -1,0 +1,617 @@
+{
+  "sidebar": {
+    "trending": "趋势",
+    "recentcalls": "最近呼叫",
+    "memescope": "表情范围",
+    "holdings": "持有",
+    "leaderboard": "排行榜",
+    "referral": "推荐",
+    "alphapicks": "Alpha精选",
+    "wallettracker": "钱包追踪",
+    "prowallets": "专业钱包",
+    "settings": "设置"
+  },
+  "tredingPage": {
+    "mainHeader": {
+      "trending": "趋势",
+      "desc": "根据所选时间范围，按交易量排序的前100个趋势代币对",
+      "timeframeFilter": {
+        "1m": "1分钟",
+        "5m": "5分钟",
+        "1h": "1小时",
+        "6h": "6小时",
+        "24h": "24小时"
+      },
+      "filter": {
+        "filter": "筛选",
+        "mintauth": "铸造授权",
+        "mintauthtooltip": "该代币不能再被铸造 — 没有人可以创建新的代币。",
+        "freezeauth": "冻结授权",
+        "freezeauthtooltip": "没有人可以冻结代币转账。",
+        "lpburned": "LP销毁",
+        "lpburnedtooltip": "流动性池代币已销毁 — 这有助于锁定流动性。",
+        "withatleast1social": "至少有1个社交媒体",
+        "bycurrentliquidity": "按当前流动性",
+        "byvolume": "按交易量",
+        "byage": "按年龄（分钟）",
+        "bymc": "按市值",
+        "bytxns": "按交易次数",
+        "bybuys": "按购买",
+        "bysells": "按出售",
+        "reset": "重置",
+        "apply": "应用"
+      },
+      "ordersetting": {
+        "ordersetting": "订单设置",
+        "quantity": "数量",
+        "buy": "购买",
+        "sell": "出售",
+        "resetpreset": "重置预设",
+        "sllippagetooltip": "您愿意容忍的最大%差距，介于预计价格和实际执行价格之间。如果价格在交易确认之前变化超过此范围，交易将失败。",
+        "priorityfeetooltip": "支付给验证者/矿工的费用，以优先处理您的交易。较高的费用可以在网络拥堵时加快交易处理速度。",
+        "mevtooltip": "通过将您的交易细节从公共内存池中隐藏，通常通过私人中继或区块构建者路由，来保护防止前置交易和三明治攻击。"
+      },
+      "buy": "购买",
+      "advanced": "高级"
+    },
+    "tableheaders": {
+      "pairinfo": "交易对信息",
+      "pairinfotooltip": "显示自代币合约创建以来的时间。",
+      "created": "创建",
+      "liquidity": "流动性",
+      "liquiditytooltip": "显示交易该代币可用的资金。低流动性可能意味着高风险或难以出售。",
+      "mcap": "市值",
+      "mcaptooltip": "市值：该代币的估计总值：价格 × 供应量。市值高 = 更具影响力。",
+      "swaps": "交换次数",
+      "swapstooltip": "在所选时间范围内，多少次交易者购买（绿色）或出售（红色）该代币",
+      "volume": "交易量",
+      "auditres": "审计结果",
+      "auditrestooltip": "快速安全检查：显示代币是否可以再次铸造、冻结，或代币是否有10个持有者。",
+      "quickbuy": "快速购买"
+    }
+  },
+  "recentcalls": {
+    "mainHeader": {
+      "title": "最近调用"
+    },
+    "tableheaders": {
+      "token": "代币",
+      "before": "之前",
+      "beforetooltip": "显示自代币被调用以来的时间",
+      "calledby": "被谁调用",
+      "calledmc": "调用时市值",
+      "calledmctooltip": "显示自代币被调用以来的时间",
+      "mcnow": "当前市值",
+      "mcnowtooltip": "当前市场市值",
+      "growth": "增长",
+      "ath": "历史最高",
+      "athtooltip": "代币的历史最高点",
+      "audit": "审计",
+      "audittooltip": "快速安全检查：显示代币是否可以再次铸造、冻结，或代币是否有10个持有者。",
+      "action": "操作"
+    }
+  },
+  "memescope": {
+    "mainHeader": {
+      "title": "表情符号",
+      "desc": "找到最好的表情符号代币",
+      "buy": "购买",
+      "filters": {
+        "newcreation": {
+          "newcreationsfilter": "新创建过滤器",
+          "top10holders": "前10持有者",
+          "withatleast1social": "至少有1个社交",
+          "bypumpprogress": "按泵进度",
+          "byholderscount": "按持有者数量",
+          "bydevholding": "按开发者持有",
+          "bysnipers": "按狙击手",
+          "byage": "按年龄",
+          "bycurrentliquidity": "按当前流动性",
+          "byvolume": "按交易量",
+          "bymCap": "按市值",
+          "bytx": "按交易",
+          "bybuys": "按购买",
+          "bysells": "按卖出",
+          "reset": "重置",
+          "apply": "应用"
+        },
+        "graduated": "毕业",
+        "abouttograduate": "即将毕业"
+      }
+    },
+    "tableheaders": {
+      "newcreations": "新创建",
+      "newcreationstooltip": "刚刚发布并且仍然非常新的代币。这些代币可能是实验性的、高度波动的，或者未经验证的。请自行承担风险——DYOR（自己做研究）！",
+      "abouttogra": "即将毕业",
+      "abouttogratooltip": "正在获得关注和参与的代币，显示出增长的迹象。它们还没有完全建立，但正在朝着更高的认可或采纳迈进。",
+      "graduated": "毕业",
+      "graduatedtooltip": "已达到一定信誉或表现水平的代币。它们已经通过了初始阶段，显示出更强的价格走势、交易量或社区活动。"
+    }
+  },
+  "holdings": {
+    "mainHeader": {
+      "title": "持有",
+      "desc": "跟踪和管理您的持有资产",
+      "withremainingtokens": "剩余代币"
+    },
+    "tableheaders": {
+      "token": "代币",
+      "quantity": "数量",
+      "pnlusdtooltip": "您从该代币中获得的利润或亏损，以美元表示。绿色 = 盈利，红色 = 亏损。",
+      "pnlpertooltip": "自购买以来您的持有资产价值的百分比变化。",
+      "quicksell": "快速卖出",
+      "quickselltooltip": "一键即时卖出您在该代币中的全部仓位。"
+    },
+    "noconnectwallet": "请连接钱包以查看您的持有资产。",
+    "noholdingsmsg": "您目前在您的Wave交易钱包中没有任何代币持有。"
+  },
+  "leaderboard": {
+    "mainHeader": {
+      "title": "排行榜",
+      "yourstats": "你的统计",
+      "ranking": "排名",
+      "totalpoints": "总积分",
+      "tradingpoints": "交易积分",
+      "tradingpointstooltip": "从交易中获得的积分",
+      "referralpoints": "推荐积分",
+      "referralpointstooltip": "从推荐中获得的积分",
+      "weeklyleaderboard": "每周排行榜"
+    },
+    "stage": {
+      "totaltrades": "总交易",
+      "value": "价值"
+    },
+    "table": {
+      "trading": {
+        "trading": "交易",
+        "wallet": "钱包",
+        "totaltrads": "总交易",
+        "value": "价值",
+        "referralid": "推荐ID"
+      },
+      "referral": "推荐"
+    }
+  },
+  "referral": {
+    "mainHeader": {
+      "title": "推荐",
+      "yourstats": "你的统计",
+      "referralpoints": "推荐积分"
+    },
+    "pageData": {
+      "title": "通过 Wave 推荐计划解锁更多推荐等级！",
+      "desc": "你推荐的朋友可以提前访问 Wave 并享受 10% 的手续费折扣",
+      "shareto": "分享给",
+      "nodata": "没有推荐数据",
+      "copy": "复制",
+      "copied": "已复制"
+    },
+    "table": {
+      "user": "用户",
+      "date": "日期",
+      "trades": "交易次数",
+      "tradestool": "该推荐人已交易的美元金额。",
+      "earning": "收益",
+      "earningtool": "您可以从该用户的推荐中领取的金额。",
+      "status": "状态",
+      "statustool": "表示您是否有资格领取推荐奖励。"
+    }
+  },
+  "alphapicks": {
+    "mainHeader": {
+      "title": "Alpha 挑选",
+      "title2": "顶级 Alpha",
+      "desc": "找到最好的交易员并复制他们的策略"
+    },
+    "cards": {
+      "topCard": {
+        "winrate": "胜率",
+        "calls": "呼叫次数",
+        "averagegains": "平均收益",
+        "topcall": "最佳呼叫",
+        "follow": "关注"
+      },
+      "restcard": {
+        "winrate": "胜率",
+        "calls": "呼叫次数",
+        "averagegains": "平均收益",
+        "topcall": "最佳呼叫",
+        "follow": "关注",
+        "details": "详情",
+        "seeall": "查看所有",
+        "allalpha": "所有 Alpha"
+      },
+      "siderightbar": {
+        "bestcalls": "最佳呼叫",
+        "bestcallstooltip": "显示在选定时间段内获得最高收益的呼叫和做出这些呼叫的 Alpha 组。",
+        "recentalphas": "最近的 Alpha",
+        "recentalphastooltip": "显示最近加入的 Alpha 组。",
+        "risingstar": "新星 Alpha",
+        "risingstartooltip": "迅速获得动力的 Alpha 组，通过最近的流行激增或其表现分数的快速增长。",
+        "boostedalphas": "提升的 Alpha",
+        "contactus": "联系我们"
+      }
+    }
+  },
+  "wallettracker": {
+    "mainHeader": {
+      "title": "钱包追踪器",
+      "desc": "标记、追踪和分析多个钱包"
+    },
+    "rightide": {
+      "title": "钱包提醒",
+      "tableHeaders": {
+        "wallet": "钱包",
+        "token": "代币",
+        "amount": "数量",
+        "amounttooltip": "代币数量",
+        "price": "价格",
+        "pricetool": "每个代币的美元价格",
+        "value": "价值",
+        "valuetooltip": "已售或购买代币的价值（美元）",
+        "type": "类型",
+        "action": "操作"
+      }
+    },
+    "leftsidebar": {
+      "title": "钱包追踪器",
+      "importwallets": {
+        "importwallets": "导入钱包",
+        "desc": "请输入钱包地址以进行 Wave Pro 导入",
+        "cancel": "取消",
+        "add": "添加"
+      },
+      "addnew": {
+        "addnewwallet": {
+          "addnewwallet": "添加新钱包",
+          "addwallet": "添加钱包",
+          "walletname": "钱包名称",
+          "entername": "请输入钱包名称",
+          "walletaddress": "钱包地址",
+          "enteraddress": "请输入钱包地址",
+          "cancel": "取消"
+        }
+      },
+      "nodataavailable": "暂无数据"
+    },
+    "pnlpopup": {
+      "top": {
+        "balance": {
+          "balance": "余额",
+          "totalvalue": "总价值",
+          "totalvaluetool": "钱包中所有资产的当前市场总值，包括已实现和未实现的盈亏。",
+          "unrealizedpnl": "未实现盈亏",
+          "unrealizedpnltool": "仍在持有且未出售的资产的盈亏。随着市场价格波动，这些值是浮动的，尚未最终确定。",
+          "avabalance": "可用余额",
+          "avabalancetool": "目前没有被锁定在仓位中的资本，适用于新的交易或提现。"
+        },
+        "pnl": "盈亏",
+        "performance": {
+          "performance": "表现",
+          "totalpnl": "总盈亏",
+          "totalpnltool": "所有交易的总盈亏，包括已实现和未实现的值。负数表示净亏损。",
+          "totaltx": "总交易次数",
+          "totaltxtool": "钱包处理的所有交易的总值，显示买入和卖出的总交易量。"
+        }
+      },
+      "bottom": {
+        "activeposition": {
+          "activeposition": "活跃仓位",
+          "token": "代币",
+          "bought": "已买入",
+          "sold": "已卖出",
+          "remaining": "剩余",
+          "pnl": "盈亏"
+        },
+        "history": {
+          "history": "历史记录",
+          "token": "代币",
+          "bought": "已买入",
+          "sold": "已卖出",
+          "remaining": "剩余",
+          "pnl": "盈亏"
+        },
+        "Top100": {
+          "top100": "前 100",
+          "token": "代币",
+          "bought": "已买入",
+          "sold": "已卖出",
+          "remaining": "剩余",
+          "pnl": "盈亏"
+        },
+        "activity": {
+          "activity": "活动",
+          "token": "代币",
+          "bought": "已买入",
+          "sold": "已卖出",
+          "remaining": "剩余",
+          "pnl": "盈亏"
+        }
+      }
+    }
+  },
+  "prowallets": {
+    "mainHeader": {
+      "title": "专业钱包",
+      "left": {
+        "gainers": "盈利者",
+        "gainerstool": "在指定时间段内基于其交易表现实现最高利润（PnL）的钱包。"
+      },
+      "right": {
+        "losers": "亏损者",
+        "loserstool": "在指定时间段内因交易活动遭受最大损失（PnL）的钱包。"
+      },
+      "filter": "筛选"
+    }
+  },
+  "settings": {
+    "mainHeader": {
+      "title": "设置"
+    },
+    "wavetradingwallet": "Wave交易钱包",
+    "quickbuy": {
+      "quickbuy": "快速购买",
+      "slippage": "滑点",
+      "slippagedesc": "由于价格波动，您愿意接受的最小代币减少量。",
+      "maxgas": "最大Gas限制",
+      "maxgasdesc": "您愿意为任何交易提供的最大Gas量。我们强烈建议您不要调整此设置。",
+      "priorityfee": "优先费用",
+      "priorityfeedesc": "为使交易更快完成而支付的额外'小费'。优先费用越高，交易越有可能尽快处理。",
+      "mevprotection": "MEV保护",
+      "mevprotectiondesc": "启用此功能以防止MEV机器人进行夹心攻击，并在交易失败时节省Gas费用。",
+      "briberyamount": "贿赂金额",
+      "briberyamountdesc": "在优先费用上设置额外的贿赂金额，以便区块构建者尽快处理您的交易。",
+      "customize": "自定义",
+      "customizedesc": "使用您自己预设的金额自定义您的快速购买按钮。"
+    },
+    "quicksell": {
+      "quicksell": "快速出售",
+      "slippage": "滑点",
+      "slippagedesc": "由于价格波动，您愿意接受的最小代币减少量。",
+      "maxgas": "最大Gas限制",
+      "maxgasdesc": "您愿意为任何交易提供的最大Gas量。我们强烈建议您不要调整此设置。",
+      "priorityfee": "优先费用",
+      "priorityfeedesc": "为使交易更快完成而支付的额外'小费'。优先费用越高，交易越有可能尽快处理。",
+      "mevprotection": "MEV保护",
+      "mevprotectiondesc": "启用此功能以防止MEV机器人进行夹心攻击，并在交易失败时节省Gas费用。",
+      "briberyamount": "贿赂金额",
+      "briberyamountdesc": "在优先费用上设置额外的贿赂金额，以便区块构建者尽快处理您的交易。",
+      "customize": "自定义",
+      "customizedesc": "使用您自己预设的金额自定义您的快速出售按钮。"
+    },
+    "approve": {
+      "approve": "批准",
+      "autoapprove": "自动批准",
+      "autoapprovedesc": "启用此功能后，您可以通过一次点击自动批准出售代币。",
+      "maxgas": "最大Gas限制",
+      "maxgasdesc": "您愿意为任何交易提供的最大Gas量。我们强烈建议您不要调整此设置。",
+      "priorityfee": "优先费用",
+      "priorityfeedesc": "为使交易更快完成而支付的额外'小费'。优先费用越高，交易越有可能尽快处理。"
+    },
+    "autobuy": {
+      "autobuy": "自动购买",
+      "slippage": "滑点",
+      "slippagedesc": "由于价格波动，您愿意接受的最小代币减少量。",
+      "maxgas": "最大Gas限制",
+      "maxgasdesc": "您愿意为任何交易提供的最大Gas量。我们强烈建议您不要调整此设置。",
+      "priorityfee": "优先费用",
+      "priorityfeedesc": "为使交易更快完成而支付的额外'小费'。优先费用越高，交易越有可能尽快处理。",
+      "mevprotection": "MEV保护",
+      "mevprotectiondesc": "启用此功能以防止MEV机器人进行夹心攻击，并在交易失败时节省Gas费用。",
+      "briberyamount": "贿赂金额",
+      "briberyamountdesc": "在优先费用上设置额外的贿赂金额，以便区块构建者尽快处理您的交易。",
+      "customize": "自定义",
+      "customizedesc": "使用您自己预设的金额自定义您的自动购买按钮。"
+    },
+    "autosell": {
+      "autosell": "自动出售",
+      "slippage": "滑点",
+      "slippagedesc": "由于价格波动，您愿意接受的最小代币减少量。",
+      "maxgas": "最大Gas限制",
+      "maxgasdesc": "您愿意为任何交易提供的最大Gas量。我们强烈建议您不要调整此设置。",
+      "priorityfee": "优先费用",
+      "priorityfeedesc": "为使交易更快完成而支付的额外'小费'。优先费用越高，交易越有可能尽快处理。",
+      "mevprotection": "MEV保护",
+      "mevprotectiondesc": "启用此功能以防止MEV机器人进行夹心攻击，并在交易失败时节省Gas费用。",
+      "briberyamount": "贿赂金额",
+      "briberyamountdesc": "在优先费用上设置额外的贿赂金额，以便区块构建者尽快处理您的交易。",
+      "customize": "自定义",
+      "customizedesc": "使用您自己预设的金额自定义您的自动出售按钮。"
+    },
+    "save": "保存"
+  },
+  "notifications": {
+    "wallettracking": "钱包追踪",
+    "wallettrackingtool": "查看您收到的钱包追踪警报。",
+    "alphapicks": "Alpha Picks",
+    "alphapickstool": "查看您关注的群组过去的Alpha推荐。"
+  },
+  "profile": {
+    "follow": "关注",
+    "share": "分享",
+    "left": {
+      "last7dpnL": "过去7天的盈亏",
+      "last7dpnLtool": "过去7天内钱包通过所有交易活动产生的总盈亏（以百分比和美元计）。",
+      "winrate": "胜率",
+      "liquidity": "流动性",
+      "liquiditytool": "钱包当前提供的作为DeFi池流动性的代币总值。"
+    },
+    "middle": {
+      "pnl": "盈亏",
+      "pnltool": "您的交易表现的总结，包括利润、成本和余额指标。",
+      "winrate": "胜率",
+      "unrealizedprofits": "未实现利润",
+      "unrealizedprofitstool": "基于当前市场价格和购买成本，尚未卖出的代币的估算盈亏。",
+      "7dcost": "过去7天总成本",
+      "7dcosttool": "过去7天购买代币的总花费。",
+      "7davgcost": "过去7天代币平均购买成本",
+      "7davgcosttool": "过去7天内购买代币的平均价格。",
+      "7drealizedprofits": "过去7天代币平均已实现利润",
+      "7drealizedprofitstool": "过去7天内出售代币的每个代币的平均利润或亏损。",
+      "balance": "余额"
+    },
+    "right": {
+      "distribution": "分布",
+      "distributiontool": "按盈亏百分比分解仓位。帮助可视化有多少持仓处于盈亏范围内。"
+    },
+    "tableHeader": {
+      "recentPnL": {
+        "recentPnL": "最近盈亏",
+        "token/lastactive": "代币/最后活动时间",
+        "token/lastactivetool": "钱包持有的特定代币，以及最后一次由钱包交易或交互的时间。",
+        "unrealized": "未实现",
+        "unrealizedtool": "当前持有代币尚未出售的盈亏。",
+        "30drealizedprofit": "过去30天已实现利润",
+        "30drealizedprofittool": "过去30天出售的代币的净利润或亏损。已实现表示该仓位已关闭。",
+        "totalprofit": "总利润",
+        "totalprofittool": "过去30天出售的代币的净利润或亏损。已实现表示该仓位已关闭。",
+        "balanceUSD": "余额（美元）",
+        "position": "仓位",
+        "positiontool": "钱包总资产中分配到特定代币的百分比。",
+        "bought/avg": "购买/平均",
+        "sold/avg": "出售/平均",
+        "30dtx": "过去30天交易次数",
+        "30dtxtool": "过去30天内买卖该代币的次数。"
+      },
+      "holdings": {
+        "holdings": "持仓",
+        "token/lastactive": "代币/最后活动时间",
+        "token/lastactivetool": "钱包持有的特定代币，以及最后一次由钱包交易或交互的时间。",
+        "unrealized": "未实现",
+        "unrealizedtool": "当前持有代币尚未出售的盈亏。",
+        "30drealizedprofit": "过去30天已实现利润",
+        "30drealizedprofittool": "过去30天出售的代币的净利润或亏损。已实现表示该仓位已关闭。",
+        "totalprofit": "总利润",
+        "totalprofittool": "过去30天出售的代币的净利润或亏损。已实现表示该仓位已关闭。",
+        "balanceUSD": "余额（美元）",
+        "position": "仓位",
+        "positiontool": "钱包总资产中分配到特定代币的百分比。",
+        "bought/avg": "购买/平均",
+        "sold/avg": "出售/平均",
+        "30dtx": "过去30天交易次数",
+        "30dtxtool": "过去30天内买卖该代币的次数。"
+      },
+      "activity": {
+        "activity": "活动",
+        "type": "类型",
+        "token": "代币",
+        "totalusd": "总美元",
+        "amount": "数量",
+        "price": "价格",
+        "profit": "利润",
+        "age": "年龄"
+      }
+    },
+    "noData": "过去30天没有买卖"
+  },
+  "tragindViewPage": {
+    "right": {
+      "stats": {
+        "tx": "交易数",
+        "txtool": "发生的买入或卖出操作的总次数。",
+        "buys": "买入",
+        "sells": "卖出",
+        "vol": "成交量",
+        "voltool": "买入和卖出的总成交量",
+        "buyvol": "买入成交量",
+        "sellvol": "卖出成交量",
+        "makers": "做市者",
+        "makerstool": "发起买入（非卖出）操作的独立钱包/用户，通常代表首次买入或流动性提供者。",
+        "buyers": "买方人数",
+        "sellers": "卖方人数"
+      },
+      "buysell": {
+        "qty": "数量",
+        "buy": "购买",
+        "sell": "出售",
+        "advancedsettings": {
+          "advancedsettings": "高级设置",
+          "autoapprove": "自动批准",
+          "slippage": "滑点容忍",
+          "priority": "优先费率",
+          "deafult": "默认"
+        },
+        "btnbuy": "快速买入",
+        "btnsell": "快速卖出"
+      },
+      "tokeninfo": {
+        "tokeninfo": "代币信息",
+        "price": "价格",
+        "supply": "供应量",
+        "liq": "流动性",
+        "liqtool": "锁定在该代币交易池中的总价值。",
+        "fdvtool": "完全稀释估值（FDV），即所有代币流通时的市值。FDV = 价格 × 总供应量",
+        "mc": "市值",
+        "mctool": "基于当前流通代币的市值（若全部代币已解锁，则与FDV相同）。"
+      },
+      "datasecurity": {
+        "data": "数据与安全",
+        "minttool": "控制是否可以铸造新代币。已禁用 = 不可再创建新代币（增加信任）。",
+        "freezetool": "冻结或限制代币转账的能力。已禁用 = 不可冻结转账（对持有者更安全）。",
+        "lptool": "显示流动性代币是否已销毁。100%销毁 = 开发者无法抽走流动性。",
+        "top10tool": "前10名持币钱包的数量。如果少数人持有大部分供应量，可能存在中心化风险。",
+        "pooled1": "交易池中该代币的数量及其美元价值。",
+        "pooled2": "与该代币配对的SOL数量及其总价值。"
+      }
+    },
+    "table": {
+      "transactions": {
+        "transactions": "交易记录",
+        "tableHeaders": {
+          "time": "时间",
+          "type": "类型",
+          "qty": "数量",
+          "qtytool": "所交易的主要代币数量。",
+          "currency": "币种",
+          "sideqty": "配对数量",
+          "sideqtytool": "交易中使用的对手币数量。卖出时表示收到的SOL数量；买入时表示花费的SOL数量。",
+          "sidecurrency": "配对币种",
+          "sidecurrencytool": "交易中的配对币种。",
+          "price": "价格",
+          "pricetool": "以配对币种计价的每单位主要代币的有效价格。",
+          "values": "价值",
+          "valuestool": "基于配对币种计算的交易总美元价值。",
+          "pool": "交易池",
+          "pooltool": "交易发生的流动性池或市场，由池创建者/拥有者的钱包地址简写表示。",
+          "hash": "交易哈希",
+          "hashtool": "在SolScan上的交易哈希。"
+        }
+      },
+      "topholders": {
+        "topholders": "持币大户",
+        "tableHeaders": {
+          "addresses": "钱包地址",
+          "value": "价值"
+        }
+      },
+      "toptraders": {
+        "toptraders": "顶级交易者",
+        "tableHeaders": {
+          "rank": "排名",
+          "owner": "持有者",
+          "dex": "DEX市场",
+          "dextool": "该代币上线或交易的平台或去中心化交易所",
+          "invest": "投资金额",
+          "investtool": "该钱包用于启动或购买代币的总资金，反映其初始投资。",
+          "sold": "卖出金额",
+          "soldtool": "该钱包通过卖出代币获得的总价值。高数值代表较大的退出或已实现利润。",
+          "volume": "交易总量",
+          "volumetool": "该钱包代币的买卖总和。可用于衡量钱包的活跃程度。",
+          "exp": "SolScan",
+          "exptool": "在SolScan上查看该钱包地址。"
+        }
+      },
+      "myholding": {
+        "myholding": "我的持仓",
+        "tableHeaders": {
+          "tokenname": "代币名称",
+          "qty": "数量",
+          "remaining": "剩余",
+          "sold": "已卖出",
+          "pnl": "盈亏变化",
+          "quicksell": "快速卖出"
+        }
+      }
+    }
+  }
+}
