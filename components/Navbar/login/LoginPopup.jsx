@@ -23,7 +23,7 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
     const [refferalCode, setRefferalCode] = useState('')
     const [email, setEmail] = useState('')
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
     const handleOtpPopup = async () => {
         const trimmedEmail = email.trim();

@@ -19,7 +19,7 @@ const PasswordPopup = ({ setIsPassword, setIsLoginPopup, email, setAuthName }) =
         setIsPassword(false);
         setIsLoginPopup(false)
     }
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
     const handleSignup = async () => {
         confirmPasswordInput.trim(); 

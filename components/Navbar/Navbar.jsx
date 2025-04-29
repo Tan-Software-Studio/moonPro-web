@@ -33,10 +33,8 @@ import { RiLogoutBoxLine } from "react-icons/ri";
 import { IoIosArrowDown, } from "react-icons/io";
 import toast from "react-hot-toast";
 import { FaCopy } from "react-icons/fa6";
-
-
-
-
+import { googleLogout } from "@react-oauth/google";
+ 
 
 
 const Navbar = () => {
@@ -82,6 +80,7 @@ const Navbar = () => {
     localStorage.removeItem('walletAddress')
     router.push('/')
     setIsProfileOpen(false)
+    googleLogout()
     setTimeout(() => {
       setIsLoginPopup(true)
       setAuthName("login");
