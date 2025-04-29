@@ -24,8 +24,6 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
     const [email, setEmail] = useState('')
 
     const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
-    
-    console.log("🚀 ~ LoginPopup ~ baseUrl:", baseUrl)
 
     const handleOtpPopup = async () => {
         const trimmedEmail = email.trim();
