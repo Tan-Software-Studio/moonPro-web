@@ -29,11 +29,7 @@ const TradingPopup = ({
   decimal,
   price,
 }) => {
-  console.log("🚀 ~ price:", price);
-  console.log("🚀 ~ latestTradesData:", decimal);
-  const { open } = useAppKit();
   const [loaderSwap, setLoaderSwap] = useState(false);
-  const [buyOption, setBuyOption] = useState("now");
   const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
   const [quantity, setQuantity] = useState(0.1);
   const [slippage, setSlippage] = useState(20);
