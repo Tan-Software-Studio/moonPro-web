@@ -30,7 +30,7 @@ const PasswordPopup = ({ setIsPassword, setIsLoginPopup, email, setAuthName }) =
         }
 
         try {
-            const response = await axios.post(`${baseUrl}signup`, {
+            const response = await axios.post(`${baseUrl}user/signup`, {
                 email: email.toLowerCase(),
                 password: passwordInput,
                 confirmPassword: confirmPasswordInput

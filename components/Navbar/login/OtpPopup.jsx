@@ -84,19 +84,21 @@ const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email, setAuthName }) =
         }
 
         try {
-            const response = await axios.post(`${baseUrl}verify`, {
+            const response = await axios.post(
+              `${baseUrl}user/verify`,
+              {
                 otp: Number(otp),
-                ...(authName != 'login' && {
-                    password: password,
-                    confirmPassword: confirmPassword
+                ...(authName != "login" && {
+                  password: password,
+                  confirmPassword: confirmPassword,
                 }),
-            },
-                {
-                    headers: {
-                        Authorization: `Bearer ${jwtToken}`
-                    }
-                }
-            )
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${jwtToken}`,
+                },
+              }
+            );
             localStorage.setItem('token', response?.data?.data?.token)
             localStorage.setItem('walletAddress', response?.data?.data?.user?.walletAddressSOL)
 

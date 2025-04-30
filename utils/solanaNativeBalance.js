@@ -6,8 +6,12 @@ const {
 
 const { PublicKey, Connection } = require("@solana/web3.js");
 
-async function getSolanaBalanceAndPrice(wallet, connection) {
+async function getSolanaBalanceAndPrice(wallet) {
   try {
+    const connection = new Connection(
+      process.env.NEXT_PUBLIC_SOLANA_RPC_URL,
+      "confirmed"
+    );
     const userPublicKey = new PublicKey(wallet);
     const bal = await connection.getBalance(userPublicKey);
     return (await (bal / 1000000000)) || 0;

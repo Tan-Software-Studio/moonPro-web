@@ -6,12 +6,11 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { setselectToken, setselectTokenLogo } from "@/app/redux/CommonUiData";
 import Table from "@/components/TradingChart/Table";
 import { solana, ethereum, baseIcon } from "@/app/Images";
+import { useAppKitState } from "@reown/appkit/react";
 import {
-  useAppKitAccount,
-  useAppKitProvider,
-  useAppKitState,
-} from "@reown/appkit/react";
-import { getSoalanaTokenBalance } from "@/utils/solanaNativeBalance";
+  getSoalanaTokenBalance,
+  getSolanaBalanceAndPrice,
+} from "@/utils/solanaNativeBalance";
 import { decimalConvert } from "@/utils/basicFunctions";
 import axiosInstance from "@/components/axiosIntance/axiosInstance";
 import TVChartContainer from "@/components/TradingChart/TradingChart";
@@ -21,6 +20,7 @@ import TradingPopup from "@/components/common/tradingview/TradingPopup";
 import TokenInfo from "@/components/common/tradingview/TokenInfo";
 import DataSecurity from "@/components/common/tradingview/DataSecurity";
 import { useTranslation } from "react-i18next";
+import { getTokenBalance } from "@/utils/EVM/getBalances";
 
 const Tradingview = () => {
   const { t, ready } = useTranslation();
@@ -32,8 +32,7 @@ const Tradingview = () => {
   const [decimal, setDecimal] = useState("");
   const dispatch = useDispatch();
   const [tokenBalance, setTokenBalance] = useState(0);
-  const { address, isConnected } = useAppKitAccount();
-  const { walletProvider } = useAppKitProvider("solana");
+  const [nativeTokenbalance, setNativeTokenbalance] = useState(0);
   const searchParams = useSearchParams();
   const [chartTokenData, setchartTokenData] = useState({});
   const tokenaddress = searchParams.get("tokenaddress");
@@ -46,6 +45,9 @@ const Tradingview = () => {
   const tvChartRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const scrollableDivRef4 = useRef(null);
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
 
   useEffect(() => {
     if (selectToken == "Solana") {
@@ -84,16 +86,21 @@ const Tradingview = () => {
     const fetchTokenMeta = async () => {
       try {
         if (getNetwork == "solana") {
-          const singleTokenBalance = await getSoalanaTokenBalance(
-            address,
-            tokenaddress,
-            getNetwork
-          ).catch((err) => {});
-          setTokenBalance(singleTokenBalance || 0);
+          const [singleTokenBalance, solBalance] = await Promise.all([
+            getSoalanaTokenBalance(solWalletAddress, tokenaddress),
+            getSolanaBalanceAndPrice(solWalletAddress),
+          ]);
+          if (singleTokenBalance) {
+            console.log("🚀 ~ fetchTokenMeta ~ singleTokenBalance:", singleTokenBalance)
+            setTokenBalance(singleTokenBalance || 0);
+          }
+          if (solBalance) {
+            setNativeTokenbalance(solBalance);
+          }
         } else {
           const tokenData = await getTokenBalance(
             tokenaddress,
-            address,
+            solWalletAddress,
             selectToken
           );
           setTokenBalance(tokenData?.tokenBalance);
@@ -104,7 +111,7 @@ const Tradingview = () => {
       }
     };
     fetchTokenMeta();
-  }, [address, getNetwork, tokenaddress]);
+  }, [solWalletAddress, getNetwork, tokenaddress]);
   const handleCopy = (mintAddress) => {
     setCopied(true);
     // toast.success("TokenAddress copied to clipboard!", {
@@ -416,8 +423,7 @@ const Tradingview = () => {
               handleCopy={handleCopy}
               TokenDetailsNumberData={TokenDetailsNumberData}
               chartTokenData={chartTokenData}
-              walletAddress={address}
-              isConnected={isConnected}
+              walletAddress={solWalletAddress}
             />
           </div>
 
@@ -431,7 +437,7 @@ const Tradingview = () => {
             <Table
               tokenCA={tokenaddress}
               networkName={getNetwork}
-              address={address}
+              address={solWalletAddress}
               scrollPosition={scrollPosition}
               tvChartRef={tvChartRef}
             />
@@ -458,12 +464,14 @@ const Tradingview = () => {
             activeTab={activeTab}
             setActiveTab={setActiveTab}
             token={tokenaddress}
-            walletAddress={address}
-            isConnected={isConnected}
-            walletProvider={walletProvider}
+            walletAddress={solWalletAddress}
             setTokenBalance={setTokenBalance}
             tokenBalance={tokenBalance}
             tokenName={tokenSymbol}
+            nativeTokenbalance={nativeTokenbalance}
+            setNativeTokenbalance={setNativeTokenbalance}
+            decimal={chartTokenData?.decimal}
+            price={latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD}
           />
         </div>
 

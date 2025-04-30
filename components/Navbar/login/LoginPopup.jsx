@@ -55,7 +55,7 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
             }
         }
         try {
-            const response = await axios.post(`${baseUrl}${auth}`, {
+            const response = await axios.post(`${baseUrl}user/${auth}`, {
                 email: email.toLowerCase(),
                 ...(authName === 'login' && { password: password }),
                 ...(authName === 'signup' && { referralId })
@@ -94,30 +94,33 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
         onSuccess: async (codeResponse) => {
             try {
                 await axios({
-                    url: `${baseUrl}googleAuth`,
-                    method: "post",
-                    data: {
-                        googleCode: codeResponse.code,
-                    },
+                  url: `${baseUrl}user/googleAuth`,
+                  method: "post",
+                  data: {
+                    googleCode: codeResponse.code,
+                  },
                 })
-                    .then((res) => {
-                        localStorage.setItem('token', res?.data?.data?.token)
-                        localStorage.setItem('walletAddress', res?.data?.data?.user?.walletAddressSOL)
-                        setVerifyData(res?.data)
+                  .then((res) => {
+                    localStorage.setItem("token", res?.data?.data?.token);
+                    localStorage.setItem(
+                      "walletAddress",
+                      res?.data?.data?.user?.walletAddressSOL
+                    );
+                    setVerifyData(res?.data);
 
-                        if (res?.data?.message === "Login successfull") {
-                            setIsLoginPopup(false)
-                        } else {
-                            setIsGoogleSignIn(true)
-                        }
-                        dispatch(setSolWalletAddress())
-                        toast.success(res?.data?.message)
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                        toast.error(err?.message)
-                        setIsGoogleSignIn(false)
-                    });
+                    if (res?.data?.message === "Login successfull") {
+                      setIsLoginPopup(false);
+                    } else {
+                      setIsGoogleSignIn(true);
+                    }
+                    dispatch(setSolWalletAddress());
+                    toast.success(res?.data?.message);
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                    toast.error(err?.message);
+                    setIsGoogleSignIn(false);
+                  });
             } catch (error) {
                 console.error(error);
                 toast.error(error?.message)

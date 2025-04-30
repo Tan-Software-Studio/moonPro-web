@@ -35,7 +35,6 @@ const TokenDetails = ({
   TokenDetailsNumberData,
   chartTokenData,
   walletAddress,
-  isConnected,
 }) => {
   const { open } = useAppKit();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -65,48 +64,44 @@ const TokenDetails = ({
     } catch (error) {}
   }
   async function addAndRemoveToFavouriteHandler() {
-    if (isConnected) {
-      if (isFavourite) {
-        axios({
-          method: "post",
-          url: `${process.env.NEXT_PUBLIC_BASE_URLS}wavePro/users/token-unlike`,
-          data: {
-            id: isFavourite?._id,
-          },
-        })
-          .then(async (res) => {
-            await dispatch(
-              setFavouriteTokens(
-                tokenFavList.filter(
-                  (item) =>
-                    item?.tokenAddress?.toLowerCase() !==
-                    tokenaddress?.toString()?.toLowerCase()
-                )
+    if (isFavourite) {
+      axios({
+        method: "post",
+        url: `${process.env.NEXT_PUBLIC_BASE_URLS}wavePro/users/token-unlike`,
+        data: {
+          id: isFavourite?._id,
+        },
+      })
+        .then(async (res) => {
+          await dispatch(
+            setFavouriteTokens(
+              tokenFavList.filter(
+                (item) =>
+                  item?.tokenAddress?.toLowerCase() !==
+                  tokenaddress?.toString()?.toLowerCase()
               )
-            );
-          })
-          .catch((err) => {});
-      } else {
-        axios({
-          method: "post",
-          url: `${process.env.NEXT_PUBLIC_BASE_URLS}wavePro/users/token-favorites`,
-          data: {
-            symbol: tokenSymbol,
-            img: tokenImage,
-            name: chartTokenData?.name,
-            tokenAddress: tokenaddress,
-            walletAddress: walletAddress,
-          },
+            )
+          );
         })
-          .then(async (res) => {
-            await dispatch(
-              setFavouriteTokens([...tokenFavList, res?.data?.data])
-            );
-          })
-          .catch((err) => {});
-      }
+        .catch((err) => {});
     } else {
-      open();
+      axios({
+        method: "post",
+        url: `${process.env.NEXT_PUBLIC_BASE_URLS}wavePro/users/token-favorites`,
+        data: {
+          symbol: tokenSymbol,
+          img: tokenImage,
+          name: chartTokenData?.name,
+          tokenAddress: tokenaddress,
+          walletAddress: walletAddress,
+        },
+      })
+        .then(async (res) => {
+          await dispatch(
+            setFavouriteTokens([...tokenFavList, res?.data?.data])
+          );
+        })
+        .catch((err) => {});
     }
   }
 
