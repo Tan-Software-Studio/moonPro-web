@@ -1,20 +1,32 @@
-import { buySolanaTokensQuickBuyHandlerCopyTrading } from '@/utils/solanaBuySell/solanaBuySell';
-import { useAppKitAccount, useAppKitProvider } from '@reown/appkit/react';
-import React from 'react';
-import { useDispatch } from 'react-redux';
+"use client";
+import React, { useEffect } from "react";
+import { buySolanaTokensQuickBuyHandlerCopyTrading } from "@/utils/solanaBuySell/solanaBuySell";
+import { useDispatch, useSelector } from "react-redux";
+import { getSolanaBalanceAndPrice } from "@/utils/solanaNativeBalance";
 export default function BuyBtn({ toToken }) {
-  const { address, isConnected } = useAppKitAccount();
-  const { walletProvider } = useAppKitProvider("solana");
   const dispatch = useDispatch();
+  const [nativeTokenbalance, setNativeTokenbalance] = useState(0);
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
+  async function getSolanaBalance() {
+    const solBalance = await getSolanaBalanceAndPrice(solWalletAddress);
+    setNativeTokenbalance(solBalance);
+  }
+  useEffect(() => {
+    if (solWalletAddress) {
+      getSolanaBalance();
+    }
+  }, [solWalletAddress]);
   return (
     <button
       onClick={(e) =>
         buySolanaTokensQuickBuyHandlerCopyTrading(
           toToken,
-          walletProvider,
-          address,
-          isConnected,
-          e,  
+          solWalletAddress,
+          nativeTokenbalance,
+          setNativeTokenbalance,
+          e,
           dispatch
         )
       }

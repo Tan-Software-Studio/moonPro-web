@@ -18,29 +18,23 @@ import { setChartSymbolImage } from "@/app/redux/states";
 import { PiCopyLight } from "react-icons/pi";
 import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 import Link from "next/link";
+import { getSolanaBalanceAndPrice } from "@/utils/solanaNativeBalance";
 
 const TableBody = ({ data, img }) => {
   const pathname = usePathname();
   const dispatch = useDispatch();
 
-  const { address, isConnected } = useAppKitAccount();
-  const { walletProvider } = useAppKitProvider("solana");
-
   const [currentTime, setCurrentTime] = useState(new Date());
   const [copied, setCopied] = useState(false);
+  const [nativeTokenbalance, setNativeTokenbalance] = useState(0);
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
   const router = useRouter();
 
   const getNetwork = pathname.split("/")[2];
 
   const bigLoader = useSelector((state) => state?.AllStatesData?.bigLoader);
-
-  const borderColor = useSelector(
-    (state) => state?.AllthemeColorData?.borderColor
-  );
-
-  const filterTime = useSelector(
-    (state) => state?.AllthemeColorData?.filterTime
-  );
 
   const quickBuy = useSelector((state) => state?.AllStatesData?.globalBuyAmt);
 
@@ -53,10 +47,6 @@ const TableBody = ({ data, img }) => {
       setCopied(null);
     }, 3000); // Reset after 3 seconds
   };
-
-  const chainName = useSelector(
-    (state) => state.AllthemeColorData?.selectToken
-  );
 
   const SkeletonData = Array(20).fill(null);
   // const SkeletonInnerData =
@@ -78,7 +68,15 @@ const TableBody = ({ data, img }) => {
 
     return () => clearInterval(interval); // Cleanup on component unmount
   }, []);
-
+  async function getSolanaBalance() {
+    const solBalance = await getSolanaBalanceAndPrice(solWalletAddress);
+    setNativeTokenbalance(solBalance);
+  }
+  useEffect(() => {
+    if (solWalletAddress) {
+      getSolanaBalance();
+    }
+  }, [solWalletAddress]);
   return (
     <>
       {data.length == 0 ? (
@@ -401,10 +399,10 @@ const TableBody = ({ data, img }) => {
                       onClick={(e) =>
                         buySolanaTokensQuickBuyHandler(
                           row?.address,
-                          walletProvider,
-                          address,
-                          isConnected,
                           quickBuy,
+                          solWalletAddress,
+                          nativeTokenbalance,
+                          setNativeTokenbalance,
                           e,
                           dispatch
                         )

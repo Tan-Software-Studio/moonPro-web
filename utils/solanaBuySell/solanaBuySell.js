@@ -74,246 +74,124 @@ const buySolanaTokens = async (
     });
   return;
 };
-
 // quick buy handler
 const buySolanaTokensQuickBuyHandler = async (
   toToken,
-  walletProvider,
-  address,
-  isConnected,
   amt,
+  address,
+  nativeTokenbalance,
+  setNativeTokenbalance,
   e,
   dispatch
 ) => {
-  try {
-    e && e.stopPropagation();
-
-    if (!isConnected) {
-      return toast.error("Wallet is not connected !", {
-        position: "top-right",
-      });
-    }
-    if (amt <= 0 || !amt) {
-      return toast.error("Invalid amount !", {
-        position: "top-right",
-      });
-    }
-    const connection = new Connection(
-      process.env.NEXT_PUBLIC_SOLANA_RPC_URL,
-      "confirmed"
-    );
-    const balanceOfNative = await getSolanaBalanceAndPrice(address, connection);
-    if (balanceOfNative <= amt || balanceOfNative <= 0) {
-      return toast.error("Insuficient balance + gas !", {
-        position: "top-right",
-      });
-    }
-    const provider = walletProvider;
-    const amountInLam = await ethers.parseUnits(amt.toString(), 9);
-    const response = await axios.get(`${GET_SOL_QUOTE}`, {
-      params: {
-        inputMint: "So11111111111111111111111111111111111111112",
-        outputMint: toToken,
-        amount: amountInLam,
-        slippageBps: 1000,
-      },
-    });
-    const quoteResponse = await response?.data;
-
-    const response2 = await axios.post(
-      `${GET_SOL_SWAP}`,
-      {
-        quoteResponse: quoteResponse,
-        userPublicKey: new PublicKey(address),
-        prioritizationFeeLamports: {
-          priorityLevelWithMaxLamports: {
-            maxLamports: 1500000,
-            global: false,
-            priorityLevel: "veryHigh",
-          },
-        },
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    const swapResponse = await response2.data;
-
-    const swapTransactionBuf = Buffer.from(
-      swapResponse.swapTransaction,
-      "base64"
-    );
-
-    let transaction = await VersionedTransaction.deserialize(
-      swapTransactionBuf
-    );
-
-    // Sign the transaction using the wallet
-    transaction = await provider.signTransaction(transaction);
-    dispatch(setBigLoader(true));
-
-    // Hide loader before the wallet approval
-
-    // Execute the transaction
-    const rawTransaction = transaction.serialize();
-
-    // Show loader again during transaction submission
-
-    const signature = await connection.sendRawTransaction(rawTransaction, {
-      maxRetries: 2,
-      skipPreflight: true,
-    });
-    const confirmation = await connection.confirmTransaction(
-      { signature },
-      "finalized"
-    );
-
-    if (confirmation.value.err) {
-      throw new Error(
-        `Transaction failed: ${JSON.stringify(
-          confirmation.value.err
-        )}\nhttps://solscan.io/tx/${signature}/`
-      );
-    } else {
-      // console.log(
-      //   `Transaction successful: https://solscan.io/tx/${signature}/`
-      // );
-      toast.success("Transaction Successfull!", {
-        position: "top-right",
-      });
-    }
-    dispatch(setBigLoader(false));
-    return;
-  } catch (error) {
-    console.error("Signing failed:", error?.message);
-    dispatch(setBigLoader(false));
-    return toast.error("Transaction failed OR Token not tradable !", {
+  e && e.stopPropagation();
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return toast.error("Please login!", {
       position: "top-right",
     });
   }
+  if (amt <= 0) {
+    return toast.error("Invalid amount !", {
+      position: "top-right",
+    });
+  }
+  if (nativeTokenbalance < amt) {
+    return toast.error("insufficient funds !", {
+      position: "top-right",
+    });
+  }
+  dispatch(setBigLoader(true));
+  await axios({
+    url: `${BASE_URL}transactions/solbuy`,
+    method: "post",
+    data: {
+      token: toToken,
+      amount: amt,
+      slippage: 50,
+      priorityFee: 0.0001,
+      price: 150,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then(async (res) => {
+      dispatch(setBigLoader(false));
+      await toast.success("Transaction successfully");
+      setTimeout(() => {
+        const solBalance = getSolanaBalanceAndPrice(address);
+        setNativeTokenbalance(solBalance);
+      }, 2000);
+    })
+    .catch(async (err) => {
+      dispatch(setBigLoader(false));
+      console.log("🚀 ~ err:", err?.message);
+      await toast.success("Somthing went wrong please try again later.");
+    });
+  return;
 };
 // quick buy handler
 const buySolanaTokensQuickBuyHandlerCopyTrading = async (
   toToken,
-  walletProvider,
   address,
-  isConnected,
+  nativeTokenbalance,
+  setNativeTokenbalance,
   e,
   dispatch
 ) => {
-  try {
-    e && e.stopPropagation();
-
-    if (!isConnected) {
-      return toast.error("Wallet is not connected !", {
-        position: "top-right",
-      });
-    }
-    const amt = await localStorage.getItem("copyBuySol");
-    if (amt <= 0 || !amt) {
-      return toast.error("Invalid amount !", {
-        position: "top-right",
-      });
-    }
-    const connection = new Connection(
-      process.env.NEXT_PUBLIC_SOLANA_RPC_URL,
-      "confirmed"
-    );
-    const balanceOfNative = await getSolanaBalanceAndPrice(address, connection);
-    if (balanceOfNative <= amt || balanceOfNative <= 0) {
-      return toast.error("Insuficient balance + gas !", {
-        position: "top-right",
-      });
-    }
-    const provider = walletProvider;
-    const amountInLam = await ethers.parseUnits(amt.toString(), 9);
-    const response = await axios.get(`${GET_SOL_QUOTE}`, {
-      params: {
-        inputMint: "So11111111111111111111111111111111111111112",
-        outputMint: toToken,
-        amount: amountInLam,
-        slippageBps: 1000,
-      },
-    });
-    const quoteResponse = await response?.data;
-
-    const response2 = await axios.post(
-      `${GET_SOL_SWAP}`,
-      {
-        quoteResponse: quoteResponse,
-        userPublicKey: new PublicKey(address),
-        prioritizationFeeLamports: {
-          priorityLevelWithMaxLamports: {
-            maxLamports: 1500000,
-            global: false,
-            priorityLevel: "veryHigh",
-          },
-        },
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    const swapResponse = await response2.data;
-
-    const swapTransactionBuf = Buffer.from(
-      swapResponse.swapTransaction,
-      "base64"
-    );
-
-    let transaction = await VersionedTransaction.deserialize(
-      swapTransactionBuf
-    );
-
-    // Sign the transaction using the wallet
-    transaction = await provider.signTransaction(transaction);
-    dispatch(setBigLoader(true));
-
-    // Hide loader before the wallet approval
-
-    // Execute the transaction
-    const rawTransaction = transaction.serialize();
-
-    // Show loader again during transaction submission
-
-    const signature = await connection.sendRawTransaction(rawTransaction, {
-      maxRetries: 2,
-      skipPreflight: true,
-    });
-    const confirmation = await connection.confirmTransaction(
-      { signature },
-      "finalized"
-    );
-
-    if (confirmation.value.err) {
-      throw new Error(
-        `Transaction failed: ${JSON.stringify(
-          confirmation.value.err
-        )}\nhttps://solscan.io/tx/${signature}/`
-      );
-    } else {
-      // console.log(
-      //   `Transaction successful: https://solscan.io/tx/${signature}/`
-      // );
-      toast.success("Transaction Successfull!", {
-        position: "top-right",
-      });
-    }
-    dispatch(setBigLoader(false));
-    return;
-  } catch (error) {
-    console.error("Signing failed:", error?.message);
-    dispatch(setBigLoader(false));
-    return toast.error("Transaction failed OR Token not tradable !", {
+  e && e.stopPropagation();
+  const amt = await localStorage.getItem("copyBuySol");
+  if (amt <= 0 || !amt) {
+    return toast.error("Invalid amount !", {
       position: "top-right",
     });
   }
+  if (nativeTokenbalance < amt) {
+    return toast.error("insufficient funds !", {
+      position: "top-right",
+    });
+  }
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return toast.error("Please login!", {
+      position: "top-right",
+    });
+  }
+  if (amt <= 0) {
+    return toast.error("Invalid amount !", {
+      position: "top-right",
+    });
+  }
+  dispatch(setBigLoader(true));
+  await axios({
+    url: `${BASE_URL}transactions/solbuy`,
+    method: "post",
+    data: {
+      token: toToken,
+      amount: amt,
+      slippage: 50,
+      priorityFee: 0.0001,
+      price: 150,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then(async (res) => {
+      dispatch(setBigLoader(false));
+      await toast.success("Transaction successfully");
+      setTimeout(() => {
+        const solBalance = getSolanaBalanceAndPrice(address);
+        setNativeTokenbalance(solBalance);
+      }, 2000);
+    })
+    .catch(async (err) => {
+      dispatch(setBigLoader(false));
+      console.log("🚀 ~ err:", err?.message);
+      await toast.success("Somthing went wrong please try again later.");
+    });
+  return;
 };
 // handler to sell solana tokens
 const sellSolanaTokens = async (
@@ -379,7 +257,6 @@ const sellSolanaTokens = async (
     });
   return;
 };
-
 // quick sell handler solana
 const sellSolanaTokensQuickSellHandler = async (
   fromToken,
@@ -391,7 +268,9 @@ const sellSolanaTokensQuickSellHandler = async (
 ) => {
   try {
     e && e.stopPropagation();
-
+    return toast.error("Service unavailable!", {
+      position: "top-right",
+    });
     if (!isConnected) {
       return toast.error("Wallet is not connected !", {
         position: "top-right",

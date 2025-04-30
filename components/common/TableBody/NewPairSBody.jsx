@@ -17,22 +17,21 @@ import SearchPopup from "../Search-Popup/SearchPopup";
 import LoaderPopup from "../LoaderPopup/LoaderPopup";
 import { setBigLoader } from "@/app/redux/states";
 import { MdOutlineQuickreply } from "react-icons/md";
+import { getSolanaBalanceAndPrice } from "@/utils/solanaNativeBalance";
 
 const NewPairSBody = ({ data, loading }) => {
-  const { address, isConnected } = useAppKitAccount();
-  const { walletProvider } = useAppKitProvider("solana");
   const router = useRouter();
   const pathname = usePathname();
   const getNetwork = pathname.split("/")[2];
   const dispatch = useDispatch();
-
+  const [nativeTokenbalance, setNativeTokenbalance] = useState(0);
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
   const bigLoader = useSelector((state) => state?.AllStatesData?.bigLoader);
-
-  const token = process.env.NEXT_PUBLIC_STREAM_BITQUERY_API;
 
   const [copied, setCopied] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
-
 
   const quickBuy = useSelector((state) => state?.AllStatesData?.globalBuyAmt);
 
@@ -61,6 +60,15 @@ const NewPairSBody = ({ data, loading }) => {
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, []); // This runs once when the component mounts
 
+  async function getSolanaBalance() {
+    const solBalance = await getSolanaBalanceAndPrice(solWalletAddress);
+    setNativeTokenbalance(solBalance);
+  }
+  useEffect(() => {
+    if (solWalletAddress) {
+      getSolanaBalance();
+    }
+  }, [solWalletAddress]);
   return (
     <>
       {data.length == 0 ? (
@@ -318,10 +326,10 @@ const NewPairSBody = ({ data, loading }) => {
                     onClick={(e) => {
                       buySolanaTokensQuickBuyHandler(
                         row?.address,
-                        walletProvider,
-                        address,
-                        isConnected,
                         quickBuy,
+                        solWalletAddress,
+                        nativeTokenbalance,
+                        setNativeTokenbalance,
                         e,
                         dispatch
                       );

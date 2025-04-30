@@ -29,15 +29,14 @@ import Image from "next/image";
 import ChartComponent from "./ChartComponent";
 import { setChartSymbolImage } from "@/app/redux/states";
 import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
+import { getSolanaBalanceAndPrice } from "@/utils/solanaNativeBalance";
 
 const MscopePumpTable = ({ MemscopeData }) => {
-  const { address, isConnected } = useAppKitAccount();
-  const { walletProvider } = useAppKitProvider("solana");
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoverRow, sethoverRow] = useState(false);
-
-  const borderColor = useSelector(
-    (state) => state?.AllthemeColorData?.borderColor
+  const [nativeTokenbalance, setNativeTokenbalance] = useState(0);
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
   );
   const bigLoader = useSelector((state) => state?.AllStatesData?.bigLoader);
 
@@ -102,7 +101,15 @@ const MscopePumpTable = ({ MemscopeData }) => {
 
     return () => clearInterval(interval);
   }, []);
-
+  async function getSolanaBalance() {
+    const solBalance = await getSolanaBalanceAndPrice(solWalletAddress);
+    setNativeTokenbalance(solBalance);
+  }
+  useEffect(() => {
+    if (solWalletAddress) {
+      getSolanaBalance();
+    }
+  }, [solWalletAddress]);
   return (
     <>
       {MemscopeData.length == 0 ? (
@@ -276,10 +283,10 @@ const MscopePumpTable = ({ MemscopeData }) => {
                               onClick={(e) =>
                                 buySolanaTokensQuickBuyHandler(
                                   block?.address,
-                                  walletProvider,
-                                  address,
-                                  isConnected,
                                   quickBuy,
+                                  solWalletAddress,
+                                  nativeTokenbalance,
+                                  setNativeTokenbalance,
                                   e,
                                   dispatch
                                 )
