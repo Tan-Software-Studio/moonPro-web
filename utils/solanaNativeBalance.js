@@ -9,7 +9,7 @@ const { PublicKey, Connection } = require("@solana/web3.js");
 async function getSolanaBalanceAndPrice(wallet) {
   try {
     const connection = new Connection(
-      process.env.NEXT_PUBLIC_SOLANA_RPC_URL,
+      `${process.env.NEXT_PUBLIC_SOLANA_RPC_URL}`,
       "confirmed"
     );
     const userPublicKey = new PublicKey(wallet);
@@ -24,8 +24,10 @@ async function getSolanaBalanceAndPrice(wallet) {
 const getSoalanaTokenBalance = async (walletAddress, tokenMintAddress) => {
   // Create a connection to the Solana cluster
   try {
-    const solanaRpc = await process.env.NEXT_PUBLIC_SOLANA_RPC_URL;
-    const connection = new Connection(solanaRpc, "confirmed");
+    const connection = new Connection(
+      `${process.env.NEXT_PUBLIC_SOLANA_RPC_URL}`,
+      "confirmed"
+    );
     const walletPublicKey = new PublicKey(walletAddress);
     const tokenMintPublicKey = new PublicKey(tokenMintAddress);
 
