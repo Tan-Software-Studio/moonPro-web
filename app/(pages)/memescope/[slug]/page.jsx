@@ -11,7 +11,6 @@ import FilterButton from "@/components/common/filter/FilterButton";
 import { fetchMemescopeData } from "@/app/redux/memescopeData/Memescope";
 import NewPairSOLData from "@/websocket/NewPairSOLData";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
-import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 import { useTranslation } from "react-i18next";
 
 const Memescope = () => {

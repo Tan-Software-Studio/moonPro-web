@@ -21,6 +21,7 @@ import {
   setFavouriteTokens,
   setIsEnabled,
   setIsSearchPopup,
+  setSolWalletAddress,
   setUserInfo,
 } from "@/app/redux/states";
 import axiosInstance from "../axiosIntance/axiosInstance";
@@ -34,7 +35,7 @@ import { IoIosArrowDown, } from "react-icons/io";
 import toast from "react-hot-toast";
 import { FaCopy } from "react-icons/fa6";
 import { googleLogout } from "@react-oauth/google";
- 
+
 
 
 const Navbar = () => {
@@ -53,6 +54,9 @@ const Navbar = () => {
   const tokenPopup = useSelector(
     (state) => state?.AllthemeColorData?.tokenPopup
   );
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
 
   const [searchTerm, setSearchTerm] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
@@ -68,16 +72,10 @@ const Navbar = () => {
   const [authName, setAuthName] = useState('');
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-
-
-  const isLogin = localStorage.getItem('token')
-  const walletAddress = localStorage.getItem('walletAddress')
-
-  //
-
   const handleLogout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('walletAddress')
+    dispatch(setSolWalletAddress())
     router.push('/')
     setIsProfileOpen(false)
     googleLogout()
@@ -102,9 +100,6 @@ const Navbar = () => {
     pathname === "/profile" ||
     pathname === "/wallet-tracker";
 
-  const borderColor = useSelector(
-    (state) => state?.AllthemeColorData?.borderColor
-  );
   const isSidebarOpen = useSelector(
     (state) => state?.AllthemeColorData?.isSidebarOpen
   );
@@ -208,6 +203,10 @@ const Navbar = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    dispatch(setSolWalletAddress())
+  }, [])
 
   useEffect(() => {
     const status = localStorage.getItem("@appkit/connection_status");
@@ -400,7 +399,7 @@ const Navbar = () => {
               </div> */}
 
               <div className="flex items-center gap-2 ">
-                {isLogin ?
+                {solWalletAddress ?
                   <div className="relative">
                     <div
                       className="text-sm bg-[#1F1F1F] py-1.5 px-4 rounded-md text-white cursor-pointer flex items-center gap-2"
@@ -410,7 +409,7 @@ const Navbar = () => {
                         <IoWallet size={16} className="text-white" />
                       </div>
                       <div>
-                        {walletAddress?.slice(0, 5)}...{walletAddress?.slice(-4)}
+                        {solWalletAddress?.slice(0, 5)}...{solWalletAddress?.slice(-4)}
                       </div>
                       <div>
                         <IoIosArrowDown size={16} className="text-white" />
@@ -423,10 +422,10 @@ const Navbar = () => {
                           Wallet Address
                         </div>
                         <div className="px-4 py-2 text-sm text-white break-words flex items-center justify-between gap-2">
-                          <span className="text-sm">{walletAddress?.slice(0, 5)}...{walletAddress?.slice(-4)}</span>
+                          <span className="text-sm">{solWalletAddress?.slice(0, 5)}...{solWalletAddress?.slice(-4)}</span>
                           <button
                             onClick={() => {
-                              navigator.clipboard.writeText(walletAddress);
+                              navigator.clipboard.writeText(solWalletAddress);
                             }}
 
                           >
@@ -451,7 +450,7 @@ const Navbar = () => {
                   // className="border-[#1F73FC] border-1  rounded-md cursor-pointer bg-[#11265B] px-5 py-1.5 ">Logout</div>
                   :
                   <>
-                    <div  
+                    <div
                       onClick={() => {
                         setIsLoginPopup(true);
                         setAuthName("login");

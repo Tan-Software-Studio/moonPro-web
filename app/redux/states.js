@@ -3,7 +3,7 @@ const { createSlice } = require("@reduxjs/toolkit");
 const AllStatesData = createSlice({
   name: "AllStatesData",
   initialState: {
-    user:{},
+    user: {},
     walletAddress: "",
     isSearchPopup: false,
     bigLoader: false,
@@ -12,6 +12,8 @@ const AllStatesData = createSlice({
     globalBuyAmt: 0.1,
     chartSymbolImage: null,
     favouriteTokens: [],
+    solWalletAddress: null,
+    jwtToken: null
   },
   reducers: {
     setWalletAddress: (state, action) => {
@@ -43,6 +45,12 @@ const AllStatesData = createSlice({
       console.log("🚀 ~ action:", action?.payload)
       state.user = action?.payload;
     },
+    setSolWalletAddress: (state, action) => {
+      const wallet = localStorage.getItem("walletAddress")
+      const token = localStorage.getItem("token")
+      state.solWalletAddress = wallet ? wallet : null
+      state.jwtToken = token ? token : null
+    }
   },
 });
 
@@ -56,5 +64,6 @@ export const {
   setGlobalBuyAmt,
   setChartSymbolImage,
   setFavouriteTokens,
-  setUserInfo
+  setUserInfo,
+  setSolWalletAddress
 } = AllStatesData.actions;

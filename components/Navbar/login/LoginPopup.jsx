@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from 'react'
 import { IoMdClose } from "react-icons/io";
 import OtpPopup from './OtpPopup';
@@ -9,10 +10,12 @@ import { jwtDecode } from 'jwt-decode'
 import Image from 'next/image';
 import { googleLogo } from '@/app/Images';
 import RecoveryKey from './RecoveryKey';
+import { setSolWalletAddress } from '@/app/redux/states';
+import { useDispatch } from 'react-redux';
 
 const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
 
-
+    const dispatch = useDispatch()
     const [isPassword, setIsPassword] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [passwordInput, setPasswordInput] = useState('')
@@ -40,9 +43,17 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
             setError('')
 
         }
+
+
         const auth = authName == 'login' ? 'login' : 'signup'
         const password = passwordInput.trim();
         const referralId = refferalCode.trim();
+        if (authName == 'login') {
+            if (!password) {
+                toast.error("Password is required");
+                return;
+            }
+        }
         try {
             const response = await axios.post(`${baseUrl}${auth}`, {
                 email: email.toLowerCase(),
@@ -56,9 +67,9 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
             if (response?.data?.statusCode === 200 || 201) {
                 setIsPassword(true);
             }
-            if (response?.data?.statusCode === 201) {
-                toast.error("User was created but not verified")
-            }
+            // if (response?.data?.statusCode === 201) {
+            //     toast.error("User was created but not verified")
+            // }
 
             toast.success(response?.data?.message)
 
@@ -99,10 +110,11 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
                         } else {
                             setIsGoogleSignIn(true)
                         }
+                        dispatch(setSolWalletAddress())
                         toast.success(res?.data?.message)
                     })
                     .catch((err) => {
-                        console.error(err );
+                        console.error(err);
                         toast.error(err?.message)
                         setIsGoogleSignIn(false)
                     });
@@ -214,7 +226,7 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
                                 <div>
                                     <span className='text-[#1F1F1F] font-semibold text-sm ml-2'>Continue with Google</span>
                                 </div>
-                            </div> 
+                            </div>
 
                             {authName != 'login' ?
                                 <div className='text-xs mt-3 cursor-pointer text-center'>

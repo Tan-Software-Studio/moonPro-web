@@ -6,15 +6,24 @@ import RecoveryKey from './RecoveryKey';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { FaEye, FaEyeSlash } from 'react-icons/fa6';
+import { setJwtToken, setSolWalletAddress, setSOLWalletAddress } from '@/app/redux/states';
+import { useDispatch } from 'react-redux';
 
 
 
 const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email, setAuthName }) => {
+    const dispatch = useDispatch();
     const [recoveryKey, setRecoveryKey] = useState(false);
     const [otp, setOtp] = useState('');
     const [verifyData, setVerifyData] = useState({})
     const [showPassword, setShowPassword] = useState(false);
     const [showPassword1, setShowPassword1] = useState(false);
+    const [passwordError, setPasswordError] = useState('')
+    const [confirmPasswordError, setConfirmPasswordError] = useState('')
+
+
+    const [otpError, setOtpError] = useState(' ')
+
 
     const [passwordInput, setPasswordInput] = useState('')
     const [confirmPasswordInput, setConfirmPasswordInput] = useState('')
@@ -28,13 +37,50 @@ const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email, setAuthName }) =
 
 
     const handleVerify = async () => {
-        confirmPasswordInput.trim();
+        const confirmPassword = confirmPasswordInput.trim();
         const password = passwordInput.trim();
+
+        if (!otp) {
+            setOtpError("Otp is required")
+            return;
+        }
+        if (otp.length < 6) {
+            setOtpError("Otp is not valid")
+            return;
+        }
+        setOtpError('')
         if (authName != 'login') {
-            if (password.length < 4) {
-                toast.error('Password must be at least 4 characters long')
+            if (password.length < 8) {
+                setPasswordError("Password must be at least 8 characters long.");
                 return;
             }
+            if (!/[a-z]/.test(password)) {
+                setPasswordError("Password must include at least one lowercase letter.");
+                return;
+            }
+            if (!/[A-Z]/.test(password)) {
+                setPasswordError("Password must include at least one uppercase letter.");
+                return;
+            }
+            if (!/\d/.test(password)) {
+                setPasswordError("Password must include at least one digit.");
+                return;
+            }
+            if (!/[@$!%*?#&]/.test(password)) {
+                setPasswordError("Password must (@$!%*?#&) one special character .");
+                return;
+            }
+            setPasswordError('')
+
+            if (!confirmPassword) {
+                setConfirmPasswordError("Confirm password is required");
+                return;
+            }
+            if (confirmPassword != password) {
+                setConfirmPasswordError("New password and Confirm password should be same ");
+                return;
+            }
+            setConfirmPasswordError('')
         }
 
         try {
@@ -42,7 +88,7 @@ const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email, setAuthName }) =
                 otp: Number(otp),
                 ...(authName != 'login' && {
                     password: password,
-                    confirmPassword: confirmPasswordInput
+                    confirmPassword: confirmPassword
                 }),
             },
                 {
@@ -53,6 +99,7 @@ const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email, setAuthName }) =
             )
             localStorage.setItem('token', response?.data?.data?.token)
             localStorage.setItem('walletAddress', response?.data?.data?.user?.walletAddressSOL)
+
             setVerifyData(response?.data)
 
             if (response?.data?.statusCode === 200) {
@@ -62,6 +109,7 @@ const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email, setAuthName }) =
                     setRecoveryKey(true)
                 }
             }
+            dispatch(setSolWalletAddress())
             toast.success(response?.data?.message)
         }
         catch (err) {
@@ -114,7 +162,8 @@ const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email, setAuthName }) =
                                     // animation: isInvalidOtp ? "shake 0.7s" : "none",
                                 }}
                             />
-                            
+                            <div className='text-xs text-red-600 mt-0.5'>{otpError}</div>
+
                             {authName != 'login' &&
                                 <div className='mt-4'>
                                     <div className='text-sm '>Password</div>
@@ -132,6 +181,7 @@ const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email, setAuthName }) =
                                         }
                                         {/* <FaEyeSlash size={18} className='w-fit cursor-pointer' /> */}
                                     </div>
+                                    <div className='text-xs text-red-600 mt-0.5'>{passwordError}</div>
                                     <div className=' border-[1px] bg-[#1F1F1F] py-2 px-2 mt-1 flex items-center justify-between rounded-md border-[#404040] '>
                                         <input
                                             type={!showPassword1 ? "password" : "text"}
@@ -147,6 +197,7 @@ const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email, setAuthName }) =
                                         }
                                         {/* <FaEyeSlash size={18} className='w-fit cursor-pointer' /> */}
                                     </div>
+                                    <div className='text-xs text-red-600 mt-0.5'>{confirmPasswordError}</div>
                                 </div>
                             }
                             <button
