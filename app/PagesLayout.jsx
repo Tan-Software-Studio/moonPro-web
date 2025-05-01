@@ -6,9 +6,8 @@ import SearchPopup from "@/components/common/Search-Popup/SearchPopup";
 import Notification from "@/components/Notification/Notification";
 import WalletScan from "@/components/walletTrackerNotification/WalletScan";
 import { setGlobalBuyAmt } from "./redux/states";
-import "../app/i18n"
-import { GoogleOAuthProvider } from '@react-oauth/google'
-
+import "../app/i18n";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const PagesLayout = ({ childrens }) => {
   const dispatch = useDispatch();
@@ -43,11 +42,12 @@ const PagesLayout = ({ childrens }) => {
     <>
       <GoogleOAuthProvider clientId={clientId}>
         <div
-          className={`w-full ${(isSidebarOpen && isLargeScreen) ||
-              (isSidebarOpen && isSmallScreenData)
+          className={`w-full ${
+            (isSidebarOpen && isLargeScreen) ||
+            (isSidebarOpen && isSmallScreenData)
               ? "md:pl-48  "
               : "md:pl-[57px]"
-            } relative`}
+          } relative`}
         >
           {/* <div
           className={` w-full ${

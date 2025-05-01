@@ -41,6 +41,24 @@ const buySolanaTokens = async (
     });
   }
   setLoaderSwap(true);
+  toast(
+    <div className="flex items-center gap-5">
+      <div className="loaderPopup"></div>
+      <div className="text-white text-sm">Attempting transaction</div>
+    </div>,
+    {
+      id: "saveToast",
+      position: "top-center",
+      duration: Infinity,
+      style: {
+        border: "1px solid #4D4D4D",
+        color: "#FFFFFF",
+        fontSize: "14px",
+        letterSpacing: "1px",
+        backgroundColor: "#1F1F1F",
+      },
+    }
+  );
   await axios({
     url: `${BASE_URL}transactions/solbuy`,
     method: "post",
@@ -56,7 +74,10 @@ const buySolanaTokens = async (
     },
   })
     .then(async (res) => {
-      await toast.success("Transaction successfully");
+      await toast.success("Transaction successfully", {
+        id: "saveToast",
+        duration: 3000,
+      });
       setLoaderSwap(false);
       setTimeout(async () => {
         const [tokenBalanceUpdate, solBalance] = await Promise.all([
@@ -70,7 +91,10 @@ const buySolanaTokens = async (
     .catch(async (err) => {
       setLoaderSwap(false);
       console.log("🚀 ~ err:", err?.message);
-      await toast.success("Somthing went wrong please try again later.");
+      await toast.error("Somthing went wrong please try again later.", {
+        id: "saveToast",
+        duration: 3000,
+      });
     });
   return;
 };
@@ -81,8 +105,7 @@ const buySolanaTokensQuickBuyHandler = async (
   address,
   nativeTokenbalance,
   setNativeTokenbalance,
-  e,
-  dispatch
+  e
 ) => {
   e && e.stopPropagation();
   const token = localStorage.getItem("token");
@@ -101,7 +124,24 @@ const buySolanaTokensQuickBuyHandler = async (
       position: "top-right",
     });
   }
-  dispatch(setBigLoader(true));
+  toast(
+    <div className="flex items-center gap-5">
+      <div className="loaderPopup"></div>
+      <div className="text-white text-sm">Attempting transaction</div>
+    </div>,
+    {
+      id: "saveToast",
+      position: "top-center",
+      duration: Infinity,
+      style: {
+        border: "1px solid #4D4D4D",
+        color: "#FFFFFF",
+        fontSize: "14px",
+        letterSpacing: "1px",
+        backgroundColor: "#1F1F1F",
+      },
+    }
+  );
   await axios({
     url: `${BASE_URL}transactions/solbuy`,
     method: "post",
@@ -117,17 +157,21 @@ const buySolanaTokensQuickBuyHandler = async (
     },
   })
     .then(async (res) => {
-      dispatch(setBigLoader(false));
-      await toast.success("Transaction successfully");
+      await toast.success("Transaction successfully", {
+        id: "saveToast",
+        duration: 3000,
+      });
       setTimeout(() => {
         const solBalance = getSolanaBalanceAndPrice(address);
         setNativeTokenbalance(solBalance);
       }, 2000);
     })
     .catch(async (err) => {
-      dispatch(setBigLoader(false));
+      await toast.error("Somthing went wrong please try again later.", {
+        id: "saveToast",
+        duration: 3000,
+      });
       console.log("🚀 ~ err:", err?.message);
-      await toast.success("Somthing went wrong please try again later.");
     });
   return;
 };
@@ -163,7 +207,24 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
       position: "top-right",
     });
   }
-  dispatch(setBigLoader(true));
+  toast(
+    <div className="flex items-center gap-5">
+      <div className="loaderPopup"></div>
+      <div className="text-white text-sm">Attempting transaction</div>
+    </div>,
+    {
+      id: "saveToast",
+      position: "top-center",
+      duration: Infinity,
+      style: {
+        border: "1px solid #4D4D4D",
+        color: "#FFFFFF",
+        fontSize: "14px",
+        letterSpacing: "1px",
+        backgroundColor: "#1F1F1F",
+      },
+    }
+  );
   await axios({
     url: `${BASE_URL}transactions/solbuy`,
     method: "post",
@@ -179,17 +240,21 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
     },
   })
     .then(async (res) => {
-      dispatch(setBigLoader(false));
-      await toast.success("Transaction successfully");
+      await toast.success("Transaction successfully", {
+        id: "saveToast",
+        duration: 3000,
+      });
       setTimeout(() => {
         const solBalance = getSolanaBalanceAndPrice(address);
         setNativeTokenbalance(solBalance);
       }, 2000);
     })
     .catch(async (err) => {
-      dispatch(setBigLoader(false));
+      await toast.error("Somthing went wrong please try again later.", {
+        id: "saveToast",
+        duration: 3000,
+      });
       console.log("🚀 ~ err:", err?.message);
-      await toast.success("Somthing went wrong please try again later.");
     });
   return;
 };
@@ -222,7 +287,24 @@ const sellSolanaTokens = async (
       position: "top-right",
     });
   }
-  setLoaderSwap(true);
+  toast(
+    <div className="flex items-center gap-5">
+      <div className="loaderPopup"></div>
+      <div className="text-white text-sm">Attempting transaction</div>
+    </div>,
+    {
+      id: "saveToast",
+      position: "top-center",
+      duration: Infinity,
+      style: {
+        border: "1px solid #4D4D4D",
+        color: "#FFFFFF",
+        fontSize: "14px",
+        letterSpacing: "1px",
+        backgroundColor: "#1F1F1F",
+      },
+    }
+  );
   await axios({
     url: `${BASE_URL}transactions/solsell`,
     method: "post",
@@ -239,8 +321,10 @@ const sellSolanaTokens = async (
     },
   })
     .then(async () => {
-      await toast.success("Transaction successfully");
-      setLoaderSwap(false);
+      await toast.success("Transaction successfully", {
+        id: "saveToast",
+        duration: 3000,
+      });
       setTimeout(async () => {
         const [tokenBalanceUpdate, solBalance] = await Promise.all([
           getSoalanaTokenBalance(address, fromToken),
@@ -251,9 +335,11 @@ const sellSolanaTokens = async (
       }, 5000);
     })
     .catch(async (err) => {
-      setLoaderSwap(false);
+      await toast.error("Somthing went wrong please try again later.", {
+        id: "saveToast",
+        duration: 3000,
+      });
       console.log("🚀 ~ err:", err?.message);
-      await toast.success("Somthing went wrong please try again later.");
     });
   return;
 };
