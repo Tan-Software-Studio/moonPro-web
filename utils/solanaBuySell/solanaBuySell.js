@@ -287,6 +287,7 @@ const sellSolanaTokens = async (
       position: "top-right",
     });
   }
+  setLoaderSwap(true)
   toast(
     <div className="flex items-center gap-5">
       <div className="loaderPopup"></div>
@@ -321,6 +322,7 @@ const sellSolanaTokens = async (
     },
   })
     .then(async () => {
+      setLoaderSwap(false)
       await toast.success("Transaction successfully", {
         id: "saveToast",
         duration: 3000,
@@ -335,6 +337,7 @@ const sellSolanaTokens = async (
       }, 5000);
     })
     .catch(async (err) => {
+      setLoaderSwap(false)
       await toast.error("Somthing went wrong please try again later.", {
         id: "saveToast",
         duration: 3000,
