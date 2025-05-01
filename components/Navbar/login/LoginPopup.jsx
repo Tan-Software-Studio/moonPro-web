@@ -14,7 +14,6 @@ import { setSolWalletAddress } from '@/app/redux/states';
 import { useDispatch } from 'react-redux';
 
 const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
-
     const dispatch = useDispatch()
     const [isPassword, setIsPassword] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
