@@ -14,6 +14,8 @@ import { Loader2 } from "lucide-react";
 import { IoClose } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { getSoalanaTokenBalance } from "@/utils/solanaNativeBalance";
+import Image from "next/image";
+import { solana } from "@/app/Images";
 
 const TradingPopup = ({
   tragindViewPage,
@@ -42,6 +44,9 @@ const TradingPopup = ({
       setQuantity(tokenBalance);
     }
   }, [tokenBalance, activeTab]);
+  const tokenImage = useSelector(
+    (state) => state?.AllStatesData?.chartSymbolImage
+  );
   // handle priority fee
   const handlepriorityFeeChange = (value) => {
     if (!value) {
@@ -154,11 +159,10 @@ const TradingPopup = ({
       {/* Buy/Sell Toggle */}
       <div className="flex h-[42px] items-center bg-[#1f1f1f] md:rounded-[8px] mb-[16px] ">
         <button
-          className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-500 outline-none ${
-            activeTab === "buy"
-              ? "bg-[#1F73FC] text-[#F6F6F6]"
-              : "bg-transparent text-[#6E6E6E]"
-          }`}
+          className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-500 outline-none ${activeTab === "buy"
+            ? "bg-[#1F73FC] text-[#F6F6F6]"
+            : "bg-transparent text-[#6E6E6E]"
+            }`}
           onClick={() => {
             setActiveTab("buy");
             setQuantity(0.1);
@@ -167,11 +171,10 @@ const TradingPopup = ({
           {tragindViewPage?.right?.buysell?.buy}
         </button>
         <button
-          className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-300 ${
-            activeTab === "sell"
-              ? "bg-[#ED1B24] text-[#F6F6F6]"
-              : "bg-transparent text-[#6E6E6E]"
-          }`}
+          className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-300 ${activeTab === "sell"
+            ? "bg-[#ED1B24] text-[#F6F6F6]"
+            : "bg-transparent text-[#6E6E6E]"
+            }`}
           onClick={() => {
             setActiveTab("sell");
           }}
@@ -193,11 +196,15 @@ const TradingPopup = ({
           onChange={(e) => handleQuantityChange(e.target.value)}
         />
         <div className="px-4">
-          <img
-            src="https://cryptologos.cc/logos/solana-sol-logo.png"
-            className="w-[30px] h-[18px] rounded-full bg-cover"
-            alt=""
-          />
+          {activeTab === "buy" ?
+            <Image src={solana} width={20} height={20} alt="solana" className="w-[35px] h-[20px] rounded-full bg-cover" />
+            : 
+            <img
+              src={tokenImage || Solana}
+              alt="Token Image"
+              className="w-[35px] h-[20px]"
+            />
+          }
         </div>
       </div>
 
@@ -205,39 +212,37 @@ const TradingPopup = ({
       <div className="flex gap-2 mb-[16px]">
         {activeTab == "buy"
           ? [0.1, 0.2, 1, 2].map((val) => (
-              <button
-                key={val}
-                className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${
-                  quantity === val
-                    ? "text-[#278BFE] border-t-[1px] border-t-[#278BFE]"
-                    : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
+            <button
+              key={val}
+              className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${quantity === val
+                ? "text-[#278BFE] border-t-[1px] border-t-[#278BFE]"
+                : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
                 }`}
-                onClick={() => setQuantity(val)}
-              >
-                {val}
-              </button>
-            ))
+              onClick={() => setQuantity(val)}
+            >
+              {val}
+            </button>
+          ))
           : [100, 80, 50, 20].map((val) => (
-              <button
-                key={val}
-                className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${
-                  Number(quantity).toFixed(5) ==
-                    Number((tokenBalance * val) / 100).toFixed(5) &&
-                  quantity > 0
-                    ? "text-[#ed1819] border-t-[1px] border-t-[#ed1819]"
-                    : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
+            <button
+              key={val}
+              className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${Number(quantity).toFixed(5) ==
+                Number((tokenBalance * val) / 100).toFixed(5) &&
+                quantity > 0
+                ? "text-[#ed1819] border-t-[1px] border-t-[#ed1819]"
+                : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
                 }`}
-                onClick={() => {
-                  if (val == 100) {
-                    setQuantity(tokenBalance);
-                  } else {
-                    setQuantity(Number((tokenBalance * val) / 100).toFixed(5));
-                  }
-                }}
-              >
-                {val}%
-              </button>
-            ))}
+              onClick={() => {
+                if (val == 100) {
+                  setQuantity(tokenBalance);
+                } else {
+                  setQuantity(Number((tokenBalance * val) / 100).toFixed(5));
+                }
+              }}
+            >
+              {val}%
+            </button>
+          ))}
         <button className="p-2 rounded-md">
           <PiPencilLineBold />
         </button>
@@ -247,9 +252,8 @@ const TradingPopup = ({
       <div className="mb-[16px]">
         <div
           onClick={() => setIsAdvancedSetting(!isAdvancedSetting)}
-          className={`flex cursor-pointer items-center justify-between ${
-            isAdvancedSetting && "mb-[16px]"
-          }`}
+          className={`flex cursor-pointer items-center justify-between ${isAdvancedSetting && "mb-[16px]"
+            }`}
         >
           <div className={`flex items-center gap-[8px] $`}>
             <FaCog className="text-[16px]" />
@@ -262,18 +266,16 @@ const TradingPopup = ({
           </div>
           <h1 className="ease-in-out duration-300">
             <MdOutlineKeyboardArrowRight
-              className={`ease-in-out duration-300 text-[19px] ${
-                isAdvancedSetting && "rotate-90"
-              }`}
+              className={`ease-in-out duration-300 text-[19px] ${isAdvancedSetting && "rotate-90"
+                }`}
             />
           </h1>
         </div>
         <div
-          className={`transform transition-all duration-300 ease-in-out origin-top overflow-hidden ${
-            isAdvancedSetting
-              ? "max-h-[1000px] opacity-100 scale-y-100"
-              : "max-h-0 opacity-0 scale-y-0"
-          }`}
+          className={`transform transition-all duration-300 ease-in-out origin-top overflow-hidden ${isAdvancedSetting
+            ? "max-h-[1000px] opacity-100 scale-y-100"
+            : "max-h-0 opacity-0 scale-y-0"
+            }`}
         >
           <div className="bg-transparent rounded-[8px] flex items-center justify-between border-t-[0.5px] border-t-[#4D4D4D] mb-[16px]">
             <h1 className="text-[#A8A8A8] select-none rounded-l-[8px] bg-[#1F1F1F] h-[40px] px-4 flex items-center justify-center">
@@ -304,11 +306,10 @@ const TradingPopup = ({
             <div className="flex items-center gap-[8px]">
               <div
                 onClick={() => setIsMev(!isMev)}
-                className={`flex ${
-                  isMev
-                    ? `${activeTab == "buy" ? "bg-[#278BFE]" : "bg-[#ed1819]"}`
-                    : "bg-[#4D4D4D]"
-                } w-[36px] h-[20px] items-center cursor-pointer pl-[3px] rounded-[1000px] transition-all duration-300`}
+                className={`flex ${isMev
+                  ? `${activeTab == "buy" ? "bg-[#278BFE]" : "bg-[#ed1819]"}`
+                  : "bg-[#4D4D4D]"
+                  } w-[36px] h-[20px] items-center cursor-pointer pl-[3px] rounded-[1000px] transition-all duration-300`}
               >
                 <div
                   className={`w-[12px] h-[12px] bg-white rounded-full shadow-md transform transition-all duration-300 
@@ -323,11 +324,10 @@ const TradingPopup = ({
             <div className="flex items-center gap-[8px]">
               <div
                 onClick={() => setisAutoApprove(!isAutoApprove)}
-                className={`flex ${
-                  isAutoApprove
-                    ? `${activeTab == "buy" ? "bg-[#278BFE]" : "bg-[#ed1819]"}`
-                    : "bg-[#4D4D4D]"
-                } w-[36px] h-[20px] items-center cursor-pointer pl-[3px] rounded-[1000px] transition-all duration-300`}
+                className={`flex ${isAutoApprove
+                  ? `${activeTab == "buy" ? "bg-[#278BFE]" : "bg-[#ed1819]"}`
+                  : "bg-[#4D4D4D]"
+                  } w-[36px] h-[20px] items-center cursor-pointer pl-[3px] rounded-[1000px] transition-all duration-300`}
               >
                 <div
                   className={`w-[12px] h-[12px] bg-white rounded-full shadow-md transform transition-all duration-300 
@@ -373,15 +373,13 @@ const TradingPopup = ({
             ].map((val) => (
               <button
                 key={val?.type}
-                className={`w-[96px] h-[34px] text-[14px] flex items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${
-                  priorityFee == val?.value
-                    ? `border-t-[1px] border-t-[#278BFE] ${
-                        activeTab == "buy"
-                          ? "text-[#278BFE] border-t-[#278BFE]"
-                          : "text-[#ed1819] border-t-[#ed1819]"
-                      }`
-                    : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
-                }`}
+                className={`w-[96px] h-[34px] text-[14px] flex items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${priorityFee == val?.value
+                  ? `border-t-[1px] border-t-[#278BFE] ${activeTab == "buy"
+                    ? "text-[#278BFE] border-t-[#278BFE]"
+                    : "text-[#ed1819] border-t-[#ed1819]"
+                  }`
+                  : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
+                  }`}
                 onClick={() => setPriorityFee(val?.value)}
               >
                 {val?.type}

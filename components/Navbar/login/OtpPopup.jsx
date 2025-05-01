@@ -20,14 +20,10 @@ const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email, setAuthName }) =
     const [showPassword1, setShowPassword1] = useState(false);
     const [passwordError, setPasswordError] = useState('')
     const [confirmPasswordError, setConfirmPasswordError] = useState('')
-
-
     const [otpError, setOtpError] = useState(' ')
-
-
     const [passwordInput, setPasswordInput] = useState('')
     const [confirmPasswordInput, setConfirmPasswordInput] = useState('')
-
+    const [isDisable, setIsDisable] = useState(false)
 
     const handleClose = () => {
         setIsLoginPopup(false)
@@ -84,20 +80,21 @@ const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email, setAuthName }) =
         }
 
         try {
+            setIsDisable(true)
             const response = await axios.post(
-              `${baseUrl}user/verify`,
-              {
-                otp: Number(otp),
-                ...(authName != "login" && {
-                  password: password,
-                  confirmPassword: confirmPassword,
-                }),
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${jwtToken}`,
+                `${baseUrl}user/verify`,
+                {
+                    otp: Number(otp),
+                    ...(authName != "login" && {
+                        password: password,
+                        confirmPassword: confirmPassword,
+                    }),
                 },
-              }
+                {
+                    headers: {
+                        Authorization: `Bearer ${jwtToken}`,
+                    },
+                }
             );
             localStorage.setItem('token', response?.data?.data?.token)
             localStorage.setItem('walletAddress', response?.data?.data?.user?.walletAddressSOL)
@@ -113,10 +110,12 @@ const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email, setAuthName }) =
             }
             dispatch(setSolWalletAddress())
             toast.success(response?.data?.message)
+            setIsDisable(false)
         }
         catch (err) {
             console.error(err);
             toast.error(err?.response?.data?.message)
+            setIsDisable(false)
         }
     }
 
@@ -204,7 +203,15 @@ const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email, setAuthName }) =
                             }
                             <button
                                 onClick={handleVerify}
-                                className='bg-[#1f73fc]  text-sm py-2 flex items-center  w-full mt-3 rounded-md justify-center'>Verify</button>
+                                disabled={isDisable}
+                                className={`bg-[#11265B] border-[1px] border-[#0E43BD]  text-sm py-2 flex items-center  w-full mt-3 rounded-md justify-center`}>    
+                                {!isDisable ? "Verify" :
+                                    <div className="flex cursor-not-allowed items-center gap-5">
+                                        <div className="loaderPopup"></div>
+                                        <div className="text-white text-sm">Verifying</div>
+                                    </div>
+                                }
+                            </button>
 
                             {/* <div className='text-sm text-center mt-3 '>You can resend a new code in 60 seconds</div> */}
                         </div>

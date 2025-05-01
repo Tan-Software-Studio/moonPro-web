@@ -25,6 +25,7 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
     const [verifyData, setVerifyData] = useState({})
     const [refferalCode, setRefferalCode] = useState('')
     const [email, setEmail] = useState('')
+    const [isDisable, setIsDisable] = useState(false)
 
     const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
@@ -55,17 +56,18 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
             }
         }
         try {
+            setIsDisable(true)
             const response = await axios.post(`${baseUrl}user/${auth}`, {
                 email: email.toLowerCase(),
                 ...(authName === 'login' && { password: password }),
                 ...(authName === 'signup' && { referralId })
 
             })
-            console.log(response);
             setJwtToken(response?.data?.data?.token)
 
             if (response?.data?.statusCode === 200 || 201) {
                 setIsPassword(true);
+                setIsDisable(false)
             }
             // if (response?.data?.statusCode === 201) {
             //     toast.error("User was created but not verified")
@@ -76,6 +78,7 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
         }
         catch (err) {
             console.error(err);
+            setIsDisable(false)
             if (err?.response?.data?.message === "User already register.") {
                 toast.error('User already exists please try to login')
                 setTimeout(() => {
@@ -93,34 +96,35 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
         flow: "auth-code",
         onSuccess: async (codeResponse) => {
             try {
-                await axios({
-                  url: `${baseUrl}user/googleAuth`,
-                  method: "post",
-                  data: {
-                    googleCode: codeResponse.code,
-                  },
-                })
-                  .then((res) => {
-                    localStorage.setItem("token", res?.data?.data?.token);
-                    localStorage.setItem(
-                      "walletAddress",
-                      res?.data?.data?.user?.walletAddressSOL
-                    );
-                    setVerifyData(res?.data);
 
-                    if (res?.data?.message === "Login successfull") {
-                      setIsLoginPopup(false);
-                    } else {
-                      setIsGoogleSignIn(true);
-                    }
-                    dispatch(setSolWalletAddress());
-                    toast.success(res?.data?.message);
-                  })
-                  .catch((err) => {
-                    console.error(err);
-                    toast.error(err?.message);
-                    setIsGoogleSignIn(false);
-                  });
+                await axios({
+                    url: `${baseUrl}user/googleAuth`,
+                    method: "post",
+                    data: {
+                        googleCode: codeResponse.code,
+                    },
+                })
+                    .then((res) => {
+                        localStorage.setItem("token", res?.data?.data?.token);
+                        localStorage.setItem(
+                            "walletAddress",
+                            res?.data?.data?.user?.walletAddressSOL
+                        );
+                        setVerifyData(res?.data);
+
+                        if (res?.data?.message === "Login successfull") {
+                            setIsLoginPopup(false);
+                        } else {
+                            setIsGoogleSignIn(true);
+                        }
+                        dispatch(setSolWalletAddress());
+                        toast.success(res?.data?.message);
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        toast.error(err?.message);
+                        setIsGoogleSignIn(false);
+                    });
             } catch (error) {
                 console.error(error);
                 toast.error(error?.message)
@@ -208,12 +212,17 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
                             </div>
                             <button
                                 onClick={handleOtpPopup}
-                                className='bg-[#11265B] border-[1px] border-[#0E43BD] text-sm py-2 flex items-center  w-full mt-3 rounded-md justify-center'>
-                                {authName == 'login' ? 'Login' : 'Sign up'}
+                                disabled={isDisable}
+                                className={`bg-[#11265B] border-[1px] border-[#0E43BD]  text-sm py-2 flex items-center  w-full mt-3 rounded-md justify-center`}>
+                                {!isDisable ? authName == 'login' ? 'Login' : 'Sign up' : 
+                                    <div className="flex cursor-not-allowed items-center gap-5">
+                                        <div className="loaderPopup"></div>
+                                        <div className="text-white text-sm">{authName == 'login' ? 'Logging in...' : 'Signing up...'}</div>
+                                    </div>
+                                }
                             </button>
 
                             <div className='text-sm text-[#6E6E6E] mt-3 text-center'>Or {authName == 'login' ? '' : 'Sign Up'}</div>
-
 
 
                             <div
