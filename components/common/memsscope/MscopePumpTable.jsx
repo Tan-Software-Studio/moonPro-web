@@ -288,7 +288,8 @@ const MscopePumpTable = ({ MemscopeData }) => {
                                   nativeTokenbalance,
                                   setNativeTokenbalance,
                                   e,
-                                  dispatch
+                                  "6ef8rrecthr5dkzon8nwu78hrvfckubj14m5ubewf6p",
+                                  block?.bonding_curv
                                 )
                               }
                             >

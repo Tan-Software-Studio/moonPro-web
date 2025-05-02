@@ -18,7 +18,8 @@ const buySolanaTokens = async (
   address,
   setLoaderSwap,
   setTokenBalance,
-  setNativeTokenbalance
+  setNativeTokenbalance,
+  programAddress
 ) => {
   // console.log("🚀 ~ setNativeTokenbalance:", setNativeTokenbalance);
   // console.log("🚀 ~ setTokenBalance:", setTokenBalance);
@@ -68,6 +69,9 @@ const buySolanaTokens = async (
       slippage: slipTolerance,
       priorityFee: priorityFee,
       price: 150,
+      programAddress: programAddress
+        ? programAddress
+        : "nasdiuasdnasdudhsdjasbhid",
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -105,7 +109,9 @@ const buySolanaTokensQuickBuyHandler = async (
   address,
   nativeTokenbalance,
   setNativeTokenbalance,
-  e
+  e,
+  programAddress,
+  bondingCurv = 0
 ) => {
   e && e.stopPropagation();
   const token = localStorage.getItem("token");
@@ -142,6 +148,8 @@ const buySolanaTokensQuickBuyHandler = async (
       },
     }
   );
+  const program =
+    bondingCurv >= 100 ? toToken : programAddress ? programAddress : toToken;
   await axios({
     url: `${BASE_URL}transactions/solbuy`,
     method: "post",
@@ -151,6 +159,7 @@ const buySolanaTokensQuickBuyHandler = async (
       slippage: 50,
       priorityFee: 0.0001,
       price: 150,
+      programAddress: program,
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -182,7 +191,7 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
   nativeTokenbalance,
   setNativeTokenbalance,
   e,
-  dispatch
+  programAddress
 ) => {
   e && e.stopPropagation();
   const amt = await localStorage.getItem("copyBuySol");
@@ -234,6 +243,9 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
       slippage: 50,
       priorityFee: 0.0001,
       price: 150,
+      programAddress: programAddress
+        ? programAddress
+        : "nasdiuasdnasdudhsdjasbhid",
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -269,7 +281,8 @@ const sellSolanaTokens = async (
   price,
   setLoaderSwap,
   setTokenBalance,
-  setNativeTokenbalance
+  setNativeTokenbalance,
+  programAddress
 ) => {
   // console.log("🚀 ~ setNativeTokenbalance:", setNativeTokenbalance);
   // console.log("🚀 ~ setTokenBalance:", setTokenBalance);
@@ -287,7 +300,7 @@ const sellSolanaTokens = async (
       position: "top-right",
     });
   }
-  setLoaderSwap(true)
+  setLoaderSwap(true);
   toast(
     <div className="flex items-center gap-5">
       <div className="loaderPopup"></div>
@@ -316,13 +329,16 @@ const sellSolanaTokens = async (
       priorityFee: priorityFee,
       decimal,
       price,
+      programAddress: programAddress
+        ? programAddress
+        : "nasdiuasdnasdudhsdjasbhid",
     },
     headers: {
       Authorization: `Bearer ${token}`,
     },
   })
     .then(async () => {
-      setLoaderSwap(false)
+      setLoaderSwap(false);
       await toast.success("Transaction successfully", {
         id: "saveToast",
         duration: 3000,
@@ -337,7 +353,7 @@ const sellSolanaTokens = async (
       }, 5000);
     })
     .catch(async (err) => {
-      setLoaderSwap(false)
+      setLoaderSwap(false);
       await toast.error("Somthing went wrong please try again later.", {
         id: "saveToast",
         duration: 3000,
