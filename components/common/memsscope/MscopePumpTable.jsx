@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
-import { IoIosPeople, IoMdContact, IoMdDoneAll } from "react-icons/io";
-import { IoRocket } from "react-icons/io5";
+import { IoMdDoneAll } from "react-icons/io";
 import { PiCopyThin } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { usePathname, useRouter } from "next/navigation";
@@ -9,10 +8,8 @@ import { humanReadableFormat, UpdateTime } from "@/utils/calculation";
 import "react-circular-progressbar/dist/styles.css";
 import SquareProgressBar from "../../common/SquareProgressBarcom/SquareProgressBar";
 import { buySolanaTokensQuickBuyHandler } from "@/utils/solanaBuySell/solanaBuySell";
-import { useAppKitAccount, useAppKitProvider } from "@reown/appkit/react";
 import LoaderPopup from "../LoaderPopup/LoaderPopup";
 import Link from "next/link";
-import { TbFocus2 } from "react-icons/tb";
 import {
   DH,
   H10,

@@ -3,25 +3,22 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { NoDataFish, referral } from "@/app/Images";
-import { FaXTwitter, FaLinkedin, FaFacebook } from "react-icons/fa6";
+import { FaXTwitter, FaFacebook } from "react-icons/fa6";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { useAppKitAccount } from "@reown/appkit/react";
-import toast from "react-hot-toast";
-import Infotip from "@/components/common/Tooltip/Infotip.jsx"
-import { ham } from "viem/chains";
+import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import { useTranslation } from "react-i18next";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL || "https://pro.wavebot.app";
 const Referral = () => {
-  const { t, ready } = useTranslation();
+  const { t } = useTranslation();
   const referralPage = t("referral");
-  const { address } = useAppKitAccount();
   const [referralData, setReferralData] = useState([]);
   const [copyRef, setCopyRef] = useState(false);
-  const user = useSelector((state) => state?.AllStatesData?.user);
-
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
   const tableHeader = [
     { id: 1, title: "#" },
     { id: 2, title: referralPage?.table?.user },
@@ -64,27 +61,6 @@ const Referral = () => {
         console.error("Failed to copy: ", err);
       });
   };
-
-  async function getRefferalData() {
-    await axios({
-      url: `${BASE_URL}wavePro/users/getReferralStats/${user?._id}`,
-      method: "get",
-    })
-      .then((res) => {
-        setReferralData(res?.data?.data?.referrals);
-      })
-      .catch((err) => {
-        console.log(err?.message);
-        toast.error("Something has been wrong!", {
-          position: "top-center",
-        });
-      });
-  }
-  useEffect(() => {
-    if (user?._id) {
-      getRefferalData();
-    }
-  }, [user, address]);
   return (
     <>
       <div className="font-poppins bg-transparent">
@@ -140,15 +116,13 @@ const Referral = () => {
               <div className="flex flex-wrap items-center w-fit gap-2 rounded-md">
                 <input
                   type="text"
-                  value={`${WEB_URL}/referral/${user?.referralId}`}
+                  value={`Not available`}
                   readOnly
                   className="flex-grow bg-[#1f1e1e85] text-white text-xs px-4 py-2 outline-none truncate border border-[#141414] rounded-md"
                 />
                 <button
                   className="hover:text-[#278BFE] text-white transition-all duration-300 ease-in-out text-xs w-[80px] py-2 rounded-md  border border-[#1F73FC] hover:bg-[#11265B]"
-                  onClick={() =>
-                    copyToClipboard(`${WEB_URL}/referral/${user?.referralId}`)
-                  }
+                  onClick={() => copyToClipboard(`Not available`)}
                 >
                   {copyRef
                     ? referralPage?.pageData?.copied
@@ -157,7 +131,7 @@ const Referral = () => {
               </div>
 
               {/* Share Section */}
-              <div className="flex items-center gap-2 w-full sm:w-3/4">
+              {/* <div className="flex items-center gap-2 w-full sm:w-3/4">
                 <h1 className="text-xs sm:text-sm text-gray-400 md:mb-0 mb-2">
                   {referralPage?.pageData?.shareto}
                 </h1>
@@ -183,7 +157,7 @@ const Referral = () => {
                     <span className="text-white text-[12px]">Facebook</span>
                   </button>
                 </a>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -194,7 +168,7 @@ const Referral = () => {
             <div className="rounded-3xl  md:w-full w-auto">
               <div className="md:max-w-full max-w-[310px] h-full overflow-y-scroll">
                 <div className=" h-full">
-                  {address && referralData?.length > 0 && (
+                  {solWalletAddress && referralData?.length > 0 && (
                     <table className={`w-full max-w-4xl rounded-b-lg  mx-auto`}>
                       <thead>
                         <tr className="sticky -top-1 z-30">
@@ -287,7 +261,7 @@ const Referral = () => {
                           className="rounded-lg"
                         />
                       </div>
-                      {address ? (
+                      {solWalletAddress ? (
                         <p className="mt-4 text-[15px] text-[#b5b7da] font-bold">
                           {referralPage?.pageData?.nodata}
                         </p>
@@ -298,7 +272,7 @@ const Referral = () => {
                       )}
                     </div>
                   ) : (
-                    !address && (
+                    !solWalletAddress && (
                       <div className="flex flex-col items-center justify-center mt-5">
                         <div className={`text-4xl mb-2`}>
                           <Image
@@ -324,6 +298,5 @@ const Referral = () => {
     </>
   );
 };
-
 
 export default Referral;

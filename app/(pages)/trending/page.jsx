@@ -7,35 +7,25 @@ import {
   buyIcon,
   bitcoinIcon,
   TrendingImg,
-  baseIcon,
-  ethereum,
   solana,
 } from "@/app/Images";
 import { useDispatch, useSelector } from "react-redux";
 import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
 import TableHeaderData from "@/components/common/TableHeader/TableHeaderData";
-import { setTableScroll } from "@/app/redux/CommonUiData";
 import TableBody from "@/components/common/TableBody/TableBody";
-// import TrendingEvm from "@/components/common/TableBody/TrendingEvm";
-// import fetchTrendingBuySallData from "@/app/redux/trending/fetchTrendingBuySallData";
 import axios from "axios";
 import handleSort from "@/utils/sortTokenData";
-import { FilterSidebarData } from "@/components/common/filter/FilterSidebarData";
 import { addSolTrendingData } from "@/app/redux/trending/solTrending.slice";
 import { useTranslation } from "react-i18next";
+const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 
 const Trending = () => {
-  const { t, ready } = useTranslation();
+  const { t } = useTranslation();
   const tredingPage = t("tredingPage");
   const dispatch = useDispatch();
   const tableRef = useRef(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  // const [data, setData] = useState([]);
-  // const [ethAndBaseData, setEthAndBaseData] = useState([]);
   const [sortColumn, setSortColumn] = useState("");
   const [sortOrder, setSortOrder] = useState("");
-  // const [eTH_And_BaseData, setETH_And_BaseData] = useState([]);
   const data = useSelector(
     (state) => state?.solTrendingData?.solanaTrendingData
   );
@@ -139,17 +129,6 @@ const Trending = () => {
       },
     ],
   };
-  // const headersData = [
-  //   { title: "Pair Info" },
-  //   { title: "Created" },
-  //   { title: "Liquidity" },
-  //   { title: "MKT Cap" },
-  //   { title: "Swaps" },
-  //   { title: "Volume" },
-  //   { title: "Holders" },
-  //   { title: "Audit Results" },
-  //   { title: "Quick Buy" },
-  // ];
   const headersDataSol = [
     {
       title: tredingPage?.tableheaders?.pairinfo,
@@ -234,39 +213,29 @@ const Trending = () => {
 
   const sortedData = handleSort(sortColumn, data, sortOrder);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (tableRef.current.scrollTop > 0) {
-        dispatch(setTableScroll(true));
-      } else {
-        dispatch(setTableScroll(false));
-      }
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (tableRef.current.scrollTop > 0) {
+  //       dispatch(setTableScroll(true));
+  //     } else {
+  //       dispatch(setTableScroll(false));
+  //     }
+  //   };
 
-    const table = tableRef.current;
-    table?.addEventListener("scroll", handleScroll);
+  //   const table = tableRef.current;
+  //   table?.addEventListener("scroll", handleScroll);
 
-    return () => {
-      table?.removeEventListener("scroll", handleScroll); // cleanup event listener
-    };
-  }, [dispatch]);
+  //   return () => {
+  //     table?.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, [dispatch]);
 
   const filterTime = useSelector(
     (state) => state?.AllthemeColorData?.filterTime
   );
 
-  // const selectToken = useSelector(
-  //   (state) => state?.AllthemeColorData?.selectToken
-  // );
-
-  const URL = process.env.NEXT_PUBLIC_BASE_URLS;
   const fetchData = async (time) => {
     try {
-      if (data.length == 0) {
-        setLoading(true);
-      }
-      setError(null);
-
       // Call the backend API endpoint
       const response = await axios.post(`${URL}SolTrendingTokenData`, {
         time,
@@ -278,7 +247,6 @@ const Trending = () => {
       // Handle empty data case
       if (!newData.length) {
         dispatch(addSolTrendingData([]));
-        setLoading(false);
         return;
       }
 
@@ -288,9 +256,6 @@ const Trending = () => {
       dispatch(addSolTrendingData(filteredData.slice(0, 100)));
     } catch (err) {
       console.error("Error fetching data:", err);
-      setError(err.message || "Failed to fetch data.");
-    } finally {
-      setLoading(false);
     }
   };
   // ---------- filter data in trending ------
@@ -310,92 +275,40 @@ const Trending = () => {
     };
     fetchTimeData();
   }, [filterTime]);
-
-  // ------- eTH_And_BaseData data featch in bitquiry API -------
-  // useEffect(() => {
-  //   let network = selectToken === "Base" ? "base" : selectToken;
-  //   const currentTimeUTC = new Date(Date.now());
-
-  //   const oneHourAgoUTC = new Date(Date.now() - 6 * 60 * 60 * 1000); // Subtract 1 hour (in milliseconds)
-  //   const formattedOneHourAgo = oneHourAgoUTC.toISOString().split(".")[0] + "Z";
-
-  //   // const fetchEthAndBaseData = async () => {
-  //   //   try {
-  //   //     const data = await fetchTrendingBuySallData(
-  //   //       network == "Ethereum" ? "eth" : network,
-  //   //       formattedOneHourAgo
-  //   //     );
-  //   //     setETH_And_BaseData(data);
-  //   //   } catch (error) {
-  //   //     console.error("Error fetching query data:", error);
-  //   //   }
-  //   // };
-  //   // if (network != "Solana") {
-  //   //   fetchEthAndBaseData();
-  //   // } else {
-  //   fetchData("24+hr");
-  //   // }
-  // }, []);
-
   return (
-      <>
-        <div className="relative">
-          <AllPageHeader
-            FilterData={Trendings}
-            HeaderData={HeaderData}
-            duration={true}
-          />
-          <div className="flex flex-col">
-            <div className="overflow-x-auto">
-              <div className="inline-block min-w-full -mt-0.5">
-                <div
-                  className="xl:h-[85vh] md:h-[78vh] h-[80vh] overflow-y-auto visibleScroll"
-                  ref={tableRef}
-                >
-                  <table className="min-w-full !text-xs ">
-                    {/* <TableHeaderData
-                    headers={
-                      selectToken === "Solana" ? headersDataSol : headersData
-                    }
-                    // onSort={handleSort}
+    <>
+      <div className="relative">
+        <AllPageHeader
+          FilterData={Trendings}
+          HeaderData={HeaderData}
+          duration={true}
+        />
+        <div className="flex flex-col">
+          <div className="overflow-x-auto">
+            <div className="inline-block min-w-full -mt-0.5">
+              <div
+                className="xl:h-[85vh] md:h-[78vh] h-[80vh] overflow-y-auto visibleScroll"
+                ref={tableRef}
+              >
+                <table className="min-w-full !text-xs ">
+                  <TableHeaderData
+                    headers={headersDataSol}
                     onSort={(key, order) => {
                       setSortColumn(key);
                       setSortOrder(order);
                     }}
                     sortColumn={sortColumn}
                     sortOrder={sortOrder}
-                  /> */}
-                    <TableHeaderData
-                      headers={headersDataSol}
-                      // onSort={handleSort}
-                      onSort={(key, order) => {
-                        setSortColumn(key);
-                        setSortOrder(order);
-                      }}
-                      sortColumn={sortColumn}
-                      sortOrder={sortOrder}
-                    />
-                    <TableBody data={sortedData} img={solana} />
-                    {/* {selectToken === "Solana" ? (
-                    <>
-                      <TableBody data={sortedData} img={solana} />
-                    </>
-                  ) : (
-                    <>
-                      <TrendingEvm
-                        data={eTH_And_BaseData}
-                        img={selectToken === "Base" ? baseIcon : ethereum}
-                      />
-                    </>
-                  )} */}
-                  </table>
-                </div>
+                  />
+                  <TableBody data={sortedData} img={solana} />
+                </table>
               </div>
             </div>
           </div>
         </div>
-      </>
-    )
+      </div>
+    </>
+  );
 };
 
 export default Trending;

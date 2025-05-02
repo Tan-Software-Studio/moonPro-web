@@ -8,10 +8,7 @@ import {
   buySolanaTokens,
   sellSolanaTokens,
 } from "@/utils/solanaBuySell/solanaBuySell";
-import { useAppKit } from "@reown/appkit/react";
 import toast from "react-hot-toast";
-import { Loader2 } from "lucide-react";
-import { IoClose } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { getSoalanaTokenBalance } from "@/utils/solanaNativeBalance";
 import Image from "next/image";

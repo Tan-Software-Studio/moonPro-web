@@ -1,17 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { bitcoinIcon, close, Lightning, Swaps, tableIcon } from "@/app/Images";
+import {Lightning, Swaps } from "@/app/Images";
 import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 // import toast from "react-hot-toast";
-import { BiSolidCopy } from "react-icons/bi";
 import { IoMdDoneAll } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { usePathname, useRouter } from "next/navigation";
 import { CiCircleCheck } from "react-icons/ci";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { humanReadableFormat, UpdateTime } from "@/utils/calculation";
-import { useAppKitAccount, useAppKitProvider } from "@reown/appkit/react";
 import { buySolanaTokensQuickBuyHandler } from "@/utils/solanaBuySell/solanaBuySell";
 import LoaderPopup from "../LoaderPopup/LoaderPopup";
 import { setChartSymbolImage } from "@/app/redux/states";

@@ -1,25 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import { BiSolidCopy } from "react-icons/bi";
 import { IoMdDoneAll } from "react-icons/io";
-import toast from "react-hot-toast";
 import NoDataMessage from "@/components/NoDataMessage/NoDataMessage";
-import axios from "axios";
 import {
   calculatePercentageChange,
-  calculatePercentageChangeWithColor,
   convertToRelativeTime,
   decimalConvert,
 } from "@/utils/calculation";
 import { setChartSymbolImage, setIsSearchPopup } from "@/app/redux/states";
 import { usePathname, useRouter } from "next/navigation";
-import { baseIcon, ethereum, solana } from "@/app/Images";
+import { solana } from "@/app/Images";
 import Image from "next/image";
 import Link from "next/link";
 
-const SearchResultData = ({ searchResult, searchLoader, notFoundMessage }) => {
+const SearchResultData = ({ searchResult, searchLoader }) => {
   const [copied, setCopied] = useState(false);
   const timeoutRefs = useRef({});
   const pathname = usePathname();
@@ -68,17 +65,6 @@ const SearchResultData = ({ searchResult, searchLoader, notFoundMessage }) => {
       return num.toString(); // Less than a thousand
     }
   }
-
-  // async function navigateToChartView(Trade) {
-  //   localStorage.setItem("recentTokens", JSON.stringify(Trade));
-
-  //   await dispatch(setIsSearchPopup(false));
-  //   setTimeout(async () => {
-  //     await navigate.push(
-  //       `/tradingview/solana?tokenaddress=${Trade?.Currency?.MintAddress}&symbol=${Trade?.Currency?.Symbol}&pair=${Trade?.Market?.MarketAddress}`
-  //     );
-  //   }, 10);
-  // }
   async function navigateToChartView(e) {
     localStorage.setItem("chartTokenImg", e?.img);
     await dispatch(setChartSymbolImage(e?.img));
@@ -105,13 +91,7 @@ const SearchResultData = ({ searchResult, searchLoader, notFoundMessage }) => {
     await dispatch(setIsSearchPopup(false));
     localStorage.setItem("silectChainName", getNetwork);
     localStorage.setItem("chartTokenAddress", e?.Trade?.Currency?.MintAddress);
-    setTimeout(async () => {
-      await navigate.push(
-        `/tradingview/solana?tokenaddress=${e?.Trade?.Currency?.MintAddress}&symbol=${e?.Trade?.Currency?.Symbol}&pair=${e?.Trade?.Market?.MarketAddress}`
-      );
-    }, 10);
   }
-
   return (
     <>
       {searchLoader === true ? (
@@ -150,7 +130,12 @@ const SearchResultData = ({ searchResult, searchLoader, notFoundMessage }) => {
               <div
                 key={ind}
                 className="flex flex-col lg:flex-row lg:flex-1 items-center overflow-hidden hover:bg-[#3333339c] bg-[#08080E] cursor-pointer rounded-md border border-[#333333] mb-3 py-[11px] px-3"
-                onClick={() => navigateToChartView(e)}
+                onClick={() => {
+                  navigateToChartView(e);
+                  navigate.push(
+                    `/tradingview/solana?tokenaddress=${e?.Trade?.Currency?.MintAddress}&symbol=${e?.Trade?.Currency?.Symbol}&pair=${e?.Trade?.Market?.MarketAddress}`
+                  );
+                }}
               >
                 <div className="flex flex-1 w-full items-center overflow-hidden">
                   <div className="flex flex-col justify-center shrink-0 gap-2">

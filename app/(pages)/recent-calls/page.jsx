@@ -1,23 +1,16 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { recentCalls } from "@/app/Images";
-import toast from "react-hot-toast";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-
 import { formatNumberNoLoop, getTimeAgo } from "@/utils/calculation";
-
-import CaretDown from "../../../public/assets/RecentCalls/CaretDown.svg";
 import XLogo from "../../../public/assets/RecentCalls/XLogo.svg";
 import TelegramLogo from "../../../public/assets/RecentCalls/TelegramLogo.svg";
 import GlobeSimple from "../../../public/assets/RecentCalls/GlobeSimple.svg";
 import Lightning from "../../../public/assets/RecentCalls/Lightning.svg";
 import ArrowsDownUp from "../../../public/assets/RecentCalls/ArrowsDownUp.svg";
-import XCircle from "../../../public/assets/RecentCalls/XCircle.svg";
-import CheckCircle from "../../../public/assets/RecentCalls/CheckCircle.svg";
-import TempChartMini from "../../../public/assets/RecentCalls/TempChartMini.png";
 import { subscribeToNewCalls } from "@/websocket/alphaCalls";
 import { CiCircleCheck } from "react-icons/ci";
 import { IoCloseCircleOutline } from "react-icons/io5";
@@ -28,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import Link from "next/link";
 
 const RecentCallsPage = () => {
-  const { t, ready } = useTranslation();
+  const { t } = useTranslation();
   const recentcalls = t("recentcalls");
   const apiSK = process.env.NEXT_PUBLIC_WAVE_SCAN_ADMIN_SK;
   const router = useRouter();

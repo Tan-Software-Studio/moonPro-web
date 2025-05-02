@@ -9,13 +9,12 @@ import WalletScan from "@/components/walletTrackerNotification/WalletScan";
 import ImportWalletModal from "@/components/WalletTracker/ImportWalletModal";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useAppKitAccount } from "@reown/appkit/react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 function WalletTracker() {
-  const { t, ready } = useTranslation();
+  const { t } = useTranslation();
   const wallettrackerPage = t("wallettracker");
-  const { address } = useAppKitAccount();
   // console.log("🚀 ~ WalletTracker ~ address:___________", address)
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
 
@@ -24,6 +23,10 @@ function WalletTracker() {
   const [isChartOpen, setIsChartOpen] = useState(false);
   const [walletData, setWalletData] = useState([]);
   const [walletChartData, setWalletChartData] = useState({});
+  // get solana wallet address
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
 
   const fetchWalletData = async () => {
     // const response = await axios.get(`${BASE_URL}wavePro/users/walletTracking`);
@@ -31,7 +34,7 @@ function WalletTracker() {
       method: "get",
       url: `${BASE_URL}wavePro/users/walletTracking`,
       headers: {
-        user: address,
+        user: solWalletAddress,
       },
     })
       .then((response) => {
@@ -45,8 +48,8 @@ function WalletTracker() {
   };
 
   useEffect(() => {
-    address && fetchWalletData();
-  }, [address]);
+    solWalletAddress && fetchWalletData();
+  }, [solWalletAddress]);
 
   const handleWalletAdd = (newWallet) => {
     setWalletData((prevWallets) => [...prevWallets, newWallet]);
@@ -84,7 +87,7 @@ function WalletTracker() {
                 {wallettrackerPage?.mainHeader?.title}
               </span>
               <span className="text-[#A8A8A8] md:text-[18px] font-normal text-[12px]">
-                {`(${address ? walletData.length : 0}/300)`}
+                {`(${solWalletAddress ? walletData.length : 0}/300)`}
               </span>
             </div>
             <div className="flex  md:gap-3 gap-1">
@@ -99,7 +102,7 @@ function WalletTracker() {
               </div>
               <div
                 onClick={() => {
-                  if (!address) {
+                  if (!solWalletAddress) {
                     toast.error("Please connect your wallet", {
                       position: "top-center",
                       style: { fontSize: "12px" },
@@ -121,10 +124,11 @@ function WalletTracker() {
             </div>
           </div>
           <div className="w-full">
-            {address ? (
+            {solWalletAddress ? (
               <LeftSideWallet
                 walletData={walletData}
                 setWalletData={setWalletData}
+                solAddress={solWalletAddress}
                 onChartOpen={() => setIsChartOpen(true)}
                 setWalletChartData={setWalletChartData}
               />
@@ -159,6 +163,7 @@ function WalletTracker() {
         wallettrackerPage={wallettrackerPage?.leftsidebar?.addnew?.addnewwallet}
         walletData={walletData}
         isOpen={isModalOpen}
+        solAddress={solWalletAddress}
         onClose={() => setModalOpen(false)}
         onAddWallet={handleWalletAdd}
       />

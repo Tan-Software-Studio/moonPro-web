@@ -3,15 +3,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
-import { useAppKitAccount } from "@reown/appkit/react";
 import { useRouter } from "next/navigation";
 import Modal from "react-modal";
 import { useDispatch, useSelector } from "react-redux";
-
 import { alphaPicks } from "@/app/Images";
-import AlphaPicksHeader from "../../../public/assets/AlphaPicks/AlphaPicksHeader.svg";
 import { formatNumberNoLoop, getTimeAgo } from "@/utils/calculation";
-import calls from "../../../public/assets/AlphaPicks/calls.svg";
 import star from "../../../public/assets/AlphaPicks/Star.svg";
 import ArrowsClockwise from "../../../public/assets/AlphaPicks/ArrowsClockwise.svg";
 import ChartLineUp from "../../../public/assets/AlphaPicks/ChartLineUp.svg";
@@ -23,37 +19,34 @@ import forthRankBadge from "../../../public/assets/AlphaPicks/forthRankBadge.png
 import ArrowCircleRight from "../../../public/assets/AlphaPicks/ArrowCircleRight.svg";
 import ArrowRight from "../../../public/assets/AlphaPicks/ArrowRight.svg";
 import Users from "../../../public/assets/AlphaPicks/Users.svg";
-
 import AllAlphaDataTable from "@/components/common/AllAlpha/AllAlphaDataTable";
 import AlphaFollowButton from "@/components/alphaPicks/AlphaFollowButton";
 import TimeIntervalsFilterTabs from "@/components/common/Alpha_TokenCalls/TimeIntervalsFilterTabs";
 import { removeAlphaFollowFromDB } from "@/app/redux/alphaFollows/alphaFollowsData.js";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
-
-// import { Swiper, SwiperSlide } from "swiper/react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Navigation } from "swiper/modules";
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 import { useTranslation } from "react-i18next";
 
 const AlphaPicks = () => {
-  const { t, ready } = useTranslation();
+  const { t } = useTranslation();
   const alphapicksPage = t("alphapicks");
   const apiSK = process.env.NEXT_PUBLIC_WAVE_SCAN_ADMIN_SK;
-  const waveScanApiUrl = process.env.NEXT_PUBLIC_WAVE_SCAN_BOT_API_URL;
 
   const top3ParentDivRef = useRef(null);
   const [top3ParentDivHeight, setTop3ParentDivHeight] = useState(0);
   const router = useRouter();
   const dispatch = useDispatch();
+  // get solana wallet address 
+  const solWalletAddress = useSelector(
+      (state) => state?.AllStatesData?.solWalletAddress
+    );
+  
   const alphaFollow = useSelector(
     (state) => state?.alphaFollowsData?.alphaFollow || []
   );
-  const { address } = useAppKitAccount();
   const [showAllAlphaDataTable, setShowAllAlphaDataTable] = useState(false);
 
   const [shownAlphaData, setShownAlphaData] = useState([]);
@@ -87,7 +80,7 @@ const AlphaPicks = () => {
     if (unfollowData) {
       dispatch(
         removeAlphaFollowFromDB({
-          walletAddress: address,
+          walletAddress: solWalletAddress,
           alphaGroupId: unfollowData?.channelId || unfollowData?.groupId,
           alphaGroupChatType: unfollowData?.chatType,
         })
@@ -523,7 +516,7 @@ const AlphaPicks = () => {
                                       )}
                                       <AlphaFollowButton
                                         groupParams={{
-                                          walletAddress: address,
+                                          walletAddress: solWalletAddress,
                                           alphaGroupId:
                                             data?.channelId || data?.groupId,
                                           alphaGroupChatType: data?.chatType,
@@ -706,7 +699,7 @@ const AlphaPicks = () => {
                                     </button>
                                     <AlphaFollowButton
                                       groupParams={{
-                                        walletAddress: address,
+                                        walletAddress: solWalletAddress,
                                         alphaGroupId:
                                           data?.channelId || data?.groupId,
                                         alphaGroupChatType: data?.chatType,

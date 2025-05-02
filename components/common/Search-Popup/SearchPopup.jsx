@@ -3,18 +3,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   Clear,
-  ETHAI,
-  searchBaseIcon,
-  searchDextIcon,
   solana,
-  X,
 } from "@/app/Images";
 import Image from "next/image";
 import { setChartSymbolImage, setIsSearchPopup } from "@/app/redux/states";
 import { useDispatch } from "react-redux";
 import SearchResultData from "./SearchResultData";
 import axios from "axios";
-import { electroneum } from "viem/chains";
 import { useRouter } from "next/navigation";
 
 const SearchPopup = () => {
@@ -26,8 +21,6 @@ const SearchPopup = () => {
   const [resentTokens, setResentTokens] = useState([]);
   const navigate = useRouter();
 
-  const tokenCreator = Array(10).fill(null);
-  const lastUpdated = Array(20).fill(null);
 
   const popupRef = useRef(null);
   const debounceRef = useRef(null);

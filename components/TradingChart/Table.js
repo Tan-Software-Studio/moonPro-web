@@ -1,15 +1,10 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  getDateMinus24Hours,
-  sellSolanaTokensQuickSellHandler,
-} from "@/utils/solanaBuySell/solanaBuySell";
 import Image from "next/image";
 import { CiShare1 } from "react-icons/ci";
 import {
   calculateHoldersPercentage,
-  calculateHoldersPercentageWithoutPercentage,
   calculateTimeDifference,
   humanReadableFormat,
   humanReadableFormatWithOutUsd,
@@ -17,39 +12,26 @@ import {
 import Moralis from "moralis";
 import { usePathname } from "next/navigation";
 import ProgressBar from "@ramonak/react-progress-bar";
-import { useAppKitAccount, useAppKitProvider } from "@reown/appkit/react";
-import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import CircularProgressChart from "../common/HolderTableChart/CircularProgressChart.jsx";
-import NoDataMessage from "../NoDataMessage/NoDataMessage.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTradesData } from "@/app/redux/chartDataSlice/chartData.slice.js";
-import { motion } from "framer-motion";
 import TabNavigation from "../common/tradingview/TabNavigation.jsx";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import { useTranslation } from "react-i18next";
 
-const Table = ({ scrollPosition, tokenCA, networkName, tvChartRef }) => {
-  const { t, ready } = useTranslation();
+const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
+  const { t } = useTranslation();
   const tragindViewPagePage = t("tragindViewPage");
-  const tabsRef = useRef([]);
-  const { address, isConnected } = useAppKitAccount();
   const dispatch = useDispatch();
   const latestTradesData = useSelector((state) => state.allCharTokenData);
-  const { walletProvider } = useAppKitProvider("solana");
   const [loader, setLoader] = useState(false);
   const [topHoldingData, setTopHoldingData] = useState([]);
-  // console.log("🚀 ~ Table ~ topHoldingData:+++>>>", topHoldingData?.BalanceUpdates)
-  // console.log("🚀 ~ Table ~ topHoldingData:---->>>", topHoldingData?.TokenSupplyUpdates)
   const [topTraderData, setTopTraderData] = useState([]);
-  const [transactionData, setTransactionData] = useState([]);
   const [holdingsData, setHoldingsData] = useState([]);
   const [activeTab, setActiveTab] = useState("Transactions");
-  const [isConnectedWallet, setIsConnectedWallet] = useState(false);
-
   const [top10Percentage, setTop10Percentage] = useState(0);
   const [top49Percentage, setTop49Percentage] = useState(0);
   const [top100Percentage, setTop100Percentage] = useState(0);
-  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
   useEffect(() => {
     if (!topHoldingData?.BalanceUpdates) return;
@@ -361,7 +343,7 @@ const Table = ({ scrollPosition, tokenCA, networkName, tvChartRef }) => {
       try {
         const response = await Moralis.SolApi.account.getPortfolio({
           network: "mainnet",
-          address: address,
+          address: solWalletAddress,
         });
         const res = response.toJSON();
         setHoldingsData(res.tokens);
@@ -373,31 +355,18 @@ const Table = ({ scrollPosition, tokenCA, networkName, tvChartRef }) => {
     }
   };
 
-  useEffect(() => {
-    const activeIndex = tabList.findIndex((tab) => tab.name === activeTab);
-    if (tabsRef.current[activeIndex]) {
-      const tabElement = tabsRef.current[activeIndex];
-      setIndicatorStyle({
-        left: tabElement.offsetLeft,
-        width: tabElement.offsetWidth,
-      });
-    }
-  }, [activeTab]);
-
   // useeffect
   useEffect(() => {
     dispatch(fetchTradesData(tokenCA));
   }, [tokenCA]);
 
   useEffect(() => {
-    if (address) {
-      setIsConnectedWallet(true);
+    if (solWalletAddress) {
       myHoldingData();
     } else {
-      setIsConnectedWallet(false);
       setHoldingsData([]);
     }
-  }, [address]);
+  }, [solWalletAddress]);
 
   return (
     <>
@@ -776,19 +745,7 @@ const Table = ({ scrollPosition, tokenCA, networkName, tvChartRef }) => {
                           </span>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-xs font-medium ">
-                          <button
-                            className="border border-[#3E9FD6] rounded-lg px-6 py-1 bg-[#16171D] hover:bg-[#3E9FD6] hover:text-black transition-all duration-300 ease-in-out"
-                            onClick={(e) =>
-                              sellSolanaTokensQuickSellHandler(
-                                data?.mint,
-                                address,
-                                isConnected,
-                                walletProvider,
-                                e
-                              )
-                            }
-                          >
-                            {/* {row.quickBuy} */}
+                          <button className="border border-[#3E9FD6] rounded-lg px-6 py-1 bg-[#16171D] hover:bg-[#3E9FD6] hover:text-black transition-all duration-300 ease-in-out">
                             {"Sell"}
                           </button>
                         </td>
@@ -816,9 +773,9 @@ const Table = ({ scrollPosition, tokenCA, networkName, tvChartRef }) => {
                       {loader ? (
                         "Loading data..."
                       ) : activeTab === "My Holdings" ? (
-                        !isConnected ? ( // Wallet disconnected condition
+                        !solWalletAddress ? ( // Wallet disconnected condition
                           <p className="text-[12px] md:text-[15px]">
-                            {"Please connect wallet to see your holdings."}
+                            {"Please login."}
                           </p>
                         ) : holdingsData?.length === 0 ? (
                           <p className="text-[12px] md:text-[15px]">
@@ -830,11 +787,6 @@ const Table = ({ scrollPosition, tokenCA, networkName, tvChartRef }) => {
                       )}
                     </p>
                   </div>
-                  {activeTab === "My Holdings" && !loader && !isConnected && (
-                    <div className="md:pt-1 pt-4">
-                      <appkit-button />
-                    </div>
-                  )}
                 </div>
               </>
             )}

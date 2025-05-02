@@ -2,12 +2,12 @@
 // import NewPairs from "./(pages)/newpairs/[slug]/page";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Trending from "./(pages)/trending/[slug]/page";
+import Trending from "./(pages)/trending/page";
 
 export default function Home() {
   const router = useRouter();
   useEffect(() => {
-    router.push(`/trending/solana`);
+    router.push(`/trending`);
   }, []);
   // useEffect(() => {
   //   router.push(`/newpairs/${selectToken.toLowerCase()}`);

@@ -1,5 +1,4 @@
 "use client";
-// import AllPageHeader from "@/components/AllPageHeader/AllPageHeader";
 import React, { useEffect, useState } from "react";
 import {
   baseIcon,
@@ -7,7 +6,6 @@ import {
   ethereum,
   HoldingImg,
   Filter,
-  Advanced,
   buyIcon,
   bitcoinIcon,
 } from "@/app/Images";
@@ -15,26 +13,25 @@ import TableHeaderData from "@/components/common/TableHeader/TableHeaderData";
 import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
 import HolderDataTable from "@/components/common/HolderTable/HolderDataTable";
 import Moralis from "moralis";
-
-import { useAppKitAccount } from "@reown/appkit/react";
 import NoDataMessage from "@/components/NoDataMessage/NoDataMessage";
 import { usePathname } from "next/navigation";
-import toast from "react-hot-toast";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
 
 const Holdings = () => {
-  const { t, ready } = useTranslation();
+  const { t } = useTranslation();
   const holdingsPage = t("holdings");
   const pathname = usePathname();
   const chainName = pathname.split("/")[2];
   const [holdingsData, setHoldingsData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { isConnected } = useAppKitAccount();
   const noDataMessage = holdingsPage?.noholdingsmsg;
   const noConnectWalletMsg = holdingsPage?.noconnectwallet;
-
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
   const HeaderData = {
     newPairsIcon: {
       menuIcon: HoldingImg,
@@ -78,9 +75,7 @@ const Holdings = () => {
     },
   ];
 
-  const { address } = useAppKitAccount();
   useEffect(() => {
-    const chainName = pathname.split("/")[2];
     const fetchData = async () => {
       if (!Moralis.Core.isStarted) {
         const apiKey = process.env.NEXT_PUBLIC_MORALIS_API_KEY;
@@ -88,60 +83,11 @@ const Holdings = () => {
         await Moralis.start({ apiKey });
       }
       setLoading(true);
-      // if (chainName == "ethereum") {
-      //   try {
-      //     const response =
-      //       await Moralis.EvmApi.wallets.getWalletTokenBalancesPrice({
-      //         chain: "0x1",
-      //         address: address,
-      //       });
-
-      //     const res = response.toJSON();
-      //     setHoldingsData(res.result);
-      //   } catch (error) {
-      //     console.error(
-      //       "Error fetching token balances and prices:",
-      //       error?.message
-      //     );
-      //   } finally {
-      //     setLoading(false);
-      //   }
-      // } else if (chainName == "solana") {
-      //   try {
-      //     const response = await axios({
-      //       url: `${BASE_URL}wavePro/users/solanaHoldings`,
-      //       method: "post",
-      //       data: {
-      //         walletAddress: address,
-      //       },
-      //     });
-      //     setHoldingsData(response?.data?.data?.buyTokens);
-      //   } catch (error) {
-      //     console.error("Error fetching token balances and prices:", error);
-      //   } finally {
-      //     setLoading(false);
-      //   }
-      // } else if (chainName == "base") {
-      //   try {
-      //     const response =
-      //       await Moralis.EvmApi.wallets.getWalletTokenBalancesPrice({
-      //         chain: "0x2105",
-      //         address: address,
-      //       });
-
-      //     const res = response.toJSON();
-      //     setHoldingsData(res.result);
-      //   } catch (error) {
-      //     console.error("Error fetching token balances and prices:", error);
-      //   } finally {
-      //     setLoading(false);
-      //   }
-      // }
       await axios({
         url: `${BASE_URL}wavePro/users/solanaHoldings`,
         method: "post",
         data: {
-          walletAddress: address,
+          walletAddress: solWalletAddress,
         },
       })
         .then((response) => {
@@ -153,10 +99,10 @@ const Holdings = () => {
           setLoading(false);
         });
     };
-    if (address) {
+    if (solWalletAddress) {
       fetchData();
     }
-  }, [address]);
+  }, [solWalletAddress]);
 
   return (
     <>
@@ -166,7 +112,7 @@ const Holdings = () => {
           <div className="overflow-x-auto">
             <div className="inline-block min-w-full -mt-0.5">
               <div className="xl:h-[86vh] h-[84vh] overflow-y-auto visibleScroll">
-                {holdingsData?.length > 0 && address ? (
+                {holdingsData?.length > 0 && solWalletAddress ? (
                   <table className="min-w-full !text-xs">
                     <TableHeaderData headers={headersData} />
                     <HolderDataTable
@@ -188,9 +134,9 @@ const Holdings = () => {
                   >
                     <NoDataMessage
                       loading={loading}
-                      isConnected={isConnected}
+                      isConnected={solWalletAddress}
                       noDataMessage={
-                        !isConnected ? noConnectWalletMsg : noDataMessage
+                        !solWalletAddress ? noConnectWalletMsg : noDataMessage
                       }
                     />
                   </div>
