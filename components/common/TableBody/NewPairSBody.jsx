@@ -331,7 +331,7 @@ const NewPairSBody = ({ data, loading }) => {
                         nativeTokenbalance,
                         setNativeTokenbalance,
                         e,
-                        dispatch
+                        row?.address
                       );
                     }}
                   >

@@ -404,7 +404,7 @@ const TableBody = ({ data, img }) => {
                           nativeTokenbalance,
                           setNativeTokenbalance,
                           e,
-                          dispatch
+                          row?.address
                         )
                       }
                     >

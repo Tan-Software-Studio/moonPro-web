@@ -91,7 +91,10 @@ const Tradingview = () => {
             getSolanaBalanceAndPrice(solWalletAddress),
           ]);
           if (singleTokenBalance) {
-            console.log("🚀 ~ fetchTokenMeta ~ singleTokenBalance:", singleTokenBalance)
+            console.log(
+              "🚀 ~ fetchTokenMeta ~ singleTokenBalance:",
+              singleTokenBalance
+            );
             setTokenBalance(singleTokenBalance || 0);
           }
           if (solBalance) {
@@ -471,6 +474,8 @@ const Tradingview = () => {
             nativeTokenbalance={nativeTokenbalance}
             setNativeTokenbalance={setNativeTokenbalance}
             decimal={chartTokenData?.decimal}
+            progranAddress={chartTokenData?.programAddress}
+            bondingProgress={chartTokenData?.bondingCurveProgress || 0}
             price={latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD}
           />
         </div>
