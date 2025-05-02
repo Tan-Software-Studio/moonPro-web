@@ -4,8 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import OtpPopup from './OtpPopup';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode'
+import { useGoogleLogin } from '@react-oauth/google';
 import Image from 'next/image';
 import { googleLogo } from '@/app/Images';
 import RecoveryKey from './RecoveryKey';
@@ -102,9 +101,7 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
         flow: "auth-code",
         scope: "openid profile email",
         onSuccess: async (codeResponse) => {
-            console.log("🚀 ~ onSuccess: ~ codeResponse:", jwtDecode(codeResponse?.code))
             try {
-
                 await axios({
                     url: `${baseUrl}user/googleAuth`,
                     method: "post",
