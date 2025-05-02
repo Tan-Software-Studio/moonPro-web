@@ -12,7 +12,6 @@ export default function Home() {
   // useEffect(() => {
   //   router.push(`/newpairs/${selectToken.toLowerCase()}`);
   // }, []);
-
   return (
     <div>
       {/* <NewPairs /> */}
