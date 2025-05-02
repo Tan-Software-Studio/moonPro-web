@@ -15,7 +15,7 @@ import { IoClose } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { getSoalanaTokenBalance } from "@/utils/solanaNativeBalance";
 import Image from "next/image";
-import { solana } from "@/app/Images";
+import { Solana, solana } from "@/app/Images";
 
 const TradingPopup = ({
   tragindViewPage,

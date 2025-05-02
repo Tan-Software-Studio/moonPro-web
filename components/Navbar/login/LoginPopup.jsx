@@ -2,7 +2,6 @@
 import React, { useState } from 'react'
 import { IoMdClose } from "react-icons/io";
 import OtpPopup from './OtpPopup';
-import { FaEyeSlash, FaEye } from "react-icons/fa6";
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
@@ -12,6 +11,14 @@ import { googleLogo } from '@/app/Images';
 import RecoveryKey from './RecoveryKey';
 import { setSolWalletAddress } from '@/app/redux/states';
 import { useDispatch } from 'react-redux';
+import { MdOutlineEmail } from "react-icons/md";
+import { FiLock } from "react-icons/fi";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
+import { FaUserFriends } from "react-icons/fa";
+import { AnimatePresence, motion } from 'framer-motion';
+
+
+
 
 const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
     const dispatch = useDispatch()
@@ -93,7 +100,9 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
 
     const handleGoogleAuth = useGoogleLogin({
         flow: "auth-code",
+        scope: "openid profile email",
         onSuccess: async (codeResponse) => {
+            console.log("🚀 ~ onSuccess: ~ codeResponse:", jwtDecode(codeResponse?.code))
             try {
 
                 await axios({
@@ -138,130 +147,198 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
 
     return (
         <>
-            {isGoogleSignIn ?
-                <RecoveryKey
-                    verifyData={verifyData}
-                    setVerifyData={setVerifyData}
-                    setIsLoginPopup={setIsLoginPopup} />
+            <AnimatePresence>
+                {isGoogleSignIn ?
+                    <RecoveryKey
+                        verifyData={verifyData}
+                        setVerifyData={setVerifyData}
+                        setIsLoginPopup={setIsLoginPopup} />
 
-                :
-
-                isPassword ?
-                    <OtpPopup
-                        email={email}
-                        setIsPassword={setIsPassword}
-                        authName={authName}
-                        setIsLoginPopup={setIsLoginPopup}
-                        jwtToken={jwtToken}
-                        setAuthName={setAuthName}
-                    />
                     :
-                    <div
-                        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-                        onClick={() => setIsLoginPopup(false)}
-                    >
-                        <div
-                            onClick={(e) => e.stopPropagation()}
-                            className="bg-[#1F1F1F]  p-4 rounded-md shadow-lg w-[350px] "
+
+                    isPassword ?
+                        <OtpPopup
+                            email={email}
+                            setIsPassword={setIsPassword}
+                            authName={authName}
+                            setIsLoginPopup={setIsLoginPopup}
+                            jwtToken={jwtToken}
+                            setAuthName={setAuthName}
+                        />
+                        :
+                        <motion.div
+                            key="backdrop"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="fixed inset-0 bg-[#1E1E1ECC] flex items-center justify-center z-50 "
+                            onClick={() => setIsLoginPopup(false)}
                         >
-                            <div
-                                className='flex cursor-pointer  leading-none items-center justify-end'>
+                            <motion.div
+                                key="modal"
+                                initial={{ scale: 0.8, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0.8, opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                                onClick={(e) => e.stopPropagation()}
+                                className="bg-[#141414]/90 backdrop-blur-lg border border-[#2A2A2A]  rounded-2xl w-[400px] relative"
+                            >
                                 <IoMdClose
+                                    size={22}
                                     onClick={() => setIsLoginPopup(false)}
-                                    className='w-fit' />
-                            </div>
-                            <h2 className="text-base text-center leading-none">{authName == 'login' ? 'Login' : 'Sign up'}</h2>
-                            <div>
-                                <div className='text-sm text-[#6E6E6E]'>Email</div>
-                                <input
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    type="email"
-                                    className="w-full  border-[1px] border-[#404040] bg-[#1F1F1F] focus:outline-none text-sm p-2 rounded-md mt-1" placeholder="Enter your email"
+                                    className="absolute right-4 top-4 text-[#6E6E6E] hover:text-white cursor-pointer transition duration-200"
                                 />
-                                <div className='text-xs text-red-600 mt-0.5'>{error}</div>
-                                {authName == 'login' ?
-                                    <>
-                                        <div className='text-sm text-[#6E6E6E] mt-3'>Password</div>
-                                        <div className=' border-[1px] bg-[#1F1F1F] py-2 px-2 mt-1 flex items-center justify-between rounded-md border-[#404040] '>
+
+                                <div className="mt-2 p-8">
+                                    {authName !== 'login' ? (
+                                        <>
+                                            <h1 className="text-3xl font-bold text-center text-white">Create Account</h1>
+                                            <p className="text-sm text-[#6E6E6E] text-center mt-1">Please enter your details</p>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <h1 className="text-3xl font-bold text-center text-white">Welcome Back</h1>
+                                            <p className="text-sm text-[#6E6E6E] text-center mt-1">Log in to your account</p>
+                                        </>
+                                    )}
+
+                                    {/* Email */}
+                                    <div className="mt-6">
+                                        <label className="text-sm text-[#6E6E6E] mb-1 block">Email</label>
+                                        <div className="flex items-center gap-3 bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
+                                            <MdOutlineEmail size={20} className="text-[#6E6E6E]" />
                                             <input
-                                                type={!showPassword ? "password" : "text"}
-                                                placeholder="Password"
-                                                onChange={(e) => setPasswordInput(e.target.value)}
-                                                className=" focus:outline-none text-sm w-full bg-[#1F1F1F]  "
-
+                                                type="email"
+                                                placeholder="Enter your email"
+                                                onChange={(e) => setEmail(e.target.value)}
+                                                className="w-full bg-transparent text-sm text-white placeholder-[#6E6E6E] focus:outline-none"
                                             />
-                                            {showPassword ?
-                                                <FaEye size={18} onClick={() => setShowPassword(!showPassword)} className='w-fit cursor-pointer' />
-                                                :
-                                                <FaEyeSlash size={18} onClick={() => setShowPassword(!showPassword)} className='w-fit cursor-pointer' />
-                                            }
-                                            {/* <FaEyeSlash size={18} className='w-fit cursor-pointer' /> */}
                                         </div>
-                                    </>
-                                    :
-                                    <>
-                                        <div className='text-sm text-[#6E6E6E] mt-3'>Invite code</div>
-                                        <input
-                                            type="text"
-                                            onChange={(e) => setRefferalCode(e.target.value)}
-                                            className="w-full border-[1px] border-[#404040] bg-[#1F1F1F] focus:outline-none text-sm p-2 rounded-md mt-1" placeholder="Invite code (optional)"
-                                        />
-                                    </>
-                                }
-                            </div>
-                            <button
-                                onClick={handleOtpPopup}
-                                disabled={isDisable}
-                                className={`bg-[#11265B] border-[1px] border-[#0E43BD]  text-sm py-2 flex items-center  w-full mt-3 rounded-md justify-center`}>
-                                {!isDisable ? authName == 'login' ? 'Login' : 'Sign up' : 
-                                    <div className="flex cursor-not-allowed items-center gap-5">
-                                        <div className="loaderPopup"></div>
-                                        <div className="text-white text-sm">{authName == 'login' ? 'Logging in...' : 'Signing up...'}</div>
+                                        <p className="text-xs text-red-500 mt-1">{error}</p>
                                     </div>
-                                }
-                            </button>
 
-                            <div className='text-sm text-[#6E6E6E] mt-3 text-center'>Or {authName == 'login' ? '' : 'Sign Up'}</div>
+                                    {/* Password or Invite Code */}
+                                    {authName === 'login' ? (
+                                        <div className="mt-4">
+                                            <label className="text-sm text-[#6E6E6E] mb-1 block">Password</label>
+                                            <div className="flex items-center justify-between bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
+                                                <div className="flex items-center gap-3 w-full">
+                                                    <FiLock size={20} className="text-[#6E6E6E]" />
+                                                    <input
+                                                        type={!showPassword ? 'password' : 'text'}
+                                                        placeholder="Password"
+                                                        onChange={(e) => setPasswordInput(e.target.value)}
+                                                        className="w-full bg-transparent text-sm text-white placeholder-[#6E6E6E] focus:outline-none"
+                                                    />
+                                                </div>
+                                                {showPassword ? (
+                                                    <BsEye
+                                                        size={18}
+                                                        onClick={() => setShowPassword(!showPassword)}
+                                                        className="text-[#6E6E6E] cursor-pointer"
+                                                    />
+                                                ) : (
+                                                    <BsEyeSlash
+                                                        size={18}
+                                                        onClick={() => setShowPassword(!showPassword)}
+                                                        className="text-[#6E6E6E] cursor-pointer"
+                                                    />
+                                                )}
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="mt-4">
+                                            <label className="text-sm text-[#6E6E6E] mb-1 block">Invite code</label>
+                                            <div className="flex items-center gap-3 bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
+                                                <FaUserFriends size={20} className="text-[#6E6E6E]" />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Invite code (optional)"
+                                                    onChange={(e) => setRefferalCode(e.target.value)}
+                                                    className="w-full bg-transparent text-sm text-white placeholder-[#6E6E6E] focus:outline-none"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
 
+                                    {/* Submit Button */}
+                                    <button
+                                        onClick={handleOtpPopup}
+                                        disabled={isDisable}
+                                        className={`mt-6 w-full rounded-lg text-sm py-3 font-semibold transition ${isDisable
+                                            ? 'bg-[#11265B] cursor-not-allowed'
+                                            : 'bg-[#11265B] hover:bg-[#133D94]'
+                                            } border border-[#0E43BD] text-white shadow-md`}
+                                    >
+                                        {!isDisable ? (authName === 'login' ? 'Login' : 'Sign up') : (
+                                            <div className="flex justify-center py-2 items-center gap-2">
+                                                <div className="loaderPopup"></div>
+                                            </div>
+                                        )}
+                                    </button>
 
-                            <div
-                                className='bg-[#FFFFFF] hover:opacity-80 text-sm py-2 flex items-center justify-center w-full mt-3 rounded-md cursor-pointer'
-                                onClick={() => handleGoogleAuth()}>
-                                <Image
-                                    src={googleLogo}
-                                    alt="Google Logo"
-                                    width={20}
-                                    height={20}
-                                    className='w-6 h-6 object-contain'
-                                />
-                                <div>
-                                    <span className='text-[#1F1F1F] font-semibold text-sm ml-2'>Continue with Google</span>
+                                    {/* Divider */}
+                                    <div className="flex items-center justify-center my-5 text-sm text-[#6E6E6E]">
+                                        <div className="flex-grow border-t border-[#333]"></div>
+                                        <span className="px-3">Or continue with</span>
+                                        <div className="flex-grow border-t border-[#333]"></div>
+                                    </div>
+
+                                    {/* Google Auth */}
+                                    <div
+                                        className="bg-white hover:opacity-90 text-sm py-3 px-4 flex items-center justify-center w-full rounded-lg cursor-pointer transition"
+                                        onClick={() => handleGoogleAuth()}
+                                    >
+                                        <Image
+                                            src={googleLogo}
+                                            alt="Google Logo"
+                                            width={20}
+                                            height={20}
+                                            className="w-5 h-5 object-contain"
+                                        />
+                                        <span className="text-[#1F1F1F] font-semibold ml-3">Continue with Google</span>
+                                    </div>
+
+                                    {/* Switch Auth */}
+                                    <div className="text-sm mt-5 text-center text-white">
+                                        {authName !== 'login' ? (
+                                            <>
+                                                Already have an account?{' '}
+                                                <span
+                                                    className="text-[#1F73FC] cursor-pointer hover:underline"
+                                                    onClick={() => setAuthName('login')}
+                                                >
+                                                    Login
+                                                </span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                Don&apos;t have an account?{' '}
+                                                <span
+                                                    className="text-[#1F73FC] cursor-pointer hover:underline"
+                                                    onClick={() => setAuthName('signup')}
+                                                >
+                                                    Sign up
+                                                </span>
+                                            </>
+                                        )}
+                                    </div>
+
                                 </div>
-                            </div>
-
-                            {authName != 'login' ?
-                                <div className='text-xs mt-3 cursor-pointer text-center'>
-                                    Already have an account?
-                                    <span onClick={() => setAuthName('login')} className='text-[#1f73fc]' >
-                                        Login
-                                    </span>
+                                <div className='text-xs border-t-[1px] border-t-[#404040] mt-3 text-center'>
+                                    <div className='p-6'>
+                                        By creating an account, you agree to moon pro&aspos;s Privacy Policy and Terms of Service
+                                    </div>
                                 </div>
-                                :
-                                <div className='text-xs mt-3 cursor-pointer text-center'>
-                                    Don&apos;t have an account?
-                                    <span onClick={() => setAuthName('signup')} className='text-[#1f73fc]'>
-                                        Sign up
-                                    </span>
-                                </div>
-                            }
-                            <div className='text-xs mt-3 text-center'>
-                                By creating an account, you agree to moon pro&apos;s Privacy Policy and Terms of Service
-                            </div>
-                        </div>
-                    </div>
-            }
+                            </motion.div>
+                        </motion.div>
 
-        </>)
+                }
+
+            </AnimatePresence >
+        </>
+    )
 }
 
 export default LoginPopup
