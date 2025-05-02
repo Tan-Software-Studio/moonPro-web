@@ -7,7 +7,7 @@ import Image from "next/image";
 import { RxCross1 } from "react-icons/rx";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
-import { IoMenu, IoWallet } from "react-icons/io5";
+import { IoMenu, IoPersonCircleOutline } from "react-icons/io5";
 import { setIsSidebarOpen } from "@/app/redux/CommonUiData";
 import {
   useAppKitAccount,
@@ -31,10 +31,11 @@ import { lang } from "../../app/contsants/lang";
 import { useTranslation } from "react-i18next";
 import LoginPopup from "./login/LoginPopup";
 import { RiLogoutBoxLine } from "react-icons/ri";
-import { IoIosArrowDown, } from "react-icons/io";
-import toast from "react-hot-toast";
 import { FaCopy } from "react-icons/fa6";
 import { googleLogout } from "@react-oauth/google";
+import { GrLanguage } from "react-icons/gr";
+
+
 
 
 
@@ -42,8 +43,7 @@ const Navbar = () => {
   const router = useRouter();
   const { i18n } = useTranslation();
   const { switchNetwork, chainId } = useAppKitNetwork();
-  const { address, isConnected } = useAppKitAccount();
-  const { disconnect } = useDisconnect();
+  const { address, } = useAppKitAccount();
   const dispatch = useDispatch();
   const pathname = usePathname();
   const pageName = pathname.split("/")[1];
@@ -384,11 +384,10 @@ const Navbar = () => {
                 className="cursor-pointer"
                 onClick={() => setIsModalOpen(true)}
               >
-                <Image
-                  alt="lang"
-                  src={language?.img}
-                  className="h-[20px] w-[30px]"
-                />
+                <div className="flex items-center justify-center hover:text-[#1F73FC] cursor-pointer py-1 gap-2 px-2  hover:border-[#1F73FC] border-[1px] rounded-md">
+                  <GrLanguage size={20} />
+                  <div className="uppercase"> {language?.lang ? language.lang.substring(0, 3) : ''}</div>
+                </div> 
               </div>
               {/* <div
                 className={`flex items-center h-10 ${
@@ -401,10 +400,8 @@ const Navbar = () => {
               <div className="flex items-center gap-2 ">
                 {solWalletAddress ?
                   <div className="relative">
-                    <div
-                      className="text-sm bg-[#1F1F1F] py-1.5 px-4 rounded-md text-white cursor-pointer flex items-center gap-2"
-                      onClick={() => setIsProfileOpen((prev) => !prev)}
-                    >
+                    {/* <div
+                      className="text-sm bg-[#1F1F1F] py-1.5 px-4 rounded-md text-white cursor-pointer flex items-center gap-2">
                       <div>
                         <IoWallet size={16} className="text-white" />
                       </div>
@@ -414,6 +411,9 @@ const Navbar = () => {
                       <div>
                         <IoIosArrowDown size={16} className="text-white" />
                       </div>
+                    </div> */}
+                    <div onClick={() => setIsProfileOpen((prev) => !prev)}>
+                      <IoPersonCircleOutline size={26} className={`md:ml-2 cursor-pointer`} />
                     </div>
 
                     {isProfileOpen && (

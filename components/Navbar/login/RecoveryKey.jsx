@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import toast from 'react-hot-toast';
 import { IoMdClose } from 'react-icons/io'
 import { MdContentCopy } from "react-icons/md";
+import { AnimatePresence, motion } from 'framer-motion';
 
 
 const RecoveryKey = ({ setIsLoginPopup, verifyData, setVerifyData }) => {
@@ -17,54 +18,71 @@ const RecoveryKey = ({ setIsLoginPopup, verifyData, setVerifyData }) => {
         toast.success('Recovery key copied to clipboard')
     }
 
-        
-    
+
+
 
 
     return (
-        <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-        >
-            <div
-                onClick={(e) => e.stopPropagation()}
-                className="bg-[#1F1F1F] border-[1px] border-[#404040] rounded-md shadow-lg w-[350px] "
+
+        <AnimatePresence>
+
+
+            <motion.div
+                key="backdrop"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 bg-[#1E1E1ECC] flex items-center justify-center z-50 "
             >
-                <div className='p-4'>
-                    <div
+                <motion.div
+                    key="modal"
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.8, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="bg-[#141414]/90 backdrop-blur-lg border border-[#2A2A2A]  rounded-2xl w-[400px] relative"
+                >
+                    <IoMdClose
+                        size={22}
                         onClick={handleClose}
-                        className='flex cursor-pointer  leading-none items-center justify-end'>
-                        <IoMdClose className='w-fit' />
-                    </div>
-                    <h2 className="text-base text-center leading-none">Recovery Key</h2>
-                    <div className='mt-4'>
-                        <div className='text-sm text-center'>This recovery key will allow you to access your wallet if you ever lose your credential to your moon pro account</div>
-                    </div>
-                    <div className='mt-4  w-full'>
-                        <div className='text-sm '>Recovery key </div>
-                        <div className={`flex w-full border-[1px] border-[#404040] rounded-md  mt-1 p-3  bg-[#1F1F1F] ${!isRevealed ? 'blur-sm select-none' : ''}`}>
-                            <div className='w-[90%] overflow-x-hidden  break-words text-sm '>{verifyData?.data?.solPhrase}</div>
-                            <div className='cursor-pointer w-[10%]'>
-                                <div className='justify-end w-full flex'>
-                                    <MdContentCopy
-                                        onClick={handleCopy}
-                                        className='w-fit' /></div>
+                        className="absolute right-4 top-4 text-[#6E6E6E] hover:text-white cursor-pointer transition duration-200"
+                    />
+
+                    <div className='p-8'>
+                        <h2 className="text-2xl font-semibold text-center text-white">Recovery Key</h2>
+                        <div className='mt-4'>
+                            <div className='text-sm text-center'>This recovery key will allow you to access your wallet if you ever lose your credential to your moon pro account</div>
+                        </div>
+                        <div className='mt-4  w-full'>
+                            <div className="text-sm text-[#6E6E6E] mt-2 mb-1 block">Recovery key </div>
+                            <div className={`flex w-full border-[1px] border-[#404040] rounded-md  mt-1 p-3  bg-[#1F1F1F] ${!isRevealed ? 'blur-sm select-none' : ''}`}>
+                                <div className='w-[90%] overflow-x-hidden  break-words text-sm '>{verifyData?.data?.solPhrase}</div>
+                                <div className='cursor-pointer w-[10%]'>
+                                    <div className='justify-end w-full flex'>
+                                        <MdContentCopy
+                                            onClick={handleCopy}
+                                            className='w-fit' /></div>
+                                </div>
                             </div>
                         </div>
+                        <button
+                            onClick={() => setIsRevealed(!isRevealed)}
+                            className={`mt-6 w-full rounded-lg text-sm py-3 font-semibold transition bg-[#11265B] hover:bg-[#133D94] border border-[#0E43BD] text-white shadow-md`}
+                        >
+                            Reveal my key
+                        </button>
                     </div>
-                    <button
-
-                        onClick={() => setIsRevealed(!isRevealed)}
-                        className='bg-[#1f73fc] text-sm py-2 flex items-center   w-full mt-3 rounded-md justify-center'>
-                        Reveal my key
-                    </button>
-                </div>
-                <div className='text-xs border-t-[1px] border-t-[#404040] mt-3 text-center'>
-                    <div className=' p-4'>
-                        WARNING: This recovery key is the only way to access your wallet if you lose your credentials. Store it in a safe place and do not share it with anyone.
+                    <div className='text-xs border-t-[1px] border-t-[#404040] mt-3 text-center'>
+                        <div className=' p-4'>
+                            WARNING: This recovery key is the only way to access your wallet if you lose your credentials. Store it in a safe place and do not share it with anyone.
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                </motion.div>
+            </motion.div>
+            
+        </AnimatePresence>
     )
 }
 
