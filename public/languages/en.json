@@ -142,7 +142,7 @@
       "quicksell": "QUICK SELL",
       "quickselltooltip": "Instantly sell your entire position in t,his token with one click."
     },
-    "noconnectwallet": "Please connect wallet to see your holdings.",
+    "noconnectwallet": "Please login to see your holdings.",
     "noholdingsmsg": "You currently do not have any token holdings in your Wave trading wallet."
   },
   "leaderboard": {
