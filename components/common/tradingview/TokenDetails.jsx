@@ -19,7 +19,6 @@ import {
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import axios from "axios";
-import { useAppKit } from "@reown/appkit/react";
 import { FaHeart } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
 import { RxCross1 } from "react-icons/rx";
@@ -36,7 +35,6 @@ const TokenDetails = ({
   chartTokenData,
   walletAddress,
 }) => {
-  const { open } = useAppKit();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCopyUrl, setIsCopyUrl] = useState(false);
 

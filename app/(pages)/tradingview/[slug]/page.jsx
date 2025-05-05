@@ -1,12 +1,10 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { BiSolidCopy } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { usePathname, useSearchParams } from "next/navigation";
 import { setselectToken, setselectTokenLogo } from "@/app/redux/CommonUiData";
 import Table from "@/components/TradingChart/Table";
-import { solana, ethereum, baseIcon } from "@/app/Images";
-import { useAppKitState } from "@reown/appkit/react";
+import { solana } from "@/app/Images";
 import {
   getSoalanaTokenBalance,
   getSolanaBalanceAndPrice,
@@ -23,13 +21,12 @@ import { useTranslation } from "react-i18next";
 import { getTokenBalance } from "@/utils/EVM/getBalances";
 
 const Tradingview = () => {
-  const { t, ready } = useTranslation();
+  const { t } = useTranslation();
   const tragindViewPage = t("tragindViewPage");
   const [activeTab, setActiveTab] = useState("buy");
   const [dataLoaderForChart, setDataLoaderForChart] = useState(false);
   const latestTradesData = useSelector((state) => state.allCharTokenData);
   const [copied, setCopied] = useState(false);
-  const [decimal, setDecimal] = useState("");
   const dispatch = useDispatch();
   const [tokenBalance, setTokenBalance] = useState(0);
   const [nativeTokenbalance, setNativeTokenbalance] = useState(0);
@@ -38,7 +35,6 @@ const Tradingview = () => {
   const tokenaddress = searchParams.get("tokenaddress");
   const tokenSymbol = searchParams.get("symbol");
   let pairAddress = searchParams?.get("pair") || null;
-  const { selectedNetworkId } = useAppKitState();
   const pathname = usePathname();
   const getNetwork = pathname.split("/")[2];
   const containerRef = useRef(null);
@@ -50,17 +46,9 @@ const Tradingview = () => {
   );
 
   useEffect(() => {
-    if (selectToken == "Solana") {
-      dispatch(setselectToken("Solana"));
-      dispatch(setselectTokenLogo(solana));
-    } else if (selectToken == "Ethereum") {
-      dispatch(setselectToken("Ethereum"));
-      dispatch(setselectTokenLogo(ethereum));
-    } else if (selectToken == "Base") {
-      dispatch(setselectToken("Base"));
-      dispatch(setselectTokenLogo(baseIcon));
-    }
-  }, [selectedNetworkId]);
+    dispatch(setselectToken("Solana"));
+    dispatch(setselectTokenLogo(solana));
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("chartTokenAddress", tokenaddress);
@@ -84,37 +72,23 @@ const Tradingview = () => {
 
   useEffect(() => {
     const fetchTokenMeta = async () => {
-      try {
-        if (getNetwork == "solana") {
-          const [singleTokenBalance, solBalance] = await Promise.all([
-            getSoalanaTokenBalance(solWalletAddress, tokenaddress),
-            getSolanaBalanceAndPrice(solWalletAddress),
-          ]);
-          if (singleTokenBalance) {
-            console.log(
-              "🚀 ~ fetchTokenMeta ~ singleTokenBalance:",
-              singleTokenBalance
-            );
-            setTokenBalance(singleTokenBalance || 0);
-          }
-          if (solBalance) {
-            setNativeTokenbalance(solBalance);
-          }
-        } else {
-          const tokenData = await getTokenBalance(
-            tokenaddress,
-            solWalletAddress,
-            selectToken
-          );
-          setTokenBalance(tokenData?.tokenBalance);
-          setDecimal(tokenData?.decimals);
-        }
-      } catch (error) {
-        console.error(error?.message);
+      const [singleTokenBalance, solBalance] = await Promise.all([
+        getSoalanaTokenBalance(solWalletAddress, tokenaddress),
+        getSolanaBalanceAndPrice(solWalletAddress),
+      ]);
+      if (singleTokenBalance) {
+        console.log(
+          "🚀 ~ fetchTokenMeta ~ singleTokenBalance:",
+          singleTokenBalance
+        );
+        setTokenBalance(singleTokenBalance || 0);
+      }
+      if (solBalance) {
+        setNativeTokenbalance(solBalance);
       }
     };
     fetchTokenMeta();
-  }, [solWalletAddress, getNetwork, tokenaddress]);
+  }, [solWalletAddress, tokenaddress]);
   const handleCopy = (mintAddress) => {
     setCopied(true);
     // toast.success("TokenAddress copied to clipboard!", {
@@ -380,9 +354,6 @@ const Tradingview = () => {
       value: `${chartTokenData?.Pooled_Quote_Native} | ${chartTokenData?.Pooled_Quote_Native_format}`,
     },
   ];
-  const selectToken = useSelector(
-    (state) => state?.AllthemeColorData?.selectToken
-  );
   // Token Chart Data (Right Side)
   const chartTokenDataAPI = async () => {
     setDataLoaderForChart(true);
@@ -439,10 +410,10 @@ const Tradingview = () => {
           <div className="overflow-y-auto border-t border-t-[#4D4D4D]">
             <Table
               tokenCA={tokenaddress}
-              networkName={getNetwork}
               address={solWalletAddress}
               scrollPosition={scrollPosition}
               tvChartRef={tvChartRef}
+              solWalletAddress={solWalletAddress}
             />
           </div>
         </div>

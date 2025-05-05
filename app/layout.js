@@ -4,7 +4,6 @@ import { Poppins, Space_Grotesk } from "next/font/google";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import PagesLayout from "./PagesLayout";
 import { Toaster } from "react-hot-toast";
-import ContextProvider from "@/context";
 import { headers } from "next/headers";
 import Providers from "./redux/provider";
 
@@ -51,7 +50,6 @@ export default function RootLayout({ children }) {
             <body
                 className={`${geistSans.variable} ${geistMono.variable}  ${poppins.variable} ${spaceGrotesk.variable} antialiased`}
             >
-                <ContextProvider cookies={cookies}>
                     <Providers>
                         <div className="flex">
                             <div className="w-auto">
@@ -64,7 +62,6 @@ export default function RootLayout({ children }) {
                             />
                         </div>
                     </Providers>
-                </ContextProvider>
             </body>
         </html>
     );

@@ -3,14 +3,11 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import axios from 'axios';
 import Image from "next/image";
-import { useAppKitAccount } from '@reown/appkit/react';
 import Modal from "react-modal";
 import { useDispatch, useSelector } from "react-redux";
-import AlphaFollowButton from "@/components/alphaPicks/AlphaFollowButton"
 import { removeAlphaFollowFromDB } from "@/app/redux/alphaFollows/alphaFollowsData.js";
 import { formatNumberNoLoop } from "@/utils/calculation";
 import { notFound, useRouter } from "next/navigation";
-
 import twitter from "../../../../public/assets/AlphaProfile/twitter.svg";
 import telegram from "../../../../public/assets/AlphaProfile/telegram.svg";
 import youtube from "../../../../public/assets/AlphaProfile/youtube.svg";
@@ -21,20 +18,18 @@ import exportIcon from "../../../../public/assets/AlphaProfile/exportIcon.svg";
 import ArrowRightDarkBlue from "../../../../public/assets/AlphaProfile/ArrowRightDarkBlue.svg";
 import MagnifyingGlass from "../../../../public/assets/AlphaPicks/MagnifyingGlass.svg";
 import Funnel from "../../../../public/assets/AlphaPicks/Funnel.svg";
-
 import AlphaProfileTabNavigation from "@/components/common/AlphaProfile/AlphaProfileTabNavigation.jsx";
 import TimeIntervalsFilterTabs from "@/components/common/Alpha_TokenCalls/TimeIntervalsFilterTabs";
 import CopyButton from "@/components/common/Alpha_TokenCalls/CopyButton";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx"
-import Tooltip from "@/components/common/Tooltip/ToolTip.jsx"
 
 const CallerProfilePage  = ({params: dynamicId}) => {
     const apiSK = process.env.NEXT_PUBLIC_WAVE_SCAN_ADMIN_SK;
-    const waveScanApiUrl = process.env.NEXT_PUBLIC_WAVE_SCAN_BOT_API_URL;
     const router = useRouter();
-    const { address } = useAppKitAccount();
     const dispatch = useDispatch();
-    const alphaFollow = useSelector((state) => state?.alphaFollowsData?.alphaFollow || []);
+    const solWalletAddress = useSelector(
+           (state) => state?.AllStatesData?.solWalletAddress
+         );
     
     const [loadingMainPage, setLoadingMainPage] = useState(true);
     const [foundGroup, setFoundGroup] = useState(true);
@@ -347,13 +342,16 @@ const CallerProfilePage  = ({params: dynamicId}) => {
 
      const handleConfirmUnfollow = () => {
         if (shownMainStatData) {
-          dispatch(removeAlphaFollowFromDB({
-            walletAddress: address,
-            alphaGroupId: shownMainStatData?.chatType === "channel"
-                ? shownMainStatData?.channelId
-                : shownMainStatData?.groupId,
-            alphaGroupChatType: shownMainStatData?.chatType
-          })); // Dispatch Redux action
+          dispatch(
+            removeAlphaFollowFromDB({
+              walletAddress: solWalletAddress,
+              alphaGroupId:
+                shownMainStatData?.chatType === "channel"
+                  ? shownMainStatData?.channelId
+                  : shownMainStatData?.groupId,
+              alphaGroupChatType: shownMainStatData?.chatType,
+            })
+          ); // Dispatch Redux action
           setIsModalFollowingOpen(false);
         }
       };

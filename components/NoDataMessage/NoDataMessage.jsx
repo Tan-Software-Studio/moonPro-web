@@ -3,13 +3,10 @@ import { usePathname } from 'next/navigation';
 import { useSelector } from 'react-redux';
 
 
-const NoDataMessage = ({ loading, noDataMessage, isConnected, searchResult }) => {
+const NoDataMessage = ({ loading, noDataMessage, isConnected }) => {
 
     const dataLoadingMsg = "Loading Data..."
     const pathname = usePathname()
-    const isSearchPopup = useSelector(
-        (state) => state?.AllStatesData?.isSearchPopup
-    );
     return (
         <div className="flex flex-col items-center justify-center">
             <div className={`text-4xl mb-2 ${loading ? 'animate-bounce' : ''}`}>

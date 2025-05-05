@@ -5,8 +5,6 @@ import QuickSell from "@/components/Settings/QuickSell";
 import Approve from "@/components/Settings/Approve";
 import AutoBuy from "@/components/Settings/AutoBuy";
 import AutoSell from "@/components/Settings/AutoSell";
-import { useAccount } from "wagmi";
-import { useAppKitAccount } from "@reown/appkit/react";
 import toast from "react-hot-toast";
 import QuickBuy from "@/components/Settings/QuickBuy";
 
@@ -20,19 +18,10 @@ const Settings = () => {
   const isSidebarOpen = useSelector(
     (state) => state?.AllthemeColorData?.isSidebarOpen
   );
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
 
-  const { address: ethaddress } = useAccount();
-  const { address: soladdress } = useAppKitAccount();
-  let address = ethaddress || soladdress;
-
-  let truncatedAddress;
-  if (ethaddress) {
-    truncatedAddress = `${ethaddress.slice(0, 9)}....${ethaddress.slice(-9)}`;
-  } else if (soladdress) {
-    truncatedAddress = `${soladdress.slice(0, 9)}....${soladdress.slice(-9)}`;
-  } else {
-    truncatedAddress = "No address found !";
-  }
   const [copied, setCopied] = useState(false);
   const copyAddress = (address) => {
     navigator?.clipboard?.writeText(address);
@@ -42,8 +31,6 @@ const Settings = () => {
       setCopied(null); // Reset after 2 seconds
     }, 600);
   };
-
-  const repeatSections = Array(4).fill(null);
 
   const renderActiveTab = () => {
     switch (activeTab) {
@@ -64,7 +51,9 @@ const Settings = () => {
 
   return (
     <div className="mr-4 ml-4 overflow-y-auto h-[95vh]">
-      <div className={`mt-4 mb-5 text-white font-semibold uppercase text-3xl tracking-wider`}>
+      <div
+        className={`mt-4 mb-5 text-white font-semibold uppercase text-3xl tracking-wider`}
+      >
         <p>Settings</p>
       </div>
       <div
@@ -79,16 +68,16 @@ const Settings = () => {
           className={`${
             isSidebarOpen ? `md: truncate` : ``
           } md:block hidden  md:w-96 w-56 px-8 md:px-4 py-1.5 bg-transparent border ${borderColor} rounded-full outline-none text-[#A5A5A7] text-center text-xs placeholder:text-xs font-normal cursor-pointer`}
-          value={address}
+          value={solWalletAddress}
           readOnly
-          onClick={() => copyAddress(address)}
+          onClick={() => copyAddress(solWalletAddress)}
         />
         <input
           type="text"
           className={`block md:hidden md:w-96 w-56 px-8 md:px-4 py-1.5 bg-transparent border ${borderColor} rounded-full outline-none text-[#A5A5A7] text-center text-xs placeholder:text-xs font-normal cursor-pointer`}
-          value={truncatedAddress}
+          value={solWalletAddress}
           readOnly
-          onClick={() => copyAddress(address)}
+          onClick={() => copyAddress(solWalletAddress)}
         />
         {/* <PiCopySimpleFill
             className={`absolute end-4  top-1/2 transform -translate-y-1/2 text-[#6B6B6D] cursor-pointer`}

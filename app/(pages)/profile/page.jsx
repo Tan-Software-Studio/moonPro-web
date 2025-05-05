@@ -2,47 +2,81 @@
 import Image from "next/image";
 import React, { useEffect, useMemo, useState } from "react";
 import img from "../../../public/assets/Profile/Image.png";
-import { IoMdDoneAll, IoMdSettings } from "react-icons/io";
+import { IoMdDoneAll } from "react-icons/io";
 import { BiSolidCopy } from "react-icons/bi";
 import { useSelector } from "react-redux";
-import { useAppKitAccount } from "@reown/appkit/react";
 import { useRouter } from "next/navigation";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { BiX } from "react-icons/bi";
 import { IoMdCheckmark } from "react-icons/io";
 import ProgressBar from "@ramonak/react-progress-bar";
-import Infotip from "@/components/common/Tooltip/Infotip.jsx"
-import Tooltip from "@/components/common/Tooltip/ToolTip.jsx"
+import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 
 const Profile = () => {
-
-  const { address } = useAppKitAccount();
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const truncatedInputValue = inputValue.length > 10 ? inputValue.slice(0, 10) + "..." : inputValue;
+  const truncatedInputValue =
+    inputValue.length > 10 ? inputValue.slice(0, 10) + "..." : inputValue;
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState(`Recent PnL`);
   const border = useSelector((state) => state?.AllthemeColorData?.borderColor);
 
   const truncatedAddress = useMemo(() => {
-    return address ? `${address.slice(0, 5)}...${address.slice(-3)}` : "Please wait...";
-  }, [address]);
+    return solWalletAddress
+      ? `${solWalletAddress.slice(0, 5)}...${solWalletAddress.slice(-3)}`
+      : "Please wait...";
+  }, [solWalletAddress]);
 
-  const [saveStatus, setSaveStatus] = useState("")
-  const [savedWalletMark, setSavedWalletMark] = useState("")
-  const [displayValue, setDisplayValue] = useState(truncatedAddress || "Please wait...");
+  const [saveStatus, setSaveStatus] = useState("");
+  const [savedWalletMark, setSavedWalletMark] = useState("");
+  const [displayValue, setDisplayValue] = useState(
+    truncatedAddress || "Please wait..."
+  );
 
   const tableHeader = [
-    { id: 1, title: "Token/Last Active", infoTipString: "The specific token held and the last time it was actively traded or interacted with by the wallet." },
-    { id: 2, title: "Unrealized", infoTipString: "Current profit or loss from tokens that are still held and not yet sold." },
-    { id: 3, title: "30D Realized Profit", infoTipString: "Net profit or loss from tokens sold in the past 30 days. Realized means the position was closed." },
-    { id: 4, title: "Total Profit", infoTipString: "Net profit or loss from tokens sold in the past 30 days. Realized means the position was closed." },
+    {
+      id: 1,
+      title: "Token/Last Active",
+      infoTipString:
+        "The specific token held and the last time it was actively traded or interacted with by the wallet.",
+    },
+    {
+      id: 2,
+      title: "Unrealized",
+      infoTipString:
+        "Current profit or loss from tokens that are still held and not yet sold.",
+    },
+    {
+      id: 3,
+      title: "30D Realized Profit",
+      infoTipString:
+        "Net profit or loss from tokens sold in the past 30 days. Realized means the position was closed.",
+    },
+    {
+      id: 4,
+      title: "Total Profit",
+      infoTipString:
+        "Net profit or loss from tokens sold in the past 30 days. Realized means the position was closed.",
+    },
     { id: 5, title: "Balance USD" },
-    { id: 6, title: "Position %", infoTipString: "The percentage of the wallet’s total portfolio value allocated to a specific token." },
+    {
+      id: 6,
+      title: "Position %",
+      infoTipString:
+        "The percentage of the wallet’s total portfolio value allocated to a specific token.",
+    },
     { id: 7, title: "Bought/Avg" },
     { id: 8, title: "Sold/Avg" },
-    { id: 9, title: "30D TXs", infoTipString: "The number of times this token was bought or sold in the past 30 days." },
+    {
+      id: 9,
+      title: "30D TXs",
+      infoTipString:
+        "The number of times this token was bought or sold in the past 30 days.",
+    },
     // { id: 10, title: "" },
   ];
 
@@ -181,7 +215,6 @@ const Profile = () => {
     // },
   ];
 
-
   const activityData = [
     // {
     //   id: 1,
@@ -286,7 +319,6 @@ const Profile = () => {
   ];
   // ------------------ stetic data End-----------------------------
 
-
   const [copied, setCopied] = useState(false);
 
   const copyAddress = (address) => {
@@ -300,12 +332,13 @@ const Profile = () => {
   const handleEditClick = () => {
     setIsEditing(true);
     setDisplayValue(inputValue || truncatedAddress);
-    setSavedWalletMark(inputValue || truncatedAddress)
+    setSavedWalletMark(inputValue || truncatedAddress);
   };
 
   const handleCancelClick = () => {
     setIsEditing(false);
-    if (false) { // muje es ki abhi koi jrurat nahi hai
+    if (false) {
+      // muje es ki abhi koi jrurat nahi hai
       setInputValue(savedWalletMark || "");
     }
   };
@@ -313,8 +346,8 @@ const Profile = () => {
   const handleSaveClick = () => {
     setDisplayValue(inputValue || truncatedAddress);
     setIsEditing(false);
-    setSavedWalletMark(inputValue || truncatedAddress)
-    localStorage.setItem("wallet_mark", inputValue)
+    setSavedWalletMark(inputValue || truncatedAddress);
+    localStorage.setItem("wallet_mark", inputValue);
   };
 
   const handleKeyDown = (event) => {
@@ -326,33 +359,6 @@ const Profile = () => {
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
-  ;
-
-
-
-
-  useEffect(() => {
-    setDisplayValue(truncatedAddress);
-
-    const walletName = localStorage.getItem("wallet_mark");
-    if (walletName) {
-      setSavedWalletMark(walletName)
-      setInputValue(walletName || "");
-    }
-
-
-
-    const status = localStorage.getItem("@appkit/connection_status")
-    setSaveStatus(status)
-
-    if (status !== "connected") {
-      router.push("/");
-    } else {
-      router.push('/profile')
-    }
-
-  }, [address, truncatedAddress]);
-
 
   return (
     <>
@@ -363,7 +369,6 @@ const Profile = () => {
               className={` bg-black rounded-full object-cover border ${border} `}
             >
               <div className={`w-14 h-14  rounded-full border p-3 ${border}`}>
-
                 <Image src={img} alt="Profile Image" className={``} />
               </div>
             </span>
@@ -372,8 +377,18 @@ const Profile = () => {
                 <div className="flex items-center">
                   {!isEditing ? (
                     <>
-                      <p className={`${inputValue == null || inputValue == "" || inputValue == undefined ? "text-[#f6e8f1]" : "text-[#6cc4f4]"} text-[16px] font-medium tracking-wider`}>
-                        {savedWalletMark == "" || savedWalletMark == undefined ? displayValue : truncatedInputValue || savedWalletMark}
+                      <p
+                        className={`${
+                          inputValue == null ||
+                          inputValue == "" ||
+                          inputValue == undefined
+                            ? "text-[#f6e8f1]"
+                            : "text-[#6cc4f4]"
+                        } text-[16px] font-medium tracking-wider`}
+                      >
+                        {savedWalletMark == "" || savedWalletMark == undefined
+                          ? displayValue
+                          : truncatedInputValue || savedWalletMark}
                       </p>
                       <BiSolidEditAlt
                         size={20}
@@ -394,7 +409,6 @@ const Profile = () => {
                       />
                       <div className="flex gap-2 items-center justify-center">
                         <div className=" bg-[#393c43] rounded-md">
-
                           <BiX
                             size={25}
                             className="text-[#fafafa] cursor-pointer"
@@ -402,7 +416,6 @@ const Profile = () => {
                           />
                         </div>
                         <div className="bg-[#393c43] rounded-md">
-
                           <IoMdCheckmark
                             size={23}
                             className="text-[#fafafa] cursor-pointer"
@@ -410,7 +423,6 @@ const Profile = () => {
                           />
                         </div>
                       </div>
-
                     </div>
                   )}
                 </div>
@@ -420,11 +432,11 @@ const Profile = () => {
                   {truncatedAddress && truncatedAddress}
                 </p>
                 <p className="text-xs tracking-wider font-normal text-[#82847f] sm:truncate md:block hidden">
-                  {address}
+                  {solWalletAddress}
                 </p>
                 <span
-                  className={`${address ? `block` : `hidden`}`}
-                  onClick={() => copyAddress(address)}
+                  className={`${solWalletAddress ? `block` : `hidden`}`}
+                  onClick={() => copyAddress(solWalletAddress)}
                 >
                   {copied ? (
                     <IoMdDoneAll
@@ -438,7 +450,6 @@ const Profile = () => {
                     />
                   )}
                 </span>
-
               </div>
             </div>
           </div>
@@ -461,72 +472,113 @@ const Profile = () => {
           <div className={`border ${border} px-4 py-4 `}>
             <div className={`border-b ${border} flex justify-between pb-2`}>
               <div className={``}>
-                <div className="flex items-center gap-1"> 
+                <div className="flex items-center gap-1">
                   <p className={`text-[#8D93B7] text-base font-medium`}>
                     Last 7D PnL
                   </p>
-                  <Infotip iconSize={20} body={"The total profit or loss (in % and USD) generated by the wallet over the past 7 days from all trading activities."} />
+                  <Infotip
+                    iconSize={20}
+                    body={
+                      "The total profit or loss (in % and USD) generated by the wallet over the past 7 days from all trading activities."
+                    }
+                  />
                 </div>
-                <p className={`text-white text-4xl font-semibold mt-1`}>{"0%"}</p>
+                <p className={`text-white text-4xl font-semibold mt-1`}>
+                  {"0%"}
+                </p>
               </div>
               <div>
                 <p className={`text-[#8D93B7] text-base font-medium`}>
                   Win Rate
                 </p>
-                <p className={`text-white text-4xl font-semibold mt-1`}>{"--%"}</p>
+                <p className={`text-white text-4xl font-semibold mt-1`}>
+                  {"--%"}
+                </p>
               </div>
             </div>
             <div className={`mt-3 border-b ${border} pb-4`}>
               <p className={`text-[#8D93B7] text-xs font-normal`}>{"USD"}</p>
-              <p className={`text-white text-xs font-normal mt-2`}>{"$0.00000"}</p>
+              <p className={`text-white text-xs font-normal mt-2`}>
+                {"$0.00000"}
+              </p>
             </div>{" "}
             <div className={`mt-3 `}>
               <div className="flex items-center gap-1">
-                <p className={`text-[#8D93B7] text-xs font-normal`}>{"Liquidity"}</p>
-                <Infotip body={"The total value of tokens currently provided as liquidity in DeFi pools by the wallet."}/>
+                <p className={`text-[#8D93B7] text-xs font-normal`}>
+                  {"Liquidity"}
+                </p>
+                <Infotip
+                  body={
+                    "The total value of tokens currently provided as liquidity in DeFi pools by the wallet."
+                  }
+                />
               </div>
-              <p className={`text-white text-xs font-normal mt-2`}>{"$0.00000"}</p>
+              <p className={`text-white text-xs font-normal mt-2`}>
+                {"$0.00000"}
+              </p>
             </div>{" "}
           </div>
           <div className={`border ${border} border ${border} px-4 py-4`}>
             <div className={`flex items-center justify-between pb-5`}>
               <div className="flex items-center gap-1">
-                <p className={`text-[#8D93B7] text-base font-medium`}>{"PnL"}</p>
-                <Infotip iconSize={20} body={"Summary of your trading performance including profits, costs, and balance metrics."}/>
+                <p className={`text-[#8D93B7] text-base font-medium`}>
+                  {"PnL"}
+                </p>
+                <Infotip
+                  iconSize={20}
+                  body={
+                    "Summary of your trading performance including profits, costs, and balance metrics."
+                  }
+                />
               </div>
               <div className="flex items-center gap-1">
                 <p className={`text-white text-base font-medium `}>
                   {"7D TXs"}
                   <span className="text-[#8D93B7]"> {"0/0"}</span>
                 </p>
-                <Infotip iconSize={20} body={"The number of token transactions (buys/sells) the wallet executed in the past 7 days."}/>
+                <Infotip
+                  iconSize={20}
+                  body={
+                    "The number of token transactions (buys/sells) the wallet executed in the past 7 days."
+                  }
+                />
               </div>
             </div>
             <div className={`space-y-3`}>
               <div className="flex justify-between items-center">
-                <p className={`text-[#8D93B7] text-xs font-normal`}>{"Win Rate"}</p>
+                <p className={`text-[#8D93B7] text-xs font-normal`}>
+                  {"Win Rate"}
+                </p>
                 <p className={`text-white text-xs font-normal `}>
                   <span className="text-[#F0488B]">{"$0 (--)"} </span>
                 </p>
               </div>
               <div className="flex justify-between items-center">
-              <div className="flex items-center gap-1">
-                <p className={`text-[#8D93B7] text-xs font-normal`}>
-                  {" Unrealized Profits"}
-                </p>
-                <Infotip body={"Estimated gains or losses from tokens still held, based on their current market price and acquisition cost."}/>
-              </div>
+                <div className="flex items-center gap-1">
+                  <p className={`text-[#8D93B7] text-xs font-normal`}>
+                    {" Unrealized Profits"}
+                  </p>
+                  <Infotip
+                    body={
+                      "Estimated gains or losses from tokens still held, based on their current market price and acquisition cost."
+                    }
+                  />
+                </div>
                 <p className={`text-white text-xs font-normal `}>
                   <span className="text-[#F0488B]">{"$0"}</span>
                 </p>
               </div>
               <div className="flex justify-between items-center">
-              <div className="flex items-center gap-1">
-                <p className={`text-[#8D93B7] text-xs font-normal`}>
-                  {"7D Total Cost"}
-                </p>
-                <Infotip body={"The total amount spent on buying tokens in the past 7 days."}/>
-              </div>
+                <div className="flex items-center gap-1">
+                  <p className={`text-[#8D93B7] text-xs font-normal`}>
+                    {"7D Total Cost"}
+                  </p>
+                  <Infotip
+                    body={
+                      "The total amount spent on buying tokens in the past 7 days."
+                    }
+                  />
+                </div>
                 <p className={`text-white text-xs font-normal `}>{"$0"}</p>
               </div>
               <div className="flex justify-between items-center">
@@ -534,7 +586,11 @@ const Profile = () => {
                   <p className={`text-[#8D93B7] text-xs font-normal`}>
                     {"7D Token Avg Cost"}
                   </p>
-                  <Infotip body={"The average purchase price of tokens acquired within the last 7 days."}/>
+                  <Infotip
+                    body={
+                      "The average purchase price of tokens acquired within the last 7 days."
+                    }
+                  />
                 </div>
                 <p className={`text-white text-xs font-normal `}>{"$0"}</p>
               </div>
@@ -543,7 +599,11 @@ const Profile = () => {
                   <p className={`text-[#8D93B7] text-xs font-normal`}>
                     {"7D Token Avg Realized Profits"}
                   </p>
-                  <Infotip body={"The average profit or loss made per token that was sold in the past 7 days."}/>
+                  <Infotip
+                    body={
+                      "The average profit or loss made per token that was sold in the past 7 days."
+                    }
+                  />
                 </div>
                 <p className={`text-white text-xs font-normal `}>
                   {" "}
@@ -554,7 +614,9 @@ const Profile = () => {
                 <p className={`text-[#8D93B7] text-xs font-normal`}>
                   {"SOL Balance"}
                 </p>
-                <p className={`text-white text-xs font-normal `}>{"0 SOL ($0)"}</p>
+                <p className={`text-white text-xs font-normal `}>
+                  {"0 SOL ($0)"}
+                </p>
               </div>
             </div>
           </div>
@@ -564,12 +626,20 @@ const Profile = () => {
                 <p className={`text-[#8D93B7] text-base font-medium`}>
                   {"Distribution (0)"}
                 </p>
-                <Infotip iconSize={20} body={"Breakdown of positions by profit/loss percentages. Helps visualize how many holdings fall into profit/loss ranges."} />
+                <Infotip
+                  iconSize={20}
+                  body={
+                    "Breakdown of positions by profit/loss percentages. Helps visualize how many holdings fall into profit/loss ranges."
+                  }
+                />
               </div>
             </div>
             <div className={`space-y-3`}>
               <div className="flex justify-between items-center">
-                <p className={`text-[#8D93B7] text-xs font-normal`}>{">"}{"500%"}</p>
+                <p className={`text-[#8D93B7] text-xs font-normal`}>
+                  {">"}
+                  {"500%"}
+                </p>
                 <p className={`text-white text-xs font-normal `}>{"0"}</p>
               </div>
               <div className="flex justify-between items-center">
@@ -585,7 +655,9 @@ const Profile = () => {
                 <p className={`text-white text-xs font-normal `}>{"0"}</p>
               </div>
               <div className="flex justify-between items-center">
-                <p className={`text-[#8D93B7] text-xs font-normal`}>{"0% ~ 50%"}</p>
+                <p className={`text-[#8D93B7] text-xs font-normal`}>
+                  {"0% ~ 50%"}
+                </p>
                 <p className={`text-white text-xs font-normal `}>{"0"}</p>
               </div>
               <div className="flex justify-between items-center">
@@ -616,15 +688,18 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className={`flex md:gap-8 gap-5 text-[#636363] text-xs font-normal md:text-sm border-b ${border} mt-4 `} >
+        <div
+          className={`flex md:gap-8 gap-5 text-[#636363] text-xs font-normal md:text-sm border-b ${border} mt-4 `}
+        >
           {["Recent PnL", "Holdings", "Activity"].map((tab) => (
             <p
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`cursor-pointer ${activeTab === tab && tab === "Approve"
-                ? `border-b pb-8 md:pb-4 text-[#A5A5A7]`
-                : ``
-                } ${activeTab === tab ? `border-b pb-4 text-[#A5A5A7]` : ``}`}
+              className={`cursor-pointer ${
+                activeTab === tab && tab === "Approve"
+                  ? `border-b pb-8 md:pb-4 text-[#A5A5A7]`
+                  : ``
+              } ${activeTab === tab ? `border-b pb-4 text-[#A5A5A7]` : ``}`}
             >
               {tab}
             </p>
@@ -656,18 +731,24 @@ const Profile = () => {
             No buying or selling in the last 30 days
           </p>
         </div> */}
-        <div className={`overflow-x-auto w-full bg-[#101018] rounded-lg shadow-md  
-  ${((activeTab === "Recent PnL" || activeTab === "Holdings") && tableData.length === 0) ||
-            (activeTab !== "Recent PnL" && activeTab !== "Holdings" && activityData.length === 0)
-            ? "h-[30vh] overflow-hidden"
-            : "h-[90vh] overflow-y-scroll"}`}>
+        <div
+          className={`overflow-x-auto w-full bg-[#101018] rounded-lg shadow-md  
+  ${
+    ((activeTab === "Recent PnL" || activeTab === "Holdings") &&
+      tableData.length === 0) ||
+    (activeTab !== "Recent PnL" &&
+      activeTab !== "Holdings" &&
+      activityData.length === 0)
+      ? "h-[30vh] overflow-hidden"
+      : "h-[90vh] overflow-y-scroll"
+  }`}
+        >
           <table className="min-w-full text-left text-sm text-gray-400 ">
             <thead className="bg-[#101018] text-gray-300 sticky top-0">
               <tr>
-                {(
-                  activeTab === "Recent PnL" || activeTab === "Holdings"
-                    ? tableHeader
-                    : tableHeaderActivity
+                {(activeTab === "Recent PnL" || activeTab === "Holdings"
+                  ? tableHeader
+                  : tableHeaderActivity
                 ).map((header) => (
                   <th
                     key={header.id}
@@ -675,9 +756,9 @@ const Profile = () => {
                   >
                     <div className="flex items-center gap-1">
                       <p>{header.title}</p>
-                      {header?.infoTipString &&
-                        <Infotip body={header.infoTipString}/>
-                      }
+                      {header?.infoTipString && (
+                        <Infotip body={header.infoTipString} />
+                      )}
                     </div>
                   </th>
                 ))}
@@ -690,30 +771,63 @@ const Profile = () => {
               ).map((row, index) => (
                 <tr
                   key={row.id}
-                  className={`${index % 2 === 0 ? "bg-gray-800" : "bg-gray-700"
-                    } hover:bg-gray-600 transition-colors duration-200`}
+                  className={`${
+                    index % 2 === 0 ? "bg-gray-800" : "bg-gray-700"
+                  } hover:bg-gray-600 transition-colors duration-200`}
                 >
                   {activeTab === "Recent PnL" || activeTab === "Holdings" ? (
                     <>
-                      <td className="py-3 px-6 border-b border-gray-700">{row.token}</td>
-                      <td className="py-3 px-6 border-b border-gray-700">{row.unrealized}</td>
-                      <td className="py-3 px-6 border-b border-gray-700">{row.realizedProfit}</td>
-                      <td className="py-3 px-6 border-b border-gray-700">{row.totalProfit}</td>
-                      <td className="py-3 px-6 border-b border-gray-700">{row.balanceUSD}</td>
-                      <td className="py-3 px-6 border-b border-gray-700">{row.position}</td>
-                      <td className="py-3 px-6 border-b border-gray-700">{row.boughtAvg}</td>
-                      <td className="py-3 px-6 border-b border-gray-700">{row.soldAvg}</td>
-                      <td className="py-3 px-6 border-b border-gray-700">{row.txs}</td>
+                      <td className="py-3 px-6 border-b border-gray-700">
+                        {row.token}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-700">
+                        {row.unrealized}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-700">
+                        {row.realizedProfit}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-700">
+                        {row.totalProfit}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-700">
+                        {row.balanceUSD}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-700">
+                        {row.position}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-700">
+                        {row.boughtAvg}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-700">
+                        {row.soldAvg}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-700">
+                        {row.txs}
+                      </td>
                     </>
                   ) : (
                     <>
-                      <td className="py-3 px-6 border-b border-gray-700">{row.type}</td>
-                      <td className="py-3 px-6 border-b border-gray-700">{row.token}</td>
-                      <td className="py-3 px-6 border-b border-gray-700">{row.totalUSD}</td>
-                      <td className="py-3 px-6 border-b border-gray-700">{row.amount}</td>
-                      <td className="py-3 px-6 border-b border-gray-700">{row.price}</td>
-                      <td className="py-3 px-6 border-b border-gray-700">{row.profit}</td>
-                      <td className="py-3 px-6 border-b border-gray-700">{row.age}</td>
+                      <td className="py-3 px-6 border-b border-gray-700">
+                        {row.type}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-700">
+                        {row.token}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-700">
+                        {row.totalUSD}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-700">
+                        {row.amount}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-700">
+                        {row.price}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-700">
+                        {row.profit}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-700">
+                        {row.age}
+                      </td>
                     </>
                   )}
                 </tr>
@@ -722,14 +836,16 @@ const Profile = () => {
           </table>
 
           {/* Agar tableData aur activityData dono empty hain tabhi ye message dikhega */}
-          {((activeTab === "Recent PnL" || activeTab === "Holdings") && tableData.length === 0) ||
-            (activeTab !== "Recent PnL" && activeTab !== "Holdings" && activityData.length === 0) ? (
+          {((activeTab === "Recent PnL" || activeTab === "Holdings") &&
+            tableData.length === 0) ||
+          (activeTab !== "Recent PnL" &&
+            activeTab !== "Holdings" &&
+            activityData.length === 0) ? (
             <p className="text-gray-500 text-xs font-normal text-center mt-6 flex justify-center items-center h-full">
               No buying or selling in the last 30 days
             </p>
           ) : null}
         </div>
-
       </div>
     </>
   );

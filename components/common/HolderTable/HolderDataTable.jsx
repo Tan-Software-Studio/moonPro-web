@@ -1,23 +1,13 @@
 "use client";
-import { bitcoinIcon } from "@/app/Images";
+import { React, useState } from "react";
 import Image from "next/image";
-import { React, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { BiSolidCopy } from "react-icons/bi";
 import { IoMdDoneAll } from "react-icons/io";
-import { IoOpenOutline } from "react-icons/io5";
-import { PiCopySimpleFill } from "react-icons/pi";
-import { useDispatch, useSelector } from "react-redux";
-import { useAppKitAccount, useAppKitProvider } from "@reown/appkit/react";
-import { sellSolanaTokensQuickSellHandler } from "@/utils/solanaBuySell/solanaBuySell";
+import { useSelector } from "react-redux";
 import LoaderPopup from "../LoaderPopup/LoaderPopup";
 
 const HolderDataTable = ({ data, img, loading }) => {
-  const dispatch = useDispatch();
-
-  const { address, isConnected } = useAppKitAccount();
-  const { walletProvider } = useAppKitProvider("solana");
-
   const bigLoader = useSelector((state) => state?.AllStatesData?.bigLoader);
 
   const borderColor = useSelector(
@@ -160,19 +150,7 @@ const HolderDataTable = ({ data, img, loading }) => {
                       className={`text-[#6B6B6D] h-4 w-4 mt-1 cursor-pointer`}
                     /> */}
 
-                    <button
-                      className="border border-[#1F73FC] rounded-lg py-1 px-[30px] bg-[#16171D] hover:bg-[#11265B] text-[#ffffff] transition-all duration-300 ease-in-out"
-                      onClick={(e) =>
-                        sellSolanaTokensQuickSellHandler(
-                          row.token_address ? row.token_address : row?.mint,
-                          address,
-                          isConnected,
-                          walletProvider,
-                          e,
-                          dispatch
-                        )
-                      }
-                    >
+                    <button className="border border-[#1F73FC] rounded-lg py-1 px-[30px] bg-[#16171D] hover:bg-[#11265B] text-[#ffffff] transition-all duration-300 ease-in-out">
                       {"Sell"}
                     </button>
                   </div>

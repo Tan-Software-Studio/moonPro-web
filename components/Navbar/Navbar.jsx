@@ -9,22 +9,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import { IoMenu, IoPersonCircleOutline } from "react-icons/io5";
 import { setIsSidebarOpen } from "@/app/redux/CommonUiData";
+import { logo } from "@/app/Images";
 import {
-  useAppKitAccount,
-  useAppKitNetwork,
-  useDisconnect,
-} from "@reown/appkit/react";
-import TokenListPopup from "../TokenListPopup";
-import { baseIcon, ethereum, logo, solana, usa } from "@/app/Images";
-import { mainnet, base } from "@reown/appkit/networks";
-import {
-  setFavouriteTokens,
   setIsEnabled,
   setIsSearchPopup,
   setSolWalletAddress,
-  setUserInfo,
 } from "@/app/redux/states";
-import axiosInstance from "../axiosIntance/axiosInstance";
 import { PiUserLight } from "react-icons/pi";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { lang } from "../../app/contsants/lang";
@@ -35,136 +25,50 @@ import { FaCopy } from "react-icons/fa6";
 import { googleLogout } from "@react-oauth/google";
 import { GrLanguage } from "react-icons/gr";
 
-
-
-
-
 const Navbar = () => {
   const router = useRouter();
   const { i18n } = useTranslation();
-  const { switchNetwork, chainId } = useAppKitNetwork();
-  const { address, } = useAppKitAccount();
   const dispatch = useDispatch();
   const pathname = usePathname();
-  const pageName = pathname.split("/")[1];
-  const getNetwork = pathname.split("/")[2];
   const [saveStatus, setSaveStatus] = useState("");
   const [language, setLanguage] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const tokenPopup = useSelector(
-    (state) => state?.AllthemeColorData?.tokenPopup
-  );
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
 
   const [searchTerm, setSearchTerm] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
-  // const [isEnabled, setIsEnabled] = useState(false);
-  const [activeTab, setActiveTab] = useState("wallets");
   const isEnabled = useSelector((state) => state?.AllStatesData?.isEnabled);
   const [mounted, setMounted] = useState(false);
-
 
   // login signup
 
   const [isLoginPopup, setIsLoginPopup] = useState(false);
-  const [authName, setAuthName] = useState('');
+  const [authName, setAuthName] = useState("");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('walletAddress')
-    dispatch(setSolWalletAddress())
-    router.push('/')
-    setIsProfileOpen(false)
-    googleLogout()
+    localStorage.removeItem("token");
+    localStorage.removeItem("walletAddress");
+    dispatch(setSolWalletAddress());
+    router.push("/");
+    setIsProfileOpen(false);
+    googleLogout();
     setTimeout(() => {
-      setIsLoginPopup(true)
+      setIsLoginPopup(true);
       setAuthName("login");
     }, 1500);
-  }
-
-
+  };
 
   const path =
     pathname === "/settings" ||
     pathname === "/copytrade" ||
     pathname === "/transfer-funds";
 
-  const pathNames =
-    pathname === "/settings" ||
-    pathname === "/leaderboard" ||
-    pathname === "/referral" ||
-    pathname === "/alpha-picks" ||
-    pathname === "/profile" ||
-    pathname === "/wallet-tracker";
-
   const isSidebarOpen = useSelector(
     (state) => state?.AllthemeColorData?.isSidebarOpen
   );
-
-  // handle to change network
-  const handleSwitchNetwork = async (targetChainId, chain, path) => {
-    const chainLocalStorage = await localStorage.getItem("chain");
-    await localStorage.setItem("chain", chain);
-    await router.push(
-      `${!pathNames ? `/${pageName}/${path}` : `/newpairs/${path}`}`
-    );
-    if (chain != 19999) {
-      switchNetwork(targetChainId);
-    }
-    if (chain == 19999) {
-      if (chainLocalStorage != 19999) {
-        // if (isConnected) {
-        //   await disconnect();
-        // }
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      }
-    } else if (chain == 1) {
-      if (chainLocalStorage == 19999 || chainLocalStorage == null) {
-        // if (isConnected) {
-        //   await disconnect();
-        // }
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      }
-    } else if (chain == 8453) {
-      if (chainLocalStorage == 19999 || chainLocalStorage == null) {
-        // if (isConnected) {
-        //   await disconnect();
-        // }
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      }
-    }
-  };
-
-  const handleClose = () => {
-    setIsEnabled(false);
-  };
-
-  const userLogin = async () => {
-    await axiosInstance
-      .post("/wavePro/users/userlogin", {
-        walletAddress: address,
-        chain: "solana",
-      })
-      .then(async (res) => {
-        await localStorage.setItem("userId", res?.data?.data?.user?._id);
-        await dispatch(
-          setFavouriteTokens(res?.data?.data?.favoriteTokens || [])
-        );
-        await dispatch(setUserInfo(res?.data?.data?.user || []));
-      })
-      .catch((err) => {
-        console.log("err", err);
-      });
-  };
 
   async function handleLanguageSelector(item) {
     await i18n.changeLanguage(item?.code);
@@ -176,17 +80,6 @@ const Navbar = () => {
     setLanguage(langLocal);
   }, []);
 
-  useEffect(() => {
-    if (chainId == 1) {
-      localStorage.setItem("chain", 1);
-    } else if (chainId == 8453) {
-      localStorage.setItem("chain", 8453);
-    } else if (chainId == "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp") {
-      localStorage.setItem("chain", 19999);
-    } else {
-      localStorage.setItem("chain", 19999);
-    }
-  }, [chainId]);
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 30) {
@@ -205,47 +98,9 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(setSolWalletAddress())
-  }, [])
+    dispatch(setSolWalletAddress());
+  }, []);
 
-  useEffect(() => {
-    const status = localStorage.getItem("@appkit/connection_status");
-    setSaveStatus(status);
-    address && userLogin();
-  }, [address]);
-
-  const token = [
-    {
-      name: "Solana",
-      img: solana,
-      ShortName: "SOL",
-      pathname: `solana`,
-      chain: 19999,
-      network: "solana",
-    },
-    {
-      name: "Base",
-      img: baseIcon,
-      ShortName: "Base",
-      pathname: `base`,
-      chain: 8453,
-      network: base,
-    },
-    {
-      name: "Ethereum",
-      img: ethereum,
-      ShortName: "ETH",
-      pathname: `ethereum`,
-      chain: 1,
-      network: mainnet,
-    },
-  ];
-
-  // const selectToken = useSelector(
-  //   (state) => state?.AllthemeColorData?.selectToken
-  // );
-
-  // login logout  
   return (
     <>
       <div
@@ -259,17 +114,20 @@ const Navbar = () => {
 
             {/* ssearch bar */}
             <div
-              className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
-                } border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+              className={`md:flex items-center  border ${
+                isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
+              } border-[#333333] ${
+                isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+              } rounded-lg h-8 px-2 bg-[#191919] hidden `}
               onClick={() => dispatch(setIsSearchPopup(true))}
             >
               <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
               <input
-                className={`${saveStatus !== "connected"
-                  ? "w-36"
-                  : `${isSidebarOpen ? "w-0" : "w-12"}`
-                  } lg:w-36 xl:w-56 bg-transparent outline-none text-[#989aaa] text-sm font-thin placeholder-gray-400 placeholder:text-xs `}
+                className={`${
+                  saveStatus !== "connected"
+                    ? "w-36"
+                    : `${isSidebarOpen ? "w-0" : "w-12"}`
+                } lg:w-36 xl:w-56 bg-transparent outline-none text-[#989aaa] text-sm font-thin placeholder-gray-400 placeholder:text-xs `}
                 placeholder="Search"
                 value={searchTerm}
               />
@@ -284,136 +142,27 @@ const Navbar = () => {
             </div>
 
             <div className=" flex items-center sm:gap-2 order-1 md:order-2">
-              {/* <div
-                className={`sm:flex hidden gap-1 items-center ${borderColor} pr-2  h-8 rounded-md cursor-pointer
-                ${getNetwork
-                    ? getNetwork === "solana"
-                      ? "bg-[#3d3d47] px-2"
-                      : "px-2"
-                    : selectToken === "solana"
-                      ? "bg-[#3d3d47] px-2"
-                      : "px-2"
-                  }`}
-                onClick={() => {
-                  handleSwitchNetwork("solana", 19999, "solana");
-                }}
-              >
-                <Image src={solana} width={20} height={20} alt="solana" />
-                <span className={`hidden md:block text-white text-xs`}>
-                  SOL
-                </span>
-              </div>
-              <div
-                className={`sm:flex hidden gap-1  items-center ${borderColor} pr-2  h-8 rounded-md cursor-pointer
-                    ${getNetwork
-                    ? getNetwork === "base"
-                      ? "bg-[#2f313b] px-2"
-                      : "px-2"
-                    : selectToken === "base"
-                      ? "bg-[#2f313b] px-2"
-                      : "px-2"
-                  }
-
-                        `}
-                onClick={() => {
-                  dispatch(setselectToken("Base"));
-                  dispatch(setselectTokenLogo(baseIcon));
-                  handleSwitchNetwork(base, 8453, "base");
-                }}
-              >
-                <Image src={baseIcon} width={20} height={20} alt="base" />
-                <span className={`hidden md:block text-white text-xs`}>
-                  Base
-                </span>
-              </div>
-              <div
-                className={`sm:flex hidden gap-1  items-center ${borderColor} pr-2  h-8 rounded-md cursor-pointer 
-                    ${getNetwork
-                    ? getNetwork === "ethereum"
-                      ? "bg-[#2f313b] px-2"
-                      : "px-2"
-                    : selectToken === "ethereum"
-                      ? "bg-[#2f313b] px-2"
-                      : "px-2"
-                  }
-
-                        `}
-                onClick={() => {
-                  dispatch(setselectToken("Ethereum"));
-                  dispatch(setselectTokenLogo(ethereum));
-                  handleSwitchNetwork(mainnet, 1, "ethereum");
-                }}
-              >
-                <Image src={ethereum} width={20} height={20} alt="eth" />
-                <span className={`hidden md:block text-white text-xs`}>
-                  ETH
-                </span>
-              </div> */}
-
-              {/* sm screen */}
-              {/* <select
-                className={`bg-[#2f313b] sm:hidden block text-white text-xs rounded-md px-2  ${saveStatus !== "connected" ? "py-2" : "py-1.5"} cursor-pointer`}
-                value={selectToken}
-                onChange={(e) => {
-                  const selectedToken = token.find(
-                    (data) => data?.name === e.target.value
-                  );
-                  if (selectedToken) {
-                    dispatch(setselectToken(selectedToken?.name));
-                    dispatch(setselectTokenLogo(selectedToken?.img));
-                    handleSwitchNetwork(
-                      selectedToken?.network,
-                      selectedToken?.chain,
-                      selectedToken?.pathname
-                    );
-                  }
-                }}
-              >
-                {token?.map((data, index) => (
-                  <option
-                    key={index}
-                    value={data?.name}
-                    className="bg-[#2f313b] text-white"
-                  >
-                    {data?.ShortName}
-                  </option>
-                ))}
-              </select> */}
-
               <div
                 className="cursor-pointer"
                 onClick={() => setIsModalOpen(true)}
               >
                 <div className="flex items-center justify-center hover:text-[#1F73FC] cursor-pointer py-1 gap-2 px-2  hover:border-[#1F73FC] border-[1px] rounded-md">
                   <GrLanguage size={20} />
-                  <div className="uppercase"> {language?.lang ? language.lang.substring(0, 3) : ''}</div>
-                </div> 
+                  <div className="uppercase">
+                    {" "}
+                    {language?.lang ? language.lang.substring(0, 3) : ""}
+                  </div>
+                </div>
               </div>
-              {/* <div
-                className={`flex items-center h-10 ${
-                  saveStatus !== "connected" ? "pl-2" : ""
-                } `}
-              >
-                <appkit-button />
-              </div> */}
 
               <div className="flex items-center gap-2 ">
-                {solWalletAddress ?
+                {solWalletAddress ? (
                   <div className="relative">
-                    {/* <div
-                      className="text-sm bg-[#1F1F1F] py-1.5 px-4 rounded-md text-white cursor-pointer flex items-center gap-2">
-                      <div>
-                        <IoWallet size={16} className="text-white" />
-                      </div>
-                      <div>
-                        {solWalletAddress?.slice(0, 5)}...{solWalletAddress?.slice(-4)}
-                      </div>
-                      <div>
-                        <IoIosArrowDown size={16} className="text-white" />
-                      </div>
-                    </div> */}
                     <div onClick={() => setIsProfileOpen((prev) => !prev)}>
-                      <IoPersonCircleOutline size={26} className={`md:ml-2 cursor-pointer`} />
+                      <IoPersonCircleOutline
+                        size={26}
+                        className={`md:ml-2 cursor-pointer`}
+                      />
                     </div>
 
                     {isProfileOpen && (
@@ -422,12 +171,14 @@ const Navbar = () => {
                           Wallet Address
                         </div>
                         <div className="px-4 py-2 text-sm text-white break-words flex items-center justify-between gap-2">
-                          <span className="text-sm">{solWalletAddress?.slice(0, 5)}...{solWalletAddress?.slice(-4)}</span>
+                          <span className="text-sm">
+                            {solWalletAddress?.slice(0, 5)}...
+                            {solWalletAddress?.slice(-4)}
+                          </span>
                           <button
                             onClick={() => {
                               navigator.clipboard.writeText(solWalletAddress);
                             }}
-
                           >
                             <FaCopy size={16} className="text-white" />
                           </button>
@@ -443,29 +194,30 @@ const Navbar = () => {
                       </div>
                     )}
                   </div>
-
-
-                  // <div 
-                  // onClick={handleLogout}
-                  // className="border-[#1F73FC] border-1  rounded-md cursor-pointer bg-[#11265B] px-5 py-1.5 ">Logout</div>
-                  :
+                ) : (
                   <>
                     <div
                       onClick={() => {
                         setIsLoginPopup(true);
                         setAuthName("login");
                       }}
-                      className="px-5 py-1 bg-[#1F1F1F] border-[1px] border-[#1F1F1F]  rounded-md cursor-pointer">Login</div>
+                      className="px-5 py-1 bg-[#1F1F1F] border-[1px] border-[#1F1F1F]  rounded-md cursor-pointer"
+                    >
+                      Login
+                    </div>
                     <div
                       onClick={() => {
                         setIsLoginPopup(true);
                         setAuthName("signup");
                       }}
-                      className="border-[1px] border-[#0E43BD] rounded-md cursor-pointer bg-[#11265B] px-5 py-1 ">Sign up</div>
+                      className="border-[1px] border-[#0E43BD] rounded-md cursor-pointer bg-[#11265B] px-5 py-1 "
+                    >
+                      Sign up
+                    </div>
                   </>
-                }
+                )}
               </div>
-              {mounted && address && (
+              {mounted && solWalletAddress && (
                 <div
                   onClick={() => dispatch(setIsEnabled(!isEnabled))}
                   style={{ cursor: "pointer" }}
@@ -473,13 +225,8 @@ const Navbar = () => {
                   <IoMdNotificationsOutline size={24} />
                 </div>
               )}
-              {mounted && address && (
+              {mounted && solWalletAddress && (
                 <Link href="/profile?" className="hidden md:block">
-                  {/* <Image
-                    src={profile}
-                    alt="profile"
-                    className={`md:mr-2 border ${borderColor} rounded-full cursor-pointer h-9 w-9 `}
-                  /> */}
                   <PiUserLight size={24} className={`md:ml-2 cursor-pointer`} />
                 </Link>
               )}
@@ -489,40 +236,32 @@ const Navbar = () => {
           {/* Show Sm screen only */}
           <div className="pb-3 md:pb-0 ">
             <div
-              className={`flex items-center gap-2 border mx-5 border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                } rounded-lg h-8 px-2 bg-[#3d3d47] md:hidden `}
+              className={`flex items-center gap-2 border mx-5 border-[#333333] ${
+                isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+              } rounded-lg h-8 px-2 bg-[#3d3d47] md:hidden `}
               onClick={() => dispatch(setIsSearchPopup(true))}
             >
               <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
               <input
-                className={`w-12 ${saveStatus !== "connected" ? "w-36" : "w-12"
-                  } lg:w-36 xl:w-56 bg-transparent outline-none text-[#989aaa] text-sm font-thin placeholder-gray-400 placeholder:text-xs `}
+                className={`w-12 ${
+                  saveStatus !== "connected" ? "w-36" : "w-12"
+                } lg:w-36 xl:w-56 bg-transparent outline-none text-[#989aaa] text-sm font-thin placeholder-gray-400 placeholder:text-xs `}
                 placeholder="Search"
                 value={searchTerm}
               />
             </div>
           </div>
         </div>
-      </div >
+      </div>
 
-
-      {isLoginPopup &&
+      {isLoginPopup && (
         <LoginPopup
           isLoginPopup={isLoginPopup}
           authName={authName}
           setIsLoginPopup={setIsLoginPopup}
           setAuthName={setAuthName}
         />
-      }
-      {
-        tokenPopup && (
-          <TokenListPopup
-            token={token}
-          // setselectToken={setselectToken}
-          // setselectTokenLogo={setselectTokenLogo}
-          />
-        )
-      }
+      )}
 
       <AnimatePresence>
         {isModalOpen && (
@@ -558,8 +297,9 @@ const Navbar = () => {
                     <div
                       onClick={() => handleLanguageSelector(item)}
                       key={item.code}
-                      className={`cursor-pointer ${i18n.language == item.code && "bg-[#3a37fe2a]"
-                        } rounded-[5px] px-4 py-2 flex items-center justify-between mb-[3px]`}
+                      className={`cursor-pointer ${
+                        i18n.language == item.code && "bg-[#3a37fe2a]"
+                      } rounded-[5px] px-4 py-2 flex items-center justify-between mb-[3px]`}
                     >
                       <div className="flex items-center gap-[10px]">
                         <Image
@@ -570,10 +310,11 @@ const Navbar = () => {
                         <h1 className="text-[16px] font-[500]">{item.lang}</h1>
                       </div>
                       <div
-                        className={`flex items-center ${i18n.language == item.code
-                          ? "bg-[#3b37fe]"
-                          : "border border-[#c9c9c9]"
-                          } justify-center w-[20px] h-[20px]  rounded-full`}
+                        className={`flex items-center ${
+                          i18n.language == item.code
+                            ? "bg-[#3b37fe]"
+                            : "border border-[#c9c9c9]"
+                        } justify-center w-[20px] h-[20px]  rounded-full`}
                       >
                         <div className="w-[8px] h-[8px] bg-[#f3f3f3] rounded-full"></div>
                       </div>
@@ -586,7 +327,6 @@ const Navbar = () => {
         )}
       </AnimatePresence>
 
-      {/* {isSearchbarPopup === true && <SearchPopup />} */}
     </>
   );
 };

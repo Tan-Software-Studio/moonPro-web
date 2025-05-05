@@ -27,21 +27,19 @@ import {
   setIsSidebarOpen,
   setIsSmallScreen,
 } from "@/app/redux/CommonUiData";
-import { useAppKitAccount } from "@reown/appkit/react";
-import toast from "react-hot-toast";
 import { subscribeToWalletTracker } from "@/websocket/walletTracker";
 import { subscribeToNewNotifications } from "@/websocket/alphaCalls";
 import { fetchAlphaPicksNotificationData } from "@/app/redux/alphaPicksNotification/alphaPicksNotificationData.js";
 import { fetchAlphaFollowsData } from "@/app/redux/alphaFollows/alphaFollowsData";
 import { useTranslation } from "react-i18next";
 const Sidebar = () => {
-  const { t, ready } = useTranslation();
-    const sidebarPage = t("sidebar");
-  const { address, isConnected } = useAppKitAccount();
-  const [isHoverId, setisHoverId] = useState();
-  const [isHoverIds, setIsHoverIds] = useState();
+  const { t } = useTranslation();
+  const sidebarPage = t("sidebar");
   const pathname = usePathname();
-
+  // get solana wallet address from redux
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
   const routeChain = pathname.split("/")[2];
   const router = useRouter();
 
@@ -57,9 +55,7 @@ const Sidebar = () => {
   const sidebardata = [
     {
       id: 1,
-      pathname: `/trending/${
-        routeChain ? routeChain : selectToken.toLowerCase()
-      }`,
+      pathname: `/trending`,
       pagename: sidebarPage?.trending,
       img: trending,
       size: "",
@@ -81,9 +77,7 @@ const Sidebar = () => {
     },
     {
       id: 4,
-      pathname: `/holdings/${
-        routeChain ? routeChain : selectToken.toLowerCase()
-      }`,
+      pathname: `/holdings`,
       pagename: sidebarPage?.holdings,
       tag: "New",
       img: holdings,
@@ -186,13 +180,13 @@ const Sidebar = () => {
 
   // start websocket for wallet tracking
   useEffect(() => {
-    if (address) {
-      subscribeToWalletTracker(address);
-      dispatch(fetchAlphaPicksNotificationData(address));
-      dispatch(fetchAlphaFollowsData(address));
-      subscribeToNewNotifications(address);
+    if (solWalletAddress) {
+      subscribeToWalletTracker(solWalletAddress);
+      dispatch(fetchAlphaPicksNotificationData(solWalletAddress));
+      dispatch(fetchAlphaFollowsData(solWalletAddress));
+      subscribeToNewNotifications(solWalletAddress);
     }
-  }, [address]);
+  }, [solWalletAddress]);
 
   useEffect(() => {
     setIsLargeScreen(isLargeScreenData);
@@ -260,19 +254,7 @@ const Sidebar = () => {
                     : "text-[#ffffff]"
                 } 
                   `}
-                onMouseEnter={() => setisHoverId(data?.id)}
-                onMouseLeave={() => setisHoverId()}
                 onClick={() => {
-                  if (data.pagename == "Holdings") {
-                    if (!isConnected) {
-                      router.push(data?.pathname);
-                      isMobileScreenData && dispatch(setIsSidebarOpen(false));
-                      return toast.error("Please connect your wallet.", {
-                        position: "top-center",
-                        style: { fontSize: "12px" },
-                      });
-                    }
-                  }
                   router.push(data?.pathname);
                   isMobileScreenData && dispatch(setIsSidebarOpen(false));
                 }}
@@ -325,8 +307,6 @@ const Sidebar = () => {
                     : "block"
                 } 
                 `}
-              onMouseEnter={() => setIsHoverIds(data?.id)}
-              onMouseLeave={() => setIsHoverIds()}
               onClick={() =>
                 isMobileScreenData && dispatch(setIsSidebarOpen(false))
               }
