@@ -61,7 +61,7 @@ const HolderDataTable = ({ data, img, loading }) => {
           {data.map((row, ind) => (
             <tbody key={ind} className={`text-center border-b ${borderColor}`}>
               <tr
-                className={``}
+                className={`cursor-pointer`}
                 onClick={() => redirectHandler(row?.mint, row?.symbol)}
               >
                 {/* Column 1: Icon and Token */}
