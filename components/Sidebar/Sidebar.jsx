@@ -61,14 +61,6 @@ const Sidebar = () => {
       size: "",
     },
     {
-      id: 2,
-      pathname: `/recent-calls`,
-      pagename: sidebarPage?.recentcalls,
-      img: recentCalls,
-      size: "",
-    },
-    // Only include Memescope if selectedToken is 'solana'
-    {
       id: 3,
       pathname: `/memescope/solana`,
       pagename: sidebarPage?.memescope,
@@ -83,14 +75,6 @@ const Sidebar = () => {
       img: holdings,
       size: "",
     },
-    // {
-    //   id: 5,
-    //   pathname: `/copytrade`,
-    //   pagename: "Copy Trade",
-    //   img: copytrade,
-    //   colorImg: copytradeColor,
-    //   size: "",
-    // },
     {
       id: 6,
       pathname: `/leaderboard`,
@@ -103,13 +87,6 @@ const Sidebar = () => {
       pathname: `/referral`,
       pagename: sidebarPage?.referral,
       img: referral,
-      size: "",
-    },
-    {
-      id: 8,
-      pathname: `/alpha-picks`,
-      pagename: sidebarPage?.alphapicks,
-      img: alphaPicks,
       size: "",
     },
     {
@@ -126,20 +103,6 @@ const Sidebar = () => {
       img: proWallet,
       size: "w-5 h-5",
     },
-    // {
-    //   id: 6,
-    //   pathname: "/swap",
-    //   pagename: "swap",
-    //   img: copytrade,
-    //   size: "w-6 h-6",
-    // },
-    // {
-    //   id: 8,
-    //   pathname: "/transfer-funds",
-    //   pagename: "Transfer-Funds",
-    //   img: transferfunds,
-    //   size: "w-5 h-5",
-    // },
   ];
 
   const sidebar = [
@@ -157,14 +120,6 @@ const Sidebar = () => {
       img: profile,
       size: "w-5 h-5",
     },
-    // {
-    //   id: 18,
-    //   pathname: " ",
-    //   pagename: "Log out",
-    //   // icon: <IoLogOutOutline className="w-6 h-6" />,
-    //   img: logout,
-    //   size: "w-4 h-4",
-    // },
   ];
 
   const isLargeScreen = useSelector(
