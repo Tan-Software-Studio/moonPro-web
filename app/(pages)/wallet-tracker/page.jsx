@@ -16,7 +16,7 @@ function WalletTracker() {
   const { t } = useTranslation();
   const wallettrackerPage = t("wallettracker");
   // console.log("🚀 ~ WalletTracker ~ address:___________", address)
-  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
+  const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [isModalOpenImport, setModalOpenImport] = useState(false);
@@ -29,16 +29,17 @@ function WalletTracker() {
   );
 
   const fetchWalletData = async () => {
-    // const response = await axios.get(`${BASE_URL}wavePro/users/walletTracking`);
+    const token = localStorage.getItem("token");
+    if (!token) return toast.error("Please login");
     await axios({
       method: "get",
-      url: `${BASE_URL}wavePro/users/walletTracking`,
+      url: `${BASE_URL}wallettracker/walletTracking`,
       headers: {
-        user: solWalletAddress,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
-        setWalletData(response.data.data);
+        setWalletData(response.data.data?.wallets);
         console.log("WalletData", walletData);
       })
       .catch((err) => {
@@ -103,7 +104,7 @@ function WalletTracker() {
               <div
                 onClick={() => {
                   if (!solWalletAddress) {
-                    toast.error("Please connect your wallet", {
+                    toast.error("Please Login", {
                       position: "top-center",
                       style: { fontSize: "12px" },
                     });
@@ -134,7 +135,7 @@ function WalletTracker() {
               />
             ) : (
               <div className="flex items-center justify-center text-[#A8A8A8] text-lg h-[20vh]">
-                Please Connect Your Wallet
+                Please Login
               </div>
             )}
           </div>

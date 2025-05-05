@@ -122,6 +122,8 @@ import usa from '../public/assets/languageImages/usa.png';
 import vietnam from '../public/assets/languageImages/vietnam.webp';
 
 import googleLogo from '../public/assets/Navbar/google-logo.svg';
+import profileImage from '../public/assets/Profile/profile.png';
+import tableImage from '../public/assets/Profile/table.png';
 
 
 export {
@@ -129,5 +131,7 @@ export {
   // languages
   china, dubai, germen, india, itli, japan, pakistan, southkorea, span, sweden, usa, vietnam,
   // googleLogo
-  googleLogo
+  googleLogo,
+  tableImage,
+  profileImage
 };

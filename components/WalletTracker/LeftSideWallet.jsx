@@ -24,14 +24,13 @@ function LeftSideWallet({
   setWalletChartData,
   solAddress,
 }) {
-  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
+  const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
   const [updatedName, setUpdatedName] = useState("");
   const [editTagIndex, setEditTagIndex] = useState(null);
   const [updatedTag, setUpdatedTag] = useState("");
-  const [notifications, setNotifications] = useState(false);
 
   // Copy Address
   const handleCopy = (address, index) => {
@@ -51,13 +50,17 @@ function LeftSideWallet({
     }
 
     const updatedWalletData = {
-      user: solAddress,
       walletAddress: wallet.walletAddress,
       walletName: updatedName,
     };
-
+    const token = localStorage.getItem("token");
+    if (!token) return toast.error("Please login");
     await axios
-      .put(`${BASE_URL}wavePro/users/walletTracking`, updatedWalletData)
+      .put(`${BASE_URL}wallettracker/walletTracking`, updatedWalletData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         if (response.data?.success) {
           setWalletData((prevData) =>
@@ -100,15 +103,21 @@ function LeftSideWallet({
     }
 
     const updatedWalletData = {
-      user: solAddress,
       walletAddress: wallet.walletAddress,
       tag: newTags,
     };
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) return toast.error("Please login");
       const response = await axios.put(
-        `${BASE_URL}wavePro/users/walletTracking`,
-        updatedWalletData
+        `${BASE_URL}wallettracker/walletTracking`,
+        updatedWalletData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (response.data?.success) {
@@ -134,15 +143,18 @@ function LeftSideWallet({
   };
   // Delete
   const handleDelete = async (walletAddress) => {
-    console.log("🚀 ~ handleDelete ~ walletAddress:+++>>", walletAddress);
     const USER_ADDRESS = solAddress;
     if (!walletAddress) return;
 
     try {
-      await axios.delete(`${BASE_URL}wavePro/users/walletTracking`, {
+      const token = localStorage.getItem("token");
+      if (!token) return toast.error("Please login");
+      await axios.delete(`${BASE_URL}wallettracker/walletTracking`, {
         data: {
-          user: USER_ADDRESS,
           walletAddresses: [walletAddress],
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -170,12 +182,18 @@ function LeftSideWallet({
     const updatedAlert = !wallet.alert;
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) return toast.error("Please login");
       const response = await axios.put(
-        `${BASE_URL}wavePro/users/walletTracking`,
+        `${BASE_URL}wallettracker/walletTracking`,
         {
-          user: solAddress,
           walletAddress: wallet.walletAddress,
           alert: updatedAlert,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -236,12 +254,11 @@ function LeftSideWallet({
                   </button>
                   <span className="text-[#6E6E6E] text-[14px]">
                     {" / "}
-                    {wallet.walletAddress.length > 11
-                      ? `${wallet.walletAddress.slice(
-                          0,
-                          6
-                        )}...${wallet.walletAddress.slice(-5)}`
-                      : wallet.walletAddress}
+                    {`${wallet?.walletAddress
+                      ?.toString()
+                      ?.slice(0, 4)}...${wallet.walletAddress
+                      ?.toString()
+                      ?.slice(-4)}`}
                   </span>
 
                   <button
