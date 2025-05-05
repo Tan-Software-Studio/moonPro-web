@@ -6,13 +6,15 @@ import { BiSolidCopy } from "react-icons/bi";
 import { IoMdDoneAll } from "react-icons/io";
 import { useSelector } from "react-redux";
 import LoaderPopup from "../LoaderPopup/LoaderPopup";
+import { useRouter } from "next/navigation";
 
 const HolderDataTable = ({ data, img, loading }) => {
+  const router = useRouter();
   const bigLoader = useSelector((state) => state?.AllStatesData?.bigLoader);
-
   const borderColor = useSelector(
     (state) => state?.AllthemeColorData?.borderColor
   );
+  const [copied, setCopied] = useState(false);
   const handleCopy = (token, index) => {
     navigator.clipboard
       .writeText(token)
@@ -29,7 +31,11 @@ const HolderDataTable = ({ data, img, loading }) => {
         toast.error("Failed to copy token.");
       });
   };
-  const [copied, setCopied] = useState(false);
+  async function redirectHandler(address, symbol) {
+    await router.push(
+      `/tradingview/solana?tokenaddress=${address}&symbol=${symbol}`
+    );
+  }
 
   const SkeletonData = Array(20).fill(null);
   const SkeletonInnerData = Array(6).fill(null);
@@ -54,7 +60,10 @@ const HolderDataTable = ({ data, img, loading }) => {
         <>
           {data.map((row, ind) => (
             <tbody key={ind} className={`text-center border-b ${borderColor}`}>
-              <tr className={``}>
+              <tr
+                className={``}
+                onClick={() => redirectHandler(row?.mint, row?.symbol)}
+              >
                 {/* Column 1: Icon and Token */}
                 <td className="whitespace-nowrap px-6 py-4">
                   <div className="flex items-center gap-3 ">
@@ -71,14 +80,7 @@ const HolderDataTable = ({ data, img, loading }) => {
                           {row.symbol}
                         </span>
                       </p>
-                      <span
-                        onClick={() =>
-                          handleCopy(
-                            row.token_address ? row.token_address : row.mint,
-                            ind
-                          )
-                        }
-                      >
+                      <span onClick={() => handleCopy(row?.mint, ind)}>
                         {copied === ind ? (
                           <IoMdDoneAll className="h-3.5 w-3.5 text-[#3f756d] cursor-pointer" />
                         ) : (

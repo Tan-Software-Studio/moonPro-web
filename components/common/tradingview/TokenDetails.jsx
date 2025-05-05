@@ -209,7 +209,6 @@ const TokenDetails = ({
         <div className="flex items-center justify-between mb-[5px] md:mb-[0px] px-3 md:px-[0px]">
           <div className="flex items-center md:flex-col">
             <div
-              onClick={() => addAndRemoveToFavouriteHandler()}
               className="cursor-pointer border-[1px] !border-t-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center"
             >
               {isFavourite ? (
