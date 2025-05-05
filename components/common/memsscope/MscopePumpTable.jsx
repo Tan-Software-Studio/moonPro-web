@@ -87,9 +87,8 @@ const MscopePumpTable = ({ MemscopeData }) => {
     await localStorage.setItem("chartTokenImg", block?.img);
     await dispatch(setChartSymbolImage(block?.img));
     router.push(
-      `/tradingview/${getNetwork}?tokenaddress=${block?.address}&symbol=${block?.symbol}`
+      `/tradingview/solana?tokenaddress=${block?.address}&symbol=${block?.symbol}`
     );
-    localStorage.setItem("silectChainName", getNetwork);
   }
   useEffect(() => {
     const interval = setInterval(() => {

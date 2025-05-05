@@ -43,10 +43,6 @@ const Holdings = () => {
       menuIcon: Filter,
       menuTitle: "Filter",
     },
-    // Advanced: {
-    //   menuIcon: Advanced,
-    //   menuTitle: "Advanced",
-    // },
     Buy: {
       menuIcon: buyIcon,
       menuTitle: "Buy",
@@ -59,7 +55,6 @@ const Holdings = () => {
 
   const headersData = [
     { title: holdingsPage?.tableheaders?.token, className: "!text-left" },
-    // { title: "Invested" },
     { title: holdingsPage?.tableheaders?.quantity },
     {
       title: "P&L in USD",
@@ -117,13 +112,7 @@ const Holdings = () => {
                     <TableHeaderData headers={headersData} />
                     <HolderDataTable
                       data={holdingsData}
-                      img={
-                        chainName == "solana"
-                          ? solana
-                          : chainName == "base"
-                          ? baseIcon
-                          : ethereum
-                      }
+                      img={solana}
                       loading={loading}
                     />
                   </table>
