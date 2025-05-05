@@ -1,23 +1,27 @@
 import { addNewTransactionForWalletTracking } from "@/app/redux/chartDataSlice/chartData.slice";
 import store from "@/app/redux/store";
 import axios from "axios";
+import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
+const BASE_URL_MOON = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 const socket = io(BASE_URL, {
   transports: ["websocket"],
 });
 let isSocketOn = false;
-export async function subscribeToWalletTracker(user) {
+export async function subscribeToWalletTracker() {
   try {
+    const token = localStorage.getItem("token");
+    if (!token) return toast.error("Please login");
     const wallets = await axios({
       method: "get",
-      url: `${BASE_URL}wavePro/users/walletTracking`,
+      url: `${BASE_URL_MOON}wallettracker/walletTracking`,
       headers: {
-        user,
+        Authorization: `Bearer ${token}`,
       },
     });
     let walletsToTrack = [];
-    await wallets?.data?.data?.map((item) => {
+    await wallets?.data?.data?.wallets?.map((item) => {
       if (item?.alert == true) {
         walletsToTrack.push(item?.walletAddress?.toLowerCase());
       }
@@ -41,7 +45,7 @@ export async function subscribeToWalletTracker(user) {
         // console.log("🚀 ~ socket.on ~ filteredData:", filteredData);
         let finalFilteredData = [];
         for (const item of filteredData) {
-          const walletName = await wallets?.data?.data?.find(
+          const walletName = await wallets?.data?.data?.wallets?.find(
             (item1) => item?.Transaction?.Signer === item1?.walletAddress
           );
           finalFilteredData.push({

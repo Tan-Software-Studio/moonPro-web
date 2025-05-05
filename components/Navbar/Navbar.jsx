@@ -7,7 +7,7 @@ import Image from "next/image";
 import { RxCross1 } from "react-icons/rx";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
-import { IoMenu, IoPersonCircleOutline } from "react-icons/io5";
+import { IoMenu, IoPersonCircleOutline, IoSettingsOutline } from "react-icons/io5";
 import { setIsSidebarOpen } from "@/app/redux/CommonUiData";
 import { logo } from "@/app/Images";
 import {
@@ -24,6 +24,8 @@ import { RiLogoutBoxLine } from "react-icons/ri";
 import { FaCopy } from "react-icons/fa6";
 import { googleLogout } from "@react-oauth/google";
 import { GrLanguage } from "react-icons/gr";
+import { MdLockOutline } from "react-icons/md";
+import { FaRegStar } from "react-icons/fa";
 
 const Navbar = () => {
   const router = useRouter();
@@ -159,29 +161,33 @@ const Navbar = () => {
                 {solWalletAddress ? (
                   <div className="relative">
                     <div onClick={() => setIsProfileOpen((prev) => !prev)}>
-                      <IoPersonCircleOutline
+                      <PiUserLight
                         size={26}
                         className={`md:ml-2 cursor-pointer`}
                       />
                     </div>
 
                     {isProfileOpen && (
-                      <div className="absolute right-0 mt-2 w-40 bg-[#1F1F1F] rounded-md shadow-lg z-50">
-                        <div className="px-4 py-2 text-xs text-gray-300">
-                          Wallet Address
+                      <div className="absolute right-0 mt-2 border-[1px] border-[#404040] w-72 bg-[#141414] shadow-[#000000CC] rounded-md shadow-lg z-50">
+                        {/* Profile */}
+                        <Link href="/profile?" className="">
+                          <div className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md">
+                            <PiUserLight className="text-xl" />
+                            My profile
+                          </div>
+                        </Link>
+
+                        <div className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md">
+                          <MdLockOutline className="text-xl" />
+                          Account & Security
                         </div>
-                        <div className="px-4 py-2 text-sm text-white break-words flex items-center justify-between gap-2">
-                          <span className="text-sm">
-                            {solWalletAddress?.slice(0, 5)}...
-                            {solWalletAddress?.slice(-4)}
-                          </span>
-                          <button
-                            onClick={() => {
-                              navigator.clipboard.writeText(solWalletAddress);
-                            }}
-                          >
-                            <FaCopy size={16} className="text-white" />
-                          </button>
+                        <div className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md">
+                          <FaRegStar className="text-xl" />
+                          My Watchlist
+                        </div>
+                        <div className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md">
+                          <IoSettingsOutline className="text-xl" />
+                          Setting
                         </div>
                         <hr className="border-gray-700 my-1" />
                         <div
@@ -224,11 +230,6 @@ const Navbar = () => {
                 >
                   <IoMdNotificationsOutline size={24} />
                 </div>
-              )}
-              {mounted && solWalletAddress && (
-                <Link href="/profile?" className="hidden md:block">
-                  <PiUserLight size={24} className={`md:ml-2 cursor-pointer`} />
-                </Link>
               )}
             </div>
           </div>
@@ -326,7 +327,6 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
     </>
   );
 };

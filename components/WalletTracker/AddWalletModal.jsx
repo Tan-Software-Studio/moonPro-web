@@ -1,9 +1,12 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { subscribeToWalletTracker, unsubscribeFromWalletTracker } from "@/websocket/walletTracker";
+import {
+  subscribeToWalletTracker,
+  unsubscribeFromWalletTracker,
+} from "@/websocket/walletTracker";
 
 function AddWalletModal({
   wallettrackerPage,
@@ -13,9 +16,7 @@ function AddWalletModal({
   onAddWallet,
   solAddress,
 }) {
-  // console.log("🚀 ~ AddWalletModal ~ walletData:--", walletData)
-  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
-  // console.log("🚀 ~ AddWalletModal ~ BASE_URL:-->", BASE_URL)
+  const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
   const [wallet, setWallet] = useState({
     name: "",
@@ -74,7 +75,6 @@ function AddWalletModal({
     }
 
     const walletDataToSend = {
-      user: userId,
       walletAddress: wallet.address.trim(),
       chain: "Solana",
       walletName: wallet.name.trim(),
@@ -83,13 +83,24 @@ function AddWalletModal({
     };
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) return toast.error("Please login");
       const response = await axios.post(
-        `${BASE_URL}wavePro/users/walletTracking`,
-        walletDataToSend
+        `${BASE_URL}wallettracker/walletTracking`,
+        walletDataToSend,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
+      console.log(
+        "🚀 ~ handleSubmit ~ response:",
+        response?.data?.data?.addWallet
+      );
       if (response.data?.success) {
-        const newWallet = response.data.data;
+        const newWallet = response.data.data?.addWallet;
         onAddWallet(newWallet);
 
         toast.success("Wallet added successfully!", {
