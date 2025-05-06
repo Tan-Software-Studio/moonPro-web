@@ -50,47 +50,40 @@ const MainWalletTrackingNotificationPopUp = ({ tx }) => {
   }, [tx?.Block?.Time]);
 
   return (
-    <div className="flex justify-between items-center bg-[#1c1d24] p-3 rounded-md border border-gray-700">
+    <div className="flex justify-between items-center sm:p-3 py-1  border-b-[1px] border-[#404040]">
       <div key={tx.id}>
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <span className="text-yellow-400">
-              {getRandomEmoji()} {tx?.tag}
+            <span className="text-[#FFFFFF] text-base font-light">
+              {tx?.tag}
             </span>
-            <span className="text-gray-500 text-sm">{relativeTime}</span>
           </div>
         </div>
         <div className="text-sm mt-2 flex gap-1 items-center">
-          <span className="text-white">
-            {tx?.Trade?.Side?.Type?.toUpperCase()}
-          </span>
-          <span
-            className={`${
-              tx?.Trade?.Side?.Type === "buy"
-                ? "text-green-500"
-                : "text-red-500"
-            }`}
+          <div className="text-white">
+            Just {tx?.Trade?.Side?.Type?.toUpperCase()}
+          </div>
+          <div
+            className={`${tx?.Trade?.Side?.Type === "buy"
+              ? "text-green-500"
+              : "text-red-500"
+              }`}
           >
-            ${Number(tx?.Trade?.AmountInUSD).toFixed(2)}
-          </span>
-          <span className="relative inline-flex items-center justify-center h-6 w-6 rounded-full bg-black border border-gray-500 text-white font-bold text-xs uppercase">
+            ${Number(tx?.Trade?.AmountInUSD).toFixed(2)} 
+          </div> 
+          <div className="relative inline-flex items-center justify-center h-6 w-6 rounded-full bg-black border border-gray-500 text-white font-bold text-xs uppercase">
             {tx?.Trade?.Currency?.Name?.charAt(0)}
-          </span>
-          <span className="font-bold">{tx?.Trade?.Currency?.Name}</span>
-        </div>
-        <div className="text-white text-xs">
-          Price:{" "}
-          <span className="text-yellow-400">
-            {Number(tx?.Trade?.PriceInUSD).toFixed(5)}
-          </span>
-        </div>
+          </div>
+          <div className="font-bold">{tx?.Trade?.Currency?.Name}</div>
+        </div> 
       </div>
-      <div>
+      <div className="flex items-center gap-3">
         {tx?.Trade?.Side?.Type === "buy" ? (
           <BuyBtn toToken={tx?.Trade?.Currency?.MintAddress} />
         ) : (
           <SellBtn fromToken={tx?.Trade?.Currency?.MintAddress} />
         )}
+        <div className="text-[#6E6E6E] text-sm">{relativeTime}</div>
       </div>
     </div>
   );

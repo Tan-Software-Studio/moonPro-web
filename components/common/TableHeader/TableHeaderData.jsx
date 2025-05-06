@@ -41,7 +41,7 @@ const TableHeaderData = ({ headers, onSort, sortColumn, sortOrder }) => {
           <th
             key={index}
             scope="col"
-            className={`text-[#7a7e9e] uppercase px-6 pt-2.5 pb-3 ${header.key == "pairInfo" || header.key == "auditResults"
+            className={`text-[#7a7e9e] uppercase px-3 pt-2.5 pb-3 ${header.key == "pairInfo" || header.key == "auditResults"
               ? "md:w-[10%] w-10"
               : "md:w-32 w-28"
               }`}

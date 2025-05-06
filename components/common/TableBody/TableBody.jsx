@@ -99,7 +99,7 @@ const TableBody = ({ data, img }) => {
                   onClick={() => navigateToChartScreen(row)}
                 >
                   {/* Column 1: Icon and Pair Info */}
-                  <td className="whitespace-nowrap W-60 px-6 py-3">
+                  <td className="whitespace-nowrap W-60 md:px-6 px-3 py-3">
                     <div className="flex items-center gap-3 !text-left">
                       {row?.img ? (
                         <img
@@ -168,14 +168,14 @@ const TableBody = ({ data, img }) => {
                   </td>
 
                   {/* Column 2: Time */}
-                  <td className="whitespace-nowrap py-3 W-32 text-[15px] px-6">
+                  <td className="whitespace-nowrap py-3 W-32 text-[15px] md:px-6 px-3">
                     {" "}
                     {/* {formatTime(timeDiffs[ind])} */}
                     {UpdateTime(row?.date, currentTime)}
                   </td>
 
                   {/* Column 3: Liquidity */}
-                  <td className="whitespace-nowrap W-32 py-3 px-6">
+                  <td className="whitespace-nowrap W-32 py-3 md:px-6 px-3">
                     <div className="grid">
                       <div className="flex  gap-1.5">
                         <Image
@@ -225,7 +225,7 @@ const TableBody = ({ data, img }) => {
                 </td> */}
 
                   {/* Column 5: Market Cap and Price */}
-                  <td className="whitespace-nowrap W-32 py-3 px-6">
+                  <td className="whitespace-nowrap W-32 py-3 md:px-6 px-3">
                     <div className="grid">
                       <p className="text-[16px] font-bold">
                         <span>{humanReadableFormat(row?.marketCap)}</span>
@@ -239,7 +239,7 @@ const TableBody = ({ data, img }) => {
                   </td>
 
                   {/* Column 6: Swaps */}
-                  <td className="whitespace-nowrap W-32 py-3 px-6">
+                  <td className="whitespace-nowrap W-32 py-3 md:px-6 px-3">
                     <div className="grid">
                       <div className="flex  gap-1.5">
                         <Image
@@ -264,7 +264,7 @@ const TableBody = ({ data, img }) => {
                   </td>
 
                   {/* Column 7: Volume */}
-                  <td className="whitespace-nowrap W-32 text-[16px] py-3 px-6">
+                  <td className="whitespace-nowrap W-32 text-[16px] py-3 md:px-6 px-3">
                     {humanReadableFormat(row?.traded_volume)}
                   </td>
 
