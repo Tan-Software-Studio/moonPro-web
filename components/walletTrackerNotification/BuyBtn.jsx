@@ -29,7 +29,7 @@ export default function BuyBtn({ toToken }) {
           toToken
         )
       }
-      className="bg-green-500 hover:bg-green-600 rounded-md py-2 px-6 text-sm"
+      className="border-[#21CB6B] border-[1px] hover:text-white transition-all ease-in-out cursor-pointer text-[#21CB6B] duration-300 hover:bg-[#21CB6B] rounded-md py-2 px-6 text-sm"
     >
       Buy
     </button>

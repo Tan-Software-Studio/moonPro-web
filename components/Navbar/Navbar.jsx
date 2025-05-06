@@ -18,41 +18,52 @@ import {
   setIsSearchPopup,
   setSolWalletAddress,
 } from "@/app/redux/states";
-import { PiUserLight } from "react-icons/pi";
-import { IoMdNotificationsOutline } from "react-icons/io";
+import { PiUserBold, PiUserLight } from "react-icons/pi"; 
 import { lang } from "../../app/contsants/lang";
 import { useTranslation } from "react-i18next";
 import LoginPopup from "./login/LoginPopup";
-import { RiLogoutBoxLine } from "react-icons/ri";
+import { RiLogoutBoxLine, RiNotification4Line } from "react-icons/ri";
 import { googleLogout } from "@react-oauth/google";
 import { GrLanguage } from "react-icons/gr";
 import { MdLockOutline } from "react-icons/md";
-import { FaRegStar } from "react-icons/fa";
+import { FaCaretDown, FaRegStar } from "react-icons/fa";
 import Setting from "./popup/Setting";
 import AccountSecurity from "./popup/AccountSecurity";
+import Watchlist from "./popup/Watchlist";
 const Navbar = () => {
-  const router = useRouter();
-  const { i18n } = useTranslation();
-  const dispatch = useDispatch();
-  const pathname = usePathname();
   const [language, setLanguage] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const solWalletAddress = useSelector(
-    (state) => state?.AllStatesData?.solWalletAddress
-  );
-
-  const isEnabled = useSelector((state) => state?.AllStatesData?.isEnabled);
   const [mounted, setMounted] = useState(false);
 
   // dropdown popup
   const [isSettingPopup, setIsSettingPopup] = useState(false);
   const [isAccountPopup, setIsAccountPopup] = useState(false);
+  const [isWatchlistPopup, setIsWatchlistPopup] = useState(false)
 
   // login signup
-  const dropdownRef = useRef(null);
   const [isLoginPopup, setIsLoginPopup] = useState(false);
   const [authName, setAuthName] = useState("");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  // X===================X Use selectors X===================X //
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
+  const isSidebarOpen = useSelector(
+    (state) => state?.AllthemeColorData?.isSidebarOpen
+  );
+  const isEnabled = useSelector((state) => state?.AllStatesData?.isEnabled);
+
+  const dropdownRef = useRef(null);
+  const router = useRouter();
+  const { i18n } = useTranslation();
+  const dispatch = useDispatch();
+  const pathname = usePathname();
+
+  const path =
+    pathname === "/settings" ||
+    pathname === "/copytrade" ||
+    pathname === "/transfer-funds";
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -67,39 +78,28 @@ const Navbar = () => {
     }, 1500);
   };
 
-  const path =
-    pathname === "/settings" ||
-    pathname === "/copytrade" ||
-    pathname === "/transfer-funds";
-
-  const isSidebarOpen = useSelector(
-    (state) => state?.AllthemeColorData?.isSidebarOpen
-  );
-
   async function handleLanguageSelector(item) {
     await i18n.changeLanguage(item?.code);
     await setLanguage(item);
     await setIsModalOpen(false);
   }
-  useEffect(() => {
-    const langLocal = lang.find((item) => item?.code == i18n.language);
-    setLanguage(langLocal);
-  }, []);
-
- 
 
   useEffect(() => {
     setMounted(true);
-  }, []);
 
-  useEffect(() => {
+    // set SolWalletAddress 
     dispatch(setSolWalletAddress());
+
+    // Change languge state
+    const langLocal = lang.find((item) => item?.code == i18n.language);
+    setLanguage(langLocal);
+
+    // Click out side for closing dropdown of profile
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsProfileOpen(false);
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -109,61 +109,78 @@ const Navbar = () => {
   return (
     <>
       <div
-        className={`backdrop-blur-3xl bg-[#08080E] transition-all duration-500 px-2 md:px-[8px] ease-in-out border-b-[1px] border-b-[#404040]`}
+        className={`backdrop-blur-3xl bg-[#08080E] transition-all duration-500 px-3 md:px-[8px] ease-in-out border-b-[1px] border-b-[#404040]`}
       >
         <div className="transition-all duration-500 ease-in-out sm:mr-2">
-          <div className="flex items-center sm:gap-2 py-2 md:justify-between justify-end md:ml-0 ml-16 sm:mx-4 md:mx-0">
-            <div className={`fixed start-4 md:hidden w-7 h-[30px]`}>
-              <Image src={logo} alt="logo" />
+          <div className="flex items-center sm:gap-2 py-2 md:justify-end justify-between  sm:mx-4 md:mx-0">
+            <div className={`md:hidden w-10 h-auto`}>
+              <Image src={logo} alt="logo" className="w-full h-full" />
             </div>
 
-            {/* ssearch bar */}
-            <div
-              className={`md:flex items-center  border ${
-                isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
-              } border-[#333333] ${
-                isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-              } rounded-lg h-8 px-2 bg-[#191919] hidden `}
-              onClick={() => dispatch(setIsSearchPopup(true))}
-            >
-              <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
-              <input
-                className={` ${
-                  isSidebarOpen ? "w-0" : "w-12"
-                } w-56 bg-transparent outline-none text-[#989aaa] text-sm font-thin placeholder-gray-400 placeholder:text-xs `}
-                placeholder="Search"
-              />
-            </div>
+            <div className=" flex items-center gap-2  ">
+              {/* Search bar */}
+              <div
+                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
+                  } border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                onClick={() => dispatch(setIsSearchPopup(true))}
+              >
+                <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
+                <input
+                  className={` ${isSidebarOpen ? "w-0" : "w-12"
+                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                  placeholder="Search"
+                />
+              </div>
 
-            {/* Hamburger menu */}
-            <div
-              className={`md:hidden flex items-center justify-center cursor-pointer border-[1px] border-[#2e2e2e] rounded-md md:order-1 order-2`}
-              onClick={() => dispatch(setIsSidebarOpen(!isSidebarOpen))}
-            >
-              <IoMenu className="text-[30px] text-[#fdf5f5] p-[2px]" />
-            </div>
 
-            <div className=" flex items-center gap-2 order-1 md:order-2">
+
+              {/* Languages */}
               <div
                 className="cursor-pointer"
                 onClick={() => setIsModalOpen(true)}
               >
-                <div className="flex items-center justify-center hover:text-[#1F73FC] cursor-pointer py-1 gap-2 px-2  hover:border-[#1F73FC] border-[1px] rounded-md">
-                  <GrLanguage size={20} />
-                  <div className="uppercase">
+                <div className="flex items-center text-sm font-light justify-center cursor-pointer py-1 gap-2 px-2 border-[1px] border-[#404040] rounded-md">
+                  <Image
+                    alt="lang"
+                    src={language.img}
+                    className="h-[22px] w-[22px] rounded-full"
+                  />
+                  <div className="uppercase flex items-center gap-1 text-[#A8A8A8]">
                     {" "}
                     {language?.lang ? language.lang.substring(0, 3) : ""}
+                    <div><FaCaretDown className="text-base text-[#A8A8A8]" /></div>
                   </div>
                 </div>
               </div>
 
+              {/* Only sm search bar */}
+              <div
+                onClick={() => dispatch(setIsSearchPopup(true))}
+                className="cursor-pointer md:hidden block"
+              >
+                <LuSearch size={24} />
+              </div>
+
+              {/* Notifications */}
+              {mounted && solWalletAddress && (
+                <div
+                  onClick={() => dispatch(setIsEnabled(!isEnabled))}
+                  className="cursor-pointer relative"
+                >
+                  <RiNotification4Line size={24} />
+                  <div className="w-2 h-2 rounded-full bg-[#ED1B24] absolute right-[0.6px] top-[0.6px]"></div>
+                </div>
+              )}
+
+              {/* Profile */}
               <div className="flex items-center gap-2 ">
                 {solWalletAddress ? (
                   <div className=" " ref={dropdownRef}>
                     <div onClick={() => setIsProfileOpen((prev) => !prev)}>
-                      <PiUserLight
+                      <PiUserBold
                         size={26}
-                        className={`md:ml-2 cursor-pointer`}
+                        className={`cursor-pointer`}
                       />
                     </div>
 
@@ -191,7 +208,10 @@ const Navbar = () => {
                           Account & Security
                         </div>
                         <div
-                          onClick={() => setIsProfileOpen(false)}
+                          onClick={() => {
+                            setIsProfileOpen(false);
+                            setIsWatchlistPopup(true);
+                          }}
                           className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md"
                         >
                           <FaRegStar className="text-xl" />
@@ -241,14 +261,16 @@ const Navbar = () => {
                   </>
                 )}
               </div>
-              {mounted && solWalletAddress && (
-                <div
-                  onClick={() => dispatch(setIsEnabled(!isEnabled))}
-                  style={{ cursor: "pointer" }}
-                >
-                  <IoMdNotificationsOutline size={24} />
-                </div>
-              )}
+
+              {/* Hamburger menu */}
+              <div
+                className={`md:hidden flex items-center justify-center cursor-pointer border-[1px] border-[#2e2e2e] rounded-md  `}
+                onClick={() => dispatch(setIsSidebarOpen(!isSidebarOpen))}
+              >
+                <IoMenu className="text-[30px] text-[#fdf5f5] p-[2px]" />
+              </div>
+
+
             </div>
           </div>
         </div>
@@ -297,9 +319,8 @@ const Navbar = () => {
                     <div
                       onClick={() => handleLanguageSelector(item)}
                       key={item.code}
-                      className={`cursor-pointer ${
-                        i18n.language == item.code && "bg-[#3a37fe2a]"
-                      } rounded-[5px] px-4 py-2 flex items-center justify-between mb-[3px]`}
+                      className={`cursor-pointer ${i18n.language == item.code && "bg-[#3a37fe2a]"
+                        } rounded-[5px] px-4 py-2 flex items-center justify-between mb-[3px]`}
                     >
                       <div className="flex items-center gap-[10px]">
                         <Image
@@ -310,11 +331,10 @@ const Navbar = () => {
                         <h1 className="text-[16px] font-[500]">{item.lang}</h1>
                       </div>
                       <div
-                        className={`flex items-center ${
-                          i18n.language == item.code
-                            ? "bg-[#3b37fe]"
-                            : "border border-[#c9c9c9]"
-                        } justify-center w-[20px] h-[20px]  rounded-full`}
+                        className={`flex items-center ${i18n.language == item.code
+                          ? "bg-[#3b37fe]"
+                          : "border border-[#c9c9c9]"
+                          } justify-center w-[20px] h-[20px]  rounded-full`}
                       >
                         <div className="w-[8px] h-[8px] bg-[#f3f3f3] rounded-full"></div>
                       </div>
@@ -331,6 +351,11 @@ const Navbar = () => {
         {isAccountPopup && (
           <AccountSecurity setIsAccountPopup={setIsAccountPopup} />
         )}
+
+        {isWatchlistPopup &&
+          <Watchlist setIsWatchlistPopup={setIsWatchlistPopup} />
+        }
+
       </AnimatePresence>
     </>
   );

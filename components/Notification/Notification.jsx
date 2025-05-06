@@ -1,12 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 import { setIsEnabled } from "@/app/redux/states";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MainWalletTrackingNotificationPopUp from "../walletTrackerNotification/MainWalletTrackingNotificationPopUp";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import { useTranslation } from "react-i18next";
+import { AnimatePresence, motion } from "framer-motion";
+import { IoClose } from "react-icons/io5";
+import Image from "next/image";
 
 const Notification = () => {
+  const [isActive, setIsActive] = useState('Wallet tracking')
   const { t } = useTranslation();
   const notificationsPage = t("notifications");
   const dispatch = useDispatch();
@@ -16,48 +20,104 @@ const Notification = () => {
   );
   return (
     <>
-      <div
-        className={`fixed inset-0 bg-black bg-opacity-50 z-[9999998] transition-opacity duration-500 ${
-          isEnabled ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
-        onClick={() => dispatch(setIsEnabled(false))}
-      />
-      {/* Sidebar Modal */}
-      <div
-        className={`fixed top-14  bottom-5 rounded-md transition-all duration-500 ease-in-out lg:w-[30%] w-full bg-[#16171c] z-[9999999] border border-[#333333] ${
-          isEnabled ? "right-0" : "-right-full"
-        }`}
-      >
-        <div className="flex flex-col h-full">
-          {/* Tabs */}
-          <div className="flex border-b border-gray-500">
-            <button
-              className={`flex-1 p-2 text-centerborder-b-2 border-[#1F73FC] text-[#1F73FC]`}
+
+      <AnimatePresence>
+        {isEnabled && (
+          <motion.div
+            key="backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => dispatch(setIsEnabled(false))}
+            className="fixed inset-0 bg-[#000000b2] flex items-center justify-center !z-[999999999999999]"
+          >
+            <motion.div
+              key="modal"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="  xl:w-[1100px] lg:w-[1000px] w-full  bg-[#08080E] rounded-md !z-[999999999999999]"
+              onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex justify-center items-center gap-1">
-                <p>{notificationsPage?.wallettracking}</p>
-                <Infotip
-                  iconSize={20}
-                  body={notificationsPage?.wallettrackingtool}
-                />
+
+              <div className="">
+                <div className="flex items-center justify-between sm:px-5 px-3 py-2">
+                  <div className="md:text-2xl sm:text-xl text-lg sm:font-bold font-semibold text-white ">
+                    Notification
+                  </div>
+                  <div
+                    onClick={() => dispatch(setIsEnabled(false))}
+                    className="cursor-pointer"
+                  >
+                    <IoClose size={20} />
+                  </div>
+                </div>
+
+                <div className="bg-[#1F1F1F] border-t-[1px] border-t-[#404040] flex overflow-x-auto  items-center gap-4 w-full px-5">
+
+                  <div className={`  text-[#1F73FC]  py-3 transition-all sm:text-base text-sm duration-500 cursor-pointer ease-in-out sm:font-semibold`}
+                  >
+                    Wallet tracking
+                  </div>
+                </div>
+
+                {isActive == 'Wallet tracking' && (
+                  <div className=" ">
+                    {/* Transaction List */}
+                    <div className="mt-1 sm:h-[650px] h-[500px] max-h-[650px] space-y-4 p-4 overflow-y-auto">
+                      {walletLatestTrades?.length > 0 ? (
+                        walletLatestTrades?.map((tx) => (
+                          <>
+                            <MainWalletTrackingNotificationPopUp tx={tx} />
+                          </>
+                        ))
+                      ) : (
+                        <div className="text-gray-400 text-center flex items-center flex-col justify-center gap-2 py-10">
+                          <Image
+                            src="/assets/NoDataImages/qwe.svg"
+                            alt="No Data Available"
+                            width={200}
+                            height={100}
+                            className="rounded-lg"
+                          />
+                          <div>No data</div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {isActive == 'Alpha picks' && (
+                  <div className="mt-1 h-[650px] max-h-[650px] space-y-4 p-4 overflow-y-auto">
+                    Alpha picks
+                  </div>
+                )}
+                <div className="py-5 sm:px-5 px-3">
+                  <div className="flex gap-2 items-center justify-end">
+                    <button
+                      onClick={() => dispatch(setIsEnabled(false))}
+                      className="py-2 px-5 border-[1px] border-[#ED1B24] text-[#ED1B24] hover:bg-[#ED1B24] hover:text-[#FFFFFF] rounded-md transition-all duration-500 ease-in-out "
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => dispatch(setIsEnabled(false))}
+                      className="py-2 px-5 border-[1px] border-[#1F73FC] text-white bg-[#1F73FC] hover:opacity-80 rounded-md transition-all duration-500 ease-in-out "
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+
               </div>
-            </button>
-          </div>
-          {/* Transaction List */}
-          <div className="mt-4 space-y-4 p-4 flex-grow overflow-y-auto">
-            {walletLatestTrades?.length > 0 ? (
-              walletLatestTrades?.map((tx) => (
-                <>
-                  <MainWalletTrackingNotificationPopUp tx={tx} />
-                </>
-              ))
-            ) : (
-              <div className="text-gray-400 text-center py-10">No Data</div>
-            )}
-          </div>
-        </div>
-      </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence >
     </>
+
   );
 };
 export default Notification;

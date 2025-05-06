@@ -132,7 +132,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData }) => {
 
   return (
     <div
-      className={`text-white bg-[#08080E] md:flex justify-between items-start lg:items-center pt-[18px] py-[6.3px] px-6 md:px-4 border-b-[1px] ${borderColor} pb-5 transition-all duration-500 ease-in-out 
+      className={`text-white bg-[#08080E] md:flex justify-between items-start lg:items-center pt-[18px] py-[6.3px] px-3 md:px-4 border-b-[1px] ${borderColor} pb-5 transition-all duration-500 ease-in-out 
         ${isScrolled && pathData === false && "-translate-y-full opacity-0 "}`}
     >
       {/* pagename + description */}
@@ -267,7 +267,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData }) => {
             )}
           </div>
         )}
-        {!holdingsPage && (
+         {!holdingsPage && (
           <div className="flex gap-2 items-center">
             <div>
               <button
