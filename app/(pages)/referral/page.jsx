@@ -8,8 +8,9 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import { useTranslation } from "react-i18next";
+import toast from "react-hot-toast";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
+const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL || "https://pro.wavebot.app";
 const Referral = () => {
   const { t } = useTranslation();
@@ -23,22 +24,6 @@ const Referral = () => {
     { id: 1, title: "#" },
     { id: 2, title: referralPage?.table?.user },
     { id: 3, title: referralPage?.table?.date },
-    // { id: 4, title: "REFERRALS" },
-    {
-      id: 5,
-      title: referralPage?.table?.trades,
-      infoTipString: referralPage?.table?.tradestool,
-    },
-    {
-      id: 6,
-      title: referralPage?.table?.earning,
-      infoTipString: referralPage?.table?.earningtool,
-    },
-    {
-      id: 7,
-      title: referralPage?.table?.status,
-      infoTipString: referralPage?.table?.statustool,
-    },
   ];
 
   const rankColors = ["bg-[#FFD542]", "bg-[#B3B3B3]", "bg-[#E39757]"];
@@ -61,6 +46,30 @@ const Referral = () => {
         console.error("Failed to copy: ", err);
       });
   };
+  async function getReferrals() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return;
+    }
+    await axios({
+      url: `${BASE_URL}user/getreferrals`,
+      method: "get",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        setReferralData(res?.data?.data?.referrals);
+      })
+      .catch((err) => {
+        console.log("🚀 ~ getReferrals ~ err:", err);
+      });
+  }
+
+  useEffect(() => {
+    getReferrals();
+  }, [solWalletAddress]);
+
   return (
     <>
       <div className="font-poppins bg-transparent">
@@ -110,9 +119,9 @@ const Referral = () => {
             </div>
           </div>
 
-          <div className="flex justify-center md:mt-12 mt-6 px-4">
+          {/* share referral link */}
+          {/* <div className="flex justify-center md:mt-12 mt-6 px-4">
             <div className="flex flex-col items-center  gap-3 rounded-lg w-full max-w-[512px] text-white">
-              {/* URL Input & Buttons */}
               <div className="flex flex-wrap items-center w-fit gap-2 rounded-md">
                 <input
                   type="text"
@@ -130,8 +139,7 @@ const Referral = () => {
                 </button>
               </div>
 
-              {/* Share Section */}
-              {/* <div className="flex items-center gap-2 w-full sm:w-3/4">
+              <div className="flex items-center gap-2 w-full sm:w-3/4">
                 <h1 className="text-xs sm:text-sm text-gray-400 md:mb-0 mb-2">
                   {referralPage?.pageData?.shareto}
                 </h1>
@@ -157,15 +165,15 @@ const Referral = () => {
                     <span className="text-white text-[12px]">Facebook</span>
                   </button>
                 </a>
-              </div> */}
+              </div>
             </div>
-          </div>
+          </div> */}
 
           <div
             className={`flex flex-col items-center justify-center md:w-full w-auto  mt-[40px]`}
           >
             {/* table data */}
-            <div className="rounded-3xl  md:w-full w-auto">
+            <div className="rounded-3xl  md:w-full">
               <div className="md:max-w-full max-w-[310px] h-full overflow-y-scroll">
                 <div className=" h-full">
                   {solWalletAddress && referralData?.length > 0 && (
@@ -210,13 +218,13 @@ const Referral = () => {
                             <td className="py-2 flex items-center gap-3">
                               <h1 className="text-white text-[14px]">
                                 <a
-                                  href={`https://solscan.io/account/${user?.walletAddress}`}
+                                  href={`https://solscan.io/account/${user?.walletAddressSOL}`}
                                   target="_blank"
                                 >
-                                  {`${user?.walletAddress?.slice(
+                                  {`${user?.walletAddressSOL?.slice(
                                     0,
                                     3
-                                  )}...${user?.walletAddress?.slice(-4)}`}
+                                  )}...${user?.walletAddressSOL?.slice(-4)}`}
                                 </a>
                               </h1>
                             </td>
@@ -227,23 +235,6 @@ const Referral = () => {
                                     "2025-04-03T12:06:12.140+00:00"
                                 )
                               )}
-                            </td>
-                            {/* <td className=" text-[#F6F6F6] text-[12px] font-medium py-2">
-                            {user?.referralCount}
-                          </td> */}
-                            <td className=" text-[12px] font-normal py-2 text-[#F6F6F6]">
-                              ${Number(user?.totalValueInDollar).toFixed(2)}
-                            </td>
-                            <td className=" text-[12px] font-normal py-2 text-[#F6F6F6]">
-                              $
-                              {Number(
-                                ((user?.totalValueInDollar / 100) * 25) / 100
-                              ).toFixed(2)}
-                            </td>
-                            <td className="py-2 ">
-                              <button className="px-4 py-2 text-[#278BFE] text-[12px] rounded-full ">
-                                Claim
-                              </button>
                             </td>
                           </tr>
                         ))}
@@ -261,15 +252,9 @@ const Referral = () => {
                           className="rounded-lg"
                         />
                       </div>
-                      {solWalletAddress ? (
-                        <p className="mt-4 text-[15px] text-[#b5b7da] font-bold">
-                          {referralPage?.pageData?.nodata}
-                        </p>
-                      ) : (
-                        <div className="mt-3">
-                          <appkit-button />
-                        </div>
-                      )}
+                      <h1 className="text-[#89888e]">
+                        Please login to see your referrals
+                      </h1>
                     </div>
                   ) : (
                     !solWalletAddress && (

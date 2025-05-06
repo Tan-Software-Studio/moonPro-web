@@ -1,9 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import {
-  baseIcon,
   solana,
-  ethereum,
   HoldingImg,
   Filter,
   buyIcon,
@@ -23,8 +21,6 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Holdings = () => {
   const { t } = useTranslation();
   const holdingsPage = t("holdings");
-  const pathname = usePathname();
-  const chainName = pathname.split("/")[2];
   const [holdingsData, setHoldingsData] = useState([]);
   const [loading, setLoading] = useState(false);
   const noDataMessage = holdingsPage?.noholdingsmsg;
@@ -64,10 +60,10 @@ const Holdings = () => {
       title: "P&L in %",
       infoTipString: holdingsPage?.tableheaders?.pnlpertooltip,
     },
-    {
-      title: holdingsPage?.tableheaders?.quicksell,
-      infoTipString: holdingsPage?.tableheaders?.quickselltooltip,
-    },
+    // {
+    //   title: holdingsPage?.tableheaders?.quicksell,
+    //   infoTipString: holdingsPage?.tableheaders?.quickselltooltip,
+    // },
   ];
 
   useEffect(() => {

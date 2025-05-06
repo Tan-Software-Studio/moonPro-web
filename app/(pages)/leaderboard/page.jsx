@@ -269,8 +269,13 @@ const LeaderBoard = () => {
                                   href={`https://solscan.io/account/${item?._id}`}
                                   target="_blank"
                                 >{`${
-                                  flag ? "----" : item?._id?.slice(0, 3)
-                                }...${item?._id?.slice(-4)}`}</a>
+                                  flag
+                                    ? "----"
+                                    : `${item?._id?.slice(
+                                        0,
+                                        3
+                                      )}...${item?._id?.slice(-4)}`
+                                }`}</a>
                               </td>
                               <td className=" text-base font-medium py-4 ">
                                 {flag ? "----" : item?.totalTransaction}

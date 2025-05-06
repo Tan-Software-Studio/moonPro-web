@@ -1,13 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { buySolanaTokensQuickBuyHandlerCopyTrading } from "@/utils/solanaBuySell/solanaBuySell";
-import { useSelector } from "react-redux";
 import { getSolanaBalanceAndPrice } from "@/utils/solanaNativeBalance";
-export default function BuyBtn({ toToken }) {
+export default function BuyWalletTracker({ solWalletAddress, toToken }) {
   const [nativeTokenbalance, setNativeTokenbalance] = useState(0);
-  const solWalletAddress = useSelector(
-    (state) => state?.AllStatesData?.solWalletAddress
-  );
   async function getSolanaBalance() {
     const solBalance = await getSolanaBalanceAndPrice(solWalletAddress);
     setNativeTokenbalance(solBalance);
@@ -18,7 +14,7 @@ export default function BuyBtn({ toToken }) {
     }
   }, [solWalletAddress]);
   return (
-    <button
+    <div
       onClick={(e) =>
         buySolanaTokensQuickBuyHandlerCopyTrading(
           toToken,
@@ -29,9 +25,9 @@ export default function BuyBtn({ toToken }) {
           toToken
         )
       }
-      className="bg-green-500 hover:bg-green-600 rounded-md py-2 px-6 text-sm"
+      className="text-[#278BFE] text-[12px] cursor-pointer"
     >
-      Buy
-    </button>
+      Quick buy
+    </div>
   );
 }

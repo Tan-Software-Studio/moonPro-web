@@ -146,17 +146,15 @@ const HolderDataTable = ({ data, img, loading }) => {
                 </td>
 
                 {/* Column 10: Quick Buy Button */}
-                <td className="whitespace-nowrap px-6  py-4">
+                {/* <td className="whitespace-nowrap px-6  py-4">
                   <div className={`flex gap-3 justify-center `}>
-                    {/* <IoOpenOutline
-                      className={`text-[#6B6B6D] h-4 w-4 mt-1 cursor-pointer`}
-                    /> */}
-
-                    <button className="border border-[#1F73FC] rounded-lg py-1 px-[30px] bg-[#16171D] hover:bg-[#11265B] text-[#ffffff] transition-all duration-300 ease-in-out">
+                    <button
+                      className="border border-[#1F73FC] rounded-lg py-1 px-[30px] bg-[#16171D] hover:bg-[#11265B] text-[#ffffff] transition-all duration-300 ease-in-out"
+                    >
                       {"Sell"}
                     </button>
                   </div>
-                </td>
+                </td> */}
               </tr>
             </tbody>
           ))}

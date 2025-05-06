@@ -3,11 +3,15 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import TokenImage from "../URI/TokenImage";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
+import BuyWalletTracker from "./BuyWalletTracker";
 
 function RightSideWallet({ wallettrackerPage }) {
   //  get wallet latest trade from redux
   const walletLatestTrades = useSelector(
     (state) => state?.allCharTokenData?.tradesForWalletTracking
+  );
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
   );
 
   const [alertWallet, setAlertWallet] = useState([]);
@@ -138,9 +142,10 @@ function RightSideWallet({ wallettrackerPage }) {
               {/* Action (Quick Buy - Only for Buy Type) */}
               <div>
                 {alert?.Trade?.Side?.Type == "buy" && (
-                  <div className="text-[#278BFE] text-[12px] cursor-pointer">
-                    Quick buy
-                  </div>
+                  <BuyWalletTracker
+                    toToken={alert.Trade.Currency?.MintAddress}
+                    solWalletAddress={solWalletAddress}
+                  />
                 )}
               </div>
             </div>

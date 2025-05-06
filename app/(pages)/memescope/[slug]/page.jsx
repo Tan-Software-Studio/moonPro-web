@@ -277,7 +277,7 @@ const Memescope = () => {
                       "bg-[#1F73FC] last-of-type:rounded-r-md"
                     }  py-2 px-3 text-xs  text-[#ffffff] hover:bg-[#1F73FC]`}
                   >
-                    {memescopePage?.tableheaders?.newcreations?.graduated}
+                    {memescopePage?.tableheaders?.graduated}
                   </button>
                 </div>
                 {selectedScope === 1 && (

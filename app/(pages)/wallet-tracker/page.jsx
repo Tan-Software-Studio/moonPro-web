@@ -40,7 +40,6 @@ function WalletTracker() {
     })
       .then((response) => {
         setWalletData(response.data.data?.wallets);
-        console.log("WalletData", walletData);
       })
       .catch((err) => {
         setWalletData([]);

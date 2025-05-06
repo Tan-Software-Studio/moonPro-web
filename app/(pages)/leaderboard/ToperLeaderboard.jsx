@@ -50,8 +50,10 @@ const ToperLeaderboard = ({
               href={`https://solscan.io/account/${walletAddress}`}
               target="_blank"
             >{`${
-              flag ? "----" : walletAddress?.slice(0, 3)
-            }...${walletAddress?.slice(-4)}`}</a>
+              flag
+                ? "----"
+                : `${walletAddress?.slice(0, 3)}...${walletAddress?.slice(-4)}`
+            }`}</a>
           </p>
         </div>
         <div
