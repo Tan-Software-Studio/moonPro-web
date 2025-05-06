@@ -7,15 +7,13 @@ import {
   trending,
   leaderboard,
   referral,
-  recentCalls,
   profile,
   setting,
-  alphaPicks,
   walletTrackerWhiteImg,
   proWallet,
 } from "@/app/Images";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect} from "react";
 import { FaAngleRight } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import Link from "next/link";
@@ -28,9 +26,6 @@ import {
   setIsSmallScreen,
 } from "@/app/redux/CommonUiData";
 import { subscribeToWalletTracker } from "@/websocket/walletTracker";
-import { subscribeToNewNotifications } from "@/websocket/alphaCalls";
-import { fetchAlphaPicksNotificationData } from "@/app/redux/alphaPicksNotification/alphaPicksNotificationData.js";
-import { fetchAlphaFollowsData } from "@/app/redux/alphaFollows/alphaFollowsData";
 import { useTranslation } from "react-i18next";
 const Sidebar = () => {
   const { t } = useTranslation();
@@ -40,7 +35,6 @@ const Sidebar = () => {
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
-  const routeChain = pathname.split("/")[2];
   const router = useRouter();
 
   const chainName = useSelector(
@@ -137,9 +131,6 @@ const Sidebar = () => {
   useEffect(() => {
     if (solWalletAddress) {
       subscribeToWalletTracker(solWalletAddress);
-      dispatch(fetchAlphaPicksNotificationData(solWalletAddress));
-      dispatch(fetchAlphaFollowsData(solWalletAddress));
-      subscribeToNewNotifications(solWalletAddress);
     }
   }, [solWalletAddress]);
 
