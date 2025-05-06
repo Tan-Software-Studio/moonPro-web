@@ -18,10 +18,10 @@ import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 import { useTranslation } from "react-i18next";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
+const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
 const LeaderBoard = () => {
-  const { t, ready } = useTranslation();
+  const { t } = useTranslation();
   const leaderboardPage = t("leaderboard");
   const tableHeader = [
     { id: 1, title: "#" },
@@ -63,11 +63,11 @@ const LeaderBoard = () => {
 
   async function getLeaderBoardData() {
     await axios({
-      url: `${BASE_URL}wavePro/transaction/leaderBoard`,
+      url: `${BASE_URL}transactions/leaderBoard`,
       method: "get",
     })
       .then((res) => {
-        setLeaderboardData(res?.data?.data);
+        setLeaderboardData(res?.data?.data?.leaderBoardData);
       })
       .catch((err) => {
         console.log(err?.message);
@@ -157,9 +157,9 @@ const LeaderBoard = () => {
               <div className="flex items-end justify-center">
                 <ToperLeaderboard
                   upperSideCss={" pr-[85px]"}
-                  walletAddress={leaderboardData[1]?.walletAddress}
+                  walletAddress={leaderboardData[1]?._id}
                   TotalTrades={leaderboardData[1]?.totalTransaction}
-                  value={leaderboardData[1]?.totalValueOfTrads}
+                  value={leaderboardData[1]?.totalValueOfTrades}
                   boxGradientClassName={"h-24 pr-[85px] justify-center"}
                   mainDivClass={" -mr-20 -z-10"}
                   clipPathDivClass={"pr-16 lg:pr-[85px] text-center"}
@@ -171,9 +171,9 @@ const LeaderBoard = () => {
 
                 <ToperLeaderboard
                   upperSideCss={""}
-                  walletAddress={leaderboardData[0]?.walletAddress}
+                  walletAddress={leaderboardData[0]?._id}
                   TotalTrades={leaderboardData[0]?.totalTransaction}
-                  value={leaderboardData[0]?.totalValueOfTrads}
+                  value={leaderboardData[0]?.totalValueOfTrades}
                   boxGradientClassName={"h-44 self-start justify-center "}
                   mainDivClass={""}
                   clipPathDivClass={"text-center"}
@@ -185,9 +185,9 @@ const LeaderBoard = () => {
 
                 <ToperLeaderboard
                   upperSideCss={"pl-[80px]"}
-                  walletAddress={leaderboardData[2]?.walletAddress}
+                  walletAddress={leaderboardData[2]?._id}
                   TotalTrades={leaderboardData[2]?.totalTransaction}
-                  value={leaderboardData[2]?.totalValueOfTrads}
+                  value={leaderboardData[2]?.totalValueOfTrades}
                   boxGradientClassName={"pl-[80px] justify-center"}
                   mainDivClass={" -ml-20 -z-10"}
                   clipPathDivClass={"pl-16 lg:pl-[80px] text-center"}
@@ -234,9 +234,9 @@ const LeaderBoard = () => {
                     >
                       <thead>
                         <tr className="sticky -top-1 z-30 bg-[#08080e]  ">
-                          {tableHeader.map((header) => (
+                          {tableHeader.map((header, i) => (
                             <th
-                              key={header.id}
+                              key={i + 1}
                               className={` text-base font-medium py-5 !text-start`}
                             >
                               <span className={`text-[#A8A8A8]`}>
@@ -254,26 +254,26 @@ const LeaderBoard = () => {
                               key={i + 1}
                               className={`py-2 text-white border-b border-[#404040]`}
                             >
-                              <td class=" text-lg font-medium py-4 ">
+                              <td className=" text-lg font-medium py-4 ">
                                 {i + 4}
                               </td>
-                              <td class=" text-base font-medium py-4 ">
+                              <td className=" text-base font-medium py-4 ">
                                 <a
-                                  href={`https://solscan.io/account/${item?.walletAddress}`}
+                                  href={`https://solscan.io/account/${item?._id}`}
                                   target="_blank"
-                                >{`${item?.walletAddress?.slice(
+                                >{`${item?._id?.slice(
                                   0,
                                   3
-                                )}...${item?.walletAddress?.slice(-4)}`}</a>
+                                )}...${item?._id?.slice(-4)}`}</a>
                               </td>
-                              <td class=" text-base font-medium py-4 ">
+                              <td className=" text-base font-medium py-4 ">
                                 {item?.totalTransaction}
                               </td>
-                              <td class=" text-base font-medium py-4">
-                                ${item?.totalValueOfTrads}
+                              <td className=" text-base font-medium py-4">
+                                ${item?.totalValueOfTrades}
                               </td>
-                              <td class=" text-base font-medium py-4">
-                                {item?.referralId}
+                              <td className=" text-base font-medium py-4">
+                                {item?.refId}
                               </td>
                             </tr>
                           ))}

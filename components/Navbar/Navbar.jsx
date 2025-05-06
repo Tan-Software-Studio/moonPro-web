@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { LuSearch } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
@@ -7,7 +7,10 @@ import Image from "next/image";
 import { RxCross1 } from "react-icons/rx";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
-import { IoMenu, IoPersonCircleOutline, IoSettingsOutline } from "react-icons/io5";
+import {
+  IoMenu,
+  IoSettingsOutline,
+} from "react-icons/io5";
 import { setIsSidebarOpen } from "@/app/redux/CommonUiData";
 import { logo } from "@/app/Images";
 import {
@@ -21,31 +24,32 @@ import { lang } from "../../app/contsants/lang";
 import { useTranslation } from "react-i18next";
 import LoginPopup from "./login/LoginPopup";
 import { RiLogoutBoxLine } from "react-icons/ri";
-import { FaCopy } from "react-icons/fa6";
 import { googleLogout } from "@react-oauth/google";
 import { GrLanguage } from "react-icons/gr";
 import { MdLockOutline } from "react-icons/md";
 import { FaRegStar } from "react-icons/fa";
-
+import Setting from "./popup/Setting";
+import AccountSecurity from "./popup/AccountSecurity";
 const Navbar = () => {
   const router = useRouter();
   const { i18n } = useTranslation();
   const dispatch = useDispatch();
   const pathname = usePathname();
-  const [saveStatus, setSaveStatus] = useState("");
   const [language, setLanguage] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isScrolled, setIsScrolled] = useState(false);
   const isEnabled = useSelector((state) => state?.AllStatesData?.isEnabled);
   const [mounted, setMounted] = useState(false);
 
-  // login signup
+  // dropdown popup
+  const [isSettingPopup, setIsSettingPopup] = useState(false);
+  const [isAccountPopup, setIsAccountPopup] = useState(false);
 
+  // login signup
+  const dropdownRef = useRef(null);
   const [isLoginPopup, setIsLoginPopup] = useState(false);
   const [authName, setAuthName] = useState("");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -82,18 +86,7 @@ const Navbar = () => {
     setLanguage(langLocal);
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 30) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+ 
 
   useEffect(() => {
     setMounted(true);
@@ -101,6 +94,16 @@ const Navbar = () => {
 
   useEffect(() => {
     dispatch(setSolWalletAddress());
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   return (
@@ -125,13 +128,10 @@ const Navbar = () => {
             >
               <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
               <input
-                className={`${
-                  saveStatus !== "connected"
-                    ? "w-36"
-                    : `${isSidebarOpen ? "w-0" : "w-12"}`
-                } lg:w-36 xl:w-56 bg-transparent outline-none text-[#989aaa] text-sm font-thin placeholder-gray-400 placeholder:text-xs `}
+                className={` ${
+                  isSidebarOpen ? "w-0" : "w-12"
+                } w-56 bg-transparent outline-none text-[#989aaa] text-sm font-thin placeholder-gray-400 placeholder:text-xs `}
                 placeholder="Search"
-                value={searchTerm}
               />
             </div>
 
@@ -143,7 +143,7 @@ const Navbar = () => {
               <IoMenu className="text-[30px] text-[#fdf5f5] p-[2px]" />
             </div>
 
-            <div className=" flex items-center sm:gap-2 order-1 md:order-2">
+            <div className=" flex items-center gap-2 order-1 md:order-2">
               <div
                 className="cursor-pointer"
                 onClick={() => setIsModalOpen(true)}
@@ -159,7 +159,7 @@ const Navbar = () => {
 
               <div className="flex items-center gap-2 ">
                 {solWalletAddress ? (
-                  <div className="relative">
+                  <div className=" " ref={dropdownRef}>
                     <div onClick={() => setIsProfileOpen((prev) => !prev)}>
                       <PiUserLight
                         size={26}
@@ -168,24 +168,42 @@ const Navbar = () => {
                     </div>
 
                     {isProfileOpen && (
-                      <div className="absolute right-0 mt-2 border-[1px] border-[#404040] w-72 bg-[#141414] shadow-[#000000CC] rounded-md shadow-lg z-50">
-                        {/* Profile */}
-                        <Link href="/profile?" className="">
+                      <div className="absolute md:right-5 right-0 mt-2 border-[1px] border-[#404040] w-72 bg-[#141414] shadow-[#000000CC] rounded-md shadow-lg z-50">
+                        <Link
+                          onClick={() => setIsProfileOpen(false)}
+                          href="/profile?"
+                          className=""
+                        >
                           <div className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md">
                             <PiUserLight className="text-xl" />
                             My profile
                           </div>
                         </Link>
 
-                        <div className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md">
+                        <div
+                          onClick={() => {
+                            setIsProfileOpen(false);
+                            setIsAccountPopup(true);
+                          }}
+                          className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md"
+                        >
                           <MdLockOutline className="text-xl" />
                           Account & Security
                         </div>
-                        <div className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md">
+                        <div
+                          onClick={() => setIsProfileOpen(false)}
+                          className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md"
+                        >
                           <FaRegStar className="text-xl" />
                           My Watchlist
                         </div>
-                        <div className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md">
+                        <div
+                          onClick={() => {
+                            setIsProfileOpen(false);
+                            setIsSettingPopup(true);
+                          }}
+                          className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md"
+                        >
                           <IoSettingsOutline className="text-xl" />
                           Setting
                         </div>
@@ -231,25 +249,6 @@ const Navbar = () => {
                   <IoMdNotificationsOutline size={24} />
                 </div>
               )}
-            </div>
-          </div>
-
-          {/* Show Sm screen only */}
-          <div className="pb-3 md:pb-0 ">
-            <div
-              className={`flex items-center gap-2 border mx-5 border-[#333333] ${
-                isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-              } rounded-lg h-8 px-2 bg-[#3d3d47] md:hidden `}
-              onClick={() => dispatch(setIsSearchPopup(true))}
-            >
-              <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
-              <input
-                className={`w-12 ${
-                  saveStatus !== "connected" ? "w-36" : "w-12"
-                } lg:w-36 xl:w-56 bg-transparent outline-none text-[#989aaa] text-sm font-thin placeholder-gray-400 placeholder:text-xs `}
-                placeholder="Search"
-                value={searchTerm}
-              />
             </div>
           </div>
         </div>
@@ -325,6 +324,12 @@ const Navbar = () => {
               </div>
             </motion.div>
           </motion.div>
+        )}
+
+        {isSettingPopup && <Setting setIsSettingPopup={setIsSettingPopup} />}
+
+        {isAccountPopup && (
+          <AccountSecurity setIsAccountPopup={setIsAccountPopup} />
         )}
       </AnimatePresence>
     </>
