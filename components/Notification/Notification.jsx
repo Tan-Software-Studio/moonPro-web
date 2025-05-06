@@ -1,18 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import { setIsEnabled } from "@/app/redux/states";
-import React, { useState } from "react";
+import React  from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MainWalletTrackingNotificationPopUp from "../walletTrackerNotification/MainWalletTrackingNotificationPopUp";
-import Infotip from "@/components/common/Tooltip/Infotip.jsx";
-import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoClose } from "react-icons/io5";
 import Image from "next/image";
 
 const Notification = () => {
-  const [isActive, setIsActive] = useState('Wallet tracking')
-  const { t } = useTranslation();
-  const notificationsPage = t("notifications");
   const dispatch = useDispatch();
   const isEnabled = useSelector((state) => state?.AllStatesData?.isEnabled);
   const walletLatestTrades = useSelector(
@@ -20,7 +15,6 @@ const Notification = () => {
   );
   return (
     <>
-
       <AnimatePresence>
         {isEnabled && (
           <motion.div
@@ -41,7 +35,6 @@ const Notification = () => {
               className="  xl:w-[1100px] lg:w-[1000px] w-full  bg-[#08080E] rounded-md !z-[999999999999999]"
               onClick={(e) => e.stopPropagation()}
             >
-
               <div className="">
                 <div className="flex items-center justify-between sm:px-5 px-3 py-2">
                   <div className="md:text-2xl sm:text-xl text-lg sm:font-bold font-semibold text-white ">
@@ -56,68 +49,42 @@ const Notification = () => {
                 </div>
 
                 <div className="bg-[#1F1F1F] border-t-[1px] border-t-[#404040] flex overflow-x-auto  items-center gap-4 w-full px-5">
-
-                  <div className={`  text-[#1F73FC]  py-3 transition-all sm:text-base text-sm duration-500 cursor-pointer ease-in-out sm:font-semibold`}
+                  <div
+                    className={`  text-[#1F73FC]  py-3 transition-all sm:text-base text-sm duration-500 cursor-pointer ease-in-out sm:font-semibold`}
                   >
                     Wallet tracking
                   </div>
                 </div>
 
-                {isActive == 'Wallet tracking' && (
-                  <div className=" ">
-                    {/* Transaction List */}
-                    <div className="mt-1 sm:h-[650px] h-[500px] max-h-[650px] space-y-4 p-4 overflow-y-auto">
-                      {walletLatestTrades?.length > 0 ? (
-                        walletLatestTrades?.map((tx) => (
-                          <>
-                            <MainWalletTrackingNotificationPopUp tx={tx} />
-                          </>
-                        ))
-                      ) : (
-                        <div className="text-gray-400 text-center flex items-center flex-col justify-center gap-2 py-10">
-                          <Image
-                            src="/assets/NoDataImages/qwe.svg"
-                            alt="No Data Available"
-                            width={200}
-                            height={100}
-                            className="rounded-lg"
-                          />
-                          <div>No data</div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {isActive == 'Alpha picks' && (
-                  <div className="mt-1 h-[650px] max-h-[650px] space-y-4 p-4 overflow-y-auto">
-                    Alpha picks
-                  </div>
-                )}
-                <div className="py-5 sm:px-5 px-3">
-                  <div className="flex gap-2 items-center justify-end">
-                    <button
-                      onClick={() => dispatch(setIsEnabled(false))}
-                      className="py-2 px-5 border-[1px] border-[#ED1B24] text-[#ED1B24] hover:bg-[#ED1B24] hover:text-[#FFFFFF] rounded-md transition-all duration-500 ease-in-out "
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={() => dispatch(setIsEnabled(false))}
-                      className="py-2 px-5 border-[1px] border-[#1F73FC] text-white bg-[#1F73FC] hover:opacity-80 rounded-md transition-all duration-500 ease-in-out "
-                    >
-                      Save
-                    </button>
+                <div className=" ">
+                  {/* Transaction List */}
+                  <div className="mt-1 sm:h-[650px] h-[500px] max-h-[650px] space-y-4 p-4 overflow-y-auto">
+                    {walletLatestTrades?.length > 0 ? (
+                      walletLatestTrades?.map((tx) => (
+                        <>
+                          <MainWalletTrackingNotificationPopUp tx={tx} />
+                        </>
+                      ))
+                    ) : (
+                      <div className="text-gray-400 text-center flex items-center flex-col justify-center gap-2 py-10">
+                        <Image
+                          src="/assets/NoDataImages/qwe.svg"
+                          alt="No Data Available"
+                          width={200}
+                          height={100}
+                          className="rounded-lg"
+                        />
+                        <div>No data</div>
+                      </div>
+                    )}
                   </div>
                 </div>
-
               </div>
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence >
+      </AnimatePresence>
     </>
-
   );
 };
 export default Notification;
