@@ -21,6 +21,9 @@ import { useTranslation } from "react-i18next";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
 const LeaderBoard = () => {
+  const [activeButton, setActiveButton] = useState("Trading");
+  const [leaderboardData, setLeaderboardData] = useState([]);
+  const [flag, setFlag] = useState(false);
   const { t } = useTranslation();
   const leaderboardPage = t("leaderboard");
   const tableHeader = [
@@ -48,8 +51,6 @@ const LeaderBoard = () => {
     },
   ];
 
-  const [activeButton, setActiveButton] = useState("Trading");
-  const [leaderboardData, setLeaderboardData] = useState([]);
   const handleButtonClick = (buttonName) => {
     setActiveButton(buttonName);
   };
@@ -62,14 +63,17 @@ const LeaderBoard = () => {
   };
 
   async function getLeaderBoardData() {
+    setFlag(true);
     await axios({
       url: `${BASE_URL}transactions/leaderBoard`,
       method: "get",
     })
       .then((res) => {
+        setFlag(false);
         setLeaderboardData(res?.data?.data?.leaderBoardData);
       })
       .catch((err) => {
+        setFlag(false);
         console.log(err?.message);
         toast.error("Something has been wrong!", {
           position: "top-center",
@@ -167,6 +171,7 @@ const LeaderBoard = () => {
                   topperNumber={Two}
                   clipPathStyle={clipPathTopStyle}
                   boxStyle={"md:w-[300px] lg:w-[380px] xl:w-[420px]"}
+                  flag={flag}
                 />
 
                 <ToperLeaderboard
@@ -181,6 +186,7 @@ const LeaderBoard = () => {
                   topperNumber={One}
                   clipPathStyle={clipPathTop1Style}
                   boxStyle={"md:w-[220px] lg:w-[300px] xl:w-[340px]"}
+                  flag={flag}
                 />
 
                 <ToperLeaderboard
@@ -195,6 +201,7 @@ const LeaderBoard = () => {
                   topperNumber={Three}
                   clipPathStyle={clipPathTopStyle}
                   boxStyle={"md:w-[300px] lg:w-[380px] xl:w-[420px]"}
+                  flag={flag}
                 />
               </div>
 
@@ -261,19 +268,18 @@ const LeaderBoard = () => {
                                 <a
                                   href={`https://solscan.io/account/${item?._id}`}
                                   target="_blank"
-                                >{`${item?._id?.slice(
-                                  0,
-                                  3
-                                )}...${item?._id?.slice(-4)}`}</a>
+                                >{`${
+                                  flag ? "----" : item?._id?.slice(0, 3)
+                                }...${item?._id?.slice(-4)}`}</a>
                               </td>
                               <td className=" text-base font-medium py-4 ">
-                                {item?.totalTransaction}
+                                {flag ? "----" : item?.totalTransaction}
                               </td>
                               <td className=" text-base font-medium py-4">
-                                ${item?.totalValueOfTrades}
+                                {flag ? "----" : `${item?.totalValueOfTrades}`}
                               </td>
                               <td className=" text-base font-medium py-4">
-                                {item?.refId}
+                                {flag ? "----" : item?.refId}
                               </td>
                             </tr>
                           ))}

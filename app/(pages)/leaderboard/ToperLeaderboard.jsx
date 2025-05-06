@@ -14,6 +14,7 @@ const ToperLeaderboard = ({
   topperNumber,
   boxStyle,
   upperSideCss,
+  flag,
 }) => {
   const { t, ready } = useTranslation();
   const leaderboardPage = t("leaderboard");
@@ -48,7 +49,9 @@ const ToperLeaderboard = ({
             <a
               href={`https://solscan.io/account/${walletAddress}`}
               target="_blank"
-            >{`${walletAddress?.slice(0, 3)}...${walletAddress?.slice(-4)}`}</a>
+            >{`${
+              flag ? "----" : walletAddress?.slice(0, 3)
+            }...${walletAddress?.slice(-4)}`}</a>
           </p>
         </div>
         <div
@@ -59,7 +62,7 @@ const ToperLeaderboard = ({
               {leaderboardPage?.stage?.totaltrades}
             </h4>
             <h3 className="text-[#F6F6F6] md:font-semibold lg:font-bold text-xs md:text-sm lg:text-base">
-              {TotalTrades}
+              {flag ? "----" : TotalTrades}
             </h3>
           </div>
           <div>
@@ -67,7 +70,7 @@ const ToperLeaderboard = ({
               {leaderboardPage?.stage?.value}
             </h4>
             <h3 className="text-[#F6F6F6] md:font-semibold lg:font-bold text-xs md:text-sm lg:text-base">
-              ${Number(value).toFixed(2)}
+              {flag ? "----" : `${Number(value).toFixed(2)}`}
             </h3>
           </div>
         </div>
