@@ -105,7 +105,7 @@ const Tradingview = () => {
     }
     setTimeout(() => {
       setCopied(false);
-    }, 3000);
+    }, 2000);
   };
 
   const TokenDetailsNumberData = [

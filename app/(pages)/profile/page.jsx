@@ -4,13 +4,33 @@ import ProfileTable from "@/components/profile/ProfileTable";
 import Image from "next/image";
 import React, { useState } from "react";
 import { FaShare, FaCopy } from "react-icons/fa";
+import { BiCheckDouble } from "react-icons/bi";
 import { HiArrowsUpDown } from "react-icons/hi2";
 import { IoCopyOutline } from "react-icons/io5";
+import { useSelector } from "react-redux";
 
 const Profile = () => {
   const [isActive, setIsActive] = useState("All");
   const [tableTab, setTableTab] = useState("Recent PnL");
-
+  const [copied, setCopied] = useState(false);
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
+  const handleCopy = (mintAddress) => {
+    setCopied(true);
+    if (mintAddress) {
+      const formattedAddress = mintAddress;
+      navigator.clipboard
+        ?.writeText(formattedAddress)
+        .then(() => {})
+        .catch((err) => {
+          console.error("Failed to copy: ", err?.message);
+        });
+    }
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  };
   return (
     <>
       <div className="overflow-y-scroll h-[90vh]">
@@ -30,11 +50,20 @@ const Profile = () => {
                   This is a name
                 </div>
                 <div className="flex items-center gap-2 text-[#A8A8A8] text-xs md:text-sm break-all">
-                  <span className="hidden sm:block">
-                    EM7aNvwMg2cHE4XvzzJnbYSE9aGmAfdumsD5GzWAKwMt
-                  </span>
-                  <span className="block sm:hidden">EM7aNvw...AKwMt</span>
-                  <FaCopy className="cursor-pointer flex-shrink-0" />
+                  <span className="hidden sm:block">{solWalletAddress}</span>
+                  <span className="block sm:hidden">{`${solWalletAddress
+                    ?.toString()
+                    ?.slice(0, 4)}...${solWalletAddress
+                    ?.toString()
+                    ?.slice(-4)}`}</span>
+                  {copied ? (
+                    <BiCheckDouble className="text-[20px]" />
+                  ) : (
+                    <FaCopy
+                      onClick={() => handleCopy(solWalletAddress)}
+                      className="cursor-pointer flex-shrink-0"
+                    />
+                  )}
                 </div>
               </div>
             </div>
