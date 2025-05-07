@@ -14,7 +14,8 @@ import { MdOutlineEmail } from "react-icons/md";
 import { FiLock } from "react-icons/fi";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { FaUserFriends } from "react-icons/fa";
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
+import RefferalPopup from './RefferalPopup';
 
 
 
@@ -30,7 +31,8 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
     const [verifyData, setVerifyData] = useState({})
     const [refferalCode, setRefferalCode] = useState('')
     const [email, setEmail] = useState('')
-    const [isDisable, setIsDisable] = useState(false)
+    const [isDisable, setIsDisable] = useState(false);
+    const [isReffaralCode, setIsReffaralCode] = useState(false)
 
     const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
@@ -49,7 +51,6 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
             setError('')
 
         }
-
 
         const auth = authName == 'login' ? 'login' : 'signup'
         const password = passwordInput.trim();
@@ -99,7 +100,6 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
 
     const handleGoogleAuth = useGoogleLogin({
         flow: "auth-code",
-        scope: "openid profile email",
         onSuccess: async (codeResponse) => {
             try {
                 await axios({
@@ -111,14 +111,16 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
                 })
                     .then((res) => {
                         localStorage.setItem("token", res?.data?.data?.token);
-                        localStorage.setItem(
-                            "walletAddress",
-                            res?.data?.data?.user?.walletAddressSOL
-                        );
+                        localStorage.setItem("walletAddress", res?.data?.data?.user?.walletAddressSOL);
                         setVerifyData(res?.data);
 
+
                         if (res?.data?.message === "Login successfull") {
-                            setIsLoginPopup(false);
+                            if (res?.data?.data?.user?.referredBy === null) {
+                                setIsReffaralCode(true)
+                            } else {
+                                setIsLoginPopup(false);
+                            }
                         } else {
                             setIsGoogleSignIn(true);
                         }
@@ -133,6 +135,7 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
             } catch (error) {
                 console.error(error);
                 toast.error(error?.message)
+                setIsReffaralCode(false)
                 setIsGoogleSignIn(false)
             }
         },
@@ -142,15 +145,23 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
 
 
 
+
     return (
         <>
-            <AnimatePresence>
-                {isGoogleSignIn ?
-                    <RecoveryKey
-                        verifyData={verifyData}
-                        setVerifyData={setVerifyData}
-                        setIsLoginPopup={setIsLoginPopup} />
 
+            {isGoogleSignIn ?
+                <RecoveryKey
+                    verifyData={verifyData}
+                    setVerifyData={setVerifyData}
+                    setIsLoginPopup={setIsLoginPopup} />
+
+                :
+                isReffaralCode ?
+                    <RefferalPopup
+                        setIsReffaralCode={setIsReffaralCode}
+                        verifyData={verifyData}
+                        setIsLoginPopup={setIsLoginPopup}
+                    />
                     :
 
                     isPassword ?
@@ -331,9 +342,8 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
                             </motion.div>
                         </motion.div>
 
-                }
+            }
 
-            </AnimatePresence >
         </>
     )
 }

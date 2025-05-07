@@ -4,8 +4,7 @@ import { LuSearch } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import Image from "next/image";
-import { RxCross1 } from "react-icons/rx";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import {
   IoMenu,
@@ -18,21 +17,17 @@ import {
   setIsSearchPopup,
   setSolWalletAddress,
 } from "@/app/redux/states";
-import { PiUserBold, PiUserLight } from "react-icons/pi"; 
-import { lang } from "../../app/contsants/lang";
-import { useTranslation } from "react-i18next";
+import { PiUserBold, PiUserLight } from "react-icons/pi";
 import LoginPopup from "./login/LoginPopup";
 import { RiLogoutBoxLine, RiNotification4Line } from "react-icons/ri";
 import { googleLogout } from "@react-oauth/google";
-import { GrLanguage } from "react-icons/gr";
 import { MdLockOutline } from "react-icons/md";
-import { FaCaretDown, FaRegStar } from "react-icons/fa";
+import { FaRegStar } from "react-icons/fa";
 import Setting from "./popup/Setting";
 import AccountSecurity from "./popup/AccountSecurity";
 import Watchlist from "./popup/Watchlist";
 const Navbar = () => {
-  const [language, setLanguage] = useState({});
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [mounted, setMounted] = useState(false);
 
   // dropdown popup
@@ -56,7 +51,6 @@ const Navbar = () => {
 
   const dropdownRef = useRef(null);
   const router = useRouter();
-  const { i18n } = useTranslation();
   const dispatch = useDispatch();
   const pathname = usePathname();
 
@@ -78,11 +72,7 @@ const Navbar = () => {
     }, 1500);
   };
 
-  async function handleLanguageSelector(item) {
-    await i18n.changeLanguage(item?.code);
-    await setLanguage(item);
-    await setIsModalOpen(false);
-  }
+
 
   useEffect(() => {
     setMounted(true);
@@ -90,9 +80,7 @@ const Navbar = () => {
     // set SolWalletAddress 
     dispatch(setSolWalletAddress());
 
-    // Change languge state
-    const langLocal = lang.find((item) => item?.code == i18n.language);
-    setLanguage(langLocal);
+
 
     // Click out side for closing dropdown of profile
     function handleClickOutside(event) {
@@ -133,26 +121,6 @@ const Navbar = () => {
                 />
               </div>
 
-
-
-              {/* Languages */}
-              <div
-                className="cursor-pointer"
-                onClick={() => setIsModalOpen(true)}
-              >
-                <div className="flex items-center text-sm font-light justify-center cursor-pointer py-1 gap-2 px-2 border-[1px] border-[#404040] rounded-md">
-                  <Image
-                    alt="lang"
-                    src={language.img}
-                    className="h-[22px] w-[22px] rounded-full"
-                  />
-                  <div className="uppercase flex items-center gap-1 text-[#A8A8A8]">
-                    {" "}
-                    {language?.lang ? language.lang.substring(0, 3) : ""}
-                    <div><FaCaretDown className="text-base text-[#A8A8A8]" /></div>
-                  </div>
-                </div>
-              </div>
 
               {/* Only sm search bar */}
               <div
@@ -276,77 +244,21 @@ const Navbar = () => {
         </div>
       </div>
 
-      {isLoginPopup && (
-        <LoginPopup
-          isLoginPopup={isLoginPopup}
-          authName={authName}
-          setIsLoginPopup={setIsLoginPopup}
-          setAuthName={setAuthName}
-        />
-      )}
 
       <AnimatePresence>
-        {isModalOpen && (
-          <motion.div
-            key="backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={() => setIsModalOpen(false)}
-            className="fixed inset-0 bg-[#000000b2] flex items-center justify-center !z-[999999999999999]"
-          >
-            <motion.div
-              key="modal"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="LanguagePopup-lg w-[366px] bg-[#08080e]  border border-[#403f45] rounded-[36px] overflow-hidden !z-[999999999999999]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-center py-[12px] px-[10px] relative ">
-                <h1 className="text-[22px]  font-bold">Languages</h1>
-                <RxCross1
-                  className="text-[16px]  cursor-pointer absolute top-4 right-4 !font-extrabold"
-                  onClick={() => setIsModalOpen(false)}
-                />
-              </div>
-              <div className="bg-[#403f45] h-[1px]"></div>
-              <div className="py-[12px] px-[10px]  h-[500px] overflow-y-auto r">
-                {lang.map((item) => {
-                  return (
-                    <div
-                      onClick={() => handleLanguageSelector(item)}
-                      key={item.code}
-                      className={`cursor-pointer ${i18n.language == item.code && "bg-[#3a37fe2a]"
-                        } rounded-[5px] px-4 py-2 flex items-center justify-between mb-[3px]`}
-                    >
-                      <div className="flex items-center gap-[10px]">
-                        <Image
-                          alt="lang"
-                          src={item.img}
-                          className="h-[20px] w-[30px]"
-                        />
-                        <h1 className="text-[16px] font-[500]">{item.lang}</h1>
-                      </div>
-                      <div
-                        className={`flex items-center ${i18n.language == item.code
-                          ? "bg-[#3b37fe]"
-                          : "border border-[#c9c9c9]"
-                          } justify-center w-[20px] h-[20px]  rounded-full`}
-                      >
-                        <div className="w-[8px] h-[8px] bg-[#f3f3f3] rounded-full"></div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
 
-        {isSettingPopup && <Setting setIsSettingPopup={setIsSettingPopup} />}
+        {isLoginPopup && (
+          <LoginPopup
+            isLoginPopup={isLoginPopup}
+            authName={authName}
+            setIsLoginPopup={setIsLoginPopup}
+            setAuthName={setAuthName}
+          />
+        )}
+        
+        {isSettingPopup &&
+          <Setting setIsSettingPopup={setIsSettingPopup} />
+        }
 
         {isAccountPopup && (
           <AccountSecurity setIsAccountPopup={setIsAccountPopup} />
