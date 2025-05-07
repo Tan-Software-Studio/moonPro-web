@@ -1,13 +1,9 @@
-import { Connection, PublicKey, VersionedTransaction } from "@solana/web3.js";
 import {
   getSoalanaTokenBalance,
   getSolanaBalanceAndPrice,
-  getSolanaTokenDecimals,
 } from "../solanaNativeBalance";
 import toast from "react-hot-toast";
-import { ethers } from "ethers";
 import axios from "axios";
-import { setBigLoader } from "@/app/redux/states";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 // handler to buy solana tokens
 const buySolanaTokens = async (

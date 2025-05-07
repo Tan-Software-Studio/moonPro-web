@@ -146,15 +146,6 @@ const TradingPopup = ({
     // toast.dismiss();
   }
 
-  async function solanaNativeBalance() {
-    const solNativeBalance = await getSolanaBalanceAndPrice(address);
-    setNativeTokenbalance(solNativeBalance);
-  }
-  async function solanaSPLTokenBalance() {
-    const solTokenBalance = await getSoalanaTokenBalance(walletAddress, token);
-    setTokenBalance(solTokenBalance);
-  }
-
   return (
     <div className="bg-[#08080E] flex flex-col h-fit w-full text-white xl:p-4 md:p-3">
       {/* Buy/Sell Toggle */}
