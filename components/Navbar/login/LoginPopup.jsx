@@ -100,11 +100,11 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
           },
         })
           .then((res) => {
-            const walletAddress = res?.data?.data?.user?.walletAddressSOL?.find(
-              (item) => item?.primary
-            );
             localStorage.setItem("token", res?.data?.data?.token);
-            localStorage.setItem("walletAddress", walletAddress?.wallet);
+            localStorage.setItem(
+              "walletAddress",
+              res?.data?.data?.user?.walletAddressSOL
+            );
             setVerifyData(res?.data);
 
             if (res?.data?.message === "Login successfull") {

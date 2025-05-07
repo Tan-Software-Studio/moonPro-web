@@ -107,11 +107,11 @@ const OtpPopup = ({
           },
         }
       );
-      const walletAddress = response?.data?.data?.user?.walletAddressSOL?.find(
-        (item) => item?.primary
-      );
       localStorage.setItem("token", response?.data?.data?.token);
-      localStorage.setItem("walletAddress", walletAddress?.wallet);
+      localStorage.setItem(
+        "walletAddress",
+        response?.data?.data?.user?.walletAddressSOL
+      );
 
       setVerifyData(response?.data);
 
