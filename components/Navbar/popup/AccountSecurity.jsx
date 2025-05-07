@@ -1,11 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { IoClose, IoCopyOutline, IoWalletOutline } from "react-icons/io5";
 import Image from "next/image";
 import { profileImage } from "@/app/Images";
 import { PiShare } from "react-icons/pi";
+import { FaCaretDown, FaCheck } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
+import { lang } from "@/app/contsants/lang";
+import { useSelector } from "react-redux";
+import Link from "next/link";
 
-const AccountSecurity = ({ setIsAccountPopup }) => {
+const AccountSecurity = ({ setIsAccountPopup, }) => {
+  const [language, setLanguage] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
+
+  const { i18n } = useTranslation();
+
+  async function handleLanguageSelector(item) {
+    await i18n.changeLanguage(item?.code);
+    setLanguage(item);
+    setIsModalOpen(false);
+  }
+
+
+  useEffect(() => {
+    // Change languge state
+    const langLocal = lang.find((item) => item?.code == i18n.language);
+    setLanguage(langLocal);
+
+  }, []);
+
   return (
     <motion.div
       key="backdrop"
@@ -48,7 +76,7 @@ const AccountSecurity = ({ setIsAccountPopup }) => {
                   className="w-[60px] h-[60px] md:w-[80px] md:h-[80px] rounded-md"
                 />
                 <div>
-                  <p>EM7aNvwMg2cHE4XvzzJn...</p>
+                  <p>{`example@gmail.com`}</p>
                   <div className="flex items-center gap-1 text-[#A8A8A8] text-sm">
                     <div>User ID:</div>
                     <div>95a2...3f95</div>
@@ -60,7 +88,7 @@ const AccountSecurity = ({ setIsAccountPopup }) => {
                     <div>
                       <IoWalletOutline />
                     </div>
-                    <div>Sg89Kui...4f9HC</div>
+                    <div>{solWalletAddress ? solWalletAddress : "wallet address"}</div>
                   </div>
                 </div>
               </div>
@@ -108,28 +136,111 @@ const AccountSecurity = ({ setIsAccountPopup }) => {
             </div>
             <hr className="border-[#1A1A1A] border-b-[1px]  w-full" />
 
-            <div className="flex sm:flex-row flex-col sm:items-center my-5  justify-between">
+            <div className="flex gap-2 sm:flex-row flex-col sm:items-center my-5  justify-between">
+              <div>
+                <div>Language</div>
+                <div className="text-[#6E6E6E] text-sm font-normal">
+                  Change the application language</div>
+              </div>
+
+              {/* Languages */}
+              <div className="relative">
+                <div
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#A8A8A8] border border-[#404040] rounded-md cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition"
+                  onClick={() => setIsModalOpen(!isModalOpen)}
+                >
+                  <Image
+                    alt="lang"
+                    src={language.img}
+                    className="w-[22px] h-[22px] rounded-full"
+                  />
+                  <span className="uppercase">{language?.lang || "English"}</span>
+                  <FaCaretDown className="text-[#A8A8A8]" />
+                </div>
+
+                {isModalOpen && (
+                  <div className="absolute z-50 h-[200px] overflow-y-auto mt-2 w-48 right-0  bg-[#08080E] border border-[#404040] rounded-lg shadow-lg shadow-black/50">
+                    {lang.map((item) => {
+                      const isSelected = i18n.language === item.code;
+                      return (
+                        <div
+                          key={item.code}
+                          onClick={() => handleLanguageSelector(item)}
+                          className={`flex items-center justify-between px-4 py-1.5 mb-1 rounded-md cursor-pointer transition-all  hover:bg-[#2a2a2a]
+                             `}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="w-[25px] h-[25px] rounded-full">
+                              <Image
+                                alt="lang"
+                                src={item.img}
+                                className="w-full h-full  object-cover"
+                              />
+                            </div>
+                            <span className="text-[15px] font-medium text-[#A8A8A8]">
+                              {item.lang}
+                            </span>
+                          </div>
+                          {isSelected &&
+                            < div
+                              className={`flex items-center justify-center text-[#3b37fe]  "
+                              }`}
+                            >
+                              <FaCheck />
+                            </div>}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+            <hr className="border-[#1A1A1A] border-b-[1px]  w-full" />
+
+
+            <div className="flex gap-2 sm:flex-row flex-col sm:items-center my-5  justify-between">
               <div>
                 <div>Wallets</div>
                 <div className="text-[#6E6E6E] text-sm font-normal">
-                  Add or manage your external wallet accounts
-                </div>
+                  Add or manage your external wallet accounts</div>
               </div>
-              <div>
-                <div className="border border-[#404040] flex items-center gap-2 w-28 h-9 rounded-lg px-2 bg-[#08080E]">
-                  <input
-                    type="number"
-                    className="bg-transparent text-white w-full outline-none text-right "
-                    placeholder="0"
-                  />
-                </div>
-              </div>
+
+              <Link
+                onClick={() => setIsAccountPopup(false)}
+                href='/portfolio'
+                className="py-2 px-5 flex items-center gap-2 border-[#404040] rounded-md cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all duration-500 ease-in-out ">
+                <IoWalletOutline />
+                <span>Manage Wallets</span>
+              </Link>
             </div>
+
+
           </div>
         </div>
       </motion.div>
-    </motion.div>
+    </motion.div >
   );
 };
 
 export default AccountSecurity;
+
+
+
+
+// <div className="flex sm:flex-row flex-col sm:items-center my-5  justify-between">
+// <div>
+//   <div>Wallets</div>
+//   <div className="text-[#6E6E6E] text-sm font-normal">
+//     Add or manage your external wallet accounts
+//   </div>
+// </div>
+// <div>
+//   <div className="border border-[#404040] flex items-center gap-2 w-28 h-9 rounded-lg px-2 bg-[#08080E]">
+//     <input
+//       type="number"
+//       className="bg-transparent text-white w-full outline-none text-right "
+//       placeholder="0"
+//     />
+//   </div>
+// </div>
+// </div>

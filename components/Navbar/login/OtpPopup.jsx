@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { FiLock } from "react-icons/fi";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { AnimatePresence, motion } from "framer-motion";
+import RefferalPopup from "./RefferalPopup";
 
 const OtpPopup = ({
   setIsLoginPopup,
@@ -30,6 +31,7 @@ const OtpPopup = ({
   const [confirmPasswordInput, setConfirmPasswordInput] = useState("");
   const [isDisable, setIsDisable] = useState(false);
   const [isInvalidOtp, setIsInvalidOtp] = useState(false);
+  const [isReffaralCode, setIsReffaralCode] = useState(false);
 
   const handleClose = () => {
     setIsLoginPopup(false);
@@ -107,6 +109,7 @@ const OtpPopup = ({
           },
         }
       );
+
       localStorage.setItem("token", response?.data?.data?.token);
       localStorage.setItem(
         "walletAddress",
@@ -117,7 +120,11 @@ const OtpPopup = ({
 
       if (response?.data?.statusCode === 200) {
         if (authName == "login") {
-          setIsLoginPopup(false);
+          if (response?.data?.data?.user?.referredBy === null) {
+            setIsReffaralCode(true);
+          } else {
+            setIsLoginPopup(false);
+          }
         } else {
           setRecoveryKey(true);
         }
@@ -133,6 +140,7 @@ const OtpPopup = ({
         setIsInvalidOtp(true);
       }
       setIsDisable(false);
+      setIsReffaralCode(false);
     }
   };
 
@@ -144,6 +152,11 @@ const OtpPopup = ({
             verifyData={verifyData}
             setVerifyData={setVerifyData}
             setIsLoginPopup={setIsLoginPopup}
+          />
+        ) : isReffaralCode ? (
+          <RefferalPopup
+            setIsReffaralCode={setIsReffaralCode}
+            verifyData={verifyData}
           />
         ) : (
           <motion.div
