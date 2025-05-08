@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Trending from "./(pages)/trending/page";
 
 export default function Home() {
-  
   const router = useRouter();
   useEffect(() => {
     router.push(`/trending`);
