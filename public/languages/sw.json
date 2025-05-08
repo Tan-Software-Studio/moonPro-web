@@ -613,5 +613,143 @@
         }
       }
     }
+  },
+  "navbar": {
+    "profile": {
+      "search": "Sök",
+      "myProfile": "Min profil",
+      "account": "Konto och säkerhet",
+      "watchList": "Min bevakningslista",
+      "setting": "Inställningar",
+      "logout": "Logga ut",
+      "login": "Logga in",
+      "signup": "Registrera"
+    },
+    "loginPopup": {
+      "enterEmail": "Vänligen ange din e-postadress",
+      "validEmail": "Vänligen ange en giltig e-postadress",
+      "enterPassword": "Lösenord krävs",
+      "creatAccount": "Skapa konto",
+      "creatAccountDesc": "Vänligen ange dina uppgifter",
+      "welcomeBack": "Välkommen tillbaka",
+      "loginInAccouont": "Logga in på ditt konto",
+      "email": "E-postadress",
+      "enterEmailPlace": "Ange din e-postadress",
+      "password": "Lösenord",
+      "inviteCode": "Inbjudningskod",
+      "inviteCodePlace": "Inbjudningskod (Valfritt)",
+      "continueWith": "Eller fortsätt med",
+      "continueGoogle": "Fortsätt med Google",
+      "haveaccount": "Har du redan ett konto?",
+      "login": "Logga in",
+      "signup": "Registrera",
+      "dontAccount": "Har du inget konto?",
+      "byCreating": "Genom att skapa ett konto godkänner du moon pros Integritetspolicy och användarvillkor"
+    },
+    "otpPopup": {
+      "required": "OTP krävs",
+      "notValid": "OTP är inte giltig",
+      "longPassword": "Lösenordet måste vara minst 8 tecken långt.",
+      "lowercaseChar": "Lösenordet måste innehålla minst en liten bokstav.",
+      "uppercaseChar": "Lösenordet måste innehålla minst en stor bokstav.",
+      "oneDigit": "Lösenordet måste innehålla minst en siffra.",
+      "specialChar": "Lösenordet måste innehålla minst ett specialtecken (@$!%*?#&).",
+      "confirmPpassword": "Bekräfta lösenord krävs",
+      "passwordSame": "Nytt lösenord och bekräfta lösenord måste vara samma",
+      "confirmationCode": "Bekräftelsekod",
+      "verifactionCode": "Vi har skickat en verifieringskod till",
+      "password": "Lösenord",
+      "confirmPassword": "Bekräfta lösenord",
+      "verify": "Verifiera",
+      "byCreating": "Genom att skapa ett konto godkänner du moon pros Integritetspolicy och användarvillkor"
+    },
+    "referralPopup": {
+      "referralCode": "Vänligen ange en hänvisningskod",
+      "useReferral": "Använd hänvisningskod här",
+      "specialBonuses": "Ange din väns hänvisningskod för att få specialbonusar!",
+      "referralCoded": "Hänvisningskod",
+      "enterCode": "Ange kod"
+    },
+    "recovery": {
+      "recoveryKey": "Återställningsnyckel",
+      "thisRecovery": "Denna återställningsnyckel gör att du kan komma åt din plånbok om du någonsin förlorar dina autentiseringsuppgifter för ditt moon pro-konto",
+      "revealMyKey": "Visa min nyckel",
+      "warning": "VARNING: Denna återställningsnyckel är det enda sättet att komma åt din plånbok om du förlorar dina autentiseringsuppgifter. Förvara den på en säker plats och dela den inte med någon."
+    }
+  },
+  "accountPopup": {
+    "security": {
+      "accountSecurity": "Konto och säkerhet",
+      "dayCreated": "Skapelsedag",
+      "lastLogin": "Senaste inloggning",
+      "referralLink": "Hänvisningslänk",
+      "setReferralCode": "Ställ in hänvisningskod",
+      "recoveryKey": "Återställningsnyckel",
+      "DONOTSHARE": "Kom åt din fröfras för att exportera dina konton. DELA INTE!",
+      "viewrecoveryVey": "Visa återställningsnyckel",
+      "language": "Språk",
+      "changeLanguage": "Byt applikationens språk",
+      "walletAccounts": "Lägg till eller hantera dina externa plånboks-konton",
+      "manageWallets": "Hantera plånböcker",
+      "userID": "Användar-ID:"
+    },
+    "setting": {
+      "slippage": "Slippage",
+      "slippageDesc": "Hur mycket mindre tokens du är villig att ta emot från en handel på grund av prisvolatilitet.",
+      "maxGasLimit": "Max gasgräns",
+      "maxGasLimitDesc": "Det högsta beloppet gas du är villig att erbjuda för ALLA transaktioner. Vi rekommenderar att du inte justerar denna inställning.",
+      "priorityFee": "Prioriteringsavgift",
+      "priorityFeeDesc": "Extra 'dricks' för att få din transaktion snabbare. Ju högre prioriteringsavgift, desto större chans att din transaktion bearbetas snabbare.",
+      "mevProtection": "MEV-skydd",
+      "mevProtectionDesc": "Aktivera detta för skydd mot sandwitch-attacker från MEV-bots och spara på gasavgifter vid misslyckad transaktion.",
+      "briberyamount": "Mutbelopp",
+      "briberyamountDesc": "Ställ in ett ytterligare mutbelopp ovanpå din prioriteringsavgift för att blockbyggaren ska placera din transaktion så snart som möjligt.",
+      "quickbuy": "Snabbköp",
+      "quickSell": "Snabbförsäljning",
+      "approve": "Godkänn",
+      "autoBuy": "Automatisk köp",
+      "autosell": "Automatisk försäljning",
+      "cancel": "Avbryt",
+      "save": "Spara",
+      "Setting": "Inställningar",
+      "Customize": "Anpassa",
+      "CustomizeDesc": "Anpassa dina snabbköpsknappar med egna förinställda belopp."
+    },
+    "watchlist": {
+      "watchlist": "Bevakningslista",
+      "Cancel": "Avbryt",
+      "Save": "Spara"
+    }
+  },
+  "newProfile": {
+    "winRate": "Vinstfrekvens",
+    "UNREALIZEDPROFITS": "OREALISERADE VINSTER",
+    "TOTALCOST": "TOTAL KOSTNAD",
+    "TOKENAVERAGECOST": "GENOMSNITTLIG KOSTNAD FÖR TOKEN",
+    "TOKENPROFITS": "REALISERADE VINSTER FRÅN TOKEN",
+    "SOLBALANCE": "SOL BALANS",
+    "Winrate": "Vinstfrekvens",
+    "PNL": "PNL",
+    "LIQUIDITY": "LIKVIDITET",
+    "TOKENACTIVE": "TOKEN/SISTA AKTIVITET",
+    "UNREALIZED": "OREALISERAD",
+    "REALIZEDPROFIT": "REALISERAD VINST",
+    "TOTALPROFIT": "TOTAL VINST",
+    "BALANCE": "BALANS (USD)",
+    "POSITION": "POSITION %",
+    "HOLDING": "HOLDING DURATION",
+    "BOUGHT": "KÖPT / GENOMSNITT",
+    "SOLD": "SÅLD / GENOMSNITT",
+    "TXS": "30D TXS",
+    "SellAll": "Sälj allt"
+  },
+  "portfolio": {
+    "Show": "Visa arkiverade",
+    "Import": "Importera",
+    "CreateWallet": "Skapa plånbok",
+    "Balance": "Balans",
+    "Holdings": "Hållningar",
+    "Actions": "Åtgärder",
+    "Wallet": "Plånbok"
   }
 }

@@ -535,7 +535,7 @@
         "btnsell": "Quick Sell"
       },
       "tokeninfo": {
-        "tokeninfo":"Token info",
+        "tokeninfo": "Token info",
         "price": "PRICE",
         "supply": "SUPPLY",
         "liq": "LIQUIDITY",
@@ -545,7 +545,7 @@
         "mctool": "Market cap based on current circulating tokens (same as FDV if all tokens are unlocked)."
       },
       "datasecurity": {
-        "data":"Data & Security",
+        "data": "Data & Security",
         "minttool": "Controls whether new tokens can be minted. Disabled = No more tokens can be created (good for trust).",
         "freezetool": "Ability to freeze or restrict token transfers. Disabled = Transfers cannot be frozen (safer for holders).",
         "lptool": "Shows whether the liquidity tokens were burned. 100% Burned = Dev can’t rug-pull liquidity.",
@@ -613,5 +613,144 @@
         }
       }
     }
+  },
+  "navbar": {
+    "profile": {
+      "search": "Search",
+      "myProfile": "My profile",
+      "account": "Account & Security",
+      "watchList": "My Watchlist",
+      "setting": "Setting",
+      "logout": "Logout",
+      "login": "Login",
+      "signup": "Sign up"
+    },
+    "loginPopup": {
+      "enterEmail": "Please enter your email",
+      "validEmail": "Please enter a valid email address",
+      "enterPassword": "Password is required",
+      "creatAccount": "Create Account",
+      "creatAccountDesc": "Please enter your details",
+      "welcomeBack": "Welcome Back",
+      "loginInAccouont": "Log in to your account",
+      "email": "Email",
+      "enterEmailPlace": "Enter your email",
+      "password": "Password",
+      "inviteCode": "Invite code",
+      "inviteCodePlace": "Invite code (Optional)",
+      "continueWith": "Or continue with",
+      "continueGoogle": "Continue with Google",
+      "haveaccount": "Already have an account?",
+      "login": "Login",
+      "signup": "Sign up",
+      "dontAccount": "Don't have an account?",
+      "byCreating": "  By creating an account, you agree to moon pro's Privacy and Terms of Service"
+    },
+    "otpPopup": {
+      "required": "Otp is required",
+      "notValid": "Otp is not valid",
+      "longPassword": "Password must be at least 8 characters long.",
+      "lowercaseChar": "Password must include at least one lowercase letter.",
+      "uppercaseChar": "Password must include at least one uppercase letter.",
+      "oneDigit": "Password must include at least one digit.",
+      "specialChar": "Password must (@$!%*?#&) one special character .",
+      "confirmPpassword": "Confirm password is required",
+      "passwordSame": "New password and Confirm password should be same ",
+      "confirmationCode": "Confirmation code",
+      "verifactionCode": "  We've sent a verifaction code to",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "verify": "Verify",
+      "byCreating": "  By creating an account, you agree to moon pro's Privacy and Terms of Service"
+    },
+    "referralPopup": {
+      "referralCode": "Please enter a referral code",
+      "useReferral": "Use Referral Code Here",
+      "specialBonuses": "Enter your friend s referral code to get special bonuses!",
+      "referralCoded": "Referral Code",
+      "enterCode": "Enter code"
+    },
+    "recovery": {
+      "recoveryKey": "Recovery Key",
+      "thisRecovery": "This recovery key will allow you to access your wallet if you ever lose your credential to your moon pro account",
+      "revealMyKey": "Reveal my key",
+      "warning": " WARNING: This recovery key is the only way to access your wallet if you lose your credentials. Store it in a safe place and do not share it with anyone."
+    }
+  },
+  "accountPopup": {
+    "security": {
+      "accountSecurity": "Account & Security",
+      "dayCreated": "Day created",
+      "lastLogin": "last login",
+      "referralLink": "Referral Link",
+      "setReferralCode": "Set referral code",
+      "recoveryKey": "Recovery Key",
+      "DONOTSHARE": "Access your seed phrase to export your accounts. DO NOT SHARE!",
+      "viewrecoveryVey": "View recovery key",
+      "language": "Language",
+      "changeLanguage": "Change the application languages",
+      "walletAccounts": "Add or manage your external wallet accounts",
+      "manageWallets": "Manage Wallets",
+      "userID": "User ID:"
+    },
+    "setting": {
+
+      "slippage": "Slippage",
+      "slippageDesc": "How much less tokens you&apos;re willing to receive from a trade due to price volatility.",
+      "maxGasLimit": "Max Gas Limit",
+      "maxGasLimitDesc": "The maximum amount of gas you are willing to offer for ANY transaction. We highly recommend that you refrain from adjusting this setting.",
+      "priorityFee": "Priority Fee",
+      "priorityFeeDesc": "Extra 'tip' to have your transaction completed faster. The higher the priority fee, the higher the chance of getting your transaction processed sooner.",
+      "mevProtection": "Mev Protection",
+      "mevProtectionDesc": "Enable this for protection against sandwich attacks from MEV bots and save on gas fees in the event of a failed transaction.",
+      "briberyamount": "Bribery Amount",
+      "briberyamountDesc": "Set an additional bribe amount on top of your priority fee for the block builder to place your transaction as soon as possible.",
+      "quickbuy": "Quick buy ",
+      "quickSell": "Quick sell",
+      "approve": "Approve",
+      "autoBuy": "Auto buy",
+      "autosell": "Auto sell",
+      "cancel": "Cancel",
+      "save": "Save",
+      "Setting": "Setting",
+      "Customize" : "Customize",
+      "CustomizeDesc" :"Customize your Quick Buy buttons with your own preset amounts."
+    },
+    "watchlist": {
+      "watchlist": "Watchlist",
+      "Cancel": "Cancel",
+      "Save": "Save"
+    }
+  },
+  "newProfile": {
+    "winRate": "win RATE",
+    "UNREALIZEDPROFITS": "UNREALIZED PROFITS",
+    "TOTALCOST": "TOTAL COST",
+    "TOKENAVERAGECOST": "TOKEN AVERAGE COST",
+    "TOKENPROFITS": "TOKEN AVERAGE REALIZED PROFITS",
+    "SOLBALANCE": "SOL BALANCE",
+    "Winrate": "Winrate",
+    "PNL": "PNL",
+    "LIQUIDITY": "LIQUIDITY",
+    "TOKENACTIVE": "TOKEN/LAST ACTIVE",
+    "UNREALIZED": "UNREALIZED",
+    "REALIZEDPROFIT": "REALIZED PROFIT",
+    "TOTALPROFIT": "TOTAL PROFIT",
+    "BALANCE": "BALANCE (USD)",
+    "POSITION": "POSITION %",
+    "HOLDING": "HOLDING DURATION",
+    "BOUGHT": "BOUGHT/AVERAGE",
+    "SOLD": "SOLD/AVERAGE",
+    "TXS": "30D TXS",
+    "SellAll": "Sell All"
+  },
+  "portfolio": {
+    "Show": "Show Archived",
+    "Import": "Import",
+    "CreateWallet" : "Create Wallet",
+    "Balance": "Balance",
+    "Holdings": "Holdings",
+    "Actions": "Actions",
+    "Wallet": "Wallet"
   }
 }

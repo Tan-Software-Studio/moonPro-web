@@ -613,5 +613,143 @@
         }
       }
     }
+  },
+  "navbar": {
+    "profile": {
+      "search": "सर्च",
+      "myProfile": "मेरा प्रोफाइल",
+      "account": "अकाउंट और सिक्योरिटी",
+      "watchList": "मेरी वॉचलिस्ट",
+      "setting": "सेटिंग",
+      "logout": "लॉगआउट",
+      "login": "लॉगिन",
+      "signup": "साइन अप"
+    },
+    "loginPopup": {
+      "enterEmail": "कृपया अपना ईमेल डालें",
+      "validEmail": "कृपया एक वैलिड ईमेल एड्रेस डालें",
+      "enterPassword": "पासवर्ड जरूरी है",
+      "creatAccount": "अकाउंट बनाएं",
+      "creatAccountDesc": "कृपया अपनी डिटेल्स डालें",
+      "welcomeBack": "वेलकम बैक",
+      "loginInAccouont": "अपने अकाउंट में लॉगिन करें",
+      "email": "ईमेल",
+      "enterEmailPlace": "अपना ईमेल डालें",
+      "password": "पासवर्ड",
+      "inviteCode": "इनवाइट कोड",
+      "inviteCodePlace": "इनवाइट कोड (ऑप्शनल)",
+      "continueWith": "या जारी रखें",
+      "continueGoogle": "गूगल से जारी रखें",
+      "haveaccount": "पहले से अकाउंट है?",
+      "login": "लॉगिन",
+      "signup": "साइन अप",
+      "dontAccount": "अभी तक अकाउंट नहीं है?",
+      "byCreating": "अकाउंट बनाकर, आप moon pro की प्राइवेसी और टर्म्स ऑफ़ सर्विस से सहमत होते हैं"
+    },
+    "otpPopup": {
+      "required": "OTP जरूरी है",
+      "notValid": "OTP वैलिड नहीं है",
+      "longPassword": "पासवर्ड कम से कम 8 कैरेक्टर का होना चाहिए।",
+      "lowercaseChar": "पासवर्ड में कम से कम एक लोअरकेस लेटर होना चाहिए।",
+      "uppercaseChar": "पासवर्ड में कम से कम एक अपरकेस लेटर होना चाहिए।",
+      "oneDigit": "पासवर्ड में कम से कम एक डिजिट होना चाहिए।",
+      "specialChar": "पासवर्ड में एक स्पेशल कैरेक्टर होना चाहिए (@$!%*?#&)।",
+      "confirmPpassword": "कन्फर्म पासवर्ड जरूरी है",
+      "passwordSame": "नया पासवर्ड और कन्फर्म पासवर्ड एक जैसा होना चाहिए",
+      "confirmationCode": "कन्फर्मेशन कोड",
+      "verifactionCode": "हमने एक वेरिफिकेशन कोड भेजा है",
+      "password": "पासवर्ड",
+      "confirmPassword": "कन्फर्म पासवर्ड",
+      "verify": "वेरिफाई करें",
+      "byCreating": "अकाउंट बनाकर, आप moon pro की प्राइवेसी और टर्म्स ऑफ़ सर्विस से सहमत होते हैं"
+    },
+    "referralPopup": {
+      "referralCode": "कृपया रेफरल कोड डालें",
+      "useReferral": "यहां रेफरल कोड का उपयोग करें",
+      "specialBonuses": "अपने दोस्त का रेफरल कोड डालें और स्पेशल बोनस पाएं!",
+      "referralCoded": "रेफरल कोड",
+      "enterCode": "कोड डालें"
+    },
+    "recovery": {
+      "recoveryKey": "रिकवरी की",
+      "thisRecovery": "यह रिकवरी की आपको आपके moon pro अकाउंट की जानकारी खोने पर वॉलेट एक्सेस करने में मदद करेगी",
+      "revealMyKey": "मेरी की दिखाएं",
+      "warning": "चेतावनी: अगर आप अपनी जानकारी खो देते हैं तो यह रिकवरी की ही आपकी वॉलेट एक्सेस करने का एकमात्र तरीका है। इसे सुरक्षित रखें और किसी के साथ शेयर न करें।"
+    }
+  },
+  "accountPopup": {
+    "security": {
+      "accountSecurity": "अकाउंट और सिक्योरिटी",
+      "dayCreated": "बनाने की तारीख",
+      "lastLogin": "आखिरी लॉगिन",
+      "referralLink": "रेफरल लिंक",
+      "setReferralCode": "रेफरल कोड सेट करें",
+      "recoveryKey": "रिकवरी की",
+      "DONOTSHARE": "अपने अकाउंट्स एक्सपोर्ट करने के लिए सीड फ्रेज एक्सेस करें। शेयर न करें!",
+      "viewrecoveryVey": "रिकवरी की देखें",
+      "language": "भाषा",
+      "changeLanguage": "एप्लिकेशन की भाषा बदलें",
+      "walletAccounts": "अपने एक्सटर्नल वॉलेट अकाउंट्स जोड़ें या मैनेज करें",
+      "manageWallets": "वॉलेट्स मैनेज करें",
+      "userID": "यूज़र ID:"
+    },
+    "setting": {
+      "slippage": "स्लिपेज",
+      "slippageDesc": "प्राइस वोलैटिलिटी के कारण आप कितने कम टोकन एक्सेप्ट करने को तैयार हैं।",
+      "maxGasLimit": "मैक्स गैस लिमिट",
+      "maxGasLimitDesc": "किसी भी ट्रांजैक्शन के लिए आप जितनी मैक्स गैस ऑफर करने को तैयार हैं। हम इसे एडजस्ट करने की सलाह नहीं देते।",
+      "priorityFee": "प्रायोरिटी फी",
+      "priorityFeeDesc": "आपका ट्रांजैक्शन जल्दी पूरा हो इसके लिए एक्स्ट्रा 'टिप'।",
+      "mevProtection": "MEV प्रोटेक्शन",
+      "mevProtectionDesc": "MEV बॉट्स से बचाव के लिए इसे ऑन करें और फेल ट्रांजैक्शन पर गैस फीस बचाएं।",
+      "briberyamount": "ब्राइबरी अमाउंट",
+      "briberyamountDesc": "ब्लॉक बिल्डर को ट्रांजैक्शन जल्दी प्रोसेस करने के लिए एक्स्ट्रा अमाउंट सेट करें।",
+      "quickbuy": "क्विक बाय",
+      "quickSell": "क्विक सेल",
+      "approve": "अप्रूव करें",
+      "autoBuy": "ऑटो बाय",
+      "autosell": "ऑटो सेल",
+      "cancel": "कैंसल करें",
+      "save": "सेव करें",
+      "Setting": "सेटिंग",
+      "Customize": "कस्टमाइज़ करें",
+      "CustomizeDesc": "अपने क्विक बाय बटन को अपनी तयशुदा अमाउंट्स से कस्टमाइज़ करें।"
+    },
+    "watchlist": {
+      "watchlist": "वॉचलिस्ट",
+      "Cancel": "कैंसल करें",
+      "Save": "सेव करें"
+    }
+  },
+  "newProfile": {
+    "winRate": "विन रेट",
+    "UNREALIZEDPROFITS": "अनरियलाइज़्ड प्रॉफिट्स",
+    "TOTALCOST": "टोटल कॉस्ट",
+    "TOKENAVERAGECOST": "टोकन एवरेज कॉस्ट",
+    "TOKENPROFITS": "टोकन एवरेज रियलाइज़्ड प्रॉफिट्स",
+    "SOLBALANCE": "SOL बैलेंस",
+    "Winrate": "विन रेट",
+    "PNL": "PNL",
+    "LIQUIDITY": "लिक्विडिटी",
+    "TOKENACTIVE": "टोकन/लास्ट एक्टिव",
+    "UNREALIZED": "अनरियलाइज़्ड",
+    "REALIZEDPROFIT": "रियलाइज़्ड प्रॉफिट",
+    "TOTALPROFIT": "टोटल प्रॉफिट",
+    "BALANCE": "बैलेंस (USD)",
+    "POSITION": "पोजीशन %",
+    "HOLDING": "होल्डिंग ड्यूरेशन",
+    "BOUGHT": "खरीदा/एवरेज",
+    "SOLD": "बिका/एवरेज",
+    "TXS": "30D TXS",
+    "SellAll": "सभी बेचें"
+  },
+  "portfolio": {
+    "Show": "आर्काइव दिखाएं",
+    "Import": "इम्पोर्ट करें",
+    "CreateWallet": "वॉलेट बनाएं",
+    "Balance": "बैलेंस",
+    "Holdings": "होल्डिंग्स",
+    "Actions": "एक्शन्स",
+    "Wallet": "वॉलेट"
   }
 }

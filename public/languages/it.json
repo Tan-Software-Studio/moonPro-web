@@ -613,5 +613,143 @@
         }
       }
     }
+  },
+  "navbar": {
+    "profile": {
+      "search": "Cerca",
+      "myProfile": "Il mio profilo",
+      "account": "Account & Sicurezza",
+      "watchList": "La mia lista di osservazione",
+      "setting": "Impostazioni",
+      "logout": "Disconnettersi",
+      "login": "Accedi",
+      "signup": "Registrati"
+    }, 
+    "loginPopup": {
+      "enterEmail": "Per favore inserisci la tua email",
+      "validEmail": "Per favore inserisci una email valida",
+      "enterPassword": "La password è richiesta",
+      "creatAccount": "Crea un account",
+      "creatAccountDesc": "Per favore inserisci i tuoi dati",
+      "welcomeBack": "Bentornato",
+      "loginInAccouont": "Accedi al tuo account",
+      "email": "Email",
+      "enterEmailPlace": "Inserisci la tua email",
+      "password": "Password",
+      "inviteCode": "Codice di invito",
+      "inviteCodePlace": "Codice di invito (opzionale)",
+      "continueWith": "O continua con",
+      "continueGoogle": "Continua con Google",
+      "haveaccount": "Hai già un account?",
+      "login": "Accedi",
+      "signup": "Registrati",
+      "dontAccount": "Non hai un account?",
+      "byCreating": "Creando un account, accetti l'informativa sulla privacy e i termini di servizio di moon pro"
+    }, 
+    "otpPopup": {
+      "required": "L'OTP è richiesto",
+      "notValid": "L'OTP non è valido",
+      "longPassword": "La password deve contenere almeno 8 caratteri.",
+      "lowercaseChar": "La password deve contenere almeno una lettera minuscola.",
+      "uppercaseChar": "La password deve contenere almeno una lettera maiuscola.",
+      "oneDigit": "La password deve contenere almeno una cifra.",
+      "specialChar": "La password deve contenere almeno un carattere speciale (@$!%*?#&).",
+      "confirmPpassword": "La conferma della password è richiesta",
+      "passwordSame": "La nuova password e la conferma devono essere uguali",
+      "confirmationCode": "Codice di conferma",
+      "verifactionCode": "Abbiamo inviato un codice di conferma a",
+      "password": "Password",
+      "confirmPassword": "Conferma password",
+      "verify": "Verifica",
+      "byCreating": "Creando un account, accetti l'informativa sulla privacy e i termini di servizio di moon pro"
+    },  
+    "referralPopup": {
+      "referralCode": "Per favore inserisci un codice di referral",
+      "useReferral": "Usa il codice di referral qui",
+      "specialBonuses": "Inserisci il codice di referral di un amico per ricevere bonus speciali!",
+      "referralCoded": "Codice referral",
+      "enterCode": "Inserisci codice"
+    },  
+    "recovery": {
+      "recoveryKey": "Chiave di recupero",
+      "thisRecovery": "Questa chiave di recupero ti permetterà di accedere al tuo wallet se perdi le tue credenziali dell'account moon pro",
+      "revealMyKey": "Mostra la mia chiave",
+      "warning": "ATTENZIONE: Questa chiave di recupero è l'unico modo per accedere al tuo wallet se perdi le tue credenziali. Conservala in un posto sicuro e non condividerla con nessuno."
+    } 
+  },
+  "accountPopup": {
+    "security": {
+      "accountSecurity": "Account & Sicurezza",
+      "dayCreated": "Giorno di creazione",
+      "lastLogin": "Ultimo login",
+      "referralLink": "Link di referral",
+      "setReferralCode": "Imposta codice di referral",
+      "recoveryKey": "Chiave di recupero",
+      "DONOTSHARE": "Accedi alla tua frase seme per esportare i tuoi account. NON CONDIVIDERE!",
+      "viewrecoveryVey": "Visualizza la chiave di recupero",
+      "language": "Lingua",
+      "changeLanguage": "Cambia la lingua dell'applicazione",
+      "walletAccounts": "Aggiungi o gestisci i tuoi account wallet esterni",
+      "manageWallets": "Gestisci i wallet",
+      "userID": "ID utente:"
+    }, 
+    "setting": {
+      "slippage": "Slippage",
+      "slippageDesc": "Quanto meno token sei disposto a ricevere da un trade a causa della volatilità del prezzo.",
+      "maxGasLimit": "Limite massimo gas",
+      "maxGasLimitDesc": "La quantità massima di gas che sei disposto a offrire per UNA transazione. Si consiglia vivamente di non modificare questa impostazione.",
+      "priorityFee": "Tassa prioritaria",
+      "priorityFeeDesc": "Extra 'mancia' per far sì che la tua transazione venga completata più velocemente. Maggiore è la tassa prioritaria, maggiore è la possibilità di ottenere la transazione elaborata prima.",
+      "mevProtection": "Protezione MEV",
+      "mevProtectionDesc": "Abilita questa protezione contro gli attacchi sandwich dai bot MEV e risparmia sulle commissioni del gas in caso di transazione fallita.",
+      "briberyamount": "Importo della tangente",
+      "briberyamountDesc": "Imposta un importo aggiuntivo di tangente sopra la tassa prioritaria per il costruttore di blocchi per posizionare la tua transazione il prima possibile.",
+      "quickbuy": "Acquisto rapido",
+      "quickSell": "Vendita rapida",
+      "approve": "Approva",
+      "autoBuy": "Acquisto automatico",
+      "autosell": "Vendita automatica",
+      "cancel": "Annulla",
+      "save": "Salva",
+      "Setting": "Impostazioni",
+      "Customize": "Personalizza",
+      "CustomizeDesc": "Personalizza i tuoi pulsanti di acquisto rapido con i tuoi importi preimpostati."
+    }, 
+    "watchlist": {
+      "watchlist": "Lista di osservazione",
+      "Cancel": "Annulla",
+      "Save": "Salva"
+    }  
+  },  
+  "newProfile": {
+    "winRate": "Tasso di vittoria",
+    "UNREALIZEDPROFITS": "Profitti non realizzati",
+    "TOTALCOST": "Costo totale",
+    "TOKENAVERAGECOST": "Costo medio del token",
+    "TOKENPROFITS": "Profitti medi realizzati del token",
+    "SOLBALANCE": "Saldo SOL",
+    "Winrate": "Tasso di vittoria",
+    "PNL": "PNL",
+    "LIQUIDITY": "Liquidità",
+    "TOKENACTIVE": "TOKEN / Ultima attività",
+    "UNREALIZED": "Non realizzato",
+    "REALIZEDPROFIT": "Profitto realizzato",
+    "TOTALPROFIT": "Profitto totale",
+    "BALANCE": "Saldo (USD)",
+    "POSITION": "Posizione %",
+    "HOLDING": "Durata del possesso",
+    "BOUGHT": "Acquistato / Media",
+    "SOLD": "Venduto / Media",
+    "TXS": "30 giorni TX",
+    "SellAll": "Vendi tutto"
+  },  
+  "portfolio": {
+    "Show": "Mostra archiviato",
+    "Import": "Importa",
+    "CreateWallet": "Crea Wallet",
+    "Balance": "Saldo",
+    "Holdings": "Partecipazioni",
+    "Actions": "Azioni",
+    "Wallet": "Wallet"
   }
 }

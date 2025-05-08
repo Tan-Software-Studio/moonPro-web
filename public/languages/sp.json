@@ -613,5 +613,143 @@
         }
       }
     }
+  },
+  "navbar": {
+    "profile": {
+      "search": "Buscar",
+      "myProfile": "Mi perfil",
+      "account": "Cuenta y seguridad",
+      "watchList": "Mi lista de deseos",
+      "setting": "Configuración",
+      "logout": "Cerrar sesión",
+      "login": "Iniciar sesión",
+      "signup": "Registrarse"
+    },
+    "loginPopup": {
+      "enterEmail": "Por favor, ingresa tu correo electrónico",
+      "validEmail": "Por favor, ingresa una dirección de correo electrónico válida",
+      "enterPassword": "Se requiere contraseña",
+      "creatAccount": "Crear cuenta",
+      "creatAccountDesc": "Por favor, ingresa tus detalles",
+      "welcomeBack": "Bienvenido de nuevo",
+      "loginInAccouont": "Inicia sesión en tu cuenta",
+      "email": "Correo electrónico",
+      "enterEmailPlace": "Ingresa tu correo electrónico",
+      "password": "Contraseña",
+      "inviteCode": "Código de invitación",
+      "inviteCodePlace": "Código de invitación (Opcional)",
+      "continueWith": "O continúa con",
+      "continueGoogle": "Continúa con Google",
+      "haveaccount": "¿Ya tienes cuenta?",
+      "login": "Iniciar sesión",
+      "signup": "Registrarse",
+      "dontAccount": "¿No tienes cuenta?",
+      "byCreating": "Al crear una cuenta, aceptas la política de privacidad y los términos de servicio de moon pro"
+    },
+    "otpPopup": {
+      "required": "OTP requerido",
+      "notValid": "OTP no válido",
+      "longPassword": "La contraseña debe tener al menos 8 caracteres.",
+      "lowercaseChar": "La contraseña debe incluir al menos una letra minúscula.",
+      "uppercaseChar": "La contraseña debe incluir al menos una letra mayúscula.",
+      "oneDigit": "La contraseña debe incluir al menos un dígito.",
+      "specialChar": "La contraseña debe incluir al menos un carácter especial (@$!%*?#&).",
+      "confirmPpassword": "Se requiere confirmar la contraseña",
+      "passwordSame": "La nueva contraseña y la confirmación de la contraseña deben ser iguales",
+      "confirmationCode": "Código de confirmación",
+      "verifactionCode": "Te hemos enviado un código de verificación a",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "verify": "Verificar",
+      "byCreating": "Al crear una cuenta, aceptas la política de privacidad y los términos de servicio de moon pro"
+    },
+    "referralPopup": {
+      "referralCode": "Por favor, ingresa un código de referido",
+      "useReferral": "Usa el código de referido aquí",
+      "specialBonuses": "¡Ingresa el código de referido de tu amigo para obtener bonos especiales!",
+      "referralCoded": "Código de referido",
+      "enterCode": "Ingresa el código"
+    },
+    "recovery": {
+      "recoveryKey": "Clave de recuperación",
+      "thisRecovery": "Esta clave de recuperación te permitirá acceder a tu billetera si alguna vez pierdes tus credenciales de tu cuenta moon pro",
+      "revealMyKey": "Revelar mi clave",
+      "warning": "ADVERTENCIA: Esta clave de recuperación es la única forma de acceder a tu billetera si pierdes tus credenciales. Guárdala en un lugar seguro y no la compartas con nadie."
+    }
+  },
+  "accountPopup": {
+    "security": {
+      "accountSecurity": "Cuenta y seguridad",
+      "dayCreated": "Día de creación",
+      "lastLogin": "Último inicio de sesión",
+      "referralLink": "Enlace de referido",
+      "setReferralCode": "Configurar código de referido",
+      "recoveryKey": "Clave de recuperación",
+      "DONOTSHARE": "Accede a tu frase semilla para exportar tus cuentas. ¡NO LA COMPARTAS!",
+      "viewrecoveryVey": "Ver clave de recuperación",
+      "language": "Idioma",
+      "changeLanguage": "Cambiar el idioma de la aplicación",
+      "walletAccounts": "Agregar o gestionar tus cuentas de billetera externas",
+      "manageWallets": "Gestionar billeteras",
+      "userID": "ID de usuario:"
+    },
+    "setting": {
+      "slippage": "Deslizamiento",
+      "slippageDesc": "Cuánto menos tokens estás dispuesto a recibir de un intercambio debido a la volatilidad del precio.",
+      "maxGasLimit": "Límite máximo de gas",
+      "maxGasLimitDesc": "La cantidad máxima de gas que estás dispuesto a ofrecer por CUALQUIER transacción. Se recomienda encarecidamente no ajustar esta configuración.",
+      "priorityFee": "Tarifa prioritaria",
+      "priorityFeeDesc": "Propina extra para completar tu transacción más rápido. Cuanto mayor sea la tarifa prioritaria, mayor será la probabilidad de que tu transacción se procese más rápido.",
+      "mevProtection": "Protección MEV",
+      "mevProtectionDesc": "Habilítalo para protegerte contra ataques de sándwich de bots MEV y ahorrar en tarifas de gas si la transacción falla.",
+      "briberyamount": "Monto de soborno",
+      "briberyamountDesc": "Establece una cantidad adicional de soborno sobre tu tarifa prioritaria para que el creador de bloques procese tu transacción lo antes posible.",
+      "quickbuy": "Compra rápida",
+      "quickSell": "Venta rápida",
+      "approve": "Aprobar",
+      "autoBuy": "Compra automática",
+      "autosell": "Venta automática",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "Setting": "Configuración",
+      "Customize": "Personalizar",
+      "CustomizeDesc": "Personaliza tus botones de compra rápida con tus propios montos preestablecidos."
+    },
+    "watchlist": {
+      "watchlist": "Lista de deseos",
+      "Cancel": "Cancelar",
+      "Save": "Guardar"
+    }
+  },
+  "newProfile": {
+    "winRate": "Tasa de victorias",
+    "UNREALIZEDPROFITS": "GANANCIAS NO REALIZADAS",
+    "TOTALCOST": "COSTO TOTAL",
+    "TOKENAVERAGECOST": "COSTO PROMEDIO DE TOKEN",
+    "TOKENPROFITS": "GANANCIAS REALIZADAS DEL TOKEN",
+    "SOLBALANCE": "BALANCE SOL",
+    "Winrate": "Tasa de victorias",
+    "PNL": "PNL",
+    "LIQUIDITY": "LIQUIDEZ",
+    "TOKENACTIVE": "TOKEN/ÚLTIMA ACTIVIDAD",
+    "UNREALIZED": "NO REALIZADO",
+    "REALIZEDPROFIT": "GANANCIA REALIZADA",
+    "TOTALPROFIT": "GANANCIA TOTAL",
+    "BALANCE": "BALANCE (USD)",
+    "POSITION": "PORCENTAJE DE POSICIÓN",
+    "HOLDING": "DURACIÓN DE LA POSESIÓN",
+    "BOUGHT": "COMPRADO/ PROMEDIO",
+    "SOLD": "VENDIDO/ PROMEDIO",
+    "TXS": "30D TXS",
+    "SellAll": "Vender todo"
+  },
+  "portfolio": {
+    "Show": "Mostrar archivados",
+    "Import": "Importar",
+    "CreateWallet": "Crear billetera",
+    "Balance": "Balance",
+    "Holdings": "Posiciones",
+    "Actions": "Acciones",
+    "Wallet": "Billetera"
   }
 }

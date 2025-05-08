@@ -4,12 +4,15 @@ import { FaGift } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 
 export default function ReferralCodePopup({ verifyData, setIsLoginPopup }) {
     const [referralCode, setReferralCode] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const { t } = useTranslation();
+    const navbar = t("navbar");
 
     const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
     const handleSubmit = async (e) => {
@@ -17,7 +20,7 @@ export default function ReferralCodePopup({ verifyData, setIsLoginPopup }) {
         const token = verifyData?.data?.token
 
         if (!referralCode.trim()) {
-            setErrorMessage('Please enter a referral code');
+            setErrorMessage(navbar?.referralPopup?.referralCode);
             return;
         }
         setErrorMessage('');
@@ -36,7 +39,7 @@ export default function ReferralCodePopup({ verifyData, setIsLoginPopup }) {
             );
             if (response?.data?.data?.user?.verify == true) {
                 setIsLoginPopup(false)
-            } 
+            }
             setIsLoading(false);
             toast.success(response?.data?.data?.message);
         }
@@ -83,22 +86,22 @@ export default function ReferralCodePopup({ verifyData, setIsLoginPopup }) {
                     </div>
 
                     <h2 className="text-2xl font-bold text-white text-center mb-2">
-                        Use Referral Code Here
+                        {navbar?.referralPopup?.useReferral}
                     </h2>
 
                     <p className="text-gray-400 text-center mb-6">
-                        Enter your friend s referral code to get special bonuses!
+                        {navbar?.referralPopup?.specialBonuses}
                     </p>
 
                     <div>
                         <div className="mb-4">
                             <label htmlFor="referralCode" className="block text-sm font-medium text-gray-300 mb-2">
-                                Referral Code
+                                {navbar?.referralPopup?.referralCoded}
                             </label>
                             <input
                                 type="text"
                                 id="referralCode"
-                                placeholder="Enter code "
+                                placeholder={navbar?.referralPopup?.enterCode}
                                 value={referralCode}
                                 onChange={(e) => setReferralCode(e.target.value)}
                                 className="w-full p-3  bg-[#141414]/90 border border-[#333] rounded-lg text-white  focus:outline-none  "

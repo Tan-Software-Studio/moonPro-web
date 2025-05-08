@@ -13,7 +13,10 @@ import Link from "next/link";
 const AccountSecurity = ({ setIsAccountPopup, }) => {
   const [language, setLanguage] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
+  const { t } = useTranslation();
+  const accountPopupLng = t("accountPopup");
+
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
@@ -56,7 +59,7 @@ const AccountSecurity = ({ setIsAccountPopup, }) => {
         <div className="">
           <div className="flex items-center justify-between lg:px-6 px-3 py-2">
             <div className="md:text-2xl sm:text-xl text-lg sm:font-bold font-semibold text-white ">
-              Account & Security
+              {accountPopupLng?.security?.accountSecurity}
             </div>
             <div
               onClick={() => setIsAccountPopup(false)}
@@ -78,7 +81,7 @@ const AccountSecurity = ({ setIsAccountPopup, }) => {
                 <div>
                   <p>{`example@gmail.com`}</p>
                   <div className="flex items-center gap-1 text-[#A8A8A8] text-sm">
-                    <div>User ID:</div>
+                    <div>{accountPopupLng?.security?.userID} </div>
                     <div>95a2...3f95</div>
                     <div>
                       <IoCopyOutline />
@@ -95,7 +98,7 @@ const AccountSecurity = ({ setIsAccountPopup, }) => {
               <div className="flex items-center sm:flex-nowrap flex-wrap lg:gap-10 gap-3">
                 <div>
                   <div className="text-[#A8A8A8] text-sm uppercase">
-                    Day created
+                    {accountPopupLng?.security?.dayCreated}
                   </div>
                   <div className="text-white font-semibold py-1.5 text-base">
                     23/02/2025
@@ -103,7 +106,7 @@ const AccountSecurity = ({ setIsAccountPopup, }) => {
                 </div>
                 <div>
                   <div className="text-[#A8A8A8] text-sm uppercase">
-                    last login
+                    {accountPopupLng?.security?.lastLogin}
                   </div>
                   <div className="text-white font-semibold py-1.5  text-base">
                     1w
@@ -111,10 +114,10 @@ const AccountSecurity = ({ setIsAccountPopup, }) => {
                 </div>
                 <div>
                   <div className="text-[#A8A8A8] text-sm uppercase">
-                    Referral Link{" "}
+                    {accountPopupLng?.security?.referralLink}   {" "}
                   </div>
                   <div className="border-b-[1px] border-b-[#FFFFFF] py-1.5 gap-1  cursor-pointer text-white flex items-center font-semibold text-base">
-                    <div>Set referral code</div>
+                    <div> {accountPopupLng?.security?.setReferralCode}</div>
                     <PiShare />
                   </div>
                 </div>
@@ -125,22 +128,22 @@ const AccountSecurity = ({ setIsAccountPopup, }) => {
           <div className="sm:px-6 px-3 py-6">
             <div className="flex gap-2 sm:flex-row flex-col sm:items-center my-5  justify-between">
               <div>
-                <div>Recovery Key</div>
+                <div>{accountPopupLng?.security?.recoveryKey}</div>
                 <div className="text-[#6E6E6E] text-sm font-normal">
-                  Access your seed phrase to export your accounts. DO NOT SHARE!
+                  {accountPopupLng?.security?.DONOTSHARE}
                 </div>
               </div>
               <button className="py-2 px-5 border-[1px] border-[#ED1B24] text-[#ED1B24] hover:bg-[#ED1B24] hover:text-[#FFFFFF] rounded-md transition-all duration-500 ease-in-out ">
-                View recovery key
+                {accountPopupLng?.security?.viewrecoveryVey}
               </button>
             </div>
             <hr className="border-[#1A1A1A] border-b-[1px]  w-full" />
 
             <div className="flex gap-2 sm:flex-row flex-col sm:items-center my-5  justify-between">
               <div>
-                <div>Language</div>
+                <div>{accountPopupLng?.security?.language}</div>
                 <div className="text-[#6E6E6E] text-sm font-normal">
-                  Change the application language</div>
+                  {accountPopupLng?.security?.changeLanguage}  </div>
               </div>
 
               {/* Languages */}
@@ -200,9 +203,9 @@ const AccountSecurity = ({ setIsAccountPopup, }) => {
 
             <div className="flex gap-2 sm:flex-row flex-col sm:items-center my-5  justify-between">
               <div>
-                <div>Wallets</div>
+                <div>{accountPopupLng?.security?.wallets}</div>
                 <div className="text-[#6E6E6E] text-sm font-normal">
-                  Add or manage your external wallet accounts</div>
+                  {accountPopupLng?.security?.walletAccounts} </div>
               </div>
 
               <Link
@@ -210,7 +213,7 @@ const AccountSecurity = ({ setIsAccountPopup, }) => {
                 href='/portfolio'
                 className="py-2 px-5 flex items-center gap-2 border-[#404040] rounded-md cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all duration-500 ease-in-out ">
                 <IoWalletOutline />
-                <span>Manage Wallets</span>
+                <span>{accountPopupLng?.security?.manageWallets}</span>
               </Link>
             </div>
 

@@ -613,5 +613,143 @@
         }
       }
     }
+  },
+  "navbar": {
+    "profile": {
+      "search": "検索",
+      "myProfile": "マイプロフィール",
+      "account": "アカウントとセキュリティ",
+      "watchList": "マイウォッチリスト",
+      "setting": "設定",
+      "logout": "ログアウト",
+      "login": "ログイン",
+      "signup": "サインアップ"
+    },
+    "loginPopup": {
+      "enterEmail": "メールアドレスを入力してください",
+      "validEmail": "有効なメールアドレスを入力してください",
+      "enterPassword": "パスワードが必要です",
+      "creatAccount": "アカウントを作成",
+      "creatAccountDesc": "詳細を入力してください",
+      "welcomeBack": "お帰りなさい",
+      "loginInAccouont": "アカウントにログイン",
+      "email": "メール",
+      "enterEmailPlace": "メールアドレスを入力",
+      "password": "パスワード",
+      "inviteCode": "招待コード",
+      "inviteCodePlace": "招待コード（オプション）",
+      "continueWith": "または、次の方法で続けてください",
+      "continueGoogle": "Googleで続ける",
+      "haveaccount": "すでにアカウントがありますか？",
+      "login": "ログイン",
+      "signup": "サインアップ",
+      "dontAccount": "アカウントをお持ちでないですか？",
+      "byCreating": "アカウントを作成することにより、moon proのプライバシーと利用規約に同意したことになります"
+    },
+    "otpPopup": {
+      "required": "OTPが必要です",
+      "notValid": "OTPは無効です",
+      "longPassword": "パスワードは8文字以上である必要があります。",
+      "lowercaseChar": "パスワードには小文字を1文字以上含める必要があります。",
+      "uppercaseChar": "パスワードには大文字を1文字以上含める必要があります。",
+      "oneDigit": "パスワードには数字を1つ以上含める必要があります。",
+      "specialChar": "パスワードには少なくとも1つの特殊文字（@$!%*?#&）が必要です。",
+      "confirmPpassword": "確認用パスワードが必要です",
+      "passwordSame": "新しいパスワードと確認用パスワードは一致する必要があります",
+      "confirmationCode": "確認コード",
+      "verifactionCode": "確認コードを送信しました",
+      "password": "パスワード",
+      "confirmPassword": "確認用パスワード",
+      "verify": "確認",
+      "byCreating": "アカウントを作成することにより、moon proのプライバシーと利用規約に同意したことになります"
+    },
+    "referralPopup": {
+      "referralCode": "紹介コードを入力してください",
+      "useReferral": "ここに紹介コードを使用",
+      "specialBonuses": "友達の紹介コードを入力して特別ボーナスをゲット！",
+      "referralCoded": "紹介コード",
+      "enterCode": "コードを入力"
+    },
+    "recovery": {
+      "recoveryKey": "回復キー",
+      "thisRecovery": "この回復キーは、moon proアカウントの資格情報を失った場合にウォレットにアクセスするためのものです",
+      "revealMyKey": "私のキーを表示",
+      "warning": "警告：この回復キーは、資格情報を失った場合にウォレットにアクセスする唯一の方法です。安全な場所に保管し、他の人と共有しないでください。"
+    }
+  },
+  "accountPopup": {
+    "security": {
+      "accountSecurity": "アカウントとセキュリティ",
+      "dayCreated": "作成日",
+      "lastLogin": "最終ログイン",
+      "referralLink": "紹介リンク",
+      "setReferralCode": "紹介コードを設定",
+      "recoveryKey": "回復キー",
+      "DONOTSHARE": "アカウントをエクスポートするためにシードフレーズにアクセスしてください。共有しないでください！",
+      "viewrecoveryVey": "回復キーを表示",
+      "language": "言語",
+      "changeLanguage": "アプリケーションの言語を変更",
+      "walletAccounts": "外部ウォレットアカウントを追加または管理",
+      "manageWallets": "ウォレットを管理",
+      "userID": "ユーザーID:"
+    },
+    "setting": {
+      "slippage": "スリッページ",
+      "slippageDesc": "価格の変動により取引で受け取るトークンがどれくらい少なくなるか。",
+      "maxGasLimit": "最大ガス制限",
+      "maxGasLimitDesc": "どんな取引にも提供する最大のガス量。設定の変更は推奨しません。",
+      "priorityFee": "優先手数料",
+      "priorityFeeDesc": "取引を早く完了させるための追加の「チップ」。優先手数料が高いほど、取引が早く処理される可能性が高くなります。",
+      "mevProtection": "MEV保護",
+      "mevProtectionDesc": "MEVボットのサンドイッチ攻撃から保護し、失敗した取引の際にガス代を節約します。",
+      "briberyamount": "賄賂額",
+      "briberyamountDesc": "取引を早く処理するために、優先手数料に追加の賄賂額を設定します。",
+      "quickbuy": "クイック購入",
+      "quickSell": "クイック売却",
+      "approve": "承認",
+      "autoBuy": "自動購入",
+      "autosell": "自動売却",
+      "cancel": "キャンセル",
+      "save": "保存",
+      "Setting": "設定",
+      "Customize": "カスタマイズ",
+      "CustomizeDesc": "クイック購入ボタンを独自の事前設定された金額でカスタマイズします。"
+    },
+    "watchlist": {
+      "watchlist": "ウォッチリスト",
+      "Cancel": "キャンセル",
+      "Save": "保存"
+    }
+  },
+  "newProfile": {
+    "winRate": "勝率",
+    "UNREALIZEDPROFITS": "未実現利益",
+    "TOTALCOST": "総コスト",
+    "TOKENAVERAGECOST": "トークン平均コスト",
+    "TOKENPROFITS": "トークン平均実現利益",
+    "SOLBALANCE": "SOL残高",
+    "Winrate": "勝率",
+    "PNL": "PNL",
+    "LIQUIDITY": "流動性",
+    "TOKENACTIVE": "トークン / 最後のアクティブ",
+    "UNREALIZED": "未実現",
+    "REALIZEDPROFIT": "実現利益",
+    "TOTALPROFIT": "総利益",
+    "BALANCE": "残高 (USD)",
+    "POSITION": "ポジション %",
+    "HOLDING": "保持期間",
+    "BOUGHT": "購入 / 平均",
+    "SOLD": "売却 / 平均",
+    "TXS": "30日TX",
+    "SellAll": "すべて売却"
+  },
+  "portfolio": {
+    "Show": "アーカイブを表示",
+    "Import": "インポート",
+    "CreateWallet": "ウォレットを作成",
+    "Balance": "残高",
+    "Holdings": "保有",
+    "Actions": "アクション",
+    "Wallet": "ウォレット"
   }
 }

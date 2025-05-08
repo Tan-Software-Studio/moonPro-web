@@ -26,6 +26,7 @@ import { FaRegStar } from "react-icons/fa";
 import Setting from "./popup/Setting";
 import AccountSecurity from "./popup/AccountSecurity";
 import Watchlist from "./popup/Watchlist";
+import { useTranslation } from "react-i18next";
 const Navbar = () => {
 
   const [mounted, setMounted] = useState(false);
@@ -51,6 +52,8 @@ const Navbar = () => {
 
   const dropdownRef = useRef(null);
   const router = useRouter();
+  const { t } = useTranslation();
+  const navbar = t("navbar");
   const dispatch = useDispatch();
   const pathname = usePathname();
 
@@ -117,7 +120,7 @@ const Navbar = () => {
                 <input
                   className={` ${isSidebarOpen ? "w-0" : "w-12"
                     } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
-                  placeholder="Search"
+                  placeholder={navbar?.profile?.search}
                 />
               </div>
 
@@ -161,7 +164,7 @@ const Navbar = () => {
                         >
                           <div className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md">
                             <PiUserLight className="text-xl" />
-                            My profile
+                            {navbar?.profile?.myProfile}
                           </div>
                         </Link>
 
@@ -173,7 +176,7 @@ const Navbar = () => {
                           className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md"
                         >
                           <MdLockOutline className="text-xl" />
-                          Account & Security
+                          {navbar?.profile?.account}
                         </div>
                         <div
                           onClick={() => {
@@ -183,7 +186,7 @@ const Navbar = () => {
                           className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md"
                         >
                           <FaRegStar className="text-xl" />
-                          My Watchlist
+                          {navbar?.profile?.watchList}
                         </div>
                         <div
                           onClick={() => {
@@ -193,7 +196,7 @@ const Navbar = () => {
                           className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md"
                         >
                           <IoSettingsOutline className="text-xl" />
-                          Setting
+                          {navbar?.profile?.setting}
                         </div>
                         <hr className="border-gray-700 my-1" />
                         <div
@@ -201,7 +204,7 @@ const Navbar = () => {
                           className="px-4 py-2 text-sm text-red-600 hover:bg-red-800 hover:text-white flex items-center gap-2 cursor-pointer rounded-md"
                         >
                           <RiLogoutBoxLine size={16} />
-                          Logout
+                          {navbar?.profile?.logout}
                         </div>
                       </div>
                     )}
@@ -215,7 +218,7 @@ const Navbar = () => {
                       }}
                       className="px-5 py-1 bg-[#1F1F1F] border-[1px] border-[#1F1F1F]  rounded-md cursor-pointer"
                     >
-                      Login
+                      {navbar?.profile?.login}
                     </div>
                     <div
                       onClick={() => {
@@ -224,7 +227,7 @@ const Navbar = () => {
                       }}
                       className="border-[1px] border-[#0E43BD] rounded-md cursor-pointer bg-[#11265B] px-5 py-1 "
                     >
-                      Sign up
+                      {navbar?.profile?.signup}
                     </div>
                   </>
                 )}
@@ -236,9 +239,7 @@ const Navbar = () => {
                 onClick={() => dispatch(setIsSidebarOpen(!isSidebarOpen))}
               >
                 <IoMenu className="text-[30px] text-[#fdf5f5] p-[2px]" />
-              </div>
-
-
+              </div> 
             </div>
           </div>
         </div>
@@ -255,7 +256,7 @@ const Navbar = () => {
             setAuthName={setAuthName}
           />
         )}
-        
+
         {isSettingPopup &&
           <Setting setIsSettingPopup={setIsSettingPopup} />
         }

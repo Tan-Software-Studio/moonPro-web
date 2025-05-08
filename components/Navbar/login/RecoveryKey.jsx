@@ -3,11 +3,14 @@ import toast from 'react-hot-toast';
 import { IoMdClose } from 'react-icons/io'
 import { MdContentCopy } from "react-icons/md";
 import { AnimatePresence, motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 
 const RecoveryKey = ({ setIsLoginPopup, verifyData, setVerifyData }) => {
 
     const [isRevealed, setIsRevealed] = useState(false);
+    const { t } = useTranslation();
+    const navbar = t("navbar");
     const handleClose = () => {
         setIsLoginPopup(false);
         setVerifyData({})
@@ -51,12 +54,12 @@ const RecoveryKey = ({ setIsLoginPopup, verifyData, setVerifyData }) => {
                     />
 
                     <div className='p-8'>
-                        <h2 className="text-2xl font-semibold text-center text-white">Recovery Key</h2>
+                        <h2 className="text-2xl font-semibold text-center text-white">{navbar?.recovery?.recoveryKey}</h2>
                         <div className='mt-4'>
-                            <div className='text-sm text-center'>This recovery key will allow you to access your wallet if you ever lose your credential to your moon pro account</div>
+                            <div className='text-sm text-center'>{navbar?.recovery?.thisRecovery}</div>
                         </div>
                         <div className='mt-4  w-full'>
-                            <div className="text-sm text-[#6E6E6E] mt-2 mb-1 block">Recovery key </div>
+                            <div className="text-sm text-[#6E6E6E] mt-2 mb-1 block">{navbar?.recovery?.recoveryKey}   </div>
                             <div className={`flex w-full border-[1px] border-[#404040] rounded-md  mt-1 p-3  bg-[#1F1F1F] ${!isRevealed ? 'blur-sm select-none' : ''}`}>
                                 <div className='w-[90%] overflow-x-hidden  break-words text-sm '>{verifyData?.data?.solPhrase}</div>
                                 <div className='cursor-pointer w-[10%]'>
@@ -71,17 +74,17 @@ const RecoveryKey = ({ setIsLoginPopup, verifyData, setVerifyData }) => {
                             onClick={() => setIsRevealed(!isRevealed)}
                             className={`mt-6 w-full rounded-lg text-sm py-3 font-semibold transition bg-[#11265B] hover:bg-[#133D94] border border-[#0E43BD] text-white shadow-md`}
                         >
-                            Reveal my key
+                            {navbar?.recovery?.revealMyKey}
                         </button>
                     </div>
                     <div className='text-xs border-t-[1px] border-t-[#404040] mt-3 text-center'>
                         <div className=' p-4'>
-                            WARNING: This recovery key is the only way to access your wallet if you lose your credentials. Store it in a safe place and do not share it with anyone.
+                            {navbar?.recovery?.warning}
                         </div>
                     </div>
                 </motion.div>
             </motion.div>
-            
+
         </AnimatePresence>
     )
 }

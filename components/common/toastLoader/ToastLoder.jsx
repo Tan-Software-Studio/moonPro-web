@@ -10,11 +10,11 @@ export function showToastLoader (title, id) {
             position: "top-center",
             duration: Infinity,
             style: {
-                border: "1px solid #4D4D4D",
+                border: "1px solid #2A2A2A",
                 color: "#FFFFFF",
                 fontSize: "14px",
                 letterSpacing: "1px",
-                backgroundColor: "#1F1F1F",
+                backgroundColor: "#141414",
             },
         }
     );

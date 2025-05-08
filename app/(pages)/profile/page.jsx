@@ -8,6 +8,7 @@ import { BiCheckDouble } from "react-icons/bi";
 import { HiArrowsUpDown } from "react-icons/hi2";
 import { IoCopyOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const Profile = () => {
   const [isActive, setIsActive] = useState("All");
@@ -16,13 +17,15 @@ const Profile = () => {
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
+  const { t } = useTranslation();
+  const newProfile = t("newProfile");
   const handleCopy = (mintAddress) => {
     setCopied(true);
     if (mintAddress) {
       const formattedAddress = mintAddress;
       navigator.clipboard
         ?.writeText(formattedAddress)
-        .then(() => {})
+        .then(() => { })
         .catch((err) => {
           console.error("Failed to copy: ", err?.message);
         });
@@ -54,8 +57,8 @@ const Profile = () => {
                   <span className="block sm:hidden">{`${solWalletAddress
                     ?.toString()
                     ?.slice(0, 4)}...${solWalletAddress
-                    ?.toString()
-                    ?.slice(-4)}`}</span>
+                      ?.toString()
+                      ?.slice(-4)}`}</span>
                   {copied ? (
                     <BiCheckDouble className="text-[20px]" />
                   ) : (
@@ -73,9 +76,8 @@ const Profile = () => {
                 {["All", "1D", "7D", "1M"].map((item, index) => (
                   <div
                     onClick={() => setIsActive(item)}
-                    className={`px-2 md:px-3 py-1 md:py-2 cursor-pointer rounded-md ${
-                      isActive == item ? "bg-[#1F73FC]" : ""
-                    }`}
+                    className={`px-2 md:px-3 py-1 md:py-2 cursor-pointer rounded-md ${isActive == item ? "bg-[#1F73FC]" : ""
+                      }`}
                     key={index}
                   >
                     {item}
@@ -103,11 +105,10 @@ const Profile = () => {
             {["Recent PnL", "Holdings", "Activity"].map((item, index) => (
               <div
                 onClick={() => setTableTab(item)}
-                className={`${
-                  tableTab == item
-                    ? "text-[#278BFE] border-b-[#278BFE] py-1"
-                    : "text-[#A8A8A8] border-b-transparent py-1"
-                } transition-all duration-300 ease-in-out cursor-pointer border-b-[1px] flex text-sm md:text-base items-center gap-3 whitespace-nowrap`}
+                className={`${tableTab == item
+                  ? "text-[#278BFE] border-b-[#278BFE] py-1"
+                  : "text-[#A8A8A8] border-b-transparent py-1"
+                  } transition-all duration-300 ease-in-out cursor-pointer border-b-[1px] flex text-sm md:text-base items-center gap-3 whitespace-nowrap`}
                 key={index}
               >
                 {item}
@@ -120,16 +121,15 @@ const Profile = () => {
             <table className="w-full min-w-[900px]">
               <thead className="w-full ">
                 {[
-                  "TOKEN/LAST ACTIVE",
-                  "UNREALIZED",
-                  "REALIZED PROFIT",
-                  "TOTAL PROFIT",
-                  "BALANCE (USD)",
-                  "POSITION %",
-                  "HOLDING DURATION",
-                  "BOUGHT/AVERAGE",
-                  "SOLD/AVERAGE",
-                  "30D TXS",
+                  newProfile?.TOKENACTIVE,
+                  newProfile?.UNREALIZED,
+                  newProfile?.REALIZEDPROFIT,
+                  newProfile?.TOTALPROFIT,
+                  newProfile?.BALANCE,
+                  newProfile?.POSITION,
+                  newProfile?.HOLDING,
+                  newProfile?.BOUGHT,
+                  newProfile?.TXS,
                 ].map((item, index) => (
                   <th key={index}>
                     <td className="text-[#A8A8A8] px-2 font-semibold flex items-center  py-3 text-xs md:text-sm whitespace-nowrap">
@@ -171,7 +171,7 @@ const Profile = () => {
                   </td>
 
                   <td className="text-xs md:text-sm px-2 whitespace-nowrap">
-                    Sell All
+                    {newProfile?.SellAll}
                   </td>
 
                   <td className="text-xs md:text-sm px-2 whitespace-nowrap">

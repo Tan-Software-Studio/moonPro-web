@@ -16,6 +16,7 @@ import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { FaUserFriends } from "react-icons/fa";
 import { motion } from "framer-motion";
 import RefferalPopup from "./RefferalPopup";
+import { useTranslation } from "react-i18next";
 
 const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
   const dispatch = useDispatch();
@@ -31,17 +32,20 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
   const [isDisable, setIsDisable] = useState(false);
   const [isReffaralCode, setIsReffaralCode] = useState(false);
 
+  const { t } = useTranslation();
+  const navbar = t("navbar");
+
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
   const handleOtpPopup = async () => {
     const trimmedEmail = email.trim();
     const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
     if (trimmedEmail === "") {
-      setError("Please enter your email");
+      setError(navbar?.loginPopup?.enterEmail);
       return;
     }
     if (!gmailRegex.test(trimmedEmail)) {
-      setError("Please enter a valid email address");
+      setError(navbar?.loginPopup?.validEmail);
       return;
     } else {
       setError("");
@@ -52,7 +56,7 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
     const referralId = refferalCode.trim();
     if (authName == "login") {
       if (!password) {
-        toast.error("Password is required");
+        toast.error(navbar?.loginPopup?.enterPassword);
         return;
       }
     }
@@ -186,19 +190,19 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
               {authName !== "login" ? (
                 <>
                   <h1 className="text-3xl font-bold text-center text-white">
-                    Create Account
+                    {navbar?.loginPopup?.creatAccount}
                   </h1>
                   <p className="text-sm text-[#6E6E6E] text-center mt-1">
-                    Please enter your details
+                    {navbar?.loginPopup?.creatAccountDesc}
                   </p>
                 </>
               ) : (
                 <>
                   <h1 className="text-3xl font-bold text-center text-white">
-                    Welcome Back
+                    {navbar?.loginPopup?.welcomeBack}
                   </h1>
                   <p className="text-sm text-[#6E6E6E] text-center mt-1">
-                    Log in to your account
+                    {navbar?.loginPopup?.loginInAccouont}
                   </p>
                 </>
               )}
@@ -206,13 +210,13 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
               {/* Email */}
               <div className="mt-6">
                 <label className="text-sm text-[#6E6E6E] mb-1 block">
-                  Email
+                  {navbar?.loginPopup?.email}
                 </label>
                 <div className="flex items-center gap-3 bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
                   <MdOutlineEmail size={20} className="text-[#6E6E6E]" />
                   <input
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder={navbar?.loginPopup?.enterEmailPlace}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-transparent text-sm text-white placeholder-[#6E6E6E] focus:outline-none"
                   />
@@ -224,14 +228,14 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
               {authName === "login" ? (
                 <div className="mt-4">
                   <label className="text-sm text-[#6E6E6E] mb-1 block">
-                    Password
+                    {navbar?.loginPopup?.password}
                   </label>
                   <div className="flex items-center justify-between bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
                     <div className="flex items-center gap-3 w-full">
                       <FiLock size={20} className="text-[#6E6E6E]" />
                       <input
                         type={!showPassword ? "password" : "text"}
-                        placeholder="Password"
+                        placeholder={navbar?.loginPopup?.password}
                         onChange={(e) => setPasswordInput(e.target.value)}
                         className="w-full bg-transparent text-sm text-white placeholder-[#6E6E6E] focus:outline-none"
                       />
@@ -254,13 +258,13 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
               ) : (
                 <div className="mt-4">
                   <label className="text-sm text-[#6E6E6E] mb-1 block">
-                    Invite code
+                    {navbar?.loginPopup?.inviteCode}
                   </label>
                   <div className="flex items-center gap-3 bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
                     <FaUserFriends size={20} className="text-[#6E6E6E]" />
                     <input
                       type="text"
-                      placeholder="Invite code (optional)"
+                      placeholder={navbar?.loginPopup?.inviteCodePlace}
                       onChange={(e) => setRefferalCode(e.target.value)}
                       className="w-full bg-transparent text-sm text-white placeholder-[#6E6E6E] focus:outline-none"
                     />
@@ -272,11 +276,10 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
               <button
                 onClick={handleOtpPopup}
                 disabled={isDisable}
-                className={`mt-6 w-full rounded-lg text-sm py-3 font-semibold transition ${
-                  isDisable
-                    ? "bg-[#11265B] cursor-not-allowed"
-                    : "bg-[#11265B] hover:bg-[#133D94]"
-                } border border-[#0E43BD] text-white shadow-md`}
+                className={`mt-6 w-full rounded-lg text-sm py-3 font-semibold transition ${isDisable
+                  ? "bg-[#11265B] cursor-not-allowed"
+                  : "bg-[#11265B] hover:bg-[#133D94]"
+                  } border border-[#0E43BD] text-white shadow-md`}
               >
                 {!isDisable ? (
                   authName === "login" ? (
@@ -294,7 +297,7 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
               {/* Divider */}
               <div className="flex items-center justify-center my-5 text-sm text-[#6E6E6E]">
                 <div className="flex-grow border-t border-[#333]"></div>
-                <span className="px-3">Or continue with</span>
+                <span className="px-3"> {navbar?.loginPopup?.continueWith}</span>
                 <div className="flex-grow border-t border-[#333]"></div>
               </div>
 
@@ -311,7 +314,7 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
                   className="w-5 h-5 object-contain"
                 />
                 <span className="text-[#1F1F1F] font-semibold ml-3">
-                  Continue with Google
+                  {navbar?.loginPopup?.continueGoogle}
                 </span>
               </div>
 
@@ -319,22 +322,22 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
               <div className="text-sm mt-5 text-center text-white">
                 {authName !== "login" ? (
                   <>
-                    Already have an account?{" "}
+                    {navbar?.loginPopup?.haveaccount} {" "}
                     <span
                       className="text-[#1F73FC] cursor-pointer hover:underline"
                       onClick={() => setAuthName("login")}
                     >
-                      Login
+                      {navbar?.loginPopup?.login}
                     </span>
                   </>
                 ) : (
                   <>
-                    Don&apos;t have an account?{" "}
+                    {navbar?.loginPopup?.dontAccount}  {" "}
                     <span
                       className="text-[#1F73FC] cursor-pointer hover:underline"
                       onClick={() => setAuthName("signup")}
                     >
-                      Sign up
+                      {navbar?.loginPopup?.signup}
                     </span>
                   </>
                 )}
@@ -342,8 +345,7 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
             </div>
             <div className="text-xs border-t-[1px] border-t-[#404040] mt-3 text-center">
               <div className="p-6">
-                By creating an account, you agree to moon pro&aspos;s Privacy
-                Policy and Terms of Service
+                {navbar?.loginPopup?.byCreating}
               </div>
             </div>
           </motion.div>

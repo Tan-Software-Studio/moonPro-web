@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { FaRegCopy, FaStar } from "react-icons/fa";
 import { IoIosKey } from "react-icons/io";
 import { IoEyeOff } from "react-icons/io5";
@@ -15,7 +16,10 @@ import { useDispatch } from "react-redux";
 
 export default function Portfolio() {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false)
   const [walletAddresses, setWalletAddresses] = useState([]);
+  const { t } = useTranslation();
+  const portfolio = t("portfolio");
 
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
@@ -23,7 +27,7 @@ export default function Portfolio() {
     const jwtToken = localStorage.getItem("token");
     if (!jwtToken) return 0;
     try {
-      // setIsLoading(true);
+      setIsLoading(true);
       const response = await axios.get(`${baseUrl}user/getAllWallets`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
@@ -34,8 +38,10 @@ export default function Portfolio() {
         response?.data?.data?.wallets?.walletAddressSOL
       );
       setWalletAddresses(response?.data?.data?.wallets?.walletAddressSOL);
+      setIsLoading(false);
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
     }
   };
 
@@ -93,7 +99,7 @@ export default function Portfolio() {
     const jwtToken = localStorage.getItem("token");
     if (!jwtToken) return 0;
 
-    showToastLoader("Processing transaction...", "wallet-toast");
+    showToastLoader("Creating wallet...", "wallet-toast");
     await axios.put(`${baseUrl}user/generateSolWallet`, {},
       {
         headers: {
@@ -105,7 +111,7 @@ export default function Portfolio() {
       .then(async (response) => {
 
         const generatedWallet = response?.data?.data?.wallet
-        toast.success(response?.data?.message, {
+        toast.success("Wallet created successfully", {
           id: 'wallet-toast',
           duration: 2000
         })
@@ -115,7 +121,7 @@ export default function Portfolio() {
       })
       .catch((error) => {
         console.error(error);
-        toast.error(error?.response?.message, {
+        toast.error("Wallet is not created", {
           id: 'wallet-toast',
           duration: 2000
         })
@@ -136,6 +142,7 @@ export default function Portfolio() {
 
   return (
     <div className="bg-[#08080E] text-white p-4 md:p-6">
+      <div className="md:text-2xl text-xl py-2 font-semibold ">Create Wallet</div>
       <div className="border-[#404040] border-[1px] rounded-lg">
         <div className="flex flex-col  ">
           {/* Header & Search Bar */}
@@ -155,17 +162,17 @@ export default function Portfolio() {
               <button
                 className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-sm `}
               >
-                <span>Show Archived</span>
+                <span>{portfolio?.Show} </span>
               </button>
 
               <button className="flex items-center space-x-2 px-3 py-1.5 bg-gray-800 rounded-lg text-sm">
-                <span>Import</span>
+                <span>{portfolio?.Import}</span>
               </button>
 
               <button
                 onClick={handleCreateMultiWallet}
                 className="flex items-center space-x-2 px-3 py-1.5 bg-blue-600 rounded-lg text-sm">
-                <span>Create Wallet</span>
+                <span>{portfolio?.CreateWallet}</span>
               </button>
             </div>
           </div>
@@ -175,103 +182,115 @@ export default function Portfolio() {
               <thead>
                 <tr className="bg-gray-800 text-left text-gray-400 text-sm">
                   <th className="py-4 px-5 font-medium w-1/12">#</th>
-                  <th className="py-4 px-5 font-medium w-5/12">Wallet</th>
+                  <th className="py-4 px-5 font-medium w-5/12">{portfolio?.Wallet}</th>
                   <th className="py-4 px-5 font-medium w-2/12 text-center md:text-left">
-                    Balance
+                    {portfolio?.Balance}
                   </th>
                   <th className="py-4 px-5 font-medium w-2/12 text-center md:text-left">
-                    Holdings
+                    {portfolio?.Holdings}
                   </th>
                   <th className="py-4 px-5 font-medium w-3/12 text-right">
-                    Actions
+                    {portfolio?.Actions}
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {walletAddresses.map((wallet, index) => (
-                  <tr
-                    key={index + 1}
-                    className={`transition-colors hover:bg-gray-800/50 ${wallet.primary
-                      ? "bg-gradient-to-r from-amber-900/30 to-transparent border-l-4 border-amber-500"
-                      : index % 2 === 0 ? "bg-gray-800/20" : ""
-                      }`}
-                  >
-                    {/* Wallet number */}
-                    <td className="py-4 px-6">{index + 1}</td>
-
-                    {/* Wallet address */}
-                    <td className="py-4 px-6">
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2">
-                          {wallet.primary && (
-                            <FaStar className="text-amber-500" size={16} />
-                          )}
-                          <div className={`font-medium ${wallet.primary ? "text-amber-500" : ""}`}>
-                            {wallet.primary ? "Primary Wallet" : "Wallet"}
-                          </div>
-                        </div>
-                        <button
-                          onClick={() => copyToClipboard(wallet.wallet)}
-                          className="text-xs text-gray-400 flex items-center hover:text-gray-200 transition-colors bg-gray-800/50 py-1 px-2 rounded-md"
-                        >
-                          {`${wallet?.wallet.slice(0, 4)}...${wallet?.wallet.slice(-4)}`}
-                          <FaRegCopy size={12} className="ml-2" />
-                        </button>
-                      </div>
-                    </td>
-
-                    {/* Balance */}
-                    <td className="py-4 px-6">
-                      <div className="flex items-center gap-2 ">
-                        <Image
-                          src={solana}
-                          width={20}
-                          height={20}
-                          alt="solana"
-                          className="rounded-full"
-                        />
-                        <span>{wallet?.balance || 0}</span>
-                      </div>
-                    </td>
-
-                    {/* Holdings */}
-                    <td className="py-4 px-6">
-                      <div className="flex items-center justify-center text-center md:justify-start space-x-2">
-                        {/* <div className="w-5 h-5 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full"></div> */}
-                        <div>{wallet?.holdings || 0}</div>
-                      </div>
-                    </td>
-
-                    {/* Actions */}
-                    <td className="py-4 px-6">
-                      <div className="flex items-center justify-end space-x-1">
-                        <button className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-gray-100" title="Archive wallet">
-                          <IoEyeOff size={18} />
-                        </button>
-
-                        <Link
-                          href={`https://solscan.io/account/${wallet?.wallet}`}
-                          target="_blank"
-                          className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-gray-100" title="Open in Solscan">
-                          <RiShareBoxLine size={18} />
-                        </Link>
-                        <button className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-gray-100" title="Export private key">
-                          <IoIosKey size={18} />
-                        </button>
-                        {!wallet?.primary && (
-                          <button
-                            onClick={() => handlePrimary(wallet?.index, index)}
-                            className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-amber-500"
-                            title="Set as primary"
-                          >
-                            <FaStar size={18} />
-                          </button>
-                        )}
-
+                {isLoading ? (
+                  <tr>
+                    <td colSpan="5">
+                      <div className="flex justify-center items-center min-h-[40vh]  ">
+                        <span class="Tableloader"></span>
                       </div>
                     </td>
                   </tr>
-                ))}
+                ) : (
+
+                  walletAddresses.map((wallet, index) => (
+                    <tr
+                      key={index + 1}
+                      className={`transition-colors hover:bg-gray-800/50 ${wallet.primary
+                        ? "bg-gradient-to-r from-amber-900/30 to-transparent border-l-4 border-amber-500"
+                        : index % 2 === 0 ? "bg-gray-800/20" : ""
+                        }`}
+                    >
+                      {/* Wallet number */}
+                      <td className="py-4 px-6">{index + 1}</td>
+
+                      {/* Wallet address */}
+                      <td className="py-4 px-6">
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2">
+                            {wallet.primary && (
+                              <FaStar className="text-amber-500" size={16} />
+                            )}
+                            <div className={`font-medium ${wallet.primary ? "text-amber-500" : ""}`}>
+                              {wallet.primary ? "Primary Wallet" : "Wallet"}
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => copyToClipboard(wallet.wallet)}
+                            className="text-xs text-gray-400 flex items-center hover:text-gray-200 transition-colors bg-gray-800/50 py-1 px-2 rounded-md"
+                          >
+                            {`${wallet?.wallet.slice(0, 4)}...${wallet?.wallet.slice(-4)}`}
+                            <FaRegCopy size={12} className="ml-2" />
+                          </button>
+                        </div>
+                      </td>
+
+                      {/* Balance */}
+                      <td className="py-4 px-6">
+                        <div className="flex items-center gap-2 ">
+                          <Image
+                            src={solana}
+                            width={20}
+                            height={20}
+                            alt="solana"
+                            className="rounded-full"
+                          />
+                          <span>{wallet?.balance || 0}</span>
+                        </div>
+                      </td>
+
+                      {/* Holdings */}
+                      <td className="py-4 px-6">
+                        <div className="flex items-center justify-center text-center md:justify-start space-x-2">
+                          {/* <div className="w-5 h-5 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full"></div> */}
+                          <div>{wallet?.holdings || 0}</div>
+                        </div>
+                      </td>
+
+                      {/* Actions */}
+                      <td className="py-4 px-6">
+                        <div className="flex items-center justify-end space-x-1">
+                          <button className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-gray-100" title="Archive wallet">
+                            <IoEyeOff size={18} />
+                          </button>
+
+                          <Link
+                            href={`https://solscan.io/account/${wallet?.wallet}`}
+                            target="_blank"
+                            className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-gray-100" title="Open in Solscan">
+                            <RiShareBoxLine size={18} />
+                          </Link>
+                          <button className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-gray-100" title="Export private key">
+                            <IoIosKey size={18} />
+                          </button>
+                          {!wallet?.primary && (
+                            <button
+                              onClick={() => handlePrimary(wallet?.index, index)}
+                              className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-amber-500"
+                              title="Set as primary"
+                            >
+                              <FaStar size={18} />
+                            </button>
+                          )}
+
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )
+                }
               </tbody>
             </table>
           </div>

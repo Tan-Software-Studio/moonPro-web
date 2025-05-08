@@ -1,36 +1,38 @@
 import React from "react";
-import { ProgressBar } from "react-loader-spinner";
+import { useTranslation } from "react-i18next";
 
 const ProfileTable = ({ title }) => {
+  const { t } = useTranslation();
+  const newProfile = t("newProfile");
   const pnlData = [
     {
       id: 1,
-      title: "win RATE",
+      title: newProfile?.winRate,
       amount: "$0",
     },
     {
       id: 2,
-      title: "UNREALIZED PROFITS",
+      title: newProfile?.UNREALIZEDPROFITS,
       amount: "$0",
     },
     {
       id: 3,
-      title: "TOTAL COST",
+      title: newProfile?.TOTALCOST,
       amount: "$0",
     },
     {
       id: 4,
-      title: "TOKEN AVERAGE COST",
+      title: newProfile?.TOKENAVERAGECOST,
       amount: "$0",
     },
     {
       id: 5,
-      title: "TOKEN AVERAGE REALIZED PROFITS",
+      title: newProfile?.TOKENPROFITS,
       amount: "$0",
     },
     {
       id: 6,
-      title: "SOL BALANCE",
+      title: newProfile?.SOLBALANCE,
       amount: "0 SOL ($0)",
     },
   ];
@@ -79,26 +81,26 @@ const ProfileTable = ({ title }) => {
           <div className="flex items-center justify-between">
             <div>
               <div className="text-[#A8A8A8] text-xs md:text-sm uppercase">
-                PNL
+               {newProfile?.PNL} 
               </div>
               <div className="text-base md:text-lg">$293.2K</div>
             </div>
             <div>
               <div className="text-[#A8A8A8] text-xs md:text-sm uppercase">
-                Winrate
+              {newProfile?.Winrate} 
               </div>
               <div className="text-base md:text-lg">45.59%</div>
             </div>
           </div>
           <div>
             <div className="text-[#A8A8A8] text-xs md:text-sm uppercase">
-              USD
+           USD
             </div>
             <div className="text-base md:text-lg">$20.2K</div>
           </div>
           <div>
             <div className="text-[#A8A8A8] text-xs md:text-sm uppercase">
-              LIQUIDITY
+              {newProfile?.LIQUIDITY}
             </div>
             <div className="text-base md:text-lg">$10.94K</div>
           </div>

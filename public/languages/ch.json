@@ -613,5 +613,143 @@
         }
       }
     }
+  },
+  "navbar": {
+    "profile": {
+      "search": "搜索",
+      "myProfile": "我的资料",
+      "account": "账户与安全",
+      "watchList": "关注列表",
+      "setting": "设置",
+      "logout": "登出",
+      "login": "登录",
+      "signup": "注册"
+    },
+    "loginPopup": {
+      "enterEmail": "请输入您的邮箱",
+      "validEmail": "请输入有效的邮箱地址",
+      "enterPassword": "请输入密码",
+      "creatAccount": "创建账户",
+      "creatAccountDesc": "请输入您的信息",
+      "welcomeBack": "欢迎回来",
+      "loginInAccouont": "登录您的账户",
+      "email": "邮箱",
+      "enterEmailPlace": "输入邮箱",
+      "password": "密码",
+      "inviteCode": "邀请码",
+      "inviteCodePlace": "邀请码（可选）",
+      "continueWith": "或通过以下方式继续",
+      "continueGoogle": "使用 Google 继续",
+      "haveaccount": "已有账户？",
+      "login": "登录",
+      "signup": "注册",
+      "dontAccount": "还没有账户？",
+      "byCreating": "创建账户即表示您同意 moon pro 的隐私政策和服务条款"
+    },
+    "otpPopup": {
+      "required": "验证码是必需的",
+      "notValid": "验证码无效",
+      "longPassword": "密码长度至少为8个字符",
+      "lowercaseChar": "密码至少包含一个小写字母",
+      "uppercaseChar": "密码至少包含一个大写字母",
+      "oneDigit": "密码至少包含一个数字",
+      "specialChar": "密码至少包含一个特殊字符（@$!%*?#&）",
+      "confirmPpassword": "请确认密码",
+      "passwordSame": "新密码与确认密码必须相同",
+      "confirmationCode": "验证码",
+      "verifactionCode": "我们已发送验证码至",
+      "password": "密码",
+      "confirmPassword": "确认密码",
+      "verify": "验证",
+      "byCreating": "创建账户即表示您同意 moon pro 的隐私政策和服务条款"
+    },
+    "referralPopup": {
+      "referralCode": "请输入推荐码",
+      "useReferral": "在此输入推荐码",
+      "specialBonuses": "输入好友的推荐码可获得专属奖励！",
+      "referralCoded": "推荐码",
+      "enterCode": "输入代码"
+    },
+    "recovery": {
+      "recoveryKey": "恢复密钥",
+      "thisRecovery": "此恢复密钥可在您丢失 moon pro 帐号凭据时帮助访问钱包",
+      "revealMyKey": "显示我的密钥",
+      "warning": "警告：此恢复密钥是您在丢失凭据时访问钱包的唯一方式，请妥善保管，不要与任何人分享。"
+    }
+  },
+  "accountPopup": {
+    "security": {
+      "accountSecurity": "账户与安全",
+      "dayCreated": "创建日期",
+      "lastLogin": "上次登录",
+      "referralLink": "推荐链接",
+      "setReferralCode": "设置推荐码",
+      "recoveryKey": "恢复密钥",
+      "DONOTSHARE": "访问您的恢复短语以导出账户。请勿分享！",
+      "viewrecoveryVey": "查看恢复密钥",
+      "language": "语言",
+      "changeLanguage": "更改应用语言",
+      "walletAccounts": "添加或管理您的外部钱包账户",
+      "manageWallets": "管理钱包",
+      "userID": "用户 ID："
+    },
+    "setting": {
+      "slippage": "滑点容差",
+      "slippageDesc": "您愿意因价格波动而接受的最低代币数量",
+      "maxGasLimit": "最大 Gas 限额",
+      "maxGasLimitDesc": "您愿意为任何交易支付的最大 Gas 数量。强烈建议不要修改此设置。",
+      "priorityFee": "优先费",
+      "priorityFeeDesc": "额外小费可加快交易速度，优先费越高，交易越容易被优先处理。",
+      "mevProtection": "MEV 保护",
+      "mevProtectionDesc": "启用后可防止 MEV 机器人进行三明治攻击，并在交易失败时节省 Gas 费用。",
+      "briberyamount": "贿赂金额",
+      "briberyamountDesc": "设置高于优先费的额外贿赂金额，以便矿工优先处理您的交易。",
+      "quickbuy": "快速购买",
+      "quickSell": "快速出售",
+      "approve": "授权",
+      "autoBuy": "自动购买",
+      "autosell": "自动出售",
+      "cancel": "取消",
+      "save": "保存",
+      "Setting": "设置",
+      "Customize": "自定义",
+      "CustomizeDesc": "使用您预设的金额自定义快速购买按钮"
+    },
+    "watchlist": {
+      "watchlist": "关注列表",
+      "Cancel": "取消",
+      "Save": "保存"
+    }
+  },
+  "newProfile": {
+    "winRate": "胜率",
+    "UNREALIZEDPROFITS": "未实现利润",
+    "TOTALCOST": "总成本",
+    "TOKENAVERAGECOST": "代币平均成本",
+    "TOKENPROFITS": "代币平均利润",
+    "SOLBALANCE": "SOL 余额",
+    "Winrate": "胜率",
+    "PNL": "盈亏",
+    "LIQUIDITY": "流动性",
+    "TOKENACTIVE": "代币/上次活动",
+    "UNREALIZED": "未实现",
+    "REALIZEDPROFIT": "已实现利润",
+    "TOTALPROFIT": "总利润",
+    "BALANCE": "余额 (USD)",
+    "POSITION": "持仓百分比",
+    "HOLDING": "持有时间",
+    "BOUGHT": "买入 / 平均",
+    "SOLD": "卖出 / 平均",
+    "TXS": "30 天交易数",
+    "SellAll": "全部卖出"
+  },
+  "portfolio": {
+    "Show": "显示已归档",
+    "Import": "导入",
+    "CreateWallet": "创建钱包",
+    "Balance": "余额",
+    "Holdings": "持仓",
+    "Actions": "操作",
+    "Wallet": "钱包"
   }
 }

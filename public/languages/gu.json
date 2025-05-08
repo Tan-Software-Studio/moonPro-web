@@ -612,5 +612,143 @@
         }
       }
     }
+  },
+  "navbar": {
+    "profile": {
+      "search": "શોધો",
+      "myProfile": "મારું પ્રોફાઇલ",
+      "account": "Account & Security",
+      "watchList": "મારી વોચલિસ્ટ",
+      "setting": "સેટિંગ",
+      "logout": "લૉગઆઉટ",
+      "login": "લૉગિન",
+      "signup": "સાઇન અપ"
+    },
+    "loginPopup": {
+      "enterEmail": "કૃપા કરીને તમારું ઈમેઈલ દાખલ કરો",
+      "validEmail": "કૃપા કરીને માન્ય ઈમેઈલ સરનામું દાખલ કરો",
+      "enterPassword": "પાસવર્ડ જરૂરી છે",
+      "creatAccount": "એકાઉન્ટ બનાવો",
+      "creatAccountDesc": "કૃપા કરીને તમારી વિગતો દાખલ કરો",
+      "welcomeBack": "પાછા આવવા માટે સ્વાગત છે",
+      "loginInAccouont": "તમારા account માં લૉગિન કરો",
+      "email": "ઈમેઈલ",
+      "enterEmailPlace": "તમારું ઈમેઈલ દાખલ કરો",
+      "password": "પાસવર્ડ",
+      "inviteCode": "આમંત્રણ કોડ",
+      "inviteCodePlace": "આમંત્રણ કોડ (વૈકલ્પિક)",
+      "continueWith": "અથવા ચાલુ રાખો",
+      "continueGoogle": "Google સાથે ચાલુ રાખો",
+      "haveaccount": "પહેલેથી એકાઉન્ટ છે?",
+      "login": "લૉગિન",
+      "signup": "સાઇન અપ",
+      "dontAccount": "એકાઉન્ટ નથી?",
+      "byCreating": "એકાઉન્ટ બનાવીને, તમે moon pro ની Privacy અને Terms of Service ને સહમત છો"
+    },
+    "otpPopup": {
+      "required": "OTP જરૂરી છે",
+      "notValid": "OTP માન્ય નથી",
+      "longPassword": "પાસવર્ડ ઓછામાં ઓછો 8 અક્ષરોનો હોવો જોઈએ.",
+      "lowercaseChar": "પાસવર્ડમાં ઓછામાં ઓછો એક નાનો અક્ષર હોવો જોઈએ.",
+      "uppercaseChar": "પાસવર્ડમાં ઓછામાં ઓછો એક મોટો અક્ષર હોવો જોઈએ.",
+      "oneDigit": "પાસવર્ડમાં ઓછામાં ઓછો એક અંક હોવો જોઈએ.",
+      "specialChar": "પાસવર્ડમાં એક વિશેષ અક્ષર હોવું જોઈએ (@$!%*?#&).",
+      "confirmPpassword": "કન્ફર્મ પાસવર્ડ જરૂરી છે",
+      "passwordSame": "નવો પાસવર્ડ અને કન્ફર્મ પાસવર્ડ સમાન હોવા જોઈએ",
+      "confirmationCode": "પુષ્ટિ કોડ",
+      "verifactionCode": "અમે એક પુષ્ટિ કોડ મોકલ્યો છે",
+      "password": "પાસવર્ડ",
+      "confirmPassword": "કન્ફર્મ પાસવર્ડ",
+      "verify": "ચકાસો",
+      "byCreating": "એકાઉન્ટ બનાવીને, તમે moon pro ની Privacy અને Terms of Service ને સહમત છો"
+    },
+    "referralPopup": {
+      "referralCode": "કૃપા કરીને રેફરલ કોડ દાખલ કરો",
+      "useReferral": "અહીં રેફરલ કોડનો ઉપયોગ કરો",
+      "specialBonuses": "વિશેષ બોનસ મેળવવા માટે તમારા મિત્રનો રેફરલ કોડ દાખલ કરો!",
+      "referralCoded": "રેફરલ કોડ",
+      "enterCode": "કોડ દાખલ કરો"
+    },
+    "recovery": {
+      "recoveryKey": "રીકવરી કી",
+      "thisRecovery": "આ રીકવરી કી તમને તમારા moon pro account ની ઓળખ ગુમાવ્યા પછી તમારા વૉલેટને access કરવાની મંજૂરી આપશે",
+      "revealMyKey": "મારી કી બતાવો",
+      "warning": "ચેતવણી: જો તમે તમારી ઓળખ ગુમાવશો તો આ રીકવરી કી તમારા વૉલેટને access કરવાની એકમાત્ર રીત છે. તેને સુરક્ષિત જગ્યાએ રાખો અને કોઈ સાથે શેર ન કરો."
+    }
+  },
+  "accountPopup": {
+    "security": {
+      "accountSecurity": "Account & Security",
+      "dayCreated": "બનાવવાની તારીખ",
+      "lastLogin": "છેલ્લો લૉગિન",
+      "referralLink": "રેફરલ લિંક",
+      "setReferralCode": "રેફરલ કોડ સેટ કરો",
+      "recoveryKey": "રીકવરી કી",
+      "DONOTSHARE": "તમારા એકાઉન્ટ્સ export કરવા માટે તમારા seed phrase ને access કરો. શેર ન કરો!",
+      "viewrecoveryVey": "રીકવરી કી જુઓ",
+      "language": "ભાષા",
+      "changeLanguage": "એપ્લિકેશનની ભાષા બદલો",
+      "walletAccounts": "તમારા external wallet accounts ઉમેરો અથવા મેનેજ કરો",
+      "manageWallets": "વૉલેટ્સ મેનેજ કરો",
+      "userID": "યૂઝર ID:"
+    },
+    "setting": {
+      "slippage": "સ્લિપેજ",
+      "slippageDesc": "પ્રાઈસ વોલેટિલિટી કારણે તમે કેટલા ઓછા ટોકન્સ સ્વીકારવા તૈયાર છો.",
+      "maxGasLimit": "મહત્તમ ગેસ મર્યાદા",
+      "maxGasLimitDesc": "કોઈપણ ટ્રાન્ઝેક્શન માટે તમે કેટલી મહત્તમ ગેસ ઓફર કરવા તૈયાર છો. અમે આ સેટિંગને બદલી ન નાખવાની ભલામણ કરીએ છીએ.",
+      "priorityFee": "પ્રાથમિકતા ફી",
+      "priorityFeeDesc": "તમારું ટ્રાન્ઝેક્શન ઝડપથી પૂર્ણ કરવા માટે વધારાની 'ટિપ'.",
+      "mevProtection": "MEV સુરક્ષા",
+      "mevProtectionDesc": "MEV બોટ્સના સેન્ડવિચ હુમલાથી બચવા માટે આને સક્રિય કરો અને નિષ્ફળ ટ્રાન્ઝેક્શન પર ગેસ ફી બચાવો.",
+      "briberyamount": "રિશ્વત રકમ",
+      "briberyamountDesc": "તમારા પ્રાથમિકતા ફી પર વધારાની રિશ્વત રકમ સેટ કરો જેથી બ્લોક બિલ્ડર તમારા ટ્રાન્ઝેક્શનને શક્ય તેટલું વહેલું મૂકે.",
+      "quickbuy": "ઝડપી ખરીદી",
+      "quickSell": "ઝડપી વેચાણ",
+      "approve": "મંજુર કરો",
+      "autoBuy": "ઓટો ખરીદી",
+      "autosell": "ઓટો વેચાણ",
+      "cancel": "રદ કરો",
+      "save": "સાચવો",
+      "Setting": "સેટિંગ",
+      "Customize": "કસ્ટમાઇઝ કરો",
+      "CustomizeDesc": "તમારા ક્વિક બાય બટનોને તમારી પોતાની પૂર્વનિર્ધારિત રકમો સાથે કસ્ટમાઇઝ કરો."
+    },
+    "watchlist": {
+      "watchlist": "વોચલિસ્ટ",
+      "Cancel": "રદ કરો",
+      "Save": "સાચવો"
+    }
+  },
+  "newProfile": {
+    "winRate": "વિન રેટ",
+    "UNREALIZEDPROFITS": "અહસ્તાંતરિત નફો",
+    "TOTALCOST": "કુલ ખર્ચ",
+    "TOKENAVERAGECOST": "ટોકન સરેરાશ ખર્ચ",
+    "TOKENPROFITS": "ટોકન સરેરાશ પ્રાપ્ત નફો",
+    "SOLBALANCE": "SOL બેલેન્સ",
+    "Winrate": "વિન રેટ",
+    "PNL": "PNL",
+    "LIQUIDITY": "લિક્વિડિટી",
+    "TOKENACTIVE": "ટોકન/છેલ્લે સક્રિય",
+    "UNREALIZED": "અહસ્તાંતરિત",
+    "REALIZEDPROFIT": "પ્રાપ્ત નફો",
+    "TOTALPROFIT": "કુલ નફો",
+    "BALANCE": "બેલેન્સ (USD)",
+    "POSITION": "સ્થિતિ %",
+    "HOLDING": "હોલ્ડિંગ અવધિ",
+    "BOUGHT": "ખરીદ્યું/સરેરાશ",
+    "SOLD": "વેચ્યું/સરેરાશ",
+    "TXS": "30D TXS",
+    "SellAll": "બધું વેચો"
+  },
+  "portfolio": {
+    "Show": "આર્કાઇવ બતાવો",
+    "Import": "આયાત કરો",
+    "CreateWallet": "વૉલેટ બનાવો",
+    "Balance": "બેલેન્સ",
+    "Holdings": "હોલ્ડિંગ્સ",
+    "Actions": "ક્રિયાઓ",
+    "Wallet": "વૉલેટ"
   }
 }

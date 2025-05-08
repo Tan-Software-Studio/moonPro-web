@@ -10,6 +10,7 @@ import { FiLock } from "react-icons/fi";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { AnimatePresence, motion } from "framer-motion";
 import RefferalPopup from "./RefferalPopup";
+import { useTranslation } from "react-i18next";
 
 const OtpPopup = ({
   setIsLoginPopup,
@@ -33,6 +34,9 @@ const OtpPopup = ({
   const [isInvalidOtp, setIsInvalidOtp] = useState(false);
   const [isReffaralCode, setIsReffaralCode] = useState(false);
 
+  const { t } = useTranslation();
+  const navbar = t("navbar");
+
   const handleClose = () => {
     setIsLoginPopup(false);
   };
@@ -44,48 +48,48 @@ const OtpPopup = ({
     const password = passwordInput.trim();
 
     if (!otp) {
-      setOtpError("Otp is required");
+      setOtpError(navbar?.otpPopup?.required);
       return;
     }
     if (otp.length < 6) {
-      setOtpError("Otp is not valid");
+      setOtpError(navbar?.otpPopup?.notValid);
       return;
     }
     setOtpError("");
     if (authName != "login") {
       if (password.length < 8) {
-        setPasswordError("Password must be at least 8 characters long.");
+        setPasswordError(navbar?.otpPopup?.longPassword);
         return;
       }
       if (!/[a-z]/.test(password)) {
         setPasswordError(
-          "Password must include at least one lowercase letter."
+          navbar?.otpPopup?.lowercaseChar
         );
         return;
       }
       if (!/[A-Z]/.test(password)) {
         setPasswordError(
-          "Password must include at least one uppercase letter."
+          navbar?.otpPopup?.uppercaseChar
         );
         return;
       }
       if (!/\d/.test(password)) {
-        setPasswordError("Password must include at least one digit.");
+        setPasswordError(navbar?.otpPopup?.oneDigit);
         return;
       }
       if (!/[@$!%*?#&]/.test(password)) {
-        setPasswordError("Password must (@$!%*?#&) one special character .");
+        setPasswordError(navbar?.otpPopup?.specialChar);
         return;
       }
       setPasswordError("");
 
       if (!confirmPassword) {
-        setConfirmPasswordError("Confirm password is required");
+        setConfirmPasswordError(navbar?.otpPopup?.confirmPpassword);
         return;
       }
       if (confirmPassword != password) {
         setConfirmPasswordError(
-          "New password and Confirm password should be same "
+          navbar?.otpPopup?.passwordSame
         );
         return;
       }
@@ -184,10 +188,10 @@ const OtpPopup = ({
 
               <div className="mt-2  p-6">
                 <h2 className="text-2xl font-semibold text-center text-white">
-                  Confirmation code
+                  {navbar?.otpPopup?.confirmationCode}
                 </h2>
                 <div className="text-sm text-center mt-2 ">
-                  We&apos;ve sent a verifaction code to {email}
+                  {navbar?.otpPopup?.verifactionCode}  {email}
                 </div>
                 <OTPInput
                   value={otp}
@@ -221,14 +225,14 @@ const OtpPopup = ({
                 {authName != "login" && (
                   <div className="mt-4">
                     <label className="text-sm text-[#6E6E6E] mb-1 block">
-                      Password
+                      {navbar?.otpPopup?.password}
                     </label>
                     <div className="flex items-center justify-between bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
                       <div className="flex items-center gap-3 w-full">
                         <FiLock size={20} className="text-[#6E6E6E]" />
                         <input
                           type={!showPassword ? "password" : "text"}
-                          placeholder="Password"
+                          placeholder={navbar?.otpPopup?.password}
                           onChange={(e) => setPasswordInput(e.target.value)}
                           className="w-full bg-transparent text-sm text-white placeholder-[#6E6E6E] focus:outline-none"
                         />
@@ -252,14 +256,14 @@ const OtpPopup = ({
                     </div>
 
                     <label className="text-sm text-[#6E6E6E] mt-2 mb-1 block">
-                      Confirm password
+                      {navbar?.otpPopup?.confirmPassword}
                     </label>
                     <div className="flex items-center justify-between bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
                       <div className="flex items-center gap-3 w-full">
                         <FiLock size={20} className="text-[#6E6E6E]" />
                         <input
                           type={!showPassword1 ? "password" : "text"}
-                          placeholder="Confirm password"
+                          placeholder={navbar?.otpPopup?.confirmPassword}
                           onChange={(e) =>
                             setConfirmPasswordInput(e.target.value)
                           }
@@ -289,14 +293,13 @@ const OtpPopup = ({
                 <button
                   onClick={handleVerify}
                   disabled={isDisable}
-                  className={`mt-6 w-full rounded-lg text-sm py-3 font-semibold transition ${
-                    isDisable
-                      ? "bg-[#11265B] cursor-not-allowed"
-                      : "bg-[#11265B] hover:bg-[#133D94]"
-                  } border border-[#0E43BD] text-white shadow-md`}
+                  className={`mt-6 w-full rounded-lg text-sm py-3 font-semibold transition ${isDisable
+                    ? "bg-[#11265B] cursor-not-allowed"
+                    : "bg-[#11265B] hover:bg-[#133D94]"
+                    } border border-[#0E43BD] text-white shadow-md`}
                 >
                   {!isDisable ? (
-                    "Verify"
+                    navbar?.otpPopup?.verify
                   ) : (
                     <div className="flex cursor-not-allowed py-2 justify-center items-center gap-5">
                       <div className="loaderPopup"></div>
@@ -308,8 +311,7 @@ const OtpPopup = ({
               </div>
               <div className="text-xs border-t-[1px] border-t-[#404040] mt-3 text-center">
                 <div className=" p-4">
-                  By creating an account, you agree to moon pro&aspos;s Privacy
-                  Policy and Terms of Service
+                  {navbar?.otpPopup?.byCreating}
                 </div>
               </div>
             </motion.div>

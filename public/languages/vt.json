@@ -613,5 +613,143 @@
         }
       }
     }
+  },
+  "navbar": {
+    "profile": {
+      "search": "Tìm kiếm",
+      "myProfile": "Hồ sơ của tôi",
+      "account": "Tài khoản và Bảo mật",
+      "watchList": "Danh sách theo dõi của tôi",
+      "setting": "Cài đặt",
+      "logout": "Đăng xuất",
+      "login": "Đăng nhập",
+      "signup": "Đăng ký"
+    },
+    "loginPopup": {
+      "enterEmail": "Vui lòng nhập email của bạn",
+      "validEmail": "Vui lòng nhập địa chỉ email hợp lệ",
+      "enterPassword": "Cần có mật khẩu",
+      "creatAccount": "Tạo tài khoản",
+      "creatAccountDesc": "Vui lòng nhập thông tin của bạn",
+      "welcomeBack": "Chào mừng quay lại",
+      "loginInAccouont": "Đăng nhập vào tài khoản của bạn",
+      "email": "Email",
+      "enterEmailPlace": "Nhập email của bạn",
+      "password": "Mật khẩu",
+      "inviteCode": "Mã mời",
+      "inviteCodePlace": "Mã mời (Tùy chọn)",
+      "continueWith": "Hoặc tiếp tục với",
+      "continueGoogle": "Tiếp tục với Google",
+      "haveaccount": "Bạn đã có tài khoản?",
+      "login": "Đăng nhập",
+      "signup": "Đăng ký",
+      "dontAccount": "Không có tài khoản?",
+      "byCreating": "Bằng cách tạo tài khoản, bạn đồng ý với Chính sách quyền riêng tư và Điều khoản dịch vụ của moon pro"
+    },
+    "otpPopup": {
+      "required": "OTP là bắt buộc",
+      "notValid": "OTP không hợp lệ",
+      "longPassword": "Mật khẩu phải có ít nhất 8 ký tự",
+      "lowercaseChar": "Mật khẩu phải bao gồm ít nhất một chữ cái viết thường",
+      "uppercaseChar": "Mật khẩu phải bao gồm ít nhất một chữ cái viết hoa",
+      "oneDigit": "Mật khẩu phải bao gồm ít nhất một chữ số",
+      "specialChar": "Mật khẩu phải có ít nhất một ký tự đặc biệt (@$!%*?#&)",
+      "confirmPpassword": "Xác nhận mật khẩu là bắt buộc",
+      "passwordSame": "Mật khẩu mới và xác nhận mật khẩu phải giống nhau",
+      "confirmationCode": "Mã xác nhận",
+      "verifactionCode": "Chúng tôi đã gửi mã xác nhận đến",
+      "password": "Mật khẩu",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "verify": "Xác minh",
+      "byCreating": "Bằng cách tạo tài khoản, bạn đồng ý với Chính sách quyền riêng tư và Điều khoản dịch vụ của moon pro"
+    },
+    "referralPopup": {
+      "referralCode": "Vui lòng nhập mã giới thiệu",
+      "useReferral": "Sử dụng mã giới thiệu ở đây",
+      "specialBonuses": "Nhập mã giới thiệu của bạn bè để nhận thưởng đặc biệt!",
+      "referralCoded": "Mã giới thiệu",
+      "enterCode": "Nhập mã"
+    },
+    "recovery": {
+      "recoveryKey": "Mã phục hồi",
+      "thisRecovery": "Mã phục hồi này sẽ cho phép bạn truy cập vào ví của bạn nếu bạn mất quyền truy cập vào tài khoản moon pro của mình",
+      "revealMyKey": "Tiết lộ mã của tôi",
+      "warning": "CẢNH BÁO: Mã phục hồi này là cách duy nhất để truy cập vào ví của bạn nếu bạn mất quyền truy cập vào tài khoản của mình. Lưu nó ở nơi an toàn và đừng chia sẻ với ai."
+    }
+  },
+  "accountPopup": {
+    "security": {
+      "accountSecurity": "Tài khoản và Bảo mật",
+      "dayCreated": "Ngày tạo",
+      "lastLogin": "Đăng nhập lần cuối",
+      "referralLink": "Liên kết giới thiệu",
+      "setReferralCode": "Cài đặt mã giới thiệu",
+      "recoveryKey": "Mã phục hồi",
+      "DONOTSHARE": "Truy cập cụm từ hạt giống của bạn để xuất khẩu tài khoản. KHÔNG CHIA SẺ!",
+      "viewrecoveryVey": "Xem mã phục hồi",
+      "language": "Ngôn ngữ",
+      "changeLanguage": "Thay đổi ngôn ngữ ứng dụng",
+      "walletAccounts": "Thêm hoặc quản lý tài khoản ví ngoại vi của bạn",
+      "manageWallets": "Quản lý ví",
+      "userID": "ID người dùng:"
+    },
+    "setting": {
+      "slippage": "Trượt giá",
+      "slippageDesc": "Bạn sẵn sàng nhận ít token hơn từ giao dịch do biến động giá bao nhiêu",
+      "maxGasLimit": "Giới hạn gas tối đa",
+      "maxGasLimitDesc": "Số tiền gas tối đa mà bạn sẵn sàng cung cấp cho bất kỳ giao dịch nào. Chúng tôi khuyên bạn không nên điều chỉnh cài đặt này.",
+      "priorityFee": "Phí ưu tiên",
+      "priorityFeeDesc": "Phí 'tip' bổ sung để giao dịch của bạn được xử lý nhanh hơn. Phí ưu tiên càng cao, cơ hội giao dịch được xử lý nhanh càng lớn.",
+      "mevProtection": "Bảo vệ MEV",
+      "mevProtectionDesc": "Kích hoạt tính năng này để bảo vệ bạn khỏi các cuộc tấn công sandwich của bot MEV và tiết kiệm phí gas khi giao dịch thất bại.",
+      "briberyamount": "Số tiền hối lộ",
+      "briberyamountDesc": "Đặt một khoản hối lộ bổ sung ngoài phí ưu tiên để người xây dựng khối xử lý giao dịch của bạn càng sớm càng tốt.",
+      "quickbuy": "Mua nhanh",
+      "quickSell": "Bán nhanh",
+      "approve": "Phê duyệt",
+      "autoBuy": "Mua tự động",
+      "autosell": "Bán tự động",
+      "cancel": "Hủy",
+      "save": "Lưu",
+      "Setting": "Cài đặt",
+      "Customize": "Tùy chỉnh",
+      "CustomizeDesc": "Tùy chỉnh các nút Mua nhanh với số tiền đã định sẵn của bạn."
+    },
+    "watchlist": {
+      "watchlist": "Danh sách theo dõi",
+      "Cancel": "Hủy",
+      "Save": "Lưu"
+    }
+  },
+  "newProfile": {
+    "winRate": "Tỷ lệ thắng",
+    "UNREALIZEDPROFITS": "Lợi nhuận chưa thực hiện",
+    "TOTALCOST": "Tổng chi phí",
+    "TOKENAVERAGECOST": "Chi phí trung bình của token",
+    "TOKENPROFITS": "Lợi nhuận thực hiện từ token",
+    "SOLBALANCE": "Cân bằng SOL",
+    "Winrate": "Tỷ lệ thắng",
+    "PNL": "PNL",
+    "LIQUIDITY": "Thanh khoản",
+    "TOKENACTIVE": "Token/Hoạt động cuối",
+    "UNREALIZED": "Chưa thực hiện",
+    "REALIZEDPROFIT": "Lợi nhuận thực hiện",
+    "TOTALPROFIT": "Lợi nhuận tổng cộng",
+    "BALANCE": "Cân bằng (USD)",
+    "POSITION": "Tỷ lệ vị trí %",
+    "HOLDING": "Thời gian nắm giữ",
+    "BOUGHT": "Mua/Số trung bình",
+    "SOLD": "Bán/Số trung bình",
+    "TXS": "Giao dịch 30D",
+    "SellAll": "Bán tất cả"
+  },
+  "portfolio": {
+    "Show": "Hiển thị lưu trữ",
+    "Import": "Nhập khẩu",
+    "CreateWallet": "Tạo ví",
+    "Balance": "Cân bằng",
+    "Holdings": "Cổ phần",
+    "Actions": "Hành động",
+    "Wallet": "Ví"
   }
 }

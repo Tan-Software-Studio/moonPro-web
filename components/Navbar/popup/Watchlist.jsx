@@ -5,8 +5,11 @@ import Image from 'next/image';
 import { Swaps, tableImage } from '@/app/Images';
 import { HiArrowsUpDown } from 'react-icons/hi2';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import { useTranslation } from 'react-i18next';
 
 const Watchlist = ({ setIsWatchlistPopup }) => {
+    const { t } = useTranslation();
+    const accountPopupLng = t("accountPopup");
     return (
         <motion.div
             key="backdrop"
@@ -29,7 +32,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
                 <div className="">
                     <div className="flex items-center justify-between lg:px-6 px-3 py-4">
                         <div className="md:text-2xl sm:text-xl text-lg sm:font-bold font-semibold text-white ">
-                            Watchlist
+                            {accountPopupLng?.watchlist?.watchlist}
                         </div>
                         <div
                             onClick={() => setIsWatchlistPopup(false)}
@@ -109,13 +112,13 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
                                     onClick={() => setIsWatchlistPopup(false)}
                                     className="py-2 px-5 border-[1px] border-[#ED1B24] text-[#ED1B24] hover:bg-[#ED1B24] hover:text-[#FFFFFF] rounded-md transition-all duration-500 ease-in-out "
                                 >
-                                    Cancel
+                                    {accountPopupLng?.watchlist?.Cancel}
                                 </button>
                                 <button
                                     onClick={() => setIsWatchlistPopup(false)}
                                     className="py-2 px-5 border-[1px] border-[#1F73FC] text-white bg-[#1F73FC] hover:opacity-80 rounded-md transition-all duration-500 ease-in-out "
                                 >
-                                    Save
+                                    {accountPopupLng?.watchlist?.Save}
                                 </button>
                             </div>
                         </div>

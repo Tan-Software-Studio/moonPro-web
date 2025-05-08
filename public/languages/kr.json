@@ -613,5 +613,143 @@
         }
       }
     }
+  },
+  "navbar": {
+    "profile": {
+      "search": "검색",
+      "myProfile": "내 프로필",
+      "account": "계정 및 보안",
+      "watchList": "내 즐겨찾기",
+      "setting": "설정",
+      "logout": "로그아웃",
+      "login": "로그인",
+      "signup": "회원가입"
+    },
+    "loginPopup": {
+      "enterEmail": "이메일을 입력하세요",
+      "validEmail": "유효한 이메일 주소를 입력하세요",
+      "enterPassword": "비밀번호가 필요합니다",
+      "creatAccount": "계정 만들기",
+      "creatAccountDesc": "세부 정보를 입력하세요",
+      "welcomeBack": "다시 오신 것을 환영합니다",
+      "loginInAccouont": "계정에 로그인",
+      "email": "이메일",
+      "enterEmailPlace": "이메일을 입력하세요",
+      "password": "비밀번호",
+      "inviteCode": "초대 코드",
+      "inviteCodePlace": "초대 코드 (선택 사항)",
+      "continueWith": "또는 계속하려면",
+      "continueGoogle": "구글로 계속하기",
+      "haveaccount": "계정이 이미 있으신가요?",
+      "login": "로그인",
+      "signup": "회원가입",
+      "dontAccount": "계정이 없으신가요?",
+      "byCreating": "계정을 만들면 moon pro의 개인정보 처리방침과 서비스 약관에 동의하는 것입니다"
+    },
+    "otpPopup": {
+      "required": "OTP가 필요합니다",
+      "notValid": "OTP가 유효하지 않습니다",
+      "longPassword": "비밀번호는 최소 8자 이상이어야 합니다.",
+      "lowercaseChar": "비밀번호에는 소문자가 하나 이상 포함되어야 합니다.",
+      "uppercaseChar": "비밀번호에는 대문자가 하나 이상 포함되어야 합니다.",
+      "oneDigit": "비밀번호에는 숫자가 하나 이상 포함되어야 합니다.",
+      "specialChar": "비밀번호에는 최소한 하나의 특수 문자(@$!%*?#&)가 포함되어야 합니다.",
+      "confirmPpassword": "비밀번호 확인이 필요합니다",
+      "passwordSame": "새 비밀번호와 비밀번호 확인이 일치해야 합니다",
+      "confirmationCode": "확인 코드",
+      "verifactionCode": "확인 코드를 보내드렸습니다",
+      "password": "비밀번호",
+      "confirmPassword": "비밀번호 확인",
+      "verify": "확인",
+      "byCreating": "계정을 만들면 moon pro의 개인정보 처리방침과 서비스 약관에 동의하는 것입니다"
+    },
+    "referralPopup": {
+      "referralCode": "추천 코드를 입력하세요",
+      "useReferral": "여기에 추천 코드 사용",
+      "specialBonuses": "친구의 추천 코드를 입력하여 특별 보너스를 받으세요!",
+      "referralCoded": "추천 코드",
+      "enterCode": "코드 입력"
+    },
+    "recovery": {
+      "recoveryKey": "복구 키",
+      "thisRecovery": "이 복구 키는 moon pro 계정의 자격 증명을 분실한 경우 지갑에 액세스할 수 있게 해줍니다",
+      "revealMyKey": "내 키 보기",
+      "warning": "경고: 이 복구 키는 자격 증명을 잃어버린 경우 지갑에 액세스할 수 있는 유일한 방법입니다. 안전한 곳에 보관하고 다른 사람과 공유하지 마세요."
+    }
+  },
+  "accountPopup": {
+    "security": {
+      "accountSecurity": "계정 및 보안",
+      "dayCreated": "생성일",
+      "lastLogin": "마지막 로그인",
+      "referralLink": "추천 링크",
+      "setReferralCode": "추천 코드 설정",
+      "recoveryKey": "복구 키",
+      "DONOTSHARE": "계정을 내보내려면 시드 문구에 액세스하세요. 공유하지 마세요!",
+      "viewrecoveryVey": "복구 키 보기",
+      "language": "언어",
+      "changeLanguage": "애플리케이션 언어 변경",
+      "walletAccounts": "외부 지갑 계정 추가 또는 관리",
+      "manageWallets": "지갑 관리",
+      "userID": "사용자 ID:"
+    },
+    "setting": {
+      "slippage": "슬ippage",
+      "slippageDesc": "가격 변동으로 인해 거래에서 받는 토큰이 얼마나 적을지에 대한 설정입니다.",
+      "maxGasLimit": "최대 가스 한도",
+      "maxGasLimitDesc": "어떤 거래에도 제공할 최대 가스량. 이 설정을 변경하지 않는 것이 좋습니다.",
+      "priorityFee": "우선 수수료",
+      "priorityFeeDesc": "거래를 더 빨리 완료하기 위한 추가 '팁'. 우선 수수료가 높을수록 거래가 더 빨리 처리될 확률이 높아집니다.",
+      "mevProtection": "MEV 보호",
+      "mevProtectionDesc": "MEV 봇의 샌드위치 공격으로부터 보호하고, 실패한 거래 시 가스 비용을 절약할 수 있습니다.",
+      "briberyamount": "뇌물 금액",
+      "briberyamountDesc": "거래를 가능한 한 빨리 처리하기 위해 우선 수수료 외에 추가적인 뇌물 금액을 설정합니다.",
+      "quickbuy": "빠른 구매",
+      "quickSell": "빠른 판매",
+      "approve": "승인",
+      "autoBuy": "자동 구매",
+      "autosell": "자동 판매",
+      "cancel": "취소",
+      "save": "저장",
+      "Setting": "설정",
+      "Customize": "사용자 정의",
+      "CustomizeDesc": "빠른 구매 버튼을 고유한 미리 설정된 금액으로 사용자 정의합니다."
+    },
+    "watchlist": {
+      "watchlist": "즐겨찾기",
+      "Cancel": "취소",
+      "Save": "저장"
+    }
+  },
+  "newProfile": {
+    "winRate": "승률",
+    "UNREALIZEDPROFITS": "미실현 이익",
+    "TOTALCOST": "총 비용",
+    "TOKENAVERAGECOST": "토큰 평균 비용",
+    "TOKENPROFITS": "토큰 평균 실현 이익",
+    "SOLBALANCE": "SOL 잔액",
+    "Winrate": "승률",
+    "PNL": "PNL",
+    "LIQUIDITY": "유동성",
+    "TOKENACTIVE": "토큰 / 마지막 활성",
+    "UNREALIZED": "미실현",
+    "REALIZEDPROFIT": "실현 이익",
+    "TOTALPROFIT": "총 이익",
+    "BALANCE": "잔액 (USD)",
+    "POSITION": "포지션 %",
+    "HOLDING": "보유 기간",
+    "BOUGHT": "구매 / 평균",
+    "SOLD": "판매 / 평균",
+    "TXS": "30일 거래",
+    "SellAll": "모두 판매"
+  },
+  "portfolio": {
+    "Show": "보관함 보기",
+    "Import": "수입",
+    "CreateWallet": "지갑 만들기",
+    "Balance": "잔액",
+    "Holdings": "보유",
+    "Actions": "작업",
+    "Wallet": "지갑"
   }
 }
