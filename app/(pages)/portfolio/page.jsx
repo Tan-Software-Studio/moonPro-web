@@ -13,7 +13,6 @@ import { useDispatch } from "react-redux";
 
 export default function Portfolio() {
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false);
   const [walletAddresses, setWalletAddresses] = useState([]);
 
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
@@ -37,7 +36,7 @@ export default function Portfolio() {
     }
   };
 
-  async function handlePrimary(index) {
+  async function handlePrimary(walletIndex, loopIndex) {
     const jwtToken = localStorage.getItem("token");
     if (!jwtToken) return 0;
     try {
@@ -45,7 +44,7 @@ export default function Portfolio() {
         .put(
           `${baseUrl}user/makeSolWalletPrimary`,
           {
-            index,
+            index: walletIndex,
           },
           {
             headers: {
@@ -60,7 +59,7 @@ export default function Portfolio() {
           setWalletAddresses((pre) => {
             const preArr = [...pre];
             preArr[findXPrimaryIndex].primary = false;
-            preArr[index].primary = true;
+            preArr[loopIndex].primary = true;
             return preArr;
           });
           localStorage.setItem(
@@ -79,30 +78,7 @@ export default function Portfolio() {
 
   useEffect(() => {
     getAllWallets();
-  }, []);
-
-  const wallets = [
-    {
-      id: 1,
-      name: "Axiom Main",
-      address: "AHZu...qjyU",
-      balance: 0,
-      holdings: 0,
-      type: "main",
-      color: "blue",
-      primary: true,
-    },
-    {
-      id: 2,
-      name: "Wallet",
-      address: "8xqT...Tokm",
-      balance: 0,
-      holdings: 0,
-      type: "standard",
-      color: "orange",
-      primary: false,
-    },
-  ];
+  }, []); 
 
   return (
     <div className="bg-[#08080E] text-white p-4 md:p-6">
@@ -158,16 +134,15 @@ export default function Portfolio() {
               <tbody className=" ">
                 {walletAddresses.map((wallet, index) => (
                   <tr
-                    key={index}
+                    key={index + 1}
                     className={` ${index % 2 == 0 ? "bg-[#1A1A1A] " : ""}`}
                   >
                     {/* Wallet Info */}
                     <td className="py-2 px-6 ">{index + 1}</td>
                     <td className="py-2 px-6 flex items-center gap-3 ">
                       <div
-                        className={`font-medium ${
-                          wallet.primary ? "text-[rgb(247,147,26)]" : ""
-                        }`}
+                        className={`font-medium ${wallet.primary ? "text-[rgb(247,147,26)]" : ""
+                          }`}
                       >
                         Wallet
                       </div>
@@ -216,7 +191,7 @@ export default function Portfolio() {
                         </button>
                         {!wallet?.primary && (
                           <button
-                            onClick={() => handlePrimary(wallet?.index)}
+                            onClick={() => handlePrimary(wallet?.index, index)}
                             className="p-1.5 hover:bg-gray-800 rounded-full transition-colors"
                           >
                             <BsStar size={16} />
