@@ -1,13 +1,15 @@
 "use client";
 import { solana } from "@/app/Images";
 import { setSolWalletAddress } from "@/app/redux/states";
+import { showToastLoader } from "@/components/common/toastLoader/ToastLoder";
 import axios from "axios";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { BsStar } from "react-icons/bs";
-import { FaRegCopy } from "react-icons/fa";
+import toast from "react-hot-toast";
+import { FaRegCopy, FaStar } from "react-icons/fa";
 import { IoIosKey } from "react-icons/io";
-import { IoEye } from "react-icons/io5";
+import { IoEyeOff } from "react-icons/io5";
 import { RiShareBoxLine } from "react-icons/ri";
 import { useDispatch } from "react-redux";
 
@@ -16,6 +18,7 @@ export default function Portfolio() {
   const [walletAddresses, setWalletAddresses] = useState([]);
 
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
+
   const getAllWallets = async (e) => {
     const jwtToken = localStorage.getItem("token");
     if (!jwtToken) return 0;
@@ -40,6 +43,7 @@ export default function Portfolio() {
     const jwtToken = localStorage.getItem("token");
     if (!jwtToken) return 0;
     try {
+      showToastLoader("Switching primary wallet", "switch-toast");
       await axios
         .put(
           `${baseUrl}user/makeSolWalletPrimary`,
@@ -66,6 +70,10 @@ export default function Portfolio() {
             "walletAddress",
             res?.data?.data?.wallet?.wallet
           );
+          toast.success('Primary wallet switched', {
+            id: 'switch-toast',
+            duration: 2000
+          })
           dispatch(setSolWalletAddress());
         })
         .catch((err) => {
@@ -73,12 +81,58 @@ export default function Portfolio() {
         });
     } catch (error) {
       console.error(error);
+      toast.error('Primary not wallet switched', {
+        id: 'switch-toast',
+        duration: 2000
+      })
     }
   }
 
+  async function handleCreateMultiWallet() {
+
+    const jwtToken = localStorage.getItem("token");
+    if (!jwtToken) return 0;
+
+    showToastLoader("Processing transaction...", "wallet-toast");
+    await axios.put(`${baseUrl}user/generateSolWallet`, {},
+      {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      }
+
+    )
+      .then(async (response) => {
+
+        const generatedWallet = response?.data?.data?.wallet
+        toast.success(response?.data?.message, {
+          id: 'wallet-toast',
+          duration: 2000
+        })
+        setWalletAddresses((pre) => {
+          return [...pre, generatedWallet]
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(error?.response?.message, {
+          id: 'wallet-toast',
+          duration: 2000
+        })
+      })
+
+  }
+
+  const copyToClipboard = (text) => {
+    navigator?.clipboard?.writeText(text);
+    toast.success('Wallet address copied successfully')
+  };
+
+
+
   useEffect(() => {
     getAllWallets();
-  }, []); 
+  }, []);
 
   return (
     <div className="bg-[#08080E] text-white p-4 md:p-6">
@@ -108,55 +162,66 @@ export default function Portfolio() {
                 <span>Import</span>
               </button>
 
-              <button className="flex items-center space-x-2 px-3 py-1.5 bg-blue-600 rounded-lg text-sm">
+              <button
+                onClick={handleCreateMultiWallet}
+                className="flex items-center space-x-2 px-3 py-1.5 bg-blue-600 rounded-lg text-sm">
                 <span>Create Wallet</span>
               </button>
             </div>
           </div>
 
-          <div className="min-h-[50vh] max-h-[70vh] overflow-y-auto">
-            <table className="w-full table-fixed overflow-x-auto">
+          <div className="min-h-[50vh] max-h-[70vh] overflow-y-auto rounded-lg border border-gray-800">
+            <table className="w-full table-fixed">
               <thead>
-                <tr className="text-left text-gray-400 text-sm border-[#404040] border-b-[1px]">
-                  <th className="py-3 px-5 font-normal w-5/12">#</th>
-                  <th className="py-3 px-5 font-normal w-5/12">Wallet</th>
-                  <th className="py-3 px-5 font-normal w-2/12 text-center md:text-left">
+                <tr className="bg-gray-800 text-left text-gray-400 text-sm">
+                  <th className="py-4 px-5 font-medium w-1/12">#</th>
+                  <th className="py-4 px-5 font-medium w-5/12">Wallet</th>
+                  <th className="py-4 px-5 font-medium w-2/12 text-center md:text-left">
                     Balance
                   </th>
-                  <th className="py-3 px-5 font-normal w-2/12 text-center md:text-left">
+                  <th className="py-4 px-5 font-medium w-2/12 text-center md:text-left">
                     Holdings
                   </th>
-                  <th className="py-3 px-5 font-normal w-3/12 text-right">
+                  <th className="py-4 px-5 font-medium w-3/12 text-right">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className=" ">
+              <tbody>
                 {walletAddresses.map((wallet, index) => (
                   <tr
                     key={index + 1}
-                    className={` ${index % 2 == 0 ? "bg-[#1A1A1A] " : ""}`}
+                    className={`transition-colors hover:bg-gray-800/50 ${wallet.primary
+                      ? "bg-gradient-to-r from-amber-900/30 to-transparent border-l-4 border-amber-500"
+                      : index % 2 === 0 ? "bg-gray-800/20" : ""
+                      }`}
                   >
-                    {/* Wallet Info */}
-                    <td className="py-2 px-6 ">{index + 1}</td>
-                    <td className="py-2 px-6 flex items-center gap-3 ">
-                      <div
-                        className={`font-medium ${wallet.primary ? "text-[rgb(247,147,26)]" : ""
-                          }`}
-                      >
-                        Wallet
-                      </div>
-                      <div className="text-xs text-gray-400 flex items-center">
-                        {`${wallet?.wallet.slice(
-                          0,
-                          4
-                        )}...${wallet?.wallet.slice(-4)}`}
-                        <FaRegCopy size={12} className="ml-1" />
+                    {/* Wallet number */}
+                    <td className="py-4 px-6">{index + 1}</td>
+
+                    {/* Wallet address */}
+                    <td className="py-4 px-6">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
+                          {wallet.primary && (
+                            <FaStar className="text-amber-500" size={16} />
+                          )}
+                          <div className={`font-medium ${wallet.primary ? "text-amber-500" : ""}`}>
+                            {wallet.primary ? "Primary Wallet" : "Wallet"}
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => copyToClipboard(wallet.wallet)}
+                          className="text-xs text-gray-400 flex items-center hover:text-gray-200 transition-colors bg-gray-800/50 py-1 px-2 rounded-md"
+                        >
+                          {`${wallet?.wallet.slice(0, 4)}...${wallet?.wallet.slice(-4)}`}
+                          <FaRegCopy size={12} className="ml-2" />
+                        </button>
                       </div>
                     </td>
 
                     {/* Balance */}
-                    <td className="py-2 px-6 ">
+                    <td className="py-4 px-6">
                       <div className="flex items-center gap-2 ">
                         <Image
                           src={solana}
@@ -170,33 +235,39 @@ export default function Portfolio() {
                     </td>
 
                     {/* Holdings */}
-                    <td className="py-2 px-6 ">
-                      <div className="flex items-center justify-center md:justify-start space-x-2">
-                        <div className="w-4 h-4 bg-gradient-to-r from-gray-400 to-gray-600 rounded-full"></div>
-                        <span>{wallet?.holdings || 0}</span>
+                    <td className="py-4 px-6">
+                      <div className="flex items-center justify-center text-center md:justify-start space-x-2">
+                        {/* <div className="w-5 h-5 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full"></div> */}
+                        <div>{wallet?.holdings || 0}</div>
                       </div>
                     </td>
 
                     {/* Actions */}
-                    <td className="py-2 px-6 ">
-                      <div className="flex items-center justify-end space-x-2">
-                        <button className="p-1.5 hover:bg-gray-800 rounded-full transition-colors">
-                          <IoEye size={16} />
+                    <td className="py-4 px-6">
+                      <div className="flex items-center justify-end space-x-1">
+                        <button className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-gray-100" title="Archive wallet">
+                          <IoEyeOff size={18} />
                         </button>
-                        <button className="p-1.5 hover:bg-gray-800 rounded-full transition-colors">
-                          <RiShareBoxLine size={16} />
-                        </button>
-                        <button className="p-1.5 hover:bg-gray-800 rounded-full transition-colors">
-                          <IoIosKey size={16} />
+
+                        <Link
+                          href={`https://solscan.io/account/${wallet?.wallet}`}
+                          target="_blank"
+                          className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-gray-100" title="Open in Solscan">
+                          <RiShareBoxLine size={18} />
+                        </Link>
+                        <button className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-gray-100" title="Export private key">
+                          <IoIosKey size={18} />
                         </button>
                         {!wallet?.primary && (
                           <button
                             onClick={() => handlePrimary(wallet?.index, index)}
-                            className="p-1.5 hover:bg-gray-800 rounded-full transition-colors"
+                            className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-amber-500"
+                            title="Set as primary"
                           >
-                            <BsStar size={16} />
+                            <FaStar size={18} />
                           </button>
                         )}
+
                       </div>
                     </td>
                   </tr>
