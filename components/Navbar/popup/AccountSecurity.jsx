@@ -173,7 +173,7 @@ const AccountSecurity = ({ setIsAccountPopup, }) => {
                              `}
                         >
                           <div className="flex items-center gap-3">
-                            <div className="w-[25px] h-[25px] rounded-full">
+                            <div className="w-[25px] h-[25px] overflow-hidden rounded-full">
                               <Image
                                 alt="lang"
                                 src={item.img}
@@ -215,9 +215,7 @@ const AccountSecurity = ({ setIsAccountPopup, }) => {
                 <IoWalletOutline />
                 <span>{accountPopupLng?.security?.manageWallets}</span>
               </Link>
-            </div>
-
-
+            </div> 
           </div>
         </div>
       </motion.div>
@@ -226,24 +224,4 @@ const AccountSecurity = ({ setIsAccountPopup, }) => {
 };
 
 export default AccountSecurity;
-
-
-
-
-// <div className="flex sm:flex-row flex-col sm:items-center my-5  justify-between">
-// <div>
-//   <div>Wallets</div>
-//   <div className="text-[#6E6E6E] text-sm font-normal">
-//     Add or manage your external wallet accounts
-//   </div>
-// </div>
-// <div>
-//   <div className="border border-[#404040] flex items-center gap-2 w-28 h-9 rounded-lg px-2 bg-[#08080E]">
-//     <input
-//       type="number"
-//       className="bg-transparent text-white w-full outline-none text-right "
-//       placeholder="0"
-//     />
-//   </div>
-// </div>
-// </div>
+ 

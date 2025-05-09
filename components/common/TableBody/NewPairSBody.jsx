@@ -9,14 +9,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { usePathname, useRouter } from "next/navigation";
 import { CiCircleCheck } from "react-icons/ci";
 import { IoCloseCircleOutline } from "react-icons/io5";
-import axios from "axios";
 import { humanReadableFormat, UpdateTime } from "@/utils/calculation";
-import { useAppKitAccount, useAppKitProvider } from "@reown/appkit/react";
 import { buySolanaTokensQuickBuyHandler } from "@/utils/solanaBuySell/solanaBuySell";
-import SearchPopup from "../Search-Popup/SearchPopup";
 import LoaderPopup from "../LoaderPopup/LoaderPopup";
-import { setBigLoader } from "@/app/redux/states";
-import { MdOutlineQuickreply } from "react-icons/md";
 import { getSolanaBalanceAndPrice } from "@/utils/solanaNativeBalance";
 
 const NewPairSBody = ({ data, loading }) => {
@@ -24,7 +19,7 @@ const NewPairSBody = ({ data, loading }) => {
   const pathname = usePathname();
   const getNetwork = pathname.split("/")[2];
   const dispatch = useDispatch();
-  const [nativeTokenbalance, setNativeTokenbalance] = useState(0);
+  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance)
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
@@ -88,9 +83,8 @@ const NewPairSBody = ({ data, loading }) => {
           {data?.slice(0, 100).map((row, ind) => (
             <tbody key={ind} className="text-center">
               <tr
-                className={`hover:bg-[#24262e] ${
-                  ind % 2 === 0 && "bg-[#16171c]"
-                } cursor-pointer`}
+                className={`hover:bg-[#24262e] ${ind % 2 === 0 && "bg-[#16171c]"
+                  } cursor-pointer`}
                 onClick={() => {
                   // Navigate to the trading view with query parameters
                   router.push(
@@ -237,9 +231,8 @@ const NewPairSBody = ({ data, loading }) => {
                   <div className="flex justify-center gap-2 text-[#828282]">
                     <div className="grid  text-start">
                       <div
-                        className={`flex flex-col text-start opacity-75 ${
-                          true ? "text-white" : "text-[#828282]"
-                        }`}
+                        className={`flex flex-col text-start opacity-75 ${true ? "text-white" : "text-[#828282]"
+                          }`}
                       >
                         {true ? (
                           <CiCircleCheck size={20} className="text-[#3aeeeb]" />
@@ -258,9 +251,8 @@ const NewPairSBody = ({ data, loading }) => {
 
                     <div className="grid  text-start ">
                       <div
-                        className={`flex flex-col text-start opacity-75 ${
-                          true ? "text-white" : "text-[#828282]"
-                        }`}
+                        className={`flex flex-col text-start opacity-75 ${true ? "text-white" : "text-[#828282]"
+                          }`}
                       >
                         {true ? (
                           <CiCircleCheck size={20} className="text-[#3aeeeb]" />
@@ -279,9 +271,8 @@ const NewPairSBody = ({ data, loading }) => {
 
                     <div className="grid  text-start text-white">
                       <div
-                        className={`flex flex-col text-start opacity-75 ${
-                          true ? "text-white" : "text-[#828282]"
-                        }`}
+                        className={`flex flex-col text-start opacity-75 ${true ? "text-white" : "text-[#828282]"
+                          }`}
                       >
                         {true ? (
                           <CiCircleCheck size={20} className="text-[#3aeeeb]" />
@@ -299,9 +290,8 @@ const NewPairSBody = ({ data, loading }) => {
                     </div>
                     <div className="grid  text-start text-white">
                       <div
-                        className={`flex flex-col text-start opacity-75 ${
-                          true ? "text-white" : "text-[#828282]"
-                        }`}
+                        className={`flex flex-col text-start opacity-75 ${true ? "text-white" : "text-[#828282]"
+                          }`}
                       >
                         {true ? (
                           <CiCircleCheck size={20} className="text-[#3aeeeb]" />
@@ -329,18 +319,17 @@ const NewPairSBody = ({ data, loading }) => {
                         quickBuy,
                         solWalletAddress,
                         nativeTokenbalance,
-                        setNativeTokenbalance,
                         e,
-                        row?.address
+                        row?.address,
+                        dispatch
                       );
                     }}
                   >
                     {quickBuy
-                      ? `${
-                          quickBuy.length > 6
-                            ? `${quickBuy.slice(0, 7)}...`
-                            : quickBuy
-                        }`
+                      ? `${quickBuy.length > 6
+                        ? `${quickBuy.slice(0, 7)}...`
+                        : quickBuy
+                      }`
                       : 0}
                   </button>
                 </td>

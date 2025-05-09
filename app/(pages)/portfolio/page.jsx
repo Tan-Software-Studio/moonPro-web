@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 export default function Portfolio() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false)
+  const [allWallets, setAllWallets] = useState([]);
   const [walletAddresses, setWalletAddresses] = useState([]);
   const { t } = useTranslation();
   const portfolio = t("portfolio");
@@ -33,10 +34,9 @@ export default function Portfolio() {
           Authorization: `Bearer ${jwtToken}`,
         },
       });
-      console.log(
-        "🚀 ~ getAllWallets ~ response:",
-        response?.data?.data?.wallets?.walletAddressSOL
-      );
+      const wallets = response?.data?.data?.wallets?.walletAddressSOL
+      setAllWallets(wallets);
+
       setWalletAddresses(response?.data?.data?.wallets?.walletAddressSOL);
       setIsLoading(false);
     } catch (error) {
@@ -134,6 +134,18 @@ export default function Portfolio() {
     toast.success('Wallet address copied successfully')
   };
 
+  function handleSearchWallet(e) {
+    const value = e.target.value.toLowerCase().trim();
+    if (!value) {
+      setWalletAddresses(allWallets);  
+      return;
+    }
+    const searchItems = allWallets.filter((wallet) => 
+      wallet?.wallet?.toLowerCase()?.includes(value)
+    );
+    setWalletAddresses(searchItems);
+  }
+
 
 
   useEffect(() => {
@@ -153,17 +165,18 @@ export default function Portfolio() {
             <div className=" selection: w-full md:w-64">
               <input
                 type="text"
-                placeholder="Search by name or address"
+                onChange={handleSearchWallet}
+                placeholder="Search by address"
                 className="w-full bg-gray-900 border border-gray-800 rounded-lg p-2 pl-4 pr-10 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
             <div className="flex gap-3 w-full md:w-auto">
-              <button
+              {/* <button
                 className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-sm `}
               >
                 <span>{portfolio?.Show} </span>
-              </button>
+              </button> */}
 
               <button className="flex items-center space-x-2 px-3 py-1.5 bg-gray-800 rounded-lg text-sm">
                 <span>{portfolio?.Import}</span>
@@ -262,9 +275,9 @@ export default function Portfolio() {
                       {/* Actions */}
                       <td className="py-4 px-6">
                         <div className="flex items-center justify-end space-x-1">
-                          <button className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-gray-100" title="Archive wallet">
+                          {/* <button className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-gray-100" title="Archive wallet">
                             <IoEyeOff size={18} />
-                          </button>
+                          </button> */}
 
                           <Link
                             href={`https://solscan.io/account/${wallet?.wallet}`}

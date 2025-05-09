@@ -19,6 +19,7 @@ import TokenInfo from "@/components/common/tradingview/TokenInfo";
 import DataSecurity from "@/components/common/tradingview/DataSecurity";
 import { useTranslation } from "react-i18next";
 import { getTokenBalance } from "@/utils/EVM/getBalances";
+import { setSolanaNativeBalance } from "@/app/redux/states";
 
 const Tradingview = () => {
   const { t } = useTranslation();
@@ -29,7 +30,6 @@ const Tradingview = () => {
   const [copied, setCopied] = useState(false);
   const dispatch = useDispatch();
   const [tokenBalance, setTokenBalance] = useState(0);
-  const [nativeTokenbalance, setNativeTokenbalance] = useState(0);
   const searchParams = useSearchParams();
   const [chartTokenData, setchartTokenData] = useState({});
   const tokenaddress = searchParams.get("tokenaddress");
@@ -44,6 +44,8 @@ const Tradingview = () => {
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
+  // native balance
+  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance)
 
   useEffect(() => {
     dispatch(setselectToken("Solana"));
@@ -74,17 +76,10 @@ const Tradingview = () => {
     const fetchTokenMeta = async () => {
       const [singleTokenBalance, solBalance] = await Promise.all([
         getSoalanaTokenBalance(solWalletAddress, tokenaddress),
-        getSolanaBalanceAndPrice(solWalletAddress),
+        dispatch(setSolanaNativeBalance()),
       ]);
       if (singleTokenBalance) {
-        console.log(
-          "🚀 ~ fetchTokenMeta ~ singleTokenBalance:",
-          singleTokenBalance
-        );
         setTokenBalance(singleTokenBalance || 0);
-      }
-      if (solBalance) {
-        setNativeTokenbalance(solBalance);
       }
     };
     fetchTokenMeta();
@@ -98,7 +93,7 @@ const Tradingview = () => {
       const formattedAddress = mintAddress;
       navigator.clipboard
         ?.writeText(formattedAddress)
-        .then(() => {})
+        .then(() => { })
         .catch((err) => {
           console.error("Failed to copy: ", err?.message);
         });
@@ -269,7 +264,7 @@ const Tradingview = () => {
         chartTokenData?.perfomancePertnage_5min == "NaN"
           ? 0
           : `${Number(chartTokenData?.perfomancePertnage_5min).toFixed(2)}` ||
-            "N/A",
+          "N/A",
     },
     {
       label: "1H",
@@ -277,7 +272,7 @@ const Tradingview = () => {
         chartTokenData?.perfomancePertnage_1h == "NaN"
           ? 0
           : `${Number(chartTokenData?.perfomancePertnage_1h).toFixed(2)}` ||
-            "N/A",
+          "N/A",
     },
     {
       label: "6H",
@@ -285,7 +280,7 @@ const Tradingview = () => {
         chartTokenData?.perfomancePertnage_6h == "NaN"
           ? 0
           : `${Number(chartTokenData?.perfomancePertnage_6h).toFixed(2)}` ||
-            "N/A",
+          "N/A",
     },
     {
       label: "24H",
@@ -293,7 +288,7 @@ const Tradingview = () => {
         chartTokenData?.perfomancePertnage_24h == "NaN"
           ? 0
           : `${Number(chartTokenData?.perfomancePertnage_24h).toFixed(2)}` ||
-            "N/A",
+          "N/A",
     },
   ];
 
@@ -305,9 +300,8 @@ const Tradingview = () => {
       )}`,
     },
     {
-      label: `${tragindViewPage?.right?.tokeninfo?.price} ${
-        getNetwork == "solana" ? "SOL" : "WETH"
-      }`,
+      label: `${tragindViewPage?.right?.tokeninfo?.price} ${getNetwork == "solana" ? "SOL" : "WETH"
+        }`,
       price: `$${decimalConvert(chartTokenData?.price_in_sol || 0)}`,
     },
     {
@@ -381,9 +375,8 @@ const Tradingview = () => {
 
   return (
     <div
-      className={`lg:flex relative overflow-y-auto h-[86vh] md:h-[91vh] lg:h-[100vh] ${
-        isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5 ml-2 mr-2"
-      }`}
+      className={`lg:flex relative overflow-y-auto h-[86vh] md:h-[91vh] lg:h-[100vh] ${isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5 ml-2 mr-2"
+        }`}
     >
       {/* left side */}
       <div className="lg:!h-[91vh] mb-2 lg:w-[80%] grid place-items-center text-[#8d93b752] overflow-y-auto w-full">
@@ -443,11 +436,11 @@ const Tradingview = () => {
             tokenBalance={tokenBalance}
             tokenName={tokenSymbol}
             nativeTokenbalance={nativeTokenbalance}
-            setNativeTokenbalance={setNativeTokenbalance}
             decimal={chartTokenData?.decimal}
             progranAddress={chartTokenData?.programAddress}
             bondingProgress={chartTokenData?.bondingCurveProgress || 0}
             price={latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD}
+            dispatch={dispatch}
           />
         </div>
 

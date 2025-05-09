@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import {Lightning, Swaps } from "@/app/Images";
+import { Lightning, Swaps } from "@/app/Images";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 // import toast from "react-hot-toast";
@@ -24,7 +24,7 @@ const TableBody = ({ data, img }) => {
 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [copied, setCopied] = useState(false);
-  const [nativeTokenbalance, setNativeTokenbalance] = useState(0);
+  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance)
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
@@ -193,13 +193,12 @@ const TableBody = ({ data, img }) => {
                         </p>
                       </div>
                       <p
-                        className={`text-[15px] mt-2 ${
-                          data.length > 0 &&
-                          typeof row?.Percentage === "string" &&
-                          row?.Percentage.includes("-")
+                        className={`text-[15px] mt-2 ${data.length > 0 &&
+                            typeof row?.Percentage === "string" &&
+                            row?.Percentage.includes("-")
                             ? "text-[#ED1B24]"
                             : "text-[#21CB6B]"
-                        }`}
+                          }`}
                       >
                         {row?.Percentage}
                       </p>
@@ -274,9 +273,8 @@ const TableBody = ({ data, img }) => {
                   </td> */}
                   <td className="whitespace-nowrap W-60 py-3 flex justify-center">
                     <div
-                      className={`flex  gap-2 ${
-                        !row.mint_authority ? "text-white" : "text-[#828282]"
-                      }`}
+                      className={`flex  gap-2 ${!row.mint_authority ? "text-white" : "text-[#828282]"
+                        }`}
                     >
                       <Tooltip
                         body={
@@ -307,11 +305,10 @@ const TableBody = ({ data, img }) => {
                       <Tooltip body={"No one can freeze token transfers."}>
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${
-                              !row.mint_authority
+                            className={`flex flex-col text-start opacity-75 ${!row.mint_authority
                                 ? "text-white"
                                 : "text-[#828282]"
-                            }`}
+                              }`}
                           >
                             {!row.freeze_authority ? (
                               <CiCircleCheck
@@ -339,9 +336,8 @@ const TableBody = ({ data, img }) => {
                       >
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${
-                              true ? "text-white" : "text-[#828282]"
-                            }`}
+                            className={`flex flex-col text-start opacity-75 ${true ? "text-white" : "text-[#828282]"
+                              }`}
                           >
                             {true ? (
                               <CiCircleCheck
@@ -365,9 +361,8 @@ const TableBody = ({ data, img }) => {
                       <Tooltip body={"Shows if token has 10 holders."}>
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${
-                              row?.top10Holder ? "text-white" : "text-[#828282]"
-                            }`}
+                            className={`flex flex-col text-start opacity-75 ${row?.top10Holder ? "text-white" : "text-[#828282]"
+                              }`}
                           >
                             {row?.top10Holder ? (
                               <CiCircleCheck
@@ -400,9 +395,9 @@ const TableBody = ({ data, img }) => {
                           quickBuy,
                           solWalletAddress,
                           nativeTokenbalance,
-                          setNativeTokenbalance,
                           e,
-                          row?.address
+                          row?.address,
+                          dispatch
                         )
                       }
                     >
@@ -411,11 +406,10 @@ const TableBody = ({ data, img }) => {
                       </span>
                       <span>
                         {quickBuy
-                          ? `${
-                              quickBuy.length > 6
-                                ? `${quickBuy.slice(0, 7)}...`
-                                : quickBuy
-                            }`
+                          ? `${quickBuy.length > 6
+                            ? `${quickBuy.slice(0, 7)}...`
+                            : quickBuy
+                          }`
                           : 0}
                       </span>
                     </button>

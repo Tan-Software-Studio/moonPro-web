@@ -1,3 +1,5 @@
+import { getSolanaBalanceAndPrice } from "@/utils/solanaNativeBalance";
+
 const { createSlice } = require("@reduxjs/toolkit");
 
 const AllStatesData = createSlice({
@@ -13,7 +15,8 @@ const AllStatesData = createSlice({
     chartSymbolImage: null,
     favouriteTokens: [],
     solWalletAddress: null,
-    jwtToken: null
+    solNativeBalance: 0,
+    jwtToken: null,
   },
   reducers: {
     setWalletAddress: (state, action) => {
@@ -50,11 +53,14 @@ const AllStatesData = createSlice({
       const token = localStorage.getItem("token")
       state.solWalletAddress = wallet ? wallet : null
       state.jwtToken = token ? token : null
+    },
+    setSolanaNativeBalance: async (state, action) => {
+      const solBalance = await getSolanaBalanceAndPrice(state.solWalletAddress)
+      state.solNativeBalance = solBalance
     }
   },
 });
 
-export default AllStatesData.reducer;
 export const {
   setWalletAddress,
   setIsSearchPopup,
@@ -65,5 +71,7 @@ export const {
   setChartSymbolImage,
   setFavouriteTokens,
   setUserInfo,
-  setSolWalletAddress
+  setSolWalletAddress,
+  setSolanaNativeBalance
 } = AllStatesData.actions;
+export default AllStatesData.reducer;

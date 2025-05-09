@@ -4,6 +4,7 @@ import {
 } from "../solanaNativeBalance";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { setSolanaNativeBalance } from "@/app/redux/states";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 // handler to buy solana tokens
 const buySolanaTokens = async (
@@ -14,10 +15,9 @@ const buySolanaTokens = async (
   address,
   setLoaderSwap,
   setTokenBalance,
-  setNativeTokenbalance,
-  programAddress
+  programAddress,
+  dispatch
 ) => {
-  // console.log("🚀 ~ setNativeTokenbalance:", setNativeTokenbalance);
   // console.log("🚀 ~ setTokenBalance:", setTokenBalance);
   // console.log("🚀 ~ priorityFee:", priorityFee);
   // console.log("🚀 ~ slipTolerance:", slipTolerance);
@@ -82,10 +82,10 @@ const buySolanaTokens = async (
       setTimeout(async () => {
         const [tokenBalanceUpdate, solBalance] = await Promise.all([
           getSoalanaTokenBalance(address, toToken),
-          getSolanaBalanceAndPrice(address),
+          dispatch(setSolanaNativeBalance())
+
         ]);
         setTokenBalance(tokenBalanceUpdate);
-        setNativeTokenbalance(solBalance);
       }, 5000);
     })
     .catch(async (err) => {
@@ -104,10 +104,10 @@ const buySolanaTokensQuickBuyHandler = async (
   amt,
   address,
   nativeTokenbalance,
-  setNativeTokenbalance,
   e,
   programAddress,
-  bondingCurv = 0
+  bondingCurv = 0,
+  dispatch
 ) => {
   e && e.stopPropagation();
   const token = localStorage.getItem("token");
@@ -167,8 +167,7 @@ const buySolanaTokensQuickBuyHandler = async (
         duration: 3000,
       });
       setTimeout(() => {
-        const solBalance = getSolanaBalanceAndPrice(address);
-        setNativeTokenbalance(solBalance);
+        dispatch(setSolanaNativeBalance())
       }, 2000);
     })
     .catch(async (err) => {
@@ -185,9 +184,9 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
   toToken,
   address,
   nativeTokenbalance,
-  setNativeTokenbalance,
   e,
-  programAddress
+  programAddress,
+  dispatch
 ) => {
   e && e.stopPropagation();
   const amt = await localStorage.getItem("copyBuySol");
@@ -253,8 +252,7 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
         duration: 3000,
       });
       setTimeout(() => {
-        const solBalance = getSolanaBalanceAndPrice(address);
-        setNativeTokenbalance(solBalance);
+        dispatch(setSolanaNativeBalance())
       }, 2000);
     })
     .catch(async (err) => {
@@ -277,10 +275,9 @@ const sellSolanaTokens = async (
   price,
   setLoaderSwap,
   setTokenBalance,
-  setNativeTokenbalance,
-  programAddress
+  programAddress,
+  dispatch
 ) => {
-  // console.log("🚀 ~ setNativeTokenbalance:", setNativeTokenbalance);
   // console.log("🚀 ~ setTokenBalance:", setTokenBalance);
   // console.log("🚀 ~ setLoaderSwap:", setLoaderSwap);
   // console.log("🚀 ~ price:", price);
@@ -342,10 +339,9 @@ const sellSolanaTokens = async (
       setTimeout(async () => {
         const [tokenBalanceUpdate, solBalance] = await Promise.all([
           getSoalanaTokenBalance(address, fromToken),
-          getSolanaBalanceAndPrice(address),
+          dispatch(setSolanaNativeBalance())
         ]);
         setTokenBalance(tokenBalanceUpdate);
-        setNativeTokenbalance(solBalance);
       }, 5000);
     })
     .catch(async (err) => {

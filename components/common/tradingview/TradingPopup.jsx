@@ -10,7 +10,6 @@ import {
 } from "@/utils/solanaBuySell/solanaBuySell";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { getSoalanaTokenBalance } from "@/utils/solanaNativeBalance";
 import Image from "next/image";
 import { Solana, solana } from "@/app/Images";
 
@@ -24,11 +23,11 @@ const TradingPopup = ({
   tokenBalance,
   tokenName,
   nativeTokenbalance,
-  setNativeTokenbalance,
   decimal,
   price,
   progranAddress,
   bondingProgress,
+  dispatch
 }) => {
   const [loaderSwap, setLoaderSwap] = useState(false);
   const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
@@ -91,8 +90,8 @@ const TradingPopup = ({
           walletAddress,
           setLoaderSwap,
           setTokenBalance,
-          setNativeTokenbalance,
-          bondingProgress >= 100 ? "djasodnasuodhasoduashd" : progranAddress
+          bondingProgress >= 100 ? "djasodnasuodhasoduashd" : progranAddress,
+          dispatch
         );
       } else {
         toast.error("Insufficient funds.");
@@ -133,8 +132,8 @@ const TradingPopup = ({
           price,
           setLoaderSwap,
           setTokenBalance,
-          setNativeTokenbalance,
-          bondingProgress >= 100 ? "djasodnasuodhasoduashd" : progranAddress
+          bondingProgress >= 100 ? "djasodnasuodhasoduashd" : progranAddress,
+          dispatch
         );
       } else {
         toast.error("Insufficient funds.");
