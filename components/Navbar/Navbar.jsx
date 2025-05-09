@@ -129,8 +129,6 @@ const Navbar = () => {
                   placeholder={navbar?.profile?.search}
                 />
               </div>
-              <h1>{nativeTokenbalance}</h1>
-
               {/* Only sm search bar */}
               <div
                 onClick={() => dispatch(setIsSearchPopup(true))}
