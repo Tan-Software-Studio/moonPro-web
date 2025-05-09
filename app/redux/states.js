@@ -1,7 +1,13 @@
 import { getSolanaBalanceAndPrice } from "@/utils/solanaNativeBalance";
+const { createSlice, createAsyncThunk } = require("@reduxjs/toolkit");
 
-const { createSlice } = require("@reduxjs/toolkit");
-
+export const fetchSolanaNativeBalance = createAsyncThunk(
+  "wallet/fetchSolanaNativeBalance",
+  async (walletAddress) => {
+    const balance = await getSolanaBalanceAndPrice(walletAddress);
+    return balance;
+  }
+);
 const AllStatesData = createSlice({
   name: "AllStatesData",
   initialState: {
@@ -45,19 +51,24 @@ const AllStatesData = createSlice({
       state.favouriteTokens = action?.payload;
     },
     setUserInfo: (state, action) => {
-      console.log("🚀 ~ action:", action?.payload)
+      console.log("🚀 ~ action:", action?.payload);
       state.user = action?.payload;
     },
     setSolWalletAddress: (state, action) => {
-      const wallet = localStorage.getItem("walletAddress")
-      const token = localStorage.getItem("token")
-      state.solWalletAddress = wallet ? wallet : null
-      state.jwtToken = token ? token : null
+      const wallet = localStorage.getItem("walletAddress");
+      const token = localStorage.getItem("token");
+      state.solWalletAddress = wallet ? wallet : null;
+      state.jwtToken = token ? token : null;
     },
     setSolanaNativeBalance: async (state, action) => {
-      const solBalance = await getSolanaBalanceAndPrice(state.solWalletAddress)
-      state.solNativeBalance = solBalance
-    }
+      const solBalance = await getSolanaBalanceAndPrice(state.solWalletAddress);
+      state.solNativeBalance = solBalance;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchSolanaNativeBalance.fulfilled, (state, action) => {
+      state.solNativeBalance = action.payload;
+    });
   },
 });
 
@@ -72,6 +83,6 @@ export const {
   setFavouriteTokens,
   setUserInfo,
   setSolWalletAddress,
-  setSolanaNativeBalance
+  setSolanaNativeBalance,
 } = AllStatesData.actions;
 export default AllStatesData.reducer;

@@ -12,7 +12,7 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import { humanReadableFormat, UpdateTime } from "@/utils/calculation";
 import { buySolanaTokensQuickBuyHandler } from "@/utils/solanaBuySell/solanaBuySell";
 import LoaderPopup from "../LoaderPopup/LoaderPopup";
-import { getSolanaBalanceAndPrice } from "@/utils/solanaNativeBalance";
+import { fetchSolanaNativeBalance } from "@/app/redux/states";
 
 const NewPairSBody = ({ data, loading }) => {
   const router = useRouter();
@@ -54,14 +54,9 @@ const NewPairSBody = ({ data, loading }) => {
 
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, []); // This runs once when the component mounts
-
-  async function getSolanaBalance() {
-    const solBalance = await getSolanaBalanceAndPrice(solWalletAddress);
-    setNativeTokenbalance(solBalance);
-  }
   useEffect(() => {
     if (solWalletAddress) {
-      getSolanaBalance();
+      dispatch(fetchSolanaNativeBalance(solWalletAddress));
     }
   }, [solWalletAddress]);
   return (

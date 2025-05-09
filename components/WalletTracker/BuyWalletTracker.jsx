@@ -2,13 +2,13 @@
 import React, { useEffect } from "react";
 import { buySolanaTokensQuickBuyHandlerCopyTrading } from "@/utils/solanaBuySell/solanaBuySell";
 import { useDispatch, useSelector } from "react-redux";
-import { setSolanaNativeBalance } from "@/app/redux/states";
+import { fetchSolanaNativeBalance } from "@/app/redux/states";
 export default function BuyWalletTracker({ solWalletAddress, toToken }) {
   const dispatch = useDispatch()
   const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance)
   useEffect(() => {
     if (solWalletAddress) {
-      dispatch(setSolanaNativeBalance())
+      dispatch(fetchSolanaNativeBalance(solWalletAddress))
     }
   }, [solWalletAddress]);
   return (

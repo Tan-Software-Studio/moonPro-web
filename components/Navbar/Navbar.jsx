@@ -6,16 +6,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  IoMenu,
-  IoSettingsOutline,
-} from "react-icons/io5";
+import { IoMenu, IoSettingsOutline } from "react-icons/io5";
 import { setIsSidebarOpen } from "@/app/redux/CommonUiData";
 import { logo } from "@/app/Images";
 import {
+  fetchSolanaNativeBalance,
   setIsEnabled,
   setIsSearchPopup,
-  setSolanaNativeBalance,
   setSolWalletAddress,
 } from "@/app/redux/states";
 import { PiUserBold, PiUserLight } from "react-icons/pi";
@@ -29,13 +26,12 @@ import AccountSecurity from "./popup/AccountSecurity";
 import Watchlist from "./popup/Watchlist";
 import { useTranslation } from "react-i18next";
 const Navbar = () => {
-
   const [mounted, setMounted] = useState(false);
 
   // dropdown popup
   const [isSettingPopup, setIsSettingPopup] = useState(false);
   const [isAccountPopup, setIsAccountPopup] = useState(false);
-  const [isWatchlistPopup, setIsWatchlistPopup] = useState(false)
+  const [isWatchlistPopup, setIsWatchlistPopup] = useState(false);
 
   // login signup
   const [isLoginPopup, setIsLoginPopup] = useState(false);
@@ -43,7 +39,9 @@ const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   // X===================X Use selectors X===================X //
-  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance)
+  const nativeTokenbalance = useSelector(
+    (state) => state?.AllStatesData?.solNativeBalance
+  );
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
@@ -80,17 +78,15 @@ const Navbar = () => {
   // update and get solana balance
   useEffect(() => {
     if (solWalletAddress) {
-      dispatch(setSolanaNativeBalance())
+      dispatch(fetchSolanaNativeBalance(solWalletAddress));
     }
   }, [solWalletAddress]);
 
   useEffect(() => {
     setMounted(true);
 
-    // set SolWalletAddress 
+    // set SolWalletAddress
     dispatch(setSolWalletAddress());
-
-
 
     // Click out side for closing dropdown of profile
     function handleClickOutside(event) {
@@ -118,19 +114,22 @@ const Navbar = () => {
             <div className=" flex items-center gap-2  ">
               {/* Search bar */}
               <div
-                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
-                  } border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                className={`md:flex items-center  border ${
+                  isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
+                } border-[#333333] ${
+                  isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                 onClick={() => dispatch(setIsSearchPopup(true))}
               >
                 <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                 <input
-                  className={` ${isSidebarOpen ? "w-0" : "w-12"
-                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                  className={` ${
+                    isSidebarOpen ? "w-0" : "w-12"
+                  } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                   placeholder={navbar?.profile?.search}
                 />
               </div>
-
+              <h1>{nativeTokenbalance}</h1>
 
               {/* Only sm search bar */}
               <div
@@ -156,10 +155,7 @@ const Navbar = () => {
                 {solWalletAddress ? (
                   <div className=" " ref={dropdownRef}>
                     <div onClick={() => setIsProfileOpen((prev) => !prev)}>
-                      <PiUserBold
-                        size={26}
-                        className={`cursor-pointer`}
-                      />
+                      <PiUserBold size={26} className={`cursor-pointer`} />
                     </div>
 
                     {isProfileOpen && (
@@ -252,9 +248,7 @@ const Navbar = () => {
         </div>
       </div>
 
-
       <AnimatePresence>
-
         {isLoginPopup && (
           <LoginPopup
             isLoginPopup={isLoginPopup}
@@ -264,18 +258,15 @@ const Navbar = () => {
           />
         )}
 
-        {isSettingPopup &&
-          <Setting setIsSettingPopup={setIsSettingPopup} />
-        }
+        {isSettingPopup && <Setting setIsSettingPopup={setIsSettingPopup} />}
 
         {isAccountPopup && (
           <AccountSecurity setIsAccountPopup={setIsAccountPopup} />
         )}
 
-        {isWatchlistPopup &&
+        {isWatchlistPopup && (
           <Watchlist setIsWatchlistPopup={setIsWatchlistPopup} />
-        }
-
+        )}
       </AnimatePresence>
     </>
   );

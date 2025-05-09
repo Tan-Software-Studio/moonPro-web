@@ -7,7 +7,6 @@ import Table from "@/components/TradingChart/Table";
 import { solana } from "@/app/Images";
 import {
   getSoalanaTokenBalance,
-  getSolanaBalanceAndPrice,
 } from "@/utils/solanaNativeBalance";
 import { decimalConvert } from "@/utils/basicFunctions";
 import axiosInstance from "@/components/axiosIntance/axiosInstance";
@@ -18,8 +17,7 @@ import TradingPopup from "@/components/common/tradingview/TradingPopup";
 import TokenInfo from "@/components/common/tradingview/TokenInfo";
 import DataSecurity from "@/components/common/tradingview/DataSecurity";
 import { useTranslation } from "react-i18next";
-import { getTokenBalance } from "@/utils/EVM/getBalances";
-import { setSolanaNativeBalance } from "@/app/redux/states";
+import { fetchSolanaNativeBalance } from "@/app/redux/states";
 
 const Tradingview = () => {
   const { t } = useTranslation();
@@ -76,7 +74,7 @@ const Tradingview = () => {
     const fetchTokenMeta = async () => {
       const [singleTokenBalance, solBalance] = await Promise.all([
         getSoalanaTokenBalance(solWalletAddress, tokenaddress),
-        dispatch(setSolanaNativeBalance()),
+        dispatch(fetchSolanaNativeBalance(solWalletAddress)),
       ]);
       if (singleTokenBalance) {
         setTokenBalance(singleTokenBalance || 0);
