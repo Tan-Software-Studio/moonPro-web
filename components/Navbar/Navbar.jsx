@@ -15,6 +15,7 @@ import { logo } from "@/app/Images";
 import {
   setIsEnabled,
   setIsSearchPopup,
+  setSolanaNativeBalance,
   setSolWalletAddress,
 } from "@/app/redux/states";
 import { PiUserBold, PiUserLight } from "react-icons/pi";
@@ -42,6 +43,7 @@ const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   // X===================X Use selectors X===================X //
+  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance)
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
@@ -75,7 +77,12 @@ const Navbar = () => {
     }, 1500);
   };
 
-
+  // update and get solana balance
+  useEffect(() => {
+    if (solWalletAddress) {
+      dispatch(setSolanaNativeBalance())
+    }
+  }, [solWalletAddress]);
 
   useEffect(() => {
     setMounted(true);
@@ -239,7 +246,7 @@ const Navbar = () => {
                 onClick={() => dispatch(setIsSidebarOpen(!isSidebarOpen))}
               >
                 <IoMenu className="text-[30px] text-[#fdf5f5] p-[2px]" />
-              </div> 
+              </div>
             </div>
           </div>
         </div>
