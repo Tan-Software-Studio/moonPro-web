@@ -129,29 +129,30 @@ const Navbar = () => {
                 />
               </div>
 
-              <div
-                onClick={() => setIsSolDepositPopup(!isSolDepositPopup)}
-                className={`flex items-center cursor-pointer gap-3 rounded-lg h-8 px-2 bg-[#1A1A1A]   `}
-              >
-                <div className="flex items-center gap-2">
-                  <Image
-                    src={walletBalance}
-                    alt="solana"
-                    height={30}
-                    width={30}
-                    className="rounded-full"
-                  />
-                  <div>{Number(nativeTokenbalance).toFixed(5) || 0}</div>
-                </div>
-
-                <div className="sm:flex  hidden items-center gap-3">
-                  <FaWallet className="h-4 w-4 text-[#FFFFFF]" />
-                  <div className={` text-[#A8A8A8] text-sm font-thin `}>
-                    {solWalletAddress?.toString()?.slice(0, 4)}...
-                    {solWalletAddress?.toString()?.slice(-4)}
+              {solWalletAddress &&
+                <div
+                  onClick={() => setIsSolDepositPopup(!isSolDepositPopup)}
+                  className={`flex items-center cursor-pointer gap-3 rounded-lg h-8 px-2 bg-[#1A1A1A]   `}
+                >
+                  <div className="flex items-center gap-2">
+                    <Image
+                      src={walletBalance}
+                      alt="solana"
+                      height={30}
+                      width={30}
+                      className="rounded-full"
+                    />
+                    <div>{Number(nativeTokenbalance).toFixed(5) || 0}</div>
                   </div>
-                </div>
-              </div>
+
+                  <div className="sm:flex  hidden items-center gap-3">
+                    <FaWallet className="h-4 w-4 text-[#FFFFFF]" />
+                    <div className={` text-[#A8A8A8] text-sm font-thin `}>
+                      {solWalletAddress?.toString()?.slice(0, 4)}...
+                      {solWalletAddress?.toString()?.slice(-4)}
+                    </div>
+                  </div>
+                </div>}
 
               {/* Only sm search bar */}
               <div
