@@ -359,13 +359,6 @@ const TradingPopup = ({
               value={priorityFee}
               onChange={(e) => handlepriorityFeeChange(e.target.value)}
             />
-            <div className="px-4">
-              <img
-                src="https://cryptologos.cc/logos/solana-sol-logo.png"
-                className="w-[30px] h-[18px] rounded-full bg-cover"
-                alt=""
-              />
-            </div>
           </div>
           <div className="flex items-center justify-between">
             {[
