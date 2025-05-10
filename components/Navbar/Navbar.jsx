@@ -114,15 +114,18 @@ const Navbar = () => {
             <div className=" flex items-center gap-2  ">
               {/* Search bar */}
               <div
-                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
-                  } border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                className={`md:flex items-center  border ${
+                  isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
+                } border-[#333333] ${
+                  isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                 onClick={() => dispatch(setIsSearchPopup(true))}
               >
                 <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                 <input
-                  className={` ${isSidebarOpen ? "w-0" : "w-12"
-                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                  className={` ${
+                    isSidebarOpen ? "w-0" : "w-12"
+                  } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                   placeholder={navbar?.profile?.search}
                 />
               </div>
@@ -138,23 +141,17 @@ const Navbar = () => {
                     width={30}
                     className="rounded-full"
                   />
-                  <div>{nativeTokenbalance || 0}</div>
+                  <div>{Number(nativeTokenbalance).toFixed(5) || 0}</div>
                 </div>
 
                 <div className="sm:flex  hidden items-center gap-3">
                   <FaWallet className="h-4 w-4 text-[#FFFFFF]" />
-                  <div
-                    className={` text-[#A8A8A8] text-sm font-thin `}
-                  >
-                    {solWalletAddress
-                      ?.toString()
-                      ?.slice(0, 4)}...{solWalletAddress
-                        ?.toString()
-                        ?.slice(-4)} 
+                  <div className={` text-[#A8A8A8] text-sm font-thin `}>
+                    {solWalletAddress?.toString()?.slice(0, 4)}...
+                    {solWalletAddress?.toString()?.slice(-4)}
                   </div>
                 </div>
               </div>
-
 
               {/* Only sm search bar */}
               <div
