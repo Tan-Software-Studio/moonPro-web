@@ -107,7 +107,7 @@ const ActivityTable = () => {
                                             </div>
                                         </td>
                                         <td className="px-3 py-4 whitespace-nowrap text-sm">
-                                            {item.amount.toFixed(2)}
+                                            {item.amount.toFixed(5)}
                                         </td>
                                         <td className="px-3 py-4 whitespace-nowrap text-sm">
                                             ${item.amountInDollar.toFixed(2)}
