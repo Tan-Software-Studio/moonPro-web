@@ -8,9 +8,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
-import { FaRegCopy, FaStar } from "react-icons/fa";
+import { BiCheckDouble } from "react-icons/bi";
+import { FaCopy, FaStar } from "react-icons/fa";
 import { IoIosKey } from "react-icons/io";
-import { IoEyeOff } from "react-icons/io5";
 import { RiShareBoxLine } from "react-icons/ri";
 import { useDispatch } from "react-redux";
 
@@ -18,6 +18,7 @@ export default function Portfolio() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false)
   const [allWallets, setAllWallets] = useState([]);
+  const [copied, setCopied] = useState(false);
   const [walletAddresses, setWalletAddresses] = useState([]);
   const { t } = useTranslation();
   const portfolio = t("portfolio");
@@ -129,31 +130,42 @@ export default function Portfolio() {
 
   }
 
-  const copyToClipboard = (text) => {
-    navigator?.clipboard?.writeText(text);
-    toast.success('Wallet address copied successfully')
+
+  const copyToClipboard = (mintAddress) => {
+    setCopied(true);
+    if (mintAddress) {
+      const formattedAddress = mintAddress;
+      navigator.clipboard
+        ?.writeText(formattedAddress)
+        .then(() => { })
+        .catch((err) => {
+          console.error("Failed to copy: ", err?.message);
+        });
+    }
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
   };
 
   function handleSearchWallet(e) {
     const value = e.target.value.toLowerCase().trim();
     if (!value) {
-      setWalletAddresses(allWallets);  
+      setWalletAddresses(allWallets);
       return;
     }
-    const searchItems = allWallets.filter((wallet) => 
+    const searchItems = allWallets.filter((wallet) =>
       wallet?.wallet?.toLowerCase()?.includes(value)
     );
     setWalletAddresses(searchItems);
-  }
-
-
+  } 
 
   useEffect(() => {
     getAllWallets();
   }, []);
 
+
   return (
-    <div className="bg-[#08080E] text-white p-4 md:p-6">
+    <div className="bg-[#08080E] text-white p-3 md:p-6">
       <div className="md:text-2xl text-xl py-2 font-semibold ">Create Wallet</div>
       <div className="border-[#404040] border-[1px] rounded-lg">
         <div className="flex flex-col  ">
@@ -190,9 +202,12 @@ export default function Portfolio() {
             </div>
           </div>
 
-          <div className="min-h-[50vh] max-h-[70vh] overflow-y-auto rounded-lg border border-gray-800">
-            <table className="w-full table-fixed">
-              <thead>
+          {/* <div className="w-full max-w-full overflow-x-auto rounded-lg border border-gray-800">
+          <table className="">  */}
+
+          <div className="min-h-[50vh] max-w-full w-full whitespace-nowrap max-h-[70vh] overflow-x-auto overflow-y-auto rounded-lg border border-gray-800">
+            <table className="min-w-[800px] w-full table-fixed">
+              <thead className="overflow-x-auto">
                 <tr className="bg-gray-800 text-left text-gray-400 text-sm">
                   <th className="py-4 px-5 font-medium w-1/12">#</th>
                   <th className="py-4 px-5 font-medium w-5/12">{portfolio?.Wallet}</th>
@@ -207,7 +222,7 @@ export default function Portfolio() {
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="overflow-x-auto">
                 {isLoading ? (
                   <tr>
                     <td colSpan="5">
@@ -245,7 +260,13 @@ export default function Portfolio() {
                             className="text-xs text-gray-400 flex items-center hover:text-gray-200 transition-colors bg-gray-800/50 py-1 px-2 rounded-md"
                           >
                             {`${wallet?.wallet.slice(0, 4)}...${wallet?.wallet.slice(-4)}`}
-                            <FaRegCopy size={12} className="ml-2" />
+                            {copied ? (
+                              <BiCheckDouble className="text-[20px]" />
+                            ) : (
+                              <FaCopy
+                                className="cursor-pointer flex-shrink-0"
+                              />
+                            )}
                           </button>
                         </div>
                       </td>

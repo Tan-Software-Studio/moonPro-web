@@ -124,6 +124,7 @@ import vietnam from '../public/assets/languageImages/vietnam.webp';
 import googleLogo from '../public/assets/Navbar/google-logo.svg';
 import profileImage from '../public/assets/Profile/profile.png';
 import tableImage from '../public/assets/Profile/table.png';
+import walletBalance from '../public/assets/Navbar/walletBalance.png'
 
 
 export {
@@ -133,5 +134,6 @@ export {
   // googleLogo
   googleLogo,
   tableImage,
-  profileImage
+  profileImage,
+  walletBalance
 };

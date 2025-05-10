@@ -91,7 +91,11 @@ const AccountSecurity = ({ setIsAccountPopup, }) => {
                     <div>
                       <IoWalletOutline />
                     </div>
-                    <div>{solWalletAddress ? solWalletAddress : "wallet address"}</div>
+                    <div> {solWalletAddress
+                      ?.toString()
+                      ?.slice(0, 4)}...{solWalletAddress
+                        ?.toString()
+                        ?.slice(-4)} </div>
                   </div>
                 </div>
               </div>
@@ -215,7 +219,7 @@ const AccountSecurity = ({ setIsAccountPopup, }) => {
                 <IoWalletOutline />
                 <span>{accountPopupLng?.security?.manageWallets}</span>
               </Link>
-            </div> 
+            </div>
           </div>
         </div>
       </motion.div>
@@ -224,4 +228,3 @@ const AccountSecurity = ({ setIsAccountPopup, }) => {
 };
 
 export default AccountSecurity;
- 

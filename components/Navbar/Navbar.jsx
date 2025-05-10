@@ -8,7 +8,7 @@ import { AnimatePresence } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import { IoMenu, IoSettingsOutline } from "react-icons/io5";
 import { setIsSidebarOpen } from "@/app/redux/CommonUiData";
-import { logo } from "@/app/Images";
+import { logo, walletBalance } from "@/app/Images";
 import {
   fetchSolanaNativeBalance,
   setIsEnabled,
@@ -20,7 +20,7 @@ import LoginPopup from "./login/LoginPopup";
 import { RiLogoutBoxLine, RiNotification4Line } from "react-icons/ri";
 import { googleLogout } from "@react-oauth/google";
 import { MdLockOutline } from "react-icons/md";
-import { FaRegStar } from "react-icons/fa";
+import { FaRegStar, FaWallet } from "react-icons/fa";
 import Setting from "./popup/Setting";
 import AccountSecurity from "./popup/AccountSecurity";
 import Watchlist from "./popup/Watchlist";
@@ -114,21 +114,48 @@ const Navbar = () => {
             <div className=" flex items-center gap-2  ">
               {/* Search bar */}
               <div
-                className={`md:flex items-center  border ${
-                  isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
-                } border-[#333333] ${
-                  isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
+                  } border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                 onClick={() => dispatch(setIsSearchPopup(true))}
               >
                 <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                 <input
-                  className={` ${
-                    isSidebarOpen ? "w-0" : "w-12"
-                  } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                  className={` ${isSidebarOpen ? "w-0" : "w-12"
+                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                   placeholder={navbar?.profile?.search}
                 />
               </div>
+
+              <div
+                className={`flex items-center gap-3 rounded-lg h-8 px-2 bg-[#1A1A1A]   `}
+              >
+                <div className="flex items-center gap-2">
+                  <Image
+                    src={walletBalance}
+                    alt="solana"
+                    height={30}
+                    width={30}
+                    className="rounded-full"
+                  />
+                  <div>{nativeTokenbalance || 0}</div>
+                </div>
+
+                <div className="sm:flex  hidden items-center gap-3">
+                  <FaWallet className="h-4 w-4 text-[#FFFFFF]" />
+                  <div
+                    className={` text-[#A8A8A8] text-sm font-thin `}
+                  >
+                    {solWalletAddress
+                      ?.toString()
+                      ?.slice(0, 4)}...{solWalletAddress
+                        ?.toString()
+                        ?.slice(-4)} 
+                  </div>
+                </div>
+              </div>
+
+
               {/* Only sm search bar */}
               <div
                 onClick={() => dispatch(setIsSearchPopup(true))}

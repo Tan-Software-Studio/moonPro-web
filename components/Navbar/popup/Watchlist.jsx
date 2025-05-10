@@ -106,21 +106,21 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
                             </tbody>
                         </table>
 
-                        <div className="py-5 sm:px-5 px-3">
-                            <div className="flex gap-2 items-center justify-end">
-                                <button
-                                    onClick={() => setIsWatchlistPopup(false)}
-                                    className="py-2 px-5 border-[1px] border-[#ED1B24] text-[#ED1B24] hover:bg-[#ED1B24] hover:text-[#FFFFFF] rounded-md transition-all duration-500 ease-in-out "
-                                >
-                                    {accountPopupLng?.watchlist?.Cancel}
-                                </button>
-                                <button
-                                    onClick={() => setIsWatchlistPopup(false)}
-                                    className="py-2 px-5 border-[1px] border-[#1F73FC] text-white bg-[#1F73FC] hover:opacity-80 rounded-md transition-all duration-500 ease-in-out "
-                                >
-                                    {accountPopupLng?.watchlist?.Save}
-                                </button>
-                            </div>
+                    </div>
+                    <div className="py-5 sm:px-5 px-3">
+                        <div className="flex gap-2 items-center justify-end">
+                            <button
+                                onClick={() => setIsWatchlistPopup(false)}
+                                className="py-2 px-5 border-[1px] border-[#ED1B24] text-[#ED1B24] hover:bg-[#ED1B24] hover:text-[#FFFFFF] rounded-md transition-all duration-500 ease-in-out "
+                            >
+                                {accountPopupLng?.watchlist?.Cancel}
+                            </button>
+                            <button
+                                onClick={() => setIsWatchlistPopup(false)}
+                                className="py-2 px-5 border-[1px] border-[#1F73FC] text-white bg-[#1F73FC] hover:opacity-80 rounded-md transition-all duration-500 ease-in-out "
+                            >
+                                {accountPopupLng?.watchlist?.Save}
+                            </button>
                         </div>
                     </div>
 
