@@ -9,10 +9,11 @@ import { HiArrowsUpDown } from "react-icons/hi2";
 import { IoCopyOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import ActivityTable from "@/components/profile/ActivityTable";
 
 const Profile = () => {
   const [isActive, setIsActive] = useState("All");
-  const [tableTab, setTableTab] = useState("Recent PnL");
+  const [tableTab, setTableTab] = useState("Activity");
   const [copied, setCopied] = useState(false);
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
@@ -36,7 +37,7 @@ const Profile = () => {
   };
   return (
     <>
-      <div className="overflow-y-scroll h-[90vh]">
+      <div className="overflow-y-scroll h-[95vh]">
         <div className="lg:p-8 p-4 ">
           {/* Profile Header - Made responsive with flex-col on small screens */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -102,7 +103,8 @@ const Profile = () => {
         {/* Table Section */}
         <div>
           <div className="px-4 lg:px-8 py-3 flex items-center gap-3 md:gap-5 bg-[#1F1F1F] w-full overflow-x-auto">
-            {["Recent PnL", "Holdings", "Activity"].map((item, index) => (
+            {["Activity", "Recent PnL"].map((item, index) => (
+              //  "Holdings"
               <div
                 onClick={() => setTableTab(item)}
                 className={`${tableTab == item
@@ -117,119 +119,126 @@ const Profile = () => {
           </div>
 
           {/* Responsive Table */}
-          <div className="w-full px-2 lg:px-8 py-3 overflow-x-auto">
-            <table className="w-full min-w-[900px]">
-              <thead className="w-full ">
-                {[
-                  newProfile?.TOKENACTIVE,
-                  newProfile?.UNREALIZED,
-                  newProfile?.REALIZEDPROFIT,
-                  newProfile?.TOTALPROFIT,
-                  newProfile?.BALANCE,
-                  newProfile?.POSITION,
-                  newProfile?.HOLDING,
-                  newProfile?.BOUGHT,
-                  newProfile?.TXS,
-                ].map((item, index) => (
-                  <th key={index}>
-                    <td className="text-[#A8A8A8] px-2 font-semibold flex items-center  py-3 text-xs md:text-sm whitespace-nowrap">
-                      <div>{item}</div>
-                      <div>
-                        <HiArrowsUpDown />
-                      </div>
-                    </td>
-                  </th>
-                ))}
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="px-2">
-                    <div className="flex items-center gap-2">
-                      <img
-                        src={tableImage}
-                        alt="Token"
-                        className="w-8 md:w-10 h-8 md:h-10 xl:w-12 xl:h-12 rounded-[4px] border border-[#1F73FC]"
-                        loading="lazy"
-                      />
-                      <div>
-                        <div className="flex items-center flex-wrap">
-                          <div className="flex font-semibold text-sm md:text-base items-center">
-                            cascade{" "}
-                          </div>
-                          <div className="flex items-center text-xs md:text-sm text-[#6E6E6E]">
-                            /53mha...pump{" "}
-                            <span>
-                              <IoCopyOutline />
-                            </span>{" "}
-                          </div>
+
+          {tableTab == "Recent PnL" ?
+            <div className="w-full px-2 lg:px-8 py-3 overflow-x-auto">
+              <table className="w-full min-w-[900px]">
+                <thead className="w-full ">
+                  {[
+                    newProfile?.TOKENACTIVE,
+                    newProfile?.UNREALIZED,
+                    newProfile?.REALIZEDPROFIT,
+                    newProfile?.TOTALPROFIT,
+                    newProfile?.BALANCE,
+                    newProfile?.POSITION,
+                    newProfile?.HOLDING,
+                    newProfile?.BOUGHT,
+                    newProfile?.TXS,
+                  ].map((item, index) => (
+                    <th key={index}>
+                      <td className="text-[#A8A8A8] px-2 font-medium flex items-center  py-3 text-xs md:text-sm whitespace-nowrap">
+                        <div>{item}</div>
+                        <div>
+                          <HiArrowsUpDown />
                         </div>
-                        <div className="text-[#6E6E6E] text-xs md:text-sm">
-                          3d
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-
-                  <td className="text-xs md:text-sm px-2 whitespace-nowrap">
-                    {newProfile?.SellAll}
-                  </td>
-
-                  <td className="text-xs md:text-sm px-2 whitespace-nowrap">
-                    <div>$0</div>
-                    <div>0%</div>
-                  </td>
-
-                  <td className="text-xs md:text-sm px-2 whitespace-nowrap">
-                    <div>$0</div>
-                    <div>0%</div>
-                  </td>
-
-                  <td className="text-xs md:text-sm px-2 whitespace-nowrap">
-                    <div>$0</div>
-                    <div>0%</div>
-                  </td>
-
-                  <td className="text-xs md:text-sm px-2 whitespace-nowrap">
-                    <div>100%</div>
-                  </td>
-
-                  <td className="text-xs md:text-sm px-2 whitespace-nowrap">
-                    <div>--</div>
-                  </td>
-
-                  <td className="text-xs md:text-sm px-2 whitespace-nowrap">
-                    <div>$0</div>
-                    <div>0%</div>
-                  </td>
-
-                  <td className="text-xs md:text-sm px-2 whitespace-nowrap">
-                    <div>$0</div>
-                    <div>0%</div>
-                  </td>
-
-                  <td className="whitespace-nowrap py-3 px-3 md:px-6">
-                    <div className="grid">
-                      <div className="flex gap-1.5">
-                        <Image
-                          src={Swaps}
-                          alt="newPairsIcon"
-                          className="my-auto"
+                      </td>
+                    </th>
+                  ))}
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="px-2">
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={tableImage}
+                          alt="Token"
+                          className="w-8 md:w-10 h-8 md:h-10 xl:w-12 xl:h-12 rounded-[4px] border border-[#1F73FC]"
+                          loading="lazy"
                         />
                         <div>
-                          <p className="mt-0.5 text-sm px-2 md:text-base">4</p>
-                          <p className="mt-0.5 text-xs md:text-sm">
-                            <span className="text-[#21CB6B]">3</span>
-                            <span className="text-[#828282]"> / </span>
-                            <span className="text-[#ED1B24]">1</span>
-                          </p>
+                          <div className="flex items-center flex-wrap">
+                            <div className="flex font-semibold text-sm md:text-base items-center">
+                              cascade{" "}
+                            </div>
+                            <div className="flex items-center text-xs md:text-sm text-[#6E6E6E]">
+                              /53mha...pump{" "}
+                              <span>
+                                <IoCopyOutline />
+                              </span>{" "}
+                            </div>
+                          </div>
+                          <div className="text-[#6E6E6E] text-xs md:text-sm">
+                            3d
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                    </td>
+
+                    <td className="text-xs md:text-sm px-2 whitespace-nowrap">
+                      {newProfile?.SellAll}
+                    </td>
+
+                    <td className="text-xs md:text-sm px-2 whitespace-nowrap">
+                      <div>$0</div>
+                      <div>0%</div>
+                    </td>
+
+                    <td className="text-xs md:text-sm px-2 whitespace-nowrap">
+                      <div>$0</div>
+                      <div>0%</div>
+                    </td>
+
+                    <td className="text-xs md:text-sm px-2 whitespace-nowrap">
+                      <div>$0</div>
+                      <div>0%</div>
+                    </td>
+
+                    <td className="text-xs md:text-sm px-2 whitespace-nowrap">
+                      <div>100%</div>
+                    </td>
+
+                    <td className="text-xs md:text-sm px-2 whitespace-nowrap">
+                      <div>--</div>
+                    </td>
+
+                    <td className="text-xs md:text-sm px-2 whitespace-nowrap">
+                      <div>$0</div>
+                      <div>0%</div>
+                    </td>
+
+                    <td className="text-xs md:text-sm px-2 whitespace-nowrap">
+                      <div>$0</div>
+                      <div>0%</div>
+                    </td>
+
+                    <td className="whitespace-nowrap py-3 px-3 md:px-6">
+                      <div className="grid">
+                        <div className="flex gap-1.5">
+                          <Image
+                            src={Swaps}
+                            alt="newPairsIcon"
+                            className="my-auto"
+                          />
+                          <div>
+                            <p className="mt-0.5 text-sm px-2 md:text-base">4</p>
+                            <p className="mt-0.5 text-xs md:text-sm">
+                              <span className="text-[#21CB6B]">3</span>
+                              <span className="text-[#828282]"> / </span>
+                              <span className="text-[#ED1B24]">1</span>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            :
+            <div className="w-full px-2 lg:px-8 py-3 overflow-x-auto">
+              <ActivityTable />
+            </div>
+          }
         </div>
       </div>
     </>

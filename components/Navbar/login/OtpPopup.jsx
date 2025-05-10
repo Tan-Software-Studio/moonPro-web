@@ -160,6 +160,7 @@ const OtpPopup = ({
         ) : isReffaralCode ? (
           <RefferalPopup
             setIsReffaralCode={setIsReffaralCode}
+            setIsLoginPopup={setIsLoginPopup}
             verifyData={verifyData}
           />
         ) : (
