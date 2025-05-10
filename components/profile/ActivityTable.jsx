@@ -121,7 +121,7 @@ const ActivityTable = () => {
                                             <div className="flex items-center">
                                                 <span className="mr-1">{truncateString(item.tx)}</span>
                                                 <Link
-                                                    href={`https://explorer.solana.com/tx/${item.tx}`}
+                                                    href={`https://solscan.io/tx/${item.tx}`}
                                                     target="_blank"
                                                     className="text-blue-400 hover:text-blue-300">
                                                     <ExternalLink className="h-3 w-3" />
