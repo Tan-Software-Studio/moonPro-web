@@ -14,8 +14,10 @@ const SolDeposit = ({ isOpen, onClose }) => {
     (state) => state?.AllStatesData?.solNativeBalance
   );
 
-
-  const depositAddress = "8xqIjIt73KcLaSBPJVhH3cjRZdTvsMDGCY9UhGTckm";
+  const depositAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
+ 
 
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(depositAddress);
