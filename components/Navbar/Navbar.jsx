@@ -25,6 +25,7 @@ import Setting from "./popup/Setting";
 import AccountSecurity from "./popup/AccountSecurity";
 import Watchlist from "./popup/Watchlist";
 import { useTranslation } from "react-i18next";
+import SolDeposit from "./popup/SolDeposit";
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
 
@@ -32,6 +33,7 @@ const Navbar = () => {
   const [isSettingPopup, setIsSettingPopup] = useState(false);
   const [isAccountPopup, setIsAccountPopup] = useState(false);
   const [isWatchlistPopup, setIsWatchlistPopup] = useState(false);
+  const [isSolDepositPopup, setIsSolDepositPopup] = useState(false)
 
   // login signup
   const [isLoginPopup, setIsLoginPopup] = useState(false);
@@ -114,24 +116,22 @@ const Navbar = () => {
             <div className=" flex items-center gap-2  ">
               {/* Search bar */}
               <div
-                className={`md:flex items-center  border ${
-                  isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
-                } border-[#333333] ${
-                  isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
+                  } border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                 onClick={() => dispatch(setIsSearchPopup(true))}
               >
                 <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                 <input
-                  className={` ${
-                    isSidebarOpen ? "w-0" : "w-12"
-                  } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                  className={` ${isSidebarOpen ? "w-0" : "w-12"
+                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                   placeholder={navbar?.profile?.search}
                 />
               </div>
 
               <div
-                className={`flex items-center gap-3 rounded-lg h-8 px-2 bg-[#1A1A1A]   `}
+                onClick={() => setIsSolDepositPopup(!isSolDepositPopup)}
+                className={`flex items-center cursor-pointer gap-3 rounded-lg h-8 px-2 bg-[#1A1A1A]   `}
               >
                 <div className="flex items-center gap-2">
                   <Image
@@ -288,6 +288,13 @@ const Navbar = () => {
 
         {isWatchlistPopup && (
           <Watchlist setIsWatchlistPopup={setIsWatchlistPopup} />
+        )}
+
+        {isSolDepositPopup && (
+          <SolDeposit
+            isOpen={isSolDepositPopup}
+            onClose={setIsSolDepositPopup}
+          />
         )}
       </AnimatePresence>
     </>
