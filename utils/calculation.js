@@ -126,22 +126,7 @@ function convertToRelativeTime(dateString) {
   }
   return `${years}y ${months}m ${days}d`;
 }
-// function UpdateTime(timestamp, currentTime) {
-//     const diff = Math.abs(currentTime - timestamp);
 
-//     const seconds = Math.floor((diff / 1000) % 60);
-//     const minutes = Math.floor((diff / 60000) % 60);
-//     const hours = Math.floor((diff / 3600000) % 24);
-//     const days = Math.floor(diff / 86400000);
-
-//     let timeString = "";
-//     if (days > 0) timeString += `${days}d `;
-//     if (hours > 0) timeString += `${hours}h `;
-//     if (minutes > 0) timeString += `${minutes}m `;
-//     if (seconds > 0) timeString += `${seconds}s `;
-
-//     return timeString.trim() || "1s";
-// }
 function UpdateTime(timestamp, currentTime) {
   const diff = Math.abs(currentTime - timestamp);
 
@@ -231,6 +216,28 @@ const formatNumberNoLoop = (num) => {
   return `${number < 0 ? "-" : ""}${formattedNum}${suffixes[i]}`;
 };
 
+function convertUTCToIST(utcTimestamp) {
+  const date = new Date(utcTimestamp);
+
+  // Convert to IST by adding 5 hours 30 minutes
+  const istOffset = 5.5 * 60; // IST offset in minutes
+  const istDate = new Date(date.getTime() + istOffset * 60000);
+
+  // Format date and time
+  const day = String(istDate.getDate()).padStart(2, "0");
+  const month = String(istDate.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const year = istDate.getFullYear();
+
+  let hours = istDate.getHours();
+  const minutes = String(istDate.getMinutes()).padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12 || 12; // Convert to 12-hour format
+
+  const time = `${hours}:${minutes} ${ampm}`;
+  const formattedDate = `${day}-${month}-${year}`;
+
+  return `${formattedDate}, ${time}`;
+}
 export {
   getDateMinus24Hours,
   getDateMinusMinutes,
@@ -245,4 +252,5 @@ export {
   decimalConvert,
   formatNumberNoLoop,
   getTimeAgo,
+  convertUTCToIST,
 };
