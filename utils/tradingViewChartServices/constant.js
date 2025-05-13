@@ -19,3 +19,4 @@ const intervalTV = [
   "1D",
 ];
 export { token, symbol, bq_apikey, intervalTV };
+
