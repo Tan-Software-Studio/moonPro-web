@@ -8,8 +8,6 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
   const chartContainerRef = useRef(null);
   // console.log("TVChartContainer called.");
   useEffect(() => {
-    // console.log("TVChartContainer useEffect called.");
-    // console.log("widgetOptions:", widgetOptions);
     const tvWidget = new widget({
       symbol: tokenSymbol,
       datafeed: Datafeed,
@@ -74,62 +72,3 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
 };
 
 export default TVChartContainer;
-
-// dummy chart
-
-// "use client";
-
-// import { useEffect, useState } from "react";
-// import { useSearchParams } from "next/navigation";
-// import { useSelector } from "react-redux";
-// import axios from "axios";
-
-// const TradingChart = () => {
-//   const searchParams = useSearchParams();
-//   const tokenSymbol = searchParams.get("symbol");
-
-//   useEffect(() => {
-//     const script = document.createElement("script");
-//     script.src = "https://s3.tradingview.com/tv.js";
-//     script.async = true;
-//     script.onload = () => {
-//       new window.TradingView.widget({
-//         width: "100%",
-//         height: "100%",
-//         symbol: tokenSymbol || "USDT",
-//         interval: "D",
-//         withdateranges: true,
-//         locale: "en",
-//         timezone: "Etc/UTC",
-//         theme: "dark",
-//         range: "YTD",
-//         details: false,
-//         hotlist: false,
-//         calendar: false,
-//         hide_side_toolbar: false,
-//         style: "1",
-//         locale: "en",
-//         toolbar_bg: "#f1f3f6",
-//         enable_publishing: false,
-//         allow_symbol_change: true,
-//         container_id: "tradingview_chart",
-//       });
-//     };
-//     document.getElementById("tradingview_chart").appendChild(script);
-//   }, [tokenSymbol]);
-
-//   const tokenPopup = useSelector(
-//     (state) => state?.AllthemeColorData?.tokenPopup
-//   );
-
-//   return (
-//     <>
-//       <div
-//         id="tradingview_chart"
-//         className={`w-full ${tokenPopup && "-z-50"} !h-[65vh] overflow-y-auto`}
-//       ></div>
-//     </>
-//   );
-// };
-
-// export default TradingChart;

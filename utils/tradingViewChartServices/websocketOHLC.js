@@ -9,6 +9,7 @@ const socket = io(BASE_URL, {
 let isSocketOn = false;
 export async function subscribeToWebSocket(onRealtimeCallback, token) {
   // const tokenAddress = await token?.toString()?.toLowerCase();
+  lastBar = null;
   if (isSocketOn) {
     console.log("Trades websocket is already connected.");
     return;
@@ -28,13 +29,12 @@ export async function subscribeToWebSocket(onRealtimeCallback, token) {
       store.dispatch(addNewTransaction(...tokenData));
       const tradeTime = new Date(tokenData[0]?.Block?.Time).getTime();
       const price = parseFloat(tokenData[0]?.Trade?.open);
-      console.log("🚀 ~ onNext ~ price:", price);
       // Round the time to the nearest minute
       const roundedTime = Math.floor(tradeTime / 60000) * 60000;
       if (!lastBar || lastBar.time !== roundedTime) {
-        if (lastBar) {
-          onRealtimeCallback(lastBar); // Send the finalized bar to the chart
-        }
+        // if (lastBar) {
+        //   onRealtimeCallback(lastBar); // Send the finalized bar to the chart
+        // }
 
         // Start a new bar
         lastBar = {
@@ -55,38 +55,6 @@ export async function subscribeToWebSocket(onRealtimeCallback, token) {
         // Call the callback for real-time updates
         onRealtimeCallback(lastBar);
       }
-      //   tokenData?.forEach((token) => {
-      //     // send bars to the chart
-      //     const tradeTime = new Date(token?.Block?.Time).getTime();
-      //     const price = parseFloat(token?.Trade?.open);
-      //     console.log("🚀 ~ onNext ~ price:", price);
-      //     // Round the time to the nearest minute
-      //     const roundedTime = Math.floor(tradeTime / 60000) * 60000;
-      //     if (!lastBar || lastBar.time !== roundedTime) {
-      //       if (lastBar) {
-      //         onRealtimeCallback(lastBar); // Send the finalized bar to the chart
-      //       }
-
-      //       // Start a new bar
-      //       lastBar = {
-      //         time: roundedTime,
-      //         open: token?.Trade?.open,
-      //         high: token?.high,
-      //         low: token?.low,
-      //         close: token?.Trade?.close,
-      //         volume: token?.volume, // Can modify to include volume data if available
-      //       };
-      //     } else {
-      //       // Update the OHLC data for the current minute
-      //       lastBar.high = token?.high;
-      //       lastBar.low = token?.low;
-      //       lastBar.close = token?.Trade?.close;
-      //       lastBar.volume = token?.volume; // Increment trade count (or add volume if applicable)
-
-      //       // Call the callback for real-time updates
-      //       onRealtimeCallback(lastBar);
-      //     }
-      //   });
     }
   });
 
@@ -95,7 +63,7 @@ export async function subscribeToWebSocket(onRealtimeCallback, token) {
     isSocketOn = false;
   });
 }
-export function unsubscribeFromWebSocket() {
+export function unsubscribeFromWebSocket(subscriberUID) {
   try {
     if (socket) {
       socket.off("new_trades");

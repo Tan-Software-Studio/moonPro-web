@@ -1,5 +1,7 @@
 import { fetchHistoricalData } from "./histOHLC";
-import { subscribeToWebSocket } from "./websocketOHLC";
+import {
+  subscribeToWebSocket,
+} from "./websocketOHLC";
 async function toGetTokenAddressFromLocalStorage() {
   const token = await localStorage.getItem("chartTokenAddress");
   return token;
@@ -53,6 +55,7 @@ export const subscribeBars = async (
 export const unsubscribeBars = (subscriberUID) => {
   try {
     delete this.subscribers[subscriberUID];
+    lastBar = null;
   } catch (error) {
     console.log("🚀 ~ unsubscribeBars ~ error:", error?.message);
   }

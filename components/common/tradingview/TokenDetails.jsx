@@ -45,7 +45,6 @@ const TokenDetails = ({
   const tokenFavList = useSelector(
     (state) => state?.AllStatesData?.favouriteTokens
   );
-  console.log("🚀 ~ tokenFavList:", tokenFavList);
   const isFavourite = tokenFavList.find(
     (item) =>
       item?.tokenAddress?.toLowerCase() ==
