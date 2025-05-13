@@ -34,7 +34,7 @@ export async function fetchHistoricalData(periodParams, resolution, token) {
   // console.log("🚀 ~ fetchHistoricalData ~ timeFromTv:", timeFromTv);
   let finalInterval = 60;
   if (resolution?.toString()?.slice(-1) == "S") {
-    finalInterval = resolution?.toString()?.slice(0, 1);
+    finalInterval = Number(resolution?.toString()?.slice(0, 1));
   } else if (resolution?.toString()?.slice(-1) == "D") {
     finalInterval = Number(resolution?.toString()?.slice(0, 1)) * oneDay;
   } else {
