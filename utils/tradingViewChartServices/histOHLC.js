@@ -32,10 +32,10 @@ export async function fetchHistoricalData(periodParams, resolution, token) {
   const timeToTv = new Date(to * 1000).toISOString();
   const oneDay = 86400;
   // console.log("🚀 ~ fetchHistoricalData ~ timeFromTv:", timeFromTv);
-  let finalInterval = resolution == "1D" ? 1440 : Number(resolution);
-  if ((resolution == resolution?.toString()?.slice(-1)) == "S") {
+  let finalInterval = 60;
+  if (resolution?.toString()?.slice(-1) == "S") {
     finalInterval = resolution?.toString()?.slice(0, 1);
-  } else if ((resolution == resolution?.toString()?.slice(-1)) == "D") {
+  } else if (resolution?.toString()?.slice(-1) == "D") {
     finalInterval = Number(resolution?.toString()?.slice(0, 1)) * oneDay;
   } else {
     finalInterval = resolution * 60;

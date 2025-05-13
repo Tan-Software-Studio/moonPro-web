@@ -3,6 +3,10 @@ const symbol = "WSOL";
 const bq_apikey = process.env.NEXT_PUBLIC_STREAM_BITQUERY_API;
 const intervalTV = [
   "1S",
+  "3S",
+  "5S",
+  "15S",
+  "30S",
   "1",
   "5",
   "15",
