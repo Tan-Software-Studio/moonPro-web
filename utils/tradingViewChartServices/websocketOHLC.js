@@ -1,76 +1,131 @@
 import { addNewTransaction } from "@/app/redux/chartDataSlice/chartData.slice";
 import store from "@/app/redux/store";
 import { io } from "socket.io-client";
+
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
-let lastBar = null;
 const socket = io(BASE_URL, {
   transports: ["websocket"],
+  autoConnect: false,
 });
-let isSocketOn = false;
-export async function subscribeToWebSocket(onRealtimeCallback, token) {
-  // const tokenAddress = await token?.toString()?.toLowerCase();
-  lastBar = null;
-  if (isSocketOn) {
-    console.log("Trades websocket is already connected.");
-    return;
-  }
-  socket.connect();
-  isSocketOn = true;
-  socket.on("connect", () => {
-    console.log("Trades websocket connected.");
-  });
-  socket.on("new_trades", async (data) => {
-    // const tokenFromChain =
-    //   await data?.Trade?.Currency?.MintAddress?.toString()?.toLowerCase();
-    const tokenData = await data?.filter(
-      (item) => item?.Trade?.Currency?.MintAddress == token
-    );
-    if (Array.isArray(tokenData) && tokenData?.length > 0) {
-      store.dispatch(addNewTransaction(...tokenData));
-      const tradeTime = new Date(tokenData[0]?.Block?.Time).getTime();
-      const price = parseFloat(tokenData[0]?.Trade?.open);
-      // Round the time to the nearest minute
-      const roundedTime = Math.floor(tradeTime / 60000) * 60000;
-      if (!lastBar || lastBar.time !== roundedTime) {
-        // if (lastBar) {
-        //   onRealtimeCallback(lastBar); // Send the finalized bar to the chart
-        // }
 
-        // Start a new bar
-        lastBar = {
+let lastBar = {};
+let isSocketOn = false;
+let activeSubscriberUID = null;
+let currentResolution = null;
+
+function getResolutionInMilliseconds(resolution) {
+  if (!resolution) return 60000;
+  if (resolution === "1D") return 86400000;
+  if (resolution.endsWith("D")) return parseInt(resolution) * 86400000;
+  if (resolution.endsWith("H")) return parseInt(resolution) * 3600000;
+  if (resolution.endsWith("S")) return parseInt(resolution) * 1000;
+  return parseInt(resolution) * 60000;
+}
+
+export async function subscribeToWebSocket(
+  onRealtimeCallback,
+  token,
+  resolution = "1",
+  subscriberUID
+) {
+  if (
+    activeSubscriberUID !== subscriberUID ||
+    currentResolution !== resolution
+  ) {
+    // Cleanup previous
+    unsubscribeFromWebSocket();
+    activeSubscriberUID = subscriberUID;
+    currentResolution = resolution;
+    lastBar[subscriberUID] = null;
+  }
+
+  if (!isSocketOn) {
+    socket.connect();
+    isSocketOn = true;
+
+    socket.on("connect", () => {
+      console.log("Trades websocket connected.");
+    });
+
+    socket.on("connect_error", (err) => {
+      console.error("WebSocket connection error:", err.message);
+    });
+
+    socket.io.on("reconnect_attempt", () => {
+      console.log("Attempting to reconnect...");
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Trades websocket disconnected.");
+      isSocketOn = false;
+    });
+  }
+
+  socket.off("new_trades");
+
+  socket.on("new_trades", async (data) => {
+    if (!Array.isArray(data)) return;
+
+    const tokenData = data.filter(
+      (item) =>
+        item?.Trade?.Currency?.MintAddress === token && item?.Trade?.open
+    );
+
+    if (!tokenData.length) return;
+
+    store.dispatch(addNewTransaction(...tokenData));
+
+    const granularity = getResolutionInMilliseconds(resolution);
+
+    tokenData.forEach((item) => {
+      const tradeTime = new Date(item?.Block?.Time).getTime();
+      const price = parseFloat(item?.Trade?.open || "0");
+      const volume = parseFloat(item?.volume || "0");
+      const high = parseFloat(item?.high || price);
+      const low = parseFloat(item?.low || price);
+      const close = parseFloat(item?.Trade?.close || price);
+
+      const roundedTime = Math.floor(tradeTime / granularity) * granularity;
+
+      if (
+        !lastBar[subscriberUID] ||
+        lastBar[subscriberUID].time !== roundedTime
+      ) {
+        if (lastBar[subscriberUID]) {
+          onRealtimeCallback(lastBar[subscriberUID]);
+        }
+
+        lastBar[subscriberUID] = {
           time: roundedTime,
-          open: tokenData[0]?.Trade?.open,
-          high: tokenData[0]?.high,
-          low: tokenData[0]?.low,
-          close: tokenData[0]?.Trade?.close,
-          volume: tokenData[0]?.volume, // Can modify to include volume data if available
+          open: price,
+          high: high,
+          low: low,
+          close: close,
+          volume: volume,
         };
       } else {
-        // Update the OHLC data for the current minute
-        lastBar.high = tokenData[0]?.high;
-        lastBar.low = tokenData[0]?.low;
-        lastBar.close = tokenData[0]?.Trade?.close;
-        lastBar.volume = tokenData[0]?.volume; // Increment trade count (or add volume if applicable)
-
-        // Call the callback for real-time updates
-        onRealtimeCallback(lastBar);
+        let bar = lastBar[subscriberUID];
+        bar.high = Math.max(bar.high, high);
+        bar.low = Math.min(bar.low, low);
+        bar.close = close;
+        bar.volume += volume;
       }
-    }
-  });
 
-  socket.on("disconnect", async () => {
-    console.log("Trades webSocket disconnected.");
-    isSocketOn = false;
+      onRealtimeCallback(lastBar[subscriberUID]);
+    });
   });
 }
-export function unsubscribeFromWebSocket(subscriberUID) {
+
+export function unsubscribeFromWebSocket() {
   try {
-    if (socket) {
-      socket.off("new_trades");
-      socket.disconnect();
-      isSocketOn = false;
-    }
+    // socket.off("new_trades");
+    // socket.disconnect();
+    // isSocketOn = false;
+    lastBar = {};
+    activeSubscriberUID = null;
+    currentResolution = null;
+    console.log("WebSocket unsubscribed and disconnected.");
   } catch (error) {
-    console.log("🚀 ~ unsubscribeFromWebSocket ~ error:", error)?.message;
+    console.error("unsubscribeFromWebSocket error:", error?.message);
   }
 }
