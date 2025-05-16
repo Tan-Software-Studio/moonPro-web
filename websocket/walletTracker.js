@@ -30,6 +30,7 @@ export async function subscribeToWalletTracker() {
       console.log("Trades websocket is already connected.");
       return;
     }
+    
     socket.connect();
     isSocketOn = true;
     socket.on("connect", () => {
