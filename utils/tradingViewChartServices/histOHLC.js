@@ -23,6 +23,7 @@ const TOKEN_DETAILS = `query TradingView($token: String, $dataset: dataset_arg_e
     }
   }
 }`;
+
 export async function fetchHistoricalData(periodParams, resolution, token) {
   console.log("🚀 ~ fetchHistoricalData ~ resolution:", resolution);
   const { from, to, countBack } = periodParams;
@@ -33,6 +34,7 @@ export async function fetchHistoricalData(periodParams, resolution, token) {
   const oneDay = 86400;
   // console.log("🚀 ~ fetchHistoricalData ~ timeFromTv:", timeFromTv);
   let finalInterval = 60;
+
   if (resolution?.toString()?.slice(-1) == "S") {
     finalInterval = Number(resolution?.toString()?.slice(0, 1));
   } else if (resolution?.toString()?.slice(-1) == "D") {
@@ -40,6 +42,7 @@ export async function fetchHistoricalData(periodParams, resolution, token) {
   } else {
     finalInterval = resolution * 60;
   }
+
   try {
     const response = await axios.post(
       endpoint,
@@ -76,9 +79,49 @@ export async function fetchHistoricalData(periodParams, resolution, token) {
         high: trade?.high || 0,
         low: trade?.low || 0,
         close: trade?.close?.PriceInUSD || 0,
-        volume: trade?.volume || 0,
+        volume: Number(trade?.volume) || 0,
       };
     });
+
+    // If resolution is in seconds, adjust candlestick data by comparing open/close
+    if (resolution?.toString()?.slice(-1) == "S") {
+      bars = bars.map((bar, index, arr) => {
+        if (index === 0) return bar; // First bar remains unchanged
+
+        const prevBar = arr[index - 1];
+        let newOpen = bar.open;
+        let newClose = bar.close;
+
+        // Compare previous close with current open to simulate candlestick movement
+        if (prevBar.close > bar.open) {
+          // Bearish: open at previous close, adjust close if needed
+          newOpen = prevBar.close;
+          newClose = bar.close < prevBar.close ? bar.close : prevBar.close;
+        } else if (prevBar.close < bar.open) {
+          // Bullish: open at previous close, adjust close if needed
+          newOpen = prevBar.close;
+          newClose = bar.close > prevBar.close ? bar.close : prevBar.close;
+        }
+
+        return {
+          ...bar,
+          open: newOpen,
+          close: newClose,
+          high: Math.max(newOpen, newClose, bar.high),
+          low: Math.min(newOpen, newClose, bar.low),
+        };
+      });
+    }
+
+    // console.log('remaining bars before filter', bars.length);
+    // ✅ Filter out flat or no-activity bars
+    bars = bars.filter((bar) => {
+      const isPriceChanged = bar.open !== bar.close;
+      return isPriceChanged;
+    });
+    // console.log('remaining bars after filter', bars.length);
+
+    // Handle missing bars
     if (bars.length < requiredBars) {
       const earliestTime = bars[0]?.time;
       const missingBarsCount = requiredBars - bars.length;
@@ -95,10 +138,13 @@ export async function fetchHistoricalData(periodParams, resolution, token) {
         });
       }
     }
+
+    // Remove duplicates and sort
     bars = await Array.from(
       new Map(bars.map((bar) => [bar.time, bar])).values()
     );
     await bars.sort((a, b) => a.time - b.time);
+    // console.log("bars", bars);
     return bars;
   } catch (err) {
     console.error("Error fetching historical data:", err?.message);
