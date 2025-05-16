@@ -240,7 +240,7 @@ const MscopePumpTable = ({ MemscopeData }) => {
                               target="_blank"
                               onClick={(e) => e.stopPropagation()}
                             >
-                              <div className="text-[10px] h-[17px] w-[17px] border border-[#626266] text-[#626266] rounded-md flex items-center justify-center cursor-pointer">
+                              <div className="text-[10px] h-[17px] w-[17px] border border-[#4CAF50] text-[#ffffff] rounded-md flex items-center justify-center cursor-pointer bg-gradient-to-br from-[#409143] to-[#093d0c] shadow-[0_0_4px_rgba(76,255,80,0.4)]">
                                 AI
                               </div>
                             </Link>
