@@ -86,20 +86,20 @@ export async function fetchHistoricalData(periodParams, resolution, token) {
     // If resolution is in seconds, adjust candlestick data by comparing open/close
     if (resolution?.toString()?.slice(-1) == "S") {
       bars = bars.map((bar, index, arr) => {
-  if (index === 0) return bar; // Skip the first bar
+      if (index === 0) return bar; // Skip the first bar
 
-  const prevBar = arr[index - 1];
-  const newOpen = prevBar.close;
-  const newClose = bar.close;
+      const prevBar = arr[index - 1];
+      const newOpen = prevBar.close;
+      const newClose = bar.close;
 
-  return {
-    ...bar,
-    open: newOpen,
-    close: newClose,
-    high: Math.max(newOpen, newClose, bar.high, prevBar.close),
-    low: Math.min(newOpen, newClose, bar.low, prevBar.close),
-  };
-});
+      return {
+        ...bar,
+        open: newOpen,
+        close: newClose,
+        high: Math.max(newOpen, newClose, bar.high, prevBar.close),
+        low: Math.min(newOpen, newClose, bar.low, prevBar.close),
+        };
+      });
     }
 
     // console.log('remaining bars before filter', bars.length);
@@ -133,7 +133,7 @@ export async function fetchHistoricalData(periodParams, resolution, token) {
       new Map(bars.map((bar) => [bar.time, bar])).values()
     );
     await bars.sort((a, b) => a.time - b.time);
-    console.log("bars", bars);
+    // console.log("bars", bars);
     return bars;
   } catch (err) {
     console.error("Error fetching historical data:", err?.message);
