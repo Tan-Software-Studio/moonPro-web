@@ -76,34 +76,59 @@ export async function subscribeToWebSocket(
     store.dispatch(addNewTransaction(...tokenData));
 
     const granularity = getResolutionInMilliseconds(resolution);
+    const isSecondResolution = resolution.toString().endsWith("S");
 
     tokenData.forEach((item) => {
+      const signer = item?.Transaction?.Signer;
+      if (signer == "2PeYGojpJTaMbNgNsezF9auxwvEBqXNi1uxYanAvB2K5") {
+        alert("User bought");
+      }
+
       const tradeTime = new Date(item?.Block?.Time).getTime();
       const price = parseFloat(item?.Trade?.open || "0");
       const volume = parseFloat(item?.volume || "0");
       const high = parseFloat(item?.high || price);
       const low = parseFloat(item?.low || price);
       const close = parseFloat(item?.Trade?.close || price);
-
       const roundedTime = Math.floor(tradeTime / granularity) * granularity;
 
       if (
         !lastBar[subscriberUID] ||
         lastBar[subscriberUID].time !== roundedTime
       ) {
+        // New bar
         if (lastBar[subscriberUID]) {
           onRealtimeCallback(lastBar[subscriberUID]);
         }
 
+        let newOpen = price;
+        let newClose = close;
+
+        if (isSecondResolution && lastBar[subscriberUID]) {
+          const prevClose = lastBar[subscriberUID].close;
+
+          newOpen = prevClose;
+
+          if (prevClose > close) {
+            // bearish
+            newClose = Math.min(close, prevClose);
+          } else if (prevClose < close) {
+            // bullish
+            newClose = Math.max(close, prevClose);
+          }
+        }
+
         lastBar[subscriberUID] = {
           time: roundedTime,
-          open: price,
-          high: high,
-          low: low,
-          close: close,
+          open: newOpen,
+          high: Math.max(newOpen, newClose, high),
+          low: Math.min(newOpen, newClose, low),
+          close: newClose,
           volume: volume,
+          custom_marker: "YB",
         };
       } else {
+        // Update existing bar
         let bar = lastBar[subscriberUID];
         bar.high = Math.max(bar.high, high);
         bar.low = Math.min(bar.low, low);
