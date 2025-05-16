@@ -80,10 +80,6 @@ export async function subscribeToWebSocket(
 
     tokenData.forEach((item) => {
       const signer = item?.Transaction?.Signer;
-      if (signer == "2PeYGojpJTaMbNgNsezF9auxwvEBqXNi1uxYanAvB2K5") {
-        alert("User bought");
-      }
-
       const tradeTime = new Date(item?.Block?.Time).getTime();
       const price = parseFloat(item?.Trade?.open || "0");
       const volume = parseFloat(item?.volume || "0");
@@ -125,7 +121,6 @@ export async function subscribeToWebSocket(
           low: Math.min(newOpen, newClose, low),
           close: newClose,
           volume: volume,
-          custom_marker: "YB",
         };
       } else {
         // Update existing bar
