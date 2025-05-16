@@ -122,22 +122,22 @@ export async function fetchHistoricalData(periodParams, resolution, token) {
     // console.log('remaining bars after filter', bars.length);
 
     // Handle missing bars
-    if (bars.length < requiredBars) {
-      const earliestTime = bars[0]?.time;
-      const missingBarsCount = requiredBars - bars.length;
+    // if (bars.length < requiredBars) {
+    //   const earliestTime = bars[0]?.time;
+    //   const missingBarsCount = requiredBars - bars.length;
 
-      // Generate missing bars before the earliest returned bar
-      for (let i = 1; i <= missingBarsCount; i++) {
-        bars.unshift({
-          time: earliestTime - i * 60000, // Assuming 1-minute bars (60000 ms)
-          open: 0,
-          high: 0,
-          low: 0,
-          close: 0,
-          volume: 0,
-        });
-      }
-    }
+    //   // Generate missing bars before the earliest returned bar
+    //   for (let i = 1; i <= missingBarsCount; i++) {
+    //     bars.unshift({
+    //       time: earliestTime - i * 60000, // Assuming 1-minute bars (60000 ms)
+    //       open: 0,
+    //       high: 0,
+    //       low: 0,
+    //       close: 0,
+    //       volume: 0,
+    //     });
+    //   }
+    // }
 
     // Remove duplicates and sort
     bars = await Array.from(
