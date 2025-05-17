@@ -1,18 +1,15 @@
 import { addNewTransaction } from "@/app/redux/chartDataSlice/chartData.slice";
 import store from "@/app/redux/store";
 import { io } from "socket.io-client";
-
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const socket = io(BASE_URL, {
   transports: ["websocket"],
   autoConnect: false,
 });
-
 let lastBar = {};
 let isSocketOn = false;
 let activeSubscriberUID = null;
 let currentResolution = null;
-
 function getResolutionInMilliseconds(resolution) {
   if (!resolution) return 60000;
   if (resolution === "1D") return 86400000;
@@ -21,13 +18,13 @@ function getResolutionInMilliseconds(resolution) {
   if (resolution.endsWith("S")) return parseInt(resolution) * 1000;
   return parseInt(resolution) * 60000;
 }
-
 export async function subscribeToWebSocket(
   onRealtimeCallback,
   token,
   resolution = "1",
   subscriberUID
 ) {
+  const tvWidget = window?.tvWidget;
   if (
     activeSubscriberUID !== subscriberUID ||
     currentResolution !== resolution
@@ -38,46 +35,34 @@ export async function subscribeToWebSocket(
     currentResolution = resolution;
     lastBar[subscriberUID] = null;
   }
-
   if (!isSocketOn) {
     socket.connect();
     isSocketOn = true;
-
     socket.on("connect", () => {
       console.log("Trades websocket connected.");
     });
-
     socket.on("connect_error", (err) => {
       console.error("WebSocket connection error:", err.message);
     });
-
     socket.io.on("reconnect_attempt", () => {
       console.log("Attempting to reconnect...");
     });
-
     socket.on("disconnect", () => {
       console.log("Trades websocket disconnected.");
       isSocketOn = false;
     });
   }
-
   socket.off("new_trades");
-
   socket.on("new_trades", async (data) => {
     if (!Array.isArray(data)) return;
-
     const tokenData = data.filter(
       (item) =>
         item?.Trade?.Currency?.MintAddress === token && item?.Trade?.open
     );
-
     if (!tokenData.length) return;
-
     store.dispatch(addNewTransaction(...tokenData));
-
     const granularity = getResolutionInMilliseconds(resolution);
     const isSecondResolution = resolution.toString().endsWith("S");
-
     tokenData.forEach((item) => {
       const signer = item?.Transaction?.Signer;
       const tradeTime = new Date(item?.Block?.Time).getTime();
@@ -87,7 +72,6 @@ export async function subscribeToWebSocket(
       const low = parseFloat(item?.low || price);
       const close = parseFloat(item?.Trade?.close || price);
       const roundedTime = Math.floor(tradeTime / granularity) * granularity;
-
       if (
         !lastBar[subscriberUID] ||
         lastBar[subscriberUID].time !== roundedTime
@@ -96,15 +80,11 @@ export async function subscribeToWebSocket(
         if (lastBar[subscriberUID]) {
           onRealtimeCallback(lastBar[subscriberUID]);
         }
-
         let newOpen = price;
         let newClose = close;
-
         if (isSecondResolution && lastBar[subscriberUID]) {
           const prevClose = lastBar[subscriberUID].close;
-
           newOpen = prevClose;
-
           if (prevClose > close) {
             // bearish
             newClose = Math.min(close, prevClose);
@@ -113,7 +93,6 @@ export async function subscribeToWebSocket(
             newClose = Math.max(close, prevClose);
           }
         }
-
         lastBar[subscriberUID] = {
           time: roundedTime,
           open: newOpen,
@@ -130,12 +109,35 @@ export async function subscribeToWebSocket(
         bar.close = close;
         bar.volume += volume;
       }
-
+      if (signer === "MfDuWeqSHEqTFVYZ7LoexgAK9dxk7cy4DFJWjWMGVWa") {
+        console.log("🚀 ~ tokenData.forEach ~ signer:", signer);
+        if (tvWidget) {
+          const chart = tvWidget.activeChart();
+          chart.createShape(
+            {
+              time: Math.floor(tradeTime / 1000),
+              price: price,
+              text: "DB",
+            },
+            {
+              shape: "label",
+              style: 2, // Rounded label
+              textColor: "#ffffff", // Text color
+              color: "#00b15d", // Border color
+              backgroundColor: "#00b15d", // Label background
+              lock: true,
+              disableSelection: true,
+              disableSave: true,
+              overrideMinSize: true, // Prevents it from getting too big
+              zOrder: "top",
+            }
+          );
+        }
+      }
       onRealtimeCallback(lastBar[subscriberUID]);
     });
   });
 }
-
 export function unsubscribeFromWebSocket() {
   try {
     // socket.off("new_trades");
