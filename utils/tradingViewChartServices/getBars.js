@@ -20,6 +20,10 @@ async function getChartSupply() {
   return await localStorage.getItem("chartSupply");
 }
 
+async function getSolPrice() {
+  return await localStorage.getItem("solPrice");
+}
+
 export const getBars = async (
   symbolInfo,
   resolution,
@@ -42,13 +46,16 @@ export const getBars = async (
     }
 
     const supply = await getChartSupply();
+    const solPrice = await getSolPrice();
+
     const bars = await fetchHistoricalData(
       periodParams,
       resolution,
       tokenAddress,
       usdActive,
       marketCapActive,
-      supply
+      supply,
+      solPrice
     );
     if (bars.length > 0) {
       onHistoryCallback(bars, { noData: false });
@@ -82,6 +89,7 @@ export const subscribeBars = async (
   }
 
   const supply = await getChartSupply();
+  const solPrice = await getSolPrice();
 
   await subscribeToWebSocket(
     onRealtimeCallback,
@@ -90,7 +98,8 @@ export const subscribeBars = async (
     subscriberUID,
     usdActive,
     marketCapActive,
-    supply
+    supply,
+    solPrice
   );
 };
 

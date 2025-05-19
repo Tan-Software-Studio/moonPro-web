@@ -26,7 +26,8 @@ export async function subscribeToWebSocket(
   subscriberUID,
   usdActive,
   marketCapActive,
-  supply
+  supply,
+  solPrice,
 ) {
   const tvWidget = window?.tvWidget;
   if (
@@ -70,11 +71,20 @@ export async function subscribeToWebSocket(
     tokenData.forEach((item) => {
       const signer = item?.Transaction?.Signer;
       const tradeTime = new Date(item?.Block?.Time).getTime();
-      const price = marketCapActive ? parseFloat(item?.Trade?.open || "0") * supply : parseFloat(item?.Trade?.open || "0");
       const volume = parseFloat(item?.volume || "0");
-      const high = marketCapActive ? parseFloat(item?.high || price) * supply : parseFloat(item?.high || price);
-      const low = marketCapActive ? parseFloat(item?.high || price) * supply : parseFloat(item?.low || price);
-      const close = marketCapActive ?  parseFloat(item?.Trade?.close || price) * supply : parseFloat(item?.Trade?.close || price);
+
+      const usdSolprice = usdActive ? parseFloat(item?.Trade?.open || "0") : parseFloat(item?.Trade?.open || "0") / solPrice;
+      const price = marketCapActive ? usdSolprice * supply : usdSolprice;
+
+      const usdSolHigh = usdActive ?  parseFloat(item?.high || price) :  parseFloat(item?.high || price) / solPrice;
+      const high = marketCapActive ? usdSolHigh * supply : usdSolHigh;
+
+      const usdSolLow = usdActive ?  parseFloat(item?.low || price) :  parseFloat(item?.low || price) / solPrice;
+      const low = marketCapActive ? usdSolLow * supply : usdSolLow;
+
+      const usdSolClose = usdActive ?  parseFloat(item?.Trade?.close || price) :  parseFloat(item?.Trade?.close || price) / solPrice;
+      const close = marketCapActive ?  usdSolClose * supply : usdSolClose;
+      
       const roundedTime = Math.floor(tradeTime / granularity) * granularity;
       if (
         !lastBar[subscriberUID] ||
