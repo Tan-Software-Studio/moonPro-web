@@ -81,7 +81,7 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
     recentTokens.unshift(e); // Store full object
 
     // Keep only the last 5 tokens
-    if (recentTokens.length > 5) {
+    if (recentTokens.length > 10) {
       recentTokens = recentTokens.slice(0, 5);
     }
 
