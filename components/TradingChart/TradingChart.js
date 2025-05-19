@@ -5,7 +5,6 @@ import { widget } from "../../public/charting_library";
 import Datafeed from "../../utils/tradingViewChartServices/customDatafeed";
 import { intervalTV } from "../../utils/tradingViewChartServices/constant";
 import { unsubscribeFromWebSocket } from "@/utils/tradingViewChartServices/websocketOHLC";
-
 const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
   const chartContainerRef = useRef(null);
   const [isUsdSolToggled, setIsUsdSolToggled] = useState(true); // Track USD/SOL toggle state
@@ -119,6 +118,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
         });
       });
     });
+    window.tvWidget = tvWidget;
     return () => {
       if (tvWidget) {
         console.log("Removing TradingView widget.");
@@ -131,5 +131,4 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
 
   return <div ref={chartContainerRef} className="h-full w-full bg-[#08080E]" />;
 };
-
 export default TVChartContainer;
