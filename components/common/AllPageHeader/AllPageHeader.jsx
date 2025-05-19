@@ -37,7 +37,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
   );
 
   const [isRightModalOpenSetting, setIsRightModalOpenSetting] = useState(false);
- 
+
 
   const borderColor = useSelector(
     (state) => state?.AllthemeColorData?.borderColor
@@ -212,7 +212,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
             />
           </div>
         )}
-        {HeaderData?.Advanced && (
+        {/*{HeaderData?.Advanced && (
           <div>
             <button
               id="DexesButton"
@@ -265,7 +265,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
               </div>
             )}
           </div>
-        )}
+        )}*/}
         {!holdingsPage && (
           <div className="flex gap-2 items-center">
             <div>
