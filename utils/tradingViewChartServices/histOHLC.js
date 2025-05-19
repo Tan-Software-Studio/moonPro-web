@@ -24,8 +24,10 @@ const TOKEN_DETAILS = `query TradingView($token: String, $dataset: dataset_arg_e
   }
 }`;
 
-export async function fetchHistoricalData(periodParams, resolution, token) {
+export async function fetchHistoricalData(periodParams, resolution, token, isUsdActive, isMarketCapActive, supply, solPrice) {
   console.log("🚀 ~ fetchHistoricalData ~ resolution:", resolution);
+  supply = supply ? Number(supply) === 0 ? 1_000_000_000 : Number(supply) : 1_000_000_000;
+  solPrice = solPrice ? Number(solPrice) === 0 ? 1 : Number(solPrice) : 1; 
   const { from, to, countBack } = periodParams;
   // console.log("🚀 ~ fetchHistoricalData ~ countBack:", countBack);
   const requiredBars = 20000;
@@ -71,13 +73,25 @@ export async function fetchHistoricalData(periodParams, resolution, token) {
     let bars = trades?.map((trade) => {
       // Parse and convert Block Timefield to Unix timestamp in milliseconds
       const blockTime = new Date(trade.Block.Time).getTime();
+      
+      const usdOpen = isUsdActive ? trade?.open?.PriceInUSD : trade?.open?.PriceInUSD / solPrice;
+      const open = isMarketCapActive ? usdOpen * supply : usdOpen;
+
+      const usdClose = isUsdActive ? trade?.close?.PriceInUSD : trade?.close?.PriceInUSD / solPrice;
+      const close = isMarketCapActive ? usdClose * supply : usdClose;
+
+      const usdSolHigh = isUsdActive ? trade?.high : trade?.high / solPrice;
+      const high = isMarketCapActive ? usdSolHigh * supply : usdSolHigh;
+
+      const usdSolLow = isUsdActive ? trade?.low : trade?.low / solPrice;
+      const low = isMarketCapActive ? usdSolLow * supply: usdSolLow;
 
       return {
         time: blockTime,
-        open: trade?.open?.PriceInUSD || 0,
-        high: trade?.high || 0,
-        low: trade?.low || 0,
-        close: trade?.close?.PriceInUSD || 0,
+        open,
+        high,
+        low,
+        close,
         volume: Number(trade?.volume) || 0,
       };
     });

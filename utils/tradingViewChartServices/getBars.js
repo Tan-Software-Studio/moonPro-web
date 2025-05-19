@@ -8,6 +8,22 @@ async function toGetTokenAddressFromLocalStorage() {
   return await localStorage.getItem("chartTokenAddress");
 }
 
+async function getChartUsdSolToggleActive() {
+  return await localStorage.getItem("chartUsdSolToggleActive");
+}
+
+async function getChartMarketCapPriceToggleActive() {
+  return await localStorage.getItem("chartMarketCapPriceToggleActive");
+}
+
+async function getChartSupply() {
+  return await localStorage.getItem("chartSupply");
+}
+
+async function getSolPrice() {
+  return await localStorage.getItem("solPrice");
+}
+
 export const getBars = async (
   symbolInfo,
   resolution,
@@ -17,10 +33,29 @@ export const getBars = async (
 ) => {
   try {
     const tokenAddress = await toGetTokenAddressFromLocalStorage();
+    
+    const isUsdActive = await getChartUsdSolToggleActive();
+    let usdActive = true;
+    if (isUsdActive !== null) {
+      usdActive = isUsdActive === "true";
+    }
+    const isMarketCapActive = await getChartMarketCapPriceToggleActive();
+    let marketCapActive = true;
+    if (isMarketCapActive !== null) {
+      marketCapActive = isMarketCapActive === "true";
+    }
+
+    const supply = await getChartSupply();
+    const solPrice = await getSolPrice();
+
     const bars = await fetchHistoricalData(
       periodParams,
       resolution,
-      tokenAddress
+      tokenAddress,
+      usdActive,
+      marketCapActive,
+      supply,
+      solPrice
     );
     if (bars.length > 0) {
       onHistoryCallback(bars, { noData: false });
@@ -41,11 +76,30 @@ export const subscribeBars = async (
   onResetCacheNeededCallback
 ) => {
   const tokenAddress = await toGetTokenAddressFromLocalStorage();
+
+  const isUsdActive = await getChartUsdSolToggleActive();
+  let usdActive = true;
+  if (isUsdActive !== null) {
+    usdActive = isUsdActive === "true";
+  }
+  const isMarketCapActive = await getChartMarketCapPriceToggleActive();
+  let marketCapActive = true;
+  if (isMarketCapActive !== null) {
+    marketCapActive = isMarketCapActive === "true";
+  }
+
+  const supply = await getChartSupply();
+  const solPrice = await getSolPrice();
+
   await subscribeToWebSocket(
     onRealtimeCallback,
     tokenAddress,
     resolution,
-    subscriberUID
+    subscriberUID,
+    usdActive,
+    marketCapActive,
+    supply,
+    solPrice
   );
 };
 
