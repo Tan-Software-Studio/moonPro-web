@@ -26,7 +26,8 @@ const TOKEN_DETAILS = `query TradingView($token: String, $dataset: dataset_arg_e
 
 export async function fetchHistoricalData(periodParams, resolution, token, isUsdActive, isMarketCapActive, supply, solPrice) {
   console.log("🚀 ~ fetchHistoricalData ~ resolution:", resolution);
-  supply = Number(supply) === 0 ? 1_000_000_000 : Number(supply);
+  supply = supply ? Number(supply) === 0 ? 1_000_000_000 : Number(supply) : 1_000_000_000;
+  solPrice = solPrice ? Number(solPrice) === 0 ? 1 : Number(solPrice) : 1; 
   const { from, to, countBack } = periodParams;
   // console.log("🚀 ~ fetchHistoricalData ~ countBack:", countBack);
   const requiredBars = 20000;

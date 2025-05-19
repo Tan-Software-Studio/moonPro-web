@@ -68,6 +68,8 @@ export async function subscribeToWebSocket(
     store.dispatch(addNewTransaction(...tokenData));
     const granularity = getResolutionInMilliseconds(resolution);
     const isSecondResolution = resolution.toString().endsWith("S");
+    supply = supply ? Number(supply) === 0 ? 1_000_000_000 : Number(supply) : 1_000_000_000;
+    solPrice = solPrice ? Number(solPrice) === 0 ? 1 : Number(solPrice) : 1; 
     tokenData.forEach((item) => {
       const signer = item?.Transaction?.Signer;
       const tradeTime = new Date(item?.Block?.Time).getTime();
