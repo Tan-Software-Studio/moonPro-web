@@ -14,20 +14,16 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { setGlobalBuyAmt } from "@/app/redux/states";
 import { useTranslation } from "react-i18next";
 import { setFilterTime } from "@/app/redux/trending/solTrending.slice";
-
 const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime }) => {
   const filterPopupRef = useRef(null);
   const dexesPopupRef = useRef(null);
   const { t, ready } = useTranslation();
   const tredingPage = t("tredingPage");
   const holdingsPageLang = t("holdings");
-
   const pathname = usePathname();
   const pathData = pathname === "/memescope";
   const holdingsPage = pathname.split("/")[1] === "holdings";
-
   const dispatch = useDispatch();
-
   const [isFilterPopup, setIsFilterPopup] = useState(false);
   const [isDexesPopup, setIsDexesPopup] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -35,35 +31,24 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
   const filterTime = useSelector(
     (state) => state?.AllthemeColorData?.filterTime
   );
-
   const [isRightModalOpenSetting, setIsRightModalOpenSetting] = useState(false);
-
-
   const borderColor = useSelector(
     (state) => state?.AllthemeColorData?.borderColor
   );
-
   const quickBuy = useSelector((state) => state?.AllStatesData?.globalBuyAmt);
-
   const handleInputChange = (event) => {
     // setInputValue(event.target.value);
     dispatch(setGlobalBuyAmt(event.target.value));
   };
-
   const handleButtonClick = (option) => {
     // Dispatch the action and ensure the state updates
     setLocalFilterTime(option);
-
     // dispatch(setFilterTime(option));
-
   };
-
   const handleDexesPopup = () => {
     setIsDexesPopup((prev) => !prev);
   };
-
   useEffect(() => {
-    const scrollThreshold = pathname === "/memescope" ? 20 : 30;
     const handleScroll = () => {
       if (window.scrollY > 30) {
         setIsScrolled(true);
@@ -71,7 +56,6 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
         setIsScrolled(false);
       }
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -94,24 +78,18 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
         setIsDexesPopup(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
   // Filter button
   const handleSidebarToggle = (id) => {
     setOpenDropdown((prev) => (prev === id ? null : id));
   };
-
   // ----------Filter Dexes--------
-
   const defaultOptions = ["Raydium", "Pump.fun", "Moonshot", "Orca", "Meteora"];
   const [selectedOptions, setSelectedOptions] = useState([...defaultOptions]);
-
   // Apply filters
   const handleCheckboxChangeDefault = (option) => {
     setSelectedOptions((prev) => {
@@ -121,15 +99,12 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
       return updated;
     });
   };
-
   // Reset all filters
   const resetButtonDefault = () => {
     setSelectedOptions([...defaultOptions]);
   };
-
   const chcekBoxStyle =
     "appearance-none w-4 h-4 border border-gray-400 rounded-sm bg-transparent flex items-center justify-center checked:bg-[#3e9fd6] checked:border-[#3e9fd6] checked:after:content-['✔'] checked:after:text-xs";
-
   return (
     <div
       className={`text-white bg-[#08080E] md:flex justify-between items-start lg:items-center pt-[18px] py-[6.3px] px-3 md:px-4 border-b-[1px] ${borderColor} pb-5 transition-all duration-500 ease-in-out 
@@ -154,7 +129,6 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
           </p>
         </div>
       </div>
-
       {/* filter + buy etc button */}
       <div className="flex flex-wrap lg:items-center md:justify-end gap-2 overflow-x-auto md:mt-0 mt-5">
         {duration && (
@@ -204,7 +178,6 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
               />
               {HeaderData?.Filter?.menuTitle}
             </button>
-
             <FilterMemescope
               data={FilterData}
               isOpen={openDropdown == 0}
@@ -290,7 +263,6 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
               <div className="w-[87px] px-[17.5px] py-2 text-center flex items-center justify-center text-xs rounded-s-md border-r-[0.5px] border-r-[#26262e] bg-[#1F1F1F] text-white gap-1 uppercase font-bold">
                 {HeaderData?.Buy?.menuTitle}
               </div>
-
               <div className="py-2 px-[12px] bg-[#141414] rounded-e-lg  w-fit">
                 <div className="flex items-center gap-1 justify-center">
                   <input
@@ -311,5 +283,4 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
     </div>
   );
 };
-
 export default AllPageHeader;
