@@ -80,7 +80,6 @@ export async function subscribeToTrendingTokens() {
     await socket.on("connect", () => {
       console.log("Trades websocket connected.");
     });
-    
     // trending tokens live data
     await socket.on("trendingtokens", async (data) => {
       switch (data?.time) {
