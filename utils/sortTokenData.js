@@ -14,7 +14,7 @@ const handleSort = (key, data, order) => {
       }
     });
   };
-  
+
   export default handleSort;
   
     // const handleSort = (key, order) => {
