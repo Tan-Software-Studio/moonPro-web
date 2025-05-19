@@ -23,6 +23,9 @@ const AllStatesData = createSlice({
     solWalletAddress: null,
     solNativeBalance: 0,
     jwtToken: null,
+    isRegisterOrLogin: "",
+    isRegLoginPopup: false,
+    referralForSignup: null,
   },
   reducers: {
     setWalletAddress: (state, action) => {
@@ -64,6 +67,15 @@ const AllStatesData = createSlice({
       const solBalance = await getSolanaBalanceAndPrice(state.solWalletAddress);
       state.solNativeBalance = solBalance;
     },
+    openCloseLoginRegPopup: (state, action) => {
+      state.isRegLoginPopup = action.payload;
+    },
+    setLoginRegPopupAuth: (state, action) => {
+      state.isRegisterOrLogin = action.payload;
+    },
+    setSignupReferral: (state, action) => {
+      state.referralForSignup = action?.payload || null;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchSolanaNativeBalance.fulfilled, (state, action) => {
@@ -84,5 +96,8 @@ export const {
   setUserInfo,
   setSolWalletAddress,
   setSolanaNativeBalance,
+  openCloseLoginRegPopup,
+  setLoginRegPopupAuth,
+  setSignupReferral,
 } = AllStatesData.actions;
 export default AllStatesData.reducer;

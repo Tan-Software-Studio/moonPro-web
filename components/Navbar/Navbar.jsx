@@ -11,8 +11,10 @@ import { setIsSidebarOpen } from "@/app/redux/CommonUiData";
 import { logo, walletBalance } from "@/app/Images";
 import {
   fetchSolanaNativeBalance,
+  openCloseLoginRegPopup,
   setIsEnabled,
   setIsSearchPopup,
+  setLoginRegPopupAuth,
   setSolWalletAddress,
 } from "@/app/redux/states";
 import { PiUserBold, PiUserLight } from "react-icons/pi";
@@ -33,11 +35,17 @@ const Navbar = () => {
   const [isSettingPopup, setIsSettingPopup] = useState(false);
   const [isAccountPopup, setIsAccountPopup] = useState(false);
   const [isWatchlistPopup, setIsWatchlistPopup] = useState(false);
-  const [isSolDepositPopup, setIsSolDepositPopup] = useState(false)
+  const [isSolDepositPopup, setIsSolDepositPopup] = useState(false);
 
   // login signup
-  const [isLoginPopup, setIsLoginPopup] = useState(false);
-  const [authName, setAuthName] = useState("");
+  // const [isLoginPopup, setIsLoginPopup] = useState(false);
+  const isLoginPopup = useSelector(
+    (state) => state?.AllStatesData?.isRegLoginPopup
+  );
+  const authName = useSelector(
+    (state) => state?.AllStatesData?.isRegisterOrLogin
+  );
+  // const [authName, setAuthName] = useState("");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   // X===================X Use selectors X===================X //
@@ -72,8 +80,8 @@ const Navbar = () => {
     setIsProfileOpen(false);
     googleLogout();
     setTimeout(() => {
-      setIsLoginPopup(true);
-      setAuthName("login");
+      dispatch(openCloseLoginRegPopup(true));
+      dispatch(setLoginRegPopupAuth("login"));
     }, 1500);
   };
 
@@ -112,24 +120,26 @@ const Navbar = () => {
             <div className={`md:hidden w-10 h-auto`}>
               <Image src={logo} alt="logo" className="w-full h-full" />
             </div>
-
             <div className=" flex items-center gap-2  ">
               {/* Search bar */}
               <div
-                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
-                  } border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                className={`md:flex items-center  border ${
+                  isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
+                } border-[#333333] ${
+                  isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                 onClick={() => dispatch(setIsSearchPopup(true))}
               >
                 <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                 <input
-                  className={` ${isSidebarOpen ? "w-0" : "w-12"
-                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                  className={` ${
+                    isSidebarOpen ? "w-0" : "w-12"
+                  } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                   placeholder={navbar?.profile?.search}
                 />
               </div>
 
-              {solWalletAddress &&
+              {solWalletAddress && (
                 <div
                   onClick={() => setIsSolDepositPopup(!isSolDepositPopup)}
                   className={`flex items-center cursor-pointer gap-3 rounded-lg h-8 px-2 bg-[#1A1A1A]   `}
@@ -152,7 +162,8 @@ const Navbar = () => {
                       {solWalletAddress?.toString()?.slice(-4)}
                     </div>
                   </div>
-                </div>}
+                </div>
+              )}
 
               {/* Only sm search bar */}
               <div
@@ -239,8 +250,8 @@ const Navbar = () => {
                   <>
                     <div
                       onClick={() => {
-                        setIsLoginPopup(true);
-                        setAuthName("login");
+                        dispatch(openCloseLoginRegPopup(true));
+                        dispatch(setLoginRegPopupAuth("login"));
                       }}
                       className="px-5 py-1 bg-[#1F1F1F] border-[1px] border-[#1F1F1F]  rounded-md cursor-pointer"
                     >
@@ -248,8 +259,8 @@ const Navbar = () => {
                     </div>
                     <div
                       onClick={() => {
-                        setIsLoginPopup(true);
-                        setAuthName("signup");
+                        dispatch(openCloseLoginRegPopup(true));
+                        dispatch(setLoginRegPopupAuth("signup"));
                       }}
                       className="border-[1px] border-[#0E43BD] rounded-md cursor-pointer bg-[#11265B] px-5 py-1 "
                     >
@@ -276,8 +287,6 @@ const Navbar = () => {
           <LoginPopup
             isLoginPopup={isLoginPopup}
             authName={authName}
-            setIsLoginPopup={setIsLoginPopup}
-            setAuthName={setAuthName}
           />
         )}
 

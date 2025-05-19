@@ -25,7 +25,6 @@ export async function subscribeToWebSocket(
   resolution = "1",
   subscriberUID
 ) {
-  const tvWidget = window?.tvWidget;
   if (
     activeSubscriberUID !== subscriberUID ||
     currentResolution !== resolution
@@ -109,13 +108,6 @@ export async function subscribeToWebSocket(
         bar.low = Math.min(bar.low, low);
         bar.close = close;
         bar.volume += volume;
-      }
-      if (signer === "MfDuWeqSHEqTFVYZ7LoexgAK9dxk7cy4DFJWjWMGVWa") {
-        console.log("🚀 ~ tokenData.forEach ~ signer:", signer);
-        if (tvWidget) {
-          const chart = tvWidget.activeChart();
-          addFlagToChart(chart, tradeTime, price);
-        }
       }
       onRealtimeCallback(lastBar[subscriberUID]);
     });

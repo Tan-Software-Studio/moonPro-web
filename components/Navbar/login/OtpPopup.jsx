@@ -1,25 +1,25 @@
+"use client";
 import React, { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import OTPInput from "react-otp-input";
 import RecoveryKey from "./RecoveryKey";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { setSolWalletAddress } from "@/app/redux/states";
+import {
+  openCloseLoginRegPopup,
+  setSolWalletAddress,
+} from "@/app/redux/states";
 import { useDispatch } from "react-redux";
 import { FiLock } from "react-icons/fi";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { AnimatePresence, motion } from "framer-motion";
 import RefferalPopup from "./RefferalPopup";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/navigation";
 
-const OtpPopup = ({
-  setIsLoginPopup,
-  authName,
-  jwtToken,
-  email,
-  setAuthName,
-}) => {
+const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [recoveryKey, setRecoveryKey] = useState(false);
   const [otp, setOtp] = useState("");
   const [verifyData, setVerifyData] = useState({});
@@ -38,7 +38,7 @@ const OtpPopup = ({
   const navbar = t("navbar");
 
   const handleClose = () => {
-    setIsLoginPopup(false);
+    dispatch(openCloseLoginRegPopup(false));
   };
 
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
@@ -62,15 +62,11 @@ const OtpPopup = ({
         return;
       }
       if (!/[a-z]/.test(password)) {
-        setPasswordError(
-          navbar?.otpPopup?.lowercaseChar
-        );
+        setPasswordError(navbar?.otpPopup?.lowercaseChar);
         return;
       }
       if (!/[A-Z]/.test(password)) {
-        setPasswordError(
-          navbar?.otpPopup?.uppercaseChar
-        );
+        setPasswordError(navbar?.otpPopup?.uppercaseChar);
         return;
       }
       if (!/\d/.test(password)) {
@@ -88,9 +84,7 @@ const OtpPopup = ({
         return;
       }
       if (confirmPassword != password) {
-        setConfirmPasswordError(
-          navbar?.otpPopup?.passwordSame
-        );
+        setConfirmPasswordError(navbar?.otpPopup?.passwordSame);
         return;
       }
       setConfirmPasswordError("");
@@ -127,11 +121,12 @@ const OtpPopup = ({
           if (response?.data?.data?.user?.referredBy === null) {
             setIsReffaralCode(true);
           } else {
-            setIsLoginPopup(false);
+            dispatch(openCloseLoginRegPopup(false));
           }
         } else {
           setRecoveryKey(true);
         }
+        router.push("/")
       }
       dispatch(setSolWalletAddress());
       toast.success(response?.data?.message);
@@ -192,7 +187,7 @@ const OtpPopup = ({
                   {navbar?.otpPopup?.confirmationCode}
                 </h2>
                 <div className="text-sm text-center mt-2 ">
-                  {navbar?.otpPopup?.verifactionCode}  {email}
+                  {navbar?.otpPopup?.verifactionCode} {email}
                 </div>
                 <OTPInput
                   value={otp}
@@ -294,10 +289,11 @@ const OtpPopup = ({
                 <button
                   onClick={handleVerify}
                   disabled={isDisable}
-                  className={`mt-6 w-full rounded-lg text-sm py-3 font-semibold transition ${isDisable
-                    ? "bg-[#11265B] cursor-not-allowed"
-                    : "bg-[#11265B] hover:bg-[#133D94]"
-                    } border border-[#0E43BD] text-white shadow-md`}
+                  className={`mt-6 w-full rounded-lg text-sm py-3 font-semibold transition ${
+                    isDisable
+                      ? "bg-[#11265B] cursor-not-allowed"
+                      : "bg-[#11265B] hover:bg-[#133D94]"
+                  } border border-[#0E43BD] text-white shadow-md`}
                 >
                   {!isDisable ? (
                     navbar?.otpPopup?.verify
@@ -311,9 +307,7 @@ const OtpPopup = ({
                 {/* <div className='text-sm text-center mt-3 '>You can resend a new code in 60 seconds</div> */}
               </div>
               <div className="text-xs border-t-[1px] border-t-[#404040] mt-3 text-center">
-                <div className=" p-4">
-                  {navbar?.otpPopup?.byCreating}
-                </div>
+                <div className=" p-4">{navbar?.otpPopup?.byCreating}</div>
               </div>
             </motion.div>
           </motion.div>
