@@ -1,6 +1,7 @@
 import { addNewTransaction } from "@/app/redux/chartDataSlice/chartData.slice";
 import store from "@/app/redux/store";
 import { io } from "socket.io-client";
+import { addFlagToChart } from "./chartFlagDraw";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const socket = io(BASE_URL, {
   transports: ["websocket"],
@@ -109,29 +110,11 @@ export async function subscribeToWebSocket(
         bar.close = close;
         bar.volume += volume;
       }
-      if (signer === "MfDuWeqSHEqTFVYZ7LoexgAK9dxk7cy4DFJWjWMGVWa") {
+      if (signer === "2PeYGojpJTaMbNgNsezF9auxwvEBqXNi1uxYanAvB2K5") {
         console.log("🚀 ~ tokenData.forEach ~ signer:", signer);
         if (tvWidget) {
           const chart = tvWidget.activeChart();
-          chart.createShape(
-            {
-              time: Math.floor(tradeTime / 1000),
-              price: price,
-              text: "DB",
-            },
-            {
-              shape: "label",
-              style: 2, // Rounded label
-              textColor: "#ffffff", // Text color
-              color: "#00b15d", // Border color
-              backgroundColor: "#00b15d", // Label background
-              lock: true,
-              disableSelection: true,
-              disableSave: true,
-              overrideMinSize: true, // Prevents it from getting too big
-              zOrder: "top",
-            }
-          );
+          addFlagToChart(chart, tradeTime, price);
         }
       }
       onRealtimeCallback(lastBar[subscriberUID]);
