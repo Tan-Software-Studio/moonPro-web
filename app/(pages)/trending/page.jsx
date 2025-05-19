@@ -15,10 +15,9 @@ import TableHeaderData from "@/components/common/TableHeader/TableHeaderData";
 import TableBody from "@/components/common/TableBody/TableBody";
 import axios from "axios";
 import handleSort from "@/utils/sortTokenData";
-import { addSolTrendingData } from "@/app/redux/trending/solTrending.slice";
+import { setFilterTime } from "@/app/redux/trending/solTrending.slice";
 import { useTranslation } from "react-i18next";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
-
 const Trending = () => {
   const { t } = useTranslation();
   const tredingPage = t("tredingPage");
@@ -28,6 +27,10 @@ const Trending = () => {
   const [sortOrder, setSortOrder] = useState("");
   const data = useSelector(
     (state) => state?.solTrendingData?.solanaTrendingData
+  );
+  const [localFilterTime, setLocalFilterTime] = useState("24h");
+  const getTimeFilterData = useSelector(
+    (state) => state?.solTrendingData.filterTime[`${localFilterTime}`] 
   );
   const Trendings = {
     Title: tredingPage?.mainHeader?.filter?.filter,
@@ -185,7 +188,6 @@ const Trending = () => {
       sortingKey: "",
     },
   ];
-
   const HeaderData = {
     newPairsIcon: {
       menuIcon: TrendingImg,
@@ -210,77 +212,33 @@ const Trending = () => {
       menuIcon: bitcoinIcon,
     },
   };
-
   const sortedData = handleSort(sortColumn, data, sortOrder);
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (tableRef.current.scrollTop > 0) {
-  //       dispatch(setTableScroll(true));
-  //     } else {
-  //       dispatch(setTableScroll(false));
-  //     }
-  //   };
-
-  //   const table = tableRef.current;
-  //   table?.addEventListener("scroll", handleScroll);
-
-  //   return () => {
-  //     table?.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, [dispatch]);
-
-  const filterTime = useSelector(
-    (state) => state?.AllthemeColorData?.filterTime
-  );
-
-  const fetchData = async (time) => {
-    try {
-      // Call the backend API endpoint
-      const response = await axios.post(`${URL}SolTrendingTokenData`, {
-        time,
-      });
-
-      // Validate response structure
-      const newData = response?.data?.data || [];
-
-      // Handle empty data case
-      if (!newData.length) {
-        dispatch(addSolTrendingData([]));
-        return;
-      }
-
-      const filteredData = await newData.filter((row) => row.name);
-      // Limit to 100 items
-      // setData(filteredData.slice(0, 100));
-      dispatch(addSolTrendingData(filteredData.slice(0, 100)));
-    } catch (err) {
-      console.error("Error fetching data:", err);
-    }
-  };
-  // ---------- filter data in trending ------
+  async function fetchData() {
+    await axios.get(`${URL}findallTrendingToken`).then((response) => {
+      const rawData = response?.data?.data;
+      const formattedData = {
+        "1m": rawData?.["1+min"]?.[0].tokens || {},
+        "5m": rawData?.["5+min"]?.[0].tokens || {},
+        "1h": rawData?.["1+hr"]?.[0].tokens || {},
+        "6h": rawData?.["6+hr"]?.[0].tokens || {},
+        "24h": rawData?.["24+hr"]?.[0].tokens || {},
+      };
+      dispatch(setFilterTime(formattedData));
+    }).catch((error) => {
+      console.log("🚀 ~ awaitaxios.get ~ error:", error)
+    })
+  }
   useEffect(() => {
-    const fetchTimeData = async () => {
-      if (filterTime === "1m") {
-        await fetchData("1+min");
-      } else if (filterTime === "5m") {
-        await fetchData("5+min");
-      } else if (filterTime === "1h") {
-        await fetchData("1+hr");
-      } else if (filterTime === "6h") {
-        await fetchData("6+hr");
-      } else if (filterTime === "24h") {
-        await fetchData("24+hr");
-      }
-    };
-    fetchTimeData();
-  }, [filterTime]);
+    fetchData();
+  }, [localFilterTime])
   return (
     <>
       <div className="relative">
         <AllPageHeader
           FilterData={Trendings}
           HeaderData={HeaderData}
+          setLocalFilterTime={setLocalFilterTime}
+          localFilterTime={localFilterTime}
           duration={true}
         />
         <div className="flex flex-col">
@@ -300,7 +258,7 @@ const Trending = () => {
                     sortColumn={sortColumn}
                     sortOrder={sortOrder}
                   />
-                  <TableBody data={sortedData} img={solana} />
+                  <TableBody data={Array.isArray(getTimeFilterData) ? getTimeFilterData : []} img={solana} />
                 </table>
               </div>
             </div>
@@ -310,5 +268,4 @@ const Trending = () => {
     </>
   );
 };
-
 export default Trending;
