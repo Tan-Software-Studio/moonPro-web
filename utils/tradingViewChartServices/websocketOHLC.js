@@ -110,7 +110,7 @@ export async function subscribeToWebSocket(
         bar.close = close;
         bar.volume += volume;
       }
-      if (signer === "2PeYGojpJTaMbNgNsezF9auxwvEBqXNi1uxYanAvB2K5") {
+      if (signer === "MfDuWeqSHEqTFVYZ7LoexgAK9dxk7cy4DFJWjWMGVWa") {
         console.log("🚀 ~ tokenData.forEach ~ signer:", signer);
         if (tvWidget) {
           const chart = tvWidget.activeChart();
