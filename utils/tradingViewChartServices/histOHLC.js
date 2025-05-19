@@ -66,7 +66,6 @@ export async function fetchHistoricalData(periodParams, resolution, token) {
     // console.log("🚀 ~ fetchHistoricalData ~ response:", response.data.data)
     // console.log("API called");
     const trades = response.data.data.Solana.DEXTradeByTokens;
-    console.log("🚀 ~ fetchHistoricalData ~ trades:", trades?.length);
 
     // Preprocess the bars data
     let bars = trades?.map((trade) => {

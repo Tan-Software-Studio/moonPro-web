@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import OtpPopup from "./OtpPopup";
 import axios from "axios";
@@ -8,18 +8,24 @@ import { useGoogleLogin } from "@react-oauth/google";
 import Image from "next/image";
 import { googleLogo } from "@/app/Images";
 import RecoveryKey from "./RecoveryKey";
-import { setSolWalletAddress } from "@/app/redux/states";
-import { useDispatch } from "react-redux";
+import {
+  openCloseLoginRegPopup,
+  setLoginRegPopupAuth,
+  setSolWalletAddress,
+} from "@/app/redux/states";
+import { useDispatch, useSelector } from "react-redux";
 import { MdOutlineEmail } from "react-icons/md";
 import { FiLock } from "react-icons/fi";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { FaUserFriends } from "react-icons/fa";
 import { motion } from "framer-motion";
-import RefferalPopup from "./RefferalPopup";
 import { useTranslation } from "react-i18next";
+import ReferralCodePopup from "./RefferalPopup";
+import { useRouter } from "next/navigation";
 
-const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
+const LoginPopup = ({ authName }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [isPassword, setIsPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
@@ -36,7 +42,9 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
   const navbar = t("navbar");
 
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
-
+  const referralIdFromLink = useSelector(
+    (state) => state?.AllStatesData?.referralForSignup
+  );
   const handleOtpPopup = async () => {
     const trimmedEmail = email.trim();
     const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
@@ -84,7 +92,7 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
       if (err?.response?.data?.message === "User already register.") {
         toast.error("User already exists please try to login");
         setTimeout(() => {
-          setAuthName("login");
+          dispatch(setLoginRegPopupAuth("login"));
           // setIsPassword(false)
         }, 1500);
       } else {
@@ -102,6 +110,7 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
           method: "post",
           data: {
             googleCode: codeResponse.code,
+            inviteCode: refferalCode || null,
           },
         })
           .then((res) => {
@@ -116,13 +125,14 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
               if (res?.data?.data?.user?.referredBy === null) {
                 setIsReffaralCode(true);
               } else {
-                setIsLoginPopup(false);
+                dispatch(openCloseLoginRegPopup(false));
               }
             } else {
               setIsGoogleSignIn(true);
             }
             dispatch(setSolWalletAddress());
             toast.success(res?.data?.message);
+            router.push("/");
           })
           .catch((err) => {
             console.error(err);
@@ -137,29 +147,27 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
       }
     },
   });
+  useEffect(() => {
+    if (referralIdFromLink) {
+      setRefferalCode(referralIdFromLink);
+    }
+  }, [referralIdFromLink]);
 
   return (
     <>
       {isGoogleSignIn ? (
-        <RecoveryKey
-          verifyData={verifyData}
-          setVerifyData={setVerifyData}
-          setIsLoginPopup={setIsLoginPopup}
-        />
+        <RecoveryKey verifyData={verifyData} setVerifyData={setVerifyData} />
       ) : isReffaralCode ? (
-        <RefferalPopup
-          setIsReffaralCode={setIsReffaralCode}
-          verifyData={verifyData}
-          setIsLoginPopup={setIsLoginPopup}
+        <ReferralCodePopup
+          token={verifyData?.data?.token}
+          onClose={() => dispatch(openCloseLoginRegPopup(false))}
         />
       ) : isPassword ? (
         <OtpPopup
           email={email}
           setIsPassword={setIsPassword}
           authName={authName}
-          setIsLoginPopup={setIsLoginPopup}
           jwtToken={jwtToken}
-          setAuthName={setAuthName}
         />
       ) : (
         <motion.div
@@ -169,7 +177,7 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
           className="fixed inset-0 bg-[#1E1E1ECC] flex items-center justify-center z-50 "
-          onClick={() => setIsLoginPopup(false)}
+          onClick={() => dispatch(openCloseLoginRegPopup(false))}
         >
           <motion.div
             key="modal"
@@ -182,7 +190,7 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
           >
             <IoMdClose
               size={22}
-              onClick={() => setIsLoginPopup(false)}
+              onClick={() => dispatch(openCloseLoginRegPopup(false))}
               className="absolute right-4 top-4 text-[#6E6E6E] hover:text-white cursor-pointer transition duration-200"
             />
 
@@ -265,6 +273,7 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
                     <input
                       type="text"
                       placeholder={navbar?.loginPopup?.inviteCodePlace}
+                      value={refferalCode}
                       onChange={(e) => setRefferalCode(e.target.value)}
                       className="w-full bg-transparent text-sm text-white placeholder-[#6E6E6E] focus:outline-none"
                     />
@@ -276,10 +285,11 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
               <button
                 onClick={handleOtpPopup}
                 disabled={isDisable}
-                className={`mt-6 w-full rounded-lg text-sm py-3 font-semibold transition ${isDisable
-                  ? "bg-[#11265B] cursor-not-allowed"
-                  : "bg-[#11265B] hover:bg-[#133D94]"
-                  } border border-[#0E43BD] text-white shadow-md`}
+                className={`mt-6 w-full rounded-lg text-sm py-3 font-semibold transition ${
+                  isDisable
+                    ? "bg-[#11265B] cursor-not-allowed"
+                    : "bg-[#11265B] hover:bg-[#133D94]"
+                } border border-[#0E43BD] text-white shadow-md`}
               >
                 {!isDisable ? (
                   authName === "login" ? (
@@ -297,7 +307,10 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
               {/* Divider */}
               <div className="flex items-center justify-center my-5 text-sm text-[#6E6E6E]">
                 <div className="flex-grow border-t border-[#333]"></div>
-                <span className="px-3"> {navbar?.loginPopup?.continueWith}</span>
+                <span className="px-3">
+                  {" "}
+                  {navbar?.loginPopup?.continueWith}
+                </span>
                 <div className="flex-grow border-t border-[#333]"></div>
               </div>
 
@@ -322,20 +335,20 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
               <div className="text-sm mt-5 text-center text-white">
                 {authName !== "login" ? (
                   <>
-                    {navbar?.loginPopup?.haveaccount} {" "}
+                    {navbar?.loginPopup?.haveaccount}{" "}
                     <span
                       className="text-[#1F73FC] cursor-pointer hover:underline"
-                      onClick={() => setAuthName("login")}
+                      onClick={() => dispatch(setLoginRegPopupAuth("login"))}
                     >
                       {navbar?.loginPopup?.login}
                     </span>
                   </>
                 ) : (
                   <>
-                    {navbar?.loginPopup?.dontAccount}  {" "}
+                    {navbar?.loginPopup?.dontAccount}{" "}
                     <span
                       className="text-[#1F73FC] cursor-pointer hover:underline"
-                      onClick={() => setAuthName("signup")}
+                      onClick={() => dispatch(setLoginRegPopupAuth("signup"))}
                     >
                       {navbar?.loginPopup?.signup}
                     </span>
@@ -344,9 +357,7 @@ const LoginPopup = ({ setIsLoginPopup, authName, setAuthName }) => {
               </div>
             </div>
             <div className="text-xs border-t-[1px] border-t-[#404040] mt-3 text-center">
-              <div className="p-6">
-                {navbar?.loginPopup?.byCreating}
-              </div>
+              <div className="p-6">{navbar?.loginPopup?.byCreating}</div>
             </div>
           </motion.div>
         </motion.div>
