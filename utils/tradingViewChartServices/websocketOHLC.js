@@ -26,7 +26,10 @@ export async function subscribeToWebSocket(
   onRealtimeCallback,
   token,
   resolution = "1",
-  subscriberUID
+  subscriberUID,
+  usdActive,
+  marketCapActive,
+  supply
 ) {
   if (
     activeSubscriberUID !== subscriberUID ||
@@ -81,11 +84,11 @@ export async function subscribeToWebSocket(
     tokenData.forEach((item) => {
       const signer = item?.Transaction?.Signer;
       const tradeTime = new Date(item?.Block?.Time).getTime();
-      const price = parseFloat(item?.Trade?.open || "0");
+      const price = marketCapActive ? parseFloat(item?.Trade?.open || "0") * supply : parseFloat(item?.Trade?.open || "0");
       const volume = parseFloat(item?.volume || "0");
-      const high = parseFloat(item?.high || price);
-      const low = parseFloat(item?.low || price);
-      const close = parseFloat(item?.Trade?.close || price);
+      const high = marketCapActive ? parseFloat(item?.high || price) * supply : parseFloat(item?.high || price);
+      const low = marketCapActive ? parseFloat(item?.high || price) * supply : parseFloat(item?.low || price);
+      const close = marketCapActive ?  parseFloat(item?.Trade?.close || price) * supply : parseFloat(item?.Trade?.close || price);
       const roundedTime = Math.floor(tradeTime / granularity) * granularity;
 
       if (

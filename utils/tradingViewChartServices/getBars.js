@@ -69,11 +69,28 @@ export const subscribeBars = async (
   onResetCacheNeededCallback
 ) => {
   const tokenAddress = await toGetTokenAddressFromLocalStorage();
+
+  const isUsdActive = await getChartUsdSolToggleActive();
+  let usdActive = true;
+  if (isUsdActive !== null) {
+    usdActive = isUsdActive === "true";
+  }
+  const isMarketCapActive = await getChartMarketCapPriceToggleActive();
+  let marketCapActive = true;
+  if (isMarketCapActive !== null) {
+    marketCapActive = isMarketCapActive === "true";
+  }
+
+  const supply = await getChartSupply();
+
   await subscribeToWebSocket(
     onRealtimeCallback,
     tokenAddress,
     resolution,
-    subscriberUID
+    subscriberUID,
+    usdActive,
+    marketCapActive,
+    supply
   );
 };
 
