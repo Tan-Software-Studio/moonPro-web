@@ -39,7 +39,7 @@ export async function subscribeToWalletTracker() {
     });
     // watch all solana trades
     await socket.on("new_trades", async (data) => {
-      console.log("🚀 ~ socket.on ~ data:", data?.length);
+      // console.log("🚀 ~ socket.on ~ data:", data?.length);
       // await store.dispatch(addNewTransactionForWalletTracking(data[0]));
       const filteredData = await data?.filter((item) =>
         walletsToTrack.includes(item?.Transaction?.Signer?.toLowerCase())
