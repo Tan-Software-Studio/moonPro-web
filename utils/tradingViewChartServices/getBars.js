@@ -8,6 +8,18 @@ async function toGetTokenAddressFromLocalStorage() {
   return await localStorage.getItem("chartTokenAddress");
 }
 
+async function getChartUsdSolToggleActive() {
+  return await localStorage.getItem("chartUsdSolToggleActive");
+}
+
+async function getChartMarketCapPriceToggleActive() {
+  return await localStorage.getItem("chartMarketCapPriceToggleActive");
+}
+
+async function getChartSupply() {
+  return await localStorage.getItem("chartSupply");
+}
+
 export const getBars = async (
   symbolInfo,
   resolution,
@@ -17,10 +29,26 @@ export const getBars = async (
 ) => {
   try {
     const tokenAddress = await toGetTokenAddressFromLocalStorage();
+    
+    const isUsdActive = await getChartUsdSolToggleActive();
+    let usdActive = true;
+    if (isUsdActive !== null) {
+      usdActive = isUsdActive === "true";
+    }
+    const isMarketCapActive = await getChartMarketCapPriceToggleActive();
+    let marketCapActive = true;
+    if (isMarketCapActive !== null) {
+      marketCapActive = isMarketCapActive === "true";
+    }
+
+    const supply = await getChartSupply();
     const bars = await fetchHistoricalData(
       periodParams,
       resolution,
-      tokenAddress
+      tokenAddress,
+      usdActive,
+      marketCapActive,
+      supply
     );
     if (bars.length > 0) {
       onHistoryCallback(bars, { noData: false });
