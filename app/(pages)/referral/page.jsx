@@ -252,9 +252,7 @@ const Referral = () => {
                           className="rounded-lg"
                         />
                       </div>
-                      <h1 className="text-[#89888e]">
-                        Please login to see your referrals
-                      </h1>
+                      <h1 className="text-[#89888e]">No referrals found</h1>
                     </div>
                   ) : (
                     !solWalletAddress && (
@@ -268,9 +266,9 @@ const Referral = () => {
                             className="rounded-lg"
                           />
                         </div>
-                        <div className="mt-3">
-                          <appkit-button />
-                        </div>
+                        <h1 className="text-[#89888e]">
+                          Please login to see your referrals
+                        </h1>
                       </div>
                     )
                   )}
