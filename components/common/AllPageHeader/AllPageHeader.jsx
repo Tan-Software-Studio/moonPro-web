@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { usePathname } from "next/navigation";
 import {
   serFilterTime,
-  setFilterTime,
   setQuickBuy,
 } from "@/app/redux/CommonUiData";
 import FilterMemescope from "../filter/FilterMemescope";
@@ -14,8 +13,9 @@ import RightModalOpenSetting from "@/components/Settings/RightModalOpenSetting";
 import { IoSettingsOutline } from "react-icons/io5";
 import { setGlobalBuyAmt } from "@/app/redux/states";
 import { useTranslation } from "react-i18next";
+import { setFilterTime } from "@/app/redux/trending/solTrending.slice";
 
-const AllPageHeader = ({ HeaderData, duration, FilterData }) => {
+const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime }) => {
   const filterPopupRef = useRef(null);
   const dexesPopupRef = useRef(null);
   const { t, ready } = useTranslation();
@@ -37,8 +37,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData }) => {
   );
 
   const [isRightModalOpenSetting, setIsRightModalOpenSetting] = useState(false);
-
-  const [localFilterTime, setLocalFilterTime] = useState(filterTime);
+ 
 
   const borderColor = useSelector(
     (state) => state?.AllthemeColorData?.borderColor
@@ -55,7 +54,8 @@ const AllPageHeader = ({ HeaderData, duration, FilterData }) => {
     // Dispatch the action and ensure the state updates
     setLocalFilterTime(option);
 
-    dispatch(setFilterTime(option));
+    // dispatch(setFilterTime(option));
+
   };
 
   const handleDexesPopup = () => {
@@ -166,10 +166,9 @@ const AllPageHeader = ({ HeaderData, duration, FilterData }) => {
               <button
                 key={index}
                 onClick={() => handleButtonClick(option)}
-                className={`py-2 px-3 text-xs text-[#A5A5A7] ${
-                  option === localFilterTime &&
+                className={`py-2 px-3 text-xs text-[#A5A5A7] ${option === localFilterTime &&
                   "bg-[#1F73FC] text-white rounded-[4px]"
-                } transition duration-300`}
+                  } transition duration-300`}
               >
                 {/* bg-[#1F73FC] text-white first-of-type:rounded-l-md last-of-type:rounded-r-md */}
                 {option}
@@ -267,7 +266,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData }) => {
             )}
           </div>
         )}
-         {!holdingsPage && (
+        {!holdingsPage && (
           <div className="flex gap-2 items-center">
             <div>
               <button
