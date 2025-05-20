@@ -1,6 +1,4 @@
-import {
-  getSoalanaTokenBalance,
-} from "../solanaNativeBalance";
+import { getSoalanaTokenBalance } from "../solanaNativeBalance";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { fetchSolanaNativeBalance } from "@/app/redux/states";
@@ -64,9 +62,7 @@ const buySolanaTokens = async (
       slippage: slipTolerance,
       priorityFee: priorityFee,
       price: 150,
-      programAddress: programAddress
-        ? programAddress
-        : "nasdiuasdnasdudhsdjasbhid",
+      programAddress: "6ef8rrecthr5dkzon8nwu78hrvfckubj14m5ubewf6p",
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -81,8 +77,7 @@ const buySolanaTokens = async (
       setTimeout(async () => {
         const [tokenBalanceUpdate, solBalance] = await Promise.all([
           getSoalanaTokenBalance(address, toToken),
-          dispatch(fetchSolanaNativeBalance(address))
-
+          dispatch(fetchSolanaNativeBalance(address)),
         ]);
         setTokenBalance(tokenBalanceUpdate);
       }, 5000);
@@ -143,8 +138,8 @@ const buySolanaTokensQuickBuyHandler = async (
       },
     }
   );
-  const program =
-    bondingCurv >= 100 ? toToken : programAddress ? programAddress : toToken;
+  // const program =
+  //   bondingCurv >= 100 ? toToken : programAddress ? programAddress : toToken;
   await axios({
     url: `${BASE_URL}transactions/solbuy`,
     method: "post",
@@ -154,7 +149,7 @@ const buySolanaTokensQuickBuyHandler = async (
       slippage: 50,
       priorityFee: 0.0001,
       price: 150,
-      programAddress: program,
+      programAddress: "6ef8rrecthr5dkzon8nwu78hrvfckubj14m5ubewf6p",
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -166,7 +161,7 @@ const buySolanaTokensQuickBuyHandler = async (
         duration: 3000,
       });
       setTimeout(() => {
-        dispatch(fetchSolanaNativeBalance(address))
+        dispatch(fetchSolanaNativeBalance(address));
       }, 2000);
     })
     .catch(async (err) => {
@@ -237,9 +232,7 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
       slippage: 50,
       priorityFee: 0.0001,
       price: 150,
-      programAddress: programAddress
-        ? programAddress
-        : "nasdiuasdnasdudhsdjasbhid",
+      programAddress: "6ef8rrecthr5dkzon8nwu78hrvfckubj14m5ubewf6p",
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -251,7 +244,7 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
         duration: 3000,
       });
       setTimeout(() => {
-        dispatch(fetchSolanaNativeBalance(address))
+        dispatch(fetchSolanaNativeBalance(address));
       }, 2000);
     })
     .catch(async (err) => {
@@ -321,9 +314,7 @@ const sellSolanaTokens = async (
       priorityFee: priorityFee,
       decimal,
       price,
-      programAddress: programAddress
-        ? programAddress
-        : "nasdiuasdnasdudhsdjasbhid",
+      programAddress: "6ef8rrecthr5dkzon8nwu78hrvfckubj14m5ubewf6p",
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -338,7 +329,7 @@ const sellSolanaTokens = async (
       setTimeout(async () => {
         const [tokenBalanceUpdate, solBalance] = await Promise.all([
           getSoalanaTokenBalance(address, fromToken),
-          dispatch(fetchSolanaNativeBalance(address))
+          dispatch(fetchSolanaNativeBalance(address)),
         ]);
         setTokenBalance(tokenBalanceUpdate);
       }, 5000);
