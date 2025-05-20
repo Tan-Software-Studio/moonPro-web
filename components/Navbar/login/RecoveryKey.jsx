@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { openCloseLoginRegPopup } from "@/app/redux/states";
 import { useDispatch } from "react-redux";
 
-const RecoveryKey = ({ setIsLoginPopup, verifyData, setVerifyData }) => {
+const RecoveryKey = ({ verifyData, setVerifyData }) => {
   const dispatch = useDispatch();
   const [isRevealed, setIsRevealed] = useState(false);
   const { t } = useTranslation();

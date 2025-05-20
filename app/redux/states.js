@@ -26,6 +26,8 @@ const AllStatesData = createSlice({
     isRegisterOrLogin: "",
     isRegLoginPopup: false,
     referralForSignup: null,
+    referralPopupAfterLogin: false,
+    recoverPopUpOpen: false,
   },
   reducers: {
     setWalletAddress: (state, action) => {
@@ -76,6 +78,12 @@ const AllStatesData = createSlice({
     setSignupReferral: (state, action) => {
       state.referralForSignup = action?.payload || null;
     },
+    setreferralPopupAfterLogin: (state, action) => {
+      state.referralPopupAfterLogin = action.payload;
+    },
+    setRecoverPopupOpen: (state, action) => {
+      state.recoverPopUpOpen = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchSolanaNativeBalance.fulfilled, (state, action) => {
@@ -99,5 +107,7 @@ export const {
   openCloseLoginRegPopup,
   setLoginRegPopupAuth,
   setSignupReferral,
+  setreferralPopupAfterLogin,
+  setRecoverPopupOpen,
 } = AllStatesData.actions;
 export default AllStatesData.reducer;

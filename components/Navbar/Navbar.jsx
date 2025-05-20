@@ -28,6 +28,7 @@ import AccountSecurity from "./popup/AccountSecurity";
 import Watchlist from "./popup/Watchlist";
 import { useTranslation } from "react-i18next";
 import SolDeposit from "./popup/SolDeposit";
+import ReferralCodePopup from "./login/RefferalPopup";
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
 
@@ -41,6 +42,10 @@ const Navbar = () => {
   // const [isLoginPopup, setIsLoginPopup] = useState(false);
   const isLoginPopup = useSelector(
     (state) => state?.AllStatesData?.isRegLoginPopup
+  );
+  // referral add popup
+  const isReffaralCode = useSelector(
+    (state) => state?.AllStatesData?.referralPopupAfterLogin
   );
   const authName = useSelector(
     (state) => state?.AllStatesData?.isRegisterOrLogin
@@ -284,10 +289,7 @@ const Navbar = () => {
 
       <AnimatePresence>
         {isLoginPopup && (
-          <LoginPopup
-            isLoginPopup={isLoginPopup}
-            authName={authName}
-          />
+          <LoginPopup isLoginPopup={isLoginPopup} authName={authName} />
         )}
 
         {isSettingPopup && <Setting setIsSettingPopup={setIsSettingPopup} />}
@@ -307,6 +309,7 @@ const Navbar = () => {
           />
         )}
       </AnimatePresence>
+      {isReffaralCode && <ReferralCodePopup />}
     </>
   );
 };

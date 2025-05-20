@@ -14,7 +14,6 @@ import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
 import TableHeaderData from "@/components/common/TableHeader/TableHeaderData";
 import TableBody from "@/components/common/TableBody/TableBody";
 import axios from "axios";
-import handleSort from "@/utils/sortTokenData";
 import { setFilterTime } from "@/app/redux/trending/solTrending.slice";
 import { useTranslation } from "react-i18next";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
@@ -25,9 +24,6 @@ const Trending = () => {
   const tableRef = useRef(null);
   const [sortColumn, setSortColumn] = useState("");
   const [sortOrder, setSortOrder] = useState("");
-  const data = useSelector(
-    (state) => state?.solTrendingData?.solanaTrendingData
-  );
   const [localFilterTime, setLocalFilterTime] = useState("24h");
   const getTimeFilterData = useSelector(
     (state) => state?.solTrendingData.filterTime[`${localFilterTime}`] 
@@ -212,7 +208,6 @@ const Trending = () => {
       menuIcon: bitcoinIcon,
     },
   };
-  const sortedData = handleSort(sortColumn, data, sortOrder);
   async function fetchData() {
     await axios.get(`${URL}findallTrendingToken`).then((response) => {
       const rawData = response?.data?.data;
@@ -230,7 +225,7 @@ const Trending = () => {
   }
   useEffect(() => {
     fetchData();
-  }, [localFilterTime])
+  }, [])
   return (
     <>
       <div className="relative">
