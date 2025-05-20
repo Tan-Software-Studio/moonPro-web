@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const BASE_URL_MOON = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
-const socket = io(BASE_URL, {
+export const socket = io(BASE_URL, {
   transports: ["websocket"],
 });
 let isSocketOn = false;
@@ -128,3 +128,4 @@ export function unsubscribeFromWalletTracker() {
     console.log("🚀 ~ unsubscribeFromWalletTracker ~ error:", error)?.message;
   }
 }
+

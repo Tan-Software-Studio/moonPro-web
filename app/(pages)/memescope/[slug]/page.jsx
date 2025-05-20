@@ -14,7 +14,7 @@ import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import { useTranslation } from "react-i18next";
 
 const Memescope = () => {
-  const { t, ready } = useTranslation();
+  const { t } = useTranslation();
   const memescopePage = t("memescope");
   const [selectedScope, setSelectedScope] = useState(1);
   const Graduatedata = useSelector(

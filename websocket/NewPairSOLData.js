@@ -1,23 +1,26 @@
 "use client";
+import {
+  setMemeScopeGraduateData,
+  setMemeScopeGraduatedData,
+} from "@/app/redux/memescopeData/Memescope";
 import { addWebSocketData } from "@/app/redux/newpair/NewPairData";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { io } from "socket.io-client";
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
-const socket = io(BASE_URL, {
-  transports: ["websocket"],
-});
+import { socket } from "./walletTracker";
 const NewPairSOLData = () => {
+  if (!socket) {
+    console.log("socket is not active");
+    return;
+  }
   const dispatch = useDispatch();
-  const [checkSocetOn, setCheckSocetOn]=useState(false)
+  const [checkSocetOn, setCheckSocetOn] = useState(false);
   async function startWebSocketConnection() {
     if (checkSocetOn) {
       console.log("WebSocket is already connected.");
       return;
     }
 
-    await setCheckSocetOn(true) // Mark as connected
-
+    await setCheckSocetOn(true); // Mark as connected
     socket.on("newData", async (data) => {
       // console.log("Received new data:", data);
       setTimeout(() => {
@@ -25,9 +28,17 @@ const NewPairSOLData = () => {
       }, 10);
     });
 
-    socket.on("disconnect", async() => {
+    // for updated memsoce data
+    socket.on("memescoptokens", async (data) => {
+      if (data?.type == "graduate") {
+        dispatch(setMemeScopeGraduateData(data?.tokens));
+      } else if (data?.type == "graduated") {
+        dispatch(setMemeScopeGraduatedData(data?.tokens));
+      }
+    });
+    socket.on("disconnect", async () => {
       console.log("WebSocket disconnected.");
-      await setCheckSocetOn(false) // Reset flag on disconnect
+      await setCheckSocetOn(false); // Reset flag on disconnect
     });
   }
   // Automatically start the connection on mount and clean up on unmount

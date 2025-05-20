@@ -10,7 +10,7 @@ export const fetchMemescopeData = createAsyncThunk(
   "fetchMemescopeData",
   async () => {
     try {
-      const res = await axios.get(`${URL}wavePro/users/memescopeData`);
+      const res = await axios.get(`${URL}wavePro/users/findmemescopeData`);
       return res?.data?.data;
     } catch (err) {
       throw err;
@@ -71,6 +71,12 @@ const allMemescopeData = createSlice({
         }
       }
     },
+    setMemeScopeGraduateData: (state, action) => {
+      state.MscopeGraduateData = action.payload;
+    },
+    setMemeScopeGraduatedData: (state, action) => {
+      state.MscopeGraduatedData = action.payload;
+    },
   },
 
   extraReducers: (builder) => {
@@ -79,8 +85,8 @@ const allMemescopeData = createSlice({
       .addCase(fetchMemescopeData.fulfilled, (state, { payload }) => {
         state.initialLoading = false;
         state.refreshLoading = false;
-        state.MscopeGraduateData = payload?.GraduateData;
-        state.MscopeGraduatedData = payload?.GraduatedData;
+        state.MscopeGraduateData = payload?.graduate;
+        state.MscopeGraduatedData = payload?.graduated;
       })
       .addCase(fetchMemescopeData.rejected, (state, { error }) => {
         state.error = error.message;
@@ -91,7 +97,11 @@ const allMemescopeData = createSlice({
 });
 
 // Export the new action
-export const { addMScopeGraduateSocketData, addMScopeGraduatedSocketData } =
-  allMemescopeData.actions;
+export const {
+  addMScopeGraduateSocketData,
+  addMScopeGraduatedSocketData,
+  setMemeScopeGraduateData,
+  setMemeScopeGraduatedData,
+} = allMemescopeData.actions;
 
 export default allMemescopeData.reducer;
