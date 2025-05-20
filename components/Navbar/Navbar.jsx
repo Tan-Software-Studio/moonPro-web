@@ -81,13 +81,9 @@ const Navbar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("walletAddress");
     dispatch(setSolWalletAddress());
-    router.push("/");
+    router.replace("/");
     setIsProfileOpen(false);
     googleLogout();
-    setTimeout(() => {
-      dispatch(openCloseLoginRegPopup(true));
-      dispatch(setLoginRegPopupAuth("login"));
-    }, 1500);
   };
 
   // update and get solana balance

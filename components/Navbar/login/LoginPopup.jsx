@@ -122,12 +122,11 @@ const LoginPopup = ({ authName }) => {
             if (res?.data?.message === "Login successfull") {
               if (res?.data?.data?.user?.referredBy === null) {
                 dispatch(setreferralPopupAfterLogin(true));
-              } else {
-                dispatch(openCloseLoginRegPopup(false));
-              }
+              } 
             } else {
               setIsGoogleSignIn(true);
             }
+            dispatch(openCloseLoginRegPopup(false));
             dispatch(setSolWalletAddress());
             toast.success(res?.data?.message);
             router.push("/");
@@ -153,9 +152,7 @@ const LoginPopup = ({ authName }) => {
 
   return (
     <>
-      {isGoogleSignIn ? (
-        <RecoveryKey verifyData={verifyData} setVerifyData={setVerifyData} />
-      ) : isPassword ? (
+      {isPassword ? (
         <OtpPopup
           email={email}
           setIsPassword={setIsPassword}

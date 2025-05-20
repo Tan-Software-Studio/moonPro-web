@@ -7,7 +7,7 @@ import Trending from "./(pages)/trending/page";
 export default function Home() {
   const router = useRouter();
   useEffect(() => {
-    router.push(`/trending`);
+    router.replace(`/trending`);
   }, []);
   // useEffect(() => {
   //   router.push(`/newpairs/${selectToken.toLowerCase()}`);

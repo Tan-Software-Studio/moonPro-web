@@ -117,12 +117,10 @@ const OtpPopup = ({ setIsPassword, authName, jwtToken, email }) => {
       if (authName == "login") {
         if (response?.data?.data?.user?.referredBy === null) {
           dispatch(setreferralPopupAfterLogin(true));
-        } else {
-          dispatch(openCloseLoginRegPopup(false));
-        }
+        } 
       } else {
         setOpenRecoverKey(true);
-      }
+      } 
       dispatch(openCloseLoginRegPopup(false));
       dispatch(setSolWalletAddress());
       toast.success(response?.data?.message);
@@ -142,10 +140,7 @@ const OtpPopup = ({ setIsPassword, authName, jwtToken, email }) => {
 
   return (
     <>
-      <AnimatePresence>
-        {openRecoverKey && authName !== "login" ? (
-          <RecoveryKey verifyData={verifyData} setVerifyData={setVerifyData} />
-        ) : (
+      <AnimatePresence> 
           <motion.div
             key="backdrop"
             initial={{ opacity: 0 }}
@@ -297,8 +292,7 @@ const OtpPopup = ({ setIsPassword, authName, jwtToken, email }) => {
                 <div className=" p-4">{navbar?.otpPopup?.byCreating}</div>
               </div>
             </motion.div>
-          </motion.div>
-        )}
+          </motion.div> 
       </AnimatePresence>
     </>
   );

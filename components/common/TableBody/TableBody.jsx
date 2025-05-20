@@ -58,7 +58,7 @@ const TableBody = ({ data, img }) => {
     await localStorage.setItem("chartTokenImg", row?.img);
     await dispatch(setChartSymbolImage(row?.img));
     router.push(
-      `/tradingview/${getNetwork}?tokenaddress=${row?.address}&symbol=${row?.name}`
+      `/tradingview/solana?tokenaddress=${row?.address}&symbol=${row?.name}`
     );
     localStorage.setItem("silectChainName", getNetwork);
   }

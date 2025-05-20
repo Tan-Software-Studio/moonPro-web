@@ -16,6 +16,7 @@ import TableBody from "@/components/common/TableBody/TableBody";
 import axios from "axios";
 import { setFilterTime } from "@/app/redux/trending/solTrending.slice";
 import { useTranslation } from "react-i18next";
+import handleSort from "@/utils/sortTokenData";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Trending = () => {
   const { t } = useTranslation();
@@ -25,6 +26,7 @@ const Trending = () => {
   const [sortColumn, setSortColumn] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [localFilterTime, setLocalFilterTime] = useState("24h");
+
   const getTimeFilterData = useSelector(
     (state) => state?.solTrendingData.filterTime[`${localFilterTime}`] 
   );
@@ -223,6 +225,14 @@ const Trending = () => {
       console.log("🚀 ~ awaitaxios.get ~ error:", error)
     })
   }
+
+  const sortedData = handleSort(
+    sortColumn,
+    Array.isArray(getTimeFilterData) ? getTimeFilterData : [],
+    sortOrder
+  );
+ 
+
   useEffect(() => {
     fetchData();
   }, [])
@@ -253,7 +263,7 @@ const Trending = () => {
                     sortColumn={sortColumn}
                     sortOrder={sortOrder}
                   />
-                  <TableBody data={Array.isArray(getTimeFilterData) ? getTimeFilterData : []} img={solana} />
+                  <TableBody data={sortedData} img={solana} />
                 </table>
               </div>
             </div>
