@@ -3,7 +3,6 @@ import { bitcoinIcon, buyIcon, memescopeImg } from "@/app/Images";
 import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchnewPairData } from "@/app/redux/newpair/NewPairData";
 import MscopePumpTable from "@/components/common/memsscope/MscopePumpTable";
 import { usePathname } from "next/navigation";
 import FilterMemescope from "@/components/common/filter/FilterMemescope";
@@ -23,7 +22,7 @@ const Memescope = () => {
   const Graduateddata = useSelector(
     (state) => state?.allMemescopeData?.MscopeGraduatedData
   );
-  const NewData = useSelector((state) => state?.allNewPairData?.Newdata);
+  const NewData = useSelector((state) => state?.allMemescopeData?.newLaunch);
   const dispatch = useDispatch();
   const [openDropdown, setOpenDropdown] = useState(null);
 
@@ -208,7 +207,6 @@ const Memescope = () => {
   const { closeWebSocketConnection } = NewPairSOLData();
   // data
   useEffect(() => {
-    dispatch(fetchnewPairData());
     dispatch(fetchMemescopeData());
   }, []);
 

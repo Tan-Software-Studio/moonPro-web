@@ -2,8 +2,8 @@
 import {
   setMemeScopeGraduateData,
   setMemeScopeGraduatedData,
+  setNewLaunchData,
 } from "@/app/redux/memescopeData/Memescope";
-import { addWebSocketData } from "@/app/redux/newpair/NewPairData";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { socket } from "./walletTracker";
@@ -22,10 +22,7 @@ const NewPairSOLData = () => {
 
     await setCheckSocetOn(true); // Mark as connected
     socket.on("newData", async (data) => {
-      // console.log("Received new data:", data);
-      setTimeout(() => {
-        dispatch(addWebSocketData(data));
-      }, 10);
+      dispatch(setNewLaunchData(data));
     });
 
     // for updated memsoce data

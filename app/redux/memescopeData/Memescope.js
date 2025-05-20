@@ -23,7 +23,7 @@ const allMemescopeData = createSlice({
   initialState: {
     MscopeGraduateData: [],
     MscopeGraduatedData: [],
-
+    newLaunch: [],
     initialLoading: true,
     refreshLoading: false, // For refreshing data every 6 seconds
     error: null,
@@ -77,6 +77,10 @@ const allMemescopeData = createSlice({
     setMemeScopeGraduatedData: (state, action) => {
       state.MscopeGraduatedData = action.payload;
     },
+    setNewLaunchData: (state, action) => {
+      const temp = state.newLaunch.slice(0, 30);
+      state.newLaunch = [action.payload, ...temp];
+    },
   },
 
   extraReducers: (builder) => {
@@ -87,6 +91,7 @@ const allMemescopeData = createSlice({
         state.refreshLoading = false;
         state.MscopeGraduateData = payload?.graduate;
         state.MscopeGraduatedData = payload?.graduated;
+        state.newLaunch = payload?.newLaunch;
       })
       .addCase(fetchMemescopeData.rejected, (state, { error }) => {
         state.error = error.message;
@@ -102,6 +107,7 @@ export const {
   addMScopeGraduatedSocketData,
   setMemeScopeGraduateData,
   setMemeScopeGraduatedData,
+  setNewLaunchData,
 } = allMemescopeData.actions;
 
 export default allMemescopeData.reducer;
