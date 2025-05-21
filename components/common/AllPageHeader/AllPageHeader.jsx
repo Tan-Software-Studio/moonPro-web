@@ -13,8 +13,7 @@ import RightModalOpenSetting from "@/components/Settings/RightModalOpenSetting";
 import { IoSettingsOutline } from "react-icons/io5";
 import { setGlobalBuyAmt } from "@/app/redux/states";
 import { useTranslation } from "react-i18next";
-import { setFilterTime } from "@/app/redux/trending/solTrending.slice";
-const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime }) => {
+const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime, setFilterValues, filterValues, onApply }) => {
   const filterPopupRef = useRef(null);
   const dexesPopupRef = useRef(null);
   const { t, ready } = useTranslation();
@@ -28,9 +27,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
   const [isDexesPopup, setIsDexesPopup] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
-  const filterTime = useSelector(
-    (state) => state?.AllthemeColorData?.filterTime
-  );
+
   const [isRightModalOpenSetting, setIsRightModalOpenSetting] = useState(false);
   const borderColor = useSelector(
     (state) => state?.AllthemeColorData?.borderColor
@@ -182,6 +179,9 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
               data={FilterData}
               isOpen={openDropdown == 0}
               setIsOpen={() => setOpenDropdown(null)}
+              setFilterValues={setFilterValues}
+              filterValues={filterValues}
+              onApply={onApply}
             />
           </div>
         )}

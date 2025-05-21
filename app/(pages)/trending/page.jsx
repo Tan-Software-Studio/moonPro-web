@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Filter,
   Advanced,
@@ -17,7 +17,10 @@ import axios from "axios";
 import handleSort from "@/utils/sortTokenData";
 import { setFilterTime } from "@/app/redux/trending/solTrending.slice";
 import { useTranslation } from "react-i18next";
+import toast from "react-hot-toast";
+
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
+
 const Trending = () => {
   const { t } = useTranslation();
   const tredingPage = t("tredingPage");
@@ -25,44 +28,66 @@ const Trending = () => {
   const tableRef = useRef(null);
   const [sortColumn, setSortColumn] = useState("");
   const [sortOrder, setSortOrder] = useState("");
-  const data = useSelector(
-    (state) => state?.solTrendingData?.solanaTrendingData
-  );
   const [localFilterTime, setLocalFilterTime] = useState("24h");
+
+  const [filterValues, setFilterValues] = useState({
+    mintauth: { checked: false },
+    freezeauth: { checked: false },
+    lpburned: { checked: false },
+    top10holders: { checked: false },
+    liquidity: { min: "", max: "" },
+    volume: { min: "", max: "" },
+    age: { min: "", max: "" },
+    MKT: { min: "", max: "" },
+    TXNS: { min: "", max: "" },
+    buys: { min: "", max: "" },
+    sells: { min: "", max: "" },
+
+  })
+
+  const [filteredData, setFilteredData] = useState([]);
+
   const getTimeFilterData = useSelector(
-    (state) => state?.solTrendingData.filterTime[`${localFilterTime}`] 
+    (state) => state?.solTrendingData.filterTime[`${localFilterTime}`]
   );
+
+
   const Trendings = {
     Title: tredingPage?.mainHeader?.filter?.filter,
     FilterInput: [
       {
         id: "1",
         name: tredingPage?.mainHeader?.filter?.mintauth,
+        title: "mintauth",
         type: "checkbox",
         infotipString: tredingPage?.mainHeader?.filter?.mintauthtooltip,
       },
       {
         id: "2",
         name: tredingPage?.mainHeader?.filter?.freezeauth,
+        title: "freezeauth",
         type: "checkbox",
         infotipString: tredingPage?.mainHeader?.filter?.freezeauthtooltip,
+
       },
       {
         id: "3",
         name: tredingPage?.mainHeader?.filter?.lpburned,
+        title: "lpburned",
         type: "checkbox",
         infotipString: tredingPage?.mainHeader?.filter?.lpburnedtooltip,
       },
       {
         id: "4",
-        name: tredingPage?.mainHeader?.filter?.withatleast1social,
+        name: "Top 10 Holders",
+        title: "top10holders",
         type: "checkbox",
       },
     ],
     FromToFilter: [
       {
         id: "5",
-        title: "Liquidity",
+        title: "liquidity",
         name: `${tredingPage?.mainHeader?.filter?.bycurrentliquidity}($)`,
         firstInputName: "Min",
         firstInputIcon: "$",
@@ -72,7 +97,7 @@ const Trending = () => {
       },
       {
         id: "6",
-        title: "Volume",
+        title: "volume",
         name: tredingPage?.mainHeader?.filter?.byvolume,
         firstInputName: "Min",
         firstInputIcon: "%",
@@ -82,7 +107,7 @@ const Trending = () => {
       },
       {
         id: "7",
-        title: "Age",
+        title: "age",
         name: `${tredingPage?.mainHeader?.filter?.byage}`,
         firstInputName: "Min",
         firstInputIcon: "",
@@ -112,7 +137,7 @@ const Trending = () => {
       },
       {
         id: "10",
-        title: "Buys",
+        title: "buys",
         name: tredingPage?.mainHeader?.filter?.bybuys,
         firstInputName: "Min",
         firstInputIcon: "",
@@ -122,8 +147,8 @@ const Trending = () => {
       },
       {
         id: "11",
-        title: tredingPage?.mainHeader?.filter?.sells,
-        name: "By Sells",
+        name: tredingPage?.mainHeader?.filter?.bysells,
+        title: "sells",
         firstInputName: "Min",
         firstInputIcon: "",
         secondInputName: "Max",
@@ -132,6 +157,7 @@ const Trending = () => {
       },
     ],
   };
+
   const headersDataSol = [
     {
       title: tredingPage?.tableheaders?.pairinfo,
@@ -188,6 +214,7 @@ const Trending = () => {
       sortingKey: "",
     },
   ];
+
   const HeaderData = {
     newPairsIcon: {
       menuIcon: TrendingImg,
@@ -212,7 +239,8 @@ const Trending = () => {
       menuIcon: bitcoinIcon,
     },
   };
-  const sortedData = handleSort(sortColumn, data, sortOrder);
+
+
   async function fetchData() {
     await axios.get(`${URL}findallTrendingToken`).then((response) => {
       const rawData = response?.data?.data;
@@ -225,12 +253,50 @@ const Trending = () => {
       };
       dispatch(setFilterTime(formattedData));
     }).catch((error) => {
-      console.log("🚀 ~ awaitaxios.get ~ error:", error)
+      toast.error("Error fetching data");
     })
   }
+
+
+  let filterDataArray = Array.isArray(getTimeFilterData) ? getTimeFilterData : []
+
+
+  function onApply() {
+    let result = [...filterDataArray];
+    // Apply freeze authority filter
+    if (filterValues.freezeauth?.checked) {
+      result = result.filter(item => item?.freeze_authority === filterValues.freezeauth.checked);
+    }
+
+    // Apply mint authority filter
+    if (filterValues.mintauth?.checked) {
+      result = result.filter(item => item?.mint_authority === filterValues.mintauth.checked);
+    }
+
+    if (filterValues.top10holders?.checked) {
+      result = result.filter(item => item?.top10Holder === filterValues.top10holders.checked);
+    }
+
+    if (filterValues.MKT?.min) {
+      result = result.filter(item => Number(item?.marketCap) >= Number(filterValues.MKT.min));
+    }
+    if (filterValues.MKT?.max) {
+      result = result.filter(item => Number(item?.marketCap) <= Number(filterValues.MKT.max));
+    }
+    console.log("🚀 ~ onApply ~ result:", result)
+    setFilteredData(result);
+  }
+
+  const datasort = filteredData.length > 0 ? filteredData : Array.isArray(getTimeFilterData) ? getTimeFilterData : [];
+  const sortedData = handleSort(sortColumn, datasort, sortOrder);
+
+  useEffect(() => {
+    onApply();
+  }, [localFilterTime]);
+
   useEffect(() => {
     fetchData();
-  }, [localFilterTime])
+  }, [])
   return (
     <>
       <div className="relative">
@@ -240,6 +306,10 @@ const Trending = () => {
           setLocalFilterTime={setLocalFilterTime}
           localFilterTime={localFilterTime}
           duration={true}
+          setFilterValues={setFilterValues}
+          filterValues={filterValues}
+          onApply={onApply}
+
         />
         <div className="flex flex-col">
           <div className="overflow-x-auto">
@@ -258,7 +328,7 @@ const Trending = () => {
                     sortColumn={sortColumn}
                     sortOrder={sortOrder}
                   />
-                  <TableBody data={Array.isArray(getTimeFilterData) ? getTimeFilterData : []} img={solana} />
+                  <TableBody data={sortedData} img={solana} />
                 </table>
               </div>
             </div>
