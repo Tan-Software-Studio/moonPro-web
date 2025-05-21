@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <div>
       {/* <NewPairs /> */}
-      <Trending />
+      {/* <Trending /> */}
     </div>
   );
 }
