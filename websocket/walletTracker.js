@@ -1,4 +1,8 @@
 import { addNewTransactionForWalletTracking } from "@/app/redux/chartDataSlice/chartData.slice";
+import {
+  setMemeScopeGraduateData,
+  setMemeScopeGraduatedData,
+} from "@/app/redux/memescopeData/Memescope";
 import store from "@/app/redux/store";
 import { updateTrendingData } from "@/app/redux/trending/solTrending.slice";
 import axios from "axios";
@@ -6,7 +10,7 @@ import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const BASE_URL_MOON = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
-const socket = io(BASE_URL, {
+export const socket = io(BASE_URL, {
   transports: ["websocket"],
 });
 let isSocketOn = false;
@@ -93,6 +97,11 @@ export async function subscribeToTrendingTokens() {
             updateTrendingData({ time: "5m", data: data?.tokens })
           );
           break;
+        case "30+min":
+          store.dispatch(
+            updateTrendingData({ time: "30m", data: data?.tokens })
+          );
+          break;
         case "1+hr":
           store.dispatch(
             updateTrendingData({ time: "1h", data: data?.tokens })
@@ -110,6 +119,15 @@ export async function subscribeToTrendingTokens() {
           break;
         default:
           break;
+      }
+    });
+    // for updated memsoce data
+    socket.on("memescoptokens", async (data) => {
+      // console.log("🚀 ~ socket.on ~ data:", data?.type)
+      if (data?.type == "graduate") {
+        store.dispatch(setMemeScopeGraduateData(data?.tokens));
+      } else if (data?.type == "graduated") {
+        store.dispatch(setMemeScopeGraduatedData(data?.tokens));
       }
     });
   } catch (error) {

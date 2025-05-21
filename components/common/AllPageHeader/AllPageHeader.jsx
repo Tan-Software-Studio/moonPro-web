@@ -89,20 +89,6 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
   };
   // ----------Filter Dexes--------
   const defaultOptions = ["Raydium", "Pump.fun", "Moonshot", "Orca", "Meteora"];
-  const [selectedOptions, setSelectedOptions] = useState([...defaultOptions]);
-  // Apply filters
-  const handleCheckboxChangeDefault = (option) => {
-    setSelectedOptions((prev) => {
-      const updated = prev.includes(option)
-        ? prev.filter((item) => item !== option)
-        : [...prev, option];
-      return updated;
-    });
-  };
-  // Reset all filters
-  const resetButtonDefault = () => {
-    setSelectedOptions([...defaultOptions]);
-  };
   const chcekBoxStyle =
     "appearance-none w-4 h-4 border border-gray-400 rounded-sm bg-transparent flex items-center justify-center checked:bg-[#3e9fd6] checked:border-[#3e9fd6] checked:after:content-['✔'] checked:after:text-xs";
   return (

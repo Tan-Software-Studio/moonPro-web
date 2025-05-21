@@ -6,10 +6,10 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
-import { openCloseLoginRegPopup } from "@/app/redux/states";
 import { useDispatch, useSelector } from "react-redux";
+import { setreferralPopupAfterLogin, setSignupReferral } from "@/app/redux/states";
 
-export default function ReferralCodePopup({ token, onClose }) {
+export default function ReferralCodePopup() {
   const dispatch = useDispatch();
   const [referralCode, setReferralCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +20,11 @@ export default function ReferralCodePopup({ token, onClose }) {
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Unauthorized request.");
+      return;
+    }
     if (!referralCode.trim()) {
       setErrorMessage(navbar?.referralPopup?.referralCode);
       return;
@@ -40,12 +44,13 @@ export default function ReferralCodePopup({ token, onClose }) {
           },
         }
       );
-      if (response?.data?.data?.user?.verify == true) {
-        onClose();
-      }
       setIsLoading(false);
       toast.success(response?.data?.message);
+       dispatch(setSignupReferral(null));
+      dispatch(setreferralPopupAfterLogin(false));
     } catch (error) {
+      console.log("🚀 ~ handleSubmit ~ error:", error?.message);
+      dispatch(setSignupReferral(null));
       setIsLoading(false);
       // console.error(error);
       toast.error(error?.response?.data?.message);
@@ -81,7 +86,10 @@ export default function ReferralCodePopup({ token, onClose }) {
           className="absolute right-4 top-4 text-gray-500 hover:text-white"
           aria-label="Close"
         >
-          <IoMdClose onClick={() => onClose()} size={22} />
+          <IoMdClose
+            onClick={() => dispatch(setreferralPopupAfterLogin(false))}
+            size={22}
+          />
         </button>
 
         <div className="p-8">

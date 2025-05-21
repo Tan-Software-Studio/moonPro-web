@@ -11,6 +11,7 @@ import RecoveryKey from "./RecoveryKey";
 import {
   openCloseLoginRegPopup,
   setLoginRegPopupAuth,
+  setreferralPopupAfterLogin,
   setSolWalletAddress,
 } from "@/app/redux/states";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,7 +21,6 @@ import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { FaUserFriends } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import ReferralCodePopup from "./RefferalPopup";
 import { useRouter } from "next/navigation";
 
 const LoginPopup = ({ authName }) => {
@@ -36,7 +36,6 @@ const LoginPopup = ({ authName }) => {
   const [refferalCode, setRefferalCode] = useState("");
   const [email, setEmail] = useState("");
   const [isDisable, setIsDisable] = useState(false);
-  const [isReffaralCode, setIsReffaralCode] = useState(false);
 
   const { t } = useTranslation();
   const navbar = t("navbar");
@@ -44,6 +43,9 @@ const LoginPopup = ({ authName }) => {
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
   const referralIdFromLink = useSelector(
     (state) => state?.AllStatesData?.referralForSignup
+  );
+  const isRegLoginPopup = useSelector(
+    (state) => state?.AllStatesData?.isRegLoginPopup
   );
   const handleOtpPopup = async () => {
     const trimmedEmail = email.trim();
@@ -81,10 +83,6 @@ const LoginPopup = ({ authName }) => {
         setIsPassword(true);
         setIsDisable(false);
       }
-      // if (response?.data?.statusCode === 201) {
-      //     toast.error("User was created but not verified")
-      // }
-
       toast.success(response?.data?.message);
     } catch (err) {
       console.error(err);
@@ -123,16 +121,15 @@ const LoginPopup = ({ authName }) => {
 
             if (res?.data?.message === "Login successfull") {
               if (res?.data?.data?.user?.referredBy === null) {
-                setIsReffaralCode(true);
-              } else {
-                dispatch(openCloseLoginRegPopup(false));
-              }
+                dispatch(setreferralPopupAfterLogin(true));
+              } 
             } else {
               setIsGoogleSignIn(true);
             }
+            dispatch(openCloseLoginRegPopup(false));
             dispatch(setSolWalletAddress());
             toast.success(res?.data?.message);
-            router.push("/");
+            router.push("/trending");
           })
           .catch((err) => {
             console.error(err);
@@ -142,7 +139,7 @@ const LoginPopup = ({ authName }) => {
       } catch (error) {
         console.error(error);
         toast.error(error?.message);
-        setIsReffaralCode(false);
+        dispatch(setreferralPopupAfterLogin(false));
         setIsGoogleSignIn(false);
       }
     },
@@ -155,14 +152,7 @@ const LoginPopup = ({ authName }) => {
 
   return (
     <>
-      {isGoogleSignIn ? (
-        <RecoveryKey verifyData={verifyData} setVerifyData={setVerifyData} />
-      ) : isReffaralCode ? (
-        <ReferralCodePopup
-          token={verifyData?.data?.token}
-          onClose={() => dispatch(openCloseLoginRegPopup(false))}
-        />
-      ) : isPassword ? (
+      {isPassword ? (
         <OtpPopup
           email={email}
           setIsPassword={setIsPassword}
@@ -170,197 +160,199 @@ const LoginPopup = ({ authName }) => {
           jwtToken={jwtToken}
         />
       ) : (
-        <motion.div
-          key="backdrop"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="fixed inset-0 bg-[#1E1E1ECC] flex items-center justify-center z-50 "
-          onClick={() => dispatch(openCloseLoginRegPopup(false))}
-        >
+        isRegLoginPopup && (
           <motion.div
-            key="modal"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
+            key="backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            onClick={(e) => e.stopPropagation()}
-            className="bg-[#141414]/90 backdrop-blur-lg border border-[#2A2A2A]  rounded-2xl w-[400px] relative"
+            className="fixed inset-0 bg-[#1E1E1ECC] flex items-center justify-center z-50"
+            onClick={() => dispatch(openCloseLoginRegPopup(false))}
           >
-            <IoMdClose
-              size={22}
-              onClick={() => dispatch(openCloseLoginRegPopup(false))}
-              className="absolute right-4 top-4 text-[#6E6E6E] hover:text-white cursor-pointer transition duration-200"
-            />
+            <motion.div
+              key="modal"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#141414]/90 backdrop-blur-lg border border-[#2A2A2A]  rounded-2xl w-[400px] relative"
+            >
+              <IoMdClose
+                size={22}
+                onClick={() => dispatch(openCloseLoginRegPopup(false))}
+                className="absolute right-4 top-4 text-[#6E6E6E] hover:text-white cursor-pointer transition duration-200"
+              />
 
-            <div className="mt-2 p-8">
-              {authName !== "login" ? (
-                <>
-                  <h1 className="text-3xl font-bold text-center text-white">
-                    {navbar?.loginPopup?.creatAccount}
-                  </h1>
-                  <p className="text-sm text-[#6E6E6E] text-center mt-1">
-                    {navbar?.loginPopup?.creatAccountDesc}
-                  </p>
-                </>
-              ) : (
-                <>
-                  <h1 className="text-3xl font-bold text-center text-white">
-                    {navbar?.loginPopup?.welcomeBack}
-                  </h1>
-                  <p className="text-sm text-[#6E6E6E] text-center mt-1">
-                    {navbar?.loginPopup?.loginInAccouont}
-                  </p>
-                </>
-              )}
+              <div className="mt-2 p-8">
+                {authName !== "login" ? (
+                  <>
+                    <h1 className="text-3xl font-bold text-center text-white">
+                      {navbar?.loginPopup?.creatAccount}
+                    </h1>
+                    <p className="text-sm text-[#6E6E6E] text-center mt-1">
+                      {navbar?.loginPopup?.creatAccountDesc}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h1 className="text-3xl font-bold text-center text-white">
+                      {navbar?.loginPopup?.welcomeBack}
+                    </h1>
+                    <p className="text-sm text-[#6E6E6E] text-center mt-1">
+                      {navbar?.loginPopup?.loginInAccouont}
+                    </p>
+                  </>
+                )}
 
-              {/* Email */}
-              <div className="mt-6">
-                <label className="text-sm text-[#6E6E6E] mb-1 block">
-                  {navbar?.loginPopup?.email}
-                </label>
-                <div className="flex items-center gap-3 bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
-                  <MdOutlineEmail size={20} className="text-[#6E6E6E]" />
-                  <input
-                    type="email"
-                    placeholder={navbar?.loginPopup?.enterEmailPlace}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-transparent text-sm text-white placeholder-[#6E6E6E] focus:outline-none"
-                  />
-                </div>
-                <p className="text-xs text-red-500 mt-1">{error}</p>
-              </div>
-
-              {/* Password or Invite Code */}
-              {authName === "login" ? (
-                <div className="mt-4">
+                {/* Email */}
+                <div className="mt-6">
                   <label className="text-sm text-[#6E6E6E] mb-1 block">
-                    {navbar?.loginPopup?.password}
-                  </label>
-                  <div className="flex items-center justify-between bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
-                    <div className="flex items-center gap-3 w-full">
-                      <FiLock size={20} className="text-[#6E6E6E]" />
-                      <input
-                        type={!showPassword ? "password" : "text"}
-                        placeholder={navbar?.loginPopup?.password}
-                        onChange={(e) => setPasswordInput(e.target.value)}
-                        className="w-full bg-transparent text-sm text-white placeholder-[#6E6E6E] focus:outline-none"
-                      />
-                    </div>
-                    {showPassword ? (
-                      <BsEye
-                        size={18}
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="text-[#6E6E6E] cursor-pointer"
-                      />
-                    ) : (
-                      <BsEyeSlash
-                        size={18}
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="text-[#6E6E6E] cursor-pointer"
-                      />
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className="mt-4">
-                  <label className="text-sm text-[#6E6E6E] mb-1 block">
-                    {navbar?.loginPopup?.inviteCode}
+                    {navbar?.loginPopup?.email}
                   </label>
                   <div className="flex items-center gap-3 bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
-                    <FaUserFriends size={20} className="text-[#6E6E6E]" />
+                    <MdOutlineEmail size={20} className="text-[#6E6E6E]" />
                     <input
-                      type="text"
-                      placeholder={navbar?.loginPopup?.inviteCodePlace}
-                      value={refferalCode}
-                      onChange={(e) => setRefferalCode(e.target.value)}
+                      type="email"
+                      placeholder={navbar?.loginPopup?.enterEmailPlace}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="w-full bg-transparent text-sm text-white placeholder-[#6E6E6E] focus:outline-none"
                     />
                   </div>
+                  <p className="text-xs text-red-500 mt-1">{error}</p>
                 </div>
-              )}
 
-              {/* Submit Button */}
-              <button
-                onClick={handleOtpPopup}
-                disabled={isDisable}
-                className={`mt-6 w-full rounded-lg text-sm py-3 font-semibold transition ${
-                  isDisable
-                    ? "bg-[#11265B] cursor-not-allowed"
-                    : "bg-[#11265B] hover:bg-[#133D94]"
-                } border border-[#0E43BD] text-white shadow-md`}
-              >
-                {!isDisable ? (
-                  authName === "login" ? (
-                    "Login"
-                  ) : (
-                    "Sign up"
-                  )
+                {/* Password or Invite Code */}
+                {authName === "login" ? (
+                  <div className="mt-4">
+                    <label className="text-sm text-[#6E6E6E] mb-1 block">
+                      {navbar?.loginPopup?.password}
+                    </label>
+                    <div className="flex items-center justify-between bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
+                      <div className="flex items-center gap-3 w-full">
+                        <FiLock size={20} className="text-[#6E6E6E]" />
+                        <input
+                          type={!showPassword ? "password" : "text"}
+                          placeholder={navbar?.loginPopup?.password}
+                          onChange={(e) => setPasswordInput(e.target.value)}
+                          className="w-full bg-transparent text-sm text-white placeholder-[#6E6E6E] focus:outline-none"
+                        />
+                      </div>
+                      {showPassword ? (
+                        <BsEye
+                          size={18}
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="text-[#6E6E6E] cursor-pointer"
+                        />
+                      ) : (
+                        <BsEyeSlash
+                          size={18}
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="text-[#6E6E6E] cursor-pointer"
+                        />
+                      )}
+                    </div>
+                  </div>
                 ) : (
-                  <div className="flex justify-center py-2 items-center gap-2">
-                    <div className="loaderPopup"></div>
+                  <div className="mt-4">
+                    <label className="text-sm text-[#6E6E6E] mb-1 block">
+                      {navbar?.loginPopup?.inviteCode}
+                    </label>
+                    <div className="flex items-center gap-3 bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
+                      <FaUserFriends size={20} className="text-[#6E6E6E]" />
+                      <input
+                        type="text"
+                        placeholder={navbar?.loginPopup?.inviteCodePlace}
+                        value={refferalCode}
+                        onChange={(e) => setRefferalCode(e.target.value)}
+                        className="w-full bg-transparent text-sm text-white placeholder-[#6E6E6E] focus:outline-none"
+                      />
+                    </div>
                   </div>
                 )}
-              </button>
 
-              {/* Divider */}
-              <div className="flex items-center justify-center my-5 text-sm text-[#6E6E6E]">
-                <div className="flex-grow border-t border-[#333]"></div>
-                <span className="px-3">
-                  {" "}
-                  {navbar?.loginPopup?.continueWith}
-                </span>
-                <div className="flex-grow border-t border-[#333]"></div>
-              </div>
+                {/* Submit Button */}
+                <button
+                  onClick={handleOtpPopup}
+                  disabled={isDisable}
+                  className={`mt-6 w-full rounded-lg text-sm py-3 font-semibold transition ${
+                    isDisable
+                      ? "bg-[#11265B] cursor-not-allowed"
+                      : "bg-[#11265B] hover:bg-[#133D94]"
+                  } border border-[#0E43BD] text-white shadow-md`}
+                >
+                  {!isDisable ? (
+                    authName === "login" ? (
+                      "Login"
+                    ) : (
+                      "Sign up"
+                    )
+                  ) : (
+                    <div className="flex justify-center py-2 items-center gap-2">
+                      <div className="loaderPopup"></div>
+                    </div>
+                  )}
+                </button>
 
-              {/* Google Auth */}
-              <div
-                className="bg-white hover:opacity-90 text-sm py-3 px-4 flex items-center justify-center w-full rounded-lg cursor-pointer transition"
-                onClick={() => handleGoogleAuth()}
-              >
-                <Image
-                  src={googleLogo}
-                  alt="Google Logo"
-                  width={20}
-                  height={20}
-                  className="w-5 h-5 object-contain"
-                />
-                <span className="text-[#1F1F1F] font-semibold ml-3">
-                  {navbar?.loginPopup?.continueGoogle}
-                </span>
-              </div>
+                {/* Divider */}
+                <div className="flex items-center justify-center my-5 text-sm text-[#6E6E6E]">
+                  <div className="flex-grow border-t border-[#333]"></div>
+                  <span className="px-3">
+                    {" "}
+                    {navbar?.loginPopup?.continueWith}
+                  </span>
+                  <div className="flex-grow border-t border-[#333]"></div>
+                </div>
 
-              {/* Switch Auth */}
-              <div className="text-sm mt-5 text-center text-white">
-                {authName !== "login" ? (
-                  <>
-                    {navbar?.loginPopup?.haveaccount}{" "}
-                    <span
-                      className="text-[#1F73FC] cursor-pointer hover:underline"
-                      onClick={() => dispatch(setLoginRegPopupAuth("login"))}
-                    >
-                      {navbar?.loginPopup?.login}
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    {navbar?.loginPopup?.dontAccount}{" "}
-                    <span
-                      className="text-[#1F73FC] cursor-pointer hover:underline"
-                      onClick={() => dispatch(setLoginRegPopupAuth("signup"))}
-                    >
-                      {navbar?.loginPopup?.signup}
-                    </span>
-                  </>
-                )}
+                {/* Google Auth */}
+                <div
+                  className="bg-white hover:opacity-90 text-sm py-3 px-4 flex items-center justify-center w-full rounded-lg cursor-pointer transition"
+                  onClick={() => handleGoogleAuth()}
+                >
+                  <Image
+                    src={googleLogo}
+                    alt="Google Logo"
+                    width={20}
+                    height={20}
+                    className="w-5 h-5 object-contain"
+                  />
+                  <span className="text-[#1F1F1F] font-semibold ml-3">
+                    {navbar?.loginPopup?.continueGoogle}
+                  </span>
+                </div>
+
+                {/* Switch Auth */}
+                <div className="text-sm mt-5 text-center text-white">
+                  {authName !== "login" ? (
+                    <>
+                      {navbar?.loginPopup?.haveaccount}{" "}
+                      <span
+                        className="text-[#1F73FC] cursor-pointer hover:underline"
+                        onClick={() => dispatch(setLoginRegPopupAuth("login"))}
+                      >
+                        {navbar?.loginPopup?.login}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      {navbar?.loginPopup?.dontAccount}{" "}
+                      <span
+                        className="text-[#1F73FC] cursor-pointer hover:underline"
+                        onClick={() => dispatch(setLoginRegPopupAuth("signup"))}
+                      >
+                        {navbar?.loginPopup?.signup}
+                      </span>
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="text-xs border-t-[1px] border-t-[#404040] mt-3 text-center">
-              <div className="p-6">{navbar?.loginPopup?.byCreating}</div>
-            </div>
+              <div className="text-xs border-t-[1px] border-t-[#404040] mt-3 text-center">
+                <div className="p-6">{navbar?.loginPopup?.byCreating}</div>
+              </div>
+            </motion.div>
           </motion.div>
-        </motion.div>
+        )
       )}
     </>
   );

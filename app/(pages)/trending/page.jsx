@@ -14,23 +14,19 @@ import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
 import TableHeaderData from "@/components/common/TableHeader/TableHeaderData";
 import TableBody from "@/components/common/TableBody/TableBody";
 import axios from "axios";
-import handleSort from "@/utils/sortTokenData";
-import { setFilterTime } from "@/app/redux/trending/solTrending.slice";
 import { useTranslation } from "react-i18next";
-const URL = process.env.NEXT_PUBLIC_BASE_URLS;
+import handleSort from "@/utils/sortTokenData";
+
 const Trending = () => {
   const { t } = useTranslation();
   const tredingPage = t("tredingPage");
-  const dispatch = useDispatch();
   const tableRef = useRef(null);
   const [sortColumn, setSortColumn] = useState("");
   const [sortOrder, setSortOrder] = useState("");
-  const data = useSelector(
-    (state) => state?.solTrendingData?.solanaTrendingData
-  );
   const [localFilterTime, setLocalFilterTime] = useState("24h");
+
   const getTimeFilterData = useSelector(
-    (state) => state?.solTrendingData.filterTime[`${localFilterTime}`] 
+    (state) => state?.solTrendingData.filterTime[`${localFilterTime}`]
   );
   const Trendings = {
     Title: tredingPage?.mainHeader?.filter?.filter,
@@ -141,11 +137,18 @@ const Trending = () => {
       sortingKey: "",
       infoTipString: tredingPage?.tableheaders?.pairinfotooltip,
     },
+    // {
+    //   title: tredingPage?.tableheaders?.created,
+    //   sortable: true,
+    //   key: "created",
+    //   sortingKey: "date",
+    // },
     {
-      title: tredingPage?.tableheaders?.created,
+      title: tredingPage?.tableheaders?.mcap,
       sortable: true,
-      key: "created",
-      sortingKey: "date",
+      key: "marketCap",
+      sortingKey: "marketCap",
+      infoTipString: tredingPage?.tableheaders?.mcaotooltip,
     },
     {
       title: tredingPage?.tableheaders?.liquidity,
@@ -155,11 +158,10 @@ const Trending = () => {
       infoTipString: tredingPage?.tableheaders?.liquiditytooltip,
     },
     {
-      title: tredingPage?.tableheaders?.mcap,
+      title: tredingPage?.tableheaders?.volume,
       sortable: true,
-      key: "marketCap",
-      sortingKey: "marketCap",
-      infoTipString: tredingPage?.tableheaders?.mcaotooltip,
+      key: "volume",
+      sortingKey: "traded_volume",
     },
     {
       title: tredingPage?.tableheaders?.swaps,
@@ -167,12 +169,6 @@ const Trending = () => {
       key: "swaps",
       sortingKey: "trades",
       infoTipString: tredingPage?.tableheaders?.swapstooltip,
-    },
-    {
-      title: tredingPage?.tableheaders?.volume,
-      sortable: true,
-      key: "volume",
-      sortingKey: "traded_volume",
     },
     {
       title: tredingPage?.tableheaders?.auditres,
@@ -194,7 +190,7 @@ const Trending = () => {
       headTitle: tredingPage?.mainHeader?.trending,
       discription: tredingPage?.mainHeader?.desc,
     },
-    timeDuration: ["1m", "5m", "1h", "6h", "24h"],
+    timeDuration: ["1m", "5m", "30m", "1h", "6h", "24h"],
     Filter: {
       menuIcon: Filter,
       menuTitle: tredingPage?.mainHeader?.filter?.filter,
@@ -212,25 +208,12 @@ const Trending = () => {
       menuIcon: bitcoinIcon,
     },
   };
-  const sortedData = handleSort(sortColumn, data, sortOrder);
-  async function fetchData() {
-    await axios.get(`${URL}findallTrendingToken`).then((response) => {
-      const rawData = response?.data?.data;
-      const formattedData = {
-        "1m": rawData?.["1+min"]?.[0].tokens || {},
-        "5m": rawData?.["5+min"]?.[0].tokens || {},
-        "1h": rawData?.["1+hr"]?.[0].tokens || {},
-        "6h": rawData?.["6+hr"]?.[0].tokens || {},
-        "24h": rawData?.["24+hr"]?.[0].tokens || {},
-      };
-      dispatch(setFilterTime(formattedData));
-    }).catch((error) => {
-      console.log("🚀 ~ awaitaxios.get ~ error:", error)
-    })
-  }
-  useEffect(() => {
-    fetchData();
-  }, [localFilterTime])
+  const sortedData = handleSort(
+    sortColumn,
+    Array.isArray(getTimeFilterData) ? getTimeFilterData : [],
+    sortOrder
+  );
+
   return (
     <>
       <div className="relative">
@@ -258,7 +241,7 @@ const Trending = () => {
                     sortColumn={sortColumn}
                     sortOrder={sortOrder}
                   />
-                  <TableBody data={Array.isArray(getTimeFilterData) ? getTimeFilterData : []} img={solana} />
+                  <TableBody data={sortedData} img={solana} />
                 </table>
               </div>
             </div>

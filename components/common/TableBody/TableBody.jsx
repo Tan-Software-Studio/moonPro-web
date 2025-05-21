@@ -16,7 +16,7 @@ import {
   fetchSolanaNativeBalance,
   setChartSymbolImage,
 } from "@/app/redux/states";
-import { PiCopyLight } from "react-icons/pi";
+import { PiCopyLight, PiCopyThin } from "react-icons/pi";
 import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 import Link from "next/link";
 
@@ -58,7 +58,7 @@ const TableBody = ({ data, img }) => {
     await localStorage.setItem("chartTokenImg", row?.img);
     await dispatch(setChartSymbolImage(row?.img));
     router.push(
-      `/tradingview/${getNetwork}?tokenaddress=${row?.address}&symbol=${row?.name}`
+      `/tradingview/solana?tokenaddress=${row?.address}&symbol=${row?.name}`
     );
     localStorage.setItem("silectChainName", getNetwork);
   }
@@ -93,180 +93,164 @@ const TableBody = ({ data, img }) => {
         <>
           {data.map((row, ind) => {
             return (
-              <tbody key={ind} className="text-start">
+              <tbody key={ind} className="text-start geist">
                 <tr
                   className={`border-b border-b-[#1A1A1A] hover:bg-[#1A1A1A] cursor-pointer`}
                   onClick={() => navigateToChartScreen(row)}
                 >
                   {/* Column 1: Icon and Pair Info */}
-                  <td className="whitespace-nowrap W-60 md:px-6 px-3 py-3">
+                  <td className="whitespace-nowrap W-60 md:px-6 px-3 py-3 ">
                     <div className="flex items-center gap-3 !text-left">
                       {row?.img ? (
                         <img
                           src={row?.img}
                           alt="Token"
-                          className="w-8 md:w-10 h-8 md:h-10 xl:w-12 xl:h-12 rounded-[4px] border border-[#1F73FC]"
+                          className="w-8 md:w-10 h-8 md:h-10 xl:w-14 xl:h-14 rounded-[4px] border border-[#1F73FC]"
                           loading="lazy"
                         />
                       ) : (
-                        <div className="w-8 md:w-10 h-8 md:h-10 xl:w-12 xl:h-12 rounded-sm flex items-center justify-center bg-[#3b3b49] border border-[#1F73FC]">
+                        <div className="w-8 md:w-10 h-8 md:h-10 xl:w-14 xl:h-14 rounded-sm flex items-center justify-center bg-[#3b3b49] border border-[#1F73FC]">
                           <span className="text-sm text-white uppercase text-center">
-                            {row?.name?.toString()?.slice(0, 1)}
+                            {row?.name?.toString()?.slice(0, 1) || "T"}
                           </span>
                         </div>
                       )}
                       <div className="">
                         <div className="flex items-center justify-center gap-[10px]">
-                          <p>
-                            <span className="text-white font-bold text-sm">
-                              {/* {row.Trade.Currency.Symbol?.length >= 12
-                              ? `${row.Trade.Currency.Symbol.slice(0, 12)}...`
-                              : row.Trade.Currency.Symbol} */}
-                              {row.name}
-                              &nbsp;
-                            </span>
-                            <span className="font-thin text-[16px] text-[#6E6E6E]">
-                              /
-                            </span>
-                            <span className="text-sm text-[#6E6E6E]">SOL</span>
-                          </p>
-                          <Link
-                            href={`https://www.pump.news/en/${row.address}-solana`}
-                            target="_blank"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <div className="text-[10px] h-[17px] w-[17px] border border-[#4CAF50] text-[#ffffff] rounded-md flex items-center justify-center cursor-pointer bg-gradient-to-br from-[#409143] to-[#093d0c] shadow-[0_0_4px_rgba(76,255,80,0.4)]">
-                              AI
+                          <div className="flex flex-col gap-2">
+                            {/* token name and copy address */}
+                            <div className="flex items-center gap-1">
+                              <div
+                                className={`text-[#F6F6F6] text-[15px] font-[400] md:text-[15px] md:font-[500] uppercase`}
+                              >
+                                {row?.symbol?.length >= 12
+                                  ? `${row?.symbol.slice(0, 12)}...`
+                                  : row?.symbol || "Token"}
+                              </div>
+
+                              <div
+                                className={`text-[#6E6E6E] text-[15px] font-[400] lowercase`}
+                              >
+                                {row?.name?.length >= 12
+                                  ? `${row?.name.slice(0, 12)}...`
+                                  : row?.name || "Trending token"}
+                              </div>
+                              <div
+                                onClick={(e) =>
+                                  copyAddress(row?.address, ind, e)
+                                }
+                                className="text-sm "
+                              >
+                                {copied === ind ? (
+                                  <IoMdDoneAll className="text-[#F6F6F6] cursor-pointer" />
+                                ) : (
+                                  <PiCopyThin className="text-[#F6F6F6] cursor-pointer" />
+                                )}
+                              </div>
                             </div>
-                          </Link>
+                            {/* time and social links */}
+                            <div className={`flex items-center gap-[8px]`}>
+                              <div
+                                className={`text-[#4CAF50] text-[15px] font-medium`}
+                              >
+                                {UpdateTime(row?.date, currentTime)}
+                              </div>
+                              {/* <div className="flex gap-2">
+                                 
+                                {row?.offchainData?.img && (
+                                  <Link
+                                    href={`/`}
+                                    target="_blank"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <div className="grid place-items-center rounded-full">
+                                      <img
+                                        src={row?.offchainData?.img}
+                                        alt={row?.offchainData?.title}
+                                        className="mx-auto text-white"
+                                      />
+                                    </div>
+                                  </Link>
+                                )}
+                              </div> */}
+                              <div className="text-[#6E6E6E]">|</div>
+                              <Link
+                                href={`https://www.pump.news/en/${row.address}-solana`}
+                                target="_blank"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <div className="text-[10px] h-[17px] w-[17px] border border-[#4CAF50] text-[#ffffff] rounded-md flex items-center justify-center cursor-pointer bg-gradient-to-br from-[#409143] to-[#093d0c] shadow-[0_0_4px_rgba(76,255,80,0.4)]">
+                                  AI
+                                </div>
+                              </Link>
+                            </div>
+                          </div>
                         </div>
-                        <div
-                          onClick={(e) => copyAddress(row.address, ind, e)}
-                          className="flex gap-2 items-center mt-1"
-                        >
-                          {/* <span className="font-thin text-white">44s</span> */}
-                          <span className="text-[#6E6E6E]">
-                            {" "}
-                            {row.address?.slice(0, 5)}...
-                            {row.address?.slice(-3)}{" "}
-                          </span>
-                          <span
-                            onClick={(e) => copyAddress(row.address, ind, e)}
-                          >
-                            {copied === ind ? (
-                              <IoMdDoneAll
-                                size={17}
-                                className="text-[#3f756d] cursor-pointer"
-                              />
-                            ) : (
-                              <PiCopyLight className="text-[#6E6E6E] cursor-pointer" />
-                            )}
-                          </span>
-                        </div>
+
+
                       </div>
                     </div>
                   </td>
 
-                  {/* Column 2: Time */}
-                  <td className="whitespace-nowrap py-3 W-32 text-[15px] md:px-6 px-3">
-                    {" "}
-                    {/* {formatTime(timeDiffs[ind])} */}
-                    {UpdateTime(row?.date, currentTime)}
-                  </td>
-
-                  {/* Column 3: Liquidity */}
+                  {/* Column 2: Market Cap and Price */}
                   <td className="whitespace-nowrap W-32 py-3 md:px-6 px-3">
-                    <div className="grid">
-                      <div className="flex  gap-1.5">
-                        <Image
-                          src={img}
-                          alt="newPairsIcon"
-                          className="my-auto  w-5 h-5"
-                        />
-                        <p>
-                          {/* <span className="text-[16px]">{row.Trade.Currency.Symbol}</span> */}
-                          {row.liquidity}
-                          <span className="text-[#6E6E6E] text-[15px]">
-                            {" "}
-                            / $46k
+                    <div className="flex flex-col gap-1">
+                      <div>
+                        <p className="text-[15px] font-medium">
+                          <span>{humanReadableFormat(row?.marketCap)}</span>
+                        </p>
+
+                        <p className="mt-1">
+                          <span className="text-[14px] font-thin text-[#666873]">
+                            {row.current_price.toFixed}
                           </span>
                         </p>
                       </div>
                       <p
-                        className={`text-[15px] mt-2 ${
-                          data.length > 0 &&
+                        className={`text-[12px] font-medium ${data.length > 0 &&
                           typeof row?.Percentage === "string" &&
                           row?.Percentage.includes("-")
-                            ? "text-[#ED1B24]"
-                            : "text-[#21CB6B]"
-                        }`}
+                          ? "text-[#ED1B24]"
+                          : "text-[#21CB6B]"
+                          }`}
                       >
                         {row?.Percentage}
                       </p>
                     </div>
                   </td>
 
-                  {/* Column 4: Initial Liquidity */}
-                  {/* <td className="whitespace-nowrap px-6 py-4">
-                  <div className="flex  items-center gap-1.5">
-                    <Image
-                      src={bitcoinIcon}
-                      alt="newPairsIcon"
-                      className="my-auto  w-5 h-5"
-                    />
-                    <p>
-                      <span className="text-[16px]">17,43&nbsp;</span>
-                      <span className="font-thin text-[16px] text-[#9b9999]">
-                        /&nbsp;
-                      </span>
-                      <span className="text-[15px] text-[#666873] ">$46k</span>
-                    </p>
-                  </div>
-                </td> */}
 
-                  {/* Column 5: Market Cap and Price */}
+                  {/* Column 3: Liquidity */}
                   <td className="whitespace-nowrap W-32 py-3 md:px-6 px-3">
-                    <div className="grid">
-                      <p className="text-[16px] font-bold">
-                        <span>{humanReadableFormat(row?.marketCap)}</span>
-                      </p>
-                      <p className="mt-1">
-                        <span className="text-[14px] font-thin text-[#666873]">
-                          {row.current_price.toFixed}
+                    <span className="text-white text-[15px] font-medium">
+                      $46k
+                    </span>
+                  </td>
+
+                  {/* Column 4: Volume */}
+                  <td className="whitespace-nowrap W-32 text-[15px] py-3 md:px-6 px-3">
+                    {humanReadableFormat(row?.traded_volume)}
+                  </td>
+
+
+                  {/* Column 5: Swaps */}
+                  <td className="whitespace-nowrap W-32 py-3 md:px-6 px-3">
+                    <p className="mt-0.5 text-[15px] font-medium">{row?.trades}</p>
+
+                    <div className="flex  gap-1.5">
+                      <p className="mt-0.5">
+                        <span className="text-[#21CB6B]">
+                          {row?.buys ? row?.buys : 0}
+                        </span>
+                        <span className="text-[#828282]"> / </span>
+                        <span className="text-[#ED1B24]">
+                          {row?.sells ? row?.sells : 0}
                         </span>
                       </p>
                     </div>
                   </td>
 
-                  {/* Column 6: Swaps */}
-                  <td className="whitespace-nowrap W-32 py-3 md:px-6 px-3">
-                    <div className="grid">
-                      <div className="flex  gap-1.5">
-                        <Image
-                          src={Swaps}
-                          alt="newPairsIcon"
-                          className="my-auto"
-                        />
-                        <div>
-                          <p className="mt-0.5 text-[16px]">{row?.trades}</p>
-                          <p className="mt-0.5">
-                            <span className="text-[#21CB6B]">
-                              {row?.buys ? row?.buys : 0}
-                            </span>
-                            <span className="text-[#828282]"> / </span>
-                            <span className="text-[#ED1B24]">
-                              {row?.sells ? row?.sells : 0}
-                            </span>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
 
-                  {/* Column 7: Volume */}
-                  <td className="whitespace-nowrap W-32 text-[16px] py-3 md:px-6 px-3">
-                    {humanReadableFormat(row?.traded_volume)}
-                  </td>
 
                   {/* Column 8: Holders */}
                   {/* <td className="whitespace-nowrap px-6 py-4 text-[16px]">
@@ -274,9 +258,8 @@ const TableBody = ({ data, img }) => {
                   </td> */}
                   <td className="whitespace-nowrap W-60 py-3 flex justify-center">
                     <div
-                      className={`flex  gap-2 ${
-                        !row.mint_authority ? "text-white" : "text-[#828282]"
-                      }`}
+                      className={`flex  gap-2 ${!row.mint_authority ? "text-white" : "text-[#828282]"
+                        }`}
                     >
                       <Tooltip
                         body={
@@ -307,11 +290,10 @@ const TableBody = ({ data, img }) => {
                       <Tooltip body={"No one can freeze token transfers."}>
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${
-                              !row.mint_authority
-                                ? "text-white"
-                                : "text-[#828282]"
-                            }`}
+                            className={`flex flex-col text-start opacity-75 ${!row.mint_authority
+                              ? "text-white"
+                              : "text-[#828282]"
+                              }`}
                           >
                             {!row.freeze_authority ? (
                               <CiCircleCheck
@@ -339,9 +321,8 @@ const TableBody = ({ data, img }) => {
                       >
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${
-                              true ? "text-white" : "text-[#828282]"
-                            }`}
+                            className={`flex flex-col text-start opacity-75 ${true ? "text-white" : "text-[#828282]"
+                              }`}
                           >
                             {true ? (
                               <CiCircleCheck
@@ -365,9 +346,8 @@ const TableBody = ({ data, img }) => {
                       <Tooltip body={"Shows if token has 10 holders."}>
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${
-                              row?.top10Holder ? "text-white" : "text-[#828282]"
-                            }`}
+                            className={`flex flex-col text-start opacity-75 ${row?.top10Holder ? "text-white" : "text-[#828282]"
+                              }`}
                           >
                             {row?.top10Holder ? (
                               <CiCircleCheck
@@ -390,7 +370,7 @@ const TableBody = ({ data, img }) => {
                     </div>
                   </td>
 
-                  {/* Column 10: Quick Buy Button */}
+                  {/* Column 6: Quick Buy Button */}
                   <td className="whitespace-nowrap W-32 py-3 place-items-center">
                     <button
                       className="text-[#1F73FC] rounded-[4px] py-3 px-[30px] hover:bg-[#11265B] transition-all duration-300 ease-in-out flex items-center gap-2"
@@ -411,11 +391,10 @@ const TableBody = ({ data, img }) => {
                       </span>
                       <span>
                         {quickBuy
-                          ? `${
-                              quickBuy.length > 6
-                                ? `${quickBuy.slice(0, 7)}...`
-                                : quickBuy
-                            }`
+                          ? `${quickBuy.length > 6
+                            ? `${quickBuy.slice(0, 7)}...`
+                            : quickBuy
+                          }`
                           : 0}
                       </span>
                     </button>
