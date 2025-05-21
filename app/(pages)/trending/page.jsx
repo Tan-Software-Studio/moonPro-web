@@ -14,14 +14,12 @@ import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
 import TableHeaderData from "@/components/common/TableHeader/TableHeaderData";
 import TableBody from "@/components/common/TableBody/TableBody";
 import axios from "axios";
-import { setFilterTime } from "@/app/redux/trending/solTrending.slice";
 import { useTranslation } from "react-i18next";
 import handleSort from "@/utils/sortTokenData";
-const URL = process.env.NEXT_PUBLIC_BASE_URLS;
+
 const Trending = () => {
   const { t } = useTranslation();
   const tredingPage = t("tredingPage");
-  const dispatch = useDispatch();
   const tableRef = useRef(null);
   const [sortColumn, setSortColumn] = useState("");
   const [sortOrder, setSortOrder] = useState("");
@@ -210,32 +208,12 @@ const Trending = () => {
       menuIcon: bitcoinIcon,
     },
   };
-  async function fetchData() {
-    await axios.get(`${URL}findallTrendingToken`).then((response) => {
-      const rawData = response?.data?.data;
-      const formattedData = {
-        "1m": rawData?.["1+min"]?.[0].tokens || {},
-        "5m": rawData?.["5+min"]?.[0].tokens || {},
-        "1h": rawData?.["1+hr"]?.[0].tokens || {},
-        "6h": rawData?.["6+hr"]?.[0].tokens || {},
-        "24h": rawData?.["24+hr"]?.[0].tokens || {},
-      };
-      dispatch(setFilterTime(formattedData));
-    }).catch((error) => {
-      console.log("🚀 ~ awaitaxios.get ~ error:", error)
-    })
-  }
-
   const sortedData = handleSort(
     sortColumn,
     Array.isArray(getTimeFilterData) ? getTimeFilterData : [],
     sortOrder
   );
- 
 
-  useEffect(() => {
-    fetchData();
-  }, [])
   return (
     <>
       <div className="relative">

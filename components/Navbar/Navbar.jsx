@@ -29,6 +29,10 @@ import Watchlist from "./popup/Watchlist";
 import { useTranslation } from "react-i18next";
 import SolDeposit from "./popup/SolDeposit";
 import ReferralCodePopup from "./login/RefferalPopup";
+import axios from "axios";
+import { fetchMemescopeData } from "@/app/redux/memescopeData/Memescope";
+import { setFilterTime } from "@/app/redux/trending/solTrending.slice";
+const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
 
@@ -85,7 +89,28 @@ const Navbar = () => {
     setIsProfileOpen(false);
     googleLogout();
   };
-
+  async function fetchData() {
+    await axios
+      .get(`${URL}findallTrendingToken`)
+      .then((response) => {
+        const rawData = response?.data?.data;
+        const formattedData = {
+          "1m": rawData?.["1+min"]?.[0].tokens || {},
+          "5m": rawData?.["5+min"]?.[0].tokens || {},
+          "1h": rawData?.["1+hr"]?.[0].tokens || {},
+          "6h": rawData?.["6+hr"]?.[0].tokens || {},
+          "24h": rawData?.["24+hr"]?.[0].tokens || {},
+        };
+        dispatch(setFilterTime(formattedData));
+      })
+      .catch((error) => {
+        console.log("🚀 ~ awaitaxios.get ~ error:", error);
+      });
+  }
+  useEffect(() => {
+    fetchData();
+    dispatch(fetchMemescopeData());
+  }, []);
   // update and get solana balance
   useEffect(() => {
     if (solWalletAddress) {

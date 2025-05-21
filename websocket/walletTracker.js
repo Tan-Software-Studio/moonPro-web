@@ -1,4 +1,8 @@
 import { addNewTransactionForWalletTracking } from "@/app/redux/chartDataSlice/chartData.slice";
+import {
+  setMemeScopeGraduateData,
+  setMemeScopeGraduatedData,
+} from "@/app/redux/memescopeData/Memescope";
 import store from "@/app/redux/store";
 import { updateTrendingData } from "@/app/redux/trending/solTrending.slice";
 import axios from "axios";
@@ -112,6 +116,14 @@ export async function subscribeToTrendingTokens() {
           break;
       }
     });
+    // for updated memsoce data
+    socket.on("memescoptokens", async (data) => {
+      if (data?.type == "graduate") {
+        dispatch(setMemeScopeGraduateData(data?.tokens));
+      } else if (data?.type == "graduated") {
+        dispatch(setMemeScopeGraduatedData(data?.tokens));
+      }
+    });
   } catch (error) {
     console.log("🚀 ~ subscribeToTrendingTokens ~ error:", error?.message);
   }
@@ -128,4 +140,3 @@ export function unsubscribeFromWalletTracker() {
     console.log("🚀 ~ unsubscribeFromWalletTracker ~ error:", error)?.message;
   }
 }
-

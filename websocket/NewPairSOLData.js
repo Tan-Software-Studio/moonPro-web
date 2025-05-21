@@ -1,7 +1,5 @@
 "use client";
 import {
-  setMemeScopeGraduateData,
-  setMemeScopeGraduatedData,
   setNewLaunchData,
 } from "@/app/redux/memescopeData/Memescope";
 import { useEffect, useState } from "react";
@@ -25,14 +23,6 @@ const NewPairSOLData = () => {
       dispatch(setNewLaunchData(data));
     });
 
-    // for updated memsoce data
-    socket.on("memescoptokens", async (data) => {
-      if (data?.type == "graduate") {
-        dispatch(setMemeScopeGraduateData(data?.tokens));
-      } else if (data?.type == "graduated") {
-        dispatch(setMemeScopeGraduatedData(data?.tokens));
-      }
-    });
     socket.on("disconnect", async () => {
       console.log("WebSocket disconnected.");
       await setCheckSocetOn(false); // Reset flag on disconnect

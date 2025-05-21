@@ -7,15 +7,12 @@ import { useTranslation } from "react-i18next";
 import { openCloseLoginRegPopup } from "@/app/redux/states";
 import { useDispatch } from "react-redux";
 
-const RecoveryKey = ({ verifyData, setVerifyData }) => {
+const RecoveryKey = () => {
   const dispatch = useDispatch();
   const [isRevealed, setIsRevealed] = useState(false);
   const { t } = useTranslation();
   const navbar = t("navbar");
-  const handleClose = () => {
-    dispatch(openCloseLoginRegPopup(false));
-    setVerifyData({});
-  };
+  const handleClose = () => {};
 
   const handleCopy = () => {
     navigator.clipboard.writeText(verifyData?.data?.solPhrase);
@@ -66,7 +63,7 @@ const RecoveryKey = ({ verifyData, setVerifyData }) => {
                 }`}
               >
                 <div className="w-[90%] overflow-x-hidden  break-words text-sm ">
-                  {verifyData?.data?.solPhrase}
+                  jjs jsko owos hui ihduh oihusdgh ighiudgs ggd so usd atasy syys iss
                 </div>
                 <div className="cursor-pointer w-[10%]">
                   <div className="justify-end w-full flex">
