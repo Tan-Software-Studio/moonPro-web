@@ -43,6 +43,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
         "use_localstorage_for_settings",
         "time_scale_controls",
       ],
+      toolbar_bg: "#08080E",
       enabled_features: ["study_templates", "seconds_resolution", "show_marks_on_series", "cropped_tick_marks", "end_of_period_timescale_marks", "two_character_bar_marks_labels"],
       charts_storage_url: "https://saveload.tradingview.com",
       charts_storage_api_version: "1.1",
