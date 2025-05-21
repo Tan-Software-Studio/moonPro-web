@@ -5,6 +5,8 @@ import { widget } from "../../public/charting_library";
 import Datafeed from "../../utils/tradingViewChartServices/customDatafeed";
 import { intervalTV } from "../../utils/tradingViewChartServices/constant";
 import { unsubscribeFromWebSocket } from "@/utils/tradingViewChartServices/websocketOHLC";
+import { clearMarks } from "@/utils/tradingViewChartServices/mark";
+
 const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
   const chartContainerRef = useRef(null);
   const [isUsdSolToggled, setIsUsdSolToggled] = useState(true); // Track USD/SOL toggle state
@@ -28,6 +30,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
 
   // console.log("TVChartContainer called.");
   useEffect(() => {
+    clearMarks();
     const tvWidget = new widget({
       symbol: tokenSymbol,
       datafeed: Datafeed,
@@ -40,7 +43,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
         "use_localstorage_for_settings",
         "time_scale_controls",
       ],
-      enabled_features: ["study_templates", "seconds_resolution"],
+      enabled_features: ["study_templates", "seconds_resolution", "show_marks_on_series", "cropped_tick_marks", "end_of_period_timescale_marks", "two_character_bar_marks_labels"],
       charts_storage_url: "https://saveload.tradingview.com",
       charts_storage_api_version: "1.1",
       client_id: "tradingview.com",
