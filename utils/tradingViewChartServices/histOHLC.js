@@ -90,7 +90,7 @@ const TOKEN_DETAILS = `query TradingView($token: String, $dataset: dataset_arg_e
 }`;
 
 export async function fetchHistoricalData(periodParams, resolution, token, isUsdActive, isMarketCapActive, supply, solPrice, tokenCreator) {
-  console.log("🚀 ~ fetchHistoricalData ~ resolution:", resolution);
+  // console.log("🚀 ~ fetchHistoricalData ~ resolution:", resolution);
   supply = supply ? Number(supply) === 0 ? 1_000_000_000 : Number(supply) : 1_000_000_000;
   solPrice = solPrice ? Number(solPrice) === 0 ? 1 : Number(solPrice) : 1; 
   const { from, to, countBack } = periodParams;
@@ -135,8 +135,8 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
     // console.log("API called");
     const trades = response.data.data.Solana.ohlcData;
     const creatorTransactions = response.data.data.Solana.creatorTransactions;
-    console.log('trades', trades);
-    console.log('creatorTransactions', creatorTransactions);
+    // console.log('trades', trades);
+    // console.log('creatorTransactions', creatorTransactions);
     // Preprocess the bars data
     let bars = trades?.map((trade) => {
       // Parse and convert Block Timefield to Unix timestamp in milliseconds
