@@ -97,6 +97,11 @@ export async function subscribeToTrendingTokens() {
             updateTrendingData({ time: "5m", data: data?.tokens })
           );
           break;
+        case "30+min":
+          store.dispatch(
+            updateTrendingData({ time: "30m", data: data?.tokens })
+          );
+          break;
         case "1+hr":
           store.dispatch(
             updateTrendingData({ time: "1h", data: data?.tokens })
@@ -119,9 +124,9 @@ export async function subscribeToTrendingTokens() {
     // for updated memsoce data
     socket.on("memescoptokens", async (data) => {
       if (data?.type == "graduate") {
-        dispatch(setMemeScopeGraduateData(data?.tokens));
+        store.dispatch(setMemeScopeGraduateData(data?.tokens));
       } else if (data?.type == "graduated") {
-        dispatch(setMemeScopeGraduatedData(data?.tokens));
+        store.dispatch(setMemeScopeGraduatedData(data?.tokens));
       }
     });
   } catch (error) {

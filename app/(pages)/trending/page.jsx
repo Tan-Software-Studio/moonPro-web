@@ -26,7 +26,7 @@ const Trending = () => {
   const [localFilterTime, setLocalFilterTime] = useState("24h");
 
   const getTimeFilterData = useSelector(
-    (state) => state?.solTrendingData.filterTime[`${localFilterTime}`] 
+    (state) => state?.solTrendingData.filterTime[`${localFilterTime}`]
   );
   const Trendings = {
     Title: tredingPage?.mainHeader?.filter?.filter,
@@ -137,11 +137,18 @@ const Trending = () => {
       sortingKey: "",
       infoTipString: tredingPage?.tableheaders?.pairinfotooltip,
     },
+    // {
+    //   title: tredingPage?.tableheaders?.created,
+    //   sortable: true,
+    //   key: "created",
+    //   sortingKey: "date",
+    // },
     {
-      title: tredingPage?.tableheaders?.created,
+      title: tredingPage?.tableheaders?.mcap,
       sortable: true,
-      key: "created",
-      sortingKey: "date",
+      key: "marketCap",
+      sortingKey: "marketCap",
+      infoTipString: tredingPage?.tableheaders?.mcaotooltip,
     },
     {
       title: tredingPage?.tableheaders?.liquidity,
@@ -151,11 +158,10 @@ const Trending = () => {
       infoTipString: tredingPage?.tableheaders?.liquiditytooltip,
     },
     {
-      title: tredingPage?.tableheaders?.mcap,
+      title: tredingPage?.tableheaders?.volume,
       sortable: true,
-      key: "marketCap",
-      sortingKey: "marketCap",
-      infoTipString: tredingPage?.tableheaders?.mcaotooltip,
+      key: "volume",
+      sortingKey: "traded_volume",
     },
     {
       title: tredingPage?.tableheaders?.swaps,
@@ -163,12 +169,6 @@ const Trending = () => {
       key: "swaps",
       sortingKey: "trades",
       infoTipString: tredingPage?.tableheaders?.swapstooltip,
-    },
-    {
-      title: tredingPage?.tableheaders?.volume,
-      sortable: true,
-      key: "volume",
-      sortingKey: "traded_volume",
     },
     {
       title: tredingPage?.tableheaders?.auditres,
@@ -190,7 +190,7 @@ const Trending = () => {
       headTitle: tredingPage?.mainHeader?.trending,
       discription: tredingPage?.mainHeader?.desc,
     },
-    timeDuration: ["1m", "5m", "1h", "6h", "24h"],
+    timeDuration: ["1m", "5m", "30m", "1h", "6h", "24h"],
     Filter: {
       menuIcon: Filter,
       menuTitle: tredingPage?.mainHeader?.filter?.filter,
