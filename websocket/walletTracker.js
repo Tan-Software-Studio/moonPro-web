@@ -118,10 +118,11 @@ export async function subscribeToTrendingTokens() {
     });
     // for updated memsoce data
     socket.on("memescoptokens", async (data) => {
+      // console.log("🚀 ~ socket.on ~ data:", data?.type)
       if (data?.type == "graduate") {
-        dispatch(setMemeScopeGraduateData(data?.tokens));
+        store.dispatch(setMemeScopeGraduateData(data?.tokens));
       } else if (data?.type == "graduated") {
-        dispatch(setMemeScopeGraduatedData(data?.tokens));
+        store.dispatch(setMemeScopeGraduatedData(data?.tokens));
       }
     });
   } catch (error) {
