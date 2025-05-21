@@ -129,7 +129,7 @@ const LoginPopup = ({ authName }) => {
             dispatch(openCloseLoginRegPopup(false));
             dispatch(setSolWalletAddress());
             toast.success(res?.data?.message);
-            router.push("/");
+            router.push("/trending");
           })
           .catch((err) => {
             console.error(err);

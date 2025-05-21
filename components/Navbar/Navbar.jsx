@@ -81,7 +81,7 @@ const Navbar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("walletAddress");
     dispatch(setSolWalletAddress());
-    router.replace("/");
+    router.replace("/trending");
     setIsProfileOpen(false);
     googleLogout();
   };
