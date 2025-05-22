@@ -373,7 +373,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
       <div
         className={`${
           latestTradesData?.latestTrades?.length > 0 ? "" : ""
-        } relative bg-[#141414] w-full overflow-hidden`}
+        } relative bg-[#141414] md:h-auto h-svh  w-full overflow-hidden`}
       >
         {/* table header */}
         <TabNavigation
@@ -400,7 +400,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
           <div>
             {activeTab === "Transactions" &&
             latestTradesData?.latestTrades?.length > 0 ? (
-              <div className="lg:h-[85vh] h-[50vh] overflow-y-scroll visibleScroll">
+              <div className="lg:h-[85vh] h-svh overflow-y-scroll visibleScroll">
                 <table className="min-w-[100%] table-auto overflow-y-scroll">
                   <thead className="bg-[#08080E] sticky top-0">
                     <tr className="">

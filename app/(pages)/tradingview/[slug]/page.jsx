@@ -414,7 +414,7 @@ const Tradingview = () => {
         </div>
       )}
       {/* left side */}
-      <div className="lg:!h-[91vh] mb-2 lg:w-[80%] grid place-items-center text-[#8d93b752] overflow-y-auto w-full">
+      <div className="lg:!h-[91vh] h-svh mb-2 lg:w-[80%] grid place-items-center text-[#8d93b752] overflow-y-auto w-full">
         {/* original live chart */}
         <div ref={containerRef} className="md:h-screen h-fit w-full overflow-y-auto">
           {(!isSmallScreen || smallScreenTab === "Trades") && (

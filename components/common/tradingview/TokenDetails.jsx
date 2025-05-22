@@ -209,7 +209,7 @@ const TokenDetails = ({
         <div className="flex items-center justify-between mb-[5px] md:mb-[0px] px-3 md:px-[0px]">
           <div className="flex items-center md:flex-col">
             <div
-              className="cursor-pointer border-[1px] !border-t-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center"
+              className="cursor-pointer border-[1px] md:!border-t-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center"
             >
               {isFavourite ? (
                 <FaHeart className="text-[#1F73FC] text-[20px]" />
@@ -217,18 +217,18 @@ const TokenDetails = ({
                 <CiHeart className="text-[#F6F6F6] text-[23px]" />
               )}
             </div>
-            <div className="cursor-pointer border-[1px] !border-b-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center">
+            <div className="cursor-pointer border-[1px] md:!border-b-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center">
               <MdKeyboardArrowLeft className="text-[#F6F6F6] text-[23px]" />
             </div>
           </div>
           <div className="flex items-center md:flex-col">
             <div
-              className="cursor-pointer border-[1px] !border-t-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center"
+              className="cursor-pointer border-[1px] md:!border-t-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center"
               onClick={() => setIsModalOpen(true)}
             >
               <PiShare className="text-[#F6F6F6] text-[23px]" />
             </div>
-            <div className="cursor-pointer border-[1px] !border-b-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center">
+            <div className="cursor-pointer border-[1px] md:!border-b-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center">
               <MdKeyboardArrowRight className="text-[#F6F6F6] text-[23px]" />
             </div>
           </div>
