@@ -11,20 +11,7 @@ const solTrendingData = createSlice({
       "6h": {},
       "24h": {},
     },
-    loading: false,
-    filterValues: {
-      mintauth: { checked: false },
-      freezeauth: { checked: false },
-      lpburned: { checked: false },
-      top10holders: { checked: false },
-      liquidity: { min: "", max: "" },
-      volume: { min: "", max: "" },
-      age: { min: "", max: "" },
-      MKT: { min: "", max: "" },
-      TXNS: { min: "", max: "" },
-      buys: { min: "", max: "" },
-      sells: { min: "", max: "" },
-    }
+    loading: false, 
   },
 
   reducers: {
@@ -33,10 +20,7 @@ const solTrendingData = createSlice({
     },
     setLoading: (state, action) => {
       state.loading = action.payload;
-    },
-    setFilterValues: (state, action) => {
-      state.filterValues = action.payload;
-    },
+    }, 
   },
 });
 
