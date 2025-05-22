@@ -19,6 +19,9 @@ import {
 import { PiCopyLight, PiCopyThin } from "react-icons/pi";
 import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 import Link from "next/link";
+import { MdOutlineLanguage } from "react-icons/md";
+import { FaXTwitter } from "react-icons/fa6";
+import { FaTelegramPlane } from "react-icons/fa";
 
 const TableBody = ({ data, img }) => {
   const pathname = usePathname();
@@ -148,32 +151,48 @@ const TableBody = ({ data, img }) => {
                                 )}
                               </div>
                             </div>
-                            {/* time and social links */}
+                            {/* time, social links and ai */}
+
                             <div className={`flex items-center gap-[8px]`}>
                               <div
                                 className={`text-[#4CAF50] text-[15px] font-medium`}
                               >
                                 {UpdateTime(row?.date, currentTime)}
                               </div>
-                              {/* <div className="flex gap-2">
-                                 
-                                {row?.offchainData?.img && (
+
+
+                              <div className="flex gap-2">
+                                {(row?.offchainData?.metadata?.telegram || row?.offchainData?.metadata?.extensions?.telegram) && (
                                   <Link
-                                    href={`/`}
+                                    href={row?.offchainData?.metadata?.telegram || row?.offchainData?.metadata?.extensions?.telegram}
                                     target="_blank"
                                     onClick={(e) => e.stopPropagation()}
                                   >
-                                    <div className="grid place-items-center rounded-full">
-                                      <img
-                                        src={row?.offchainData?.img}
-                                        alt={row?.offchainData?.title}
-                                        className="mx-auto text-white"
-                                      />
-                                    </div>
+                                    <FaTelegramPlane size={16} className="text-[#6E6E6E] hover:text-[#ffffff]" />
                                   </Link>
                                 )}
-                              </div> */}
-                              <div className="text-[#6E6E6E]">|</div>
+
+                                {(row?.offchainData?.metadata?.twitter || row?.offchainData?.metadata?.extensions?.twitter) && (
+                                  <Link
+                                    href={row?.offchainData?.metadata?.twitter || row?.offchainData?.metadata?.extensions?.twitter}
+                                    target="_blank"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <FaXTwitter size={16} className="text-[#6E6E6E] hover:text-[#ffffff]" />
+                                  </Link>
+                                )}
+                                
+                                {(row?.offchainData?.metadata?.website || row?.offchainData?.metadata?.extensions?.website) && (
+                                  <Link
+                                    href={row?.offchainData?.metadata?.website || row?.offchainData?.metadata?.extensions?.website}
+                                    target="_blank"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <MdOutlineLanguage size={16} className="text-[#6E6E6E] hover:text-[#ffffff]" />
+                                  </Link>
+                                )}
+                              </div>
+
                               <Link
                                 href={`https://www.pump.news/en/${row.address}-solana`}
                                 target="_blank"
@@ -404,7 +423,8 @@ const TableBody = ({ data, img }) => {
             );
           })}
         </>
-      )}
+      )
+      }
       {bigLoader == true && <LoaderPopup />}
     </>
   );

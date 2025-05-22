@@ -121,6 +121,7 @@ export async function subscribeToTrendingTokens() {
           break;
       }
     });
+    
     // for updated memsoce data
     socket.on("memescoptokens", async (data) => {
       // console.log("🚀 ~ socket.on ~ data:", data?.type)
