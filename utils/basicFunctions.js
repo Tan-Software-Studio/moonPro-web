@@ -71,29 +71,36 @@ function decimalConvert(price) {
 }
 
 function formatDecimal(num) {
-    if (num >= 1 || num <= 0) {
-        return num.toString(); // Return as-is for values outside (0, 1)
-    }
+  // Defensive check to ensure input is a finite number
+  if (typeof num !== 'number' || !isFinite(num)) {
+    console.warn('Invalid input to formatDecimal:', num);
+    return ''; // Or return a fallback like '–'
+  }
 
-    const decimalStr = num.toFixed(20).split('.')[1];
-    const leadingZerosMatch = decimalStr.match(/^0*/);
-    const leadingZeros = leadingZerosMatch[0].length;
-    const trimmed = decimalStr.slice(leadingZeros);
+  if (num >= 1 || num <= 0) {
+    return num.toString();
+  }
 
-    const subscripts = {
-        '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄',
-        '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉'
-    };
+  const decimalStr = num.toFixed(20).split('.')[1];
+  const leadingZerosMatch = decimalStr.match(/^0*/);
+  const leadingZeros = leadingZerosMatch[0].length;
+  const trimmed = decimalStr.slice(leadingZeros);
 
-    function toSubscript(n) {
-        return String(n).split('').map(d => subscripts[d] || d).join('');
-    }
+  const subscripts = {
+    '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄',
+    '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉'
+  };
 
-    if (leadingZeros > 4) {
-        return `0${toSubscript(leadingZeros)}${trimmed.slice(0, 3)}`;
-    } else {
-        return `0.${decimalStr.slice(0, 3)}`;
-    }
+  function toSubscript(n) {
+    return String(n).split('').map(d => subscripts[d] || d).join('');
+  }
+
+  if (leadingZeros > 3) {
+    return `0${toSubscript(leadingZeros)}${trimmed.slice(0, 3)}`;
+  } else {
+    return `0.${decimalStr.slice(0, 3)}`;
+  }
 }
+
 
 export { humanReadableFormat, humanReadableFormatNoDollar, decimalConvert, humanReadableFormatWithNoDollar, formatDecimal };
