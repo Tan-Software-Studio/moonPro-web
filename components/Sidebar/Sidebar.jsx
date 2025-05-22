@@ -14,7 +14,6 @@ import {
 } from "@/app/Images";
 import Image from "next/image";
 import React, { useEffect } from "react";
-import { FaAngleRight } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -27,6 +26,9 @@ import {
 } from "@/app/redux/CommonUiData";
 import { subscribeToTrendingTokens, subscribeToWalletTracker } from "@/websocket/walletTracker";
 import { useTranslation } from "react-i18next";
+import { FaAngleDoubleLeft, FaAngleLeft, FaAngleRight } from "react-icons/fa";
+import { FaAngleDoubleRight } from "react-icons/fa";
+
 const Sidebar = () => {
   const { t } = useTranslation();
   const sidebarPage = t("sidebar");
@@ -157,40 +159,53 @@ const Sidebar = () => {
           (isSidebarOpen && isSmallScreenData)
           ? `w-full md:w-[192.4px]`
           : " hidden md:block md:w-[64px]"
-          } transition-all duration-1000 ease-in-out h-full z-50 fixed top-0 left-0 bg-[#08080E] border-r-[1px] border-r-[#404040]`}
+          } transition-all duration-1000 ease-in-out h-full overflow-x-hidden z-50 fixed top-0 left-0 bg-[#08080E] border-r-[1px] border-r-[#404040]`}
       >
         {/* logo + text */}
-        <div className="flex  py-[17.8px] px-2 md:px-[2.4px] items-center justify-between md:justify-center text-[#B5B7DA] w-full">
+        <div className="flex  py-[17.8px] px-2 md:px-[2.4px]  items-center gap-3 justify-between md:justify-center text-[#B5B7DA] w-full">
           {isSidebarOpen ? (
             <>
-              <Image
-                onClick={() => {
-                  dispatch(setIsSidebarOpen(!isSidebarOpen));
-                }}
-                alt="logotext"
-                src={logotext}
-                className={`cursor-pointer h-[25px] w-[140px]`}
-              />
-              <div
-                className={`md:hidden flex items-center justify-center cursor-pointer border-[1px] border-[#2e2e2e] rounded-md md:order-1 order-2`}
-                onClick={() => dispatch(setIsSidebarOpen(!isSidebarOpen))}
-              >
-                <RxCross2 className="text-[30px] text-[#fdf5f5] p-[2px]" />
-              </div>
+              <Link href="/trending" >
+                <Image
+                  alt="logotext"
+                  src={logotext}
+                  className={`cursor-pointer h-[25px] w-[140px]`}
+                />
+              </Link>
+
             </>
           ) : (
-            <Image
-              onClick={() => {
-                dispatch(setIsSidebarOpen(!isSidebarOpen));
-              }}
-              alt="full-logo"
-              src={logo}
-              className="cursor-pointer  w-[40px] h-[25px]"
-            />
+            <Link href="/trending" >
+              <Image
+                alt="full-logo"
+                src={logo}
+                className="cursor-pointer  w-[40px] h-[25px]"
+              />
+            </Link>
           )}
         </div>
+
         {/* Munu */}
-        <div className="mt-[48px]">
+        <div className="relative hidden lg:block z-[]">
+          {isSidebarOpen ? (
+
+            <button
+              onClick={() => dispatch(setIsSidebarOpen(!isSidebarOpen))}
+              className="bg-[#11265B]/[30] rounded-full h-[30px] w-[30px]  transition-colors duration-200 absolute -right-4 -top-2 "
+            >
+              <FaAngleLeft size={15} className="text-white/[30] " />
+            </button>
+          ) : (
+
+            <button
+              onClick={() => dispatch(setIsSidebarOpen(!isSidebarOpen))}
+              className="bg-[#11265B]/[30] rounded-full h-[30px] w-[30px]  transition-colors duration-200 absolute -right-4 -top-2"
+            >
+              <FaAngleRight size={15} className="text-white/[30] " />
+            </button>
+          )}
+        </div>
+        <div className="mt-[38px]">
           <ul className={`flex flex-col gap-6 mt-6`}>
             {sidebardata?.map((data) => (
               <div
