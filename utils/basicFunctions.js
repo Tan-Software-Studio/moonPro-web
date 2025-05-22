@@ -77,11 +77,13 @@ function formatDecimal(num) {
     return ''; // Or return a fallback like '–'
   }
 
-  if (num >= 1 || num <= 0) {
+  if (num >= 1 || num <= -1 || num === 0) {
     return num.toString();
   }
 
-  const decimalStr = num.toFixed(20).split('.')[1];
+  const isNegative = num < 0;
+  const absNum = Math.abs(num);
+  const decimalStr = absNum.toFixed(20).split('.')[1];
   const leadingZerosMatch = decimalStr.match(/^0*/);
   const leadingZeros = leadingZerosMatch[0].length;
   const trimmed = decimalStr.slice(leadingZeros);
@@ -95,11 +97,14 @@ function formatDecimal(num) {
     return String(n).split('').map(d => subscripts[d] || d).join('');
   }
 
+  let result;
   if (leadingZeros > 3) {
-    return `0${toSubscript(leadingZeros)}${trimmed.slice(0, 3)}`;
+    result = `0${toSubscript(leadingZeros)}${trimmed.slice(0, 3)}`;
   } else {
-    return `0.${decimalStr.slice(0, 3)}`;
+    result = `0.${decimalStr.slice(0, 3)}`;
   }
+
+  return isNegative ? `-${result}` : result;
 }
 
 
