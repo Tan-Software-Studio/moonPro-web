@@ -672,9 +672,12 @@
     },
     "recovery": {
       "recoveryKey": "Clave de recuperación",
+      "privateKey": "Clave de recuperación",
       "thisRecovery": "Esta clave de recuperación te permitirá acceder a tu billetera si alguna vez pierdes tus credenciales de tu cuenta moon pro",
+      "thisPrivateKey": "Esta clave de recuperación te permitirá acceder a tu billetera si alguna vez pierdes tus credenciales de tu cuenta moon pro",
       "revealMyKey": "Revelar mi clave",
-      "warning": "ADVERTENCIA: Esta clave de recuperación es la única forma de acceder a tu billetera si pierdes tus credenciales. Guárdala en un lugar seguro y no la compartas con nadie."
+      "warning": "ADVERTENCIA: Esta clave de recuperación es la única forma de acceder a tu billetera si pierdes tus credenciales. Guárdala en un lugar seguro y no la compartas con nadie.",
+      "warningPrivate": "ADVERTENCIA: Esta clave de recuperación es la única forma de acceder a tu billetera si pierdes tus credenciales. Guárdala en un lugar seguro y no la compartas con nadie."
     }
   },
   "accountPopup": {

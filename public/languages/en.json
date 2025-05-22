@@ -672,9 +672,12 @@
     },
     "recovery": {
       "recoveryKey": "Recovery Key",
+      "privateKey": "Private Key",
       "thisRecovery": "This recovery key will allow you to access your wallet if you ever lose your credential to your moon pro account",
+      "thisPrivateKey": "This private key will allow you to access your wallet if you ever lose your credential to your moon pro account",
       "revealMyKey": "Reveal my key",
-      "warning": " WARNING: This recovery key is the only way to access your wallet if you lose your credentials. Store it in a safe place and do not share it with anyone."
+      "warning": " WARNING: This recovery key is the only way to access your wallet if you lose your credentials. Store it in a safe place and do not share it with anyone.",
+      "warningPrivate": " WARNING: This private key is the only way to access your wallet if you lose your credentials. Store it in a safe place and do not share it with anyone."
     }
   },
   "accountPopup": {

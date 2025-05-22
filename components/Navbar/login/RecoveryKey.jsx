@@ -4,18 +4,19 @@ import { IoMdClose } from "react-icons/io";
 import { MdContentCopy } from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { openCloseLoginRegPopup } from "@/app/redux/states";
 import { useDispatch } from "react-redux";
 
-const RecoveryKey = () => {
-  const dispatch = useDispatch();
+const RecoveryKey = ({ PK, setPK, setOpenRecovery, flag }) => {
   const [isRevealed, setIsRevealed] = useState(false);
   const { t } = useTranslation();
   const navbar = t("navbar");
-  const handleClose = () => {};
+  const handleClose = () => {
+    setPK("");
+    setOpenRecovery(false);
+  };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(verifyData?.data?.solPhrase);
+    navigator.clipboard.writeText(PK);
     toast.success("Recovery key copied to clipboard");
   };
 
@@ -46,16 +47,22 @@ const RecoveryKey = () => {
 
           <div className="p-8">
             <h2 className="text-2xl font-semibold text-center text-white">
-              {navbar?.recovery?.recoveryKey}
+              {flag
+                ? navbar?.recovery?.recoveryKey
+                : navbar?.recovery?.privateKey}
             </h2>
             <div className="mt-4">
               <div className="text-sm text-center">
-                {navbar?.recovery?.thisRecovery}
+                {flag
+                  ? navbar?.recovery?.thisRecovery
+                  : navbar?.recovery?.thisPrivateKey}
               </div>
             </div>
             <div className="mt-4  w-full">
               <div className="text-sm text-[#6E6E6E] mt-2 mb-1 block">
-                {navbar?.recovery?.recoveryKey}{" "}
+                {flag
+                  ? navbar?.recovery?.recoveryKey
+                  : navbar?.recovery?.privateKey}
               </div>
               <div
                 className={`flex w-full border-[1px] border-[#404040] rounded-md  mt-1 p-3  bg-[#1F1F1F] ${
@@ -63,7 +70,7 @@ const RecoveryKey = () => {
                 }`}
               >
                 <div className="w-[90%] overflow-x-hidden  break-words text-sm ">
-                  jjs jsko owos hui ihduh oihusdgh ighiudgs ggd so usd atasy syys iss
+                  {PK}
                 </div>
                 <div className="cursor-pointer w-[10%]">
                   <div className="justify-end w-full flex">
@@ -80,7 +87,11 @@ const RecoveryKey = () => {
             </button>
           </div>
           <div className="text-xs border-t-[1px] border-t-[#404040] mt-3 text-center">
-            <div className=" p-4">{navbar?.recovery?.warning}</div>
+            <div className=" p-4">
+              {flag
+                ? navbar?.recovery?.warning
+                : navbar?.recovery?.warningPrivate}
+            </div>
           </div>
         </motion.div>
       </motion.div>
