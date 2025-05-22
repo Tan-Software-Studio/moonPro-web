@@ -261,7 +261,7 @@ const TableBody = ({ data, img }) => {
                   {/* Column 3: Liquidity */}
                   <td className="whitespace-nowrap W-32 py-3 md:px-6 px-3">
                     <span className="text-white text-[15px] font-medium">
-                      {`$${humanReadableFormat(row?.liquidity || 0)}`}
+                      {humanReadableFormat(row?.liquidity || 0)}
                     </span>
                   </td>
 
