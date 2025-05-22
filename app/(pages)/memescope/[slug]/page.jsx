@@ -15,6 +15,15 @@ const Memescope = () => {
   const { t } = useTranslation();
   const memescopePage = t("memescope");
   const [selectedScope, setSelectedScope] = useState(1);
+  const [filterValues, setFilterValues] = useState({})
+
+  function onApply() {
+    console.log("Apply filters");
+  }
+  function onReset() {
+    console.log("remove filters");
+  }
+
   const Graduatedata = useSelector(
     (state) => state?.allMemescopeData?.MscopeGraduateData
   );
@@ -208,20 +217,18 @@ const Memescope = () => {
     <>
       <div className="relative">
         <div
-          className={`${
-            pathname === "/memescope"
-              ? "sticky z-10 top-0"
-              : "sticky z-10 top-[56.5px]"
-          }  `}
+          className={`${pathname === "/memescope"
+            ? "sticky z-10 top-0"
+            : "sticky z-10 top-[56.5px]"
+            }  `}
         >
           <AllPageHeader HeaderData={HeaderData} duration={true} />
         </div>
         <div className={`grid xl:grid-cols-3 w-full  `}>
           {/* box 1 */}
           <div
-            className={` ${
-              NewData.length === 0 ? `border-r ${borderColor} ` : ""
-            }`}
+            className={` ${NewData.length === 0 ? `border-r ${borderColor} ` : ""
+              }`}
           >
             <div
               className={`md:flex border-r ${borderColor} justify-between items-center w-full sticky px-1 sm:px-3 md:px-[24px] md:pt-[24px]`}
@@ -245,29 +252,26 @@ const Memescope = () => {
                   <button
                     // key={index}
                     onClick={() => setSelectedScope(1)}
-                    className={`${
-                      selectedScope === 1 &&
+                    className={`${selectedScope === 1 &&
                       "bg-[#1F73FC] first-of-type:rounded-l-md"
-                    }  py-2 px-3 text-xs  text-[#ffffff] hover:bg-[#1F73FC] border-r ${borderColor}`}
+                      }  py-2 px-3 text-xs  text-[#ffffff] hover:bg-[#1F73FC] border-r ${borderColor}`}
                   >
                     {memescopePage?.tableheaders?.newcreations}
                   </button>
                   <button
                     // key={index}
                     onClick={() => setSelectedScope(2)}
-                    className={`${
-                      selectedScope === 2 && "bg-[#1F73FC]"
-                    }  py-2 px-3 text-xs  text-[#ffffff] hover:bg-[#1F73FC] border-r ${borderColor}`}
+                    className={`${selectedScope === 2 && "bg-[#1F73FC]"
+                      }  py-2 px-3 text-xs  text-[#ffffff] hover:bg-[#1F73FC] border-r ${borderColor}`}
                   >
                     {memescopePage?.tableheaders?.abouttogra}
                   </button>
                   <button
                     // key={index}
                     onClick={() => setSelectedScope(3)}
-                    className={`${
-                      selectedScope === 3 &&
+                    className={`${selectedScope === 3 &&
                       "bg-[#1F73FC] last-of-type:rounded-r-md"
-                    }  py-2 px-3 text-xs  text-[#ffffff] hover:bg-[#1F73FC]`}
+                      }  py-2 px-3 text-xs  text-[#ffffff] hover:bg-[#1F73FC]`}
                   >
                     {memescopePage?.tableheaders?.graduated}
                   </button>
@@ -289,9 +293,8 @@ const Memescope = () => {
             </div>
             {/* Box body */}
             <div
-              className={`${
-                selectedScope === 1 ? "block " : "hidden xl:block"
-              }`}
+              className={`${selectedScope === 1 ? "block " : "hidden xl:block"
+                }`}
             >
               <MscopePumpTable MemscopeData={NewData} />
             </div>
@@ -299,9 +302,8 @@ const Memescope = () => {
 
           {/* 2 box */}
           <div
-            className={` ${
-              Graduatedata.length === 0 ? `border-r ${borderColor}` : ""
-            }`}
+            className={` ${Graduatedata.length === 0 ? `border-r ${borderColor}` : ""
+              }`}
           >
             {/* Box header */}
             <div
@@ -323,9 +325,8 @@ const Memescope = () => {
             </div>
             {/* Box body */}
             <div
-              className={`${
-                selectedScope === 2 ? "block " : "hidden xl:block"
-              }`}
+              className={`${selectedScope === 2 ? "block " : "hidden xl:block"
+                }`}
             >
               <MscopePumpTable MemscopeData={Graduatedata} />
             </div>
@@ -333,11 +334,10 @@ const Memescope = () => {
 
           {/* 3 box */}
           <div
-            className={` ${
-              Graduateddata.length === 0
-                ? `border-r ${borderColor} h-screen`
-                : ""
-            }`}
+            className={` ${Graduateddata.length === 0
+              ? `border-r ${borderColor} h-screen`
+              : ""
+              }`}
           >
             {/* Box header */}
             <div
@@ -359,55 +359,43 @@ const Memescope = () => {
             </div>
             {/* Box body */}
             <div
-              className={`${
-                selectedScope === 3 ? "block " : "hidden xl:block"
-              }`}
+              className={`${selectedScope === 3 ? "block " : "hidden xl:block"
+                }`}
             >
               <MscopePumpTable MemscopeData={Graduateddata} />
             </div>
           </div>
+
 
           {/* Filter sidebar */}
           <FilterMemescope
             isOpen={openDropdown === 0}
             setIsOpen={() => setOpenDropdown(null)}
             data={NewCreationFilterData}
+            onApply={onApply}
+            onReset={onReset}
+            filterValues={filterValues}
+            setFilterValues={setFilterValues}
           />
           <FilterMemescope
             isOpen={openDropdown === 1}
             setIsOpen={() => setOpenDropdown(null)}
             data={AboutGraduate}
+            onApply={onApply}
+            onReset={onReset}
+            filterValues={filterValues}
+            setFilterValues={setFilterValues}
           />
           <FilterMemescope
             isOpen={openDropdown === 2}
             setIsOpen={() => setOpenDropdown(null)}
             data={Graduate}
+            onApply={onApply}
+            onReset={onReset}
+            filterValues={filterValues}
+            setFilterValues={setFilterValues}
           />
 
-          {/* Filter sidebar */}
-          {/* {openDropdown === 0 && (
-            <FilterMemescope
-              isOpen={true}
-              setIsOpen={() => setOpenDropdown(null)}
-              data={FilterSidebarData.NewCreationFilterData}
-            />
-          )}
-
-          {openDropdown === 1 && (
-            <FilterMemescope
-              isOpen={true}
-              setIsOpen={() => setOpenDropdown(null)}
-              data={FilterSidebarData.AboutGraduate}
-            />
-          )}
-
-          {openDropdown === 2 && (
-            <FilterMemescope
-              isOpen={true}
-              setIsOpen={() => setOpenDropdown(null)}
-              data={FilterSidebarData.Graduate}
-            />
-          )} */}
         </div>
       </div>
     </>

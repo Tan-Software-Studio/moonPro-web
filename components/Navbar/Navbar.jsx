@@ -31,7 +31,7 @@ import SolDeposit from "./popup/SolDeposit";
 import ReferralCodePopup from "./login/RefferalPopup";
 import axios from "axios";
 import { fetchMemescopeData } from "@/app/redux/memescopeData/Memescope";
-import { setFilterTime } from "@/app/redux/trending/solTrending.slice";
+import { setFilterTime, setLoading } from "@/app/redux/trending/solTrending.slice";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
@@ -90,6 +90,7 @@ const Navbar = () => {
     googleLogout();
   };
   async function fetchData() {
+    dispatch(setLoading(true));
     await axios
       .get(`${URL}findallTrendingToken`)
       .then((response) => {
@@ -103,9 +104,11 @@ const Navbar = () => {
           "24h": rawData?.["24+hr"]?.[0].tokens || {},
         };
         dispatch(setFilterTime(formattedData));
+        dispatch(setLoading(false));
       })
       .catch((error) => {
         console.log("🚀 ~ awaitaxios.get ~ error:", error);
+        dispatch(setLoading(false));
       });
   }
   useEffect(() => {
@@ -150,18 +153,15 @@ const Navbar = () => {
             <div className=" flex items-center gap-2  ">
               {/* Search bar */}
               <div
-                className={`md:flex items-center  border ${
-                  isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
-                } border-[#333333] ${
-                  isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
+                  } border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                 onClick={() => dispatch(setIsSearchPopup(true))}
               >
                 <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                 <input
-                  className={` ${
-                    isSidebarOpen ? "w-0" : "w-12"
-                  } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                  className={` ${isSidebarOpen ? "w-0" : "w-12"
+                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                   placeholder={navbar?.profile?.search}
                 />
               </div>

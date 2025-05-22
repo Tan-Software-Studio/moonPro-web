@@ -672,9 +672,12 @@
     },
     "recovery": {
       "recoveryKey": "Mã phục hồi",
+      "privateKey": "Mã phục hồi",
       "thisRecovery": "Mã phục hồi này sẽ cho phép bạn truy cập vào ví của bạn nếu bạn mất quyền truy cập vào tài khoản moon pro của mình",
+      "thisPrivateKey": "Mã phục hồi này sẽ cho phép bạn truy cập vào ví của bạn nếu bạn mất quyền truy cập vào tài khoản moon pro của mình",
       "revealMyKey": "Tiết lộ mã của tôi",
-      "warning": "CẢNH BÁO: Mã phục hồi này là cách duy nhất để truy cập vào ví của bạn nếu bạn mất quyền truy cập vào tài khoản của mình. Lưu nó ở nơi an toàn và đừng chia sẻ với ai."
+      "warning": "CẢNH BÁO: Mã phục hồi này là cách duy nhất để truy cập vào ví của bạn nếu bạn mất quyền truy cập vào tài khoản của mình. Lưu nó ở nơi an toàn và đừng chia sẻ với ai.",
+      "warningPrivate": "CẢNH BÁO: Mã phục hồi này là cách duy nhất để truy cập vào ví của bạn nếu bạn mất quyền truy cập vào tài khoản của mình. Lưu nó ở nơi an toàn và đừng chia sẻ với ai."
     }
   },
   "accountPopup": {

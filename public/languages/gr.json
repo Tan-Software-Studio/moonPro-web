@@ -672,9 +672,12 @@
     },
     "recovery": {
       "recoveryKey": "Wiederherstellungsschlüssel",
+      "privateKey": "Wiederherstellungsschlüssel",
       "thisRecovery": "Dieser Wiederherstellungsschlüssel ermöglicht den Zugriff auf Ihre Wallet, falls Sie Ihre moon pro-Zugangsdaten verlieren",
+      "thisPrivateKey": "Dieser Wiederherstellungsschlüssel ermöglicht den Zugriff auf Ihre Wallet, falls Sie Ihre moon pro-Zugangsdaten verlieren",
       "revealMyKey": "Meinen Schlüssel anzeigen",
-      "warning": "WARNUNG: Dieser Wiederherstellungsschlüssel ist der einzige Weg, auf Ihre Wallet zuzugreifen, wenn Sie Ihre Zugangsdaten verlieren. Bewahren Sie ihn sicher auf und teilen Sie ihn niemandem mit."
+      "warning": "WARNUNG: Dieser Wiederherstellungsschlüssel ist der einzige Weg, auf Ihre Wallet zuzugreifen, wenn Sie Ihre Zugangsdaten verlieren. Bewahren Sie ihn sicher auf und teilen Sie ihn niemandem mit.",
+      "warningPrivate": "WARNUNG: Dieser Wiederherstellungsschlüssel ist der einzige Weg, auf Ihre Wallet zuzugreifen, wenn Sie Ihre Zugangsdaten verlieren. Bewahren Sie ihn sicher auf und teilen Sie ihn niemandem mit."
     }
   },
   "accountPopup": {

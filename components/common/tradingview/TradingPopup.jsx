@@ -27,7 +27,7 @@ const TradingPopup = ({
   price,
   progranAddress,
   bondingProgress,
-  dispatch
+  dispatch,
 }) => {
   const [loaderSwap, setLoaderSwap] = useState(false);
   const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
@@ -223,7 +223,7 @@ const TradingPopup = ({
                 {val}
               </button>
             ))
-          : [100, 80, 50, 20].map((val) => (
+          : [20, 50, 80, 100].map((val) => (
               <button
                 key={val}
                 className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${
