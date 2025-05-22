@@ -49,7 +49,11 @@ const TradingPopup = ({
 
     const usdValue = amountToken1 * priceToken1;
     const amountToken2 = usdValue / priceToken2;
-    setRrcQty(amountToken2);
+    if (amountToken2 > 1) {
+      setRrcQty(amountToken2.toFixed(2));
+    } else {
+      setRrcQty(amountToken2.toFixed(5));
+    }
   }
 
   const tokenImage = useSelector(
@@ -427,9 +431,7 @@ const TradingPopup = ({
             onClick={() => buyHandler()}
             className={`bg-[#2A7FF0] hover:bg-[#3f8cf1] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[40px] ease-in-out duration-200  rounded-md`}
           >
-            {`${tragindViewPage?.right?.buysell?.btnbuy} ${recQty?.toFixed(
-              5
-            )} ${tokenName}`}
+            {`${tragindViewPage?.right?.buysell?.btnbuy} ${recQty} ${tokenName}`}
           </button>
         )
       ) : loaderSwap ? (
@@ -443,9 +445,7 @@ const TradingPopup = ({
           onClick={() => sellHandler()}
           className={`bg-[#ED1B24] hover:bg-[#ff323d] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[40px] ease-in-out duration-200  rounded-md`}
         >
-          {`${tragindViewPage?.right?.buysell?.btnsell} ${recQty?.toFixed(
-            5
-          )} SOL`}
+          {`${tragindViewPage?.right?.buysell?.btnsell} ${recQty} SOL`}
         </button>
       )}
     </div>
