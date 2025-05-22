@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { Lightning, Swaps } from "@/app/Images";
+import { Lightning, NoDataFish, Swaps } from "@/app/Images";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 // import toast from "react-hot-toast";
@@ -40,6 +40,10 @@ const TableBody = ({ data, img }) => {
   const getNetwork = pathname.split("/")[2];
 
   const bigLoader = useSelector((state) => state?.AllStatesData?.bigLoader);
+  const isLoading = useSelector(
+    (state) => state?.solTrendingData?.loading
+  );
+
 
   const quickBuy = useSelector((state) => state?.AllStatesData?.globalBuyAmt);
 
@@ -80,7 +84,7 @@ const TableBody = ({ data, img }) => {
   }, [solWalletAddress]);
   return (
     <>
-      {data.length == 0 ? (
+      {isLoading ? (
         SkeletonData.map((_, ind) => (
           <tbody key={ind} className="text-center">
             <tr className={` ${ind % 2 === 0 && "bg-[#16171ca4]"} w-full`}>
@@ -92,7 +96,7 @@ const TableBody = ({ data, img }) => {
             </tr>
           </tbody>
         ))
-      ) : (
+      ) : data.length > 0 ? (
         <>
           {data.map((row, ind) => {
             return (
@@ -181,7 +185,7 @@ const TableBody = ({ data, img }) => {
                                     <FaXTwitter size={16} className="text-[#6E6E6E] hover:text-[#ffffff]" />
                                   </Link>
                                 )}
-                                
+
                                 {(row?.offchainData?.metadata?.website || row?.offchainData?.metadata?.extensions?.website) && (
                                   <Link
                                     href={row?.offchainData?.metadata?.website || row?.offchainData?.metadata?.extensions?.website}
@@ -423,7 +427,27 @@ const TableBody = ({ data, img }) => {
             );
           })}
         </>
+      ) : (
+        <tbody>
+          <tr>
+            <td colSpan={7}>
+              <div className="flex flex-col  h-[70vh] w-full items-center justify-center mt-5">
+                <div className="text-4xl mb-2">
+                  <Image
+                    src={NoDataFish}
+                    alt="No Data Available"
+                    width={200}
+                    height={100}
+                    className="rounded-lg"
+                  />
+                </div>
+                <h1 className="text-[#89888e] text-lg">No data found.</h1>
+              </div>
+            </td>
+          </tr>
+        </tbody>
       )
+
       }
       {bigLoader == true && <LoaderPopup />}
     </>
