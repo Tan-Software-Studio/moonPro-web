@@ -1,6 +1,7 @@
 import axios from "axios";
 import { bq_apikey } from "./constant";
-import { addMark } from "./mark";
+import { addDevMark } from "./mark";
+import { formatDecimal } from "@/utils/basicFunctions"
 
 const endpoint = "https://streaming.bitquery.io/eap";
 const TOKEN_DETAILS = `query TradingView($token: String, $dataset: dataset_arg_enum, $from: DateTime, $to: DateTime, $interval: Int, $tokenCreator: String) {
@@ -34,8 +35,8 @@ const TOKEN_DETAILS = `query TradingView($token: String, $dataset: dataset_arg_e
       Block {
         Time(interval: {count: $interval, in: seconds})
       }
-      low: quantile(of: Trade_PriceInUSD, level: 0.05)
-      high: quantile(of: Trade_PriceInUSD, level: 0.95)
+      low: quantile(of: Trade_PriceInUSD, level: 0.20)
+      high: quantile(of: Trade_PriceInUSD, level: 0.80)
       close: Trade {
         PriceInUSD(maximum: Block_Slot)
       }
@@ -80,8 +81,10 @@ const TOKEN_DETAILS = `query TradingView($token: String, $dataset: dataset_arg_e
         Signer
       }
       Trade {
+        PriceInUSD
         Side {
           Type
+          AmountInUSD
         }
       }
     }
@@ -169,10 +172,21 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
         const creatorTransaction = creatorTransactions[i];
         const blockTime = new Date(creatorTransaction?.Block?.Time).getTime() / 1000;
         const isBuy = creatorTransaction?.Trade?.Side?.Type === 'buy';
-        addMark(
+
+        const usdTraded = Number(creatorTransaction?.Trade?.Side?.AmountInUSD);
+
+        const usdPrice = Number(creatorTransaction?.Trade?.PriceInUSD);
+        const usdSolPrice = isUsdActive ? usdPrice : usdPrice / solPrice;
+        const atPrice = isMarketCapActive ? usdSolPrice * supply : usdSolPrice;
+
+        addDevMark(
           i, 
           blockTime, 
-          isBuy
+          isBuy,
+          usdTraded,
+          atPrice,
+          isUsdActive,
+          isMarketCapActive
         );
       }
     }

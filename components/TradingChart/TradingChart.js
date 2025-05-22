@@ -6,6 +6,7 @@ import Datafeed from "../../utils/tradingViewChartServices/customDatafeed";
 import { intervalTV } from "../../utils/tradingViewChartServices/constant";
 import { unsubscribeFromWebSocket } from "@/utils/tradingViewChartServices/websocketOHLC";
 import { clearMarks } from "@/utils/tradingViewChartServices/mark";
+import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFunctions";
 
 const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
   const chartContainerRef = useRef(null);
@@ -34,6 +35,18 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
     const tvWidget = new widget({
       symbol: tokenSymbol,
       datafeed: Datafeed,
+      custom_formatters: {
+          priceFormatterFactory: (symbolInfo, minTick) => {
+              return {
+                format: (price, signPositive) => {
+                  if (typeof price !== 'number' || isNaN(price)) return '';
+                  return price > 0.99
+                    ? humanReadableFormatWithNoDollar(price, 2)
+                    : formatDecimal(price);
+                },
+              };
+          },
+      },
       tokenAddress: tokenaddress,
       interval: "1S",
       container: chartContainerRef.current,

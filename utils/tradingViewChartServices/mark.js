@@ -1,6 +1,10 @@
+import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFunctions"
+
 const marks = [];
 
-export const mark = (id, time, isBuy) => {
+export const devMark = (id, time, isBuy, usdTraded, atPricePoint, isUsdActive, isMarketCapActive) => {
+    const usdTradedReadable = humanReadableFormatWithNoDollar(usdTraded, 1);
+    const atPricePointReadable = atPricePoint > 0.99 ?  humanReadableFormatWithNoDollar(atPricePoint, 2) : formatDecimal(atPricePoint);
     return {
         id,
         time,
@@ -8,7 +12,10 @@ export const mark = (id, time, isBuy) => {
             border: isBuy === true ? '#195E54' : '#84303B',
             background: isBuy === true ? '#089880' : '#F23645',
         },
-        text: isBuy === true ? ['Developer Buy'] : ['Developer Sell'],
+        text: isBuy === true ? 
+        [`Dev Bought $${usdTradedReadable} at ${isUsdActive ? "$" : ""}${atPricePointReadable} ${isUsdActive ? "USD" : "SOL"} ${isMarketCapActive ? "Market Cap" : ""}`] 
+        : 
+        [`Dev sold $${usdTradedReadable} at ${isUsdActive ? "$" : ""}${atPricePointReadable} ${isUsdActive ? "USD" : "SOL"} ${isMarketCapActive ? "Market Cap" : ""}`],
         label: isBuy === true ? 'DB' : 'DS',
         labelFontColor: 'white',
         minSize: 25,
@@ -16,8 +23,8 @@ export const mark = (id, time, isBuy) => {
 }
 
 // Add a mark object to local store
-export const addMark = (id, time, isBuy) => {
-  const newMark = mark(id, time, isBuy);
+export const addDevMark = (id, time, isBuy, usdTraded, atPricePoint, isUsdActive, isMarketCapActive) => {
+  const newMark = devMark(id, time, isBuy, usdTraded, atPricePoint, isUsdActive, isMarketCapActive);
   marks.push(newMark);
 };
 
