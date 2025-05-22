@@ -133,7 +133,11 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                 onClick={() => {
                   navigateToChartView(e);
                   navigate.push(
-                    `/tradingview/solana?tokenaddress=${e?.Trade?.Currency?.MintAddress}&symbol=${e?.Trade?.Currency?.Symbol}&pair=${e?.Trade?.Market?.MarketAddress}`
+                    `/tradingview/solana?tokenaddress=${
+                      e?.Trade?.Currency?.MintAddress
+                    }&symbol=${e?.Trade?.Currency?.Symbol || "unknown"}&pair=${
+                      e?.Trade?.Market?.MarketAddress
+                    }`
                   );
                 }}
               >
