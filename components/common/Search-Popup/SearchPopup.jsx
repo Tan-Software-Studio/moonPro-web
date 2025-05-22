@@ -1,10 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Clear,
-  solana,
-} from "@/app/Images";
+import { Clear, solana } from "@/app/Images";
 import Image from "next/image";
 import { setChartSymbolImage, setIsSearchPopup } from "@/app/redux/states";
 import { useDispatch } from "react-redux";
@@ -20,7 +17,6 @@ const SearchPopup = () => {
   const [notFoundMessage, setNotFoundMessage] = useState("");
   const [resentTokens, setResentTokens] = useState([]);
   const navigate = useRouter();
-
 
   const popupRef = useRef(null);
   const debounceRef = useRef(null);
@@ -102,7 +98,11 @@ const SearchPopup = () => {
     localStorage.setItem("chartTokenAddress", e?.Trade?.Currency?.MintAddress);
     setTimeout(async () => {
       await navigate.push(
-        `/tradingview/solana?tokenaddress=${e?.Trade?.Currency?.MintAddress}&symbol=${e?.Trade?.Currency?.Symbol}&pair=${e?.Trade?.Market?.MarketAddress}`
+        `/tradingview/solana?tokenaddress=${
+          e?.Trade?.Currency?.MintAddress
+        }&symbol=${e?.Trade?.Currency?.Symbol || "unknown"}&pair=${
+          e?.Trade?.Market?.MarketAddress
+        }`
       );
     }, 10);
   }
