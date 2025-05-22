@@ -48,7 +48,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
           },
       },
       tokenAddress: tokenaddress,
-      interval: "1S",
+      interval: "15S",
       container: chartContainerRef.current,
       library_path: "/charting_library/",
       locale: "en",
