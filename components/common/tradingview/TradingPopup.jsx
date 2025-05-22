@@ -52,7 +52,7 @@ const TradingPopup = ({
     if (amountToken2 > 1) {
       setRrcQty(amountToken2.toFixed(2));
     } else {
-      setRrcQty(amountToken2.toFixed(5));
+      setRrcQty(amountToken2.toFixed(6));
     }
   }
 
