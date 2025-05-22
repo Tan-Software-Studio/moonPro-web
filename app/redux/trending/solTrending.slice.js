@@ -6,32 +6,40 @@ const solTrendingData = createSlice({
     filterTime: {
       "1m": {},
       "5m": {},
+      "30m": {},
       "1h": {},
       "6h": {},
       "24h": {},
     },
-    filterInput:
-    {
-      "By Volume": {},
-      "By Liquidity": {},
-      "By Age": {},
-      "By MKT Cap": {},
-      "By TXNS": {},
-      "By Buys": {},
-      "By Sales": {},
-    },
+    loading: false,
+    filterValues: {
+      mintauth: { checked: false },
+      freezeauth: { checked: false },
+      lpburned: { checked: false },
+      top10holders: { checked: false },
+      liquidity: { min: "", max: "" },
+      volume: { min: "", max: "" },
+      age: { min: "", max: "" },
+      MKT: { min: "", max: "" },
+      TXNS: { min: "", max: "" },
+      buys: { min: "", max: "" },
+      sells: { min: "", max: "" },
+    }
   },
 
   reducers: {
     setFilterTime: (state, action) => {
       state.filterTime = action.payload;
     },
-    setFilterInput: (state, action) => {
-      state.filterInput = action.payload;
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+    setFilterValues: (state, action) => {
+      state.filterValues = action.payload;
     },
   },
 });
 
-export const { setFilterTime, setFilterInput } = solTrendingData.actions;
+export const { setFilterTime, setLoading, setFilterValues } = solTrendingData.actions;
 
 export default solTrendingData.reducer;

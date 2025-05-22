@@ -1,20 +1,18 @@
 "use client";
 import { bitcoinIcon, buyIcon, memescopeImg } from "@/app/Images";
 import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchnewPairData } from "@/app/redux/newpair/NewPairData";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import MscopePumpTable from "@/components/common/memsscope/MscopePumpTable";
 import { usePathname } from "next/navigation";
 import FilterMemescope from "@/components/common/filter/FilterMemescope";
 import FilterButton from "@/components/common/filter/FilterButton";
-import { fetchMemescopeData } from "@/app/redux/memescopeData/Memescope";
 import NewPairSOLData from "@/websocket/NewPairSOLData";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import { useTranslation } from "react-i18next";
 
 const Memescope = () => {
-  const { t, ready } = useTranslation();
+  const { t } = useTranslation();
   const memescopePage = t("memescope");
   const [selectedScope, setSelectedScope] = useState(1);
   const Graduatedata = useSelector(
@@ -23,8 +21,7 @@ const Memescope = () => {
   const Graduateddata = useSelector(
     (state) => state?.allMemescopeData?.MscopeGraduatedData
   );
-  const NewData = useSelector((state) => state?.allNewPairData?.Newdata);
-  const dispatch = useDispatch();
+  const NewData = useSelector((state) => state?.allMemescopeData?.newLaunch);
   const [openDropdown, setOpenDropdown] = useState(null);
 
   const pathname = usePathname();
@@ -206,11 +203,6 @@ const Memescope = () => {
   );
 
   const { closeWebSocketConnection } = NewPairSOLData();
-  // data
-  useEffect(() => {
-    dispatch(fetchnewPairData());
-    dispatch(fetchMemescopeData());
-  }, []);
 
   return (
     <>

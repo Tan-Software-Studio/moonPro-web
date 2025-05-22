@@ -7,7 +7,7 @@ import { VscDebugRestart } from "react-icons/vsc";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import { useTranslation } from 'react-i18next';
 
-function FilterMemescope({ isOpen, setIsOpen, data, onApply, filterValues, setFilterValues }) {
+function FilterMemescope({ isOpen, setIsOpen, data, onApply, onReset, filterValues, setFilterValues }) {
   const { t } = useTranslation();
   const tredingPage = t("tredingPage");
 
@@ -38,17 +38,22 @@ function FilterMemescope({ isOpen, setIsOpen, data, onApply, filterValues, setFi
   };
 
   // Reset all filters
-  const handleReset = () => {
-    setFilterValues({});
-  };
+
 
   // Apply filters and close the panel
   const handleApply = () => {
     if (onApply) {
-      onApply(filterValues);
+      onApply();
     }
     setIsOpen(false);
   };
+
+  const handleReset = () => {
+    if (onReset) {
+      onReset();
+    }
+    setIsOpen(false);
+  }
 
   const chcekBoxStyle =
     "appearance-none w-4 h-4 border border-gray-400 rounded-sm bg-transparent flex items-center justify-center checked:bg-[#3e9fd6] checked:border-[#3e9fd6] checked:after:content-['✔'] checked:after:text-xs";
@@ -95,7 +100,7 @@ function FilterMemescope({ isOpen, setIsOpen, data, onApply, filterValues, setFi
                   </div>
                   <input
                     type="checkbox"
-                    checked={filterValues[item.title]?.checked || false} 
+                    checked={filterValues[item.title]?.checked || false}
                     onChange={(e) =>
                       handleCheckboxChange(item.id, item?.title, e.target.checked)
                     }

@@ -7,20 +7,20 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import {
   openCloseLoginRegPopup,
+  setreferralPopupAfterLogin,
   setSolWalletAddress,
 } from "@/app/redux/states";
 import { useDispatch } from "react-redux";
 import { FiLock } from "react-icons/fi";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { AnimatePresence, motion } from "framer-motion";
-import RefferalPopup from "./RefferalPopup";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
 
-const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email }) => {
+const OtpPopup = ({ setIsPassword, authName, jwtToken, email }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [recoveryKey, setRecoveryKey] = useState(false);
+  const [openRecoverKey, setOpenRecoverKey] = useState(false);
   const [otp, setOtp] = useState("");
   const [verifyData, setVerifyData] = useState({});
   const [showPassword, setShowPassword] = useState(false);
@@ -32,7 +32,6 @@ const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email }) => {
   const [confirmPasswordInput, setConfirmPasswordInput] = useState("");
   const [isDisable, setIsDisable] = useState(false);
   const [isInvalidOtp, setIsInvalidOtp] = useState(false);
-  const [isReffaralCode, setIsReffaralCode] = useState(false);
 
   const { t } = useTranslation();
   const navbar = t("navbar");
@@ -115,23 +114,19 @@ const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email }) => {
       );
 
       setVerifyData(response?.data);
-
-      if (response?.data?.statusCode === 200) {
-        if (authName == "login") {
-          if (response?.data?.data?.user?.referredBy === null) {
-            setIsReffaralCode(true);
-          } else {
-            dispatch(openCloseLoginRegPopup(false));
-          }
-        } else {
-          setRecoveryKey(true);
-        }
-        router.push("/")
-      }
+      if (authName == "login") {
+        if (response?.data?.data?.user?.referredBy === null) {
+          dispatch(setreferralPopupAfterLogin(true));
+        } 
+      } else {
+        setOpenRecoverKey(true);
+      } 
+      dispatch(openCloseLoginRegPopup(false));
       dispatch(setSolWalletAddress());
       toast.success(response?.data?.message);
       setIsDisable(false);
       setIsInvalidOtp(false);
+      setIsPassword(false);
     } catch (err) {
       console.error(err);
       toast.error(err?.response?.data?.message);
@@ -139,26 +134,13 @@ const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email }) => {
         setIsInvalidOtp(true);
       }
       setIsDisable(false);
-      setIsReffaralCode(false);
+      dispatch(setreferralPopupAfterLogin(false));
     }
   };
 
   return (
     <>
-      <AnimatePresence>
-        {recoveryKey && authName != "login" ? (
-          <RecoveryKey
-            verifyData={verifyData}
-            setVerifyData={setVerifyData}
-            setIsLoginPopup={setIsLoginPopup}
-          />
-        ) : isReffaralCode ? (
-          <RefferalPopup
-            setIsReffaralCode={setIsReffaralCode}
-            setIsLoginPopup={setIsLoginPopup}
-            verifyData={verifyData}
-          />
-        ) : (
+      <AnimatePresence> 
           <motion.div
             key="backdrop"
             initial={{ opacity: 0 }}
@@ -310,8 +292,7 @@ const OtpPopup = ({ setIsLoginPopup, authName, jwtToken, email }) => {
                 <div className=" p-4">{navbar?.otpPopup?.byCreating}</div>
               </div>
             </motion.div>
-          </motion.div>
-        )}
+          </motion.div> 
       </AnimatePresence>
     </>
   );

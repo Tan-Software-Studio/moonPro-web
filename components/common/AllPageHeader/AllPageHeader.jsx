@@ -13,7 +13,7 @@ import RightModalOpenSetting from "@/components/Settings/RightModalOpenSetting";
 import { IoSettingsOutline } from "react-icons/io5";
 import { setGlobalBuyAmt } from "@/app/redux/states";
 import { useTranslation } from "react-i18next";
-const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime, setFilterValues, filterValues, onApply }) => {
+const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime, setFilterValues, filterValues, onApply, onReset,   }) => {
   const filterPopupRef = useRef(null);
   const dexesPopupRef = useRef(null);
   const { t, ready } = useTranslation();
@@ -86,20 +86,6 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
   };
   // ----------Filter Dexes--------
   const defaultOptions = ["Raydium", "Pump.fun", "Moonshot", "Orca", "Meteora"];
-  const [selectedOptions, setSelectedOptions] = useState([...defaultOptions]);
-  // Apply filters
-  const handleCheckboxChangeDefault = (option) => {
-    setSelectedOptions((prev) => {
-      const updated = prev.includes(option)
-        ? prev.filter((item) => item !== option)
-        : [...prev, option];
-      return updated;
-    });
-  };
-  // Reset all filters
-  const resetButtonDefault = () => {
-    setSelectedOptions([...defaultOptions]);
-  };
   const chcekBoxStyle =
     "appearance-none w-4 h-4 border border-gray-400 rounded-sm bg-transparent flex items-center justify-center checked:bg-[#3e9fd6] checked:border-[#3e9fd6] checked:after:content-['✔'] checked:after:text-xs";
   return (
@@ -182,6 +168,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
               setFilterValues={setFilterValues}
               filterValues={filterValues}
               onApply={onApply}
+              onReset={onReset} 
             />
           </div>
         )}

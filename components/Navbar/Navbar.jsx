@@ -28,6 +28,11 @@ import AccountSecurity from "./popup/AccountSecurity";
 import Watchlist from "./popup/Watchlist";
 import { useTranslation } from "react-i18next";
 import SolDeposit from "./popup/SolDeposit";
+import ReferralCodePopup from "./login/RefferalPopup";
+import axios from "axios";
+import { fetchMemescopeData } from "@/app/redux/memescopeData/Memescope";
+import { setFilterTime, setLoading } from "@/app/redux/trending/solTrending.slice";
+const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
 
@@ -41,6 +46,10 @@ const Navbar = () => {
   // const [isLoginPopup, setIsLoginPopup] = useState(false);
   const isLoginPopup = useSelector(
     (state) => state?.AllStatesData?.isRegLoginPopup
+  );
+  // referral add popup
+  const isReffaralCode = useSelector(
+    (state) => state?.AllStatesData?.referralPopupAfterLogin
   );
   const authName = useSelector(
     (state) => state?.AllStatesData?.isRegisterOrLogin
@@ -76,15 +85,36 @@ const Navbar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("walletAddress");
     dispatch(setSolWalletAddress());
-    router.push("/");
+    router.replace("/trending");
     setIsProfileOpen(false);
     googleLogout();
-    setTimeout(() => {
-      dispatch(openCloseLoginRegPopup(true));
-      dispatch(setLoginRegPopupAuth("login"));
-    }, 1500);
   };
-
+  async function fetchData() {
+    dispatch(setLoading(true));
+    await axios
+      .get(`${URL}findallTrendingToken`)
+      .then((response) => {
+        const rawData = response?.data?.data;
+        const formattedData = {
+          "1m": rawData?.["1+min"]?.[0].tokens || {},
+          "5m": rawData?.["5+min"]?.[0].tokens || {},
+          "30m": rawData?.["30+min"]?.[0].tokens || {},
+          "1h": rawData?.["1+hr"]?.[0].tokens || {},
+          "6h": rawData?.["6+hr"]?.[0].tokens || {},
+          "24h": rawData?.["24+hr"]?.[0].tokens || {},
+        };
+        dispatch(setFilterTime(formattedData));
+        dispatch(setLoading(false));
+      })
+      .catch((error) => {
+        console.log("🚀 ~ awaitaxios.get ~ error:", error);
+        dispatch(setLoading(false));
+      });
+  }
+  useEffect(() => {
+    fetchData();
+    dispatch(fetchMemescopeData());
+  }, []);
   // update and get solana balance
   useEffect(() => {
     if (solWalletAddress) {
@@ -123,18 +153,15 @@ const Navbar = () => {
             <div className=" flex items-center gap-2  ">
               {/* Search bar */}
               <div
-                className={`md:flex items-center  border ${
-                  isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
-                } border-[#333333] ${
-                  isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
+                  } border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                 onClick={() => dispatch(setIsSearchPopup(true))}
               >
                 <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                 <input
-                  className={` ${
-                    isSidebarOpen ? "w-0" : "w-12"
-                  } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                  className={` ${isSidebarOpen ? "w-0" : "w-12"
+                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                   placeholder={navbar?.profile?.search}
                 />
               </div>
@@ -284,10 +311,7 @@ const Navbar = () => {
 
       <AnimatePresence>
         {isLoginPopup && (
-          <LoginPopup
-            isLoginPopup={isLoginPopup}
-            authName={authName}
-          />
+          <LoginPopup isLoginPopup={isLoginPopup} authName={authName} />
         )}
 
         {isSettingPopup && <Setting setIsSettingPopup={setIsSettingPopup} />}
@@ -307,6 +331,7 @@ const Navbar = () => {
           />
         )}
       </AnimatePresence>
+      {isReffaralCode && <ReferralCodePopup />}
     </>
   );
 };
