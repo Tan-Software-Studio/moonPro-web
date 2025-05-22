@@ -15,10 +15,10 @@ import { FaCopy, FaStar } from "react-icons/fa";
 import { IoIosKey } from "react-icons/io";
 import { RiShareBoxLine } from "react-icons/ri";
 import { useDispatch } from "react-redux";
-const FE_SEC = Buffer.from(
-  process.env.NEXT_PUBLIC_FE_ENCRYPT_SEC_KEY,
-  "utf8"
-).subarray(0, 32);
+// const FE_SEC = Buffer.from(
+//   process.env.NEXT_PUBLIC_FE_ENCRYPT_SEC_KEY,
+//   "utf8"
+// ).subarray(0, 32);
 export default function Portfolio() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
