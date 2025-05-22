@@ -40,10 +40,7 @@ const TableBody = ({ data, img }) => {
   const getNetwork = pathname.split("/")[2];
 
   const bigLoader = useSelector((state) => state?.AllStatesData?.bigLoader);
-  const isLoading = useSelector(
-    (state) => state?.solTrendingData?.loading
-  );
-
+  const isLoading = useSelector((state) => state?.solTrendingData?.loading);
 
   const quickBuy = useSelector((state) => state?.AllStatesData?.globalBuyAmt);
 
@@ -164,35 +161,61 @@ const TableBody = ({ data, img }) => {
                                 {UpdateTime(row?.date, currentTime)}
                               </div>
 
-
                               <div className="flex gap-2">
-                                {(row?.offchainData?.metadata?.telegram || row?.offchainData?.metadata?.extensions?.telegram) && (
+                                {(row?.offchainData?.metadata?.telegram ||
+                                  row?.offchainData?.metadata?.extensions
+                                    ?.telegram) && (
                                   <Link
-                                    href={row?.offchainData?.metadata?.telegram || row?.offchainData?.metadata?.extensions?.telegram}
+                                    href={
+                                      row?.offchainData?.metadata?.telegram ||
+                                      row?.offchainData?.metadata?.extensions
+                                        ?.telegram
+                                    }
                                     target="_blank"
                                     onClick={(e) => e.stopPropagation()}
                                   >
-                                    <FaTelegramPlane size={16} className="text-[#6E6E6E] hover:text-[#ffffff]" />
+                                    <FaTelegramPlane
+                                      size={16}
+                                      className="text-[#6E6E6E] hover:text-[#ffffff]"
+                                    />
                                   </Link>
                                 )}
 
-                                {(row?.offchainData?.metadata?.twitter || row?.offchainData?.metadata?.extensions?.twitter) && (
+                                {(row?.offchainData?.metadata?.twitter ||
+                                  row?.offchainData?.metadata?.extensions
+                                    ?.twitter) && (
                                   <Link
-                                    href={row?.offchainData?.metadata?.twitter || row?.offchainData?.metadata?.extensions?.twitter}
+                                    href={
+                                      row?.offchainData?.metadata?.twitter ||
+                                      row?.offchainData?.metadata?.extensions
+                                        ?.twitter
+                                    }
                                     target="_blank"
                                     onClick={(e) => e.stopPropagation()}
                                   >
-                                    <FaXTwitter size={16} className="text-[#6E6E6E] hover:text-[#ffffff]" />
+                                    <FaXTwitter
+                                      size={16}
+                                      className="text-[#6E6E6E] hover:text-[#ffffff]"
+                                    />
                                   </Link>
                                 )}
 
-                                {(row?.offchainData?.metadata?.website || row?.offchainData?.metadata?.extensions?.website) && (
+                                {(row?.offchainData?.metadata?.website ||
+                                  row?.offchainData?.metadata?.extensions
+                                    ?.website) && (
                                   <Link
-                                    href={row?.offchainData?.metadata?.website || row?.offchainData?.metadata?.extensions?.website}
+                                    href={
+                                      row?.offchainData?.metadata?.website ||
+                                      row?.offchainData?.metadata?.extensions
+                                        ?.website
+                                    }
                                     target="_blank"
                                     onClick={(e) => e.stopPropagation()}
                                   >
-                                    <MdOutlineLanguage size={16} className="text-[#6E6E6E] hover:text-[#ffffff]" />
+                                    <MdOutlineLanguage
+                                      size={16}
+                                      className="text-[#6E6E6E] hover:text-[#ffffff]"
+                                    />
                                   </Link>
                                 )}
                               </div>
@@ -209,8 +232,6 @@ const TableBody = ({ data, img }) => {
                             </div>
                           </div>
                         </div>
-
-
                       </div>
                     </div>
                   </td>
@@ -222,31 +243,25 @@ const TableBody = ({ data, img }) => {
                         <p className="text-[15px] font-medium">
                           <span>{humanReadableFormat(row?.marketCap)}</span>
                         </p>
-
-                        <p className="mt-1">
-                          <span className="text-[14px] font-thin text-[#666873]">
-                            {row.current_price.toFixed}
-                          </span>
-                        </p>
                       </div>
                       <p
-                        className={`text-[12px] font-medium ${data.length > 0 &&
+                        className={`text-[12px] font-medium ${
+                          data.length > 0 &&
                           typeof row?.Percentage === "string" &&
                           row?.Percentage.includes("-")
-                          ? "text-[#ED1B24]"
-                          : "text-[#21CB6B]"
-                          }`}
+                            ? "text-[#ED1B24]"
+                            : "text-[#21CB6B]"
+                        }`}
                       >
                         {row?.Percentage}
                       </p>
                     </div>
                   </td>
 
-
                   {/* Column 3: Liquidity */}
                   <td className="whitespace-nowrap W-32 py-3 md:px-6 px-3">
                     <span className="text-white text-[15px] font-medium">
-                      $46k
+                      {`$${row?.liquidity || 0}`}
                     </span>
                   </td>
 
@@ -255,10 +270,11 @@ const TableBody = ({ data, img }) => {
                     {humanReadableFormat(row?.traded_volume)}
                   </td>
 
-
                   {/* Column 5: Swaps */}
                   <td className="whitespace-nowrap W-32 py-3 md:px-6 px-3">
-                    <p className="mt-0.5 text-[15px] font-medium">{row?.trades}</p>
+                    <p className="mt-0.5 text-[15px] font-medium">
+                      {row?.trades}
+                    </p>
 
                     <div className="flex  gap-1.5">
                       <p className="mt-0.5">
@@ -273,16 +289,15 @@ const TableBody = ({ data, img }) => {
                     </div>
                   </td>
 
-
-
                   {/* Column 8: Holders */}
                   {/* <td className="whitespace-nowrap px-6 py-4 text-[16px]">
                     {data[ind]?.tradesCountWithUniqueTraders}
                   </td> */}
                   <td className="whitespace-nowrap W-60 py-3 flex justify-center">
                     <div
-                      className={`flex  gap-2 ${!row.mint_authority ? "text-white" : "text-[#828282]"
-                        }`}
+                      className={`flex  gap-2 ${
+                        !row.mint_authority ? "text-white" : "text-[#828282]"
+                      }`}
                     >
                       <Tooltip
                         body={
@@ -313,10 +328,11 @@ const TableBody = ({ data, img }) => {
                       <Tooltip body={"No one can freeze token transfers."}>
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${!row.mint_authority
-                              ? "text-white"
-                              : "text-[#828282]"
-                              }`}
+                            className={`flex flex-col text-start opacity-75 ${
+                              !row.mint_authority
+                                ? "text-white"
+                                : "text-[#828282]"
+                            }`}
                           >
                             {!row.freeze_authority ? (
                               <CiCircleCheck
@@ -344,8 +360,9 @@ const TableBody = ({ data, img }) => {
                       >
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${true ? "text-white" : "text-[#828282]"
-                              }`}
+                            className={`flex flex-col text-start opacity-75 ${
+                              true ? "text-white" : "text-[#828282]"
+                            }`}
                           >
                             {true ? (
                               <CiCircleCheck
@@ -369,8 +386,9 @@ const TableBody = ({ data, img }) => {
                       <Tooltip body={"Shows if token has 10 holders."}>
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${row?.top10Holder ? "text-white" : "text-[#828282]"
-                              }`}
+                            className={`flex flex-col text-start opacity-75 ${
+                              row?.top10Holder ? "text-white" : "text-[#828282]"
+                            }`}
                           >
                             {row?.top10Holder ? (
                               <CiCircleCheck
@@ -414,10 +432,11 @@ const TableBody = ({ data, img }) => {
                       </span>
                       <span>
                         {quickBuy
-                          ? `${quickBuy.length > 6
-                            ? `${quickBuy.slice(0, 7)}...`
-                            : quickBuy
-                          }`
+                          ? `${
+                              quickBuy.length > 6
+                                ? `${quickBuy.slice(0, 7)}...`
+                                : quickBuy
+                            }`
                           : 0}
                       </span>
                     </button>
@@ -446,9 +465,7 @@ const TableBody = ({ data, img }) => {
             </td>
           </tr>
         </tbody>
-      )
-
-      }
+      )}
       {bigLoader == true && <LoaderPopup />}
     </>
   );
