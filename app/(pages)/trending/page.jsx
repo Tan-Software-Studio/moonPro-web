@@ -27,7 +27,6 @@ const Trending = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [filtersApplied, setFiltersApplied] = useState(false);
 
-
   // Initial filter values - all empty/false
   const initialFilterValues = {
     mintauth: { checked: false },
@@ -51,7 +50,9 @@ const Trending = () => {
   );
 
   // Convert data to array (safety check)
-  let filterDataArray = Array.isArray(getTimeFilterData) ? getTimeFilterData : [];
+  let filterDataArray = Array.isArray(getTimeFilterData)
+    ? getTimeFilterData
+    : [];
 
   const Trendings = {
     Title: tredingPage?.mainHeader?.filter?.filter,
@@ -69,7 +70,6 @@ const Trending = () => {
         title: "freezeauth",
         type: "checkbox",
         infotipString: tredingPage?.mainHeader?.filter?.freezeauthtooltip,
-
       },
       // {
       //   id: "3",
@@ -86,16 +86,16 @@ const Trending = () => {
       },
     ],
     FromToFilter: [
-      // {
-      //   id: "5",
-      //   title: "liquidity",
-      //   name: ${tredingPage?.mainHeader?.filter?.bycurrentliquidity}($),
-      //   firstInputName: "Min",
-      //   firstInputIcon: "$",
-      //   secondInputName: "Max",
-      //   secondInputIcon: "$",
-      //   type: "number",
-      // },
+      {
+        id: "5",
+        title: "liquidity",
+        name: tredingPage?.mainHeader?.filter?.bycurrentliquidity,
+        firstInputName: "Min",
+        firstInputIcon: "$",
+        secondInputName: "Max",
+        secondInputIcon: "$",
+        type: "number",
+      },
       {
         id: "6",
         title: "volume",
@@ -158,7 +158,6 @@ const Trending = () => {
       },
     ],
   };
-
 
   const headersDataSol = [
     {
@@ -242,7 +241,6 @@ const Trending = () => {
     },
   };
 
-
   // === SIMPLE HELPER FUNCTIONS ===
 
   // Check if user has set any filters
@@ -253,6 +251,7 @@ const Trending = () => {
     if (filters.top10holders?.checked) return true;
 
     // Check number inputs
+    if (filters.liquidity?.min || filters.liquidity?.max) return true;
     if (filters.volume?.min || filters.volume?.max) return true;
     if (filters.age?.min || filters.age?.max) return true;
     if (filters.MKT?.min || filters.MKT?.max) return true;
@@ -269,6 +268,7 @@ const Trending = () => {
       MKT: "marketCap",
       TXNS: "trades",
       volume: "traded_volume",
+      liquidity: "liquidity",
       age: "date",
       buys: "buys",
       sells: "sells",
@@ -282,25 +282,33 @@ const Trending = () => {
 
     // true false filters
     if (filters.freezeauth?.checked) {
-      result = result.filter(item => item?.freeze_authority === true);
+      result = result.filter((item) => item?.freeze_authority === true);
     }
 
     if (filters.mintauth?.checked) {
-      result = result.filter(item => item?.mint_authority === true);
+      result = result.filter((item) => item?.mint_authority === true);
     }
 
     if (filters.top10holders?.checked) {
-      result = result.filter(item => item?.top10Holder === true);
+      result = result.filter((item) => item?.top10Holder === true);
     }
 
     // from to filters (min max)
-    const numberFilters = ["volume", "age", "MKT", "TXNS", "buys", "sells"];
+    const numberFilters = [
+      "liquidity",
+      "volume",
+      "age",
+      "MKT",
+      "TXNS",
+      "buys",
+      "sells",
+    ];
 
-    numberFilters.forEach(filterName => {
+    numberFilters.forEach((filterName) => {
       const fieldName = getFieldName(filterName);
 
       if (filters[filterName]?.min) {
-        result = result.filter(item => {
+        result = result.filter((item) => {
           let value = Number(item?.[fieldName]);
 
           // Convert age from timestamp to minutes
@@ -317,7 +325,7 @@ const Trending = () => {
 
       // Apply maximum filter
       if (filters[filterName]?.max) {
-        result = result.filter(item => {
+        result = result.filter((item) => {
           let value = Number(item?.[fieldName]);
 
           // Convert age from timestamp to minutes
@@ -331,33 +339,30 @@ const Trending = () => {
           return value <= maxValue;
         });
       }
-
     });
     return result;
   }
-
-
 
   // === Localstorage manipulation === \\
 
   // Save filters
   function saveFiltersToStorage(filters) {
     try {
-      localStorage.setItem('trendingFilters', JSON.stringify(filters));
+      localStorage.setItem("trendingFilters", JSON.stringify(filters));
     } catch (error) {
-      console.error('Could not save filters:', error);
+      console.error("Could not save filters:", error);
     }
   }
 
   // get filter
   function loadFiltersFromStorage() {
     try {
-      const saved = localStorage.getItem('trendingFilters');
+      const saved = localStorage.getItem("trendingFilters");
       if (saved) {
         return JSON.parse(saved);
       }
     } catch (error) {
-      console.error('Could not load filters:', error);
+      console.error("Could not load filters:", error);
     }
     return null;
   }
@@ -365,13 +370,11 @@ const Trending = () => {
   // remove filters
   function clearFiltersFromStorage() {
     try {
-      localStorage.removeItem('trendingFilters');
+      localStorage.removeItem("trendingFilters");
     } catch (error) {
-      console.error('Could not clear filters:', error);
+      console.error("Could not clear filters:", error);
     }
   }
-
-
 
   function onApply() {
     const hasFilters = checkIfFiltersExist(filterValues);
@@ -393,15 +396,12 @@ const Trending = () => {
     }
   }
 
-
   function onReset() {
     setFilterValues(initialFilterValues);
     setFilteredData([]);
     setFiltersApplied(false);
     clearFiltersFromStorage();
   }
-
-
 
   // show save filter data
   useEffect(() => {
@@ -434,12 +434,10 @@ const Trending = () => {
     }
   }, [localFilterTime]);
 
+  const dataToShow =
+    filtersApplied && filteredData.length >= 0 ? filteredData : filterDataArray;
 
-
-
-  const dataToShow = (filtersApplied && filteredData.length >= 0) ? filteredData : filterDataArray;
-
-  // asc dsc function 
+  // asc dsc function
   const sortedData = handleSort(sortColumn, dataToShow, sortOrder);
   return (
     <>
@@ -454,7 +452,6 @@ const Trending = () => {
           filterValues={filterValues}
           onApply={onApply}
           onReset={onReset}
-
         />
         <div className="flex flex-col">
           <div className="overflow-x-auto">
@@ -483,4 +480,4 @@ const Trending = () => {
     </>
   );
 };
-export default Trending;  
+export default Trending;
