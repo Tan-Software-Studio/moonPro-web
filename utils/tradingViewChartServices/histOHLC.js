@@ -1,31 +1,99 @@
 import axios from "axios";
 import { bq_apikey } from "./constant";
+import { addDevMark } from "./mark";
+import { formatDecimal } from "@/utils/basicFunctions"
 
 const endpoint = "https://streaming.bitquery.io/eap";
-const TOKEN_DETAILS = `query TradingView($token: String, $dataset: dataset_arg_enum,$from: DateTime, $to: DateTime, $interval: Int) {
+const TOKEN_DETAILS = `query TradingView($token: String, $dataset: dataset_arg_enum, $from: DateTime, $to: DateTime, $interval: Int, $tokenCreator: String) {
   Solana(dataset: $dataset, aggregates: no) {
-    DEXTradeByTokens(
+    
+    # 1. OHLC aggregated data
+    ohlcData: DEXTradeByTokens(
       orderBy: {ascendingByField: "Block_Time"}
-      where: {Trade: {Currency: {MintAddress: {is: $token}}, Side: {Currency: {MintAddress: {in: ["11111111111111111111111111111111", "So11111111111111111111111111111111111111112", "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB", "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN", "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"]}}}}, Block: {Time: {since: $from, till: $to}}, Transaction: {Result: {Success: true}}}
+      where: {
+        Trade: {
+          Currency: {MintAddress: {is: $token}}, 
+          Side: {
+            Currency: {
+              MintAddress: {
+                in: [
+                  "11111111111111111111111111111111",
+                  "So11111111111111111111111111111111111111112",
+                  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+                  "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+                  "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
+                  "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"
+                ]
+              }
+            }
+          }
+        }, 
+        Block: {Time: {since: $from, till: $to}}, 
+        Transaction: {Result: {Success: true}}
+      }
     ) {
       Block {
         Time(interval: {count: $interval, in: seconds})
       }
-      low: quantile(of: Trade_PriceInUSD, level: 0.05)
-      high: quantile(of: Trade_PriceInUSD, level: 0.95)
+      low: quantile(of: Trade_PriceInUSD, level: 0.20)
+      high: quantile(of: Trade_PriceInUSD, level: 0.80)
       close: Trade {
         PriceInUSD(maximum: Block_Slot)
       }
       open: Trade {
         PriceInUSD(minimum: Block_Slot)
       }
-      volume: sum(of: Trade_Side_AmountInUSD)
     }
+
+    # 2. Raw trade info (e.g. to check signer + side)
+    creatorTransactions: DEXTradeByTokens(
+      orderBy: {descending: Block_Time}
+      limit: {count: 1000}
+      where: {
+        Trade: {
+          Currency: {MintAddress: {is: $token}}, 
+          Side: {
+            Currency: {
+              MintAddress: {
+                in: [
+                  "11111111111111111111111111111111",
+                  "So11111111111111111111111111111111111111112",
+                  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+                  "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB", 
+                  "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
+                  "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"
+                ]
+              }
+            }
+          }
+        }, 
+        Block: {Time: {since: $from, till: $to}}, 
+        Transaction: {
+          Result: {Success: true}, 
+          Signer: {is: $tokenCreator}
+        }
+      }
+    ) {
+      Block {
+        Time
+      }
+      Transaction {
+        Signer
+      }
+      Trade {
+        PriceInUSD
+        Side {
+          Type
+          AmountInUSD
+        }
+      }
+    }
+
   }
 }`;
 
-export async function fetchHistoricalData(periodParams, resolution, token, isUsdActive, isMarketCapActive, supply, solPrice) {
-  console.log("🚀 ~ fetchHistoricalData ~ resolution:", resolution);
+export async function fetchHistoricalData(periodParams, resolution, token, isUsdActive, isMarketCapActive, supply, solPrice, tokenCreator) {
+  // console.log("🚀 ~ fetchHistoricalData ~ resolution:", resolution);
   supply = supply ? Number(supply) === 0 ? 1_000_000_000 : Number(supply) : 1_000_000_000;
   solPrice = solPrice ? Number(solPrice) === 0 ? 1 : Number(solPrice) : 1; 
   const { from, to, countBack } = periodParams;
@@ -56,6 +124,7 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
           to: timeToTv,
           interval: finalInterval || 1,
           dataset: "realtime",
+          tokenCreator
         },
       },
       {
@@ -67,8 +136,10 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
     );
     // console.log("🚀 ~ fetchHistoricalData ~ response:", response.data.data)
     // console.log("API called");
-    const trades = response.data.data.Solana.DEXTradeByTokens;
-
+    const trades = response.data.data.Solana.ohlcData;
+    const creatorTransactions = response.data.data.Solana.creatorTransactions;
+    // console.log('trades', trades);
+    // console.log('creatorTransactions', creatorTransactions);
     // Preprocess the bars data
     let bars = trades?.map((trade) => {
       // Parse and convert Block Timefield to Unix timestamp in milliseconds
@@ -96,31 +167,59 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
       };
     });
 
+    if (creatorTransactions?.length > 0) {
+      for (let i = 0; i < creatorTransactions.length; i++) {
+        const creatorTransaction = creatorTransactions[i];
+        const blockTime = new Date(creatorTransaction?.Block?.Time).getTime() / 1000;
+        const isBuy = creatorTransaction?.Trade?.Side?.Type === 'buy';
+
+        const usdTraded = Number(creatorTransaction?.Trade?.Side?.AmountInUSD);
+
+        const usdPrice = Number(creatorTransaction?.Trade?.PriceInUSD);
+        const usdSolPrice = isUsdActive ? usdPrice : usdPrice / solPrice;
+        const atPrice = isMarketCapActive ? usdSolPrice * supply : usdSolPrice;
+
+        addDevMark(
+          i, 
+          blockTime, 
+          isBuy,
+          usdTraded,
+          atPrice,
+          isUsdActive,
+          isMarketCapActive
+        );
+      }
+    }
+
     // If resolution is in seconds, adjust candlestick data by comparing open/close
     if (resolution?.toString()?.slice(-1) == "S") {
-      bars = bars.map((bar, index, arr) => {
-      if (index === 0) return bar; // Skip the first bar
-
-      const prevBar = arr[index - 1];
-      const newOpen = prevBar.close;
-      const newClose = bar.close;
-
-      return {
-        ...bar,
-        open: newOpen,
-        close: newClose,
-        high: Math.max(newOpen, newClose, bar.high, prevBar.close),
-        low: Math.min(newOpen, newClose, bar.low, prevBar.close),
-        };
-      });
+      if (bars?.length > 0) {
+        bars = bars.map((bar, index, arr) => {
+        if (index === 0) return bar; // Skip the first bar
+  
+        const prevBar = arr[index - 1];
+        const newOpen = prevBar.close;
+        const newClose = bar.close;
+  
+        return {
+          ...bar,
+          open: newOpen,
+          close: newClose,
+          high: Math.max(newOpen, newClose, bar.high, prevBar.close),
+          low: Math.min(newOpen, newClose, bar.low, prevBar.close),
+          };
+        });
+      }
     }
 
     // console.log('remaining bars before filter', bars.length);
     // ✅ Filter out flat or no-activity bars
-    bars = bars.filter((bar) => {
-      const isPriceChanged = bar.open !== bar.close;
-      return isPriceChanged;
-    });
+    if (bars?.length > 0) {
+      bars = bars?.filter((bar) => {
+        const isPriceChanged = bar.open !== bar.close;
+        return isPriceChanged;
+      });
+    }
     // console.log('remaining bars after filter', bars.length);
 
     // Handle missing bars
@@ -142,10 +241,12 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
     // }
 
     // Remove duplicates and sort
-    bars = await Array.from(
-      new Map(bars.map((bar) => [bar.time, bar])).values()
-    );
-    await bars.sort((a, b) => a.time - b.time);
+    if (bars?.length > 0) {
+      bars = await Array.from(
+        new Map(bars.map((bar) => [bar.time, bar])).values()
+      );
+      await bars.sort((a, b) => a.time - b.time);
+    }
     // console.log("bars", bars);
     return bars;
   } catch (err) {

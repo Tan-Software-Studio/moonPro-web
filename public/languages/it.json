@@ -672,9 +672,12 @@
     },  
     "recovery": {
       "recoveryKey": "Chiave di recupero",
+      "privateKey": "Chiave di recupero",
       "thisRecovery": "Questa chiave di recupero ti permetterà di accedere al tuo wallet se perdi le tue credenziali dell'account moon pro",
+      "thisPrivateKey": "Questa chiave di recupero ti permetterà di accedere al tuo wallet se perdi le tue credenziali dell'account moon pro",
       "revealMyKey": "Mostra la mia chiave",
-      "warning": "ATTENZIONE: Questa chiave di recupero è l'unico modo per accedere al tuo wallet se perdi le tue credenziali. Conservala in un posto sicuro e non condividerla con nessuno."
+      "warning": "ATTENZIONE: Questa chiave di recupero è l'unico modo per accedere al tuo wallet se perdi le tue credenziali. Conservala in un posto sicuro e non condividerla con nessuno.",
+      "warningPrivate": "ATTENZIONE: Questa chiave di recupero è l'unico modo per accedere al tuo wallet se perdi le tue credenziali. Conservala in un posto sicuro e non condividerla con nessuno."
     } 
   },
   "accountPopup": {

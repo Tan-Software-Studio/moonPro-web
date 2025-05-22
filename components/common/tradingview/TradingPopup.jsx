@@ -27,21 +27,35 @@ const TradingPopup = ({
   price,
   progranAddress,
   bondingProgress,
-  dispatch
+  dispatch,
 }) => {
   const [loaderSwap, setLoaderSwap] = useState(false);
   const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
   const [quantity, setQuantity] = useState(0.1);
+  const [recQty, setRrcQty] = useState(0);
   const [slippage, setSlippage] = useState(20);
   const [priorityFee, setPriorityFee] = useState(0.0001);
   const [isMev, setIsMev] = useState(true);
   const [isAutoApprove, setisAutoApprove] = useState(false);
-
-  useEffect(() => {
-    if (activeTab == "sell") {
-      setQuantity(tokenBalance);
+  // function to calculate rec. amount
+  function calculateRecAmountSolToAnytoken(
+    amountToken1,
+    priceToken1,
+    priceToken2
+  ) {
+    if (priceToken2 === 0) {
+      throw new Error("Price of token 2 cannot be zero");
     }
-  }, [tokenBalance, activeTab]);
+
+    const usdValue = amountToken1 * priceToken1;
+    const amountToken2 = usdValue / priceToken2;
+    if (amountToken2 > 1) {
+      setRrcQty(amountToken2.toFixed(2));
+    } else {
+      setRrcQty(amountToken2.toFixed(6));
+    }
+  }
+
   const tokenImage = useSelector(
     (state) => state?.AllStatesData?.chartSymbolImage
   );
@@ -144,7 +158,21 @@ const TradingPopup = ({
 
     // toast.dismiss();
   }
-
+  useEffect(() => {
+    if (activeTab == "sell") {
+      setQuantity(tokenBalance);
+    }
+  }, [tokenBalance, activeTab]);
+  useEffect(() => {
+    if (price) {
+      const solPrice = localStorage.getItem("solPrice");
+      if (activeTab == "sell") {
+        calculateRecAmountSolToAnytoken(quantity || 0, price, solPrice);
+      } else {
+        calculateRecAmountSolToAnytoken(quantity || 0.1, solPrice, price);
+      }
+    }
+  }, [quantity, activeTab, price]);
   return (
     <div className="bg-[#08080E] flex flex-col h-fit w-full text-white xl:p-4 md:p-3">
       {/* Buy/Sell Toggle */}
@@ -223,7 +251,7 @@ const TradingPopup = ({
                 {val}
               </button>
             ))
-          : [100, 80, 50, 20].map((val) => (
+          : [20, 50, 80, 100].map((val) => (
               <button
                 key={val}
                 className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${
@@ -403,7 +431,7 @@ const TradingPopup = ({
             onClick={() => buyHandler()}
             className={`bg-[#2A7FF0] hover:bg-[#3f8cf1] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[40px] ease-in-out duration-200  rounded-md`}
           >
-            {`${tragindViewPage?.right?.buysell?.btnbuy} ${tokenName}`}
+            {`${tragindViewPage?.right?.buysell?.btnbuy} ${recQty} ${tokenName}`}
           </button>
         )
       ) : loaderSwap ? (
@@ -417,7 +445,7 @@ const TradingPopup = ({
           onClick={() => sellHandler()}
           className={`bg-[#ED1B24] hover:bg-[#ff323d] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[40px] ease-in-out duration-200  rounded-md`}
         >
-          {`${tragindViewPage?.right?.buysell?.btnsell} ${tokenName}`}
+          {`${tragindViewPage?.right?.buysell?.btnsell} ${recQty} SOL`}
         </button>
       )}
     </div>

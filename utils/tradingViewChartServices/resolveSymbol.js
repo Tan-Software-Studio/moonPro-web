@@ -41,5 +41,7 @@ export const resolveSymbol = async (
     visible_plots_set: "ohlcv",
     build_seconds_from_ticks: true,
     has_empty_bars: false,
+    supports_marks: true,
+    supports_timescale_marks: true,
   });
 }

@@ -16,7 +16,9 @@ function DataSecurity({
         className="flex px-[16px] py-[10px] items-center justify-between cursor-pointer bg-[#1F1F1F]"
         onClick={() => setIsDataSecurity(!isDataSecurity)}
       >
-        <h1 className="text-white text-[16px] font-medium">{ tragindViewPage?.data}</h1>
+        <h1 className="text-white text-[16px] font-medium">
+          {tragindViewPage?.data}
+        </h1>
         <MdOutlineKeyboardArrowRight
           className={`ease-in-out duration-300 text-[19px] ${
             isDataSecurity && "rotate-90"
@@ -34,18 +36,14 @@ function DataSecurity({
           <div className="flex items-center justify-between mb-[16px]">
             <div className="flex items-center gap-2">
               <div
-                className={`w-4 h-4 border-[1px] ease-in-out duration-200 ${
-                  activeTab == "buy"
-                    ? "bg-[#21cb6b38] border-[#21CB6B]"
-                    : "bg-[#ed1b2642] border-[#ED1B247A]"
-                } rounded-full flex items-center justify-center`}
+                className={`w-4 h-4 border-[1px] ease-in-out duration-200 bg-[#21cb6b38] border-[#21CB6B] rounded-full flex items-center justify-center`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke-width="2"
-                  stroke={`${activeTab == "buy" ? "#21CB6B" : "#ED1B247A"}`}
+                  stroke={`#21CB6B`}
                   class="w-3 h-3"
                 >
                   <path
@@ -67,18 +65,14 @@ function DataSecurity({
           <div className="flex items-center justify-between mb-[16px]">
             <div className="flex items-center gap-2">
               <div
-                className={`w-4 h-4 border-[1px] ease-in-out duration-200 ${
-                  activeTab == "buy"
-                    ? "bg-[#21cb6b38] border-[#21CB6B]"
-                    : "bg-[#ed1b2642] border-[#ED1B247A]"
-                } rounded-full flex items-center justify-center`}
+                className={`w-4 h-4 border-[1px] ease-in-out duration-200 bg-[#21cb6b38] border-[#21CB6B] rounded-full flex items-center justify-center`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke-width="2"
-                  stroke={`${activeTab == "buy" ? "#21CB6B" : "#ED1B247A"}`}
+                  stroke={`#21CB6B`}
                   class="w-3 h-3"
                 >
                   <path
@@ -101,18 +95,14 @@ function DataSecurity({
           <div className="flex items-center justify-between mb-[16px]">
             <div className="flex items-center gap-2">
               <div
-                className={`w-4 h-4 border-[1px] ease-in-out duration-200 ${
-                  activeTab == "buy"
-                    ? "bg-[#21cb6b38] border-[#21CB6B]"
-                    : "bg-[#ed1b2642] border-[#ED1B247A]"
-                } rounded-full flex items-center justify-center`}
+                className={`w-4 h-4 border-[1px] ease-in-out duration-200 bg-[#21cb6b38] border-[#21CB6B] rounded-full flex items-center justify-center`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke-width="2"
-                  stroke={`${activeTab == "buy" ? "#21CB6B" : "#ED1B247A"}`}
+                  stroke={`#21CB6B`}
                   class="w-3 h-3"
                 >
                   <path
@@ -133,18 +123,14 @@ function DataSecurity({
           <div className="flex items-center justify-between mb-[16px]">
             <div className="flex items-center gap-2">
               <div
-                className={`w-4 h-4 border-[1px] ease-in-out duration-200 ${
-                  activeTab == "buy"
-                    ? "bg-[#21cb6b38] border-[#21CB6B]"
-                    : "bg-[#ed1b2642] border-[#ED1B247A]"
-                } rounded-full flex items-center justify-center`}
+                className={`w-4 h-4 border-[1px] ease-in-out duration-200 bg-[#21cb6b38] border-[#21CB6B] rounded-full flex items-center justify-center`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke-width="2"
-                  stroke={`${activeTab == "buy" ? "#21CB6B" : "#ED1B247A"}`}
+                  stroke={`#21CB6B`}
                   class="w-3 h-3"
                 >
                   <path
@@ -167,18 +153,14 @@ function DataSecurity({
           <div className="flex items-center justify-between mb-[16px]">
             <div className="flex items-center gap-2">
               <div
-                className={`w-4 h-4 border-[1px] ease-in-out duration-200 ${
-                  activeTab == "buy"
-                    ? "bg-[#21cb6b38] border-[#21CB6B]"
-                    : "bg-[#ed1b2642] border-[#ED1B247A]"
-                } rounded-full flex items-center justify-center`}
+                className={`w-4 h-4 border-[1px] ease-in-out duration-200 bg-[#21cb6b38] border-[#21CB6B] rounded-full flex items-center justify-center`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke-width="2"
-                  stroke={`${activeTab == "buy" ? "#21CB6B" : "#ED1B247A"}`}
+                  stroke={`#21CB6B`}
                   class="w-3 h-3"
                 >
                   <path
@@ -200,18 +182,14 @@ function DataSecurity({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div
-                className={`w-4 h-4 border-[1px] ease-in-out duration-200 ${
-                  activeTab == "buy"
-                    ? "bg-[#21cb6b38] border-[#21CB6B]"
-                    : "bg-[#ed1b2642] border-[#ED1B247A]"
-                } rounded-full flex items-center justify-center`}
+                className={`w-4 h-4 border-[1px] ease-in-out duration-200 bg-[#21cb6b38] border-[#21CB6B] rounded-full flex items-center justify-center`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke-width="2"
-                  stroke={`${activeTab == "buy" ? "#21CB6B" : "#ED1B247A"}`}
+                  stroke={`#21CB6B`}
                   class="w-3 h-3"
                 >
                   <path

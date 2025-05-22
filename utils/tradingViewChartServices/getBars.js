@@ -24,6 +24,10 @@ async function getSolPrice() {
   return await localStorage.getItem("solPrice");
 }
 
+async function getChartTokenCreator() {
+  return await localStorage.getItem("chartTokenCreator");
+}
+
 export const getBars = async (
   symbolInfo,
   resolution,
@@ -47,6 +51,7 @@ export const getBars = async (
 
     const supply = await getChartSupply();
     const solPrice = await getSolPrice();
+    const tokenCreator = await getChartTokenCreator();
 
     const bars = await fetchHistoricalData(
       periodParams,
@@ -55,9 +60,10 @@ export const getBars = async (
       usdActive,
       marketCapActive,
       supply,
-      solPrice
+      solPrice,
+      tokenCreator
     );
-    if (bars.length > 0) {
+    if (bars?.length > 0) {
       onHistoryCallback(bars, { noData: false });
     } else {
       onHistoryCallback([], { noData: true });

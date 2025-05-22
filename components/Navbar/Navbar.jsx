@@ -31,7 +31,12 @@ import SolDeposit from "./popup/SolDeposit";
 import ReferralCodePopup from "./login/RefferalPopup";
 import axios from "axios";
 import { fetchMemescopeData } from "@/app/redux/memescopeData/Memescope";
-import { setFilterTime, setLoading } from "@/app/redux/trending/solTrending.slice";
+import {
+  setFilterTime,
+  setLoading,
+} from "@/app/redux/trending/solTrending.slice";
+import RecoveryKey from "./login/RecoveryKey";
+import { decodeData } from "@/utils/decryption/decryption";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
@@ -41,7 +46,37 @@ const Navbar = () => {
   const [isAccountPopup, setIsAccountPopup] = useState(false);
   const [isWatchlistPopup, setIsWatchlistPopup] = useState(false);
   const [isSolDepositPopup, setIsSolDepositPopup] = useState(false);
+  const [solPhrase, setSolPhrase] = useState("");
+  const [openRecovery, setOpenRecovery] = useState(false);
+  const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
+  // handle to get phrase of solana
+  async function handleToGetSolanaPhrase() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return toast.error("Please login.");
+    }
+    await axios({
+      url: `${baseUrl}user/getSolanaPhrase`,
+      method: "get",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(async (res) => {
+        // const decryptPK = await decrypt(res?.data?.data?.solanaPk, FE_SEC);
+        // console.log("🚀 ~ .then ~ decryptPK:", decryptPK);
+        setIsAccountPopup(false);
+        const decodeKey = await decodeData(
+          res?.data?.data?.seedPhrases?.solana
+        );
+        setSolPhrase(decodeKey);
+        setOpenRecovery(true);
+      })
+      .catch((err) => {
+        console.log("🚀 ~ handleToGetSolanaPk ~ err:", err);
+      });
+  }
   // login signup
   // const [isLoginPopup, setIsLoginPopup] = useState(false);
   const isLoginPopup = useSelector(
@@ -153,15 +188,18 @@ const Navbar = () => {
             <div className=" flex items-center gap-2  ">
               {/* Search bar */}
               <div
-                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
-                  } border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                className={`md:flex items-center  border ${
+                  isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
+                } border-[#333333] ${
+                  isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                 onClick={() => dispatch(setIsSearchPopup(true))}
               >
                 <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                 <input
-                  className={` ${isSidebarOpen ? "w-0" : "w-12"
-                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                  className={` ${
+                    isSidebarOpen ? "w-0" : "w-12"
+                  } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                   placeholder={navbar?.profile?.search}
                 />
               </div>
@@ -317,7 +355,10 @@ const Navbar = () => {
         {isSettingPopup && <Setting setIsSettingPopup={setIsSettingPopup} />}
 
         {isAccountPopup && (
-          <AccountSecurity setIsAccountPopup={setIsAccountPopup} />
+          <AccountSecurity
+            setIsAccountPopup={setIsAccountPopup}
+            handlePhrase={handleToGetSolanaPhrase}
+          />
         )}
 
         {isWatchlistPopup && (
@@ -328,6 +369,14 @@ const Navbar = () => {
           <SolDeposit
             isOpen={isSolDepositPopup}
             onClose={setIsSolDepositPopup}
+          />
+        )}
+        {openRecovery && solPhrase && (
+          <RecoveryKey
+            PK={solPhrase}
+            setPK={setSolPhrase}
+            setOpenRecovery={setOpenRecovery}
+            flag={true}
           />
         )}
       </AnimatePresence>

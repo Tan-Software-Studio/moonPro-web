@@ -672,9 +672,12 @@
     },
     "recovery": {
       "recoveryKey": "恢复密钥",
+      "privateKey": "恢复密钥",
       "thisRecovery": "此恢复密钥可在您丢失 moon pro 帐号凭据时帮助访问钱包",
+      "thisPrivateKey": "此恢复密钥可在您丢失 moon pro 帐号凭据时帮助访问钱包",
       "revealMyKey": "显示我的密钥",
-      "warning": "警告：此恢复密钥是您在丢失凭据时访问钱包的唯一方式，请妥善保管，不要与任何人分享。"
+      "warning": "警告：此恢复密钥是您在丢失凭据时访问钱包的唯一方式，请妥善保管，不要与任何人分享。",
+      "warningPrivate": "警告：此恢复密钥是您在丢失凭据时访问钱包的唯一方式，请妥善保管，不要与任何人分享。"
     }
   },
   "accountPopup": {

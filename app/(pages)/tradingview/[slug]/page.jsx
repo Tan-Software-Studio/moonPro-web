@@ -373,8 +373,10 @@ const Tradingview = () => {
         setDataLoaderForChart(false);
         const tokenData = res?.data?.data;
         setchartTokenData(tokenData);
+        // console.log('tokenData', tokenData);
         localStorage.setItem("chartSupply", tokenData?.rawsupply || 0);
         localStorage.setItem("solPrice", tokenData?.solPrice || 0);
+        localStorage.setItem("chartTokenCreator", tokenData?.tokenCreator || 0);
       })
       .catch((err) => {
         console.log("🚀 ~ chartTokenDataAPI ~ err:", err?.message);
