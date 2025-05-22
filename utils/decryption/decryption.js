@@ -1,15 +1,9 @@
-import CryptoJS from "crypto-js";
-export function decrypt(encryptedWithIv, SECRET_KEY) {
-  const [ivBase64, encryptedBase64] = encryptedWithIv.split(":");
-
-  const iv = CryptoJS.enc.Base64.parse(ivBase64);
-  const key = CryptoJS.SHA256(SECRET_KEY);
-
-  const decrypted = CryptoJS.AES.decrypt(encryptedBase64, key, {
-    iv,
-    mode: CryptoJS.mode.CBC,
-    padding: CryptoJS.pad.Pkcs7,
-  });
-
-  return decrypted.toString(CryptoJS.enc.Utf8);
+import cryptoJS from "crypto-js";
+export function decodeData(data) {
+  const bytes = cryptoJS.AES.decrypt(
+    data,
+    process.env.NEXT_PUBLIC_FE_ENCRYPT_SEC_KEY
+  );
+  const plainData = JSON.parse(bytes.toString(cryptoJS.enc.Utf8));
+  return plainData;
 }

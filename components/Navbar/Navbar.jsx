@@ -36,6 +36,7 @@ import {
   setLoading,
 } from "@/app/redux/trending/solTrending.slice";
 import RecoveryKey from "./login/RecoveryKey";
+import { decodeData } from "@/utils/decryption/decryption";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
@@ -66,7 +67,10 @@ const Navbar = () => {
         // const decryptPK = await decrypt(res?.data?.data?.solanaPk, FE_SEC);
         // console.log("🚀 ~ .then ~ decryptPK:", decryptPK);
         setIsAccountPopup(false);
-        setSolPhrase(res?.data?.data?.seedPhrases?.solana);
+        const decodeKey = await decodeData(
+          res?.data?.data?.seedPhrases?.solana
+        );
+        setSolPhrase(decodeKey);
         setOpenRecovery(true);
       })
       .catch((err) => {

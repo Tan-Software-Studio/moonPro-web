@@ -3,7 +3,7 @@ import { solana } from "@/app/Images";
 import { setSolWalletAddress } from "@/app/redux/states";
 import { showToastLoader } from "@/components/common/toastLoader/ToastLoder";
 import RecoveryKey from "@/components/Navbar/login/RecoveryKey";
-import { decrypt } from "@/utils/decryption/decryption";
+import { decodeData, decrypt } from "@/utils/decryption/decryption";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -177,7 +177,8 @@ export default function Portfolio() {
       .then(async (res) => {
         // const decryptPK = await decrypt(res?.data?.data?.solanaPk, FE_SEC);
         // console.log("🚀 ~ .then ~ decryptPK:", decryptPK);
-        setPkParticulerWallet(res?.data?.data?.solanaPk);
+        const decodeKey = await decodeData(res?.data?.data?.solanaPk);
+        setPkParticulerWallet(decodeKey);
         setOpenRecovery(true);
       })
       .catch((err) => {
