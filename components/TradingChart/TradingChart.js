@@ -5,6 +5,9 @@ import { widget } from "../../public/charting_library";
 import Datafeed from "../../utils/tradingViewChartServices/customDatafeed";
 import { intervalTV } from "../../utils/tradingViewChartServices/constant";
 import { unsubscribeFromWebSocket } from "@/utils/tradingViewChartServices/websocketOHLC";
+import { clearMarks } from "@/utils/tradingViewChartServices/mark";
+import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFunctions";
+
 const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
   const chartContainerRef = useRef(null);
   const [isUsdSolToggled, setIsUsdSolToggled] = useState(true); // Track USD/SOL toggle state
@@ -28,9 +31,22 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
 
   // console.log("TVChartContainer called.");
   useEffect(() => {
+    clearMarks();
     const tvWidget = new widget({
       symbol: tokenSymbol,
       datafeed: Datafeed,
+      custom_formatters: {
+          priceFormatterFactory: (symbolInfo, minTick) => {
+              return {
+                format: (price, signPositive) => {
+                  if (typeof price !== 'number' || isNaN(price)) return '';
+                  return price > 0.99
+                    ? humanReadableFormatWithNoDollar(price, 2)
+                    : formatDecimal(price);
+                },
+              };
+          },
+      },
       tokenAddress: tokenaddress,
       interval: "1S",
       container: chartContainerRef.current,
@@ -40,7 +56,8 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
         "use_localstorage_for_settings",
         "time_scale_controls",
       ],
-      enabled_features: ["study_templates", "seconds_resolution"],
+      toolbar_bg: "#08080E",
+      enabled_features: ["study_templates", "seconds_resolution", "show_marks_on_series", "cropped_tick_marks", "end_of_period_timescale_marks", "two_character_bar_marks_labels"],
       charts_storage_url: "https://saveload.tradingview.com",
       charts_storage_api_version: "1.1",
       client_id: "tradingview.com",

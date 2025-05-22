@@ -70,4 +70,30 @@ function decimalConvert(price) {
   }
 }
 
-export { humanReadableFormat, humanReadableFormatNoDollar, decimalConvert, humanReadableFormatWithNoDollar };
+function formatDecimal(num) {
+    if (num >= 1 || num <= 0) {
+        return num.toString(); // Return as-is for values outside (0, 1)
+    }
+
+    const decimalStr = num.toFixed(20).split('.')[1];
+    const leadingZerosMatch = decimalStr.match(/^0*/);
+    const leadingZeros = leadingZerosMatch[0].length;
+    const trimmed = decimalStr.slice(leadingZeros);
+
+    const subscripts = {
+        '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄',
+        '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉'
+    };
+
+    function toSubscript(n) {
+        return String(n).split('').map(d => subscripts[d] || d).join('');
+    }
+
+    if (leadingZeros > 4) {
+        return `0${toSubscript(leadingZeros)}${trimmed.slice(0, 3)}`;
+    } else {
+        return `0.${decimalStr.slice(0, 3)}`;
+    }
+}
+
+export { humanReadableFormat, humanReadableFormatNoDollar, decimalConvert, humanReadableFormatWithNoDollar, formatDecimal };

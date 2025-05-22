@@ -10,6 +10,8 @@ const configurationData = {
     ],
     // The `symbols_types` arguments are used for the `searchSymbols` method if a user selects this symbol type
     symbols_types: [{ name: "crypto", value: "crypto" }],
+    supports_marks: true,
+    supports_timescale_marks: true,
 };
 
 export const onReady = (callback) => {
