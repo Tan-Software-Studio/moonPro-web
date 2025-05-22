@@ -40,7 +40,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
               return {
                 format: (price, signPositive) => {
                   if (typeof price !== 'number' || isNaN(price)) return '';
-                  return price > 0.99 || price < 0
+                  return price >= 1 || price <= -1
                     ? humanReadableFormatWithNoDollar(price, 2)
                     : formatDecimal(price);
                 },
