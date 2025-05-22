@@ -45,6 +45,21 @@ const Tradingview = () => {
   // native balance
   const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance)
 
+  const [smallScreenTab, setIsSmallScreenTab] = useState("Trades");
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth < 768);
+    };
+
+    checkScreenSize();
+
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
   useEffect(() => {
     dispatch(setselectToken("Solana"));
     dispatch(setselectTokenLogo(solana));
@@ -381,89 +396,120 @@ const Tradingview = () => {
       className={`lg:flex relative overflow-y-auto h-[86vh] md:h-[91vh] lg:h-[100vh] ${isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5 ml-2 mr-2"
         }`}
     >
+      {isSmallScreen && (
+
+        <div className="md:hidden flex  items-center justify-start bg-[#1F1F1F] rounded-md mt-2 text-white   text-[12px] font-semibold px-2 py-1">
+
+          {["Trades", "Transaction"].map((item, index) => (
+            <div
+              onClick={() => setIsSmallScreenTab(item)}
+              className={`${smallScreenTab === item
+                ? "bg-[#11265B] border-2 border-[#0E43BD]"
+                : "border-[1px] border-[#1F1F1F]"
+                } cursor-pointer  min-w-fit w-20 text-sm font-light flex justify-center tracking-wider px-2 py-1 rounded-md`}
+              key={index}>
+              {item}
+            </div>
+          ))}
+        </div>
+      )}
       {/* left side */}
       <div className="lg:!h-[91vh] mb-2 lg:w-[80%] grid place-items-center text-[#8d93b752] overflow-y-auto w-full">
         {/* original live chart */}
-        <div ref={containerRef} className="h-screen w-full overflow-y-auto">
-          <div ref={tvChartRef}>
-            <TokenDetails
-              tokenSymbol={tokenSymbol}
-              tokenaddress={tokenaddress}
-              copied={copied}
-              handleCopy={handleCopy}
-              TokenDetailsNumberData={TokenDetailsNumberData}
-              chartTokenData={chartTokenData}
-              walletAddress={solWalletAddress}
-            />
-          </div>
+        <div ref={containerRef} className="md:h-screen h-fit w-full overflow-y-auto">
+          {(!isSmallScreen || smallScreenTab === "Trades") && (
+            <>
+              <div ref={tvChartRef}>
 
-          <div className="h-[600px] w-full">
-            <TVChartContainer
-              tokenSymbol={tokenSymbol}
-              tokenaddress={tokenaddress}
-            />
-          </div>
-          <div className="overflow-y-auto border-t border-t-[#4D4D4D]">
-            <Table
-              tokenCA={tokenaddress}
-              address={solWalletAddress}
-              scrollPosition={scrollPosition}
-              tvChartRef={tvChartRef}
-              solWalletAddress={solWalletAddress}
-            />
-          </div>
+                <TokenDetails
+                  tokenSymbol={tokenSymbol}
+                  tokenaddress={tokenaddress}
+                  copied={copied}
+                  handleCopy={handleCopy}
+                  TokenDetailsNumberData={TokenDetailsNumberData}
+                  chartTokenData={chartTokenData}
+                  walletAddress={solWalletAddress}
+                />
+              </div>
+
+              <div className="h-[600px] w-full">
+                <TVChartContainer
+                  tokenSymbol={tokenSymbol}
+                  tokenaddress={tokenaddress}
+                />
+              </div>
+            </>
+          )
+          }
+          {(!isSmallScreen || smallScreenTab === "Transaction") && (
+            <div className="overflow-y-auto border-t border-t-[#4D4D4D]">
+              <Table
+                tokenCA={tokenaddress}
+                address={solWalletAddress}
+                scrollPosition={scrollPosition}
+                tvChartRef={tvChartRef}
+                solWalletAddress={solWalletAddress}
+              />
+            </div>
+          )}
         </div>
       </div>
 
       {/* right side */}
-      <div
-        ref={scrollableDivRef4}
-        className="lg:h-[91.5vh] overflow-y-auto w-full lg:w-[25%] border-b border-b-[#404040] md:border-l md:border-l-[#404040] space-y-2 md:space-y-0"
-      >
-        <div className="p-1 w-full border border-[#4D4D4D] md:border-t-0 md:border-l-0 md:border-r-0 md:border-b-0">
-          <TradingStats
-            tragindViewPage={tragindViewPage}
-            data={tradeData}
-            timeframes={timeframesTrade}
-          />
-        </div>
+      {(!isSmallScreen || smallScreenTab === "Trades") && (
 
-        <div className="p-1 w-full border border-[#4D4D4D] md:border-l-0 md:border-r-0 md:border-b-0">
-          <TradingPopup
-            tragindViewPage={tragindViewPage}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            token={tokenaddress}
-            walletAddress={solWalletAddress}
-            setTokenBalance={setTokenBalance}
-            tokenBalance={tokenBalance}
-            tokenName={tokenSymbol}
-            nativeTokenbalance={nativeTokenbalance}
-            decimal={chartTokenData?.decimal}
-            progranAddress={chartTokenData?.programAddress}
-            bondingProgress={chartTokenData?.bondingCurveProgress || 0}
-            price={latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD}
-            dispatch={dispatch}
-          />
-        </div>
 
-        <div className="w-full border border-[#4D4D4D] md:border-l-0 md:border-r-0 md:border-b-0">
-          <TokenInfo
-            tragindViewPage={tragindViewPage?.right?.tokeninfo}
-            tokenInfo={tokenInfo}
-            dataLoaderForChart={dataLoaderForChart}
-          />
-        </div>
+        <div
+          ref={scrollableDivRef4}
+          className="lg:h-[91.5vh] overflow-y-auto w-full lg:w-[25%] border-b border-b-[#404040] md:border-l md:border-l-[#404040] space-y-2 md:space-y-0"
+        >
+          <div className="flex sm:flex-col flex-col-reverse gap-2">
+            <div className="p-1 w-full border border-[#4D4D4D] md:border-l-0 md:border-r-0 md:border-t-0">
+              <TradingStats
+                tragindViewPage={tragindViewPage}
+                data={tradeData}
+                timeframes={timeframesTrade}
+              />
+            </div>
 
-        <div className="w-full border border-[#4D4D4D] md:border-l-0 md:border-r-0">
-          <DataSecurity
-            tragindViewPage={tragindViewPage?.right?.datasecurity}
-            activeTab={activeTab}
-            dataAndSecurity={dataAndSecurity}
-            dataLoaderForChart={dataLoaderForChart}
-          />
+            <div className="p-1 w-full border border-[#4D4D4D] md:border-t-0 md:border-l-0 md:border-r-0 md:border-b-0">
+              <TradingPopup
+                tragindViewPage={tragindViewPage}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                token={tokenaddress}
+                walletAddress={solWalletAddress}
+                setTokenBalance={setTokenBalance}
+                tokenBalance={tokenBalance}
+                tokenName={tokenSymbol}
+                nativeTokenbalance={nativeTokenbalance}
+                decimal={chartTokenData?.decimal}
+                progranAddress={chartTokenData?.programAddress}
+                bondingProgress={chartTokenData?.bondingCurveProgress || 0}
+                price={latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD}
+                dispatch={dispatch}
+              />
+            </div>
+          </div>
+
+          <div className="w-full border border-[#4D4D4D] md:border-l-0 md:border-r-0 md:border-b-0">
+            <TokenInfo
+              tragindViewPage={tragindViewPage?.right?.tokeninfo}
+              tokenInfo={tokenInfo}
+              dataLoaderForChart={dataLoaderForChart}
+            />
+          </div>
+
+          <div className="w-full border border-[#4D4D4D] md:border-l-0 md:border-r-0">
+            <DataSecurity
+              tragindViewPage={tragindViewPage?.right?.datasecurity}
+              activeTab={activeTab}
+              dataAndSecurity={dataAndSecurity}
+              dataLoaderForChart={dataLoaderForChart}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

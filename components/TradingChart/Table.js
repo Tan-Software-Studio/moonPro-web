@@ -756,7 +756,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
               </div>
             ) : (
               <>
-                <div className="flex w-full flex-col items-center justify-center lg:h-[20vh] h-[25vh] rounded-lg">
+                <div className="flex w-full flex-col items-center justify-center lg:h-[20vh] h-[80vh] rounded-lg">
                   <div className="flex flex-col items-center justify-center">
                     <div
                       className={`text-4xl ${loader ? "animate-bounce" : ""}`}

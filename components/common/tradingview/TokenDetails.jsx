@@ -114,7 +114,7 @@ const TokenDetails = ({
   }, []);
   return (
     <div className="bg-transparent border-b-[1px] border-b-[#26262e] w-full">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center ">
         {/* Token Details */}
         <div className="sm:pl-[10px] p-3 flex items-center sm:gap-4 gap-1">
           {tokenImage ? (
@@ -130,10 +130,10 @@ const TokenDetails = ({
           )}
           <div className="flex flex-col">
             <div className="flex items-center sm:gap-2 gap-[8px]">
-              <div className="text-white font-[700] text-2xl sm:text-[28px] font-spaceGrotesk">
+              <div className="text-white font-[700] text-lg sm:text-[28px] font-spaceGrotesk">
                 {tokenSymbol}
               </div>
-              <div className="text-[#A8A8A8] text-sm md:[14px]">
+              <div className="text-[#A8A8A8] text-xs md:text-[14px]">
                 {tokenaddress && tokenaddress.length >= 10
                   ? `${tokenaddress.slice(0, 5)}...${tokenaddress.slice(-3)}`
                   : tokenaddress}
@@ -162,7 +162,7 @@ const TokenDetails = ({
               </div>
               </Link>
             </div>
-            <div className="flex gap-3 mt-2">
+            <div className="flex gap-3">
               {[Telegram, linkedin, NewX].map((img, index) => (
                 <Image
                   key={index}
@@ -170,6 +170,7 @@ const TokenDetails = ({
                   alt={`icon-${index}`}
                   width={20}
                   height={20}
+                  className="sm:w-[20px] sm:h-[20px] w-[17px] h-[17px] cursor-pointer"
                 />
               ))}
             </div>
