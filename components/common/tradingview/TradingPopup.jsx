@@ -425,7 +425,7 @@ const TradingPopup = ({
           onClick={() => sellHandler()}
           className={`bg-[#ED1B24] hover:bg-[#ff323d] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[40px] ease-in-out duration-200  rounded-md`}
         >
-          {`${tragindViewPage?.right?.buysell?.btnsell} ${recQty} SOL`}
+          {`${tragindViewPage?.right?.buysell?.btnsell} receive(${recQty} SOL)`}
         </button>
       )}
     </div>
