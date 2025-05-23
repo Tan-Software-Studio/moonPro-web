@@ -113,25 +113,6 @@ const TradingPopup = ({
     } else {
       toast.error("Please login.");
     }
-    // toast(
-    //   (t) => (
-    //     <div className="flex items-center gap-5">
-    //       <div class="loaderPopup"></div>
-    //       <div className="text-white text-sm">Attempting transaction</div>
-    //     </div>
-    //   ),
-    //   {
-    //     duration: Infinity,
-    //     position: "top-center",
-    //     style: {
-    //       border: "1px solid #4D4D4D",
-    //       color: "#FFFFFF",
-    //       fontSize: "14px",
-    //       letterSpacing: "1px",
-    //       backgroundColor: "#1F1F1F",
-    //     },
-    //   }
-    // );
   }
   async function sellHandler() {
     if (walletAddress) {
@@ -147,7 +128,8 @@ const TradingPopup = ({
           setLoaderSwap,
           setTokenBalance,
           bondingProgress >= 100 ? "djasodnasuodhasoduashd" : progranAddress,
-          dispatch
+          dispatch,
+          recQty
         );
       } else {
         toast.error("Insufficient funds.");
@@ -155,8 +137,6 @@ const TradingPopup = ({
     } else {
       toast.error("Please login.");
     }
-
-    // toast.dismiss();
   }
   useEffect(() => {
     if (activeTab == "sell") {
