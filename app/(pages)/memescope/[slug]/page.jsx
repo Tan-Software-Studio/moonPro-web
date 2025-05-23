@@ -7,7 +7,6 @@ import MscopePumpTable from "@/components/common/memsscope/MscopePumpTable";
 import { usePathname } from "next/navigation";
 import FilterMemescope from "@/components/common/filter/FilterMemescope";
 import FilterButton from "@/components/common/filter/FilterButton";
-import NewPairSOLData from "@/websocket/NewPairSOLData";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import { useTranslation } from "react-i18next";
 import { aboutGraduateFilterData, applyAllAboutGraduatDataFilters, checkIfAboutGraduatDataFiltersExist, initialAboutGraduatDataFilterValues, loadAboutGraduatDataFiltersFromStorage, applyAboutGraduatDataFilters, resetAboutGraduatDataFilters } from '../../../../components/memescope/AboutGraduateDataFilter'

@@ -41,31 +41,31 @@ const ProfileTable = ({ title }) => {
     {
       id: 1,
       title: ">500%",
-      amount: "1",
+      amount: "---",
       color: "bg-[#24C366]",
     },
     {
       id: 2,
       title: "100% - 500%",
-      amount: "3",
+      amount: "---",
       color: "bg-[#1A8045]",
     },
     {
       id: 3,
       title: "0% - 200%",
-      amount: "7",
+      amount: "---",
       color: "bg-[#124D2B]",
     },
     {
       id: 4,
-      title: "0 - -50%",
-      amount: "2",
+      title: "0 -50%",
+      amount: "---",
       color: "bg-[#9F141D]",
     },
     {
       id: 5,
       title: "←50%",
-      amount: "12",
+      amount: "---",
       color: "bg-[#ED1B24]",
     },
   ];
@@ -83,26 +83,26 @@ const ProfileTable = ({ title }) => {
               <div className="text-[#A8A8A8] text-xs md:text-sm uppercase">
                {newProfile?.PNL} 
               </div>
-              <div className="text-base md:text-lg">$293.2K</div>
+              <div className="text-base md:text-lg">---</div>
             </div>
             <div>
               <div className="text-[#A8A8A8] text-xs md:text-sm uppercase">
               {newProfile?.Winrate} 
               </div>
-              <div className="text-base md:text-lg">45.59%</div>
+              <div className="text-base md:text-lg">---</div>
             </div>
           </div>
           <div>
             <div className="text-[#A8A8A8] text-xs md:text-sm uppercase">
            USD
             </div>
-            <div className="text-base md:text-lg">$20.2K</div>
+            <div className="text-base md:text-lg">---</div>
           </div>
           <div>
             <div className="text-[#A8A8A8] text-xs md:text-sm uppercase">
               {newProfile?.LIQUIDITY}
             </div>
-            <div className="text-base md:text-lg">$10.94K</div>
+            <div className="text-base md:text-lg">---</div>
           </div>
         </div>
       )}

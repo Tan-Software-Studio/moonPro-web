@@ -97,14 +97,14 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase }) => {
                   </div>
                 </div>
                 <div className="flex items-center sm:flex-nowrap flex-wrap lg:gap-10 gap-3">
-                  <div>
+                  {/* <div>
                     <div className="text-[#A8A8A8] text-sm uppercase">
                       {accountPopupLng?.security?.dayCreated}
                     </div>
                     <div className="text-white font-semibold py-1.5 text-base">
                       23/02/2025
                     </div>
-                  </div>
+                  </div> */}
                   {/* <div>
                   <div className="text-[#A8A8A8] text-sm uppercase">
                     {accountPopupLng?.security?.lastLogin}

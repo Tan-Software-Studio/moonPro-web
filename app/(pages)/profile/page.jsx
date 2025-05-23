@@ -50,9 +50,6 @@ const Profile = () => {
                 className="w-[60px] h-[60px] md:w-[80px] md:h-[80px] rounded-md"
               />
               <div>
-                <div className="font-semibold text-base md:text-lg">
-                  This is a name
-                </div>
                 <div className="flex items-center gap-2 text-[#A8A8A8] text-xs md:text-sm break-all">
                   <span className="hidden sm:block">{solWalletAddress}</span>
                   <span className="block sm:hidden">{`${solWalletAddress
@@ -103,7 +100,7 @@ const Profile = () => {
         {/* Table Section */}
         <div>
           <div className="px-4 lg:px-8 py-3 flex items-center gap-3 md:gap-5 bg-[#1F1F1F] w-full overflow-x-auto">
-            {["Activity", "Recent PnL"].map((item, index) => (
+            {["Activity"].map((item, index) => (
               //  "Holdings"
               <div
                 onClick={() => setTableTab(item)}

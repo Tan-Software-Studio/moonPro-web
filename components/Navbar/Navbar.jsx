@@ -280,7 +280,7 @@ const Navbar = () => {
                           <MdLockOutline className="text-xl" />
                           {navbar?.profile?.account}
                         </div>
-                        <div
+                        {/* <div
                           onClick={() => {
                             setIsProfileOpen(false);
                             setIsWatchlistPopup(true);
@@ -289,7 +289,7 @@ const Navbar = () => {
                         >
                           <FaRegStar className="text-xl" />
                           {navbar?.profile?.watchList}
-                        </div>
+                        </div> */}
                         <div
                           onClick={() => {
                             setIsProfileOpen(false);
