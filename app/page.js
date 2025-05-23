@@ -1,21 +1,10 @@
 "use client";
-// import NewPairs from "./(pages)/newpairs/[slug]/page";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Trending from "./(pages)/trending/page";
-
 export default function Home() {
   const router = useRouter();
   useEffect(() => {
     router.replace(`/trending`);
   }, []);
-  // useEffect(() => {
-  //   router.push(`/newpairs/${selectToken.toLowerCase()}`);
-  // }, []);
-  return (
-    <div>
-      {/* <NewPairs /> */}
-      {/* <Trending /> */}
-    </div>
-  );
+  return <></>;
 }

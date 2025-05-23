@@ -49,7 +49,11 @@ const TradingPopup = ({
 
     const usdValue = amountToken1 * priceToken1;
     const amountToken2 = usdValue / priceToken2;
-    setRrcQty(amountToken2);
+    if (amountToken2 > 1) {
+      setRrcQty(amountToken2.toFixed(2));
+    } else {
+      setRrcQty(amountToken2.toFixed(6));
+    }
   }
 
   const tokenImage = useSelector(
@@ -109,25 +113,6 @@ const TradingPopup = ({
     } else {
       toast.error("Please login.");
     }
-    // toast(
-    //   (t) => (
-    //     <div className="flex items-center gap-5">
-    //       <div class="loaderPopup"></div>
-    //       <div className="text-white text-sm">Attempting transaction</div>
-    //     </div>
-    //   ),
-    //   {
-    //     duration: Infinity,
-    //     position: "top-center",
-    //     style: {
-    //       border: "1px solid #4D4D4D",
-    //       color: "#FFFFFF",
-    //       fontSize: "14px",
-    //       letterSpacing: "1px",
-    //       backgroundColor: "#1F1F1F",
-    //     },
-    //   }
-    // );
   }
   async function sellHandler() {
     if (walletAddress) {
@@ -143,7 +128,8 @@ const TradingPopup = ({
           setLoaderSwap,
           setTokenBalance,
           bondingProgress >= 100 ? "djasodnasuodhasoduashd" : progranAddress,
-          dispatch
+          dispatch,
+          recQty
         );
       } else {
         toast.error("Insufficient funds.");
@@ -151,8 +137,6 @@ const TradingPopup = ({
     } else {
       toast.error("Please login.");
     }
-
-    // toast.dismiss();
   }
   useEffect(() => {
     if (activeTab == "sell") {
@@ -427,9 +411,7 @@ const TradingPopup = ({
             onClick={() => buyHandler()}
             className={`bg-[#2A7FF0] hover:bg-[#3f8cf1] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[40px] ease-in-out duration-200  rounded-md`}
           >
-            {`${tragindViewPage?.right?.buysell?.btnbuy} ${recQty?.toFixed(
-              5
-            )} ${tokenName}`}
+            {`${tragindViewPage?.right?.buysell?.btnbuy} ${recQty} ${tokenName}`}
           </button>
         )
       ) : loaderSwap ? (
@@ -443,9 +425,7 @@ const TradingPopup = ({
           onClick={() => sellHandler()}
           className={`bg-[#ED1B24] hover:bg-[#ff323d] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[40px] ease-in-out duration-200  rounded-md`}
         >
-          {`${tragindViewPage?.right?.buysell?.btnsell} ${recQty?.toFixed(
-            5
-          )} SOL`}
+          {`${tragindViewPage?.right?.buysell?.btnsell} (Receive ${recQty} SOL)`}
         </button>
       )}
     </div>

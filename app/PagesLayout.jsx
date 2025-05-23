@@ -46,7 +46,7 @@ const PagesLayout = ({ childrens }) => {
             (isSidebarOpen && isLargeScreen) ||
             (isSidebarOpen && isSmallScreenData)
               ? "md:pl-48  "
-              : "md:pl-[57px]"
+              : "md:pl-[64px]"
           } relative`}
         >
           {/* <div

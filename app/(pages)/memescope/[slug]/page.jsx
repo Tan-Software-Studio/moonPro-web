@@ -1,7 +1,7 @@
 "use client";
 import { bitcoinIcon, buyIcon, memescopeImg } from "@/app/Images";
 import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import MscopePumpTable from "@/components/common/memsscope/MscopePumpTable";
 import { usePathname } from "next/navigation";
@@ -10,12 +10,137 @@ import FilterButton from "@/components/common/filter/FilterButton";
 import NewPairSOLData from "@/websocket/NewPairSOLData";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import { useTranslation } from "react-i18next";
+import { aboutGraduateFilterData, applyAllAboutGraduatDataFilters, checkIfAboutGraduatDataFiltersExist, initialAboutGraduatDataFilterValues, loadAboutGraduatDataFiltersFromStorage, applyAboutGraduatDataFilters, resetAboutGraduatDataFilters } from '../../../../components/memescope/AboutGraduateDataFilter'
+import { graduatedFilterData, applyGraduatedDataFilters, initialGraduatedDataFilterValues, resetGratuatedDataFilters, loadGraduatedDataFiltersFromStorage, checkIfGraduatedDataFiltersExist, applyAllGraduatedDataFilters } from "@/components/memescope/GraduatedDataFilter";
+import { newCreationFilterData } from "@/components/memescope/NewCreationDataFilter";
 
 const Memescope = () => {
   const { t } = useTranslation();
   const memescopePage = t("memescope");
   const [selectedScope, setSelectedScope] = useState(1);
-  const [filterValues, setFilterValues] = useState({})
+  const [newDataFilterValues, setNewDataFilterValues] = useState({});
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const pathname = usePathname();
+
+
+  // == about graduate states == \\
+  const [aboutGraduateDataFilterValues, setAboutGraduateDataFilterValues] = useState(initialAboutGraduatDataFilterValues);  // input values
+  const [aboutGraduateDataFiltersApplied, setaboutGraduateDataFiltersApplied] = useState(false); // filter applied or not
+  const [filteredAboutGraduatData, setFilteredAboutGraduatData] = useState([]); // filtered data
+
+  // == graduated states == \\
+  const [graduatedDataFilterValues, setGraduatedDataFilterValues] = useState(initialGraduatedDataFilterValues); // input values
+  const [graduatedDataFiltersApplied, setGraduatedDataFiltersApplied] = useState(false); // filter applied or not
+  const [filteredGraduatedData, setFilteredGraduatedData] = useState([]); // filtered data
+
+
+  // =======*=*= All about graduate data filter ==========//
+  const Graduatedata = useSelector(
+    (state) => state?.allMemescopeData?.MscopeGraduateData
+  );
+  // input of about graduate data
+  const aboutGraduateFilterDataJson = aboutGraduateFilterData(memescopePage)
+
+  // onApply function 
+  function onApplyAboutGraduatData() {
+    applyAboutGraduatDataFilters(aboutGraduateDataFilterValues, Graduatedata, setFilteredAboutGraduatData, setaboutGraduateDataFiltersApplied)
+  }
+
+  // onReset function  
+  function onResetAboutGraduatData() {
+    resetAboutGraduatDataFilters(setAboutGraduateDataFilterValues, setFilteredAboutGraduatData, setaboutGraduateDataFiltersApplied)
+
+  }
+
+  // about graduate data apply in localstotahr
+  useEffect(() => {
+    const savedFilters = loadAboutGraduatDataFiltersFromStorage();
+    if (savedFilters) {
+      setAboutGraduateDataFilterValues(savedFilters);
+    }
+  }, []);
+
+  // Apply saved filters when data avilable 
+  useEffect(() => {
+    const savedFilters = loadAboutGraduatDataFiltersFromStorage();
+
+    if (savedFilters && Graduatedata.length > 0) {
+      const hasFilters = checkIfAboutGraduatDataFiltersExist(savedFilters);
+
+      if (hasFilters) {
+        const filteredResult = applyAllAboutGraduatDataFilters(Graduatedata, savedFilters);
+        setFilteredAboutGraduatData(filteredResult);
+        setaboutGraduateDataFiltersApplied(true);
+      }
+    }
+  }, [Graduatedata]);
+
+  // Check if filters are or not
+  const aboutDataToShow = aboutGraduateDataFiltersApplied && filteredAboutGraduatData.length >= 0
+    ? filteredAboutGraduatData
+    : Graduatedata;
+
+
+
+
+  // =======*=*= All graduated data filter ==========//
+  const Graduateddata = useSelector(
+    (state) => state?.allMemescopeData?.MscopeGraduatedData
+  );
+  const GraduateddataSortedData = [...Graduateddata].sort((a, b) => b.created_time - a.created_time);
+
+  const graduatedFilterDataJson = graduatedFilterData(memescopePage);
+
+  function onApplyGraduatedData() {
+    applyGraduatedDataFilters(
+      graduatedDataFilterValues,
+      GraduateddataSortedData,
+      setFilteredGraduatedData,
+      setGraduatedDataFiltersApplied
+    )
+  }
+
+  function onReserGraduatedData() {
+    resetGratuatedDataFilters(
+      setGraduatedDataFiltersApplied,
+      setGraduatedDataFilterValues,
+      setFilteredGraduatedData
+    )
+  }
+
+  useEffect(() => {
+    const savedFilters = loadGraduatedDataFiltersFromStorage();
+    if (savedFilters) {
+      setGraduatedDataFilterValues(savedFilters);
+    }
+  }, []);
+
+  useEffect(() => {
+    const savedFilters = loadGraduatedDataFiltersFromStorage();
+
+    if (savedFilters && GraduateddataSortedData.length > 0) {
+      const hasFilters = checkIfGraduatedDataFiltersExist(savedFilters);
+
+      if (hasFilters) {
+        const filteredResult = applyAllGraduatedDataFilters(GraduateddataSortedData, savedFilters);
+        setFilteredAboutGraduatData(filteredResult);
+        setGraduatedDataFiltersApplied(true);
+      }
+    }
+  }, [GraduateddataSortedData]);
+
+  const graDataToShow = graduatedDataFiltersApplied && filteredGraduatedData.length >= 0
+    ? filteredGraduatedData
+    : GraduateddataSortedData;
+
+
+  // == new creation data filter == \\
+  const NewData = useSelector((state) => state?.allMemescopeData?.newLaunch);
+  const NewCreationFilterDataJson = newCreationFilterData(memescopePage);
+
+  const handleSidebarToggle = (id) => {
+    setOpenDropdown((prev) => (prev === id ? null : id));
+  };
 
   function onApply() {
     console.log("Apply filters");
@@ -24,164 +149,7 @@ const Memescope = () => {
     console.log("remove filters");
   }
 
-  const Graduatedata = useSelector(
-    (state) => state?.allMemescopeData?.MscopeGraduateData
-  );
-  const Graduateddata = useSelector(
-    (state) => state?.allMemescopeData?.MscopeGraduatedData
-  );
-  const NewData = useSelector((state) => state?.allMemescopeData?.newLaunch);
-  const [openDropdown, setOpenDropdown] = useState(null);
 
-  const pathname = usePathname();
-
-  const handleSidebarToggle = (id) => {
-    setOpenDropdown((prev) => (prev === id ? null : id));
-  };
-  const FilterInput = [
-    {
-      id: "1",
-      name: memescopePage?.mainHeader?.filters?.newcreation?.top10holders,
-      type: "checkbox",
-    },
-    {
-      id: "2",
-      name: memescopePage?.mainHeader?.filters?.newcreation?.withatleast1social,
-      type: "checkbox",
-    },
-  ];
-
-  // New Creations data input
-  const FromToFilter = [
-    {
-      id: "3",
-      title: "progress",
-      name: memescopePage?.mainHeader?.filters?.newcreation?.bypumpprogress,
-      firstInputName: "Min",
-      firstInputIcon: "%",
-      secondInputName: "Max",
-      secondInputIcon: "",
-      type: "number",
-    },
-    {
-      id: "4",
-      title: "Holders",
-      name: memescopePage?.mainHeader?.filters?.newcreation?.byholderscount,
-      firstInputName: "Min",
-      firstInputIcon: "%",
-      secondInputName: "Max",
-      secondInputIcon: "",
-      type: "number",
-    },
-    {
-      id: "5",
-      title: "holding",
-      name: memescopePage?.mainHeader?.filters?.newcreation?.bydevholding,
-      firstInputName: "Min",
-      firstInputIcon: "",
-      secondInputName: "Max",
-      secondInputIcon: "",
-      type: "number",
-    },
-    {
-      id: "6",
-      title: "Snipers",
-      name: memescopePage?.mainHeader?.filters?.newcreation?.bysnipers,
-      firstInputName: "Min",
-      firstInputIcon: "$",
-      secondInputName: "Max",
-      secondInputIcon: "$",
-      type: "number",
-    },
-    {
-      id: "7",
-      title: "Age",
-      name: memescopePage?.mainHeader?.filters?.newcreation?.byage,
-      firstInputName: "Min",
-      firstInputIcon: "$",
-      secondInputName: "Max",
-      secondInputIcon: "$",
-      type: "number",
-    },
-    {
-      id: "8",
-      title: "Liquidity",
-      name: memescopePage?.mainHeader?.filters?.newcreation?.bycurrentliquidity,
-      firstInputName: "Min",
-      firstInputIcon: "$",
-      secondInputName: "Max",
-      secondInputIcon: "$",
-      type: "number",
-    },
-    {
-      id: "9",
-      title: "Volume",
-      name: memescopePage?.mainHeader?.filters?.newcreation?.byvolume,
-      firstInputName: "Min",
-      firstInputIcon: "",
-      secondInputName: "Max",
-      secondInputIcon: "",
-      type: "number",
-    },
-    {
-      id: "10",
-      title: "MKT",
-      name: memescopePage?.mainHeader?.filters?.newcreation?.bymCap,
-      firstInputName: "Min",
-      firstInputIcon: "",
-      secondInputName: "Max",
-      secondInputIcon: "",
-      type: "number",
-    },
-    {
-      id: "11",
-      title: "TXNS",
-      name: memescopePage?.mainHeader?.filters?.newcreation?.bytx,
-      firstInputName: "Min",
-      firstInputIcon: "",
-      secondInputName: "Max",
-      secondInputIcon: "",
-      type: "number",
-    },
-    {
-      id: "12",
-      title: "Buys",
-      name: memescopePage?.mainHeader?.filters?.newcreation?.bybuys,
-      firstInputName: "Min",
-      firstInputIcon: "",
-      secondInputName: "Max",
-      secondInputIcon: "",
-      type: "number",
-    },
-    {
-      id: "13",
-      title: "Sells",
-      name: memescopePage?.mainHeader?.filters?.newcreation?.bysells,
-      firstInputName: "Min",
-      firstInputIcon: "",
-      secondInputName: "Max",
-      secondInputIcon: "",
-      type: "number",
-    },
-  ];
-  // New Creations data
-  const NewCreationFilterData = {
-    Title: memescopePage?.mainHeader?.filters?.newcreation?.newcreationsfilter,
-    FilterInput,
-    FromToFilter,
-  };
-  // About to Graduate data
-  const AboutGraduate = {
-    Title: memescopePage?.mainHeader?.filters?.abouttograduate,
-    FilterInput,
-    FromToFilter,
-  };
-  // Graduated data
-  const Graduate = {
-    Title: memescopePage?.mainHeader?.filters?.graduated,
-    FilterInput,
-    FromToFilter,
-  };
   ///------------------------------------------
   const HeaderData = {
     newPairsIcon: {
@@ -211,7 +179,7 @@ const Memescope = () => {
     (state) => state?.AllthemeColorData?.borderColor
   );
 
-  const { closeWebSocketConnection } = NewPairSOLData();
+
 
   return (
     <>
@@ -328,7 +296,7 @@ const Memescope = () => {
               className={`${selectedScope === 2 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={Graduatedata} />
+              <MscopePumpTable MemscopeData={aboutDataToShow} />
             </div>
           </div>
 
@@ -362,7 +330,7 @@ const Memescope = () => {
               className={`${selectedScope === 3 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={Graduateddata} />
+              <MscopePumpTable MemscopeData={graDataToShow} />
             </div>
           </div>
 
@@ -371,29 +339,29 @@ const Memescope = () => {
           <FilterMemescope
             isOpen={openDropdown === 0}
             setIsOpen={() => setOpenDropdown(null)}
-            data={NewCreationFilterData}
+            data={NewCreationFilterDataJson}
             onApply={onApply}
             onReset={onReset}
-            filterValues={filterValues}
-            setFilterValues={setFilterValues}
+            filterValues={newDataFilterValues}
+            setFilterValues={setNewDataFilterValues}
           />
           <FilterMemescope
             isOpen={openDropdown === 1}
             setIsOpen={() => setOpenDropdown(null)}
-            data={AboutGraduate}
-            onApply={onApply}
-            onReset={onReset}
-            filterValues={filterValues}
-            setFilterValues={setFilterValues}
+            data={aboutGraduateFilterDataJson}
+            onApply={onApplyAboutGraduatData}
+            onReset={onResetAboutGraduatData}
+            filterValues={aboutGraduateDataFilterValues}
+            setFilterValues={setAboutGraduateDataFilterValues}
           />
           <FilterMemescope
             isOpen={openDropdown === 2}
             setIsOpen={() => setOpenDropdown(null)}
-            data={Graduate}
-            onApply={onApply}
-            onReset={onReset}
-            filterValues={filterValues}
-            setFilterValues={setFilterValues}
+            data={graduatedFilterDataJson}
+            onApply={onApplyGraduatedData}
+            onReset={onReserGraduatedData}
+            filterValues={graduatedDataFilterValues}
+            setFilterValues={setGraduatedDataFilterValues}
           />
 
         </div>
