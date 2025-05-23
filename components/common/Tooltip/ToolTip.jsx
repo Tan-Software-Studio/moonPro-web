@@ -82,7 +82,7 @@ export default function Tooltip({ body, children }) {
       ref: triggerRef,
       onMouseEnter: handleMouseEnter,
       onMouseLeave: handleMouseLeave,
-      className: `${children.props.className ?? ''} cursor-help`,
+      className: `${children.props.className ?? ''}`,
     })
   : children; // fallback — just render it raw if it's not a React element
 
@@ -101,7 +101,7 @@ export default function Tooltip({ body, children }) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed z-[9999999] max-w-[320px] flex flex-col items-center cursor-help"
+                className="fixed z-[9999999] max-w-[320px] flex flex-col items-center"
                 style={{
                   top: position === 'top' ? coords.top - 2 : coords.top + 2,
                   left: coords.left,
@@ -118,7 +118,7 @@ export default function Tooltip({ body, children }) {
                   />
                 )}
 
-                <div className="bg-[#1F1F1F] text-[10px] font-bold leading-3 text-[#FFFFFF] rounded-[4px] p-2 flex flex-col justify-start gap-1 onest shadow-2xl">
+                <div className="bg-[#1F1F1F] text-[12px] font-bold leading-3 text-[#FFFFFF] rounded-[4px] p-2 flex flex-col justify-start gap-1 onest shadow-2xl">
                   <p className="font-normal">{body}</p>
                 </div>
 

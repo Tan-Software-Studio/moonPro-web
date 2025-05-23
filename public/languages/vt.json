@@ -56,7 +56,7 @@
     },
     "tableheaders": {
       "pairinfo": "Thông tin cặp",
-      "pairinfotooltip": "Hiển thị thời gian kể từ khi token được tạo.",
+      "pairinfotooltip": "Tên token, tuổi và mạng xã hội.",
       "created": "Tạo lúc",
       "liquidity": "Thanh khoản",
       "liquiditytooltip": "Số tiền có sẵn để giao dịch token. Thanh khoản thấp = rủi ro cao hoặc khó bán.",

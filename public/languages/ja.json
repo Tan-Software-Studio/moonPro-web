@@ -56,7 +56,7 @@
     },
     "tableheaders": {
       "pairinfo": "ペア情報",
-      "pairinfotooltip": "トークン契約が作成されてからの時間を表示します。",
+      "pairinfotooltip": "トークン名、経過時間、ソーシャルリンク。",
       "created": "作成日",
       "liquidity": "流動性",
       "liquiditytooltip": "このトークンを取引するために利用できるお金の量を表示します。流動性が低いと、リスクが高いか、売却が難しいことがあります。",

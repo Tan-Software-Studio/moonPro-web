@@ -56,7 +56,7 @@
     },
     "tableheaders": {
       "pairinfo": "交易对信息",
-      "pairinfotooltip": "显示自代币合约创建以来的时间。",
+      "pairinfotooltip": "代币名称、时间和社交信息。",
       "created": "创建",
       "liquidity": "流动性",
       "liquiditytooltip": "显示交易该代币可用的资金。低流动性可能意味着高风险或难以出售。",

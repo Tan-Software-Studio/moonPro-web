@@ -56,7 +56,7 @@
     },
     "tableheaders": {
       "pairinfo": "페어 정보",
-      "pairinfotooltip": "토큰 계약이 생성된 시간",
+      "pairinfotooltip": "토큰 이름, 나이, 소셜 정보",
       "created": "생성일",
       "liquidity": "유동성",
       "liquiditytooltip": "이 토큰을 거래할 수 있는 금액. 낮은 유동성은 높은 위험 또는 판매가 어려울 수 있음을 의미합니다.",

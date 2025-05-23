@@ -77,7 +77,7 @@ export default function Tooltip({
         ref={iconRef}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="inline-block cursor-help shrink-0"
+        className="inline-block shrink-0"
         style={{ width: iconSize, height: iconSize }}
       >
         <Image
@@ -99,7 +99,7 @@ export default function Tooltip({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed z-[9999999] max-w-[320px] flex flex-col items-center cursor-help"
+                className="fixed z-[9999999] max-w-[320px] flex flex-col items-center"
                 style={{
                   top: position === 'top' ? coords.top - 2 : coords.top + 2,
                   left: coords.left,
@@ -115,7 +115,7 @@ export default function Tooltip({
                   className='rotate-180 shadow-2xl'
                 />
                 }
-                <div className='w-full bg-[#1F1F1F] text-[10px] font-bold leading-3 text-[#FFFFFF] rounded-[4px] p-2 flex flex-col justify-start gap-1 onest shadow-2xl'>
+                <div className='w-full bg-[#1F1F1F] text-[12px] font-bold leading-3 text-[#FFFFFF] rounded-[4px] p-2 flex flex-col justify-start gap-1 onest shadow-2xl'>
                   {header && <h3>{header}</h3>}
                   <p className="font-normal">{body}</p>
                   {ctaText && (
