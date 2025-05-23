@@ -11,7 +11,7 @@ const solTrendingData = createSlice({
       "6h": {},
       "24h": {},
     },
-    loading: false, 
+    loading: false,
   },
 
   reducers: {
@@ -20,10 +20,11 @@ const solTrendingData = createSlice({
     },
     setLoading: (state, action) => {
       state.loading = action.payload;
-    }, 
+    },
   },
 });
 
-export const { setFilterTime, setLoading, setFilterValues } = solTrendingData.actions;
+export const { setFilterTime, setLoading, setFilterValues } =
+  solTrendingData.actions;
 
 export default solTrendingData.reducer;

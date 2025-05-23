@@ -3,6 +3,7 @@ import {
   setMemeScopeGraduateData,
   setMemeScopeGraduatedData,
 } from "@/app/redux/memescopeData/Memescope";
+import { setSolanaLivePrice } from "@/app/redux/states";
 import store from "@/app/redux/store";
 import { updateTrendingData } from "@/app/redux/trending/solTrending.slice";
 import axios from "axios";
@@ -45,6 +46,14 @@ export async function subscribeToWalletTracker() {
     await socket.on("new_trades", async (data) => {
       // console.log("🚀 ~ socket.on ~ data:", data?.length);
       // await store.dispatch(addNewTransactionForWalletTracking(data[0]));
+      const solPrice = await data?.find(
+        (item) =>
+          item?.Trade?.Currency?.MintAddress ==
+          "So11111111111111111111111111111111111111112"
+      );
+      if (solPrice?.Trade?.PriceInUSD) {
+        store.dispatch(setSolanaLivePrice(solPrice?.Trade?.PriceInUSD));
+      }
       const filteredData = await data?.filter((item) =>
         walletsToTrack.includes(item?.Transaction?.Signer?.toLowerCase())
       );
@@ -121,7 +130,7 @@ export async function subscribeToTrendingTokens() {
           break;
       }
     });
-    
+
     // for updated memsoce data
     socket.on("memescoptokens", async (data) => {
       // console.log("🚀 ~ socket.on ~ data:", data?.type)

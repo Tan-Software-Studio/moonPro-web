@@ -37,6 +37,9 @@ const TradingPopup = ({
   const [priorityFee, setPriorityFee] = useState(0.0001);
   const [isMev, setIsMev] = useState(true);
   const [isAutoApprove, setisAutoApprove] = useState(false);
+  const solanaLivePrice = useSelector(
+    (state) => state?.AllStatesData?.solanaLivePrice
+  );
   // function to calculate rec. amount
   function calculateRecAmountSolToAnytoken(
     amountToken1,
@@ -144,15 +147,18 @@ const TradingPopup = ({
     }
   }, [tokenBalance, activeTab]);
   useEffect(() => {
-    if (price) {
-      const solPrice = localStorage.getItem("solPrice");
+    if (price && solanaLivePrice) {
       if (activeTab == "sell") {
-        calculateRecAmountSolToAnytoken(quantity || 0, price, solPrice);
+        calculateRecAmountSolToAnytoken(quantity || 0, price, solanaLivePrice);
       } else {
-        calculateRecAmountSolToAnytoken(quantity || 0.1, solPrice, price);
+        calculateRecAmountSolToAnytoken(
+          quantity || 0.1,
+          solanaLivePrice,
+          price
+        );
       }
     }
-  }, [quantity, activeTab, price]);
+  }, [quantity, activeTab, price, solanaLivePrice]);
   return (
     <div className="bg-[#08080E] flex flex-col h-fit w-full text-white xl:p-4 md:p-3">
       {/* Buy/Sell Toggle */}
