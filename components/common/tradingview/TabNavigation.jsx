@@ -18,6 +18,8 @@ const TabNavigation = ({
   const tabsRef = useRef([]);
   const scrollContainerRef = useRef(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+  const [isExpanded, setIsExpanded] = useState(true);
+
   // Function to handle tab click with centering behavior
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
@@ -67,12 +69,34 @@ const TabNavigation = ({
     }
   };
 
-  // scroll to  top
-  function scrollToTop() {
-    tvChartRef?.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+  useEffect(() => {
+    if (tvChartRef?.current) {
+      const el = tvChartRef.current;
+
+      // Only set if not already set
+      if (!el.style.height) {
+        el.style.height = "600px";
+      }
+    }
+  }, []);
+
+  function swapTvHeight() {
+      if (tvChartRef?.current) {
+      const el = tvChartRef.current;
+
+      // Set smooth transition
+      el.style.transition = "height 0.4s ease";
+
+      // Toggle height based on state
+      if (isExpanded) {
+        el.style.height = "200px";
+      } else {
+        el.style.height = "600px";
+      }
+
+      // Update state
+      setIsExpanded(!isExpanded);
+    }
   }
 
   // Update indicator position when tab changes or when component mounts
@@ -128,14 +152,16 @@ const TabNavigation = ({
       {/* DownToUp Icon */}
       <div
         className="flex items-center justify-center cursor-pointer ml-4 md:ml-6 p-1 md:p-2"
-        onClick={() => scrollToTop()}
+        onClick={() => swapTvHeight()}
       >
         <Image
           src={DownToUp}
           alt="DownToUp"
           width={20}
           height={20}
-          className="w-5 h-5 md:w-6 md:h-6"
+          className={`w-5 h-5 md:w-6 md:h-6 transition-transform duration-300 ${
+            !isExpanded ? "rotate-180" : ""
+          }`}
         />
       </div>
     </div>

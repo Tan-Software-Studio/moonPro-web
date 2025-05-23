@@ -419,8 +419,7 @@ const Tradingview = () => {
         <div ref={containerRef} className="md:h-screen h-fit w-full overflow-y-auto">
           {(!isSmallScreen || smallScreenTab === "Trades") && (
             <>
-              <div ref={tvChartRef}>
-
+              <div>
                 <TokenDetails
                   tokenSymbol={tokenSymbol}
                   tokenaddress={tokenaddress}
@@ -432,7 +431,7 @@ const Tradingview = () => {
                 />
               </div>
 
-              <div className="h-[600px] w-full">
+              <div ref={tvChartRef} className="h-[600px] w-full">
                 <TVChartContainer
                   tokenSymbol={tokenSymbol}
                   tokenaddress={tokenaddress}
