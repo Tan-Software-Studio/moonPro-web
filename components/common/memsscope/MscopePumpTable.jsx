@@ -28,14 +28,16 @@ import ChartComponent from "./ChartComponent";
 import {
   fetchSolanaNativeBalance,
   setChartSymbolImage,
-  setSolanaNativeBalance,
 } from "@/app/redux/states";
 import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
-import { getSolanaBalanceAndPrice } from "@/utils/solanaNativeBalance";
 
 const MscopePumpTable = ({ MemscopeData }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoverRow, sethoverRow] = useState(false);
+  // solana live price 
+  const solanaLivePrice = useSelector(
+    (state) => state?.AllStatesData?.solanaLivePrice
+  );
   const nativeTokenbalance = useSelector(
     (state) => state?.AllStatesData?.solNativeBalance
   );
@@ -283,6 +285,7 @@ const MscopePumpTable = ({ MemscopeData }) => {
                               className="absolute z-10 border border-[#1F73FC] rounded-lg bg-[#16171D] py-1 px-5 text-xs hover:bg-[#11265B] transition-all duration-300 ease-in-out"
                               onClick={(e) =>
                                 buySolanaTokensQuickBuyHandler(
+                                  solanaLivePrice,
                                   block?.address,
                                   quickBuy,
                                   solWalletAddress,

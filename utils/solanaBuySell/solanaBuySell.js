@@ -13,6 +13,7 @@ const buySolanaTokens = async (
   setLoaderSwap,
   setTokenBalance,
   programAddress,
+  solanaLivePrice,
   dispatch
 ) => {
   // console.log("🚀 ~ setTokenBalance:", setTokenBalance);
@@ -61,7 +62,7 @@ const buySolanaTokens = async (
       amount: amt,
       slippage: slipTolerance,
       priorityFee: priorityFee,
-      price: 150,
+      price: Number(solanaLivePrice),
       programAddress: programAddress
         ? programAddress
         : "nasdiuasdnasdudhsdjasbhid",
@@ -96,6 +97,7 @@ const buySolanaTokens = async (
 };
 // quick buy handler
 const buySolanaTokensQuickBuyHandler = async (
+  solanaLivePrice,
   toToken,
   amt,
   address,
@@ -150,7 +152,7 @@ const buySolanaTokensQuickBuyHandler = async (
       amount: amt,
       slippage: 50,
       priorityFee: 0.0001,
-      price: 150,
+      price: Number(solanaLivePrice),
       programAddress: program,
     },
     headers: {
@@ -177,6 +179,7 @@ const buySolanaTokensQuickBuyHandler = async (
 };
 // quick buy handler
 const buySolanaTokensQuickBuyHandlerCopyTrading = async (
+  solanaLivePrice,
   toToken,
   address,
   nativeTokenbalance,
@@ -233,7 +236,7 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
       amount: amt,
       slippage: 50,
       priorityFee: 0.0001,
-      price: 150,
+      price: Number(solanaLivePrice),
       programAddress: programAddress
         ? programAddress
         : "nasdiuasdnasdudhsdjasbhid",

@@ -19,12 +19,15 @@ const NewPairSBody = ({ data, loading }) => {
   const pathname = usePathname();
   const getNetwork = pathname.split("/")[2];
   const dispatch = useDispatch();
-  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance)
+  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
+  // solana live price 
+  const solanaLivePrice = useSelector(
+    (state) => state?.AllStatesData?.solanaLivePrice
+  );
   const bigLoader = useSelector((state) => state?.AllStatesData?.bigLoader);
-
   const [copied, setCopied] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -310,6 +313,7 @@ const NewPairSBody = ({ data, loading }) => {
                     className="border border-[#3E9FD6] rounded-lg py-1 px-[30px] bg-[#16171D] hover:text-black hover:bg-[#3E9FD6] transition-all duration-300 ease-in-out"
                     onClick={(e) => {
                       buySolanaTokensQuickBuyHandler(
+                        solanaLivePrice,
                         row?.address,
                         quickBuy,
                         solWalletAddress,

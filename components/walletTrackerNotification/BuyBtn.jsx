@@ -4,20 +4,25 @@ import { buySolanaTokensQuickBuyHandlerCopyTrading } from "@/utils/solanaBuySell
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSolanaNativeBalance } from "@/app/redux/states";
 export default function BuyBtn({ toToken }) {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
-  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance)
+  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
+  // solana live price 
+  const solanaLivePrice = useSelector(
+    (state) => state?.AllStatesData?.solanaLivePrice
+  );
   useEffect(() => {
     if (solWalletAddress) {
-      dispatch(fetchSolanaNativeBalance(solWalletAddress))
+      dispatch(fetchSolanaNativeBalance(solWalletAddress));
     }
   }, [solWalletAddress]);
   return (
     <button
       onClick={(e) =>
         buySolanaTokensQuickBuyHandlerCopyTrading(
+          solanaLivePrice,
           toToken,
           solWalletAddress,
           nativeTokenbalance,
