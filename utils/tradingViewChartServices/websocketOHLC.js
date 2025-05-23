@@ -1,7 +1,10 @@
 import { addNewTransaction } from "@/app/redux/chartDataSlice/chartData.slice";
 import store from "@/app/redux/store";
 import { io } from "socket.io-client";
+import { addMark, getStoredMarks } from "./mark";
+
 import { addFlagToChart } from "./chartFlagDraw";
+import { getMarks } from "./getMarks";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const socket = io(BASE_URL, {
   transports: ["websocket"],
@@ -28,6 +31,8 @@ export async function subscribeToWebSocket(
   marketCapActive,
   supply,
   solPrice,
+  tokenCreator,
+  userSolWallet
 ) {
   if (
     activeSubscriberUID !== subscriberUID ||
@@ -68,9 +73,8 @@ export async function subscribeToWebSocket(
     const granularity = getResolutionInMilliseconds(resolution);
     const isSecondResolution = resolution.toString().endsWith("S");
     supply = supply ? Number(supply) === 0 ? 1_000_000_000 : Number(supply) : 1_000_000_000;
-    solPrice = solPrice ? Number(solPrice) === 0 ? 1 : Number(solPrice) : 1; 
+    solPrice = solPrice ? Number(solPrice) === 0 ? 1 : Number(solPrice) : 1;
     tokenData.forEach((item) => {
-      const signer = item?.Transaction?.Signer;
       const tradeTime = new Date(item?.Block?.Time).getTime();
       const volume = parseFloat(item?.volume || "0");
 
@@ -124,6 +128,15 @@ export async function subscribeToWebSocket(
         bar.close = close;
         bar.volume += volume;
       }
+      const signer = item?.Transaction?.Signer;
+      const isBuy = item?.Trade?.Side?.Type == 'buy';
+      const usdTraded = Number(item?.Trade?.Side?.AmountInUSD);
+
+      if (signer === tokenCreator) {
+        addMark(tradeTime / 1000, isBuy, usdTraded, price, usdActive, marketCapActive, "dev");
+      } else if (signer === userSolWallet) {
+        addMark(tradeTime / 1000, isBuy, usdTraded, price, usdActive, marketCapActive, "user");
+      } 
       onRealtimeCallback(lastBar[subscriberUID]);
     });
   });

@@ -1,10 +1,9 @@
 import axios from "axios";
 import { bq_apikey } from "./constant";
-import { addDevMark } from "./mark";
-import { formatDecimal } from "@/utils/basicFunctions"
+import { addMark } from "./mark";
 
 const endpoint = "https://streaming.bitquery.io/eap";
-const TOKEN_DETAILS = `query TradingView($token: String, $dataset: dataset_arg_enum, $from: DateTime, $to: DateTime, $interval: Int, $tokenCreator: String) {
+const TOKEN_DETAILS = `query TradingView($token: String, $dataset: dataset_arg_enum, $from: DateTime, $to: DateTime, $interval: Int, $walletsToMark: [String!] = []) {
   Solana(dataset: $dataset, aggregates: no) {
     
     # 1. OHLC aggregated data
@@ -71,7 +70,7 @@ const TOKEN_DETAILS = `query TradingView($token: String, $dataset: dataset_arg_e
         Block: {Time: {since: $from, till: $to}}, 
         Transaction: {
           Result: {Success: true}, 
-          Signer: {is: $tokenCreator}
+          Signer: {in: $walletsToMark}
         }
       }
     ) {
@@ -93,11 +92,18 @@ const TOKEN_DETAILS = `query TradingView($token: String, $dataset: dataset_arg_e
   }
 }`;
 
-export async function fetchHistoricalData(periodParams, resolution, token, isUsdActive, isMarketCapActive, supply, solPrice, tokenCreator) {
+export async function fetchHistoricalData(periodParams, resolution, token, isUsdActive, isMarketCapActive, supply, solPrice, tokenCreator, userWallet) {
   // console.log("🚀 ~ fetchHistoricalData ~ resolution:", resolution);
   supply = supply ? Number(supply) === 0 ? 1_000_000_000 : Number(supply) : 1_000_000_000;
   solPrice = solPrice ? Number(solPrice) === 0 ? 1 : Number(solPrice) : 1; 
   const { from, to, countBack } = periodParams;
+  const walletsToMark = [];
+  if (tokenCreator != 0) {
+    walletsToMark.push(tokenCreator);
+  }
+  if (userWallet !== null) {
+    walletsToMark.push(userWallet);
+  } 
   // console.log("🚀 ~ fetchHistoricalData ~ countBack:", countBack);
   const requiredBars = 20000;
   const timeFromTv = new Date(from * 1000).toISOString();
@@ -125,7 +131,7 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
           to: timeToTv,
           interval: finalInterval || 1,
           dataset: "realtime",
-          tokenCreator
+          walletsToMark
         },
       },
       {
@@ -180,37 +186,31 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
         const usdSolPrice = isUsdActive ? usdPrice : usdPrice / solPrice;
         const atPrice = isMarketCapActive ? usdSolPrice * supply : usdSolPrice;
 
-        addDevMark(
-          i, 
-          blockTime, 
-          isBuy,
-          usdTraded,
-          atPrice,
-          isUsdActive,
-          isMarketCapActive
-        );
+        if (creatorTransaction?.Transaction?.Signer === tokenCreator) {
+          addMark(blockTime, isBuy, usdTraded, atPrice, isUsdActive, isMarketCapActive, "dev");
+        } else if (creatorTransaction?.Transaction?.Signer === userWallet) {
+          addMark(blockTime, isBuy,  usdTraded,atPrice,isUsdActive,isMarketCapActive,"user");
+        }
       }
     }
 
     // If resolution is in seconds, adjust candlestick data by comparing open/close
-    if (resolution?.toString()?.slice(-1) == "S") {
-      if (bars?.length > 0) {
-        bars = bars.map((bar, index, arr) => {
-        if (index === 0) return bar; // Skip the first bar
-  
-        const prevBar = arr[index - 1];
-        const newOpen = prevBar.close;
-        const newClose = bar.close;
-  
-        return {
-          ...bar,
-          open: newOpen,
-          close: newClose,
-          high: Math.max(newOpen, newClose, bar.high, prevBar.close),
-          low: Math.min(newOpen, newClose, bar.low, prevBar.close),
-          };
-        });
-      }
+    if (bars?.length > 0) {
+      bars = bars.map((bar, index, arr) => {
+      if (index === 0) return bar; // Skip the first bar
+
+      const prevBar = arr[index - 1];
+      const newOpen = prevBar.close;
+      const newClose = bar.close;
+
+      return {
+        ...bar,
+        open: newOpen,
+        close: newClose,
+        high: Math.max(newOpen, newClose, bar.high, prevBar.close),
+        low: Math.min(newOpen, newClose, bar.low, prevBar.close),
+        };
+      });
     }
 
     // console.log('remaining bars before filter', bars.length);

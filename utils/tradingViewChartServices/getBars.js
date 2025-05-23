@@ -28,6 +28,10 @@ async function getChartTokenCreator() {
   return await localStorage.getItem("chartTokenCreator");
 }
 
+async function getSolWalletAddress() {
+  return await localStorage.getItem("walletAddress");
+}
+
 export const getBars = async (
   symbolInfo,
   resolution,
@@ -52,6 +56,7 @@ export const getBars = async (
     const supply = await getChartSupply();
     const solPrice = await getSolPrice();
     const tokenCreator = await getChartTokenCreator();
+    const walletAddress = await getSolWalletAddress();
 
     const bars = await fetchHistoricalData(
       periodParams,
@@ -61,7 +66,8 @@ export const getBars = async (
       marketCapActive,
       supply,
       solPrice,
-      tokenCreator
+      tokenCreator,
+      walletAddress
     );
     if (bars?.length > 0) {
       onHistoryCallback(bars, { noData: false });
@@ -96,6 +102,8 @@ export const subscribeBars = async (
 
   const supply = await getChartSupply();
   const solPrice = await getSolPrice();
+  const tokenCreator = await getChartTokenCreator();
+  const walletAddress = await getSolWalletAddress();
 
   await subscribeToWebSocket(
     onRealtimeCallback,
@@ -105,7 +113,9 @@ export const subscribeBars = async (
     usdActive,
     marketCapActive,
     supply,
-    solPrice
+    solPrice,
+    tokenCreator,
+    walletAddress
   );
 };
 

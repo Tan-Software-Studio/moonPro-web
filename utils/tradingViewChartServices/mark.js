@@ -2,30 +2,42 @@ import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFun
 
 const marks = [];
 
-export const devMark = (id, time, isBuy, usdTraded, atPricePoint, isUsdActive, isMarketCapActive) => {
-    const usdTradedReadable = humanReadableFormatWithNoDollar(usdTraded, 1);
-    const atPricePointReadable = atPricePoint > 0.99 ?  humanReadableFormatWithNoDollar(atPricePoint, 2) : formatDecimal(atPricePoint);
-    return {
-        id,
-        time,
-        color: {
-            border: isBuy === true ? '#195E54' : '#84303B',
-            background: isBuy === true ? '#089880' : '#F23645',
-        },
-        text: isBuy === true ? 
-        [`Dev Bought $${usdTradedReadable} at ${isUsdActive ? "$" : ""}${atPricePointReadable} ${isUsdActive ? "USD" : "SOL"} ${isMarketCapActive ? "Market Cap" : ""}`] 
-        : 
-        [`Dev sold $${usdTradedReadable} at ${isUsdActive ? "$" : ""}${atPricePointReadable} ${isUsdActive ? "USD" : "SOL"} ${isMarketCapActive ? "Market Cap" : ""}`],
-        label: isBuy === true ? 'DB' : 'DS',
-        labelFontColor: 'white',
-        minSize: 25,
-    };
+export const devMark = (id, time, isBuy, usdTraded, atPricePoint, isUsdActive, isMarketCapActive, markType) => {
+  const usdTradedReadable = usdTraded >= 1 || usdTraded <= -1 ?  humanReadableFormatWithNoDollar(usdTraded, 2) : formatDecimal(usdTraded);
+  const atPricePointReadable = atPricePoint >= 1 || atPricePoint <= -1 ?  humanReadableFormatWithNoDollar(atPricePoint, 2) : formatDecimal(atPricePoint);
+  
+  const isDev = markType === 'dev';
+  const label = isDev
+    ? (isBuy ? 'DB' : 'DS')
+    : (isBuy ? 'B' : 'S');
+  const trader = isDev ? 'Dev' : 'You';
+
+  return {
+      id,
+      time,
+      color: {
+          border: isBuy === true ? '#195E54' : '#84303B',
+          background: isBuy === true ? '#089880' : '#F23645',
+      },
+      text: isBuy === true ? 
+      [`${trader} Bought $${usdTradedReadable} at ${isUsdActive ? "$" : ""}${atPricePointReadable} ${isUsdActive ? "USD" : "SOL"} ${isMarketCapActive ? "Market Cap" : ""}`] 
+      : 
+      [`${trader} sold $${usdTradedReadable} at ${isUsdActive ? "$" : ""}${atPricePointReadable} ${isUsdActive ? "USD" : "SOL"} ${isMarketCapActive ? "Market Cap" : ""}`],
+      label,
+      labelFontColor: 'white',
+      minSize: 25,
+  };
 }
 
 // Add a mark object to local store
-export const addDevMark = (id, time, isBuy, usdTraded, atPricePoint, isUsdActive, isMarketCapActive) => {
-  const newMark = devMark(id, time, isBuy, usdTraded, atPricePoint, isUsdActive, isMarketCapActive);
+export const addMark = (time, isBuy, usdTraded, atPricePoint, isUsdActive, isMarketCapActive, markType) => {
+  const newMark = devMark(getStoredMarks().length, time, isBuy, usdTraded, atPricePoint, isUsdActive, isMarketCapActive, markType);
   marks.push(newMark);
+  const chart = window?.tvWidget;
+  if (chart) {
+    chart.activeChart().clearMarks(); // Clear existing marks
+    chart.activeChart().refreshMarks(); // Force re-request of marks
+  }
 };
 
 // Get all stored marks

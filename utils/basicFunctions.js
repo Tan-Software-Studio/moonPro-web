@@ -98,7 +98,7 @@ function formatDecimal(num) {
   }
 
   let result;
-  if (leadingZeros > 3) {
+  if (leadingZeros > 2) {
     result = `0${toSubscript(leadingZeros)}${trimmed.slice(0, 3)}`;
   } else {
     result = `0.${decimalStr.slice(0, 3)}`;
