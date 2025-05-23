@@ -2,6 +2,7 @@ import { addNewTransactionForWalletTracking } from "@/app/redux/chartDataSlice/c
 import {
   setMemeScopeGraduateData,
   setMemeScopeGraduatedData,
+  setNewLaunchData,
 } from "@/app/redux/memescopeData/Memescope";
 import { setSolanaLivePrice } from "@/app/redux/states";
 import store from "@/app/redux/store";
@@ -93,6 +94,12 @@ export async function subscribeToTrendingTokens() {
     await socket.on("connect", () => {
       console.log("Trades websocket connected.");
     });
+
+    // new launch pumpfun data
+    socket.on("newData", async (data) => {
+      store.dispatch(setNewLaunchData(data));
+    });
+
     // trending tokens live data
     await socket.on("trendingtokens", async (data) => {
       switch (data?.time) {
