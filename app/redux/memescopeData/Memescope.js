@@ -18,7 +18,6 @@ export const fetchMemescopeData = createAsyncThunk(
   }
 );
 
-
 const allMemescopeData = createSlice({
   name: "allMemescopeData",
   initialState: {
@@ -82,6 +81,9 @@ const allMemescopeData = createSlice({
       const temp = state.newLaunch.slice(0, 30);
       state.newLaunch = [action.payload, ...temp];
     },
+    updateAllDataByNode: (state, { payload }) => {
+      // console.log(payload);
+    },
   },
 
   extraReducers: (builder) => {
@@ -109,6 +111,7 @@ export const {
   setMemeScopeGraduateData,
   setMemeScopeGraduatedData,
   setNewLaunchData,
+  updateAllDataByNode,
 } = allMemescopeData.actions;
 
 export default allMemescopeData.reducer;

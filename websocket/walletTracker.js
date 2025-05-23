@@ -3,6 +3,7 @@ import {
   setMemeScopeGraduateData,
   setMemeScopeGraduatedData,
   setNewLaunchData,
+  updateAllDataByNode,
 } from "@/app/redux/memescopeData/Memescope";
 import { setSolanaLivePrice } from "@/app/redux/states";
 import store from "@/app/redux/store";
@@ -145,6 +146,25 @@ export async function subscribeToTrendingTokens() {
         store.dispatch(setMemeScopeGraduateData(data?.tokens));
       } else if (data?.type == "graduated") {
         store.dispatch(setMemeScopeGraduatedData(data?.tokens));
+      }
+    });
+
+    // gRPC node data
+    socket.on("gRPC_node_tx", async (data) => {
+      if (data?.action == "buy") {
+        store.dispatch(
+          updateAllDataByNode({
+            priceInSol: data?.priceInSolOfToken,
+            token: data?.bought,
+          })
+        );
+      } else if (data?.action == "sell") {
+        store.dispatch(
+          updateAllDataByNode({
+            priceInSol: data?.priceInSolOfToken,
+            token: data?.sold,
+          })
+        );
       }
     });
   } catch (error) {
