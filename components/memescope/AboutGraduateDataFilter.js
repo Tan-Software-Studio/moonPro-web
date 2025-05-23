@@ -192,14 +192,13 @@ function getAboutGraduatDataFieldName(filterName) {
 function applyAllAboutGraduatDataFilters(dataArray, filters) {
     let result = [...dataArray];
 
-    // Boolean filters (checkboxes)
     if (filters.top10holders?.checked) {
-        result = result.filter((item) => item?.isTop10Holder === true);
+        result = result.filter((item) => item?.holders > 10);
     }
 
     if (filters.withatleast1social?.checked) {
-        result = result.filter((item) => item?.hasSocialMedia === true);
-    }
+        result = result.filter((item) => item?.socialIconsLink?.length > 0);
+    } 
 
     // Number filters (min/max ranges)
     const numberFilters = [

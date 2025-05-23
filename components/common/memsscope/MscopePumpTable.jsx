@@ -14,6 +14,7 @@ import {
   DH,
   H10,
   MC,
+  NoDataFish,
   pumpfun,
   sniper,
   telegrams,
@@ -42,6 +43,10 @@ const MscopePumpTable = ({ MemscopeData }) => {
     (state) => state?.AllStatesData?.solWalletAddress
   );
   const bigLoader = useSelector((state) => state?.AllStatesData?.bigLoader);
+
+  const initialLoading = useSelector(
+    (state) => state?.allMemescopeData?.initialLoading
+  );
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -109,7 +114,7 @@ const MscopePumpTable = ({ MemscopeData }) => {
   }, [solWalletAddress]);
   return (
     <>
-      {MemscopeData.length == 0 ? (
+      {initialLoading ? (
         <div
           className="snippet flex justify-center mt-20   "
           data-title=".dot-spin"
@@ -118,7 +123,7 @@ const MscopePumpTable = ({ MemscopeData }) => {
             <div className="dot-spin"></div>
           </div>
         </div>
-      ) : (
+      ) : MemscopeData.length > 0 ? (
         <>
           <div className={`h-[78vh] visibleScroll overflow-y-auto`}>
             {MemscopeData?.slice(0, 20)?.map((block, index) => (
@@ -257,8 +262,8 @@ const MscopePumpTable = ({ MemscopeData }) => {
                               {block?.bonding_curv >= 100
                                 ? "100%"
                                 : block?.bonding_curv
-                                ? `${block?.bonding_curv?.toFixed(2)} %`
-                                : "0%"}
+                                  ? `${block?.bonding_curv?.toFixed(2)} %`
+                                  : "0%"}
                             </div>
                           </Tooltip>
                         </div>
@@ -266,11 +271,10 @@ const MscopePumpTable = ({ MemscopeData }) => {
                       <div>
                         <div className="w-[60px] h-[60px] relative flex items-center justify-center">
                           <div
-                            className={`${
-                              hoverRow === index
-                                ? "opacity-40 absolute inset-0 flex items-center justify-center"
-                                : "opacity-100"
-                            } `}
+                            className={`${hoverRow === index
+                              ? "opacity-40 absolute inset-0 flex items-center justify-center"
+                              : "opacity-100"
+                              } `}
                           >
                             <ChartComponent block={block} />
                           </div>
@@ -291,11 +295,10 @@ const MscopePumpTable = ({ MemscopeData }) => {
                               }
                             >
                               {quickBuy
-                                ? `${
-                                    quickBuy?.length > 6
-                                      ? `${quickBuy.slice(0, 7)}...`
-                                      : quickBuy
-                                  }`
+                                ? `${quickBuy?.length > 6
+                                  ? `${quickBuy.slice(0, 7)}...`
+                                  : quickBuy
+                                }`
                                 : 0}
                             </button>
                           )}
@@ -306,9 +309,8 @@ const MscopePumpTable = ({ MemscopeData }) => {
                     <div className="flex justify-between">
                       <div className="flex gap-[12px] order-2">
                         <Tooltip
-                          body={`Number of Holders: ${
-                            block?.holders ? block.holders : 0
-                          }`}
+                          body={`Number of Holders: ${block?.holders ? block.holders : 0
+                            }`}
                         >
                           <div className="flex items-center gap-[4px]">
                             <Image src={Users} alt="user" />
@@ -319,11 +321,10 @@ const MscopePumpTable = ({ MemscopeData }) => {
                         </Tooltip>
 
                         <Tooltip
-                          body={`Volume: ${
-                            block?.volume
-                              ? humanReadableFormat(block?.volume.toFixed(2))
-                              : 0
-                          }`}
+                          body={`Volume: ${block?.volume
+                            ? humanReadableFormat(block?.volume.toFixed(2))
+                            : 0
+                            }`}
                         >
                           <div className="flex items-center gap-[4px]">
                             <Image src={Vol} alt="volume" />
@@ -336,9 +337,8 @@ const MscopePumpTable = ({ MemscopeData }) => {
                         </Tooltip>
 
                         <Tooltip
-                          body={`Market Cap: ${
-                            block?.MKC ? humanReadableFormat(block?.MKC) : 0
-                          }`}
+                          body={`Market Cap: ${block?.MKC ? humanReadableFormat(block?.MKC) : 0
+                            }`}
                         >
                           <div className="flex items-center gap-[4px]">
                             <Image src={MC} alt="MC" />
@@ -387,6 +387,19 @@ const MscopePumpTable = ({ MemscopeData }) => {
             ))}
           </div>
         </>
+      ) : (
+        <div className="flex flex-col  h-[70vh] w-full items-center justify-center mt-5">
+          <div className="text-4xl mb-2">
+            <Image
+              src={NoDataFish}
+              alt="No Data Available"
+              width={200}
+              height={100}
+              className="rounded-lg"
+            />
+          </div>
+          <h1 className="text-[#89888e] text-lg">No data found.</h1>
+        </div>
       )}
       {bigLoader == true && <LoaderPopup />}
     </>
