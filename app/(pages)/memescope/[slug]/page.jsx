@@ -123,13 +123,13 @@ const Memescope = () => {
 
       if (hasFilters) {
         const filteredResult = applyAllGraduatedDataFilters(GraduateddataSortedData, savedFilters);
-        setFilteredAboutGraduatData(filteredResult);
+        setFilteredGraduatedData(filteredResult);
         setGraduatedDataFiltersApplied(true);
       }
     }
   }, [GraduateddataSortedData]);
 
-  const graDataToShow = graduatedDataFiltersApplied && filteredGraduatedData.length >= 0
+  const graduateDataToShow = graduatedDataFiltersApplied && filteredGraduatedData.length >= 0
     ? filteredGraduatedData
     : GraduateddataSortedData;
 
@@ -330,7 +330,7 @@ const Memescope = () => {
               className={`${selectedScope === 3 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={graDataToShow} />
+              <MscopePumpTable MemscopeData={graduateDataToShow} />
             </div>
           </div>
 
