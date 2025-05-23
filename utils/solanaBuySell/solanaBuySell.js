@@ -1,6 +1,4 @@
-import {
-  getSoalanaTokenBalance,
-} from "../solanaNativeBalance";
+import { getSoalanaTokenBalance } from "../solanaNativeBalance";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { fetchSolanaNativeBalance } from "@/app/redux/states";
@@ -81,8 +79,7 @@ const buySolanaTokens = async (
       setTimeout(async () => {
         const [tokenBalanceUpdate, solBalance] = await Promise.all([
           getSoalanaTokenBalance(address, toToken),
-          dispatch(fetchSolanaNativeBalance(address))
-
+          dispatch(fetchSolanaNativeBalance(address)),
         ]);
         setTokenBalance(tokenBalanceUpdate);
       }, 5000);
@@ -166,7 +163,7 @@ const buySolanaTokensQuickBuyHandler = async (
         duration: 3000,
       });
       setTimeout(() => {
-        dispatch(fetchSolanaNativeBalance(address))
+        dispatch(fetchSolanaNativeBalance(address));
       }, 2000);
     })
     .catch(async (err) => {
@@ -251,7 +248,7 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
         duration: 3000,
       });
       setTimeout(() => {
-        dispatch(fetchSolanaNativeBalance(address))
+        dispatch(fetchSolanaNativeBalance(address));
       }, 2000);
     })
     .catch(async (err) => {
@@ -275,7 +272,8 @@ const sellSolanaTokens = async (
   setLoaderSwap,
   setTokenBalance,
   programAddress,
-  dispatch
+  dispatch,
+  recQty
 ) => {
   // console.log("🚀 ~ setTokenBalance:", setTokenBalance);
   // console.log("🚀 ~ setLoaderSwap:", setLoaderSwap);
@@ -324,6 +322,7 @@ const sellSolanaTokens = async (
       programAddress: programAddress
         ? programAddress
         : "nasdiuasdnasdudhsdjasbhid",
+      amountRecInsol: recQty,
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -338,7 +337,7 @@ const sellSolanaTokens = async (
       setTimeout(async () => {
         const [tokenBalanceUpdate, solBalance] = await Promise.all([
           getSoalanaTokenBalance(address, fromToken),
-          dispatch(fetchSolanaNativeBalance(address))
+          dispatch(fetchSolanaNativeBalance(address)),
         ]);
         setTokenBalance(tokenBalanceUpdate);
       }, 5000);
