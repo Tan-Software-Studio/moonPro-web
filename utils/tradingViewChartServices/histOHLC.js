@@ -43,6 +43,7 @@ const TOKEN_DETAILS = `query TradingView($token: String, $dataset: dataset_arg_e
       open: Trade {
         PriceInUSD(minimum: Block_Slot)
       }
+      volume: sum(of: Trade_Side_AmountInUSD)
     }
 
     # 2. Raw trade info (e.g. to check signer + side)
