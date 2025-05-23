@@ -18,6 +18,7 @@ export const fetchMemescopeData = createAsyncThunk(
   }
 );
 
+
 const allMemescopeData = createSlice({
   name: "allMemescopeData",
   initialState: {
