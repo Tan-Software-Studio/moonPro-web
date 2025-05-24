@@ -95,13 +95,6 @@ const Sidebar = () => {
       img: walletTrackerWhiteImg,
       size: "w-5 h-5",
     },
-    {
-      id: 10,
-      pathname: `/trader-board`,
-      pagename: sidebarPage?.prowallets,
-      img: proWallet,
-      size: "w-5 h-5",
-    },
   ];
 
   const sidebar = [
