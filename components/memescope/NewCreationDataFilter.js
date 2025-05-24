@@ -28,57 +28,57 @@ function newCreationFilterData(memescopePage) {
             },
             {
                 id: "4",
-                title: "Holders",
+                title: "holders",
                 name: memescopePage?.mainHeader?.filters?.newcreation?.byholderscount,
-                firstInputName: "Min",
-                firstInputIcon: "%",
-                secondInputName: "Max",
-                secondInputIcon: "",
-                type: "number",
-            },
-            {
-                id: "5",
-                title: "holding",
-                name: memescopePage?.mainHeader?.filters?.newcreation?.bydevholding,
                 firstInputName: "Min",
                 firstInputIcon: "",
                 secondInputName: "Max",
                 secondInputIcon: "",
                 type: "number",
             },
-            {
-                id: "6",
-                title: "Snipers",
-                name: memescopePage?.mainHeader?.filters?.newcreation?.bysnipers,
-                firstInputName: "Min",
-                firstInputIcon: "$",
-                secondInputName: "Max",
-                secondInputIcon: "$",
-                type: "number",
-            },
+            // {
+            //     id: "5",
+            //     title: "holding",
+            //     name: memescopePage?.mainHeader?.filters?.newcreation?.bydevholding,
+            //     firstInputName: "Min",
+            //     firstInputIcon: "",
+            //     secondInputName: "Max",
+            //     secondInputIcon: "",
+            //     type: "number",
+            // },
+            // {
+            //     id: "6",
+            //     title: "snipers",
+            //     name: memescopePage?.mainHeader?.filters?.newcreation?.bysnipers,
+            //     firstInputName: "Min",
+            //     firstInputIcon: "$",
+            //     secondInputName: "Max",
+            //     secondInputIcon: "$",
+            //     type: "number",
+            // },
             {
                 id: "7",
-                title: "Age",
+                title: "age",
                 name: memescopePage?.mainHeader?.filters?.newcreation?.byage,
                 firstInputName: "Min",
-                firstInputIcon: "$",
+                firstInputIcon: "",
                 secondInputName: "Max",
-                secondInputIcon: "$",
+                secondInputIcon: "",
                 type: "number",
             },
-            {
-                id: "8",
-                title: "Liquidity",
-                name: memescopePage?.mainHeader?.filters?.newcreation?.bycurrentliquidity,
-                firstInputName: "Min",
-                firstInputIcon: "$",
-                secondInputName: "Max",
-                secondInputIcon: "$",
-                type: "number",
-            },
+            // {
+            //     id: "8",
+            //     title: "liquidity",
+            //     name: memescopePage?.mainHeader?.filters?.newcreation?.bycurrentliquidity,
+            //     firstInputName: "Min",
+            //     firstInputIcon: "$",
+            //     secondInputName: "Max",
+            //     secondInputIcon: "$",
+            //     type: "number",
+            // },
             {
                 id: "9",
-                title: "Volume",
+                title: "volume",
                 name: memescopePage?.mainHeader?.filters?.newcreation?.byvolume,
                 firstInputName: "Min",
                 firstInputIcon: "",
@@ -96,38 +96,221 @@ function newCreationFilterData(memescopePage) {
                 secondInputIcon: "",
                 type: "number",
             },
-            {
-                id: "11",
-                title: "TXNS",
-                name: memescopePage?.mainHeader?.filters?.newcreation?.bytx,
-                firstInputName: "Min",
-                firstInputIcon: "",
-                secondInputName: "Max",
-                secondInputIcon: "",
-                type: "number",
-            },
-            {
-                id: "12",
-                title: "Buys",
-                name: memescopePage?.mainHeader?.filters?.newcreation?.bybuys,
-                firstInputName: "Min",
-                firstInputIcon: "",
-                secondInputName: "Max",
-                secondInputIcon: "",
-                type: "number",
-            },
-            {
-                id: "13",
-                title: "Sells",
-                name: memescopePage?.mainHeader?.filters?.newcreation?.bysells,
-                firstInputName: "Min",
-                firstInputIcon: "",
-                secondInputName: "Max",
-                secondInputIcon: "",
-                type: "number",
-            },
+            // {
+            //     id: "11",
+            //     title: "TXNS",
+            //     name: memescopePage?.mainHeader?.filters?.newcreation?.bytx,
+            //     firstInputName: "Min",
+            //     firstInputIcon: "",
+            //     secondInputName: "Max",
+            //     secondInputIcon: "",
+            //     type: "number",
+            // },
+            // {
+            //     id: "12",
+            //     title: "buys",
+            //     name: memescopePage?.mainHeader?.filters?.newcreation?.bybuys,
+            //     firstInputName: "Min",
+            //     firstInputIcon: "",
+            //     secondInputName: "Max",
+            //     secondInputIcon: "",
+            //     type: "number",
+            // },
+            // {
+            //     id: "13",
+            //     name: memescopePage?.mainHeader?.filters?.newcreation?.bysells,
+            //     title: "sells",
+            //     firstInputName: "Min",
+            //     firstInputIcon: "",
+            //     secondInputName: "Max",
+            //     secondInputIcon: "",
+            //     type: "number",
+            // },
         ]
     }
 };
 
-export { newCreationFilterData };
+
+const initialNewCreationDataFilterValues = {
+    top10holders: { checked: false },
+    withatleast1social: { checked: false },
+    progress: { min: "", max: "" },
+    holders: { min: "", max: "" },
+    holding: { min: "", max: "" },
+    snipers: { min: "", max: "" },
+    age: { min: "", max: "" },
+    liquidity: { min: "", max: "" },
+    volume: { min: "", max: "" },
+    MKT: { min: "", max: "" },
+    TXNS: { min: "", max: "" },
+    buys: { min: "", max: "" },
+    sells: { min: "", max: "" },
+};
+
+
+function checkIfNewCreationFiltersExist(filters) {
+    // Check checkboxes
+    if (filters.top10holders?.checked) return true;
+    if (filters.withatleast1social?.checked) return true;
+
+    // Check number inputs
+    if (filters.progress?.min || filters.progress?.max) return true;
+    if (filters.holders?.min || filters.holders?.max) return true;
+    if (filters.holding?.min || filters.holding?.max) return true;
+    if (filters.snipers?.min || filters.snipers?.max) return true;
+    if (filters.age?.min || filters.age?.max) return true;
+    if (filters.liquidity?.min || filters.liquidity?.max) return true;
+    if (filters.volume?.min || filters.volume?.max) return true;
+    if (filters.MKT?.min || filters.MKT?.max) return true;
+    if (filters.TXNS?.min || filters.TXNS?.max) return true;
+    if (filters.buys?.min || filters.buys?.max) return true;
+    if (filters.sells?.min || filters.sells?.max) return true;
+
+    return false;
+}
+
+
+function newCreationDataFieldName(filterName) {
+    const fieldMap = {
+        progress: "bonding_curv",
+        holders: "holders",
+        // holding: "devHolding",
+        // snipers: "snipers",
+        age: "created_time",
+        // liquidity: "liquidity",
+        volume: "volume",
+        MKT: "MKC",
+        // TXNS: "transactions",
+        // buys: "buys",
+        // sells: "sells",
+    };
+    return fieldMap[filterName] || filterName;
+}
+
+function applyAllNewCreationDataFilters(dataArray, filters) {
+    let result = [...dataArray];
+
+    if (filters.top10holders?.checked) {
+        result = result.filter((item) => item?.holders > 10);
+    }
+
+    if (filters.withatleast1social?.checked) {
+        result = result.filter((item) => item?.socialIconsLink?.length > 0);
+    }
+
+    // Number filters (min/max ranges)
+    const numberFilters = [
+        "progress",
+        "holders",
+        // "holding",
+        // "snipers",
+        "age",
+        // "liquidity",
+        "volume",
+        "MKT",
+        // "TXNS",
+        // "buys",
+        // "sells",
+    ];
+
+    numberFilters.forEach((filterName) => {
+        const fieldName = newCreationDataFieldName(filterName);
+
+        // Apply minimum filter
+        if (filters[filterName]?.min) {
+            result = result.filter((item) => {
+                let value = Number(item?.[fieldName]);
+
+                // covert in miniutes
+                if (filterName === "age") {
+                    const now = Date.now();
+                    const ageInMs = now - value;
+                    value = Math.floor(ageInMs / (1000 * 60));
+                }
+
+                const minValue = Number(filters[filterName].min);
+                return value >= minValue;
+            });
+        }
+
+        // Apply maximum filter
+        if (filters[filterName]?.max) {
+            result = result.filter((item) => {
+                let value = Number(item?.[fieldName]);
+
+                // covert in miniutes)
+                if (filterName === "age") {
+                    const now = Date.now();
+                    const ageInMs = now - value;
+                    value = Math.floor(ageInMs / (1000 * 60));
+                }
+
+                const maxValue = Number(filters[filterName].max);
+                return value <= maxValue;
+            });
+        }
+    });
+
+    return result;
+}
+
+
+function saveNewCreationDataFiltersToStorage(filters) {
+    try {
+        localStorage.setItem("newCreationDataFilters", JSON.stringify(filters));
+    } catch (error) {
+        console.error("Could not save new data filters:", error);
+    }
+}
+
+// Get filters
+function loadNewCreationDataFiltersFromStorage() {
+    try {
+        const saved = localStorage.getItem("newCreationDataFilters");
+        if (saved) {
+            return JSON.parse(saved);
+        }
+    } catch (error) {
+        console.error("Could not load new data filters:", error);
+    }
+    return null;
+}
+
+// Remove filters
+function clearNewCreationDataFiltersFromStorage() {
+    try {
+        localStorage.removeItem("newCreationDataFilters");
+    } catch (error) {
+        console.error("Could not clear new data filters:", error);
+    }
+}
+
+
+function applyNewCreationDataFilters(newCreationDataFilterValues, NewData, setFilteredNewCreationData, setNewCreationDataFiltersApplied) {
+    const hasFilters = checkIfNewCreationFiltersExist(newCreationDataFilterValues);
+
+    if (hasFilters) {
+        // Apply filters to data
+        const filteredResult = applyAllNewCreationDataFilters(NewData, newCreationDataFilterValues);
+        setFilteredNewCreationData(filteredResult);
+        setNewCreationDataFiltersApplied(true);
+
+        // Save to storage
+        saveNewCreationDataFiltersToStorage(newCreationDataFilterValues);
+    } else {
+        setFilteredNewCreationData([]);
+        setNewCreationDataFiltersApplied(false);
+
+        // Remove localStorage
+        clearNewCreationDataFiltersFromStorage();
+    }
+}
+
+function resetNewCreationDataFilters(setNewCreationDataFiltersApplied, setNewCreationDataFilterValues, setFilteredNewCreationData,) {
+    setNewCreationDataFilterValues(initialNewCreationDataFilterValues);
+    setFilteredNewCreationData([]);
+    setNewCreationDataFiltersApplied(false);
+    clearNewCreationDataFiltersFromStorage();
+}
+
+export { newCreationFilterData, initialNewCreationDataFilterValues, checkIfNewCreationFiltersExist, newCreationDataFieldName, applyAllNewCreationDataFilters, saveNewCreationDataFiltersToStorage, loadNewCreationDataFiltersFromStorage, clearNewCreationDataFiltersFromStorage, applyNewCreationDataFilters, resetNewCreationDataFilters };

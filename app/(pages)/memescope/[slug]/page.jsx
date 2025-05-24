@@ -11,13 +11,12 @@ import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import { useTranslation } from "react-i18next";
 import { aboutGraduateFilterData, applyAllAboutGraduatDataFilters, checkIfAboutGraduatDataFiltersExist, initialAboutGraduatDataFilterValues, loadAboutGraduatDataFiltersFromStorage, applyAboutGraduatDataFilters, resetAboutGraduatDataFilters } from '../../../../components/memescope/AboutGraduateDataFilter'
 import { graduatedFilterData, applyGraduatedDataFilters, initialGraduatedDataFilterValues, resetGratuatedDataFilters, loadGraduatedDataFiltersFromStorage, checkIfGraduatedDataFiltersExist, applyAllGraduatedDataFilters } from "@/components/memescope/GraduatedDataFilter";
-import { newCreationFilterData } from "@/components/memescope/NewCreationDataFilter";
+import { applyAllNewCreationDataFilters, applyNewCreationDataFilters, checkIfNewCreationFiltersExist, initialNewCreationDataFilterValues, loadNewCreationDataFiltersFromStorage, newCreationFilterData, resetNewCreationDataFilters } from "@/components/memescope/NewCreationDataFilter";
 
 const Memescope = () => {
   const { t } = useTranslation();
   const memescopePage = t("memescope");
   const [selectedScope, setSelectedScope] = useState(1);
-  const [newDataFilterValues, setNewDataFilterValues] = useState({});
   const [openDropdown, setOpenDropdown] = useState(null);
   const pathname = usePathname();
 
@@ -31,6 +30,11 @@ const Memescope = () => {
   const [graduatedDataFilterValues, setGraduatedDataFilterValues] = useState(initialGraduatedDataFilterValues); // input values
   const [graduatedDataFiltersApplied, setGraduatedDataFiltersApplied] = useState(false); // filter applied or not
   const [filteredGraduatedData, setFilteredGraduatedData] = useState([]); // filtered data
+
+  const [newCreationDataFilterValues, setNewCreationDataFilterValues] = useState(initialNewCreationDataFilterValues);
+  const [newCreationDataFiltersApplied, setNewCreationDataFiltersApplied] = useState(false); // filter applied or not
+  const [filteredNewCreationData, setFilteredNewCreationData] = useState([]); // filtered data
+
 
 
   // =======*=*= All about graduate data filter ==========//
@@ -96,6 +100,7 @@ const Memescope = () => {
       GraduateddataSortedData,
       setFilteredGraduatedData,
       setGraduatedDataFiltersApplied
+
     )
   }
 
@@ -136,6 +141,49 @@ const Memescope = () => {
   // == new creation data filter == \\
   const NewData = useSelector((state) => state?.allMemescopeData?.newLaunch);
   const NewCreationFilterDataJson = newCreationFilterData(memescopePage);
+
+  function onApplyNewCreationData() {
+    applyNewCreationDataFilters(
+      newCreationDataFilterValues,
+      NewData,
+      setFilteredNewCreationData,
+      setNewCreationDataFiltersApplied
+    )
+  }
+
+  function onReserNewCreationData() {
+    resetNewCreationDataFilters(
+      setNewCreationDataFiltersApplied,
+      setNewCreationDataFilterValues,
+      setFilteredNewCreationData
+
+    )
+  }
+
+  useEffect(() => {
+    const savedFilters = loadNewCreationDataFiltersFromStorage();
+    if (savedFilters) {
+      setNewCreationDataFilterValues(savedFilters);
+    }
+  }, []);
+
+  useEffect(() => {
+    const savedFilters = loadNewCreationDataFiltersFromStorage();
+
+    if (savedFilters && filteredNewCreationData.length > 0) {
+      const hasFilters = checkIfNewCreationFiltersExist(savedFilters);
+
+      if (hasFilters) {
+        const filteredResult = applyAllNewCreationDataFilters(NewData, savedFilters);
+        setFilteredNewCreationData(filteredResult);
+        setNewCreationDataFiltersApplied(true);
+      }
+    }
+  }, [NewData]);
+
+  const newCreationDataToShow = newCreationDataFiltersApplied && filteredNewCreationData.length >= 0
+    ? filteredNewCreationData
+    : NewData;
 
   const handleSidebarToggle = (id) => {
     setOpenDropdown((prev) => (prev === id ? null : id));
@@ -263,7 +311,7 @@ const Memescope = () => {
               className={`${selectedScope === 1 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={NewData} />
+              <MscopePumpTable MemscopeData={newCreationDataToShow} />
             </div>
           </div>
 
@@ -339,10 +387,10 @@ const Memescope = () => {
             isOpen={openDropdown === 0}
             setIsOpen={() => setOpenDropdown(null)}
             data={NewCreationFilterDataJson}
-            onApply={onApply}
-            onReset={onReset}
-            filterValues={newDataFilterValues}
-            setFilterValues={setNewDataFilterValues}
+            onApply={onApplyNewCreationData}
+            onReset={onReserNewCreationData}
+            filterValues={newCreationDataFilterValues}
+            setFilterValues={setNewCreationDataFilterValues}
           />
           <FilterMemescope
             isOpen={openDropdown === 1}
