@@ -117,7 +117,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
         {duration && (
           <div
             // w-[348px]
-            className={`flex rounded-md bg-[#1A1A1A] p-1`}
+            className={`flex `}
           >
             {HeaderData?.timeDuration?.map((option, index) => (
               <button

@@ -73,7 +73,7 @@ function FilterMemescope({ isOpen, setIsOpen, data, onApply, onReset, filterValu
         <div className="">
           <div className="flex w-full justify-between p-3 px-3 py-4 h-full items-center border-b border-gray-500">
             <div className="flex items-center gap-1 ">
-              <HiMenuAlt2 color="#00FFFF" size={20} />
+              <HiMenuAlt2 color="11265B" size={20} />
               <span className="text-sm font-semibold text-gray-0">
                 {data?.Title}
               </span>
@@ -104,7 +104,7 @@ function FilterMemescope({ isOpen, setIsOpen, data, onApply, onReset, filterValu
                     onChange={(e) =>
                       handleCheckboxChange(item.id, item?.title, e.target.checked)
                     }
-                    className={`${chcekBoxStyle} cursor-pointer`}
+                    className={`${chcekBoxStyle} text-[#11265B] focus:text-[#11265B] focus:ring-[#11265B] bg-[#11265B] placeholder:text-[#11265B] cursor-pointer`}
                   />
                 </div>
               ))}
@@ -170,7 +170,7 @@ function FilterMemescope({ isOpen, setIsOpen, data, onApply, onReset, filterValu
 
               <button
                 onClick={handleApply}
-                className="bg-[#1F73FC] hover:bg-[#3f8cf1] !font-semibold h-[36px] !px-8 border-[#1F73FC] rounded-md text-white text-grey-0 text-xs"
+                className="bg-[#11265B] !font-semibold h-[36px] !px-8 border-2 border-[#0E43BD] rounded-md text-white text-grey-0 text-xs"
               >
                 {tredingPage?.mainHeader?.filter?.apply}
               </button>

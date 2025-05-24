@@ -5,7 +5,7 @@ import Image from "next/image";
 import { IoMdDoneAll } from "react-icons/io";
 import { decimalConvert } from "@/utils/basicFunctions";
 import { useDispatch, useSelector } from "react-redux";
-import { setChartSymbolImage, setFavouriteTokens } from "@/app/redux/states";
+import { removeFavouriteToken, setChartSymbolImage, setFavouriteTokens, setIsFaviouriteToken } from "@/app/redux/states";
 import { CiHeart } from "react-icons/ci";
 import {
   PiDiscordLogo,
@@ -25,6 +25,7 @@ import { RxCross1 } from "react-icons/rx";
 import { BsCopy, BsTwitterX } from "react-icons/bs";
 import { RiFacebookCircleLine } from "react-icons/ri";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 const TokenDetails = ({
   tokenSymbol,
@@ -38,6 +39,7 @@ const TokenDetails = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCopyUrl, setIsCopyUrl] = useState(false);
 
+
   const dispatch = useDispatch();
   const tokenImage = useSelector(
     (state) => state?.AllStatesData?.chartSymbolImage
@@ -45,11 +47,11 @@ const TokenDetails = ({
   const tokenFavList = useSelector(
     (state) => state?.AllStatesData?.favouriteTokens
   );
-  const isFavourite = tokenFavList.find(
-    (item) =>
-      item?.tokenAddress?.toLowerCase() ==
-      tokenaddress?.toString().toLowerCase()
+
+  const isFavourite = useSelector(
+    (state) => state?.AllStatesData?.isFaviourite
   );
+
   async function getAndSetImageFromLocalStorage() {
     try {
       const getImageFromLocalStorage = localStorage.getItem("chartTokenImg");
@@ -58,49 +60,78 @@ const TokenDetails = ({
       } else {
         dispatch(setChartSymbolImage(getImageFromLocalStorage));
       }
-    } catch (error) {}
+    } catch (error) { }
   }
-  async function addAndRemoveToFavouriteHandler() {
-    if (isFavourite) {
-      axios({
-        method: "post",
-        url: `${process.env.NEXT_PUBLIC_BASE_URLS}wavePro/users/token-unlike`,
-        data: {
-          id: isFavourite?._id,
-        },
-      })
-        .then(async (res) => {
-          await dispatch(
-            setFavouriteTokens(
-              tokenFavList.filter(
-                (item) =>
-                  item?.tokenAddress?.toLowerCase() !==
-                  tokenaddress?.toString()?.toLowerCase()
-              )
-            )
-          );
-        })
-        .catch((err) => {});
-    } else {
-      axios({
-        method: "post",
-        url: `${process.env.NEXT_PUBLIC_BASE_URLS}wavePro/users/token-favorites`,
-        data: {
-          symbol: tokenSymbol,
-          img: tokenImage,
-          name: chartTokenData?.name,
-          tokenAddress: tokenaddress,
-          walletAddress: walletAddress,
-        },
-      })
-        .then(async (res) => {
-          await dispatch(
-            setFavouriteTokens([...tokenFavList, res?.data?.data])
-          );
-        })
-        .catch((err) => {});
+  const token = localStorage.getItem("token");
+
+  async function addToFavouriteHandler() {
+    if (!token) {
+      return toast.error("Please login");
     }
+    await axios({
+      method: "post",
+      url: `${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}user/createTokenFavourite`,
+      data: {
+        symbol: tokenSymbol || "Unknown",
+        name: chartTokenData?.name,
+        img: tokenImage,
+        tokenAddress: tokenaddress,
+      },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(async (res) => {
+      toast.success(res?.data?.message);
+      dispatch(setIsFaviouriteToken())
+      // await dispatch(
+      //   setFavouriteTokens([, res?.data?.data])
+      // );
+      // dispatch(setFavouriteTokens([...tokenFavList, res?.data?.data?.tokenFavorites]))
+    })
+      .catch((err) => {
+        toast.error(err?.res?.data?.message || "Something went wrong");
+      });
   }
+
+  async function checkLikeOrNot() {
+    if (!token) {
+      return toast.error("Please login");
+    }
+    await axios.get(`${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}user/checkTokenFavorite/${tokenaddress}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+    ).then((res) => {
+      dispatch(setIsFaviouriteToken(res?.data?.data?.exists))
+    })
+      .catch((err) => {
+      });
+  }
+
+  async function removeFromFavouriteHandler() {
+    if (!token) {
+      return toast.error("Please login");
+    }
+    await axios.delete(`${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}user/deleteTokenFavorite`, {
+      data: {
+        tokenAddress: tokenaddress
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    },
+    ).then(async (res) => {
+      toast.success(res?.data?.message);
+      dispatch(setIsFaviouriteToken())
+    })
+      .catch((err) => {
+        toast.error(err?.res?.data?.message || "Something went wrong");
+      });
+  }
+
 
   async function copyUrlOfPage() {
     await navigator.clipboard.writeText(window.location.href);
@@ -109,8 +140,14 @@ const TokenDetails = ({
       setIsCopyUrl(false);
     }, 2000);
   }
+
+  useEffect(() => {
+    checkLikeOrNot()
+  }, [isFavourite])
+
   useEffect(() => {
     getAndSetImageFromLocalStorage();
+
   }, []);
   return (
     <div className="bg-transparent border-b-[1px] border-b-[#26262e] w-full">
@@ -157,9 +194,9 @@ const TokenDetails = ({
                 target="_blank"
                 onClick={(e) => e.stopPropagation()}
               >
-              <div className="text-[10px] h-[17px] w-[17px] border border-[#4CAF50] text-[#ffffff] rounded-md flex items-center justify-center cursor-pointer bg-gradient-to-br from-[#409143] to-[#093d0c] shadow-[0_0_4px_rgba(76,255,80,0.4)]">
-                AI
-              </div>
+                <div className="text-[10px] h-[17px] w-[17px] border border-[#4CAF50] text-[#ffffff] rounded-md flex items-center justify-center cursor-pointer bg-gradient-to-br from-[#409143] to-[#093d0c] shadow-[0_0_4px_rgba(76,255,80,0.4)]">
+                  AI
+                </div>
               </Link>
             </div>
             <div className="flex gap-3">
@@ -212,9 +249,13 @@ const TokenDetails = ({
               className="cursor-pointer border-[1px] md:!border-t-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center"
             >
               {isFavourite ? (
-                <FaHeart className="text-[#1F73FC] text-[20px]" />
+                <FaHeart
+                  onClick={removeFromFavouriteHandler}
+                  className="text-[#1F73FC] text-[20px]" />
               ) : (
-                <CiHeart className="text-[#F6F6F6] text-[23px]" />
+                <CiHeart
+                  onClick={addToFavouriteHandler}
+                  className="text-[#F6F6F6] text-[23px]" />
               )}
             </div>
             <div className="cursor-pointer border-[1px] md:!border-b-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center">
@@ -256,7 +297,7 @@ const TokenDetails = ({
             >
               <div className="flex items-center justify-between py-[12px] px-[24px]">
                 <h1 className="text-[22px] font-[700] text-[#F6F6F6]">Share</h1>
-                <RxCross1 className="text-[16px] text-[#F6F6F6] cursor-pointer" />
+                <RxCross1 onClick={() => setIsModalOpen(false)} className="text-[16px] text-[#F6F6F6] cursor-pointer" />
               </div>
               <div className="bg-[#404040] h-[1.5px]"></div>
               <div className="py-[12px] px-[24px]">

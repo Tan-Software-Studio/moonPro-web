@@ -29,6 +29,7 @@ const AllStatesData = createSlice({
     referralPopupAfterLogin: false,
     recoverPopUpOpen: false,
     solanaLivePrice: 0,
+    isFaviourite: false
   },
   reducers: {
     setWalletAddress: (state, action) => {
@@ -55,6 +56,9 @@ const AllStatesData = createSlice({
     },
     setFavouriteTokens: (state, action) => {
       state.favouriteTokens = action?.payload;
+    },
+    setIsFaviouriteToken: (state, action) => {
+      state.isFaviourite = action?.payload;
     },
     setUserInfo: (state, action) => {
       console.log("🚀 ~ action:", action?.payload);
@@ -114,5 +118,6 @@ export const {
   setreferralPopupAfterLogin,
   setRecoverPopupOpen,
   setSolanaLivePrice,
+  setIsFaviouriteToken
 } = AllStatesData.actions;
 export default AllStatesData.reducer;
