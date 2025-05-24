@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { FaCog } from "react-icons/fa";
+import { FaCheck, FaCog } from "react-icons/fa";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { GrCaretUp, GrCaretDown } from "react-icons/gr";
 import { PiPencilLineBold } from "react-icons/pi";
@@ -37,6 +37,40 @@ const TradingPopup = ({
   const [priorityFee, setPriorityFee] = useState(0.0001);
   const [isMev, setIsMev] = useState(true);
   const [isAutoApprove, setisAutoApprove] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
+  const [customInput, setCustomInput] = useState("");
+  const [buyValues, setBuyValues] = useState(() => {
+    const saved = localStorage.getItem('buyValues');
+    return saved ? JSON.parse(saved) : [0.1, 0.2, 1, 2];
+  });
+  const [sellValues, setSellValues] = useState(() => {
+    const saved = localStorage.getItem('sellValues');
+    return saved ? JSON.parse(saved) : [20, 50, 80, 100];
+  });
+
+
+  const saveEditedValue = () => {
+    const value = parseFloat(customInput);
+    if (value > 0) {
+      if (activeTab === "buy") {
+        const newValues = [...buyValues];
+        newValues[editIndex] = value;
+        setBuyValues(newValues);
+        localStorage.setItem('buyValues', JSON.stringify(newValues));
+      } else {
+        const newValues = [...sellValues];
+        newValues[editIndex] = value;
+        setSellValues(newValues);
+        localStorage.setItem('sellValues', JSON.stringify(newValues));
+      }
+      setIsEditing(false);
+      setEditIndex(null);
+      setCustomInput("");
+    }
+  };
+
+
   // solana live price 
   const solanaLivePrice = useSelector(
     (state) => state?.AllStatesData?.solanaLivePrice
@@ -224,41 +258,91 @@ const TradingPopup = ({
       {/* Preset Quantity Buttons */}
       <div className="flex gap-2 mb-[16px]">
         {activeTab == "buy"
-          ? [0.1, 0.2, 1, 2].map((val) => (
-            <button
-              key={val}
-              className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${quantity === val
-                ? "text-[#278BFE] border-t-[1px] border-t-[#278BFE]"
-                : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
-                }`}
-              onClick={() => setQuantity(val)}
-            >
-              {val}
-            </button>
+          ? buyValues.map((val, index) => (
+            editIndex === index ? (
+              <input
+                key={index}
+                type="number"
+                value={customInput}
+                onChange={(e) => setCustomInput(e.target.value)}
+                className="w-[62px] h-[34px] flex items-center justify-center text-center   text-[14px] rounded bg-[#1F1F1F] outline-none   text-[#278BFE] border-t-[1px] border-t-[#278BFE] "
+                autoFocus
+              />
+            ) : (
+              <button
+                key={index}
+                className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${quantity === val
+                  ? "text-[#278BFE] border-t-[1px] border-t-[#278BFE]"
+                  : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
+                  }`}
+                onClick={() => {
+                  if (isEditing) {
+                    setEditIndex(index);
+                    setCustomInput(val.toString());
+                  } else {
+                    setQuantity(val);
+                  }
+                }}
+              >
+                {val}
+              </button>
+            )
           ))
-          : [20, 50, 80, 100].map((val) => (
-            <button
-              key={val}
-              className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${Number(quantity).toFixed(5) ==
-                Number((tokenBalance * val) / 100).toFixed(5) &&
-                quantity > 0
-                ? "text-[#ed1819] border-t-[1px] border-t-[#ed1819]"
-                : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
-                }`}
-              onClick={() => {
-                if (val == 100) {
-                  setQuantity(tokenBalance);
-                } else {
-                  setQuantity(Number((tokenBalance * val) / 100).toFixed(5));
-                }
-              }}
-            >
-              {val}%
-            </button>
+          : sellValues.map((val, index) => (
+            editIndex === index ? (
+              <input
+                key={index}
+                type="number"
+                value={customInput}
+                onChange={(e) => setCustomInput(e.target.value)}
+                className="w-[62px] h-[34px] flex items-center justify-center text-center text-[14px] rounded bg-[#1F1F1F] outline-none text-[#ed1819] border-t-[1px] border-t-[#ed1819]"
+                autoFocus
+              />
+            ) : (
+              <button
+                key={index}
+                className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 
+                  ${Number(quantity).toFixed(5) === Number((tokenBalance * val) / 100).toFixed(5) && quantity > 0
+                    ? "text-[#ed1819] border-t-[1px] border-t-[#ed1819]"
+                    : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
+                  }`}
+                onClick={() => {
+                  if (isEditing) {
+                    setEditIndex(index);
+                    setCustomInput(val.toString());
+                  } else {
+                    if (val == 100) {
+                      setQuantity(tokenBalance);
+                    } else {
+                      setQuantity(Number((tokenBalance * val) / 100).toFixed(5));
+                    }
+                  }
+                }}
+              >
+                {val}%
+              </button>
+            )
           ))}
-        <button className="p-2 rounded-md">
-          <PiPencilLineBold />
-        </button>
+
+        {!isEditing ? (
+          <button
+            className="p-2 rounded-md"
+            onClick={() => {
+              setIsEditing(true);
+              setEditIndex(null);
+            }}
+          >
+            <PiPencilLineBold />
+          </button>
+        ) : (
+          <button
+            onClick={saveEditedValue}
+            className="px-2"
+            disabled={editIndex === null}
+          >
+            <FaCheck />
+          </button>
+        )}
       </div>
 
       {/* Advanced Settings */}

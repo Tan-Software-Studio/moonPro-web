@@ -157,7 +157,7 @@ const Navbar = () => {
         const price = res?.data?.data[res?.data?.data?.length - 1]?.price;
         dispatch(setSolanaLivePrice(price));
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }
   useEffect(() => {
     fetchData();
@@ -202,18 +202,15 @@ const Navbar = () => {
             <div className=" flex items-center gap-2  ">
               {/* Search bar */}
               <div
-                className={`md:flex items-center  border ${
-                  isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
-                } border-[#333333] ${
-                  isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
+                  } border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                 onClick={() => dispatch(setIsSearchPopup(true))}
               >
                 <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                 <input
-                  className={` ${
-                    isSidebarOpen ? "w-0" : "w-12"
-                  } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                  className={` ${isSidebarOpen ? "w-0" : "w-12"
+                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                   placeholder={navbar?.profile?.search}
                 />
               </div>
@@ -294,7 +291,7 @@ const Navbar = () => {
                           <MdLockOutline className="text-xl" />
                           {navbar?.profile?.account}
                         </div>
-                        {/* <div
+                        <div
                           onClick={() => {
                             setIsProfileOpen(false);
                             setIsWatchlistPopup(true);
@@ -303,7 +300,7 @@ const Navbar = () => {
                         >
                           <FaRegStar className="text-xl" />
                           {navbar?.profile?.watchList}
-                        </div> */}
+                        </div>
                         <div
                           onClick={() => {
                             setIsProfileOpen(false);
