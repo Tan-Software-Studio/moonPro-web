@@ -73,7 +73,7 @@ function FilterMemescope({ isOpen, setIsOpen, data, onApply, onReset, filterValu
         <div className="">
           <div className="flex w-full justify-between p-3 px-3 py-4 h-full items-center border-b border-gray-500">
             <div className="flex items-center gap-1 ">
-              <HiMenuAlt2 color="11265B" size={20} />
+              <HiMenuAlt2 color="1976f8" size={20} />
               <span className="text-sm font-semibold text-gray-0">
                 {data?.Title}
               </span>
