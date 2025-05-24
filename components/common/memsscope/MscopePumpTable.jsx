@@ -34,7 +34,7 @@ import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 const MscopePumpTable = ({ MemscopeData }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoverRow, sethoverRow] = useState(false);
-  // solana live price 
+  // solana live price
   const solanaLivePrice = useSelector(
     (state) => state?.AllStatesData?.solanaLivePrice
   );
@@ -264,8 +264,8 @@ const MscopePumpTable = ({ MemscopeData }) => {
                               {block?.bonding_curv >= 100
                                 ? "100%"
                                 : block?.bonding_curv
-                                  ? `${block?.bonding_curv?.toFixed(2)} %`
-                                  : "0%"}
+                                ? `${block?.bonding_curv?.toFixed(2)} %`
+                                : "0%"}
                             </div>
                           </Tooltip>
                         </div>
@@ -273,16 +273,17 @@ const MscopePumpTable = ({ MemscopeData }) => {
                       <div>
                         <div className="w-[60px] h-[60px] relative flex items-center justify-center">
                           <div
-                            className={`${hoverRow === index
-                              ? "opacity-40 absolute inset-0 flex items-center justify-center"
-                              : "opacity-100"
-                              } `}
+                            className={`${
+                              hoverRow === index
+                                ? "opacity-40 absolute inset-0 flex items-center justify-center"
+                                : "opacity-100"
+                            } `}
                           >
                             <ChartComponent block={block} />
                           </div>
                           {hoverRow === index && (
                             <button
-                              className="absolute z-10 border border-[#1F73FC] rounded-lg bg-[#16171D] py-1 px-5 text-xs hover:bg-[#11265B] transition-all duration-300 ease-in-out"
+                              className="absolute z-10 rounded-lg bg-[#1d73fc] hover:bg-[#438bff] text-[#111111] font-bold py-1 px-5 text-xs transition-all duration-100 ease-in-out"
                               onClick={(e) =>
                                 buySolanaTokensQuickBuyHandler(
                                   solanaLivePrice,
@@ -298,10 +299,11 @@ const MscopePumpTable = ({ MemscopeData }) => {
                               }
                             >
                               {quickBuy
-                                ? `${quickBuy?.length > 6
-                                  ? `${quickBuy.slice(0, 7)}...`
-                                  : quickBuy
-                                }`
+                                ? `${
+                                    quickBuy?.length > 6
+                                      ? `${quickBuy.slice(0, 7)}...`
+                                      : quickBuy
+                                  }`
                                 : 0}
                             </button>
                           )}
@@ -312,8 +314,9 @@ const MscopePumpTable = ({ MemscopeData }) => {
                     <div className="flex justify-between">
                       <div className="flex gap-[12px] order-2">
                         <Tooltip
-                          body={`Number of Holders: ${block?.holders ? block.holders : 0
-                            }`}
+                          body={`Number of Holders: ${
+                            block?.holders ? block.holders : 0
+                          }`}
                         >
                           <div className="flex items-center gap-[4px]">
                             <Image src={Users} alt="user" />
@@ -324,10 +327,11 @@ const MscopePumpTable = ({ MemscopeData }) => {
                         </Tooltip>
 
                         <Tooltip
-                          body={`Volume: ${block?.volume
-                            ? humanReadableFormat(block?.volume.toFixed(2))
-                            : 0
-                            }`}
+                          body={`Volume: ${
+                            block?.volume
+                              ? humanReadableFormat(block?.volume.toFixed(2))
+                              : 0
+                          }`}
                         >
                           <div className="flex items-center gap-[4px]">
                             <Image src={Vol} alt="volume" />
@@ -340,8 +344,9 @@ const MscopePumpTable = ({ MemscopeData }) => {
                         </Tooltip>
 
                         <Tooltip
-                          body={`Market Cap: ${block?.MKC ? humanReadableFormat(block?.MKC) : 0
-                            }`}
+                          body={`Market Cap: ${
+                            block?.MKC ? humanReadableFormat(block?.MKC) : 0
+                          }`}
                         >
                           <div className="flex items-center gap-[4px]">
                             <Image src={MC} alt="MC" />

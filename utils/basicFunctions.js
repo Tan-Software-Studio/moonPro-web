@@ -72,9 +72,9 @@ function decimalConvert(price) {
 
 function formatDecimal(num) {
   // Defensive check to ensure input is a finite number
-  if (typeof num !== 'number' || !isFinite(num)) {
-    console.warn('Invalid input to formatDecimal:', num);
-    return ''; // Or return a fallback like '–'
+  if (typeof num !== "number" || !isFinite(num)) {
+    console.warn("Invalid input to formatDecimal:", num);
+    return ""; // Or return a fallback like '–'
   }
 
   if (num >= 1 || num <= -1 || num === 0) {
@@ -83,18 +83,29 @@ function formatDecimal(num) {
 
   const isNegative = num < 0;
   const absNum = Math.abs(num);
-  const decimalStr = absNum.toFixed(20).split('.')[1];
+  const decimalStr = absNum.toFixed(20).split(".")[1];
   const leadingZerosMatch = decimalStr.match(/^0*/);
   const leadingZeros = leadingZerosMatch[0].length;
   const trimmed = decimalStr.slice(leadingZeros);
 
   const subscripts = {
-    '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄',
-    '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉'
+    0: "₀",
+    1: "₁",
+    2: "₂",
+    3: "₃",
+    4: "₄",
+    5: "₅",
+    6: "₆",
+    7: "₇",
+    8: "₈",
+    9: "₉",
   };
 
   function toSubscript(n) {
-    return String(n).split('').map(d => subscripts[d] || d).join('');
+    return String(n)
+      .split("")
+      .map((d) => subscripts[d] || d)
+      .join("");
   }
 
   let result;
@@ -107,5 +118,16 @@ function formatDecimal(num) {
   return isNegative ? `-${result}` : result;
 }
 
+function calculatePercentageDifference(newValue, oldValue) {
+  const change = ((newValue - oldValue) / oldValue) * 100;
+  return change;
+}
 
-export { humanReadableFormat, humanReadableFormatNoDollar, decimalConvert, humanReadableFormatWithNoDollar, formatDecimal };
+export {
+  humanReadableFormat,
+  humanReadableFormatNoDollar,
+  decimalConvert,
+  humanReadableFormatWithNoDollar,
+  formatDecimal,
+  calculatePercentageDifference,
+};

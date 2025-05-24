@@ -7,9 +7,11 @@ import {
 } from "@/app/redux/memescopeData/Memescope";
 import { setSolanaLivePrice } from "@/app/redux/states";
 import store from "@/app/redux/store";
-import { updateTrendingData } from "@/app/redux/trending/solTrending.slice";
+import {
+  updateTrendingData,
+  updateTrendingLiveData,
+} from "@/app/redux/trending/solTrending.slice";
 import axios from "axios";
-import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const BASE_URL_MOON = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
@@ -21,7 +23,7 @@ let isTrendingSocketOn = false;
 export async function subscribeToWalletTracker() {
   try {
     const token = localStorage.getItem("token");
-    if (!token) return toast.error("Please login");
+    if (!token) return;
     const wallets = await axios({
       method: "get",
       url: `${BASE_URL_MOON}wallettracker/walletTracking`,
@@ -139,22 +141,58 @@ export async function subscribeToTrendingTokens() {
       }
     });
 
+    // live solana price
+    let liveSolanaPrice = 0;
+    store.subscribe(() => {
+      liveSolanaPrice = store?.getState()?.AllStatesData?.solanaLivePrice;
+    });
+
     // gRPC node data
     socket.on("gRPC_node_tx", async (data) => {
       if (data?.action == "buy") {
-        store.dispatch(
-          updateAllDataByNode({
-            priceInSol: data?.priceInSolOfToken,
-            token: data?.bought,
-          })
-        );
+        if (
+          data?.bought?.mint != "So11111111111111111111111111111111111111112"
+        ) {
+          store.dispatch(
+            updateAllDataByNode({
+              type: "buy",
+              price: data?.priceInSolOfToken * liveSolanaPrice,
+              mint: data?.bought?.mint,
+              amount: data?.bought?.uiTokenAmount?.amount,
+              holderAction: data?.holder,
+            })
+          );
+          store.dispatch(
+            updateTrendingLiveData({
+              type: "buy",
+              price: data?.priceInSolOfToken * liveSolanaPrice,
+              mint: data?.bought?.mint,
+              amount: data?.bought?.uiTokenAmount?.amount,
+              holderAction: data?.holder,
+            })
+          );
+        }
       } else if (data?.action == "sell") {
-        store.dispatch(
-          updateAllDataByNode({
-            priceInSol: data?.priceInSolOfToken,
-            token: data?.sold,
-          })
-        );
+        if (data?.sold?.mint != "So11111111111111111111111111111111111111112") {
+          store.dispatch(
+            updateAllDataByNode({
+              type: "sell",
+              price: data?.priceInSolOfToken * liveSolanaPrice,
+              mint: data?.sold?.mint,
+              amount: data?.sold?.uiTokenAmount?.amount,
+              holderAction: data?.holder,
+            })
+          );
+          store.dispatch(
+            updateTrendingLiveData({
+              type: "sell",
+              price: data?.priceInSolOfToken * liveSolanaPrice,
+              mint: data?.sold?.mint,
+              amount: data?.sold?.uiTokenAmount?.amount,
+              holderAction: data?.holder,
+            })
+          );
+        }
       }
     });
   } catch (error) {

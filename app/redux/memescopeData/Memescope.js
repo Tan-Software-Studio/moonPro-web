@@ -82,6 +82,67 @@ const allMemescopeData = createSlice({
     },
     updateAllDataByNode: (state, { payload }) => {
       // console.log(payload);
+      if (
+        state.newLaunch.length > 0 &&
+        state.MscopeGraduateData.length > 0 &&
+        state.MscopeGraduatedData.length
+      ) {
+        // new launch
+        const findTokenFromNewLaunch = state?.newLaunch?.findIndex(
+          (item) => item?.address == payload?.mint
+        );
+        if (findTokenFromNewLaunch >= 0) {
+          state.newLaunch[findTokenFromNewLaunch].volume +=
+            payload?.price * payload?.amount;
+          state.newLaunch[findTokenFromNewLaunch].MKC =
+            state.newLaunch[findTokenFromNewLaunch].supply * payload?.price;
+          if (payload.holderAction == "add") {
+            state.newLaunch[findTokenFromNewLaunch].holders += 1;
+          } else if (payload.holderAction == "remove") {
+            if (state.newLaunch[findTokenFromNewLaunch].holders > 0) {
+              state.newLaunch[findTokenFromNewLaunch].holders -= 1;
+            }
+          }
+        }
+        // about to graduate
+        const findTokenFromGraduate = state?.MscopeGraduateData?.findIndex(
+          (item) => item?.address == payload?.mint
+        );
+        if (findTokenFromGraduate >= 0) {
+          state.MscopeGraduateData[findTokenFromGraduate].volume +=
+            payload?.price * payload?.amount;
+          state.MscopeGraduateData[findTokenFromGraduate].MKC =
+            state.MscopeGraduateData[findTokenFromGraduate].totalsupply *
+            payload?.price;
+          if (payload.holderAction == "add") {
+            state.MscopeGraduateData[findTokenFromGraduate].holders += 1;
+          } else if (payload.holderAction == "remove") {
+            if (state.MscopeGraduateData[findTokenFromGraduate].holders) {
+              state.MscopeGraduateData[findTokenFromGraduate].holders -= 1;
+            }
+          }
+        }
+
+        // graduated
+        const findTokenFromGraduated = state?.MscopeGraduatedData?.findIndex(
+          (item) => item?.address == payload?.mint
+        );
+
+        if (findTokenFromGraduated >= 0) {
+          state.MscopeGraduatedData[findTokenFromGraduated].volume +=
+            payload?.price * payload?.amount;
+          state.MscopeGraduatedData[findTokenFromGraduated].MKC =
+            state.MscopeGraduatedData[findTokenFromGraduated].totalsupply *
+            payload?.price;
+          if (payload.holderAction == "add") {
+            state.MscopeGraduatedData[findTokenFromGraduated].holders += 1;
+          } else if (payload.holderAction == "remove") {
+            if (state.MscopeGraduatedData[findTokenFromGraduated].holders) {
+              state.MscopeGraduatedData[findTokenFromGraduated].holders -= 1;
+            }
+          }
+        }
+      }
     },
   },
 

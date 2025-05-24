@@ -35,7 +35,7 @@ const TableBody = ({ data, img }) => {
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
-  // solana live price 
+  // solana live price
   const solanaLivePrice = useSelector(
     (state) => state?.AllStatesData?.solanaLivePrice
   );
@@ -107,7 +107,7 @@ const TableBody = ({ data, img }) => {
                   onClick={() => navigateToChartScreen(row)}
                 >
                   {/* Column 1: Icon and Pair Info */}
-                  <td className="whitespace-nowrap W-60 md:px-6 px-3 py-3 ">
+                  <td className="whitespace-nowrap w-60 md:px-6 px-3 py-3 ">
                     <div className="flex items-center gap-3 !text-left">
                       {row?.img ? (
                         <img
@@ -169,59 +169,59 @@ const TableBody = ({ data, img }) => {
                                 {(row?.offchainData?.metadata?.telegram ||
                                   row?.offchainData?.metadata?.extensions
                                     ?.telegram) && (
-                                    <Link
-                                      href={
-                                        row?.offchainData?.metadata?.telegram ||
-                                        row?.offchainData?.metadata?.extensions
-                                          ?.telegram
-                                      }
-                                      target="_blank"
-                                      onClick={(e) => e.stopPropagation()}
-                                    >
-                                      <FaTelegramPlane
-                                        size={16}
-                                        className="text-[#6E6E6E] hover:text-[#ffffff]"
-                                      />
-                                    </Link>
-                                  )}
+                                  <Link
+                                    href={
+                                      row?.offchainData?.metadata?.telegram ||
+                                      row?.offchainData?.metadata?.extensions
+                                        ?.telegram
+                                    }
+                                    target="_blank"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <FaTelegramPlane
+                                      size={16}
+                                      className="text-[#6E6E6E] hover:text-[#ffffff]"
+                                    />
+                                  </Link>
+                                )}
 
                                 {(row?.offchainData?.metadata?.twitter ||
                                   row?.offchainData?.metadata?.extensions
                                     ?.twitter) && (
-                                    <Link
-                                      href={
-                                        row?.offchainData?.metadata?.twitter ||
-                                        row?.offchainData?.metadata?.extensions
-                                          ?.twitter
-                                      }
-                                      target="_blank"
-                                      onClick={(e) => e.stopPropagation()}
-                                    >
-                                      <FaXTwitter
-                                        size={16}
-                                        className="text-[#6E6E6E] hover:text-[#ffffff]"
-                                      />
-                                    </Link>
-                                  )}
+                                  <Link
+                                    href={
+                                      row?.offchainData?.metadata?.twitter ||
+                                      row?.offchainData?.metadata?.extensions
+                                        ?.twitter
+                                    }
+                                    target="_blank"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <FaXTwitter
+                                      size={16}
+                                      className="text-[#6E6E6E] hover:text-[#ffffff]"
+                                    />
+                                  </Link>
+                                )}
 
                                 {(row?.offchainData?.metadata?.website ||
                                   row?.offchainData?.metadata?.extensions
                                     ?.website) && (
-                                    <Link
-                                      href={
-                                        row?.offchainData?.metadata?.website ||
-                                        row?.offchainData?.metadata?.extensions
-                                          ?.website
-                                      }
-                                      target="_blank"
-                                      onClick={(e) => e.stopPropagation()}
-                                    >
-                                      <MdOutlineLanguage
-                                        size={16}
-                                        className="text-[#6E6E6E] hover:text-[#ffffff]"
-                                      />
-                                    </Link>
-                                  )}
+                                  <Link
+                                    href={
+                                      row?.offchainData?.metadata?.website ||
+                                      row?.offchainData?.metadata?.extensions
+                                        ?.website
+                                    }
+                                    target="_blank"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <MdOutlineLanguage
+                                      size={16}
+                                      className="text-[#6E6E6E] hover:text-[#ffffff]"
+                                    />
+                                  </Link>
+                                )}
                               </div>
 
                               <Link
@@ -241,7 +241,7 @@ const TableBody = ({ data, img }) => {
                   </td>
 
                   {/* Column 2: Market Cap and Price */}
-                  <td className="whitespace-nowrap W-32 py-3 md:px-6 px-3">
+                  <td className="whitespace-nowrap w-32 py-3 md:px-6 px-3">
                     <div className="flex flex-col gap-1">
                       <div>
                         <p className="text-[15px] font-medium">
@@ -249,34 +249,35 @@ const TableBody = ({ data, img }) => {
                         </p>
                       </div>
                       <p
-                        className={`text-[12px] font-medium ${data.length > 0 &&
-                          typeof row?.Percentage === "string" &&
-                          row?.Percentage.includes("-")
-                          ? "text-[#ED1B24]"
-                          : "text-[#21CB6B]"
-                          }`}
+                        className={`text-[12px] font-medium ${
+                          row?.Percentage < 0
+                            ? "text-[#ED1B24]"
+                            : "text-[#21CB6B]"
+                        }`}
                       >
-                        {row?.Percentage}
+                        {`${row?.Percentage > 0 ? "+" : ""}${Number(
+                          row?.Percentage || 0
+                        ).toFixed(2)}`}
                       </p>
                     </div>
                   </td>
 
                   {/* Column 3: Liquidity */}
-                  <td className="whitespace-nowrap W-32 py-3 md:px-6 px-3">
+                  <td className="whitespace-nowrap w-32 py-3 md:px-6 px-3">
                     <span className="text-white text-[15px] font-medium">
                       {humanReadableFormat(row?.liquidity || 0)}
                     </span>
                   </td>
 
                   {/* Column 4: Volume */}
-                  <td className="whitespace-nowrap W-32 text-[15px] py-3 md:px-6 px-3">
+                  <td className="whitespace-nowrap w-32 text-[15px] py-3 md:px-6 px-3">
                     {humanReadableFormat(row?.traded_volume)}
                   </td>
 
                   {/* Column 5: Swaps */}
-                  <td className="whitespace-nowrap W-32 py-3 md:px-6 px-3">
+                  <td className="whitespace-nowrap w-32 py-3 md:px-6 px-3">
                     <p className="mt-0.5 text-[15px] font-medium">
-                      {row?.trades}
+                      {row?.buys + row?.sells}
                     </p>
 
                     <div className="flex  gap-1.5">
@@ -296,10 +297,11 @@ const TableBody = ({ data, img }) => {
                   {/* <td className="whitespace-nowrap px-6 py-4 text-[16px]">
                     {data[ind]?.tradesCountWithUniqueTraders}
                   </td> */}
-                  <td className="whitespace-nowrap W-60 py-3 flex justify-center">
+                  <td className="whitespace-nowrap w-60 py-3 flex justify-center">
                     <div
-                      className={`flex  gap-2 ${!row.mint_authority ? "text-white" : "text-[#828282]"
-                        }`}
+                      className={`flex  gap-2 ${
+                        !row.mint_authority ? "text-white" : "text-[#828282]"
+                      }`}
                     >
                       <Tooltip
                         body={
@@ -330,10 +332,11 @@ const TableBody = ({ data, img }) => {
                       <Tooltip body={"No one can freeze token transfers."}>
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${!row.mint_authority
-                              ? "text-white"
-                              : "text-[#828282]"
-                              }`}
+                            className={`flex flex-col text-start opacity-75 ${
+                              !row.mint_authority
+                                ? "text-white"
+                                : "text-[#828282]"
+                            }`}
                           >
                             {!row.freeze_authority ? (
                               <CiCircleCheck
@@ -361,8 +364,9 @@ const TableBody = ({ data, img }) => {
                       >
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${true ? "text-white" : "text-[#828282]"
-                              }`}
+                            className={`flex flex-col text-start opacity-75 ${
+                              true ? "text-white" : "text-[#828282]"
+                            }`}
                           >
                             {true ? (
                               <CiCircleCheck
@@ -386,8 +390,9 @@ const TableBody = ({ data, img }) => {
                       <Tooltip body={"Shows if token has 10 holders."}>
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${row?.top10Holder ? "text-white" : "text-[#828282]"
-                              }`}
+                            className={`flex flex-col text-start opacity-75 ${
+                              row?.top10Holder ? "text-white" : "text-[#828282]"
+                            }`}
                           >
                             {row?.top10Holder ? (
                               <CiCircleCheck
@@ -411,9 +416,11 @@ const TableBody = ({ data, img }) => {
                   </td>
 
                   {/* Column 6: Quick Buy Button */}
-                  <td className="whitespace-nowrap W-32 py-3 place-items-center">
+                  <td className="whitespace-nowrap w-32 py-3 place-items-center">
                     <button
-                      className="text-[#1F73FC] rounded-[4px] py-3 px-[30px] hover:bg-[#11265B] transition-all duration-300 ease-in-out flex items-center gap-2"
+                      className={`text-[#111111] font-bold rounded-[20px] py-2 ${
+                        quickBuy > 0 ? "px-2" : "px-3"
+                      } bg-[#1d73fc] hover:bg-[#438bff] transition-all duration-300 ease-in-out flex items-center justify-center`}
                       onClick={(e) =>
                         buySolanaTokensQuickBuyHandler(
                           solanaLivePrice,
@@ -431,12 +438,13 @@ const TableBody = ({ data, img }) => {
                         <Image src={Lightning} alt="" />
                       </span>
                       <span>
-                        {quickBuy
-                          ? `${quickBuy.length > 6
-                            ? `${quickBuy.slice(0, 7)}...`
-                            : quickBuy
-                          }`
-                          : 0}
+                        {quickBuy > 0
+                          ? `${
+                              quickBuy.length > 6
+                                ? `Buy ${quickBuy.slice(0, 7)}... SOL`
+                                : `Buy ${quickBuy} SOL`
+                            }`
+                          : `Buy`}
                       </span>
                     </button>
                   </td>
