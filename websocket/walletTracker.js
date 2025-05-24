@@ -109,7 +109,7 @@ export async function subscribeToTrendingTokens() {
             updateTrendingData({ time: "1m", data: data?.tokens })
           );
           break;
-        case "15+min":
+        case "5+min":
           store.dispatch(
             updateTrendingData({ time: "15m", data: data?.tokens })
           );

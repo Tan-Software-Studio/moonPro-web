@@ -133,7 +133,7 @@ const Navbar = () => {
         const rawData = response?.data?.data;
         const formattedData = {
           "1m": rawData?.["1+min"]?.[0].tokens || [],
-          "15m": rawData?.["15+min"]?.[0].tokens || [],
+          "5m": rawData?.["5+min"]?.[0].tokens || [],
           "30m": rawData?.["30+min"]?.[0].tokens || [],
           "1h": rawData?.["1+hr"]?.[0].tokens || [],
         };

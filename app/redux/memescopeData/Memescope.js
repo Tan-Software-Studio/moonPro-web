@@ -1,7 +1,6 @@
 "use client";
 import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import SolQuery from "@/components/common/NewPair/SolQuery";
 
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 // Helper function to format large numbers

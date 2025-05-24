@@ -5,7 +5,7 @@ const solTrendingData = createSlice({
   initialState: {
     filterTime: {
       "1m": [],
-      "15m": [],
+      "5m": [],
       "30m": [],
       "1h": [],
     },
