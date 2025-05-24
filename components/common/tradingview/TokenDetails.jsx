@@ -5,7 +5,12 @@ import Image from "next/image";
 import { IoMdDoneAll } from "react-icons/io";
 import { decimalConvert } from "@/utils/basicFunctions";
 import { useDispatch, useSelector } from "react-redux";
-import { removeFavouriteToken, setChartSymbolImage, setFavouriteTokens, setIsFaviouriteToken } from "@/app/redux/states";
+import {
+  removeFavouriteToken,
+  setChartSymbolImage,
+  setFavouriteTokens,
+  setIsFaviouriteToken,
+} from "@/app/redux/states";
 import { CiHeart } from "react-icons/ci";
 import {
   PiDiscordLogo,
@@ -39,7 +44,6 @@ const TokenDetails = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCopyUrl, setIsCopyUrl] = useState(false);
 
-
   const dispatch = useDispatch();
   const tokenImage = useSelector(
     (state) => state?.AllStatesData?.chartSymbolImage
@@ -60,7 +64,7 @@ const TokenDetails = ({
       } else {
         dispatch(setChartSymbolImage(getImageFromLocalStorage));
       }
-    } catch (error) { }
+    } catch (error) {}
   }
   const token = localStorage.getItem("token");
 
@@ -81,14 +85,15 @@ const TokenDetails = ({
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-    }).then(async (res) => {
-      toast.success(res?.data?.message);
-      dispatch(setIsFaviouriteToken())
-      // await dispatch(
-      //   setFavouriteTokens([, res?.data?.data])
-      // );
-      // dispatch(setFavouriteTokens([...tokenFavList, res?.data?.data?.tokenFavorites]))
     })
+      .then(async (res) => {
+        toast.success(res?.data?.message);
+        dispatch(setIsFaviouriteToken());
+        // await dispatch(
+        //   setFavouriteTokens([, res?.data?.data])
+        // );
+        // dispatch(setFavouriteTokens([...tokenFavList, res?.data?.data?.tokenFavorites]))
+      })
       .catch((err) => {
         toast.error(err?.res?.data?.message || "Something went wrong");
       });
@@ -96,42 +101,48 @@ const TokenDetails = ({
 
   async function checkLikeOrNot() {
     if (!token) {
-      return toast.error("Please login");
+      return;
     }
-    await axios.get(`${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}user/checkTokenFavorite/${tokenaddress}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }
-    ).then((res) => {
-      dispatch(setIsFaviouriteToken(res?.data?.data?.exists))
-    })
-      .catch((err) => {
-      });
+    await axios
+      .get(
+        `${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}user/checkTokenFavorite/${tokenaddress}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        dispatch(setIsFaviouriteToken(res?.data?.data?.exists));
+      })
+      .catch((err) => {});
   }
 
   async function removeFromFavouriteHandler() {
     if (!token) {
       return toast.error("Please login");
     }
-    await axios.delete(`${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}user/deleteTokenFavorite`, {
-      data: {
-        tokenAddress: tokenaddress
-      },
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    },
-    ).then(async (res) => {
-      toast.success(res?.data?.message);
-      dispatch(setIsFaviouriteToken())
-    })
+    await axios
+      .delete(
+        `${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}user/deleteTokenFavorite`,
+        {
+          data: {
+            tokenAddress: tokenaddress,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then(async (res) => {
+        toast.success(res?.data?.message);
+        dispatch(setIsFaviouriteToken());
+      })
       .catch((err) => {
         toast.error(err?.res?.data?.message || "Something went wrong");
       });
   }
-
 
   async function copyUrlOfPage() {
     await navigator.clipboard.writeText(window.location.href);
@@ -142,12 +153,11 @@ const TokenDetails = ({
   }
 
   useEffect(() => {
-    checkLikeOrNot()
-  }, [isFavourite])
+    checkLikeOrNot();
+  }, [isFavourite]);
 
   useEffect(() => {
     getAndSetImageFromLocalStorage();
-
   }, []);
   return (
     <div className="bg-transparent border-b-[1px] border-b-[#26262e] w-full">
@@ -245,17 +255,17 @@ const TokenDetails = ({
         </div>
         <div className="flex items-center justify-between mb-[5px] md:mb-[0px] px-3 md:px-[0px]">
           <div className="flex items-center md:flex-col">
-            <div
-              className="cursor-pointer border-[1px] md:!border-t-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center"
-            >
+            <div className="cursor-pointer border-[1px] md:!border-t-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center">
               {isFavourite ? (
                 <FaHeart
                   onClick={removeFromFavouriteHandler}
-                  className="text-[#1F73FC] text-[20px]" />
+                  className="text-[#1F73FC] text-[20px]"
+                />
               ) : (
                 <CiHeart
                   onClick={addToFavouriteHandler}
-                  className="text-[#F6F6F6] text-[23px]" />
+                  className="text-[#F6F6F6] text-[23px]"
+                />
               )}
             </div>
             <div className="cursor-pointer border-[1px] md:!border-b-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center">
@@ -297,7 +307,10 @@ const TokenDetails = ({
             >
               <div className="flex items-center justify-between py-[12px] px-[24px]">
                 <h1 className="text-[22px] font-[700] text-[#F6F6F6]">Share</h1>
-                <RxCross1 onClick={() => setIsModalOpen(false)} className="text-[16px] text-[#F6F6F6] cursor-pointer" />
+                <RxCross1
+                  onClick={() => setIsModalOpen(false)}
+                  className="text-[16px] text-[#F6F6F6] cursor-pointer"
+                />
               </div>
               <div className="bg-[#404040] h-[1.5px]"></div>
               <div className="py-[12px] px-[24px]">

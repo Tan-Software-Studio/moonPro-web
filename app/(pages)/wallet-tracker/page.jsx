@@ -30,7 +30,7 @@ function WalletTracker() {
 
   const fetchWalletData = async () => {
     const token = localStorage.getItem("token");
-    if (!token) return toast.error("Please login");
+    if (!token) return;
     await axios({
       method: "get",
       url: `${BASE_URL}wallettracker/walletTracking`,

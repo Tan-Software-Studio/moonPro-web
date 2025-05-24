@@ -54,7 +54,7 @@ function LeftSideWallet({
       walletName: updatedName,
     };
     const token = localStorage.getItem("token");
-    if (!token) return toast.error("Please login");
+    if (!token) return;
     await axios
       .put(`${BASE_URL}wallettracker/walletTracking`, updatedWalletData, {
         headers: {
@@ -109,7 +109,7 @@ function LeftSideWallet({
 
     try {
       const token = localStorage.getItem("token");
-      if (!token) return toast.error("Please login");
+      if (!token) return;
       const response = await axios.put(
         `${BASE_URL}wallettracker/walletTracking`,
         updatedWalletData,
@@ -148,7 +148,7 @@ function LeftSideWallet({
 
     try {
       const token = localStorage.getItem("token");
-      if (!token) return toast.error("Please login");
+      if (!token) return;
       await axios.delete(`${BASE_URL}wallettracker/walletTracking`, {
         data: {
           walletAddresses: [walletAddress],
@@ -183,7 +183,7 @@ function LeftSideWallet({
 
     try {
       const token = localStorage.getItem("token");
-      if (!token) return toast.error("Please login");
+      if (!token) return;
       const response = await axios.put(
         `${BASE_URL}wallettracker/walletTracking`,
         {

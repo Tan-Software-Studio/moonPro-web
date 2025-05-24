@@ -84,7 +84,7 @@ function AddWalletModal({
 
     try {
       const token = localStorage.getItem("token");
-      if (!token) return toast.error("Please login");
+      if (!token) return;
       const response = await axios.post(
         `${BASE_URL}wallettracker/walletTracking`,
         walletDataToSend,
