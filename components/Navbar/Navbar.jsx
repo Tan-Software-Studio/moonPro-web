@@ -15,6 +15,7 @@ import {
   setIsEnabled,
   setIsSearchPopup,
   setLoginRegPopupAuth,
+  setSolanaLivePrice,
   setSolWalletAddress,
 } from "@/app/redux/states";
 import { PiUserBold, PiUserLight } from "react-icons/pi";
@@ -132,11 +133,9 @@ const Navbar = () => {
         const rawData = response?.data?.data;
         const formattedData = {
           "1m": rawData?.["1+min"]?.[0].tokens || [],
-          "5m": rawData?.["5+min"]?.[0].tokens || [],
+          "15m": rawData?.["15+min"]?.[0].tokens || [],
           "30m": rawData?.["30+min"]?.[0].tokens || [],
           "1h": rawData?.["1+hr"]?.[0].tokens || [],
-          "6h": rawData?.["6+hr"]?.[0].tokens || [],
-          "24h": rawData?.["24+hr"]?.[0].tokens || [],
         };
         dispatch(setFilterTime(formattedData));
         dispatch(setLoading(false));
@@ -146,9 +145,24 @@ const Navbar = () => {
         dispatch(setLoading(false));
       });
   }
+  async function fetchSolPrice() {
+    await axios({
+      method: "get",
+      url: `https://pro-api.solscan.io/v2.0/token/price?address=So11111111111111111111111111111111111111112`,
+      headers: {
+        token: process.env.NEXT_PUBLIC_SOLANAPRO_TOKEN,
+      },
+    })
+      .then((res) => {
+        const price = res?.data?.data[res?.data?.data?.length - 1]?.price;
+        dispatch(setSolanaLivePrice(price));
+      })
+      .catch((err) => {});
+  }
   useEffect(() => {
     fetchData();
     dispatch(fetchMemescopeData());
+    fetchSolPrice();
   }, []);
   // update and get solana balance
   useEffect(() => {
@@ -188,15 +202,18 @@ const Navbar = () => {
             <div className=" flex items-center gap-2  ">
               {/* Search bar */}
               <div
-                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
-                  } border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                className={`md:flex items-center  border ${
+                  isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
+                } border-[#333333] ${
+                  isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                 onClick={() => dispatch(setIsSearchPopup(true))}
               >
                 <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                 <input
-                  className={` ${isSidebarOpen ? "w-0" : "w-12"
-                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                  className={` ${
+                    isSidebarOpen ? "w-0" : "w-12"
+                  } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                   placeholder={navbar?.profile?.search}
                 />
               </div>

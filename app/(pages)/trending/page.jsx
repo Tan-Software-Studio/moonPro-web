@@ -23,7 +23,7 @@ const Trending = () => {
   const tableRef = useRef(null);
   const [sortColumn, setSortColumn] = useState("");
   const [sortOrder, setSortOrder] = useState("");
-  const [localFilterTime, setLocalFilterTime] = useState("24h");
+  const [localFilterTime, setLocalFilterTime] = useState("1h");
   const [filteredData, setFilteredData] = useState([]);
   const [filtersApplied, setFiltersApplied] = useState(false);
 
@@ -222,7 +222,7 @@ const Trending = () => {
       headTitle: tredingPage?.mainHeader?.trending,
       discription: tredingPage?.mainHeader?.desc,
     },
-    timeDuration: ["1m", "5m", "30m", "1h", "6h", "24h"],
+    timeDuration: ["1m", "15m", "30m", "1h"],
     Filter: {
       menuIcon: Filter,
       menuTitle: tredingPage?.mainHeader?.filter?.filter,
