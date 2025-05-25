@@ -299,8 +299,8 @@ const MscopePumpTable = ({ MemscopeData }) => {
                             >
                               {quickBuy > 0
                                 ? `${quickBuy?.length > 6
-                                  ? `Buy ${quickBuy.slice(0, 7)}... SOL`
-                                  : `Buy ${quickBuy} SOL`
+                                  ? `${quickBuy.slice(0, 7)}...`
+                                  : `${quickBuy}`
                                 }`
                                 : 'Buy'}
                             </button>
