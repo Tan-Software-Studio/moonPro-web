@@ -523,6 +523,7 @@
         "qty": "مقدار",
         "buy": "خریدیں",
         "sell": "بیچیں",
+        "orderSettings": "آرڈر کی ترتیبات",
         "advancedsettings": {
           "advancedsettings": "اعلی ترتیبات",
           "autoapprove": "خودکار منظوری",

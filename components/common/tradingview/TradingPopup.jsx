@@ -11,8 +11,9 @@ import {
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import Image from "next/image";
-import { Solana, solana } from "@/app/Images";
-
+import { solana } from "@/app/Images";
+import RightModalOpenSetting from "@/components/Settings/RightModalOpenSetting";
+import { setOpenOrderSetting } from "@/app/redux/states";
 const TradingPopup = ({
   tragindViewPage,
   activeTab,
@@ -28,7 +29,8 @@ const TradingPopup = ({
   progranAddress,
   bondingProgress,
   dispatch,
-  solanaLivePrice
+  solanaLivePrice,
+  tredingPage
 }) => {
   const [loaderSwap, setLoaderSwap] = useState(false);
   const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
@@ -37,10 +39,11 @@ const TradingPopup = ({
   const [slippage, setSlippage] = useState(20);
   const [priorityFee, setPriorityFee] = useState(0.0001);
   const [isMev, setIsMev] = useState(true);
-  const [isAutoApprove, setisAutoApprove] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [customInput, setCustomInput] = useState("");
+  const [presist, setPresist] = useState("P1");
+  const [preSetData, setPreSetData] = useState({});
   const [buyValues, setBuyValues] = useState(() => {
     const saved = localStorage.getItem('buyValues');
     return saved ? JSON.parse(saved) : [0.1, 0.2, 1, 2];
@@ -49,8 +52,8 @@ const TradingPopup = ({
     const saved = localStorage.getItem('sellValues');
     return saved ? JSON.parse(saved) : [20, 50, 80, 100];
   });
-
-
+  // order settings flag
+  const orderSettingFlag = useSelector((state) => state?.AllStatesData?.openOrderSetting);
   const saveEditedValue = () => {
     const value = parseFloat(customInput);
     if (value > 0) {
@@ -70,7 +73,6 @@ const TradingPopup = ({
       setCustomInput("");
     }
   };
-
   // function to calculate rec. amount
   function calculateRecAmountSolToAnytoken(
     amountToken1,
@@ -80,7 +82,6 @@ const TradingPopup = ({
     if (priceToken2 === 0) {
       throw new Error("Price of token 2 cannot be zero");
     }
-
     const usdValue = amountToken1 * priceToken1;
     const amountToken2 = usdValue / priceToken2;
     if (amountToken2 > 1) {
@@ -89,7 +90,6 @@ const TradingPopup = ({
       setRrcQty(amountToken2.toFixed(6));
     }
   }
-
   const tokenImage = useSelector(
     (state) => state?.AllStatesData?.chartSymbolImage
   );
@@ -99,7 +99,6 @@ const TradingPopup = ({
       setPriorityFee("");
       return;
     }
-
     const numericValue = Number(value);
     if (!isNaN(numericValue) && numericValue >= 0) {
       setPriorityFee(numericValue);
@@ -127,6 +126,13 @@ const TradingPopup = ({
       setSlippage(Math.min(numericValue, 100));
     }
   };
+  // update order settings
+  function updateOrderSetting() {
+    setSlippage(preSetData?.[presist]?.[activeTab]?.slippage);
+    setPriorityFee(preSetData?.[presist]?.[activeTab]?.priorityFee);
+    setIsMev(preSetData?.[presist]?.[activeTab]?.mev);
+  }
+  // buy handler
   async function buyHandler() {
     if (walletAddress) {
       if (quantity < nativeTokenbalance) {
@@ -149,6 +155,7 @@ const TradingPopup = ({
       toast.error("Please login.");
     }
   }
+  // sell handler
   async function sellHandler() {
     if (walletAddress) {
       if (quantity <= tokenBalance) {
@@ -191,6 +198,19 @@ const TradingPopup = ({
       }
     }
   }, [quantity, activeTab, price, solanaLivePrice]);
+
+  // all about order setting
+  useEffect(() => {
+    const preSetFromLocalStorage = JSON.parse(localStorage.getItem("preSetAllData"));
+    const orderActiveChart = localStorage.getItem("preSetSettingActiveChart");
+    setPreSetData(preSetFromLocalStorage);
+    if (orderActiveChart) {
+      setPresist(orderActiveChart);
+    }
+  }, [orderSettingFlag]);
+  useEffect(() => {
+    updateOrderSetting();
+  }, [presist, activeTab, preSetData]);
   return (
     <div className="bg-[#08080E] flex flex-col h-fit w-full text-white xl:p-4 md:p-3">
       {/* Buy/Sell Toggle */}
@@ -219,6 +239,40 @@ const TradingPopup = ({
           {tragindViewPage?.right?.buysell?.sell}
         </button>
       </div>
+      {/* preset settings  */}
+      <div className={`flex items-center justify-between mb-[16px]`}>
+        <div className="flex items-center gap-[8px]">
+          <FaCog className="text-[16px]" />
+          <h1 className="text-[#F6F6F6] text-[12px] font-[400]">
+            {
+              tragindViewPage?.right?.buysell?.orderSettings
+            }
+          </h1>
+        </div>
+        <button
+          className="p-2 rounded-md"
+          onClick={() => dispatch(setOpenOrderSetting(true))}
+        >
+          <PiPencilLineBold />
+        </button>
+      </div>
+      <div className="mb-[16px] flex items-center border-[0.5px] border-[#404040] rounded-[4px]">
+        {["P1", "P2", "P3", "P4", "P5"].map((item, index) => <button
+          key={index + 1}
+          onClick={() => {
+            setPresist(item);
+            localStorage.setItem("preSetSettingActiveChart", item);
+          }}
+          className={`w-full py-[7px] text-[#F6F6F6] font-[700] text-[12px] border-r-[0.5px] border-r-[#404040] duration-300 ease-in-out ${presist == item
+            ? activeTab == "buy"
+              ? "bg-[#1F73FC]"
+              : "bg-[#ED1B24]"
+            : "bg-transparent"
+            }`}
+        >
+          {item}
+        </button>)}
+      </div>
       {/* Quantity Input */}
       <div className="bg-transparent rounded-[8px] flex items-center justify-between border-t-[0.5px] border-t-[#4D4D4D] mb-[8px]">
         <h1 className="text-[#A8A8A8] rounded-l-[8px] bg-[#1F1F1F] h-[40px] px-4 flex items-center justify-center whitespace-nowrap">
@@ -243,14 +297,13 @@ const TradingPopup = ({
             />
           ) : (
             <img
-              src={tokenImage || Solana}
+              src={tokenImage || solana}
               alt="Token Image"
               className="w-[35px] h-[20px]"
             />
           )}
         </div>
       </div>
-
       {/* Preset Quantity Buttons */}
       <div className="flex gap-2 mb-[16px]">
         {activeTab == "buy"
@@ -319,7 +372,6 @@ const TradingPopup = ({
               </button>
             )
           ))}
-
         {!isEditing ? (
           <button
             className="p-2 rounded-md"
@@ -340,7 +392,6 @@ const TradingPopup = ({
           </button>
         )}
       </div>
-
       {/* Advanced Settings */}
       <div className="mb-[16px]">
         <div
@@ -414,7 +465,7 @@ const TradingPopup = ({
               </h1>
             </div>
             {/* Auto approve */}
-            <div className="flex items-center gap-[8px]">
+            {/* <div className="flex items-center gap-[8px]">
               <div
                 onClick={() => setisAutoApprove(!isAutoApprove)}
                 className={`flex ${isAutoApprove
@@ -430,17 +481,15 @@ const TradingPopup = ({
               <h1 className="text-[#F6F6F6] text-[14px] font-[400]">
                 {tragindViewPage?.right?.buysell?.advancedsettings?.autoapprove}
               </h1>
-            </div>
+            </div> */}
           </div>
-
           <div className="bg-transparent rounded-[8px] flex items-center justify-between border-t-[0.5px] border-t-[#4D4D4D] mb-[16px]">
             <h1 className="text-[#A8A8A8] select-none rounded-l-[8px] bg-[#1F1F1F] h-[40px] px-4 flex items-center whitespace-nowrap">
               {tragindViewPage?.right?.buysell?.advancedsettings?.priority}
             </h1>
-
             <input
               type="number"
-              className="bg-transparent w-full text-white text-right outline-none text-[14px] h-[40px] [&::-webkit-inner-spin-button]:appearance-none 
+              className="bg-transparent px-11 w-full text-white text-right outline-none text-[14px] h-[40px] [&::-webkit-inner-spin-button]:appearance-none 
              [&::-webkit-outer-spin-button]:appearance-none 
              [&::-moz-appearance]:textfield"
               value={priorityFee}
@@ -474,7 +523,6 @@ const TradingPopup = ({
           </div>
         </div>
       </div>
-
       {/* Quick Buy/Sell Button */}
       {activeTab === "buy" ? (
         loaderSwap ? (
@@ -505,8 +553,13 @@ const TradingPopup = ({
           {`${tragindViewPage?.right?.buysell?.btnsell} (Receive ${recQty} SOL)`}
         </button>
       )}
+      <RightModalOpenSetting
+        ordersettingLang={tredingPage?.mainHeader?.ordersetting}
+        isOpen={orderSettingFlag}
+        onClose={() => dispatch(setOpenOrderSetting(false))}
+        tredingPage={tredingPage}
+      />
     </div>
   );
 };
-
 export default TradingPopup;

@@ -524,6 +524,7 @@
         "qty": "数量",
         "buy": "購入",
         "sell": "売却",
+        "orderSettings": "注文設定",
         "advancedsettings": {
           "advancedsettings": "詳細設定",
           "autoapprove": "自動承認",

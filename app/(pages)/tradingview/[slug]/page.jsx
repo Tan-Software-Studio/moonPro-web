@@ -8,8 +8,7 @@ import { solana } from "@/app/Images";
 import {
   getSoalanaTokenBalance,
 } from "@/utils/solanaNativeBalance";
-import { calculatePercentageDifference, convertAnyPriceToSol, decimalConvert } from "@/utils/basicFunctions";
-import axiosInstance from "@/components/axiosIntance/axiosInstance";
+import { calculatePercentageDifference, convertAnyPriceToSol, decimalConvert, numberFormated } from "@/utils/basicFunctions";
 import TVChartContainer from "@/components/TradingChart/TradingChart";
 import TokenDetails from "@/components/common/tradingview/TokenDetails";
 import TradingStats from "@/components/common/tradingview/TradingStats";
@@ -24,6 +23,7 @@ import { fetchChartAllData } from "@/app/redux/chartDataSlice/chartData.slice";
 const Tradingview = () => {
   const { t } = useTranslation();
   const tragindViewPage = t("tragindViewPage");
+  const tredingPage = t("tredingPage");
   const [activeTab, setActiveTab] = useState("buy");
   const [dataLoaderForChart, setDataLoaderForChart] = useState(false);
   const latestTradesData = useSelector((state) => state.allCharTokenData);
@@ -274,11 +274,11 @@ const Tradingview = () => {
     },
     {
       label: `Pooled ${tokenSymbol}`,
-      value: `${Number(chartTokenData?.Pooled_Base || 0).toFixed(2)} | ${humanReadableFormat(chartTokenData?.Pooled_Base * latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD)}`,
+      value: `${numberFormated(chartTokenData?.Pooled_Base || 0)} | ${humanReadableFormat(chartTokenData?.Pooled_Base * latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD)}`,
     },
     {
       label: "Pooled SOL",
-      value: `${Number(chartTokenData?.Pooled_Quote_Native || 0).toFixed(2)} | ${humanReadableFormat(chartTokenData?.Pooled_Quote_Native * solanaLivePrice)}`,
+      value: `${numberFormated(chartTokenData?.Pooled_Quote_Native || 0)} | ${humanReadableFormat(chartTokenData?.Pooled_Quote_Native * solanaLivePrice)}`,
     },
   ];
   // Token Chart Data (Right Side)
@@ -390,6 +390,7 @@ const Tradingview = () => {
                 price={latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD}
                 dispatch={dispatch}
                 solanaLivePrice={solanaLivePrice}
+                tredingPage={tredingPage}
               />
             </div>
           </div>

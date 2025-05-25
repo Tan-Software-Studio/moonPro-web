@@ -524,6 +524,7 @@
         "qty": "Antal",
         "buy": "Köp",
         "sell": "Sälj",
+        "orderSettings": "Orderinställningar",
         "advancedsettings": {
           "advancedsettings": "Avancerade Inställningar",
           "autoapprove": "Godkänn automatiskt",

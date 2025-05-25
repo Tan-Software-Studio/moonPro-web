@@ -11,9 +11,9 @@ import FilterMemescope from "../filter/FilterMemescope";
 import { baseIcon, ethereum, logo, solana } from "@/app/Images";
 import RightModalOpenSetting from "@/components/Settings/RightModalOpenSetting";
 import { IoSettingsOutline } from "react-icons/io5";
-import { setGlobalBuyAmt } from "@/app/redux/states";
+import { setGlobalBuyAmt, setOpenOrderSetting } from "@/app/redux/states";
 import { useTranslation } from "react-i18next";
-const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime, setFilterValues, filterValues, onApply, onReset,   }) => {
+const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime, setFilterValues, filterValues, onApply, onReset, }) => {
   const filterPopupRef = useRef(null);
   const dexesPopupRef = useRef(null);
   const { t, ready } = useTranslation();
@@ -23,12 +23,12 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
   const pathData = pathname === "/memescope";
   const holdingsPage = pathname.split("/")[1] === "holdings";
   const dispatch = useDispatch();
-  const [isFilterPopup, setIsFilterPopup] = useState(false);
-  const [isDexesPopup, setIsDexesPopup] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
 
-  const [isRightModalOpenSetting, setIsRightModalOpenSetting] = useState(false);
+  // order setting popup flag
+  const isRightModalOpenSetting = useSelector((state) => state?.AllStatesData?.openOrderSetting);
+
   const borderColor = useSelector(
     (state) => state?.AllthemeColorData?.borderColor
   );
@@ -168,7 +168,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
               setFilterValues={setFilterValues}
               filterValues={filterValues}
               onApply={onApply}
-              onReset={onReset} 
+              onReset={onReset}
             />
           </div>
         )}
@@ -230,7 +230,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
           <div className="flex gap-2 items-center">
             <div>
               <button
-                onClick={() => setIsRightModalOpenSetting(true)}
+                onClick={() => dispatch(setOpenOrderSetting(true))}
                 className="flex items-center justify-center gap-2 px-[10px] md:px-[17.5px] py-[9px] border text-white border-[#1F73FC] hover:bg-[#11265B] bg-transparent text-xs rounded-[4px] transition duration-300"
               >
                 <IoSettingsOutline className="text-base" />
@@ -239,13 +239,12 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                 </span>
               </button>
             </div>
-            {
-              <RightModalOpenSetting
-                ordersettingLang={tredingPage?.mainHeader?.ordersetting}
-                isOpen={isRightModalOpenSetting}
-                onClose={() => setIsRightModalOpenSetting(false)}
-              />
-            }
+            <RightModalOpenSetting
+              ordersettingLang={tredingPage?.mainHeader?.ordersetting}
+              isOpen={isRightModalOpenSetting}
+              onClose={() => dispatch(setOpenOrderSetting(false))}
+              tredingPage={tredingPage}
+            />
             <div className={`flex border ${borderColor} rounded-lg`}>
               <div className="w-[87px] px-[17.5px] py-2 text-center flex items-center justify-center text-xs rounded-s-md border-r-[0.5px] border-r-[#26262e] bg-[#1F1F1F] text-white gap-1 uppercase font-bold">
                 {HeaderData?.Buy?.menuTitle}

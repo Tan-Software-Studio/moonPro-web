@@ -524,6 +524,7 @@
         "qty": "数量",
         "buy": "购买",
         "sell": "出售",
+        "orderSettings": "订单设置",
         "advancedsettings": {
           "advancedsettings": "高级设置",
           "autoapprove": "自动批准",

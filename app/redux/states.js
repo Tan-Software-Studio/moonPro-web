@@ -29,7 +29,8 @@ const AllStatesData = createSlice({
     referralPopupAfterLogin: false,
     recoverPopUpOpen: false,
     solanaLivePrice: 0,
-    isFaviourite: false
+    isFaviourite: false,
+    openOrderSetting: false,
   },
   reducers: {
     setWalletAddress: (state, action) => {
@@ -92,6 +93,9 @@ const AllStatesData = createSlice({
     setSolanaLivePrice: (state, action) => {
       state.solanaLivePrice = action.payload;
     },
+    setOpenOrderSetting: (state, action) => {
+      state.openOrderSetting = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchSolanaNativeBalance.fulfilled, (state, action) => {
@@ -118,6 +122,7 @@ export const {
   setreferralPopupAfterLogin,
   setRecoverPopupOpen,
   setSolanaLivePrice,
-  setIsFaviouriteToken
+  setIsFaviouriteToken,
+  setOpenOrderSetting,
 } = AllStatesData.actions;
 export default AllStatesData.reducer;

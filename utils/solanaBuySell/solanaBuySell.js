@@ -124,6 +124,18 @@ const buySolanaTokensQuickBuyHandler = async (
       position: "top-right",
     });
   }
+  let slippage = 50;
+  let priorityFee = 0.0001;
+  const preSetFromLocalStorage = JSON.parse(
+    localStorage.getItem("preSetAllData")
+  );
+  const preSetActiveFLag = localStorage.getItem("preSetSettingActive");
+  if (preSetFromLocalStorage) {
+    slippage =
+      preSetFromLocalStorage?.[preSetActiveFLag || "P1"]?.["buy"]?.slippage;
+    priorityFee =
+      preSetFromLocalStorage?.[preSetActiveFLag || "P1"]?.["buy"]?.priorityFee;
+  }
   toast(
     <div className="flex items-center gap-5">
       <div className="loaderPopup"></div>
@@ -150,8 +162,8 @@ const buySolanaTokensQuickBuyHandler = async (
     data: {
       token: toToken,
       amount: amt,
-      slippage: 50,
-      priorityFee: 0.0001,
+      slippage: slippage,
+      priorityFee: priorityFee,
       price: Number(solanaLivePrice),
       programAddress: program,
     },
@@ -210,6 +222,18 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
       position: "top-right",
     });
   }
+  let slippage = 50;
+  let priorityFee = 0.0001;
+  const preSetFromLocalStorage = JSON.parse(
+    localStorage.getItem("preSetAllData")
+  );
+  const preSetActiveFLag = localStorage.getItem("preSetSettingActive");
+  if (preSetFromLocalStorage) {
+    slippage =
+      preSetFromLocalStorage?.[preSetActiveFLag || "P1"]?.["buy"]?.slippage;
+    priorityFee =
+      preSetFromLocalStorage?.[preSetActiveFLag || "P1"]?.["buy"]?.priorityFee;
+  }
   toast(
     <div className="flex items-center gap-5">
       <div className="loaderPopup"></div>
@@ -234,8 +258,8 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
     data: {
       token: toToken,
       amount: amt,
-      slippage: 50,
-      priorityFee: 0.0001,
+      slippage: slippage,
+      priorityFee: priorityFee,
       price: Number(solanaLivePrice),
       programAddress: programAddress
         ? programAddress
@@ -358,7 +382,7 @@ const sellSolanaTokens = async (
 
 const getDateMinus24Hours = async (hours) => {
   const date = new Date();
-  await date.setHours(date.getHours() - hours); // Subtract 24 hours
+  await date.setHours(date.getHours() - hours);
   return date.toISOString();
 };
 

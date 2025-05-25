@@ -524,6 +524,7 @@
         "qty": "मात्रा",
         "buy": "खरीदें",
         "sell": "बेचें",
+        "orderSettings": "ऑर्डर सेटिंग्स",
         "advancedsettings": {
           "advancedsettings": "उन्नत सेटिंग्स",
           "autoapprove": "स्वतः स्वीकृति",

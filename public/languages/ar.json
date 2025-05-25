@@ -524,6 +524,7 @@
         "qty": "الكمية",
         "buy": "شراء",
         "sell": "بيع",
+        "orderSettings": "إعدادات الطلب",
         "advancedsettings": {
           "advancedsettings": "الإعدادات المتقدمة",
           "autoapprove": "الموافقة التلقائية",

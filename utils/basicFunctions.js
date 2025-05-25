@@ -129,6 +129,11 @@ function calculatePercentageDifference(newValue, oldValue) {
 function convertAnyPriceToSol(tokenPrice, solPriceUSD) {
   return tokenPrice / solPriceUSD;
 }
+function numberFormated(value) {
+  return parseFloat(value).toLocaleString(undefined, {
+    maximumFractionDigits: 2,
+  });
+}
 
 export {
   humanReadableFormat,
@@ -138,4 +143,5 @@ export {
   formatDecimal,
   calculatePercentageDifference,
   convertAnyPriceToSol,
+  numberFormated,
 };

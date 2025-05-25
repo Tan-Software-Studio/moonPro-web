@@ -524,6 +524,7 @@
         "qty": "Số lượng",
         "buy": "Mua",
         "sell": "Bán",
+        "orderSettings": "Cài đặt đơn hàng",
         "advancedsettings": {
           "advancedsettings": "Cài đặt nâng cao",
           "autoapprove": "Tự động phê duyệt",

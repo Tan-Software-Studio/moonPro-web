@@ -524,6 +524,7 @@
         "qty": "Quantity",
         "buy": "Buy",
         "sell": "Sell",
+        "orderSettings": "Order Settings",
         "advancedsettings": {
           "advancedsettings": "Advanced Settings",
           "autoapprove": "Auto Approve",
