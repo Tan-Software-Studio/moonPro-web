@@ -17,7 +17,7 @@ const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage 
       "buy": {
         slippage: 20,
         priorityFee: 0.0001,
-        mev: true
+        mev: false
       },
       "sell": {
         slippage: 20,
