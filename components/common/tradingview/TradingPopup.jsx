@@ -28,6 +28,7 @@ const TradingPopup = ({
   progranAddress,
   bondingProgress,
   dispatch,
+  solanaLivePrice
 }) => {
   const [loaderSwap, setLoaderSwap] = useState(false);
   const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
@@ -70,11 +71,6 @@ const TradingPopup = ({
     }
   };
 
-
-  // solana live price 
-  const solanaLivePrice = useSelector(
-    (state) => state?.AllStatesData?.solanaLivePrice
-  );
   // function to calculate rec. amount
   function calculateRecAmountSolToAnytoken(
     amountToken1,

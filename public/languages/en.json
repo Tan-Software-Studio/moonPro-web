@@ -14,7 +14,7 @@
   "tredingPage": {
     "mainHeader": {
       "trending": "Trending",
-      "desc": "Top 100 trending token pairs by transactions within selected timeframe",
+      "desc": "Top 50 trending tokens",
       "timeframeFilter": {
         "1m": "1m",
         "5m": "5m",
@@ -697,7 +697,6 @@
       "userID": "User ID:"
     },
     "setting": {
-
       "slippage": "Slippage",
       "slippageDesc": "How much less tokens you&apos;re willing to receive from a trade due to price volatility.",
       "maxGasLimit": "Max Gas Limit",
@@ -716,8 +715,8 @@
       "cancel": "Cancel",
       "save": "Save",
       "Setting": "Setting",
-      "Customize" : "Customize",
-      "CustomizeDesc" :"Customize your Quick Buy buttons with your own preset amounts."
+      "Customize": "Customize",
+      "CustomizeDesc": "Customize your Quick Buy buttons with your own preset amounts."
     },
     "watchlist": {
       "watchlist": "Watchlist",
@@ -750,7 +749,7 @@
   "portfolio": {
     "Show": "Show Archived",
     "Import": "Import",
-    "CreateWallet" : "Create Wallet",
+    "CreateWallet": "Create Wallet",
     "Balance": "Balance",
     "Holdings": "Holdings",
     "Actions": "Actions",

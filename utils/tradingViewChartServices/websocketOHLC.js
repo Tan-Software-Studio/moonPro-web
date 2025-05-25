@@ -69,27 +69,39 @@ export async function subscribeToWebSocket(
         item?.Trade?.Currency?.MintAddress === token && item?.Trade?.open
     );
     if (!tokenData.length) return;
-    store.dispatch(addNewTransaction(...tokenData));
+    store.dispatch(addNewTransaction(tokenData));
     const granularity = getResolutionInMilliseconds(resolution);
     const isSecondResolution = resolution.toString().endsWith("S");
-    supply = supply ? Number(supply) === 0 ? 1_000_000_000 : Number(supply) : 1_000_000_000;
-    solPrice = solPrice ? Number(solPrice) === 0 ? 1 : Number(solPrice) : 1;
+    supply = supply
+      ? Number(supply) === 0
+        ? 1_000_000_000
+        : Number(supply)
+      : 1_000_000_000;
+    solPrice = solPrice ? (Number(solPrice) === 0 ? 1 : Number(solPrice)) : 1;
     tokenData.forEach((item) => {
       const tradeTime = new Date(item?.Block?.Time).getTime();
       const volume = parseFloat(item?.volume || "0");
 
-      const usdSolprice = usdActive ? parseFloat(item?.Trade?.open || "0") : parseFloat(item?.Trade?.open || "0") / solPrice;
+      const usdSolprice = usdActive
+        ? parseFloat(item?.Trade?.open || "0")
+        : parseFloat(item?.Trade?.open || "0") / solPrice;
       const price = marketCapActive ? usdSolprice * supply : usdSolprice;
 
-      const usdSolHigh = usdActive ?  parseFloat(item?.high || price) :  parseFloat(item?.high || price) / solPrice;
+      const usdSolHigh = usdActive
+        ? parseFloat(item?.high || price)
+        : parseFloat(item?.high || price) / solPrice;
       const high = marketCapActive ? usdSolHigh * supply : usdSolHigh;
 
-      const usdSolLow = usdActive ?  parseFloat(item?.low || price) :  parseFloat(item?.low || price) / solPrice;
+      const usdSolLow = usdActive
+        ? parseFloat(item?.low || price)
+        : parseFloat(item?.low || price) / solPrice;
       const low = marketCapActive ? usdSolLow * supply : usdSolLow;
 
-      const usdSolClose = usdActive ?  parseFloat(item?.Trade?.close || price) :  parseFloat(item?.Trade?.close || price) / solPrice;
-      const close = marketCapActive ?  usdSolClose * supply : usdSolClose;
-      
+      const usdSolClose = usdActive
+        ? parseFloat(item?.Trade?.close || price)
+        : parseFloat(item?.Trade?.close || price) / solPrice;
+      const close = marketCapActive ? usdSolClose * supply : usdSolClose;
+
       const roundedTime = Math.floor(tradeTime / granularity) * granularity;
       if (
         !lastBar[subscriberUID] ||
@@ -129,14 +141,30 @@ export async function subscribeToWebSocket(
         bar.volume += volume;
       }
       const signer = item?.Transaction?.Signer;
-      const isBuy = item?.Trade?.Side?.Type == 'buy';
+      const isBuy = item?.Trade?.Side?.Type == "buy";
       const usdTraded = Number(item?.Trade?.Side?.AmountInUSD);
 
       if (signer === tokenCreator) {
-        addMark(tradeTime / 1000, isBuy, usdTraded, price, usdActive, marketCapActive, "dev");
+        addMark(
+          tradeTime / 1000,
+          isBuy,
+          usdTraded,
+          price,
+          usdActive,
+          marketCapActive,
+          "dev"
+        );
       } else if (signer === userSolWallet) {
-        addMark(tradeTime / 1000, isBuy, usdTraded, price, usdActive, marketCapActive, "user");
-      } 
+        addMark(
+          tradeTime / 1000,
+          isBuy,
+          usdTraded,
+          price,
+          usdActive,
+          marketCapActive,
+          "user"
+        );
+      }
       onRealtimeCallback(lastBar[subscriberUID]);
     });
   });

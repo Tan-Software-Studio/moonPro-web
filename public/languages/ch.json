@@ -14,7 +14,7 @@
   "tredingPage": {
     "mainHeader": {
       "trending": "趋势",
-      "desc": "根据所选时间范围，按交易量排序的前100个趋势代币对",
+      "desc": "前50大热门代币",
       "timeframeFilter": {
         "1m": "1分钟",
         "5m": "5分钟",

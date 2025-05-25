@@ -14,7 +14,7 @@
   "tredingPage": {
     "mainHeader": {
       "trending": "트렌딩",
-      "desc": "선택한 시간대 내에서 거래량이 많은 상위 100개 토큰 페어",
+      "desc": "인기 급상승 토큰 TOP 50",
       "timeframeFilter": {
         "1m": "1분",
         "5m": "5분",

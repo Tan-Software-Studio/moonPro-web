@@ -14,7 +14,7 @@
   "tredingPage": {
     "mainHeader": {
       "trending": "トレンド",
-      "desc": "選択した時間枠内での取引によるトップ100のトレンドトークンペア",
+      "desc": "注目のトークン トップ50",
       "timeframeFilter": {
         "1m": "1分",
         "5m": "5分",

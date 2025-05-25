@@ -14,7 +14,7 @@
   "tredingPage": {
     "mainHeader": {
       "trending": "Trendig",
-      "desc": "Top 100 trending Token-Paare nach Transaktionen im ausgewählten Zeitraum",
+      "desc": "Top 50 trendende Token",
       "timeframeFilter": {
         "1m": "1m",
         "5m": "5m",

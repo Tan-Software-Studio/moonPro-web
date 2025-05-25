@@ -73,9 +73,7 @@ export async function subscribeToWalletTracker() {
             tag: walletName?.walletName,
           });
         }
-        await store.dispatch(
-          addNewTransactionForWalletTracking(finalFilteredData)
-        );
+        store.dispatch(addNewTransactionForWalletTracking(finalFilteredData));
       }
     });
     socket.on("disconnect", async () => {

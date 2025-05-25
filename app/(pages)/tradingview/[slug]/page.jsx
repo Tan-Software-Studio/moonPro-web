@@ -8,7 +8,7 @@ import { solana } from "@/app/Images";
 import {
   getSoalanaTokenBalance,
 } from "@/utils/solanaNativeBalance";
-import { decimalConvert } from "@/utils/basicFunctions";
+import { calculatePercentageDifference, convertAnyPriceToSol, decimalConvert } from "@/utils/basicFunctions";
 import axiosInstance from "@/components/axiosIntance/axiosInstance";
 import TVChartContainer from "@/components/TradingChart/TradingChart";
 import TokenDetails from "@/components/common/tradingview/TokenDetails";
@@ -18,6 +18,8 @@ import TokenInfo from "@/components/common/tradingview/TokenInfo";
 import DataSecurity from "@/components/common/tradingview/DataSecurity";
 import { useTranslation } from "react-i18next";
 import { fetchSolanaNativeBalance } from "@/app/redux/states";
+import { humanReadableFormat } from "@/utils/calculation";
+import { fetchChartAllData } from "@/app/redux/chartDataSlice/chartData.slice";
 
 const Tradingview = () => {
   const { t } = useTranslation();
@@ -29,12 +31,10 @@ const Tradingview = () => {
   const dispatch = useDispatch();
   const [tokenBalance, setTokenBalance] = useState(0);
   const searchParams = useSearchParams();
-  const [chartTokenData, setchartTokenData] = useState({});
   const tokenaddress = searchParams.get("tokenaddress");
   const tokenSymbol = searchParams.get("symbol");
   let pairAddress = searchParams?.get("pair") || null;
   const pathname = usePathname();
-  const getNetwork = pathname.split("/")[2];
   const containerRef = useRef(null);
   const tvChartRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -43,8 +43,15 @@ const Tradingview = () => {
     (state) => state?.AllStatesData?.solWalletAddress
   );
   // native balance
-  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance)
+  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
 
+  // chart data from redux
+  const chartTokenData = useSelector((state) => state?.allCharTokenData?.chartData);
+
+  // solana live price 
+  const solanaLivePrice = useSelector(
+    (state) => state?.AllStatesData?.solanaLivePrice
+  );
   const [smallScreenTab, setIsSmallScreenTab] = useState("Trades");
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
@@ -118,155 +125,69 @@ const Tradingview = () => {
 
   const TokenDetailsNumberData = [
     {
-      label: "Price USD",
-      price: latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+      label: `${tragindViewPage?.right?.tokeninfo?.price} USD`,
+      price: `$${decimalConvert(
+        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD || 0
+      )}`,
     },
     {
-      label: "Liqudity",
+      label: tragindViewPage?.right?.tokeninfo?.liq,
       price: chartTokenData?.Liqudity || 0,
     },
     {
       label: "FDV",
-      price: `$${chartTokenData?.marketCap || 0}`,
+      price: humanReadableFormat(chartTokenData?.currentSupply * latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD),
     },
     {
-      label: "MKT CAP",
-      price: `$${chartTokenData?.marketCap || 0}`,
+      label: tragindViewPage?.right?.tokeninfo?.mc,
+      price: humanReadableFormat(chartTokenData?.currentSupply * latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD),
     },
   ];
 
   const tradeData = {
     "5M": {
-      txns:
-        chartTokenData?.totalTxns5min == "NaN"
-          ? 0
-          : chartTokenData?.totalTxns5min || 0,
-      buys:
-        chartTokenData?.buys_5min == "NaN" ? 0 : chartTokenData?.buys_5min || 0,
-      sells:
-        chartTokenData?.sells_5min == "NaN"
-          ? 0
-          : chartTokenData?.sells_5min || 0,
-      vol:
-        chartTokenData?.totalVol5min == "$NaN"
-          ? 0
-          : chartTokenData?.totalVol5min || 0,
-      buyVol:
-        chartTokenData?.buy_volume_5min == "$NaN"
-          ? 0
-          : chartTokenData?.buy_volume_5min || 0,
-      sellVol:
-        chartTokenData?.sell_volume_5min == "$NaN"
-          ? 0
-          : chartTokenData?.sell_volume_5min || 0,
-      makers:
-        chartTokenData?.totalMakers5min == "NaN"
-          ? 0
-          : chartTokenData?.totalMakers5min || 0,
-      buyers:
-        chartTokenData?.buyers_5min == "NaN"
-          ? 0
-          : chartTokenData?.buyers_5min || 0,
-      sellers:
-        chartTokenData?.sellers_5min == "NaN"
-          ? 0
-          : chartTokenData?.sellers_5min || 0,
+      txns: chartTokenData?.buys_5min + chartTokenData?.sells_5min,
+      buys: chartTokenData?.buys_5min,
+      sells: chartTokenData?.sells_5min,
+      vol: chartTokenData?.buy_volume_5min + chartTokenData?.sell_volume_5min,
+      buyVol: chartTokenData?.buy_volume_5min,
+      sellVol: chartTokenData?.sell_volume_5min,
+      makers: chartTokenData?.buyers_5min + chartTokenData?.sellers_5min,
+      buyers: chartTokenData?.buyers_5min,
+      sellers: chartTokenData?.sellers_5min,
     },
     "1H": {
-      txns:
-        chartTokenData?.totalTxns1h == "NaN"
-          ? 0
-          : chartTokenData?.totalTxns1h || 0,
-      buys: chartTokenData?.buys_1h == "NaN" ? 0 : chartTokenData?.buys_1h || 0,
-      sells:
-        chartTokenData?.sells_1h == "NaN" ? 0 : chartTokenData?.sells_1h || 0,
-      vol:
-        chartTokenData?.totalVol1h == "$NaN"
-          ? 0
-          : chartTokenData?.totalVol1h || 0,
-      buyVol:
-        chartTokenData?.buy_volume_1h == "$NaN"
-          ? 0
-          : chartTokenData?.buy_volume_1h || 0,
-      sellVol:
-        chartTokenData?.sell_volume_1h == "$NaN"
-          ? 0
-          : chartTokenData?.sell_volume_1h || 0,
-      makers:
-        chartTokenData?.totalMakers1h == "NaN"
-          ? 0
-          : chartTokenData?.totalMakers1h || 0,
-      buyers:
-        chartTokenData?.buyers_1h == "NaN" ? 0 : chartTokenData?.buyers_1h || 0,
-      sellers:
-        chartTokenData?.sellers_1h == "NaN"
-          ? 0
-          : chartTokenData?.sellers_1h || 0,
+      txns: chartTokenData?.buys_1h + chartTokenData?.sells_1h,
+      buys: chartTokenData?.buys_1h,
+      sells: chartTokenData?.sells_1h,
+      vol: chartTokenData?.buy_volume_1h + chartTokenData?.sell_volume_1h,
+      buyVol: chartTokenData?.buy_volume_1h,
+      sellVol: chartTokenData?.sell_volume_1h,
+      makers: chartTokenData?.buyers_1h + chartTokenData?.sellers_1h,
+      buyers: chartTokenData?.buyers_1h,
+      sellers: chartTokenData?.sellers_1h,
     },
     "6H": {
-      txns:
-        chartTokenData?.totalTxns6h == "NaN"
-          ? 0
-          : chartTokenData?.totalTxns6h || 0,
-      buys: chartTokenData?.buys_6h == "NaN" ? 0 : chartTokenData?.buys_6h || 0,
-      sells:
-        chartTokenData?.sells_6h == "NaN" ? 0 : chartTokenData?.sells_6h || 0,
-      vol:
-        chartTokenData?.totalVol6h == "$NaN"
-          ? 0
-          : chartTokenData?.totalVol6h || 0,
-      buyVol:
-        chartTokenData?.buy_volume_6h == "$NaN"
-          ? 0
-          : chartTokenData?.buy_volume_6h || 0,
-      sellVol:
-        chartTokenData?.sell_volume_6h == "$NaN"
-          ? 0
-          : chartTokenData?.sell_volume_6h || 0,
-      makers:
-        chartTokenData?.totalMakers6h == "NaN"
-          ? 0
-          : chartTokenData?.totalMakers6h || 0,
-      buyers:
-        chartTokenData?.buyers_6h == "NaN" ? 0 : chartTokenData?.buyers_6h || 0,
-      sellers:
-        chartTokenData?.sellers_6h == "NaN"
-          ? 0
-          : chartTokenData?.sellers_6h || 0,
+      txns: chartTokenData?.buys_6h + chartTokenData?.sells_6h,
+      buys: chartTokenData?.buys_6h,
+      sells: chartTokenData?.sells_6h,
+      vol: chartTokenData?.buy_volume_6h + chartTokenData?.sell_volume_6h,
+      buyVol: chartTokenData?.buy_volume_6h,
+      sellVol: chartTokenData?.sell_volume_6h,
+      makers: chartTokenData?.buyers_6h + chartTokenData?.sellers_6h,
+      buyers: chartTokenData?.buyers_6h,
+      sellers: chartTokenData?.sellers_6h,
     },
     "24H": {
-      txns:
-        chartTokenData?.totalTxns24h == "NaN"
-          ? 0
-          : chartTokenData?.totalTxns24h || 0,
-      buys:
-        chartTokenData?.buys_24h == "NaN" ? 0 : chartTokenData?.buys_24h || 0,
-      sells:
-        chartTokenData?.sells_24h == "NaN" ? 0 : chartTokenData?.sells_24h || 0,
-      vol:
-        chartTokenData?.totalVol24h == "$NaN"
-          ? 0
-          : chartTokenData?.totalVol24h || 0,
-      buyVol:
-        chartTokenData?.buy_volume_24h == "$NaN"
-          ? 0
-          : chartTokenData?.buy_volume_24h || 0,
-      sellVol:
-        chartTokenData?.sell_volume_24h == "$NaN"
-          ? 0
-          : chartTokenData?.sell_volume_24h || 0,
-      makers:
-        chartTokenData?.totalMakers24h == "NaN"
-          ? 0
-          : chartTokenData?.totalMakers24h || 0,
-      buyers:
-        chartTokenData?.buyers_24h == "NaN"
-          ? 0
-          : chartTokenData?.buyers_24h || 0,
-      sellers:
-        chartTokenData?.sellers_24h == "NaN"
-          ? 0
-          : chartTokenData?.sellers_24h || 0,
+      txns: chartTokenData?.buys_24h + chartTokenData?.sells_24h,
+      buys: chartTokenData?.buys_24h,
+      sells: chartTokenData?.sells_24h,
+      vol: chartTokenData?.buy_volume_24h + chartTokenData?.sell_volume_24h,
+      buyVol: chartTokenData?.buy_volume_24h,
+      sellVol: chartTokenData?.sell_volume_24h,
+      makers: chartTokenData?.buyers_24h + chartTokenData?.sellers_24h,
+      buyers: chartTokenData?.buyers_24h,
+      sellers: chartTokenData?.sellers_24h,
     },
   };
 
@@ -276,7 +197,7 @@ const Tradingview = () => {
       value:
         chartTokenData?.perfomancePertnage_5min == "NaN"
           ? 0
-          : `${Number(chartTokenData?.perfomancePertnage_5min).toFixed(2)}` ||
+          : `${calculatePercentageDifference(latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD, chartTokenData?.perfomancePertnage_5min).toFixed(2)}` ||
           "N/A",
     },
     {
@@ -284,7 +205,7 @@ const Tradingview = () => {
       value:
         chartTokenData?.perfomancePertnage_1h == "NaN"
           ? 0
-          : `${Number(chartTokenData?.perfomancePertnage_1h).toFixed(2)}` ||
+          : `${calculatePercentageDifference(latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD, chartTokenData?.perfomancePertnage_1h).toFixed(2)}` ||
           "N/A",
     },
     {
@@ -292,7 +213,7 @@ const Tradingview = () => {
       value:
         chartTokenData?.perfomancePertnage_6h == "NaN"
           ? 0
-          : `${Number(chartTokenData?.perfomancePertnage_6h).toFixed(2)}` ||
+          : `${calculatePercentageDifference(latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD, chartTokenData?.perfomancePertnage_6h).toFixed(2)}` ||
           "N/A",
     },
     {
@@ -300,7 +221,7 @@ const Tradingview = () => {
       value:
         chartTokenData?.perfomancePertnage_24h == "NaN"
           ? 0
-          : `${Number(chartTokenData?.perfomancePertnage_24h).toFixed(2)}` ||
+          : `${calculatePercentageDifference(latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD, chartTokenData?.perfomancePertnage_24h).toFixed(2)}` ||
           "N/A",
     },
   ];
@@ -313,13 +234,12 @@ const Tradingview = () => {
       )}`,
     },
     {
-      label: `${tragindViewPage?.right?.tokeninfo?.price} ${getNetwork == "solana" ? "SOL" : "WETH"
-        }`,
-      price: `$${decimalConvert(chartTokenData?.price_in_sol || 0)}`,
+      label: `${tragindViewPage?.right?.tokeninfo?.price} SOL`,
+      price: `${decimalConvert(convertAnyPriceToSol(latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD, solanaLivePrice) || 0)}`,
     },
     {
       label: tragindViewPage?.right?.tokeninfo?.supply,
-      price: chartTokenData?.currentSupply,
+      price: humanReadableFormat(chartTokenData?.currentSupply),
     },
     {
       label: tragindViewPage?.right?.tokeninfo?.liq,
@@ -327,11 +247,11 @@ const Tradingview = () => {
     },
     {
       label: "FDV",
-      price: `$${chartTokenData?.marketCap || 0}`,
+      price: humanReadableFormat(chartTokenData?.currentSupply * latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD),
     },
     {
       label: tragindViewPage?.right?.tokeninfo?.mc,
-      price: `$${chartTokenData?.marketCap || 0}`,
+      price: humanReadableFormat(chartTokenData?.currentSupply * latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD),
     },
   ];
 
@@ -354,37 +274,19 @@ const Tradingview = () => {
     },
     {
       label: `Pooled ${tokenSymbol}`,
-      value: `${chartTokenData?.Pooled_Base} | ${chartTokenData?.Pooled_Base_format}`,
+      value: `${Number(chartTokenData?.Pooled_Base || 0).toFixed(2)} | ${humanReadableFormat(chartTokenData?.Pooled_Base * latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD)}`,
     },
     {
       label: "Pooled SOL",
-      value: `${chartTokenData?.Pooled_Quote_Native} | ${chartTokenData?.Pooled_Quote_Native_format}`,
+      value: `${Number(chartTokenData?.Pooled_Quote_Native || 0).toFixed(2)} | ${humanReadableFormat(chartTokenData?.Pooled_Quote_Native * solanaLivePrice)}`,
     },
   ];
   // Token Chart Data (Right Side)
-  const chartTokenDataAPI = async () => {
-    setDataLoaderForChart(true);
-    await axiosInstance
-      .post("combineData", {
-        address: tokenaddress,
-        pair: pairAddress || null,
-      })
-      .then((res) => {
-        setDataLoaderForChart(false);
-        const tokenData = res?.data?.data;
-        setchartTokenData(tokenData);
-        // console.log('tokenData', tokenData);
-        localStorage.setItem("chartSupply", tokenData?.rawsupply || 0);
-        localStorage.setItem("solPrice", tokenData?.solPrice || 0);
-        localStorage.setItem("chartTokenCreator", tokenData?.tokenCreator || 0);
-      })
-      .catch((err) => {
-        console.log("🚀 ~ chartTokenDataAPI ~ err:", err?.message);
-      });
-  };
-
   useEffect(() => {
-    chartTokenDataAPI();
+    if (tokenaddress) {
+      setDataLoaderForChart(true);
+      dispatch(fetchChartAllData({ tokenaddress, pairAddress, setDataLoaderForChart }));
+    }
   }, [tokenaddress]);
 
   const isSidebarOpen = useSelector(
@@ -487,6 +389,7 @@ const Tradingview = () => {
                 bondingProgress={chartTokenData?.bondingCurveProgress || 0}
                 price={latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD}
                 dispatch={dispatch}
+                solanaLivePrice={solanaLivePrice}
               />
             </div>
           </div>

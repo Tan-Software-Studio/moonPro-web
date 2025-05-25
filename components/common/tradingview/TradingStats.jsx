@@ -139,28 +139,25 @@ const TradingStats = ({ tragindViewPage, data, timeframes }) => {
           <div
             key={label}
             onClick={() => setSelectedTimeframe(label)}
-            className={`select-none cursor-pointer outline-none flex items-center justify-center w-[77px] h-[54px] rounded-[4px] ease-linear duration-200 ${
-              selectedTimeframe === label
-                ? `${
-                    value > 0
-                      ? "bg-[#1c894bb7] border-[0.5px] border-[#21CB6B]"
-                      : "bg-[#ED1B247A] border-[0.5px] border-[#ED1B247A]"
-                  }`
-                : "border-[0.5px] border-transparent"
-            }`}
+            className={`select-none cursor-pointer outline-none flex items-center justify-center w-[77px] h-[54px] rounded-[4px] ease-linear duration-200 ${selectedTimeframe === label
+              ? `${value > 0
+                ? "bg-[#1c894bb7] border-[0.5px] border-[#21CB6B]"
+                : "bg-[#ED1B247A] border-[0.5px] border-[#ED1B247A]"
+              }`
+              : "border-[0.5px] border-transparent"
+              }`}
           >
             <div className="flex flex-col">
               <div className="text-center text-[12px] font-[400]">{label}</div>
               <div
-                className={`text-center text-[14px] font-[600] ${
-                  selectedTimeframe === label
-                    ? value > 0
-                      ? "text-[#21cb6bcc]"
-                      : "text-[#ED1B247A]"
-                    : value > 0
+                className={`text-center text-[14px] font-[600] ${selectedTimeframe === label
+                  ? value > 0
+                    ? "text-[#21cb6bcc]"
+                    : "text-[#ED1B247A]"
+                  : value > 0
                     ? "text-[#21CB6B]"
                     : "text-[#ED1B24]"
-                }`}
+                  }`}
               >
                 {value}%
               </div>

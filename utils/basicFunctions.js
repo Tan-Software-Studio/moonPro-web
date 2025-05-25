@@ -119,8 +119,15 @@ function formatDecimal(num) {
 }
 
 function calculatePercentageDifference(newValue, oldValue) {
+  if (oldValue == 0) {
+    return 0;
+  }
   const change = ((newValue - oldValue) / oldValue) * 100;
   return change;
+}
+
+function convertAnyPriceToSol(tokenPrice, solPriceUSD) {
+  return tokenPrice / solPriceUSD;
 }
 
 export {
@@ -130,4 +137,5 @@ export {
   humanReadableFormatWithNoDollar,
   formatDecimal,
   calculatePercentageDifference,
+  convertAnyPriceToSol,
 };

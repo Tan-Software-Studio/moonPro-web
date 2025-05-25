@@ -14,7 +14,7 @@
   "tredingPage": {
     "mainHeader": {
       "trending": "Tendenze",
-      "desc": "Le prime 100 coppie di token in tendenza per transazioni nel periodo di tempo selezionato",
+      "desc": "Le 50 criptovalute più popolari",
       "timeframeFilter": {
         "1m": "1m",
         "5m": "5m",
@@ -624,7 +624,7 @@
       "logout": "Disconnettersi",
       "login": "Accedi",
       "signup": "Registrati"
-    }, 
+    },
     "loginPopup": {
       "enterEmail": "Per favore inserisci la tua email",
       "validEmail": "Per favore inserisci una email valida",
@@ -645,7 +645,7 @@
       "signup": "Registrati",
       "dontAccount": "Non hai un account?",
       "byCreating": "Creando un account, accetti l'informativa sulla privacy e i termini di servizio di moon pro"
-    }, 
+    },
     "otpPopup": {
       "required": "L'OTP è richiesto",
       "notValid": "L'OTP non è valido",
@@ -662,14 +662,14 @@
       "confirmPassword": "Conferma password",
       "verify": "Verifica",
       "byCreating": "Creando un account, accetti l'informativa sulla privacy e i termini di servizio di moon pro"
-    },  
+    },
     "referralPopup": {
       "referralCode": "Per favore inserisci un codice di referral",
       "useReferral": "Usa il codice di referral qui",
       "specialBonuses": "Inserisci il codice di referral di un amico per ricevere bonus speciali!",
       "referralCoded": "Codice referral",
       "enterCode": "Inserisci codice"
-    },  
+    },
     "recovery": {
       "recoveryKey": "Chiave di recupero",
       "privateKey": "Chiave di recupero",
@@ -678,7 +678,7 @@
       "revealMyKey": "Mostra la mia chiave",
       "warning": "ATTENZIONE: Questa chiave di recupero è l'unico modo per accedere al tuo wallet se perdi le tue credenziali. Conservala in un posto sicuro e non condividerla con nessuno.",
       "warningPrivate": "ATTENZIONE: Questa chiave di recupero è l'unico modo per accedere al tuo wallet se perdi le tue credenziali. Conservala in un posto sicuro e non condividerla con nessuno."
-    } 
+    }
   },
   "accountPopup": {
     "security": {
@@ -695,7 +695,7 @@
       "walletAccounts": "Aggiungi o gestisci i tuoi account wallet esterni",
       "manageWallets": "Gestisci i wallet",
       "userID": "ID utente:"
-    }, 
+    },
     "setting": {
       "slippage": "Slippage",
       "slippageDesc": "Quanto meno token sei disposto a ricevere da un trade a causa della volatilità del prezzo.",
@@ -717,13 +717,13 @@
       "Setting": "Impostazioni",
       "Customize": "Personalizza",
       "CustomizeDesc": "Personalizza i tuoi pulsanti di acquisto rapido con i tuoi importi preimpostati."
-    }, 
+    },
     "watchlist": {
       "watchlist": "Lista di osservazione",
       "Cancel": "Annulla",
       "Save": "Salva"
-    }  
-  },  
+    }
+  },
   "newProfile": {
     "winRate": "Tasso di vittoria",
     "UNREALIZEDPROFITS": "Profitti non realizzati",
@@ -745,7 +745,7 @@
     "SOLD": "Venduto / Media",
     "TXS": "30 giorni TX",
     "SellAll": "Vendi tutto"
-  },  
+  },
   "portfolio": {
     "Show": "Mostra archiviato",
     "Import": "Importa",

@@ -14,7 +14,7 @@
   "tredingPage": {
     "mainHeader": {
       "trending": "Xu hướng",
-      "desc": "Top 100 cặp token có số giao dịch cao nhất trong khung thời gian được chọn",
+      "desc": "Top 50 token thịnh hành",
       "timeframeFilter": {
         "1m": "1 phút",
         "5m": "5 phút",

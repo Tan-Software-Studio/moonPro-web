@@ -16,7 +16,7 @@ async function getSolanaBalanceAndPrice(wallet) {
     const bal = await connection.getBalance(userPublicKey);
     return (await (bal / 1000000000)) || 0;
   } catch (error) {
-    console.log("🚀 ~ getSolanaBalanceAndPrice ~ error:", error);
+    // console.log("🚀 ~ getSolanaBalanceAndPrice ~ error:", error);
     return 0;
   }
 }
@@ -43,7 +43,7 @@ const getSoalanaTokenBalance = async (walletAddress, tokenMintAddress) => {
     const balance = Number(accountInfo.amount) / 10 ** mintInfo.decimals;
     return balance;
   } catch (error) {
-    console.log("🚀 ~ getSoalanaTokenBalance ~ error:", error);
+    // console.log("🚀 ~ getSoalanaTokenBalance ~ error:", error);
     return 0;
   }
 };

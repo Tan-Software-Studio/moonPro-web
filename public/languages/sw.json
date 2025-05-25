@@ -14,7 +14,7 @@
   "tredingPage": {
     "mainHeader": {
       "trending": "Trender",
-      "desc": "Topp 100 mest trendiga tokenpar baserat på transaktioner inom vald tidsram",
+      "desc": "Topp 50 trendande tokens",
       "timeframeFilter": {
         "1m": "1m",
         "5m": "5m",
