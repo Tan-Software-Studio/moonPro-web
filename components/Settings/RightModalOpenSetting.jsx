@@ -110,7 +110,7 @@ const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage 
   // handleReset for selected preset
   async function handleReset() {
     await setPreSetData((pre) => {
-      return {
+      const update = {
         ...pre,
         [presist]: {
           buy: {
@@ -125,8 +125,9 @@ const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage 
           }
         }
       };
+      localStorage.setItem("preSetAllData", JSON.stringify(update));
+      return update;
     });
-    localStorage.setItem("preSetAllData", JSON.stringify(preSetData));
   }
 
   // save function 
