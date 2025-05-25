@@ -126,6 +126,7 @@ const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage 
         }
       };
     });
+    localStorage.setItem("preSetAllData", JSON.stringify(preSetData));
   }
 
   // save function 
