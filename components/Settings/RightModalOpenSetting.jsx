@@ -148,7 +148,7 @@ const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage 
     if (preSetActiveFLag) {
       setPresist(preSetActiveFLag);
     }
-  }, [preSetData]);
+  }, []);
   return (
     <>
       <div

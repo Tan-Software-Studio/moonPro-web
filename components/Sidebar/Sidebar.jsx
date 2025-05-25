@@ -148,12 +148,11 @@ const Sidebar = () => {
   return (
     <>
       <div
-        className={`sidebar ${
-          (isSidebarOpen && isLargeScreen) ||
-          (isSidebarOpen && isSmallScreenData)
+        className={`sidebar ${(isSidebarOpen && isLargeScreen) ||
+            (isSidebarOpen && isSmallScreenData)
             ? `w-full md:w-[192.4px]`
             : " hidden md:block md:w-[64px]"
-        } transition-all duration-1000 ease-in-out h-full overflow-x-hidden z-50 fixed top-0 left-0 bg-[#08080E] border-r-[1px] border-r-[#404040]`}
+          } transition-all duration-1000 ease-in-out h-full overflow-x-hidden z-50 fixed top-0 left-0 bg-[#08080E] border-r-[1px] border-r-[#404040]`}
       >
         {/* logo + text */}
         <div className="flex  py-[17.8px] px-2 md:px-[2.4px]  items-center gap-3 justify-between md:justify-center text-[#B5B7DA] w-full">
@@ -201,15 +200,13 @@ const Sidebar = () => {
             {sidebardata?.map((data) => (
               <div
                 key={data.id}
-                className={`font-[400] p-2 text-[14px] mx-3 cursor-pointer text-[#ffffff] ${
-                  data.pathname === pathname
-                    ? `${
-                        isSidebarOpen
-                          ? "!rounded-md bg-[#11265B]"
-                          : "rounded-full bg-gradient"
-                      } border-[1px] border-[#0E43BD]`
+                className={`font-[400] p-2 text-[14px] mx-3 cursor-pointer text-[#ffffff] ${data.pathname === pathname
+                    ? `${isSidebarOpen
+                      ? "!rounded-md bg-[#11265B]"
+                      : "rounded-full bg-gradient"
+                    } border-[1px] border-[#0E43BD]`
                     : "text-[#ffffff]"
-                } 
+                  } 
                   `}
                 onClick={() => {
                   router.push(data?.pathname);
@@ -225,18 +222,16 @@ const Sidebar = () => {
                     />
                   </div>
                   <span
-                    className={`items-center justify-between flex-grow font-[400] text-nowrap ${
-                      (isSidebarOpen && isLargeScreen) ||
-                      (isSidebarOpen && isSmallScreenData)
+                    className={`items-center justify-between flex-grow font-[400] text-nowrap ${(isSidebarOpen && isLargeScreen) ||
+                        (isSidebarOpen && isSmallScreenData)
                         ? "block"
                         : "hidden"
-                    }
-                        ${
-                          selectToken == "Solana" &&
-                          pathname === "memescope/solana"
-                            ? "hidden"
-                            : "flex"
-                        }
+                      }
+                        ${selectToken == "Solana" &&
+                        pathname === "memescope/solana"
+                        ? "hidden"
+                        : "flex"
+                      }
                        `}
                   >
                     {data.pagename}
@@ -251,17 +246,15 @@ const Sidebar = () => {
           {sidebar?.map((data) => (
             <li
               key={data.id}
-              className={`font-[400] mt-6 p-2 mx-3 text-[14px] cursor-pointer text-[#ebe8e8]  ${
-                data.pathname == pathname
+              className={`font-[400] mt-6 p-2 mx-3 text-[14px] cursor-pointer text-[#ebe8e8]  ${data.pathname == pathname
                   ? "text-[#00FFFF] bg-gradient bg-[#11265B] border-2 border-[#0E43BD] rounded-md"
                   : "text-[#ffffff]"
-              } 
+                } 
                 ${data.pagename === "Profile" ? "md:hidden" : "block "}
                 ${data.pagename === "Transfer-Funds" ? "md:hidden" : "block "} 
-                ${
-                  data.pathname == `/memescope/solana` && chainName !== "Solana"
-                    ? "hidden"
-                    : "block"
+                ${data.pathname == `/memescope/solana` && chainName !== "Solana"
+                  ? "hidden"
+                  : "block"
                 } 
                 `}
               onClick={() =>
@@ -286,12 +279,11 @@ const Sidebar = () => {
                 </div>
 
                 <span
-                  className={`flex items-center justify-between flex-grow ${
-                    (isSidebarOpen && isLargeScreen) ||
-                    (isSidebarOpen && isSmallScreenData)
+                  className={`flex items-center justify-between flex-grow ${(isSidebarOpen && isLargeScreen) ||
+                      (isSidebarOpen && isSmallScreenData)
                       ? "block"
                       : "hidden"
-                  }`}
+                    }`}
                 >
                   {data.pagename}
                   <FaAngleRight className={`md:hidden mr-[18px]`} />

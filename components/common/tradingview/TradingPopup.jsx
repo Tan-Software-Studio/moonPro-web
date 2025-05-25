@@ -207,7 +207,7 @@ const TradingPopup = ({
     if (orderActiveChart) {
       setPresist(orderActiveChart);
     }
-  }, [orderSettingFlag]);
+  }, []);
   useEffect(() => {
     updateOrderSetting();
   }, [presist, activeTab, preSetData]);
