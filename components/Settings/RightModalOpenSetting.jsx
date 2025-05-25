@@ -259,7 +259,7 @@ const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage 
                 type="number"
                 name="slippage"
                 value={preSetData?.[presist]?.[activeTab]?.slippage}
-                onChange={(e) => updatePreSetSetting({ name: e?.target?.name, value: Math.min(Number(e?.target?.value), 100) })}
+                onChange={(e) => updatePreSetSetting(e?.target)}
                 className="bg-transparent p-[11px] text-start w-full text-white outline-none text-[14px] h-[40px] 
                                [&::-webkit-inner-spin-button]:appearance-none 
                                [&::-webkit-outer-spin-button]:appearance-none 
@@ -280,7 +280,7 @@ const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage 
                 type="number"
                 name="priorityFee"
                 value={preSetData?.[presist]?.[activeTab]?.priorityFee}
-                onChange={(e) => updatePreSetSetting({ name: e?.target?.name, value: Math.min(Number(e?.target?.value), 1) })}
+                onChange={(e) => updatePreSetSetting(e?.target)}
                 className="bg-transparent w-full text-white text-right outline-none text-[14px] h-[40px] [&::-webkit-inner-spin-button]:appearance-none 
              [&::-webkit-outer-spin-button]:appearance-none 
              [&::-moz-appearance]:textfield"
