@@ -98,9 +98,6 @@ const MscopePumpTable = ({ MemscopeData }) => {
   function navigateToChartSreen(block) {
     localStorage.setItem("chartTokenImg", block?.img);
     dispatch(setChartSymbolImage(block?.img));
-    router.push(
-      `/tradingview/solana?tokenaddress=${block?.address}&symbol=${block?.symbol}`
-    );
   }
   useEffect(() => {
     const interval = setInterval(() => {
@@ -129,71 +126,74 @@ const MscopePumpTable = ({ MemscopeData }) => {
         <>
           <div className={`h-[78vh] visibleScroll overflow-y-auto`}>
             {MemscopeData.map((block, index) => (
-              <div
-                key={block.id}
-                className={`cursor-pointer border-b  md:border-b md:border-r md:border-l-0 md:border-t-0 border-[#26262e] bg-[#08080E] hover:bg-[#6e6e6e1a] ease-in-out duration-200`}
-                onClick={() => navigateToChartSreen(block)}
-                onMouseEnter={() => sethoverRow(index)}
-                onMouseLeave={() => sethoverRow(null)}
+              <Link
+                key={index + 1}
+                href={`/tradingview/solana?tokenaddress=${block?.address}&symbol=${block?.symbol}`}
               >
-                <div className="flex md:space-y-0 px-[16px] py-[10px] md:px-[32px] md:py-[15px] gap-3 justify-center items-center">
-                  <div className="flex justify-center items-center">
-                    <div className="relative w-[70px] h-[70px]">
-                      <SquareProgressBar
-                        value={block?.bonding_curv || 0}
-                        maxValue={100}
-                        trailColor="#7b8085"
-                        progressColor={"#4FAFFE"}
-                      />
+                <div
+                  className={`cursor-pointer border-b md:border-b md:border-r md:border-l-0 md:border-t-0 border-[#26262e] bg-[#08080E] hover:bg-[#6e6e6e1a] ease-in-out duration-200`}
+                  onClick={() => navigateToChartSreen(block)}
+                  onMouseEnter={() => sethoverRow(index)}
+                  onMouseLeave={() => sethoverRow(null)}
+                >
+                  <div className="flex md:space-y-0 px-[16px] py-[10px] md:px-[32px] md:py-[15px] gap-3 justify-center items-center">
+                    <div className="flex justify-center items-center">
+                      <div className="relative w-[70px] h-[70px]">
+                        <SquareProgressBar
+                          value={block?.bonding_curv || 0}
+                          maxValue={100}
+                          trailColor="#7b8085"
+                          progressColor={"#4FAFFE"}
+                        />
 
-                      <img
-                        key={block?.img}
-                        src={
-                          block?.img
-                            ? block?.img
-                            : "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/in/wp-content/uploads/2022/03/monkey-g412399084_1280.jpg"
-                        }
-                        alt="Profile"
-                        className="absolute inset-0 m-auto w-[64px] h-[64px] rounded-sm"
-                      />
+                        <img
+                          key={block?.img}
+                          src={
+                            block?.img
+                              ? block?.img
+                              : "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/in/wp-content/uploads/2022/03/monkey-g412399084_1280.jpg"
+                          }
+                          alt="Profile"
+                          className="absolute inset-0 m-auto w-[64px] h-[64px] rounded-sm"
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="flex flex-col w-full">
-                    <div className="flex justify-between items-center">
-                      <div className="flex flex-col">
-                        {/* token name and copy address */}
-                        <div className="flex items-center gap-[2px]">
-                          <div
-                            className={`text-[#F6F6F6] text-[14px] font-[400] md:text-[16px] md:font-[700] uppercase`}
-                          >
-                            {block?.symbol?.length >= 12
-                              ? `${block?.symbol.slice(0, 12)}...`
-                              : block?.symbol}
-                          </div>
-                          <div className="text-[#6E6E6E] text-[14px] font-[400] md:text-[16px] md:font-[700]">
-                            /
-                          </div>
-                          <div
-                            className={`text-[#6E6E6E] text-[16px] font-[400] lowercase`}
-                          >
-                            {block?.name?.length >= 12
-                              ? `${block?.name.slice(0, 12)}...`
-                              : block?.name}
-                          </div>
-                          <div
-                            onClick={(e) =>
-                              copyAddress(block?.address, index, e)
-                            }
-                            className="text-sm "
-                          >
-                            {copied === index ? (
-                              <IoMdDoneAll className="text-[#F6F6F6] cursor-pointer" />
-                            ) : (
-                              <PiCopyThin className="text-[#F6F6F6] cursor-pointer" />
-                            )}
-                          </div>
-                          {/* {block?.replyCount > 0 && (
+                    <div className="flex flex-col w-full">
+                      <div className="flex justify-between items-center">
+                        <div className="flex flex-col">
+                          {/* token name and copy address */}
+                          <div className="flex items-center gap-[2px]">
+                            <div
+                              className={`text-[#F6F6F6] text-[14px] font-[400] md:text-[16px] md:font-[700] uppercase`}
+                            >
+                              {block?.symbol?.length >= 12
+                                ? `${block?.symbol.slice(0, 12)}...`
+                                : block?.symbol}
+                            </div>
+                            <div className="text-[#6E6E6E] text-[14px] font-[400] md:text-[16px] md:font-[700]">
+                              /
+                            </div>
+                            <div
+                              className={`text-[#6E6E6E] text-[16px] font-[400] lowercase`}
+                            >
+                              {block?.name?.length >= 12
+                                ? `${block?.name.slice(0, 12)}...`
+                                : block?.name}
+                            </div>
+                            <div
+                              onClick={(e) =>
+                                copyAddress(block?.address, index, e)
+                              }
+                              className="text-sm "
+                            >
+                              {copied === index ? (
+                                <IoMdDoneAll className="text-[#F6F6F6] cursor-pointer" />
+                              ) : (
+                                <PiCopyThin className="text-[#F6F6F6] cursor-pointer" />
+                              )}
+                            </div>
+                            {/* {block?.replyCount > 0 && (
                             <div className="flex items-center">
                               <span>
                                 <MdQuickreply
@@ -206,199 +206,205 @@ const MscopePumpTable = ({ MemscopeData }) => {
                               </span>
                             </div>
                           )} */}
-                        </div>
-                        {/* time and social links */}
-                        <div className={`flex items-center gap-[8px]`}>
-                          <div
-                            className={`text-[#6E6E6E] text-[14px] font-[400]`}
-                          >
-                            {UpdateTime(block?.created_time, currentTime)}
                           </div>
-                          <div className="text-[#6E6E6E]">|</div>
-                          <div className="flex gap-2">
-                            {block?.socialIconsLink
-                              ?.filter((item) => item?.uri)
-                              .map((item, index) => {
-                                const matchedIcon = socialIcons.find(
-                                  (iconItem) => iconItem.title === item.alt
-                                );
-
-                                return (
-                                  <Link
-                                    key={index}
-                                    href={item?.uri}
-                                    target="_blank"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <div className="grid place-items-center rounded-full">
-                                      {matchedIcon && (
-                                        <Image
-                                          src={matchedIcon?.icon}
-                                          alt={matchedIcon?.title}
-                                          className="mx-auto text-white"
-                                        />
-                                      )}
-                                    </div>
-                                  </Link>
-                                );
-                              })}
-                            <Link
-                              href={`https://www.pump.news/en/${block?.address}-solana`}
-                              target="_blank"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <div className="text-[10px] h-[17px] w-[17px] border border-[#4CAF50] text-[#ffffff] rounded-md flex items-center justify-center cursor-pointer bg-gradient-to-br from-[#409143] to-[#093d0c] shadow-[0_0_4px_rgba(76,255,80,0.4)]">
-                                AI
-                              </div>
-                            </Link>
-                            <Link
-                              href={`https://x.com/search?q=${block?.address}`}
-                              target="_blank"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <IoSearchSharp color="#BBBBBC" size={19} />
-                            </Link>
-                          </div>
-                          <div className="text-[#6E6E6E]">|</div>
-                          <Tooltip
-                            body={
-                              "Represents how far along the token is on its bonding curve. A higher % means more tokens have been bought, pushing the price higher.\nEarly % = cheaper price\nHigher % = more expensive and more demand."
-                            }
-                          >
+                          {/* time and social links */}
+                          <div className={`flex items-center gap-[8px]`}>
                             <div
-                              className={`text-[#21CB6B] text-[12px] font-[400]`}
+                              className={`text-[#6E6E6E] text-[14px] font-[400]`}
                             >
-                              {block?.bonding_curv >= 100
-                                ? "100%"
-                                : block?.bonding_curv
-                                ? `${block?.bonding_curv?.toFixed(2)} %`
-                                : "0%"}
+                              {UpdateTime(block?.created_time, currentTime)}
+                            </div>
+                            <div className="text-[#6E6E6E]">|</div>
+                            <div className="flex gap-2">
+                              {block?.socialIconsLink
+                                ?.filter((item) => item?.uri)
+                                .map((item, index) => {
+                                  const matchedIcon = socialIcons.find(
+                                    (iconItem) => iconItem.title === item.alt
+                                  );
+
+                                  return (
+                                    <Link
+                                      key={index}
+                                      href={item?.uri}
+                                      target="_blank"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      <div className="grid place-items-center rounded-full">
+                                        {matchedIcon && (
+                                          <Image
+                                            src={matchedIcon?.icon}
+                                            alt={matchedIcon?.title}
+                                            className="mx-auto text-white"
+                                          />
+                                        )}
+                                      </div>
+                                    </Link>
+                                  );
+                                })}
+                              <Link
+                                href={`https://www.pump.news/en/${block?.address}-solana`}
+                                target="_blank"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <div className="text-[10px] h-[17px] w-[17px] border border-[#4CAF50] text-[#ffffff] rounded-md flex items-center justify-center cursor-pointer bg-gradient-to-br from-[#409143] to-[#093d0c] shadow-[0_0_4px_rgba(76,255,80,0.4)]">
+                                  AI
+                                </div>
+                              </Link>
+                              <Link
+                                href={`https://x.com/search?q=${block?.address}`}
+                                target="_blank"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <IoSearchSharp color="#BBBBBC" size={19} />
+                              </Link>
+                            </div>
+                            <div className="text-[#6E6E6E]">|</div>
+                            <Tooltip
+                              body={
+                                "Represents how far along the token is on its bonding curve. A higher % means more tokens have been bought, pushing the price higher.\nEarly % = cheaper price\nHigher % = more expensive and more demand."
+                              }
+                            >
+                              <div
+                                className={`text-[#21CB6B] text-[12px] font-[400]`}
+                              >
+                                {block?.bonding_curv >= 100
+                                  ? "100%"
+                                  : block?.bonding_curv
+                                  ? `${block?.bonding_curv?.toFixed(2)} %`
+                                  : "0%"}
+                              </div>
+                            </Tooltip>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="w-[90px] h-[60px] relative flex items-center justify-center">
+                            <div
+                              className={`${
+                                hoverRow === index
+                                  ? "opacity-40 absolute inset-0 flex items-center justify-center"
+                                  : "opacity-100"
+                              } `}
+                            >
+                              <ChartComponent block={block} />
+                            </div>
+                            {hoverRow === index && (
+                              <button
+                                className="absolute z-10 w-fit whitespace-nowrap rounded-md bg-[#1d73fc] hover:bg-[#438bff] text-[#111111] font-bold py-1 px-5 text-xs transition-all duration-100 ease-in-out"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  buySolanaTokensQuickBuyHandler(
+                                    solanaLivePrice,
+                                    block?.address,
+                                    quickBuy,
+                                    solWalletAddress,
+                                    nativeTokenbalance,
+                                    e,
+                                    "6ef8rrecthr5dkzon8nwu78hrvfckubj14m5ubewf6p",
+                                    block?.bonding_curv,
+                                    dispatch
+                                  );
+                                }}
+                              >
+                                {quickBuy > 0
+                                  ? `${
+                                      quickBuy?.length > 6
+                                        ? `${quickBuy.slice(0, 7)}...`
+                                        : `${quickBuy} SOL`
+                                    }`
+                                  : "Buy"}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-between">
+                        <div className="flex gap-[12px] order-2">
+                          <Tooltip
+                            body={`Number of Holders: ${
+                              block?.holders ? block.holders : 0
+                            }`}
+                          >
+                            <div className="flex items-center gap-[4px]">
+                              <Image src={Users} alt="user" />
+                              <div className="text-[#F1F0F0] text-xs md:text-[12px] font-400">
+                                {block?.holders ? block?.holders : 0}
+                              </div>
+                            </div>
+                          </Tooltip>
+
+                          <Tooltip
+                            body={`Volume: ${
+                              block?.volume
+                                ? humanReadableFormat(block?.volume.toFixed(2))
+                                : 0
+                            }`}
+                          >
+                            <div className="flex items-center gap-[4px]">
+                              <Image src={Vol} alt="volume" />
+                              <div className="text-[#F1F0F0] text-xs md:text-[12px] font-400">
+                                {block?.volume
+                                  ? humanReadableFormat(
+                                      block?.volume.toFixed(2)
+                                    )
+                                  : 0}{" "}
+                              </div>
+                            </div>
+                          </Tooltip>
+
+                          <Tooltip
+                            body={`Market Cap: ${
+                              block?.MKC ? humanReadableFormat(block?.MKC) : 0
+                            }`}
+                          >
+                            <div className="flex items-center gap-[4px]">
+                              <Image src={MC} alt="MC" />
+                              <div className="text-[#F1F0F0] text-xs md:text-[12px] font-400">
+                                {block?.MKC
+                                  ? humanReadableFormat(block?.MKC)
+                                  : 0}
+                                {/* {humanReadableMarketCap(block?.marketCap)} */}
+                              </div>
                             </div>
                           </Tooltip>
                         </div>
-                      </div>
-                      <div>
-                        <div className="w-[90px] h-[60px] relative flex items-center justify-center">
-                          <div
-                            className={`${
-                              hoverRow === index
-                                ? "opacity-40 absolute inset-0 flex items-center justify-center"
-                                : "opacity-100"
-                            } `}
-                          >
-                            <ChartComponent block={block} />
-                          </div>
-                          {hoverRow === index && (
-                            <button
-                              className="absolute z-10 w-fit whitespace-nowrap rounded-md bg-[#1d73fc] hover:bg-[#438bff] text-[#111111] font-bold py-1 px-5 text-xs transition-all duration-100 ease-in-out"
-                              onClick={(e) => {
-                                buySolanaTokensQuickBuyHandler(
-                                  solanaLivePrice,
-                                  block?.address,
-                                  quickBuy,
-                                  solWalletAddress,
-                                  nativeTokenbalance,
-                                  e,
-                                  "6ef8rrecthr5dkzon8nwu78hrvfckubj14m5ubewf6p",
-                                  block?.bonding_curv,
-                                  dispatch
-                                );
-                              }}
-                            >
-                              {quickBuy > 0
-                                ? `${
-                                    quickBuy?.length > 6
-                                      ? `${quickBuy.slice(0, 7)}...`
-                                      : `${quickBuy} SOL`
-                                  }`
-                                : "Buy"}
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between">
-                      <div className="flex gap-[12px] order-2">
-                        <Tooltip
-                          body={`Number of Holders: ${
-                            block?.holders ? block.holders : 0
-                          }`}
-                        >
-                          <div className="flex items-center gap-[4px]">
-                            <Image src={Users} alt="user" />
-                            <div className="text-[#F1F0F0] text-xs md:text-[12px] font-400">
-                              {block?.holders ? block?.holders : 0}
-                            </div>
-                          </div>
-                        </Tooltip>
-
-                        <Tooltip
-                          body={`Volume: ${
-                            block?.volume
-                              ? humanReadableFormat(block?.volume.toFixed(2))
-                              : 0
-                          }`}
-                        >
-                          <div className="flex items-center gap-[4px]">
-                            <Image src={Vol} alt="volume" />
-                            <div className="text-[#F1F0F0] text-xs md:text-[12px] font-400">
-                              {block?.volume
-                                ? humanReadableFormat(block?.volume.toFixed(2))
-                                : 0}{" "}
-                            </div>
-                          </div>
-                        </Tooltip>
-
-                        <Tooltip
-                          body={`Market Cap: ${
-                            block?.MKC ? humanReadableFormat(block?.MKC) : 0
-                          }`}
-                        >
-                          <div className="flex items-center gap-[4px]">
-                            <Image src={MC} alt="MC" />
-                            <div className="text-[#F1F0F0] text-xs md:text-[12px] font-400">
-                              {block?.MKC ? humanReadableFormat(block?.MKC) : 0}
-                              {/* {humanReadableMarketCap(block?.marketCap)} */}
-                            </div>
-                          </div>
-                        </Tooltip>
-                      </div>
-                      <div className="flex gap-[8px] order-1">
-                        {block?.additionalInfo?.map((item, index) => {
-                          const matchedData = percentages.find(
-                            (iconItem) => iconItem.title === item.title
-                          );
-                          return (
-                            <Tooltip
-                              key={index}
-                              body={`${matchedData?.getToolTip(item?.value)}`}
-                            >
-                              <div
-                                className={`flex gap-[4px] items-center font-[400]`}
+                        <div className="flex gap-[8px] order-1">
+                          {block?.additionalInfo?.map((item, index) => {
+                            const matchedData = percentages.find(
+                              (iconItem) => iconItem.title === item.title
+                            );
+                            return (
+                              <Tooltip
+                                key={index}
+                                body={`${matchedData?.getToolTip(item?.value)}`}
                               >
-                                {matchedData && (
-                                  <Image
-                                    src={matchedData?.icon}
-                                    alt={matchedData?.title}
-                                  />
-                                )}
                                 <div
-                                  className={`text-[12px]  ${matchedData?.color}`}
+                                  className={`flex gap-[4px] items-center font-[400]`}
                                 >
-                                  {matchedData?.title == "sniper_count"
-                                    ? item.value
-                                    : `${item.value}%`}
+                                  {matchedData && (
+                                    <Image
+                                      src={matchedData?.icon}
+                                      alt={matchedData?.title}
+                                    />
+                                  )}
+                                  <div
+                                    className={`text-[12px]  ${matchedData?.color}`}
+                                  >
+                                    {matchedData?.title == "sniper_count"
+                                      ? item.value
+                                      : `${item.value}%`}
+                                  </div>
                                 </div>
-                              </div>
-                            </Tooltip>
-                          );
-                        })}
+                              </Tooltip>
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </>
