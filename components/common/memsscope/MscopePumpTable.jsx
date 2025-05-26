@@ -30,6 +30,7 @@ import {
   setChartSymbolImage,
 } from "@/app/redux/states";
 import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
+import { IoSearchSharp } from "react-icons/io5";
 
 const MscopePumpTable = ({ MemscopeData }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -250,6 +251,13 @@ const MscopePumpTable = ({ MemscopeData }) => {
                               <div className="text-[10px] h-[17px] w-[17px] border border-[#4CAF50] text-[#ffffff] rounded-md flex items-center justify-center cursor-pointer bg-gradient-to-br from-[#409143] to-[#093d0c] shadow-[0_0_4px_rgba(76,255,80,0.4)]">
                                 AI
                               </div>
+                            </Link>
+                            <Link
+                              href={`https://x.com/search?q=${block?.address}`}
+                              target="_blank"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <IoSearchSharp color="#BBBBBC" size={19} />
                             </Link>
                           </div>
                           <div className="text-[#6E6E6E]">|</div>

@@ -8,7 +8,7 @@ import { IoMdDoneAll } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { usePathname, useRouter } from "next/navigation";
 import { CiCircleCheck } from "react-icons/ci";
-import { IoCloseCircleOutline } from "react-icons/io5";
+import { IoCloseCircleOutline, IoSearchSharp } from "react-icons/io5";
 import { humanReadableFormat, UpdateTime } from "@/utils/calculation";
 import { buySolanaTokensQuickBuyHandler } from "@/utils/solanaBuySell/solanaBuySell";
 import LoaderPopup from "../LoaderPopup/LoaderPopup";
@@ -169,59 +169,59 @@ const TableBody = ({ data, img }) => {
                                 {(row?.offchainData?.metadata?.telegram ||
                                   row?.offchainData?.metadata?.extensions
                                     ?.telegram) && (
-                                  <Link
-                                    href={
-                                      row?.offchainData?.metadata?.telegram ||
-                                      row?.offchainData?.metadata?.extensions
-                                        ?.telegram
-                                    }
-                                    target="_blank"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <FaTelegramPlane
-                                      size={16}
-                                      className="text-[#6E6E6E] hover:text-[#ffffff]"
-                                    />
-                                  </Link>
-                                )}
+                                    <Link
+                                      href={
+                                        row?.offchainData?.metadata?.telegram ||
+                                        row?.offchainData?.metadata?.extensions
+                                          ?.telegram
+                                      }
+                                      target="_blank"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      <FaTelegramPlane
+                                        size={16}
+                                        className="text-[#6E6E6E] hover:text-[#ffffff]"
+                                      />
+                                    </Link>
+                                  )}
 
                                 {(row?.offchainData?.metadata?.twitter ||
                                   row?.offchainData?.metadata?.extensions
                                     ?.twitter) && (
-                                  <Link
-                                    href={
-                                      row?.offchainData?.metadata?.twitter ||
-                                      row?.offchainData?.metadata?.extensions
-                                        ?.twitter
-                                    }
-                                    target="_blank"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <FaXTwitter
-                                      size={16}
-                                      className="text-[#6E6E6E] hover:text-[#ffffff]"
-                                    />
-                                  </Link>
-                                )}
+                                    <Link
+                                      href={
+                                        row?.offchainData?.metadata?.twitter ||
+                                        row?.offchainData?.metadata?.extensions
+                                          ?.twitter
+                                      }
+                                      target="_blank"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      <FaXTwitter
+                                        size={16}
+                                        className="text-[#6E6E6E] hover:text-[#ffffff]"
+                                      />
+                                    </Link>
+                                  )}
 
                                 {(row?.offchainData?.metadata?.website ||
                                   row?.offchainData?.metadata?.extensions
                                     ?.website) && (
-                                  <Link
-                                    href={
-                                      row?.offchainData?.metadata?.website ||
-                                      row?.offchainData?.metadata?.extensions
-                                        ?.website
-                                    }
-                                    target="_blank"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <MdOutlineLanguage
-                                      size={16}
-                                      className="text-[#6E6E6E] hover:text-[#ffffff]"
-                                    />
-                                  </Link>
-                                )}
+                                    <Link
+                                      href={
+                                        row?.offchainData?.metadata?.website ||
+                                        row?.offchainData?.metadata?.extensions
+                                          ?.website
+                                      }
+                                      target="_blank"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      <MdOutlineLanguage
+                                        size={16}
+                                        className="text-[#6E6E6E] hover:text-[#ffffff]"
+                                      />
+                                    </Link>
+                                  )}
                               </div>
 
                               <Link
@@ -232,6 +232,13 @@ const TableBody = ({ data, img }) => {
                                 <div className="text-[10px] h-[17px] w-[17px] border border-[#4CAF50] text-[#ffffff] rounded-md flex items-center justify-center cursor-pointer bg-gradient-to-br from-[#409143] to-[#093d0c] shadow-[0_0_4px_rgba(76,255,80,0.4)]">
                                   AI
                                 </div>
+                              </Link>
+                              <Link
+                                href={`https://x.com/search?q=${row.address}`}
+                                target="_blank"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <IoSearchSharp color="#BBBBBC" size={19} />
                               </Link>
                             </div>
                           </div>
@@ -249,11 +256,10 @@ const TableBody = ({ data, img }) => {
                         </p>
                       </div>
                       <p
-                        className={`text-[12px] font-medium ${
-                          row?.Percentage < 0
+                        className={`text-[12px] font-medium ${row?.Percentage < 0
                             ? "text-[#ED1B24]"
                             : "text-[#21CB6B]"
-                        }`}
+                          }`}
                       >
                         {`${row?.Percentage > 0 ? "+" : ""}${Number(
                           row?.Percentage || 0
@@ -299,9 +305,8 @@ const TableBody = ({ data, img }) => {
                   </td> */}
                   <td className="whitespace-nowrap w-60 py-3 flex justify-center">
                     <div
-                      className={`flex  gap-2 ${
-                        !row.mint_authority ? "text-white" : "text-[#828282]"
-                      }`}
+                      className={`flex  gap-2 ${!row.mint_authority ? "text-white" : "text-[#828282]"
+                        }`}
                     >
                       <Tooltip
                         body={
@@ -332,11 +337,10 @@ const TableBody = ({ data, img }) => {
                       <Tooltip body={"No one can freeze token transfers."}>
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${
-                              !row.mint_authority
+                            className={`flex flex-col text-start opacity-75 ${!row.mint_authority
                                 ? "text-white"
                                 : "text-[#828282]"
-                            }`}
+                              }`}
                           >
                             {!row.freeze_authority ? (
                               <CiCircleCheck
@@ -364,9 +368,8 @@ const TableBody = ({ data, img }) => {
                       >
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${
-                              true ? "text-white" : "text-[#828282]"
-                            }`}
+                            className={`flex flex-col text-start opacity-75 ${true ? "text-white" : "text-[#828282]"
+                              }`}
                           >
                             {true ? (
                               <CiCircleCheck
@@ -390,9 +393,8 @@ const TableBody = ({ data, img }) => {
                       <Tooltip body={"Shows if token has 10 holders."}>
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${
-                              row?.top10Holder ? "text-white" : "text-[#828282]"
-                            }`}
+                            className={`flex flex-col text-start opacity-75 ${row?.top10Holder ? "text-white" : "text-[#828282]"
+                              }`}
                           >
                             {row?.top10Holder ? (
                               <CiCircleCheck
@@ -418,9 +420,8 @@ const TableBody = ({ data, img }) => {
                   {/* Column 6: Quick Buy Button */}
                   <td className="whitespace-nowrap w-32 py-3 place-items-center">
                     <button
-                      className={`text-[#111111] font-bold rounded-[20px] py-2 ${
-                        quickBuy > 0 ? "px-2" : "px-3"
-                      } bg-[#1d73fc] hover:bg-[#438bff] transition-all duration-300 ease-in-out flex items-center justify-center`}
+                      className={`text-[#111111] font-bold rounded-[20px] py-2 ${quickBuy > 0 ? "px-2" : "px-3"
+                        } bg-[#1d73fc] hover:bg-[#438bff] transition-all duration-300 ease-in-out flex items-center justify-center`}
                       onClick={(e) =>
                         buySolanaTokensQuickBuyHandler(
                           solanaLivePrice,
@@ -439,11 +440,10 @@ const TableBody = ({ data, img }) => {
                       </span>
                       <span>
                         {quickBuy > 0
-                          ? `${
-                              quickBuy.length > 6
-                                ? `Buy ${quickBuy.slice(0, 7)}... SOL`
-                                : `Buy ${quickBuy} SOL`
-                            }`
+                          ? `${quickBuy.length > 6
+                            ? `Buy ${quickBuy.slice(0, 7)}... SOL`
+                            : `Buy ${quickBuy} SOL`
+                          }`
                           : `Buy`}
                       </span>
                     </button>
