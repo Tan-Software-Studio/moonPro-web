@@ -1,6 +1,8 @@
-import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFunctions"
+import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFunctions";
+import { setPriceLines } from "./fifoPrice";
 
 const marks = [];
+const userMarks = [];
 
 export const devMark = (id, time, isBuy, usdTraded, atPricePoint, isUsdActive, isMarketCapActive, markType) => {
   const usdTradedReadable = usdTraded >= 1 || usdTraded <= -1 ?  humanReadableFormatWithNoDollar(usdTraded, 2) : formatDecimal(usdTraded);
@@ -30,15 +32,32 @@ export const devMark = (id, time, isBuy, usdTraded, atPricePoint, isUsdActive, i
 }
 
 // Add a mark object to local store
-export const addMark = (time, isBuy, usdTraded, atPricePoint, isUsdActive, isMarketCapActive, markType) => {
+export const addMark = async (time, isBuy, usdTraded, atPricePoint, tokenAmount, isUsdActive, isMarketCapActive, markType) => {
   const newMark = devMark(getStoredMarks().length, time, isBuy, usdTraded, atPricePoint, isUsdActive, isMarketCapActive, markType);
   marks.push(newMark);
+  const isUser = markType === "user";
+  if (isUser) {
+    const userMark = {
+      time,
+      isBuy,
+      usdTraded,
+      price: atPricePoint,
+      amount: tokenAmount
+    }
+    userMarks.push(userMark);
+    userMarks.sort((a, b) => a.time - b.time);
+  }
   const chart = window?.tvWidget;
-  if (chart) {
+  if (chart?.ready) {
     chart.activeChart().clearMarks(); // Clear existing marks
     chart.activeChart().refreshMarks(); // Force re-request of marks
+    await setPriceLines(chart);
   }
 };
+
+export const getStoredUserMarks = () => {
+  return [...userMarks];
+}
 
 // Get all stored marks
 export const getStoredMarks = () => {
@@ -48,4 +67,5 @@ export const getStoredMarks = () => {
 // Clear all marks from local store
 export const clearMarks = () => {
   marks.length = 0; // clear array in-place
+  userMarks.length = 0;
 };

@@ -81,6 +81,7 @@ const TOKEN_DETAILS = `query TradingView($token: String, $dataset: dataset_arg_e
         Signer
       }
       Trade {
+        Amount
         PriceInUSD
         Side {
           Type
@@ -104,6 +105,7 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
   if (userWallet !== null) {
     walletsToMark.push(userWallet);
   } 
+
   // console.log("🚀 ~ fetchHistoricalData ~ countBack:", countBack);
   const requiredBars = 20000;
   const timeFromTv = new Date(from * 1000).toISOString();
@@ -179,6 +181,7 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
         const creatorTransaction = creatorTransactions[i];
         const blockTime = new Date(creatorTransaction?.Block?.Time).getTime() / 1000;
         const isBuy = creatorTransaction?.Trade?.Side?.Type === 'buy';
+        const tokenAmount = Number(creatorTransaction?.Trade?.Amount);
 
         const usdTraded = Number(creatorTransaction?.Trade?.Side?.AmountInUSD);
 
@@ -187,9 +190,9 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
         const atPrice = isMarketCapActive ? usdSolPrice * supply : usdSolPrice;
 
         if (creatorTransaction?.Transaction?.Signer === tokenCreator) {
-          addMark(blockTime, isBuy, usdTraded, atPrice, isUsdActive, isMarketCapActive, "dev");
+          await addMark(blockTime, isBuy, usdTraded, atPrice, tokenAmount, isUsdActive, isMarketCapActive, "dev");
         } else if (creatorTransaction?.Transaction?.Signer === userWallet) {
-          addMark(blockTime, isBuy,  usdTraded,atPrice,isUsdActive,isMarketCapActive,"user");
+          await addMark(blockTime, isBuy,  usdTraded,atPrice, tokenAmount, isUsdActive, isMarketCapActive, "user");
         }
       }
     }
