@@ -405,6 +405,7 @@ const Tradingview = () => {
 
           <div className="w-full border border-[#4D4D4D] md:border-l-0 md:border-r-0">
             <DataSecurity
+              tokenCA={tokenaddress}
               tragindViewPage={tragindViewPage?.right?.datasecurity}
               activeTab={activeTab}
               dataAndSecurity={dataAndSecurity}

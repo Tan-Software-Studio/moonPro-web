@@ -1,15 +1,79 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
+import axios from "axios";
 
 function DataSecurity({
+  tokenCA,
   tragindViewPage,
   activeTab,
   dataAndSecurity,
   dataLoaderForChart,
 }) {
   const [isDataSecurity, setIsDataSecurity] = useState(true);
+  const [top10holdersPercetnage, setTop10holdersPercetnage] = useState([]);
+
+  async function getRawSupply() {
+    return await localStorage.getItem("chartSupply");
+  }
+
+  useEffect(() => {
+    console.log("hi");
+    const init = async () => {
+      await topHoldersApiCall();
+    };
+    init();
+  }, []);
+
+    const topHoldersApiCall = async () => {
+      const date = await new Date();
+      const currentTime = await date.toISOString();
+      try {
+        const response = await axios.post(
+          "https://streaming.bitquery.io/eap",
+          {
+            query: `query TopHolders($token: String, $time_ago: DateTime) {
+    Solana {
+      BalanceUpdates(
+        orderBy: {descendingByField: "BalanceUpdate_balance_maximum"}
+        where: {BalanceUpdate: {Currency: {MintAddress: {is: $token}}}, Block: {Time: {before: $time_ago}}}
+        limit:{count:10}
+      ) {
+        BalanceUpdate {
+          Account {
+            Owner
+          }
+          balance: PostBalance(maximum: Block_Slot)
+        }
+      }
+    }
+  }
+  `,
+            variables: {
+              token: tokenCA,
+              time_ago: currentTime,
+            },
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${process.env.NEXT_PUBLIC_STREAM_BITQUERY_API}`,
+            },
+          }
+        );
+        let rawSupply = await getRawSupply();
+        rawSupply === 0 ? 1 : rawSupply;
+        const balances = response?.data?.data?.Solana?.BalanceUpdates.map((item) =>
+          Number(item?.BalanceUpdate?.balance)
+        ).sort((a, b) => b - a);
+        const totalBalance = balances.reduce((sum, balance) => sum + balance, 0);
+        const top10percentage = totalBalance > 0 ? ((totalBalance / rawSupply) * 100).toFixed(0) : 0;
+        setTop10holdersPercetnage(rawSupply === 0 ? top10percentage : 0);
+      } catch (error) {
+        console.error("Error:", error.response?.data || error.message || error);
+      }
+    };
   return (
     <div className="bg-[#08080E] select-none flex flex-col h-fit w-full text-white">
       <div
@@ -145,9 +209,15 @@ function DataSecurity({
               </p>
               <Infotip body={tragindViewPage?.top10tool} />
             </div>
-            <p className="text-[#F6F6F6] text-[12px] font-[500]">
+              <p className={`text-[#F6F6F6] text-[12px] font-[500] ${
+                top10holdersPercetnage
+                  ? top10holdersPercetnage >= 10
+                    ? 'text-[#ed1b26]'
+                    : 'text-[#21CB6B]'
+                  : 'text-[#ffffff]'
+              }`}>              
               {" "}
-              {dataLoaderForChart ? "------" : dataAndSecurity?.[3]?.value}
+              {!top10holdersPercetnage ? "------" : top10holdersPercetnage + "%"}
             </p>
           </div>{" "}
           <div className="flex items-center justify-between mb-[16px]">
