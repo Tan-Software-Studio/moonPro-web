@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSelector } from "react-redux";
-
 const AllPageHeader = ({ HeaderData }) => {
   const [inputValue, setInputValue] = useState("0");
   const borderColor = useSelector(
