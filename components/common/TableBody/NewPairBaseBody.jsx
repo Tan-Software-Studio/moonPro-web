@@ -15,7 +15,6 @@ const NewPairBaseBody = ({ data, loading }) => {
   const [copied, setCopied] = useState(false);
 
   const pathname = usePathname();
-  const getNetwork = pathname.split("/")[2];
   const quickBuy = useSelector((state) => state?.AllthemeColorData?.quickBuy);
   const copyAddress = (address, index, e) => {
     e.stopPropagation();
@@ -63,9 +62,8 @@ const NewPairBaseBody = ({ data, loading }) => {
                   } cursor-pointer`}
                   onClick={() => {
                     router.push(
-                      `/tradingview/${getNetwork}?tokenaddress=${row?.Receipt?.ContractAddress}&symbol=${row?.Arguments[1]?.Value?.string}`
+                      `/tradingview/solana?tokenaddress=${row?.Receipt?.ContractAddress}&symbol=${row?.Arguments[1]?.Value?.string}`
                     );
-                    localStorage.setItem("silectChainName", getNetwork);
                   }}
                 >
                   {/* Column 1: Icon and Pair Info */}

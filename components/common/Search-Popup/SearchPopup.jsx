@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import SearchResultData from "./SearchResultData";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const SearchPopup = () => {
   const [searchData, setsearchData] = useState(false);
@@ -91,20 +92,11 @@ const SearchPopup = () => {
     setResentTokens(storedTokens);
   }, []);
 
-  async function navigateToChartView(e) {
+  function navigateToChartView(e) {
     localStorage.setItem("chartTokenImg", e?.img);
-    await dispatch(setIsSearchPopup(false));
-    await dispatch(setChartSymbolImage(e?.img));
+    dispatch(setIsSearchPopup(false));
+    dispatch(setChartSymbolImage(e?.img));
     localStorage.setItem("chartTokenAddress", e?.Trade?.Currency?.MintAddress);
-    setTimeout(async () => {
-      await navigate.push(
-        `/tradingview/solana?tokenaddress=${
-          e?.Trade?.Currency?.MintAddress
-        }&symbol=${e?.Trade?.Currency?.Symbol || "unknown"}&pair=${
-          e?.Trade?.Market?.MarketAddress
-        }`
-      );
-    }, 10);
   }
   return (
     <>
@@ -169,32 +161,39 @@ const SearchPopup = () => {
                   <h3 className="text-sm text-white opacity-60">Recents :</h3>
                   <div className="flex overflow-x-auto gap-2">
                     {resentTokens.map((recentData, index) => (
-                      <button
+                      <Link
                         key={index}
-                        onClick={() => navigateToChartView(recentData)}
-                        className="text-xs text-white px-2 py-1 bg-[#17171c] rounded cursor-pointer hover:bg-[#333] flex gap-2 items-center"
+                        href={`/tradingview/solana?tokenaddress=${
+                          recentData?.Trade?.Currency?.MintAddress
+                        }&symbol=${
+                          recentData?.Trade?.Currency?.Symbol || "unknown"
+                        }&pair=${recentData?.Trade?.Market?.MarketAddress}`}
                       >
-                        <div className="flex w-7 h-7 items-center justify-center border border-dashed rounded-md border-gray-700 relative">
-                          {recentData?.img ? (
-                            <img
-                              key={index}
-                              src={recentData?.img}
-                              alt={`${recentData?.Currency?.Symbol}`}
-                              className="w-7 h-7 rounded-md border border-dashed border-gray-700 text-sm text-gray-700 uppercase"
+                        <button
+                          onClick={() => navigateToChartView(recentData)}
+                          className="text-xs text-white px-2 py-1 bg-[#17171c] rounded cursor-pointer hover:bg-[#333] flex gap-2 items-center"
+                        >
+                          <div className="flex w-7 h-7 items-center justify-center border border-dashed rounded-md border-gray-700 relative">
+                            {recentData?.img ? (
+                              <img
+                                src={recentData?.img}
+                                alt={`${recentData?.Currency?.Symbol}`}
+                                className="w-7 h-7 rounded-md border border-dashed border-gray-700 text-sm text-gray-700 uppercase"
+                              />
+                            ) : recentData?.Currency?.Symbol ? (
+                              recentData?.Currency?.Symbol?.charAt(0)
+                            ) : (
+                              "?"
+                            )}
+                            <Image
+                              src={solana}
+                              alt="solana"
+                              className="absolute w-3 h-3 right-0 bottom-0"
                             />
-                          ) : recentData?.Currency?.Symbol ? (
-                            recentData?.Currency?.Symbol?.charAt(0)
-                          ) : (
-                            "?"
-                          )}
-                          <Image
-                            src={solana}
-                            alt="solana"
-                            className="absolute w-3 h-3 right-0 bottom-0"
-                          />
-                        </div>
-                        <span>{recentData?.Trade?.Currency?.Symbol}</span>
-                      </button>
+                          </div>
+                          <span>{recentData?.Trade?.Currency?.Symbol}</span>
+                        </button>
+                      </Link>
                     ))}
                   </div>
                 </div>

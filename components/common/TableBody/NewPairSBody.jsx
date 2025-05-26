@@ -17,7 +17,6 @@ import { fetchSolanaNativeBalance } from "@/app/redux/states";
 const NewPairSBody = ({ data, loading }) => {
   const router = useRouter();
   const pathname = usePathname();
-  const getNetwork = pathname.split("/")[2];
   const dispatch = useDispatch();
   const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
   const solWalletAddress = useSelector(
@@ -86,9 +85,8 @@ const NewPairSBody = ({ data, loading }) => {
                 onClick={() => {
                   // Navigate to the trading view with query parameters
                   router.push(
-                    `/tradingview/${getNetwork}?tokenaddress=${row?.address}&symbol=${row?.symbol}`
+                    `/tradingview/solana?tokenaddress=${row?.address}&symbol=${row?.symbol}`
                   );
-                  localStorage.setItem("silectChainName", getNetwork);
                 }}
               >
                 {/* Column 1: Icon and Pair Info */}

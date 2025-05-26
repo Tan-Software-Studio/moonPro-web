@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Filter,
   Advanced,
@@ -9,11 +9,10 @@ import {
   TrendingImg,
   solana,
 } from "@/app/Images";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
 import TableHeaderData from "@/components/common/TableHeader/TableHeaderData";
 import TableBody from "@/components/common/TableBody/TableBody";
-import axios from "axios";
 import { useTranslation } from "react-i18next";
 import handleSort from "@/utils/sortTokenData";
 
@@ -168,12 +167,6 @@ const Trending = () => {
       sortingKey: "",
       infoTipString: tredingPage?.tableheaders?.pairinfotooltip,
     },
-    // {
-    //   title: tredingPage?.tableheaders?.created,
-    //   sortable: true,
-    //   key: "created",
-    //   sortingKey: "date",
-    // },
     {
       title: tredingPage?.tableheaders?.mcap,
       sortable: true,

@@ -99,9 +99,8 @@ const TrendingEvm = ({ data, img }) => {
                   } cursor-pointer`}
                   onClick={() => {
                     router.push(
-                      `/tradingview/${getNetwork}?tokenaddress=${row?.Trade?.Side?.Currency?.SmartContract}&symbol=${row.Trade.Side.Currency.Symbol}`
+                      `/tradingview/solana?tokenaddress=${row?.Trade?.Side?.Currency?.SmartContract}&symbol=${row.Trade.Side.Currency.Symbol}`
                     );
-                    localStorage.setItem("silectChainName", getNetwork);
                   }}
                 >
                   {/* Column 1: Symbol and PairInfo */}

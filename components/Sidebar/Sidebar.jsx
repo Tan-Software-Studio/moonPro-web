@@ -7,14 +7,10 @@ import {
   trending,
   leaderboard,
   referral,
-  profile,
-  setting,
   walletTrackerWhiteImg,
-  proWallet,
 } from "@/app/Images";
 import Image from "next/image";
 import React, { useEffect } from "react";
-import { RxCross2 } from "react-icons/rx";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,8 +25,7 @@ import {
   subscribeToWalletTracker,
 } from "@/websocket/walletTracker";
 import { useTranslation } from "react-i18next";
-import { FaAngleDoubleLeft, FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { FaAngleDoubleRight } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 
 const Sidebar = () => {
   const { t } = useTranslation();
@@ -40,12 +35,6 @@ const Sidebar = () => {
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
-  const router = useRouter();
-
-  const chainName = useSelector(
-    (state) => state.AllthemeColorData?.selectToken
-  );
-
   const selectToken = useSelector(
     (state) => state?.AllthemeColorData?.selectToken
   );
@@ -97,23 +86,6 @@ const Sidebar = () => {
     },
   ];
 
-  const sidebar = [
-    {
-      id: 16,
-      pathname: "/settings",
-      pagename: sidebarPage?.settings,
-      img: setting,
-      size: "w-5 h-5",
-    },
-    {
-      id: 17,
-      pathname: "/profile",
-      pagename: "Profile",
-      img: profile,
-      size: "w-5 h-5",
-    },
-  ];
-
   const isLargeScreen = useSelector(
     (state) => state?.AllthemeColorData?.isLargeScreen
   );
@@ -148,11 +120,12 @@ const Sidebar = () => {
   return (
     <>
       <div
-        className={`sidebar ${(isSidebarOpen && isLargeScreen) ||
+        className={`sidebar ${
+          (isSidebarOpen && isLargeScreen) ||
           (isSidebarOpen && isSmallScreenData)
-          ? `w-full md:w-[192.4px]`
-          : " hidden md:block md:w-[64px]"
-          } transition-all duration-1000 ease-in-out h-full overflow-x-hidden z-50 fixed top-0 left-0 bg-[#08080E] border-r-[1px] border-r-[#404040]`}
+            ? `w-full md:w-[192.4px]`
+            : " hidden md:block md:w-[64px]"
+        } transition-all duration-1000 ease-in-out h-full overflow-x-hidden z-50 fixed top-0 left-0 bg-[#08080E] border-r-[1px] border-r-[#404040]`}
       >
         {/* logo + text */}
         <div className="flex  py-[17.8px] px-2 md:px-[2.4px]  items-center gap-3 justify-between md:justify-center text-[#B5B7DA] w-full">
@@ -171,7 +144,7 @@ const Sidebar = () => {
               <Image
                 alt="full-logo"
                 src={logo}
-                className="cursor-pointer  w-[40px] h-[25px]"
+                className="cursor-pointer w-[40px] h-[25px]"
               />
             </Link>
           )}
@@ -198,100 +171,56 @@ const Sidebar = () => {
         <div className="mt-[38px]">
           <ul className={`flex flex-col gap-6 mt-6`}>
             {sidebardata?.map((data) => (
-              <div
-                key={data.id}
-                className={`font-[400] p-2 transition-all border-[1px] border-transparent duration-300 ease-in-out text-[14px] mx-3 cursor-pointer text-[#ffffff] ${data.pathname === pathname
-                  ? `${isSidebarOpen
-                    ? "!rounded-md bg-[#11265B]"
-                    : "rounded-full bg-gradient"
-                  } border-[1px] !border-[#0E43BD]`
-                  : `text-[#ffffff]   hover:bg-[#11265B] ${isSidebarOpen ? "rounded-md" : "rounded-full"}`
+              <Link key={data.id} href={data?.pathname}>
+                <div
+                  className={`font-[400] p-2 transition-all border-[1px] border-transparent duration-300 ease-in-out text-[14px] mx-3 cursor-pointer text-[#ffffff] ${
+                    data.pathname === pathname
+                      ? `${
+                          isSidebarOpen
+                            ? "!rounded-md bg-[#11265B]"
+                            : "rounded-full bg-gradient"
+                        } border-[1px] !border-[#0E43BD]`
+                      : `text-[#ffffff]   hover:bg-[#11265B] ${
+                          isSidebarOpen ? "rounded-md" : "rounded-full"
+                        }`
                   } 
                   `}
-                onClick={() => {
-                  router.push(data?.pathname);
-                  isMobileScreenData && dispatch(setIsSidebarOpen(false));
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <div className={`w-6 h-6 flex items-center relative`}>
-                    <Image
-                      src={data.img}
-                      alt={data.pagename}
-                      className={` mx-auto ${data.size}`}
-                    />
-                  </div>
-                  <span
-                    className={`items-center justify-between flex-grow font-[400] text-nowrap ${(isSidebarOpen && isLargeScreen) ||
-                      (isSidebarOpen && isSmallScreenData)
-                      ? "block"
-                      : "hidden"
+                  onClick={() => {
+                    isMobileScreenData && dispatch(setIsSidebarOpen(false));
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <div className={`w-6 h-6 flex items-center relative`}>
+                      <Image
+                        src={data.img}
+                        alt={data.pagename}
+                        className={` mx-auto ${data.size}`}
+                      />
+                    </div>
+                    <span
+                      className={`items-center justify-between flex-grow font-[400] text-nowrap ${
+                        (isSidebarOpen && isLargeScreen) ||
+                        (isSidebarOpen && isSmallScreenData)
+                          ? "block"
+                          : "hidden"
                       }
-                        ${selectToken == "Solana" &&
-                        pathname === "memescope/solana"
-                        ? "hidden"
-                        : "flex"
-                      }
+                        ${
+                          selectToken == "Solana" &&
+                          pathname === "memescope/solana"
+                            ? "hidden"
+                            : "flex"
+                        }
                        `}
-                  >
-                    {data.pagename}
-                    <FaAngleRight className={`md:hidden mr-[18px]`} />
-                  </span>
+                    >
+                      {data.pagename}
+                      <FaAngleRight className={`md:hidden mr-[18px]`} />
+                    </span>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </ul>
         </div>
-        <ul className="bottom-7 md:absolute w-full">
-          {sidebar?.map((data) => (
-            <li
-              key={data.id}
-              className={`font-[400] mt-6 p-2 mx-3 text-[14px] cursor-pointer text-[#ebe8e8]  ${data.pathname == pathname
-                ? "text-[#00FFFF] bg-gradient bg-[#11265B] border-2 border-[#0E43BD] rounded-md"
-                : "text-[#ffffff]"
-                } 
-                ${data.pagename === "Profile" ? "md:hidden" : "block "}
-                ${data.pagename === "Transfer-Funds" ? "md:hidden" : "block "} 
-                ${data.pathname == `/memescope/solana` && chainName !== "Solana"
-                  ? "hidden"
-                  : "block"
-                } 
-                `}
-              onClick={() =>
-                isMobileScreenData && dispatch(setIsSidebarOpen(false))
-              }
-            >
-              <Link href={data.pathname} className="flex items-center gap-2">
-                <div className="w-6 h-6 flex items-center relative">
-                  {data.pathname === pathname ? (
-                    <Image
-                      src={data.colorImg}
-                      alt={data.pagename}
-                      className={` mx-auto ${data.size}  `}
-                    />
-                  ) : (
-                    <Image
-                      src={data.img}
-                      alt={data.pagename}
-                      className={` mx-auto ${data.size}  `}
-                    />
-                  )}
-                </div>
-
-                <span
-                  className={`flex items-center justify-between flex-grow ${(isSidebarOpen && isLargeScreen) ||
-                    (isSidebarOpen && isSmallScreenData)
-                    ? "block"
-                    : "hidden"
-                    }`}
-                >
-                  {data.pagename}
-                  <FaAngleRight className={`md:hidden mr-[18px]`} />
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
       </div>
     </>
   );
