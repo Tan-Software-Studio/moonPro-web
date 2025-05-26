@@ -31,6 +31,7 @@ import { BsCopy, BsTwitterX } from "react-icons/bs";
 import { RiFacebookCircleLine } from "react-icons/ri";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { IoSearchSharp } from "react-icons/io5";
 
 const TokenDetails = ({
   tokenSymbol,
@@ -64,7 +65,7 @@ const TokenDetails = ({
       } else {
         dispatch(setChartSymbolImage(getImageFromLocalStorage));
       }
-    } catch (error) {}
+    } catch (error) { }
   }
   const token = localStorage.getItem("token");
 
@@ -116,7 +117,7 @@ const TokenDetails = ({
       .then((res) => {
         dispatch(setIsFaviouriteToken(res?.data?.data?.exists));
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }
 
   async function removeFromFavouriteHandler() {
@@ -163,21 +164,23 @@ const TokenDetails = ({
     <div className="bg-transparent border-b-[1px] border-b-[#26262e] w-full">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center ">
         {/* Token Details */}
-        <div className="sm:pl-[10px] p-3 flex items-center sm:gap-4 gap-1">
+        <div className="sm:pl-[10px] p-3 flex items-center sm:gap-2 gap-1">
           {tokenImage ? (
-            <img
-              src={tokenImage || Solana}
-              alt="Token Image"
-              className="rounded-lg sm:w-[56px] w-[40px] sm:h-[56px] h-[40px]"
-            />
+            <div className="rounded-sm sm:w-[46px] sm:h-[46px] w-[40px] h-[40px] overflow-hidden">
+              <img
+                src={tokenImage || Solana}
+                alt="Token Image"
+                className="w-full h-full object-cover"
+              />
+            </div>
           ) : (
-            <h1 className="rounded-lg text-[22px] sm:w-[56px] w-[40px] sm:h-[56px] border-[1px] border-[#26262e] bg-[#191919] flex items-center justify-center  h-[40px]">
+            <h1 className=" text-[22px] rounded-sm sm:w-[46px] sm:h-[46px] w-[40px] h-[40px] border-[1px] border-[#26262e] bg-[#191919] flex items-center justify-center ">
               {tokenSymbol?.toString()?.slice(0, 1)}
             </h1>
           )}
           <div className="flex flex-col">
-            <div className="flex items-center sm:gap-2 gap-[8px]">
-              <div className="text-white font-[700] text-lg sm:text-[28px] font-spaceGrotesk">
+            <div className="flex items-center gap-2">
+              <div className="text-white font-semibold text-base sm:text-lg font-spaceGrotesk">
                 {tokenSymbol}
               </div>
               <div className="text-[#A8A8A8] text-xs md:text-[14px]">
@@ -208,6 +211,13 @@ const TokenDetails = ({
                   AI
                 </div>
               </Link>
+              <Link
+                href={`https://x.com/search?q=${tokenaddress}`}
+                target="_blank"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <IoSearchSharp color="#BBBBBC" size={19} />
+              </Link>
             </div>
             <div className="flex gap-3">
               {[Telegram, linkedin, NewX].map((img, index) => (
@@ -215,9 +225,7 @@ const TokenDetails = ({
                   key={index}
                   src={img}
                   alt={`icon-${index}`}
-                  width={20}
-                  height={20}
-                  className="sm:w-[20px] sm:h-[20px] w-[17px] h-[17px] cursor-pointer"
+                  className="sm:w-[18px] sm:h-[18px] w-[17px] h-[17px] cursor-pointer"
                 />
               ))}
             </div>
@@ -225,14 +233,14 @@ const TokenDetails = ({
         </div>
         {/* Numbers */}
         <div className="sm:p-[0px] p-3 flex items-center">
-          <div className="grid grid-cols-4 lg:gap-6 md:gap-4 gap-2">
+          <div className="grid grid-cols-4 lg:gap-5 md:gap-4 gap-2">
             {TokenDetailsNumberData?.map((num, index) => {
               return (
                 <div key={index} className="flex flex-col items-center">
-                  <span className="text-[#A8A8A8] text-xs uppercase">
+                  <span className="text-[#A8A8A8] text-xs capitalize">
                     {num.label}
                   </span>
-                  <span className="text-white font-bold text-sm">
+                  <span className="text-white font-semibold  text-sm">
                     {num?.label == "Price USD"
                       ? decimalConvert(num?.price)
                       : num?.price}
@@ -259,17 +267,17 @@ const TokenDetails = ({
               {isFavourite ? (
                 <FaHeart
                   onClick={removeFromFavouriteHandler}
-                  className="text-[#1F73FC] text-[20px]"
+                  className="text-[#1F73FC] text-[18px]"
                 />
               ) : (
                 <CiHeart
                   onClick={addToFavouriteHandler}
-                  className="text-[#F6F6F6] text-[23px]"
+                  className="text-[#F6F6F6] text-[22px]"
                 />
               )}
             </div>
             <div className="cursor-pointer border-[1px] md:!border-b-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center">
-              <MdKeyboardArrowLeft className="text-[#F6F6F6] text-[23px]" />
+              <MdKeyboardArrowLeft className="text-[#F6F6F6] text-[22px]" />
             </div>
           </div>
           <div className="flex items-center md:flex-col">
@@ -277,10 +285,10 @@ const TokenDetails = ({
               className="cursor-pointer border-[1px] md:!border-t-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center"
               onClick={() => setIsModalOpen(true)}
             >
-              <PiShare className="text-[#F6F6F6] text-[23px]" />
+              <PiShare className="text-[#F6F6F6] text-[22px]" />
             </div>
             <div className="cursor-pointer border-[1px] md:!border-b-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center">
-              <MdKeyboardArrowRight className="text-[#F6F6F6] text-[23px]" />
+              <MdKeyboardArrowRight className="text-[#F6F6F6] text-[22px]" />
             </div>
           </div>
         </div>
@@ -313,10 +321,7 @@ const TokenDetails = ({
                 />
               </div>
               <div className="bg-[#404040] h-[1.5px]"></div>
-              <div className="py-[12px] px-[24px]">
-                <h1 className="text-[18px] font-[700] text-[#F6F6F6]">
-                  Share to
-                </h1>
+              <div className="py-[12px] px-[24px]"> 
                 {/* social icons */}
                 <div className="grid grid-cols-4 place-content-between">
                   <div className="mt-[16px] flex flex-col items-center justify-center gap-[4px]">
