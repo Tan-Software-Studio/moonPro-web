@@ -532,8 +532,8 @@
           "priority": "Priority Fee",
           "deafult": "Default"
         },
-        "btnbuy": "Quick Buy",
-        "btnsell": "Quick Sell"
+        "btnbuy": "Buy",
+        "btnsell": "Sell"
       },
       "tokeninfo": {
         "tokeninfo": "Token info",

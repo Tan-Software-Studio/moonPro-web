@@ -43,6 +43,7 @@ import polygon from "../public/assets/Navbar/polygon.png";
 import baseIcon from "../public/assets/Navbar/base.png";
 import phantom from "../public/assets/Navbar/phantom.png";
 import solana from "../public/assets/Navbar/solana.png";
+import solanaBlackLogo from "../public/assets/common/solanaBlackLogo.png";
 import BUYICON from "../public/assets/Trading/BUY.png";
 import SELLICON from "../public/assets/Trading/SELL.png";
 import pairsColor from "../public/assets/Sidebar/pairsColor.svg";
@@ -65,14 +66,14 @@ import X from "../public/assets/Searchbar/X.png";
 import upIcon from "../public/assets/common/upIcon.svg";
 import pump_img from "../public/assets/pump_img/pump_img.png";
 
-import userIcon from "../public/assets/Leaderboard/userIcon.png"
-import LeaderboardIcon from "../public/assets/Leaderboard/leaderboard.svg"
-import firstUserIcon from "../public/assets/Leaderboard/firstUserIcon.png"
-import SecondUserIcon from "../public/assets/Leaderboard/SecondUserIcon.png"
-import ThirdUserIcon from "../public/assets/Leaderboard/ThirdUserIcon.png"
-import One from "../public/assets/Leaderboard/one.png"
-import Two from "../public/assets/Leaderboard/two.png"
-import Three from "../public/assets/Leaderboard/three.png"
+import userIcon from "../public/assets/Leaderboard/userIcon.png";
+import LeaderboardIcon from "../public/assets/Leaderboard/leaderboard.svg";
+import firstUserIcon from "../public/assets/Leaderboard/firstUserIcon.png";
+import SecondUserIcon from "../public/assets/Leaderboard/SecondUserIcon.png";
+import ThirdUserIcon from "../public/assets/Leaderboard/ThirdUserIcon.png";
+import One from "../public/assets/Leaderboard/one.png";
+import Two from "../public/assets/Leaderboard/two.png";
+import Three from "../public/assets/Leaderboard/three.png";
 import website from "../public/assets/Memescope/website.svg";
 import twitter from "../public/assets/Memescope/x.svg";
 import telegrams from "../public/assets/Memescope/telegram.svg";
@@ -107,33 +108,146 @@ import Users from "../public/assets/Memescope/Users.svg";
 import Import from "../public/assets/wallet-tracker/Import.svg";
 import Plus from "../public/assets/wallet-tracker/Plus.svg";
 
-// languages 
-import china from '../public/assets/languageImages/china.jpg';
-import dubai from '../public/assets/languageImages/dubai.jpg';
-import germen from '../public/assets/languageImages/germen.png';
-import india from '../public/assets/languageImages/india.png';
-import itli from '../public/assets/languageImages/itli.png';
-import japan from '../public/assets/languageImages/japan.webp';
-import pakistan from '../public/assets/languageImages/pakistan.png';
-import southkorea from '../public/assets/languageImages/southkorea.webp';
-import span from '../public/assets/languageImages/span.webp';
-import sweden from '../public/assets/languageImages/sweden.webp';
-import usa from '../public/assets/languageImages/usa.png';
-import vietnam from '../public/assets/languageImages/vietnam.webp';
+// languages
+import china from "../public/assets/languageImages/china.jpg";
+import dubai from "../public/assets/languageImages/dubai.jpg";
+import germen from "../public/assets/languageImages/germen.png";
+import india from "../public/assets/languageImages/india.png";
+import itli from "../public/assets/languageImages/itli.png";
+import japan from "../public/assets/languageImages/japan.webp";
+import pakistan from "../public/assets/languageImages/pakistan.png";
+import southkorea from "../public/assets/languageImages/southkorea.webp";
+import span from "../public/assets/languageImages/span.webp";
+import sweden from "../public/assets/languageImages/sweden.webp";
+import usa from "../public/assets/languageImages/usa.png";
+import vietnam from "../public/assets/languageImages/vietnam.webp";
 
-import googleLogo from '../public/assets/Navbar/google-logo.svg';
-import profileImage from '../public/assets/Profile/profile.png';
-import tableImage from '../public/assets/Profile/table.png';
-import walletBalance from '../public/assets/Navbar/walletBalance.png'
-
+import googleLogo from "../public/assets/Navbar/google-logo.svg";
+import profileImage from "../public/assets/Profile/profile.png";
+import tableImage from "../public/assets/Profile/table.png";
+import walletBalance from "../public/assets/Navbar/walletBalance.png";
 
 export {
-  LeaderboardIcon, SecondUserIcon, firstUserIcon, One, ThirdUserIcon, Three, Two, linkedin, Users, Vol, MC, H10, DH, sniper, CryptoWithoutColor, CryptoColor, pumpfun, video, website, telegrams, twitter, logo, logotext, copytrade, holdings, memescope, recentCalls, pairs, trending, bitcoin, newPairsIcon, Filter, Advanced, buyIcon, bitcoinIcon, tableIcon, Swaps, close, TrendingImg, HoldingImg, memescopeImg, memesicon, walletLogo, transferfunds, leaderboard, referral, profile, setting, logout, telegram, lable, lable1, eth, per, polygon, optimism, linea, ethereum, bnb, avalanche, arbitrum, baseIcon, phantom, solana, moon, pump, BUYICON, SELLICON, pairsColor, trendingColor, memescopeColor, holdingsColor, copytradeColor, leaderboardColor, referralColor, settingColor, Hamburger, Copytrading, alphaPicks, alphaPicksColor, ETHAI, Clear, searchBaseIcon, searchDextIcon, X, upIcon, pump_img, walletTrackerWhiteImg, WalletTrackerColorImg, proWallet, proWalletColor, NoDataFish, Solana, Copy, Telegram, Facebook, NewX, LeftArrow, RightArrow, Like, userIcon, Import, Plus,
+  LeaderboardIcon,
+  SecondUserIcon,
+  firstUserIcon,
+  One,
+  ThirdUserIcon,
+  Three,
+  Two,
+  linkedin,
+  Users,
+  Vol,
+  MC,
+  H10,
+  DH,
+  sniper,
+  CryptoWithoutColor,
+  CryptoColor,
+  pumpfun,
+  video,
+  website,
+  telegrams,
+  twitter,
+  logo,
+  logotext,
+  copytrade,
+  holdings,
+  memescope,
+  recentCalls,
+  pairs,
+  trending,
+  bitcoin,
+  newPairsIcon,
+  Filter,
+  Advanced,
+  buyIcon,
+  bitcoinIcon,
+  tableIcon,
+  Swaps,
+  close,
+  TrendingImg,
+  HoldingImg,
+  memescopeImg,
+  memesicon,
+  walletLogo,
+  transferfunds,
+  leaderboard,
+  referral,
+  profile,
+  setting,
+  logout,
+  telegram,
+  lable,
+  lable1,
+  eth,
+  per,
+  polygon,
+  optimism,
+  linea,
+  ethereum,
+  bnb,
+  avalanche,
+  arbitrum,
+  baseIcon,
+  phantom,
+  solana,
+  solanaBlackLogo,
+  moon,
+  pump,
+  BUYICON,
+  SELLICON,
+  pairsColor,
+  trendingColor,
+  memescopeColor,
+  holdingsColor,
+  copytradeColor,
+  leaderboardColor,
+  referralColor,
+  settingColor,
+  Hamburger,
+  Copytrading,
+  alphaPicks,
+  alphaPicksColor,
+  ETHAI,
+  Clear,
+  searchBaseIcon,
+  searchDextIcon,
+  X,
+  upIcon,
+  pump_img,
+  walletTrackerWhiteImg,
+  WalletTrackerColorImg,
+  proWallet,
+  proWalletColor,
+  NoDataFish,
+  Solana,
+  Copy,
+  Telegram,
+  Facebook,
+  NewX,
+  LeftArrow,
+  RightArrow,
+  Like,
+  userIcon,
+  Import,
+  Plus,
   // languages
-  china, dubai, germen, india, itli, japan, pakistan, southkorea, span, sweden, usa, vietnam,
+  china,
+  dubai,
+  germen,
+  india,
+  itli,
+  japan,
+  pakistan,
+  southkorea,
+  span,
+  sweden,
+  usa,
+  vietnam,
   // googleLogo
   googleLogo,
   tableImage,
   profileImage,
-  walletBalance
+  walletBalance,
 };

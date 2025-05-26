@@ -12,6 +12,7 @@ const AllStatesData = createSlice({
   name: "AllStatesData",
   initialState: {
     user: {},
+    preSetOrderSettings: {},
     walletAddress: "",
     isSearchPopup: false,
     bigLoader: false,
@@ -96,6 +97,9 @@ const AllStatesData = createSlice({
     setOpenOrderSetting: (state, action) => {
       state.openOrderSetting = action.payload;
     },
+    setPreSetOrderSetting: (state, action) => {
+      state.preSetOrderSettings = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchSolanaNativeBalance.fulfilled, (state, action) => {
@@ -124,5 +128,6 @@ export const {
   setSolanaLivePrice,
   setIsFaviouriteToken,
   setOpenOrderSetting,
+  setPreSetOrderSetting,
 } = AllStatesData.actions;
 export default AllStatesData.reducer;

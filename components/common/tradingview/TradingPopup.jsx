@@ -11,9 +11,9 @@ import {
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import Image from "next/image";
-import { solana } from "@/app/Images";
+import { solana, solanaBlackLogo } from "@/app/Images";
 import RightModalOpenSetting from "@/components/Settings/RightModalOpenSetting";
-import { setOpenOrderSetting } from "@/app/redux/states";
+import { setOpenOrderSetting, setPreSetOrderSetting } from "@/app/redux/states";
 const TradingPopup = ({
   tragindViewPage,
   activeTab,
@@ -30,7 +30,7 @@ const TradingPopup = ({
   bondingProgress,
   dispatch,
   solanaLivePrice,
-  tredingPage
+  tredingPage,
 }) => {
   const [loaderSwap, setLoaderSwap] = useState(false);
   const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
@@ -43,17 +43,21 @@ const TradingPopup = ({
   const [editIndex, setEditIndex] = useState(null);
   const [customInput, setCustomInput] = useState("");
   const [presist, setPresist] = useState("P1");
-  const [preSetData, setPreSetData] = useState({});
   const [buyValues, setBuyValues] = useState(() => {
-    const saved = localStorage.getItem('buyValues');
+    const saved = localStorage.getItem("buyValues");
     return saved ? JSON.parse(saved) : [0.1, 0.2, 1, 2];
   });
   const [sellValues, setSellValues] = useState(() => {
-    const saved = localStorage.getItem('sellValues');
+    const saved = localStorage.getItem("sellValues");
     return saved ? JSON.parse(saved) : [20, 50, 80, 100];
   });
   // order settings flag
-  const orderSettingFlag = useSelector((state) => state?.AllStatesData?.openOrderSetting);
+  const orderSettingFlag = useSelector(
+    (state) => state?.AllStatesData?.openOrderSetting
+  );
+  const preSetData = useSelector(
+    (state) => state?.AllStatesData?.preSetOrderSettings
+  );
   const saveEditedValue = () => {
     const value = parseFloat(customInput);
     if (value > 0) {
@@ -61,12 +65,12 @@ const TradingPopup = ({
         const newValues = [...buyValues];
         newValues[editIndex] = value;
         setBuyValues(newValues);
-        localStorage.setItem('buyValues', JSON.stringify(newValues));
+        localStorage.setItem("buyValues", JSON.stringify(newValues));
       } else {
         const newValues = [...sellValues];
         newValues[editIndex] = value;
         setSellValues(newValues);
-        localStorage.setItem('sellValues', JSON.stringify(newValues));
+        localStorage.setItem("sellValues", JSON.stringify(newValues));
       }
       setIsEditing(false);
       setEditIndex(null);
@@ -201,9 +205,13 @@ const TradingPopup = ({
 
   // all about order setting
   useEffect(() => {
-    const preSetFromLocalStorage = JSON.parse(localStorage.getItem("preSetAllData"));
+    const preSetFromLocalStorage = JSON.parse(
+      localStorage.getItem("preSetAllData")
+    );
     const orderActiveChart = localStorage.getItem("preSetSettingActiveChart");
-    setPreSetData(preSetFromLocalStorage);
+    if (preSetFromLocalStorage) {
+      dispatch(setPreSetOrderSetting(preSetFromLocalStorage));
+    }
     if (orderActiveChart) {
       setPresist(orderActiveChart);
     }
@@ -216,10 +224,11 @@ const TradingPopup = ({
       {/* Buy/Sell Toggle */}
       <div className="flex h-[42px] items-center bg-[#1f1f1f] md:rounded-[8px] mb-[16px] ">
         <button
-          className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-500 outline-none ${activeTab === "buy"
-            ? "bg-[#1F73FC] text-[#F6F6F6]"
-            : "bg-transparent text-[#6E6E6E]"
-            }`}
+          className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-500 outline-none ${
+            activeTab === "buy"
+              ? "bg-[#1F73FC] text-[#F6F6F6]"
+              : "bg-transparent text-[#6E6E6E]"
+          }`}
           onClick={() => {
             setActiveTab("buy");
             setQuantity(0.1);
@@ -228,10 +237,11 @@ const TradingPopup = ({
           {tragindViewPage?.right?.buysell?.buy}
         </button>
         <button
-          className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-300 ${activeTab === "sell"
-            ? "bg-[#ED1B24] text-[#F6F6F6]"
-            : "bg-transparent text-[#6E6E6E]"
-            }`}
+          className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-300 ${
+            activeTab === "sell"
+              ? "bg-[#ED1B24] text-[#F6F6F6]"
+              : "bg-transparent text-[#6E6E6E]"
+          }`}
           onClick={() => {
             setActiveTab("sell");
           }}
@@ -244,9 +254,7 @@ const TradingPopup = ({
         <div className="flex items-center gap-[8px]">
           <FaCog className="text-[16px]" />
           <h1 className="text-[#F6F6F6] text-[12px] font-[400]">
-            {
-              tragindViewPage?.right?.buysell?.orderSettings
-            }
+            {tragindViewPage?.right?.buysell?.orderSettings}
           </h1>
         </div>
         <button
@@ -257,21 +265,24 @@ const TradingPopup = ({
         </button>
       </div>
       <div className="mb-[16px] flex items-center border-[0.5px] border-[#404040] rounded-[4px]">
-        {["P1", "P2", "P3", "P4", "P5"].map((item, index) => <button
-          key={index + 1}
-          onClick={() => {
-            setPresist(item);
-            localStorage.setItem("preSetSettingActiveChart", item);
-          }}
-          className={`w-full py-[7px] text-[#F6F6F6] font-[700] text-[12px] border-r-[0.5px] border-r-[#404040] duration-300 ease-in-out ${presist == item
-            ? activeTab == "buy"
-              ? "bg-[#1F73FC]"
-              : "bg-[#ED1B24]"
-            : "bg-transparent"
+        {["P1", "P2", "P3", "P4", "P5"].map((item, index) => (
+          <button
+            key={index + 1}
+            onClick={() => {
+              setPresist(item);
+              localStorage.setItem("preSetSettingActiveChart", item);
+            }}
+            className={`w-full py-[7px] text-[#F6F6F6] font-[700] text-[12px] border-r-[0.5px] border-r-[#404040] duration-300 ease-in-out ${
+              presist == item
+                ? activeTab == "buy"
+                  ? "bg-[#1F73FC]"
+                  : "bg-[#ED1B24]"
+                : "bg-transparent"
             }`}
-        >
-          {item}
-        </button>)}
+          >
+            {item}
+          </button>
+        ))}
       </div>
       {/* Quantity Input */}
       <div className="bg-transparent rounded-[8px] flex items-center justify-between border-t-[0.5px] border-t-[#4D4D4D] mb-[8px]">
@@ -307,71 +318,77 @@ const TradingPopup = ({
       {/* Preset Quantity Buttons */}
       <div className="flex gap-2 mb-[16px]">
         {activeTab == "buy"
-          ? buyValues.map((val, index) => (
-            editIndex === index ? (
-              <input
-                key={index}
-                type="number"
-                value={customInput}
-                onChange={(e) => setCustomInput(e.target.value)}
-                className="w-[62px] h-[34px] flex items-center justify-center text-center   text-[14px] rounded bg-[#1F1F1F] outline-none   text-[#278BFE] border-t-[1px] border-t-[#278BFE] "
-                autoFocus
-              />
-            ) : (
-              <button
-                key={index}
-                className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${quantity === val
-                  ? "text-[#278BFE] border-t-[1px] border-t-[#278BFE]"
-                  : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
+          ? buyValues.map((val, index) =>
+              editIndex === index ? (
+                <input
+                  key={index}
+                  type="number"
+                  value={customInput}
+                  onChange={(e) => setCustomInput(e.target.value)}
+                  className="w-[62px] h-[34px] flex items-center justify-center text-center   text-[14px] rounded bg-[#1F1F1F] outline-none   text-[#278BFE] border-t-[1px] border-t-[#278BFE] "
+                  autoFocus
+                />
+              ) : (
+                <button
+                  key={index}
+                  className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${
+                    quantity === val
+                      ? "text-[#278BFE] border-t-[1px] border-t-[#278BFE]"
+                      : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
                   }`}
-                onClick={() => {
-                  if (isEditing) {
-                    setEditIndex(index);
-                    setCustomInput(val.toString());
-                  } else {
-                    setQuantity(val);
-                  }
-                }}
-              >
-                {val}
-              </button>
-            )
-          ))
-          : sellValues.map((val, index) => (
-            editIndex === index ? (
-              <input
-                key={index}
-                type="number"
-                value={customInput}
-                onChange={(e) => setCustomInput(e.target.value)}
-                className="w-[62px] h-[34px] flex items-center justify-center text-center text-[14px] rounded bg-[#1F1F1F] outline-none text-[#ed1819] border-t-[1px] border-t-[#ed1819]"
-                autoFocus
-              />
-            ) : (
-              <button
-                key={index}
-                className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 
-                  ${Number(quantity).toFixed(5) === Number((tokenBalance * val) / 100).toFixed(5) && quantity > 0
-                    ? "text-[#ed1819] border-t-[1px] border-t-[#ed1819]"
-                    : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
-                  }`}
-                onClick={() => {
-                  if (isEditing) {
-                    setEditIndex(index);
-                    setCustomInput(val.toString());
-                  } else {
-                    if (val == 100) {
-                      setQuantity(tokenBalance);
+                  onClick={() => {
+                    if (isEditing) {
+                      setEditIndex(index);
+                      setCustomInput(val.toString());
                     } else {
-                      setQuantity(Number((tokenBalance * val) / 100).toFixed(5));
+                      setQuantity(val);
                     }
-                  }
-                }}
-              >
-                {val}%
-              </button>
+                  }}
+                >
+                  {val}
+                </button>
+              )
             )
-          ))}
+          : sellValues.map((val, index) =>
+              editIndex === index ? (
+                <input
+                  key={index}
+                  type="number"
+                  value={customInput}
+                  onChange={(e) => setCustomInput(e.target.value)}
+                  className="w-[62px] h-[34px] flex items-center justify-center text-center text-[14px] rounded bg-[#1F1F1F] outline-none text-[#ed1819] border-t-[1px] border-t-[#ed1819]"
+                  autoFocus
+                />
+              ) : (
+                <button
+                  key={index}
+                  className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 
+                  ${
+                    Number(quantity).toFixed(5) ===
+                      Number((tokenBalance * val) / 100).toFixed(5) &&
+                    quantity > 0
+                      ? "text-[#ed1819] border-t-[1px] border-t-[#ed1819]"
+                      : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
+                  }`}
+                  onClick={() => {
+                    if (isEditing) {
+                      setEditIndex(index);
+                      setCustomInput(val.toString());
+                    } else {
+                      if (val == 100) {
+                        setQuantity(tokenBalance);
+                      } else {
+                        setQuantity(
+                          Number((tokenBalance * val) / 100).toFixed(5)
+                        );
+                      }
+                    }
+                  }}
+                >
+                  {val}%
+                </button>
+              )
+            )}
         {!isEditing ? (
           <button
             className="p-2 rounded-md"
@@ -396,8 +413,9 @@ const TradingPopup = ({
       <div className="mb-[16px]">
         <div
           onClick={() => setIsAdvancedSetting(!isAdvancedSetting)}
-          className={`flex cursor-pointer items-center justify-between ${isAdvancedSetting && "mb-[16px]"
-            }`}
+          className={`flex cursor-pointer items-center justify-between ${
+            isAdvancedSetting && "mb-[16px]"
+          }`}
         >
           <div className={`flex items-center gap-[8px] $`}>
             <FaCog className="text-[16px]" />
@@ -410,16 +428,18 @@ const TradingPopup = ({
           </div>
           <h1 className="ease-in-out duration-300">
             <MdOutlineKeyboardArrowRight
-              className={`ease-in-out duration-300 text-[19px] ${isAdvancedSetting && "rotate-90"
-                }`}
+              className={`ease-in-out duration-300 text-[19px] ${
+                isAdvancedSetting && "rotate-90"
+              }`}
             />
           </h1>
         </div>
         <div
-          className={`transform transition-all duration-300 ease-in-out origin-top overflow-hidden ${isAdvancedSetting
-            ? "max-h-[1000px] opacity-100 scale-y-100"
-            : "max-h-0 opacity-0 scale-y-0"
-            }`}
+          className={`transform transition-all duration-300 ease-in-out origin-top overflow-hidden ${
+            isAdvancedSetting
+              ? "max-h-[1000px] opacity-100 scale-y-100"
+              : "max-h-0 opacity-0 scale-y-0"
+          }`}
         >
           <div className="bg-transparent rounded-[8px] flex items-center justify-between border-t-[0.5px] border-t-[#4D4D4D] mb-[16px]">
             <h1 className="text-[#A8A8A8] select-none rounded-l-[8px] bg-[#1F1F1F] h-[40px] px-4 flex items-center justify-center">
@@ -450,10 +470,11 @@ const TradingPopup = ({
             <div className="flex items-center gap-[8px]">
               <div
                 onClick={() => setIsMev(!isMev)}
-                className={`flex ${isMev
-                  ? `${activeTab == "buy" ? "bg-[#278BFE]" : "bg-[#ed1819]"}`
-                  : "bg-[#4D4D4D]"
-                  } w-[36px] h-[20px] items-center cursor-pointer pl-[3px] rounded-[1000px] transition-all duration-300`}
+                className={`flex ${
+                  isMev
+                    ? `${activeTab == "buy" ? "bg-[#278BFE]" : "bg-[#ed1819]"}`
+                    : "bg-[#4D4D4D]"
+                } w-[36px] h-[20px] items-center cursor-pointer pl-[3px] rounded-[1000px] transition-all duration-300`}
               >
                 <div
                   className={`w-[12px] h-[12px] bg-white rounded-full shadow-md transform transition-all duration-300 
@@ -508,13 +529,15 @@ const TradingPopup = ({
             ].map((val) => (
               <button
                 key={val?.type}
-                className={`w-[96px] h-[34px] text-[14px] flex items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${priorityFee == val?.value
-                  ? `border-t-[1px] border-t-[#278BFE] ${activeTab == "buy"
-                    ? "text-[#278BFE] border-t-[#278BFE]"
-                    : "text-[#ed1819] border-t-[#ed1819]"
-                  }`
-                  : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
-                  }`}
+                className={`w-[96px] h-[34px] text-[14px] flex items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${
+                  priorityFee == val?.value
+                    ? `border-t-[1px] border-t-[#278BFE] ${
+                        activeTab == "buy"
+                          ? "text-[#278BFE] border-t-[#278BFE]"
+                          : "text-[#ed1819] border-t-[#ed1819]"
+                      }`
+                    : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
+                }`}
                 onClick={() => setPriorityFee(val?.value)}
               >
                 {val?.type}
@@ -534,9 +557,16 @@ const TradingPopup = ({
         ) : (
           <button
             onClick={() => buyHandler()}
-            className={`bg-[#2A7FF0] hover:bg-[#3f8cf1] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[40px] ease-in-out duration-200  rounded-md`}
+            className={`flex items-center justify-center gap-[2px] bg-[#2A7FF0] hover:bg-[#3f8cf1] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[40px] ease-in-out duration-200  rounded-md`}
           >
-            {`${tragindViewPage?.right?.buysell?.btnbuy} ${recQty} ${tokenName}`}
+            <h1>
+              {`${tragindViewPage?.right?.buysell?.btnbuy} ${tokenName} ${quantity}`}
+            </h1>
+            <Image
+              src={solanaBlackLogo}
+              alt="solana"
+              className="w-[20px] !h-[13px] rounded-full bg-cover"
+            />
           </button>
         )
       ) : loaderSwap ? (
@@ -548,9 +578,18 @@ const TradingPopup = ({
       ) : (
         <button
           onClick={() => sellHandler()}
-          className={`bg-[#ED1B24] hover:bg-[#ff323d] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[40px] ease-in-out duration-200  rounded-md`}
+          className={`flex items-center justify-center gap-[2px] bg-[#ED1B24] hover:bg-[#ff323d] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[40px] ease-in-out duration-200  rounded-md`}
         >
-          {`${tragindViewPage?.right?.buysell?.btnsell} (Receive ${recQty} SOL)`}
+          <h1>
+            {`${tragindViewPage?.right?.buysell?.btnsell} ${tokenName} ${
+              recQty > 0 ? recQty : 0
+            }`}
+          </h1>
+          <Image
+            src={solanaBlackLogo}
+            alt="solana"
+            className="w-[20px] !h-[13px] rounded-full bg-cover"
+          />
         </button>
       )}
       <RightModalOpenSetting
