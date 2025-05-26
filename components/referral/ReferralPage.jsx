@@ -1,245 +1,242 @@
 /* eslint-disable @next/next/no-img-element */
-"use client";
-import Image from "next/image";
-import React, { useState } from "react";
-import { NoDataFish, referral } from "@/app/Images";
-import { FaXTwitter, FaFacebook } from "react-icons/fa6";
-import Infotip from "@/components/common/Tooltip/Infotip.jsx";
-import { useTranslation } from "react-i18next";
-const WEB_URL =
-  process.env.NEXT_PUBLIC_WEB_URL || "https://moonpro.wavebot.app";
-const ReferralPage = ({ referralData, referralId, solWalletAddress }) => {
-  const { t } = useTranslation();
-  const referralPage = t("referral");
-  const [copyRef, setCopyRef] = useState(false);
-  const tableHeader = [
-    { id: 1, title: "#" },
-    { id: 2, title: referralPage?.table?.user },
-    { id: 3, title: referralPage?.table?.date },
-  ];
+import { useRef, useState } from "react";
+import { LuUpload } from "react-icons/lu";
+import { LuCopyPlus } from "react-icons/lu";
+import { FaUserFriends } from "react-icons/fa";
+import { MdOutlineKeyboardDoubleArrowUp } from "react-icons/md";
+import { FaGem } from "react-icons/fa6";
+import { FiUserPlus } from "react-icons/fi";
+import { FaRegStar } from "react-icons/fa";
+import { IoPieChartOutline } from "react-icons/io5";
+import { HiOutlineCurrencyDollar } from "react-icons/hi2";
+import { TbCopyCheck } from "react-icons/tb";
 
-  const rankColors = ["bg-[#FFD542]", "bg-[#B3B3B3]", "bg-[#E39757]"];
-  const rankBorder = [
-    "border-2 border-[#FFBB00]",
-    "border-2 border-[#818181]",
-    "border-2 border-[#DC7220]",
-  ];
-  const copyToClipboard = (url) => {
-    navigator.clipboard
-      .writeText(url)
-      .then(() => {
-        setCopyRef(true);
-        setTimeout(() => {
-          setCopyRef(false);
-        }, 2000);
-        // alert("Copied to clipboard!");
-      })
-      .catch((err) => {
-        console.error("Failed to copy: ", err);
-      });
+
+const ReferralPage = () => {
+
+  const fileInputRef = useRef(null);
+  const [hovered, setHovered] = useState(false);
+  const [imageURL, setImageURL] = useState(null);
+  const [copied, setCopied] = useState(false);
+  const [copied2, setCopied2] = useState(false);
+  const [copied3, setCopied3] = useState(false);
+  const username = "wavepro123";
+
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(username);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
-  return (
-    <>
-      <div className="font-poppins bg-transparent">
-        {/* header */}
-        <div className="px-4 sm:px-6 pt-6 text-white">
-          <div className="flex flex-wrap justify-between items-center gap-4">
-            <div className="flex items-center gap-2 text-lg font-semibold">
-              <Image
-                src={referral}
-                alt="referral"
-                className="h-6 w-6 sm:h-8 sm:w-8"
-              />
-              <span className="text-xl sm:text-[28px] font-bold">
-                {referralPage?.mainHeader?.title}
-              </span>
-            </div>
 
-            <div className="flex flex-wrap items-center gap-2 text-sm sm:text-base">
-              <span className="text-[#F6F6F6] font-normal text-base sm:text-lg">
-                {referralPage?.mainHeader?.yourstats}
-              </span>
-              <div className="flex items-center">
-                <span className="text-[#A8A8A8] text-xs sm:text-sm px-2 py-1 rounded-md">
-                  {referralPage?.mainHeader?.referralpoints}
-                </span>
-                <span className="text-[#1F73FC] font-bold text-lg sm:text-xl">
-                  23
-                </span>
+  const handleCopy2 = () => {
+    navigator.clipboard.writeText(username);
+    setCopied2(true);
+    setTimeout(() => setCopied2(false), 2000);
+  };
+
+  const handleCopy3 = () => {
+    navigator.clipboard.writeText(username);
+    setCopied3(true);
+    setTimeout(() => setCopied3(false), 2000);
+  };
+
+  const handleBoxClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setImageURL(imageUrl);
+    }
+  };
+
+
+  return (
+    <div className=" text-white p-6 rounded-2xl space-y-6 overflow-y-auto h-[90vh]">
+
+      {/* User Header */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-0">
+        {/* Left Section (Image + Info) */}
+        <div className="flex flex-col items-center sm:flex-row sm:items-center sm:gap-4">
+          {/* Upload Box */}
+          <div
+            className={`w-20 h-20 rounded-md bg-yellow-500 relative cursor-pointer overflow-hidden transition duration-200 ${hovered && !imageURL ? "bg-yellow-400" : ""
+              }`}
+            onClick={handleBoxClick}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+          >
+            {imageURL && (
+              <img
+                src={imageURL}
+                alt="Uploaded"
+                className="w-full h-full object-cover"
+              />
+            )}
+
+            {/* Show upload icon on hover */}
+            {hovered && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white">
+                <LuUpload size={24} />
               </div>
+            )}
+
+            {/* Hidden File Input */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImageUpload}
+              className="hidden"
+              accept="image/*"
+            />
+          </div>
+
+          {/* User Info */}
+          <div className="mt-3 sm:mt-0 flex gap-4 items-center sm:items-start text-center sm:text-left">
+            <div
+              onClick={handleCopy3}
+              className="font-semibold text-xl hover:text-blue-400 cursor-pointer relative flex items-center gap-1"
+            >
+              {username}
+
             </div>
+            <div className="text-lg font-semibold text-gray-400">0 Points</div>
           </div>
         </div>
 
-        <div className="container mx-auto px-4 mb-4 md:h-[83vh] h-[75vh] overflow-auto">
-          <div className="md:mt-12 mt-6 mx-4 mb-4">
-            <div className="flex justify-center">
-              <div
-                className={`md:text-[32px] text-[14px] font-bold text-white text-center  md:w-[570px]`}
-              >
-                <h2>{referralPage?.pageData?.title}</h2>
-                <p
-                  className={`text-[#B9BABC] md:text-[16px] font-normal text-xs items-center text-center mt-2 m-0`}
-                >
-                  {referralPage?.pageData?.desc}
-                </p>
-              </div>
-            </div>
-          </div>
+        {/* Right Section (Upload & Copy) */}
+        <div className="flex items-center justify-center sm:justify-end gap-3 text-sm text-gray-400">
+          {/* Upload icon — not clickable */}
+          <LuUpload className="mr-1 cursor-not-allowed text-[#4f628a]" />
 
-          {/* share referral link */}
-          <div className="flex justify-center md:mt-12 mt-6 px-4">
-            <div className="flex flex-col items-center  gap-3 rounded-lg w-full max-w-[512px] text-white">
-              <div className="flex flex-wrap items-center w-fit gap-2 rounded-md">
-                <input
-                  type="text"
-                  value={`${WEB_URL}/referral/${referralId}`}
-                  readOnly
-                  className="flex-grow bg-[#1f1e1e85] text-white text-xs px-4 py-2 outline-none truncate border border-[#141414] rounded-md"
-                />
-                <button
-                  className="hover:text-[#278BFE] text-white transition-all duration-300 ease-in-out text-xs w-[80px] py-2 rounded-md  border border-[#1F73FC] hover:bg-[#11265B]"
-                  onClick={() =>
-                    copyToClipboard(`${WEB_URL}/referral/${referralId}`)
-                  }
-                >
-                  {copyRef
-                    ? referralPage?.pageData?.copied
-                    : referralPage?.pageData?.copy}
-                </button>
-              </div>
-
-              <div className="flex items-center gap-2 w-full sm:w-3/4">
-                <h1 className="text-xs sm:text-sm text-gray-400 md:mb-0 mb-2">
-                  {referralPage?.pageData?.shareto}
-                </h1>
-                <a
-                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
-                    `${WEB_URL}/referral/${referralId}`
-                  )}`}
-                  target="_blank"
-                >
-                  <button className=" gap-2 flex justify-center items-center flex-1 bg-[#11265B] px-4 py-2 rounded-md text-white transition">
-                    <FaXTwitter className="text-white text-[12px]" />
-                    <span className="text-white text-[12px]">Twitter</span>
-                  </button>
-                </a>
-                <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                    `${WEB_URL}/referral/${referralId}`
-                  )}`}
-                  target="_blank"
-                >
-                  <button className=" gap-2 flex justify-center items-center flex-1 bg-[#11265B] px-4 py-2 rounded-md text-white transition">
-                    <FaFacebook className="text-white text-[12px]" />
-                    <span className="text-white text-[12px]">Facebook</span>
-                  </button>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div
-            className={`flex flex-col items-center justify-center md:w-full w-auto  mt-[40px]`}
-          >
-            {/* table data */}
-            <div className="rounded-3xl  md:w-full">
-              <div className="md:max-w-full max-w-[310px] h-full overflow-y-scroll">
-                <div className=" h-full">
-                  {solWalletAddress && referralData?.length > 0 && (
-                    <table className={`w-full max-w-4xl rounded-b-lg  mx-auto`}>
-                      <thead>
-                        <tr className="sticky -top-1 z-30">
-                          {tableHeader.map((header) => (
-                            <th
-                              key={header.id}
-                              className={`text-start text-[12px] font-bold py-5 `}
-                            >
-                              <span className={`text-[#A8A8A8] uppercase`}>
-                                <div className="flex items-center gap-1">
-                                  <p>{header.title}</p>
-                                  {header.infoTipString && (
-                                    <Infotip body={header.infoTipString} />
-                                  )}
-                                </div>
-                              </span>
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-
-                      <tbody className={`mt-5`}>
-                        {referralData?.map((user, index) => (
-                          <tr
-                            key={index + 1}
-                            className={`py-2 border-b border-[#2B3737]`}
-                          >
-                            <td className="py-2">
-                              <div
-                                className={`w-8 h-8 flex items-center justify-center text-white font-bold text-[12px] rounded-full ${
-                                  index < 3
-                                    ? `${rankColors[index]} ${rankBorder[index]}`
-                                    : ""
-                                }`}
-                              >
-                                {index + 1}
-                              </div>
-                            </td>
-                            <td className="py-2 flex items-center gap-3">
-                              <h1 className="text-white text-[14px]">
-                                {user?.email}
-                              </h1>
-                            </td>
-                            <td className="text-[#F6F6F6]  text-[12px] font-medium py-2">
-                              {new Intl.DateTimeFormat("en-GB").format(
-                                new Date(
-                                  user?.referralAddedAt ||
-                                    "2025-04-03T12:06:12.140+00:00"
-                                )
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  )}
-                  {!solWalletAddress && (
-                    <div className="flex flex-col items-center justify-center mt-5">
-                      <div className={`text-4xl mb-2`}>
-                        <Image
-                          src={NoDataFish}
-                          alt="No Data Available"
-                          width={200}
-                          height={100}
-                          className="rounded-lg"
-                        />
-                      </div>
-                      <h1 className="text-[#89888e]">
-                        Please login to see your referrals.
-                      </h1>
-                    </div>
-                  )}
-                  {solWalletAddress && referralData?.length <= 0 && (
-                    <div className="flex flex-col items-center justify-center mt-5">
-                      <div className={`text-4xl mb-2`}>
-                        <Image
-                          src={NoDataFish}
-                          alt="No Data Available"
-                          width={200}
-                          height={100}
-                          className="rounded-lg"
-                        />
-                      </div>
-                      <h1 className="text-[#89888e]">No referrals found.</h1>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+          {/* Copy section */}
+          <div className="flex items-center gap-1 cursor-pointer" onClick={handleCopy}>
+            {copied ? <TbCopyCheck className="text-green-600" /> : <LuCopyPlus />}
+            <span>{username}</span>
           </div>
         </div>
       </div>
-    </>
+
+
+      {/* Progress Bar */}
+      <div className="relative w-full h-1.5 bg-[#1c1c24] rounded">
+        <div className="absolute h-2 rounded bg-blue-500" style={{ width: "100%" }}></div>
+      </div>
+      <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:items-center text-xs text-gray-400">
+        {/* Left side: Level Info */}
+        <div className="flex items-start gap-1 sm:items-center flex-wrap">
+          <MdOutlineKeyboardDoubleArrowUp className="text-blue-500 mt-[2px]" size={16} />
+          <span>Next Level:</span>
+          <span className="font-medium text-blue-500">2.5X Rewards rate for Points and SOL</span>
+        </div>
+
+        {/* Right side: Progress Info */}
+        <div className="flex items-start gap-1 sm:items-center flex-wrap">
+          <FaGem className="text-blue-500 mt-[2px]" size={16} />
+          <span>{"You're almost there! Trade 20 SOL to reach"}</span>
+          <span className="text-white font-medium">Silver</span>
+        </div>
+      </div>
+
+
+      {/* Info Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Level Card */}
+        <div className="border-[#5b6075ce] border rounded-xl p-4 space-y-2">
+          <div className="text-sm text-orange-400">🥉 Bronze</div>
+          <div className="text-2xl font-bold  flex items-center gap-2">2X Rewards <span className="text-blue-500"><FaRegStar className="text-blue-500" size={23} /></span></div>
+        </div>
+
+        {/* SOL Earned */}
+        <div className="border-[#5b6075ce] border rounded-xl p-4">
+          <div className="text-sm text-[rgb(200,201,209)] flex justify-between items-center gap-2">
+            <div className="flex items-center gap-2">
+              <HiOutlineCurrencyDollar className="text-blue-500" size={20} />SOL Earned
+            </div>
+            <button className="lg:py-2 md:py-0 py-2 lg:px-3 md:px-0 px-3 bg-blue-500 rounded-md hover:bg-blue-700">Claim SOL</button>
+          </div>
+          <div className="text-2xl font-thin pt-2">
+            0.0<sub>4</sub>66 SOL
+          </div>
+
+          <div className="text-sm text-gray-500">0 SOL claimed</div>
+        </div>
+
+        {/* Points Breakdown */}
+        <div className="border-[#5b6075ce] border rounded-xl p-4">
+          <div className="text-sm text-[rgb(200,201,209)] flex items-center gap-2">
+            <IoPieChartOutline className="text-blue-500" size={20} />
+            Points Breakdown
+          </div>
+          <div className="flex flex-col gap-1 text-sm mt-2 pt-1.5">
+            <div className="text-[#5B6075]">Trading <span className="float-right text-[rgb(200,201,209)]">0</span></div>
+            <div className="text-[#5B6075]">Referrals <span className="float-right text-[rgb(200,201,209)]">0</span></div>
+            <div className="text-[#5B6075]">Quests <span className="float-right text-[rgb(200,201,209)]">0</span></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Referral Table */}
+      <div className="bg-[#1c1c2493] rounded-xl border border-[#2c2c34]">
+        <div className="text-white text-sm">
+          {/* Header */}
+          <div className="flex justify-between border-b border-[#2c2c34] px-4 py-2 overflow-x-auto whitespace-nowrap">
+            <div className="flex gap-2 items-center flex-shrink-0">
+              <FiUserPlus className="text-blue-500" size={18} /> Referrals
+            </div>
+
+            <div className="flex items-center gap-3 text-sm text-gray-400 flex-shrink-0">
+              <span className="text-blue-400 whitespace-nowrap">30%+ Referral Rate</span>
+
+              <span
+                className="flex items-center gap-1 cursor-pointer whitespace-nowrap"
+                onClick={handleCopy2}
+              >
+                {copied2 ? (
+                  <TbCopyCheck className="text-green-600" />
+                ) : (
+                  <LuCopyPlus />
+                )}
+                <span>{username}</span>
+              </span>
+
+              <span className="flex items-center gap-2 whitespace-nowrap">
+                <FaUserFriends /> 1
+              </span>
+            </div>
+          </div>
+
+
+          {/* Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm border-collapse">
+              <thead className="text-gray-500 border-b border-[#2c2c34]">
+                <tr>
+                  <th className="px-4 py-2 text-nowrap">Email/Wallet</th>
+                  <th className="px-4 py-2 text-nowrap">Date Joined</th>
+                  <th className="px-4 py-2 text-nowrap">Type</th>
+                  <th className="px-4 py-2 text-nowrap">Points Earned</th>
+                  <th className="px-4 py-2 text-nowrap">SOL Earned</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="text-white border-b border-[#2c2c34]">
+                  <td className="px-4 py-2 text-nowrap">m********</td>
+                  <td className="px-4 py-2 text-nowrap">3mo</td>
+                  <td className="px-4 py-2 text-nowrap">Direct</td>
+                  <td className="px-4 py-2 text-nowrap">0.2202</td>
+                  <td className="px-4 py-2 text-nowrap">0.0466 SOL</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
   );
 };
 
