@@ -271,7 +271,7 @@ const MscopePumpTable = ({ MemscopeData }) => {
                         </div>
                       </div>
                       <div>
-                        <div className="w-[60px] h-[60px] relative flex items-center justify-center">
+                        <div className="w-[90px] h-[60px] relative flex items-center justify-center">
                           <div
                             className={`${hoverRow === index
                               ? "opacity-40 absolute inset-0 flex items-center justify-center"
@@ -282,7 +282,7 @@ const MscopePumpTable = ({ MemscopeData }) => {
                           </div>
                           {hoverRow === index && (
                             <button
-                              className="absolute z-10 rounded-lg bg-[#1d73fc] hover:bg-[#438bff] text-[#111111] font-bold py-1 px-5 text-xs transition-all duration-100 ease-in-out"
+                              className="absolute z-10 w-fit rounded-md bg-[#1d73fc] hover:bg-[#438bff] text-[#111111] font-bold py-1 px-5 text-xs transition-all duration-100 ease-in-out"
                               onClick={(e) =>
                                 buySolanaTokensQuickBuyHandler(
                                   solanaLivePrice,
@@ -300,7 +300,7 @@ const MscopePumpTable = ({ MemscopeData }) => {
                               {quickBuy > 0
                                 ? `${quickBuy?.length > 6
                                   ? `${quickBuy.slice(0, 7)}...`
-                                  : `${quickBuy}`
+                                  : `${quickBuy} SOL`
                                 }`
                                 : 'Buy'}
                             </button>
