@@ -59,7 +59,7 @@ const buySolanaTokens = async (
     method: "post",
     data: {
       token: toToken,
-      amount: amt,
+      amount: Number(amt),
       slippage: slipTolerance,
       priorityFee: priorityFee,
       price: Number(solanaLivePrice),
@@ -161,7 +161,7 @@ const buySolanaTokensQuickBuyHandler = async (
     method: "post",
     data: {
       token: toToken,
-      amount: amt,
+      amount: Number(amt),
       slippage: slippage,
       priorityFee: priorityFee,
       price: Number(solanaLivePrice),
@@ -257,7 +257,7 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
     method: "post",
     data: {
       token: toToken,
-      amount: amt,
+      amount: Number(amt),
       slippage: slippage,
       priorityFee: priorityFee,
       price: Number(solanaLivePrice),
@@ -341,7 +341,7 @@ const sellSolanaTokens = async (
     method: "post",
     data: {
       token: fromToken,
-      amount: amt,
+      amount: Number(amt),
       slippage: slipTolerance,
       priorityFee: priorityFee,
       decimal,
@@ -349,7 +349,7 @@ const sellSolanaTokens = async (
       programAddress: programAddress
         ? programAddress
         : "nasdiuasdnasdudhsdjasbhid",
-      amountRecInsol: recQty,
+      amountRecInsol: Number(recQty),
     },
     headers: {
       Authorization: `Bearer ${token}`,

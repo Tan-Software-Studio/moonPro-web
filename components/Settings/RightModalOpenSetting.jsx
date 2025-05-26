@@ -8,70 +8,78 @@ import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 import { VscDebugRestart } from "react-icons/vsc";
 import Image from "next/image";
 import { solana } from "@/app/Images";
-const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage }) => {
+import { useDispatch } from "react-redux";
+import { setPreSetOrderSetting } from "@/app/redux/states";
+const RightModalOpenSetting = ({
+  ordersettingLang,
+  isOpen,
+  onClose,
+  tredingPage,
+}) => {
+  const dispatch = useDispatch();
   const [presist, setPresist] = useState("P1");
   const [activeTab, setActiveTab] = useState("buy");
   const [saveLoaderFlag, setSaveLoaderFlag] = useState(false);
   const [preSetData, setPreSetData] = useState({
-    "P1": {
-      "buy": {
+    P1: {
+      buy: {
         slippage: 20,
         priorityFee: 0.0001,
-        mev: false
+        mev: false,
       },
-      "sell": {
+      sell: {
         slippage: 20,
         priorityFee: 0.0001,
-        mev: false
-      }
+        mev: false,
+      },
     },
-    "P2": {
-      "buy": {
+    P2: {
+      buy: {
         slippage: 20,
         priorityFee: 0.0001,
-        mev: false
+        mev: false,
       },
-      "sell": {
+      sell: {
         slippage: 20,
         priorityFee: 0.0001,
-        mev: false
-      }
+        mev: false,
+      },
     },
-    "P3": {
-      "buy": {
+    P3: {
+      buy: {
         slippage: 20,
         priorityFee: 0.0001,
-        mev: false
+        mev: false,
       },
-      "sell": {
+      sell: {
         slippage: 20,
         priorityFee: 0.0001,
-        mev: false
-      }
+        mev: false,
+      },
     },
-    "P4": {
-      "buy": {
+    P4: {
+      buy: {
         slippage: 20,
         priorityFee: 0.0001,
-        mev: false
+        mev: false,
       },
-      "sell": {
+      sell: {
         slippage: 20,
         priorityFee: 0.0001,
-        mev: false
-      }
+        mev: false,
+      },
     },
-    "P5": {
-      "buy": {
+    P5: {
+      buy: {
         slippage: 20,
         priorityFee: 0.0001,
-        mev: false
+        mev: false,
       },
-      "sell": {
+      sell: {
         slippage: 20,
         priorityFee: 0.0001,
-        mev: false
-      }
+        mev: false,
+      },
     },
   });
   // onchange function for data update
@@ -84,9 +92,9 @@ const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage 
           ...pre[presist],
           [activeTab]: {
             ...pre?.[presist]?.[activeTab],
-            [name]: parseFloat(value)
-          }
-        }
+            [name]: parseFloat(value),
+          },
+        },
       };
       return updated;
     });
@@ -100,9 +108,9 @@ const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage 
           ...pre[presist],
           [activeTab]: {
             ...pre?.[presist]?.[activeTab],
-            mev: value
-          }
-        }
+            mev: value,
+          },
+        },
       };
       return updated;
     });
@@ -116,34 +124,38 @@ const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage 
           buy: {
             slippage: 20,
             priorityFee: 0.0001,
-            mev: false
+            mev: false,
           },
           sell: {
             slippage: 20,
             priorityFee: 0.0001,
-            mev: false
-          }
-        }
+            mev: false,
+          },
+        },
       };
       localStorage.setItem("preSetAllData", JSON.stringify(update));
+      dispatch(setPreSetOrderSetting(update));
       return update;
     });
   }
 
-  // save function 
+  // save function
   function savePresetData() {
     setSaveLoaderFlag(true);
     localStorage.setItem("preSetAllData", JSON.stringify(preSetData));
+    dispatch(setPreSetOrderSetting(preSetData));
     setTimeout(() => {
       setSaveLoaderFlag(false);
     }, 500);
     onClose();
   }
   useEffect(() => {
-    const preSetFromLocalStorage = localStorage.getItem("preSetAllData");
+    const preSetFromLocalStorage = JSON.parse(
+      localStorage.getItem("preSetAllData")
+    );
     const preSetActiveFLag = localStorage.getItem("preSetSettingActive");
     if (preSetFromLocalStorage) {
-      setPreSetData(JSON.parse(preSetFromLocalStorage));
+      setPreSetData(preSetFromLocalStorage);
     } else {
       localStorage.setItem("preSetAllData", JSON.stringify(preSetData));
     }
@@ -154,14 +166,16 @@ const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage 
   return (
     <>
       <div
-        className={`fixed inset-0 bg-black bg-opacity-50 z-[9999998] transition-opacity duration-500 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-          }`}
+        className={`fixed inset-0 bg-black bg-opacity-50 z-[9999998] transition-opacity duration-500 ${
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
         onClick={onClose}
       />
       {/* Modal */}
       <div
-        className={`flex flex-col justify-between fixed top-14 bottom-5 rounded-md transition-all duration-500 ease-in-out xl:w-[20%] lg:w-[30%]  w-full bg-[#08080e] z-[9999999] border border-[#191919] ${isOpen ? "right-0" : "-right-full"
-          }`}
+        className={`flex flex-col justify-between fixed top-14 bottom-5 rounded-md transition-all duration-500 ease-in-out xl:w-[20%] lg:w-[30%]  w-full bg-[#08080e] z-[9999999] border border-[#191919] ${
+          isOpen ? "right-0" : "-right-full"
+        }`}
       >
         <div>
           <div className="bg-[#1F1F1F] flex items-center justify-between py-[13px] px-[16px]">
@@ -179,10 +193,11 @@ const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage 
           <div className="p-[16px]">
             <div className="flex items-center bg-[#1f1f1f] md:rounded-[8px]">
               <button
-                className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-500 outline-none ${activeTab === "buy"
-                  ? "bg-[#1F73FC] text-[#F6F6F6]"
-                  : "bg-transparent text-[#6E6E6E]"
-                  }`}
+                className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-500 outline-none ${
+                  activeTab === "buy"
+                    ? "bg-[#1F73FC] text-[#F6F6F6]"
+                    : "bg-transparent text-[#6E6E6E]"
+                }`}
                 onClick={() => {
                   setActiveTab("buy");
                 }}
@@ -190,10 +205,11 @@ const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage 
                 {ordersettingLang?.buy}
               </button>
               <button
-                className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-300 ${activeTab === "sell"
-                  ? "bg-[#ED1B24] text-[#F6F6F6]"
-                  : "bg-transparent text-[#6E6E6E]"
-                  }`}
+                className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-300 ${
+                  activeTab === "sell"
+                    ? "bg-[#ED1B24] text-[#F6F6F6]"
+                    : "bg-transparent text-[#6E6E6E]"
+                }`}
                 onClick={() => {
                   setActiveTab("sell");
                 }}
@@ -206,20 +222,22 @@ const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage 
                 return (
                   <Tooltip
                     key={index + 1}
-                    body={`Preset ${index + 1
-                      }: Save your trade settings such as quantity, slippage, and fees.`}
+                    body={`Preset ${
+                      index + 1
+                    }: Save your trade settings such as quantity, slippage, and fees.`}
                   >
                     <button
                       onClick={() => {
                         setPresist(item);
                         localStorage.setItem("preSetSettingActive", item);
                       }}
-                      className={`w-full py-[10px] text-[#F6F6F6] font-[700] text-[12px] border-r-[0.5px] border-r-[#404040] duration-300 ease-in-out ${presist == item
-                        ? activeTab == "buy"
-                          ? "bg-[#1F73FC]"
-                          : "bg-[#ED1B24]"
-                        : "bg-transparent"
-                        }`}
+                      className={`w-full py-[10px] text-[#F6F6F6] font-[700] text-[12px] border-r-[0.5px] border-r-[#404040] duration-300 ease-in-out ${
+                        presist == item
+                          ? activeTab == "buy"
+                            ? "bg-[#1F73FC]"
+                            : "bg-[#ED1B24]"
+                          : "bg-transparent"
+                      }`}
                     >
                       {item}
                     </button>
@@ -261,7 +279,12 @@ const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage 
                 type="number"
                 name="slippage"
                 value={preSetData?.[presist]?.[activeTab]?.slippage}
-                onChange={(e) => updatePreSetSetting({ name: e?.target?.name, value: Math.min(Number(e?.target?.value), 100) })}
+                onChange={(e) =>
+                  updatePreSetSetting({
+                    name: e?.target?.name,
+                    value: Math.min(Number(e?.target?.value), 100),
+                  })
+                }
                 className="bg-transparent p-[11px] text-start w-full text-white outline-none text-[14px] h-[40px] 
                                [&::-webkit-inner-spin-button]:appearance-none 
                                [&::-webkit-outer-spin-button]:appearance-none 
@@ -282,7 +305,12 @@ const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage 
                 type="number"
                 name="priorityFee"
                 value={preSetData?.[presist]?.[activeTab]?.priorityFee}
-                onChange={(e) => updatePreSetSetting({ name: e?.target?.name, value: Math.min(Number(e?.target?.value), 1) })}
+                onChange={(e) =>
+                  updatePreSetSetting({
+                    name: e?.target?.name,
+                    value: Math.min(Number(e?.target?.value), 1),
+                  })
+                }
                 className="bg-transparent w-full text-white text-right outline-none text-[14px] h-[40px] [&::-webkit-inner-spin-button]:appearance-none 
              [&::-webkit-outer-spin-button]:appearance-none 
              [&::-moz-appearance]:textfield"
@@ -307,14 +335,19 @@ const RightModalOpenSetting = ({ ordersettingLang, isOpen, onClose, tredingPage 
                 onClick={() => {
                   updateMEV(!preSetData?.[presist]?.[activeTab]?.mev);
                 }}
-                className={`flex ${preSetData?.[presist]?.[activeTab]?.mev
-                  ? `${activeTab == "buy" ? "bg-[#278BFE]" : "bg-[#ed1819]"}`
-                  : "bg-[#4D4D4D]"
-                  } w-[36px] h-[20px] items-center cursor-pointer pl-[3px] rounded-[1000px] transition-all duration-300`}
+                className={`flex ${
+                  preSetData?.[presist]?.[activeTab]?.mev
+                    ? `${activeTab == "buy" ? "bg-[#278BFE]" : "bg-[#ed1819]"}`
+                    : "bg-[#4D4D4D]"
+                } w-[36px] h-[20px] items-center cursor-pointer pl-[3px] rounded-[1000px] transition-all duration-300`}
               >
                 <div
                   className={`w-[12px] h-[12px] bg-white rounded-full shadow-md transform transition-all duration-300 
-      ${preSetData?.[presist]?.[activeTab]?.mev ? "translate-x-[18px]" : "translate-x-0 "}`}
+      ${
+        preSetData?.[presist]?.[activeTab]?.mev
+          ? "translate-x-[18px]"
+          : "translate-x-0 "
+      }`}
                 />
               </div>
             </div>

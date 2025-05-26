@@ -7,6 +7,7 @@ import { intervalTV } from "../../utils/tradingViewChartServices/constant";
 import { unsubscribeFromWebSocket } from "@/utils/tradingViewChartServices/websocketOHLC";
 import { clearMarks } from "@/utils/tradingViewChartServices/mark";
 import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFunctions";
+import { setPriceLines } from "@/utils/tradingViewChartServices/fifoPrice"
 
 const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
   const chartContainerRef = useRef(null);
@@ -87,13 +88,18 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
       },
     });
     // console.log("TradingView widget initialized.", tvWidget);
-    tvWidget.onChartReady(() => {
-      // console.log("Chart has loaded!");
+    tvWidget.onChartReady(async () => {
+      // console.log("Chart has loaded!");  
+      await setPriceLines(tvWidget);
       const priceScale = tvWidget
         .activeChart()
         .getPanes()[0]
         .getMainSourcePriceScale();
       priceScale.setAutoScale(true);
+      tvWidget.activeChart().onIntervalChanged().subscribe(null, async (interval, timeframeObj) => {
+        await setPriceLines(tvWidget);
+        clearMarks();
+      });
     });
     // Add custom toggle buttons
     tvWidget.headerReady().then(() => {

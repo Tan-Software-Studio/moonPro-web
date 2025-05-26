@@ -30,6 +30,7 @@ import {
 } from "@/app/redux/states";
 import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 import { IoSearchSharp } from "react-icons/io5";
+import { useRouter } from "next/navigation";
 
 const MscopePumpTable = ({ MemscopeData }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -51,6 +52,7 @@ const MscopePumpTable = ({ MemscopeData }) => {
   );
 
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const quickBuy = useSelector((state) => state?.AllStatesData?.globalBuyAmt);
 
@@ -123,13 +125,13 @@ const MscopePumpTable = ({ MemscopeData }) => {
       ) : MemscopeData.length > 0 ? (
         <>
           <div className={`h-[78vh] visibleScroll overflow-y-auto`}>
-            {MemscopeData?.slice(0, 20)?.map((block, index) => (
+            {MemscopeData.map((block, index) => (
               <Link
-                key={block.id}
+                key={index + 1}
                 href={`/tradingview/solana?tokenaddress=${block?.address}&symbol=${block?.symbol}`}
               >
                 <div
-                  className={`cursor-pointer border-b  md:border-b md:border-r md:border-l-0 md:border-t-0 border-[#26262e] bg-[#08080E] hover:bg-[#6e6e6e1a] ease-in-out duration-200`}
+                  className={`cursor-pointer border-b md:border-b md:border-r md:border-l-0 md:border-t-0 border-[#26262e] bg-[#08080E] hover:bg-[#6e6e6e1a] ease-in-out duration-200`}
                   onClick={() => navigateToChartSreen(block)}
                   onMouseEnter={() => sethoverRow(index)}
                   onMouseLeave={() => sethoverRow(null)}
@@ -289,7 +291,8 @@ const MscopePumpTable = ({ MemscopeData }) => {
                             {hoverRow === index && (
                               <button
                                 className="absolute z-10 w-fit whitespace-nowrap rounded-md bg-[#1d73fc] hover:bg-[#438bff] text-[#111111] font-bold py-1 px-5 text-xs transition-all duration-100 ease-in-out"
-                                onClick={(e) =>
+                                onClick={(e) => {
+                                  e.preventDefault();
                                   buySolanaTokensQuickBuyHandler(
                                     solanaLivePrice,
                                     block?.address,
@@ -300,8 +303,8 @@ const MscopePumpTable = ({ MemscopeData }) => {
                                     "6ef8rrecthr5dkzon8nwu78hrvfckubj14m5ubewf6p",
                                     block?.bonding_curv,
                                     dispatch
-                                  )
-                                }
+                                  );
+                                }}
                               >
                                 {quickBuy > 0
                                   ? `${

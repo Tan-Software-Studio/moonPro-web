@@ -78,7 +78,7 @@ export async function subscribeToWebSocket(
         : Number(supply)
       : 1_000_000_000;
     solPrice = solPrice ? (Number(solPrice) === 0 ? 1 : Number(solPrice)) : 1;
-    tokenData.forEach((item) => {
+    tokenData.forEach(async (item) => {
       const tradeTime = new Date(item?.Block?.Time).getTime();
       const volume = parseFloat(item?.volume || "0");
 
@@ -145,7 +145,7 @@ export async function subscribeToWebSocket(
       const usdTraded = Number(item?.Trade?.Side?.AmountInUSD);
 
       if (signer === tokenCreator) {
-        addMark(
+        await addMark(
           tradeTime / 1000,
           isBuy,
           usdTraded,
@@ -155,7 +155,7 @@ export async function subscribeToWebSocket(
           "dev"
         );
       } else if (signer === userSolWallet) {
-        addMark(
+        await addMark(
           tradeTime / 1000,
           isBuy,
           usdTraded,
