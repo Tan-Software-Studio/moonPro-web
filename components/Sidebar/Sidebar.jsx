@@ -200,12 +200,12 @@ const Sidebar = () => {
             {sidebardata?.map((data) => (
               <div
                 key={data.id}
-                className={`font-[400] p-2 transition-all duration-300 ease-in-out text-[14px] mx-3 cursor-pointer text-[#ffffff] ${data.pathname === pathname
+                className={`font-[400] p-2 transition-all border-[1px] border-transparent duration-300 ease-in-out text-[14px] mx-3 cursor-pointer text-[#ffffff] ${data.pathname === pathname
                   ? `${isSidebarOpen
                     ? "!rounded-md bg-[#11265B]"
                     : "rounded-full bg-gradient"
-                  } border-[1px] border-[#0E43BD]`
-                  : `text-[#ffffff] hover:bg-[#11265B] ${isSidebarOpen ? "rounded-md" : "rounded-full"}`
+                  } border-[1px] !border-[#0E43BD]`
+                  : `text-[#ffffff]   hover:bg-[#11265B] ${isSidebarOpen ? "rounded-md" : "rounded-full"}`
                   } 
                   `}
                 onClick={() => {

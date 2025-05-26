@@ -282,7 +282,7 @@ const MscopePumpTable = ({ MemscopeData }) => {
                           </div>
                           {hoverRow === index && (
                             <button
-                              className="absolute z-10 w-fit rounded-md bg-[#1d73fc] hover:bg-[#438bff] text-[#111111] font-bold py-1 px-5 text-xs transition-all duration-100 ease-in-out"
+                              className="absolute z-10 w-fit whitespace-nowrap rounded-md bg-[#1d73fc] hover:bg-[#438bff] text-[#111111] font-bold py-1 px-5 text-xs transition-all duration-100 ease-in-out"
                               onClick={(e) =>
                                 buySolanaTokensQuickBuyHandler(
                                   solanaLivePrice,
