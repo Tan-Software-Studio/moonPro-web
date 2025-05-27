@@ -16,7 +16,7 @@ import {
   fetchSolanaNativeBalance,
   setChartSymbolImage,
 } from "@/app/redux/states";
-import { PiCopyLight, PiCopyThin } from "react-icons/pi";
+import { PiCopyThin } from "react-icons/pi";
 import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 import Link from "next/link";
 import { MdOutlineLanguage } from "react-icons/md";

@@ -60,20 +60,20 @@ function WalletTracker() {
       <div className="flex justify-between items-center bg-[#0A0A0B] text-white md:p-4 p-2  border-b border-[#404040]">
         {/* Left Section */}
         <div className="flex items-center gap-2">
-          <Image
+          {/* <Image
             src={walletTrackerWhiteImg}
             alt="Wallet Tracker Icon"
             width={30}
             height={30}
             className="object-contain"
-          />
-          <h1 className="xl:text-[28px] text-[14px] font-bold">
+          /> */}
+          <h1 className="xl:text-[20px] text-[14px] font-bold">
             {wallettrackerPage?.mainHeader?.title}
           </h1>
-          <div className="h-2 w-2 bg-[#6E6E6E] rounded-full "></div>
-          <div className="font-normal md:text-[14px] text-[10px] text-[#6E6E6E]">
+          {/* <div className="h-2 w-2 bg-[#6E6E6E] rounded-full "></div> */}
+          {/* <div className="font-normal md:text-[14px] text-[10px] text-[#6E6E6E]">
             {wallettrackerPage?.mainHeader?.desc}
-          </div>
+          </div> */}
         </div>
       </div>
 
