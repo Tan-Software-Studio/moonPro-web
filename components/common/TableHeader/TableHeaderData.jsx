@@ -28,7 +28,7 @@ const TableHeaderData = ({ headers, onSort, sortColumn, sortOrder }) => {
 
   return (
     <thead
-      className={`!text-[#84858E] bg-[#08080E] sticky top-0 transition-all duration-500 ease-in-out ${hasScrolled ? "z-10" : "z-10"
+      className={`!text-[#84858E] bg-[#08080E] sticky top-0 transition-all duration-500 ease-in-out ${hasScrolled ? "z-7" : "z-7"
         }`}
     >
       {hasScrolled && (
@@ -42,7 +42,7 @@ const TableHeaderData = ({ headers, onSort, sortColumn, sortOrder }) => {
             key={index}
             scope="col"
             className={`text-[#7a7e9e] uppercase px-3 pt-2.5 pb-3 ${header.key == "pairInfo" || header.key == "auditResults"
-              ? "md:w-[10%] w-10"
+              ? "md:w-[7%] w-7"
               : "md:w-32 w-28"
               }`}
           >
@@ -56,13 +56,13 @@ const TableHeaderData = ({ headers, onSort, sortColumn, sortOrder }) => {
                   }`}
                 onClick={() => handleSort(header)}
               >
-                <td className={`text-xs font-bold text-[#A8A8A8]`}>{header?.title}</td>
+                <td className={`text-xs font-semibold capitalize text-[#5c6772]`}>{header?.title}</td>
                 {header?.sortable && (
                   <div className="relative">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="10"
-                      height="10"
+                      width="8"
+                      height="8"
                       fill="currentColor"
                       className={`g-table-column-sorter-up active ${sortColumn === header.sortingKey && sortOrder === "asc"
                         ? "text-white"
@@ -73,8 +73,8 @@ const TableHeaderData = ({ headers, onSort, sortColumn, sortOrder }) => {
                     </svg>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="10"
-                      height="10"
+                      width="8"
+                      height="8"
                       fill="currentColor"
                       className={`g-table-column-sorter-down ${sortColumn === header.sortingKey && sortOrder === "desc"
                         ? "text-white"
