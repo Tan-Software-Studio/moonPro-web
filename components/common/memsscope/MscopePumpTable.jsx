@@ -281,11 +281,11 @@ const MscopePumpTable = ({ MemscopeData }) => {
                           <div className="w-[90px] h-[60px] relative flex items-center justify-center">
                             <div
                               className={`${hoverRow === index
-                                  ? "opacity-40 absolute inset-0 flex items-center justify-center"
-                                  : "opacity-100"
+                                ? "opacity-40 absolute inset-0 flex items-center justify-center"
+                                : "opacity-100"
                                 } `}
                             >
-                              {/* <ChartComponent block={block} /> */}
+                              <ChartComponent block={block} />
                             </div>
                             {hoverRow === index && (
                               <button
@@ -333,8 +333,8 @@ const MscopePumpTable = ({ MemscopeData }) => {
 
                           <Tooltip
                             body={`Volume: ${block?.volume
-                                ? humanReadableFormat(block?.volume.toFixed(2))
-                                : 0
+                              ? humanReadableFormat(block?.volume.toFixed(2))
+                              : 0
                               }`}
                           >
                             <div className="flex items-center gap-[4px]">
