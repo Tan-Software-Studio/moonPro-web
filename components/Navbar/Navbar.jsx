@@ -132,10 +132,10 @@ const Navbar = () => {
       .then((response) => {
         const rawData = response?.data?.data;
         const formattedData = {
-          "1m": rawData?.["1+min"]?.[0].tokens || [],
-          "5m": rawData?.["5+min"]?.[0].tokens || [],
-          "30m": rawData?.["30+min"]?.[0].tokens || [],
-          "1h": rawData?.["1+hr"]?.[0].tokens || [],
+          "1m": rawData?.["1+min"]?.tokens || [],
+          "5m": rawData?.["5+min"]?.tokens || [],
+          "30m": rawData?.["30+min"]?.tokens || [],
+          "1h": rawData?.["1+hr"]?.tokens || [],
         };
         dispatch(setFilterTime(formattedData));
         dispatch(setLoading(false));
@@ -162,7 +162,7 @@ const Navbar = () => {
   useEffect(() => {
     fetchData();
     dispatch(fetchMemescopeData());
-    fetchSolPrice();
+    // fetchSolPrice();
   }, []);
   // update and get solana balance
   useEffect(() => {

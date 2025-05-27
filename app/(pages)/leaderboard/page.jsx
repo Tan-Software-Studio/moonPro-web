@@ -13,20 +13,25 @@ import {
 } from "@/app/Images";
 import ToperLeaderboard from "./ToperLeaderboard";
 import axios from "axios";
-import toast from "react-hot-toast"; 
+import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
-const LeaderBoard = () => { 
+const LeaderBoard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [flag, setFlag] = useState(false);
   const { t } = useTranslation();
   const leaderboardPage = t("leaderboard");
+  const solanaLivePrice = useSelector(
+    (state) => state?.AllStatesData?.solanaLivePrice
+  );
   const tableHeader = [
     { id: 1, title: "#" },
-    { id: 3, title: "email" },
-    { id: 4, title: leaderboardPage?.table?.trading?.totaltrads },
+    { id: 2, title: "email" },
+    { id: 3, title: leaderboardPage?.table?.trading?.totaltrads },
+    { id: 4, title: "amount" },
     { id: 5, title: leaderboardPage?.table?.trading?.value },
     { id: 6, title: leaderboardPage?.table?.trading?.referralid },
   ];
@@ -47,7 +52,6 @@ const LeaderBoard = () => {
       infoTipString: leaderboardPage?.mainHeader?.referralpointstooltip,
     },
   ];
- 
 
   const clipPathTop1Style = {
     clipPath: "polygon(10% 0%, 90% 0%, 100% 100%, 0 100%)",
@@ -63,10 +67,8 @@ const LeaderBoard = () => {
       method: "get",
     })
       .then((res) => {
-        console.log("🚀 ~ .then ~ res:", res)
         setFlag(false);
         setLeaderboardData(res?.data?.data?.leaderBoardData);
-
       })
       .catch((err) => {
         setFlag(false);
@@ -84,15 +86,15 @@ const LeaderBoard = () => {
     <>
       {/* container mx-auto px-4 */}
       <div className="font-poppins">
-        <div className={`container mx-auto px-4 mb-4 h-[93vh] overflow-auto`}>
+        <div className={`container mx-auto sm:px-4 px-2 mb-4 h-[93vh] overflow-auto`}>
           <div className={`mx-[-1px] md:mx-0`}>
             <div
               className={`flex justify-start items-start xl:items-center pt-4 w-full`}
             >
               <div className="flex items-center gap-2">
-                <Image src={LeaderboardIcon} alt="" />
+                {/* <Image src={LeaderboardIcon} alt="" /> */}
                 <p
-                  className={`md:text-[28px] text-[14px] font-semibold text-white`}
+                  className={`md:text-[20px] text-[14px] font-semibold text-white`}
                 >
                   {leaderboardPage?.mainHeader?.title}
                 </p>
@@ -168,6 +170,7 @@ const LeaderBoard = () => {
                   clipPathStyle={clipPathTopStyle}
                   boxStyle={"md:w-[300px] lg:w-[380px] xl:w-[420px]"}
                   flag={flag}
+                  solanaLivePrice={solanaLivePrice}
                 />
 
                 <ToperLeaderboard
@@ -183,6 +186,7 @@ const LeaderBoard = () => {
                   clipPathStyle={clipPathTop1Style}
                   boxStyle={"md:w-[220px] lg:w-[300px] xl:w-[340px]"}
                   flag={flag}
+                  solanaLivePrice={solanaLivePrice}
                 />
 
                 <ToperLeaderboard
@@ -198,12 +202,12 @@ const LeaderBoard = () => {
                   clipPathStyle={clipPathTopStyle}
                   boxStyle={"md:w-[300px] lg:w-[380px] xl:w-[420px]"}
                   flag={flag}
+                  solanaLivePrice={solanaLivePrice}
                 />
               </div>
 
               {/* table data */}
-              <div className=" rounded-3xl mt-28"> 
-
+              <div className=" rounded-3xl mt-28">
                 <div className="w-full h-[50vh]">
                   <div className="overflow-auto h-full">
                     <table
@@ -214,7 +218,7 @@ const LeaderBoard = () => {
                           {tableHeader.map((header, i) => (
                             <th
                               key={i + 1}
-                              className={` text-base font-medium py-5 !text-start`}
+                              className={` text-base whitespace-nowrap font-medium py-5 px-4 !text-start`}
                             >
                               <span className={`text-[#A8A8A8]`}>
                                 {header.title}
@@ -223,33 +227,45 @@ const LeaderBoard = () => {
                           ))}
                         </tr>
                       </thead>
-                      <tbody className={`mt-5`}>
+                      <tbody>
                         {leaderboardData
                           ?.slice(3, leaderboardData.length)
                           .map((item, i) => (
                             <tr
                               key={i + 1}
-                              className={`py-2 text-white border-b border-[#404040]`}
+                              className={`py-2 text-white whitespace-nowrap border-b border-[#404040]`}
                             >
-                              <td className=" text-lg font-medium py-4 ">
+                              <td className=" text-lg font-medium py-4 px-4">
                                 {i + 4}
                               </td>
-                              <td className=" text-base font-medium py-4 ">
+                              <td className=" text-base font-medium py-4 px-4">
                                 {`${flag
-                                  ? "----"
-                                  : `${item?.email?.slice(
-                                    0,
-                                    3
-                                  )}...${item?.email?.slice(-4)}`
+                                    ? "----"
+                                    : `${item?.email?.slice(
+                                      0,
+                                      3
+                                    )}...${item?.email?.slice(-4)}`
                                   }`}
                               </td>
-                              <td className=" text-base font-medium py-4 ">
+                              <td className=" text-base font-medium py-4 px-4">
                                 {flag ? "----" : item?.totalTrades}
                               </td>
-                              <td className=" text-base font-medium py-4">
-                                {flag ? "----" : `${item?.totalTradeAmount}`}
+                              <td className=" text-base font-medium py-4 px-4">
+                                {flag
+                                  ? "----"
+                                  : `${Number(item?.totalTradeAmount).toFixed(
+                                    5
+                                  )}`}
                               </td>
-                              <td className=" text-base font-medium py-4">
+                              <td className=" text-base font-medium py-4 px-4">
+                                {flag
+                                  ? "----"
+                                  : `$${(
+                                    Number(item?.totalTradeAmount) *
+                                    solanaLivePrice
+                                  ).toFixed(2)}`}
+                              </td>
+                              <td className=" text-base font-medium py-4 px-4">
                                 {flag ? "----" : item?.referralId}
                               </td>
                             </tr>
