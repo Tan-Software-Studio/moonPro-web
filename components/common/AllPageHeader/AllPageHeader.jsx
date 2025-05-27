@@ -3,20 +3,26 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { usePathname } from "next/navigation";
-import {
-  serFilterTime,
-  setQuickBuy,
-} from "@/app/redux/CommonUiData";
 import FilterMemescope from "../filter/FilterMemescope";
-import { baseIcon, ethereum, logo, solana } from "@/app/Images";
+import { solana } from "@/app/Images";
 import RightModalOpenSetting from "@/components/Settings/RightModalOpenSetting";
 import { IoSettingsOutline } from "react-icons/io5";
 import { setGlobalBuyAmt, setOpenOrderSetting } from "@/app/redux/states";
 import { useTranslation } from "react-i18next";
-const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime, setFilterValues, filterValues, onApply, onReset, }) => {
+const AllPageHeader = ({
+  HeaderData,
+  duration,
+  FilterData,
+  localFilterTime,
+  setLocalFilterTime,
+  setFilterValues,
+  filterValues,
+  onApply,
+  onReset,
+}) => {
   const filterPopupRef = useRef(null);
   const dexesPopupRef = useRef(null);
-  const { t, ready } = useTranslation();
+  const { t } = useTranslation();
   const tredingPage = t("tredingPage");
   const holdingsPageLang = t("holdings");
   const pathname = usePathname();
@@ -33,7 +39,9 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
   // Close dropdown when clicking outside
 
   // order setting popup flag
-  const isRightModalOpenSetting = useSelector((state) => state?.AllStatesData?.openOrderSetting);
+  const isRightModalOpenSetting = useSelector(
+    (state) => state?.AllStatesData?.openOrderSetting
+  );
 
   const borderColor = useSelector(
     (state) => state?.AllthemeColorData?.borderColor
@@ -63,9 +71,9 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -147,9 +155,9 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
               <button
                 key={index}
                 onClick={() => handleButtonClick(option)}
-                className={`py-2 px-3 text-sm  font-semibold hover:bg-[#1F73FC]/[30%] rounded-md ${option === localFilterTime &&
-                  " !text-[#1F73FC]"
-                  } transition duration-300 text-[#edebe5]`}
+                className={`py-2 px-3 text-sm  font-semibold hover:bg-[#1F73FC]/[30%] rounded-md ${
+                  option === localFilterTime && " !text-[#1F73FC]"
+                } transition duration-300 text-[#edebe5]`}
               >
                 {/* bg-[#1F73FC] text-white first-of-type:rounded-l-md last-of-type:rounded-r-md */}
                 {option}
@@ -289,7 +297,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
               </svg>
             </div> */}
 
-            <div className=" inline-block" >
+            <div className=" inline-block">
               {/* Wallet Button */}
               <div
                 ref={buttonRef}
@@ -297,8 +305,19 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                 className="flex items-center mr-2 space-x-2 px-5 py-2 bg-[#1a1a1a] rounded-full text-[#ecf6fd] text-sm font-medium cursor-pointer"
               >
                 {/* Wallet Icon */}
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a4 4 0 00-4-4H5a2 2 0 00-2 2v12a2 2 0 002 2h8a4 4 0 004-4v-2M9 13h6" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 9V7a4 4 0 00-4-4H5a2 2 0 00-2 2v12a2 2 0 002 2h8a4 4 0 004-4v-2M9 13h6"
+                  />
                 </svg>
                 <span>1</span>
 
@@ -307,8 +326,19 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                 <span>0</span>
 
                 {/* Dropdown Icon */}
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </div>
 
@@ -319,12 +349,28 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                 >
                   {/* Wallet List */}
                   {[
-                    { name: "Moon Pro Main", status: "Off", address: "BEsA4", balance: 0, toggle: 0, active: true },
-                    { name: "Wallet", status: "Off", address: "8cYVF", balance: 0, toggle: 0, active: false }
+                    {
+                      name: "Moon Pro Main",
+                      status: "Off",
+                      address: "BEsA4",
+                      balance: 0,
+                      toggle: 0,
+                      active: true,
+                    },
+                    {
+                      name: "Wallet",
+                      status: "Off",
+                      address: "8cYVF",
+                      balance: 0,
+                      toggle: 0,
+                      active: false,
+                    },
                   ].map((wallet, idx) => (
                     <div
                       key={idx}
-                      className={`flex items-center justify-between p-3 ${wallet.active ? "bg-[#1a1a1a]" : ""}`}
+                      className={`flex items-center justify-between p-3 ${
+                        wallet.active ? "bg-[#1a1a1a]" : ""
+                      }`}
                     >
                       {/* Checkbox and wallet info */}
                       <div className="flex items-center gap-2 w-1/2">
@@ -335,16 +381,27 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                           readOnly
                         />
                         <div>
-                          <span className={`text-sm font-semibold ${wallet.active ? "text-orange-400" : ""}`}>
+                          <span
+                            className={`text-sm font-semibold ${
+                              wallet.active ? "text-orange-400" : ""
+                            }`}
+                          >
                             {wallet.name}
                           </span>
-                          <p className="text-xs text-gray-400">{wallet.status} · {wallet.address}</p>
+                          <p className="text-xs text-gray-400">
+                            {wallet.status} · {wallet.address}
+                          </p>
                         </div>
                       </div>
 
                       {/* Solana balance */}
                       <div className="flex items-center gap-1">
-                        <Image src={solana} width={16} height={16} alt="solana" />
+                        <Image
+                          src={solana}
+                          width={16}
+                          height={16}
+                          alt="solana"
+                        />
                         <span className="text-sm">0</span>
                       </div>
 
@@ -393,16 +450,26 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
 
               {/* Middle section: Amount input */}
               <div className="px-3 py-1 text-gray-400 font-medium">
-                Amount
+                <div className="">
+                  <input
+                    type="number"
+                    placeholder="Amount"
+                    className="bg-transparent text-gray-400 text-xs w-8 outline-none"
+                    value={quickBuy}
+                    onChange={handleInputChange}
+                  />
+                </div>
               </div>
 
               {/* Right section: Solana + value */}
-              <div className="flex items-center gap-1 px-3 py-1 border-l border-[#26262e] cursor-pointer" onClick={() => dispatch(setOpenOrderSetting(true))}>
+              <div
+                className="flex items-center gap-1 px-3 py-1 border-l border-[#26262e] cursor-pointer"
+                onClick={() => dispatch(setOpenOrderSetting(true))}
+              >
                 <Image src={solana} width={16} height={16} alt="solana" />
                 <span className="text-white text-xs">{presist}</span>
               </div>
             </div>
-
           </div>
         )}
       </div>
