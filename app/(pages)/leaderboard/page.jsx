@@ -252,7 +252,11 @@ const LeaderBoard = () => {
                                 {flag ? "----" : item?.totalTrades}
                               </td>
                               <td className=" text-base font-medium py-4">
-                                {flag ? "----" : `${item?.totalTradeAmount}`}
+                                {flag
+                                  ? "----"
+                                  : `${Number(item?.totalTradeAmount).toFixed(
+                                      5
+                                    )}`}
                               </td>
                               <td className=" text-base font-medium py-4">
                                 {flag

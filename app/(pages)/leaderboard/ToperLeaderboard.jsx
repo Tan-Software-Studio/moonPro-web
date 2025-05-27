@@ -66,7 +66,7 @@ const ToperLeaderboard = ({
               {"amount"}
             </h4>
             <h3 className="text-[#F6F6F6] md:font-semibold lg:font-bold text-xs md:text-sm lg:text-base">
-              {flag ? "----" : `${Number(value).toFixed(2)}`}
+              {flag ? "----" : `${Number(value).toFixed(5)}`}
             </h3>
           </div>
           <div>
