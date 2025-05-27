@@ -15,6 +15,7 @@ const ToperLeaderboard = ({
   boxStyle,
   upperSideCss,
   flag,
+  solanaLivePrice
 }) => {
   const { t, ready } = useTranslation();
   const leaderboardPage = t("leaderboard");
@@ -68,10 +69,18 @@ const ToperLeaderboard = ({
           </div>
           <div>
             <h4 className="text-[#A8A8A8] text-[10px] md:text-xs">
-              {leaderboardPage?.stage?.value}
+              {"amount"}
             </h4>
             <h3 className="text-[#F6F6F6] md:font-semibold lg:font-bold text-xs md:text-sm lg:text-base">
               {flag ? "----" : `${Number(value).toFixed(2)}`}
+            </h3>
+          </div>
+          <div>
+            <h4 className="text-[#A8A8A8] text-[10px] md:text-xs">
+              {leaderboardPage?.stage?.value}
+            </h4>
+            <h3 className="text-[#F6F6F6] md:font-semibold lg:font-bold text-xs md:text-sm lg:text-base">
+              {flag ? "----" : `$${(Number(value) * solanaLivePrice).toFixed(2)}`}
             </h3>
           </div>
         </div>

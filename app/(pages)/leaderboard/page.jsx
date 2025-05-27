@@ -13,20 +13,25 @@ import {
 } from "@/app/Images";
 import ToperLeaderboard from "./ToperLeaderboard";
 import axios from "axios";
-import toast from "react-hot-toast"; 
+import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
-const LeaderBoard = () => { 
+const LeaderBoard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [flag, setFlag] = useState(false);
   const { t } = useTranslation();
   const leaderboardPage = t("leaderboard");
+  const solanaLivePrice = useSelector(
+    (state) => state?.AllStatesData?.solanaLivePrice || 0
+  ); 
   const tableHeader = [
     { id: 1, title: "#" },
-    { id: 3, title: "email" },
-    { id: 4, title: leaderboardPage?.table?.trading?.totaltrads },
+    { id: 2, title: "email" },
+    { id: 3, title: leaderboardPage?.table?.trading?.totaltrads },
+    { id: 4, title: "amount" },
     { id: 5, title: leaderboardPage?.table?.trading?.value },
     { id: 6, title: leaderboardPage?.table?.trading?.referralid },
   ];
@@ -47,7 +52,7 @@ const LeaderBoard = () => {
       infoTipString: leaderboardPage?.mainHeader?.referralpointstooltip,
     },
   ];
- 
+
 
   const clipPathTop1Style = {
     clipPath: "polygon(10% 0%, 90% 0%, 100% 100%, 0 100%)",
@@ -63,7 +68,6 @@ const LeaderBoard = () => {
       method: "get",
     })
       .then((res) => {
-        console.log("🚀 ~ .then ~ res:", res)
         setFlag(false);
         setLeaderboardData(res?.data?.data?.leaderBoardData);
 
@@ -168,6 +172,7 @@ const LeaderBoard = () => {
                   clipPathStyle={clipPathTopStyle}
                   boxStyle={"md:w-[300px] lg:w-[380px] xl:w-[420px]"}
                   flag={flag}
+                  solanaLivePrice={solanaLivePrice}
                 />
 
                 <ToperLeaderboard
@@ -183,6 +188,7 @@ const LeaderBoard = () => {
                   clipPathStyle={clipPathTop1Style}
                   boxStyle={"md:w-[220px] lg:w-[300px] xl:w-[340px]"}
                   flag={flag}
+                  solanaLivePrice={solanaLivePrice}
                 />
 
                 <ToperLeaderboard
@@ -198,11 +204,12 @@ const LeaderBoard = () => {
                   clipPathStyle={clipPathTopStyle}
                   boxStyle={"md:w-[300px] lg:w-[380px] xl:w-[420px]"}
                   flag={flag}
+                  solanaLivePrice={solanaLivePrice}
                 />
               </div>
 
               {/* table data */}
-              <div className=" rounded-3xl mt-28"> 
+              <div className=" rounded-3xl mt-28">
 
                 <div className="w-full h-[50vh]">
                   <div className="overflow-auto h-full">
@@ -248,6 +255,9 @@ const LeaderBoard = () => {
                               </td>
                               <td className=" text-base font-medium py-4">
                                 {flag ? "----" : `${item?.totalTradeAmount}`}
+                              </td>
+                              <td className=" text-base font-medium py-4">
+                                {flag ? "----" : `$${(Number(item?.totalTradeAmount) * solanaLivePrice)}`}
                               </td>
                               <td className=" text-base font-medium py-4">
                                 {flag ? "----" : item?.referralId}

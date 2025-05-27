@@ -34,7 +34,6 @@ const Tradingview = () => {
   const tokenaddress = searchParams.get("tokenaddress");
   const tokenSymbol = searchParams.get("symbol");
   let pairAddress = searchParams?.get("pair") || null;
-  const pathname = usePathname();
   const containerRef = useRef(null);
   const tvChartRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
