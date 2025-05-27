@@ -21,6 +21,7 @@ const ReferralPage = () => {
   const [copied2, setCopied2] = useState(false);
   const [copied3, setCopied3] = useState(false);
   const username = "wavepro123";
+  const progress = 100;
 
 
   const handleCopy = () => {
@@ -58,73 +59,65 @@ const ReferralPage = () => {
     <div className=" text-white p-6 rounded-2xl space-y-6 overflow-y-auto h-[90vh]">
 
       {/* User Header */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-0">
-        {/* Left Section (Image + Info) */}
-        <div className="flex flex-col items-center sm:flex-row sm:items-center sm:gap-4">
-          {/* Upload Box */}
-          <div
-            className={`w-20 h-20 rounded-md bg-yellow-500 relative cursor-pointer overflow-hidden transition duration-200 ${hovered && !imageURL ? "bg-yellow-400" : ""
-              }`}
-            onClick={handleBoxClick}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-          >
-            {imageURL && (
-              <img
-                src={imageURL}
-                alt="Uploaded"
-                className="w-full h-full object-cover"
-              />
-            )}
-
-            {/* Show upload icon on hover */}
-            {hovered && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white">
-                <LuUpload size={24} />
-              </div>
-            )}
-
-            {/* Hidden File Input */}
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleImageUpload}
-              className="hidden"
-              accept="image/*"
-            />
-          </div>
-
-          {/* User Info */}
-          <div className="mt-3 sm:mt-0 flex gap-4 items-center sm:items-start text-center sm:text-left">
-            <div
-              onClick={handleCopy3}
-              className="font-semibold text-xl hover:text-blue-400 cursor-pointer relative flex items-center gap-1"
-            >
-              {username}
-
+      <div className="flex md:flex-row flex-col items-center md:items-start gap-4 w-full">
+        {/* Image */}
+        <div
+          className={`w-20 h-20 min-w-[3.5rem] rounded-md bg-yellow-500 overflow-hidden cursor-pointer relative`}
+          onClick={handleBoxClick}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+        >
+          {imageURL && (
+            <img src={imageURL} alt="Uploaded" className="w-full h-full object-cover" />
+          )}
+          {hovered && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white">
+              <LuUpload size={20} />
             </div>
-            <div className="text-lg font-semibold text-gray-400">0 Points</div>
-          </div>
+          )}
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImageUpload}
+            className="hidden"
+            accept="image/*"
+          />
         </div>
 
-        {/* Right Section (Upload & Copy) */}
-        <div className="flex items-center justify-center sm:justify-end gap-3 text-sm text-gray-400">
-          {/* Upload icon — not clickable */}
-          <LuUpload className="mr-1 cursor-not-allowed text-[#4f628a]" />
+        {/* Right Content */}
+        <div className="flex-1 flex flex-col items-center md:items-start w-full">
+          {/* Top row: username, points, icons */}
+          <div className="flex flex-col md:flex-row items-center md:items-center justify-center md:justify-between w-full gap-2 md:gap-0 mt-2">
+            <div className="flex gap-2 items-center">
+              <div
+                onClick={handleCopy3}
+                className="font-semibold hover:text-blue-400 cursor-pointer"
+              >
+                {username}
+              </div>
+              <div className="text-sm font-medium text-gray-400">0 Points</div>
+            </div>
 
-          {/* Copy section */}
-          <div className="flex items-center gap-1 cursor-pointer" onClick={handleCopy}>
-            {copied ? <TbCopyCheck className="text-green-600" /> : <LuCopyPlus />}
-            <span>{username}</span>
+            <div className="flex items-center gap-2 text-sm text-gray-400">
+              <LuUpload className="cursor-not-allowed text-[#4f628a]" />
+              <div className="flex items-center gap-1 cursor-pointer" onClick={handleCopy}>
+                {copied ? <TbCopyCheck className="text-green-600" /> : <LuCopyPlus />}
+                <span>{username}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="mt-4 w-full h-2 bg-gray-700 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-blue-500 transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            ></div>
           </div>
         </div>
       </div>
 
 
-      {/* Progress Bar */}
-      <div className="relative w-full h-1.5 bg-[#1c1c24] rounded">
-        <div className="absolute h-2 rounded bg-blue-500" style={{ width: "100%" }}></div>
-      </div>
       <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:items-center text-xs text-gray-400">
         {/* Left side: Level Info */}
         <div className="flex items-start gap-1 sm:items-center flex-wrap">
