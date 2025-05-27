@@ -23,20 +23,26 @@ let isTrendingSocketOn = false;
 export async function subscribeToWalletTracker() {
   try {
     const token = localStorage.getItem("token");
-    if (!token) return;
-    const wallets = await axios({
-      method: "get",
-      url: `${BASE_URL_MOON}wallettracker/walletTracking`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    let walletsToTrack = [];
-    await wallets?.data?.data?.wallets?.map((item) => {
-      if (item?.alert == true) {
-        walletsToTrack.push(item?.walletAddress?.toLowerCase());
+    let wallets = null;
+    try {
+      if (token) {
+        wallets = await axios({
+          method: "get",
+          url: `${BASE_URL_MOON}wallettracker/walletTracking`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
       }
-    });
+    } catch (error) {}
+    let walletsToTrack = [];
+    if (wallets?.data?.data?.wallets?.length > 0) {
+      await wallets?.data?.data?.wallets?.map((item) => {
+        if (item?.alert == true) {
+          walletsToTrack.push(item?.walletAddress?.toLowerCase());
+        }
+      });
+    }
     if (isSocketOn) {
       console.log("Trades websocket is already connected.");
       return;
@@ -55,26 +61,27 @@ export async function subscribeToWalletTracker() {
           item?.Trade?.Currency?.MintAddress ==
           "So11111111111111111111111111111111111111112"
       );
-      console.log("🚀 ~ awaitsocket.on ~ solPrice?.Trade?.PriceInUSD:", solPrice?.Trade?.PriceInUSD)
       if (solPrice?.Trade?.PriceInUSD) {
         store.dispatch(setSolanaLivePrice(solPrice?.Trade?.PriceInUSD));
       }
-      const filteredData = await data?.filter((item) =>
-        walletsToTrack.includes(item?.Transaction?.Signer?.toLowerCase())
-      );
-      if (filteredData?.length > 0) {
-        // console.log("🚀 ~ socket.on ~ filteredData:", filteredData);
-        let finalFilteredData = [];
-        for (const item of filteredData) {
-          const walletName = await wallets?.data?.data?.wallets?.find(
-            (item1) => item?.Transaction?.Signer === item1?.walletAddress
-          );
-          finalFilteredData.push({
-            ...item,
-            tag: walletName?.walletName,
-          });
+      if (walletsToTrack?.length > 0) {
+        const filteredData = await data?.filter((item) =>
+          walletsToTrack.includes(item?.Transaction?.Signer?.toLowerCase())
+        );
+        if (filteredData?.length > 0) {
+          // console.log("🚀 ~ socket.on ~ filteredData:", filteredData);
+          let finalFilteredData = [];
+          for (const item of filteredData) {
+            const walletName = await wallets?.data?.data?.wallets?.find(
+              (item1) => item?.Transaction?.Signer === item1?.walletAddress
+            );
+            finalFilteredData.push({
+              ...item,
+              tag: walletName?.walletName,
+            });
+          }
+          store.dispatch(addNewTransactionForWalletTracking(finalFilteredData));
         }
-        store.dispatch(addNewTransactionForWalletTracking(finalFilteredData));
       }
     });
     socket.on("disconnect", async () => {
