@@ -15,7 +15,7 @@ const ToperLeaderboard = ({
   boxStyle,
   upperSideCss,
   flag,
-  solanaLivePrice
+  solanaLivePrice,
 }) => {
   const { t, ready } = useTranslation();
   const leaderboardPage = t("leaderboard");
@@ -47,13 +47,7 @@ const ToperLeaderboard = ({
           style={clipPathStyle}
         >
           <p className="text-[#6E6E6E] font-normal text-xs md:text-sm lg:text-base">
-            {`${flag
-              ? "----"
-              : `${email?.slice(
-                0,
-                3
-              )}...${email?.slice(-4)}`
-              }`}
+            {`${flag ? "----" : `${email?.slice(0, 3)}...${email?.slice(-4)}`}`}
           </p>
         </div>
         <div
@@ -80,7 +74,9 @@ const ToperLeaderboard = ({
               {leaderboardPage?.stage?.value}
             </h4>
             <h3 className="text-[#F6F6F6] md:font-semibold lg:font-bold text-xs md:text-sm lg:text-base">
-              {flag ? "----" : `$${(Number(value) * solanaLivePrice).toFixed(2)}`}
+              {flag
+                ? "----"
+                : `$${(Number(value) * (solanaLivePrice || 0)).toFixed(2)}`}
             </h3>
           </div>
         </div>

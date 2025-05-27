@@ -25,8 +25,8 @@ const LeaderBoard = () => {
   const { t } = useTranslation();
   const leaderboardPage = t("leaderboard");
   const solanaLivePrice = useSelector(
-    (state) => state?.AllStatesData?.solanaLivePrice || 0
-  ); 
+    (state) => state?.AllStatesData?.solanaLivePrice
+  );
   const tableHeader = [
     { id: 1, title: "#" },
     { id: 2, title: "email" },
@@ -53,7 +53,6 @@ const LeaderBoard = () => {
     },
   ];
 
-
   const clipPathTop1Style = {
     clipPath: "polygon(10% 0%, 90% 0%, 100% 100%, 0 100%)",
   };
@@ -70,7 +69,6 @@ const LeaderBoard = () => {
       .then((res) => {
         setFlag(false);
         setLeaderboardData(res?.data?.data?.leaderBoardData);
-
       })
       .catch((err) => {
         setFlag(false);
@@ -210,7 +208,6 @@ const LeaderBoard = () => {
 
               {/* table data */}
               <div className=" rounded-3xl mt-28">
-
                 <div className="w-full h-[50vh]">
                   <div className="overflow-auto h-full">
                     <table
@@ -242,13 +239,14 @@ const LeaderBoard = () => {
                                 {i + 4}
                               </td>
                               <td className=" text-base font-medium py-4 ">
-                                {`${flag
-                                  ? "----"
-                                  : `${item?.email?.slice(
-                                    0,
-                                    3
-                                  )}...${item?.email?.slice(-4)}`
-                                  }`}
+                                {`${
+                                  flag
+                                    ? "----"
+                                    : `${item?.email?.slice(
+                                        0,
+                                        3
+                                      )}...${item?.email?.slice(-4)}`
+                                }`}
                               </td>
                               <td className=" text-base font-medium py-4 ">
                                 {flag ? "----" : item?.totalTrades}
@@ -257,7 +255,12 @@ const LeaderBoard = () => {
                                 {flag ? "----" : `${item?.totalTradeAmount}`}
                               </td>
                               <td className=" text-base font-medium py-4">
-                                {flag ? "----" : `$${(Number(item?.totalTradeAmount) * solanaLivePrice).toFixed(2)}`}
+                                {flag
+                                  ? "----"
+                                  : `$${(
+                                      Number(item?.totalTradeAmount) *
+                                      (solanaLivePrice || 0)
+                                    ).toFixed(2)}`}
                               </td>
                               <td className=" text-base font-medium py-4">
                                 {flag ? "----" : item?.referralId}
