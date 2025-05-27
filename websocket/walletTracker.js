@@ -104,22 +104,22 @@ export async function subscribeToTrendingTokens() {
     // trending tokens live data
     await socket.on("trendingtokens", async (data) => {
       switch (data?.time) {
-        case "1+min":
+        case "1+m":
           store.dispatch(
             updateTrendingData({ time: "1m", data: data?.tokens })
           );
           break;
-        case "5+min":
+        case "5+m":
           store.dispatch(
             updateTrendingData({ time: "15m", data: data?.tokens })
           );
           break;
-        case "30+min":
+        case "30+m":
           store.dispatch(
             updateTrendingData({ time: "30m", data: data?.tokens })
           );
           break;
-        case "1+hr":
+        case "1+h":
           store.dispatch(
             updateTrendingData({ time: "1h", data: data?.tokens })
           );

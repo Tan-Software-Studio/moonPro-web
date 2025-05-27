@@ -14,10 +14,9 @@ const RightModalOpenSetting = ({
   ordersettingLang,
   isOpen,
   onClose,
-  tredingPage,
+  tredingPage,presist,setPresist
 }) => {
   const dispatch = useDispatch();
-  const [presist, setPresist] = useState("P1");
   const [activeTab, setActiveTab] = useState("buy");
   const [saveLoaderFlag, setSaveLoaderFlag] = useState(false);
   const [preSetData, setPreSetData] = useState({
