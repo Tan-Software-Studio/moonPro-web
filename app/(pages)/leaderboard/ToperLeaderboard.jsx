@@ -76,7 +76,7 @@ const ToperLeaderboard = ({
             <h3 className="text-[#F6F6F6] md:font-semibold lg:font-bold text-xs md:text-sm lg:text-base">
               {flag
                 ? "----"
-                : `$${(Number(value) * (solanaLivePrice || 0)).toFixed(2)}`}
+                : `$${(Number(value) * solanaLivePrice).toFixed(2)}`}
             </h3>
           </div>
         </div>
