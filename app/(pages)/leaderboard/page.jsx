@@ -92,9 +92,9 @@ const LeaderBoard = () => {
               className={`flex justify-start items-start xl:items-center pt-4 w-full`}
             >
               <div className="flex items-center gap-2">
-                <Image src={LeaderboardIcon} alt="" />
+                {/* <Image src={LeaderboardIcon} alt="" /> */}
                 <p
-                  className={`md:text-[28px] text-[14px] font-semibold text-white`}
+                  className={`md:text-[20px] text-[14px] font-semibold text-white`}
                 >
                   {leaderboardPage?.mainHeader?.title}
                 </p>

@@ -50,7 +50,7 @@ const ReferralPage = ({ referralData, referralId, solWalletAddress }) => {
                 alt="referral"
                 className="h-6 w-6 sm:h-8 sm:w-8"
               />
-              <span className="text-xl sm:text-[28px] font-bold">
+              <span className="text-gl sm:text-[28px] font-bold">
                 {referralPage?.mainHeader?.title}
               </span>
             </div>
