@@ -1,43 +1,88 @@
 /* eslint-disable @next/next/no-img-element */
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LuUpload } from "react-icons/lu";
-import { LuCopyPlus } from "react-icons/lu";
-import { FaUserFriends } from "react-icons/fa";
 import { MdOutlineKeyboardDoubleArrowUp } from "react-icons/md";
 import { FaGem } from "react-icons/fa6";
 import { FiUserPlus } from "react-icons/fi";
 import { FaRegStar } from "react-icons/fa";
 import { IoPieChartOutline } from "react-icons/io5";
 import { HiOutlineCurrencyDollar } from "react-icons/hi2";
-import { TbCopyCheck } from "react-icons/tb";
-
+import axios from "axios";
+import Image from "next/image";
+import { NoDataFish } from "@/app/Images";
+import { useSelector } from "react-redux";
+import { token } from "@/utils/tradingViewChartServices/constant";
+import toast from "react-hot-toast";
+import { decimalConvert } from "@/utils/basicFunctions";
+import RefPopup from "./RefPopup";
 
 const ReferralPage = () => {
+
+  const URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
 
   const fileInputRef = useRef(null);
   const [hovered, setHovered] = useState(false);
   const [imageURL, setImageURL] = useState(null);
-  const [copied, setCopied] = useState(false);
-  const [copied2, setCopied2] = useState(false);
   const [copied3, setCopied3] = useState(false);
-  const username = "wavepro123";
+  const [refData, setRefData] = useState([])
+  const [selectedTier, setSelectedTier] = useState(1);
+  const [showWithdrawPopup, setShowWithdrawPopup] = useState(false);
   const progress = 100;
 
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(username);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const shortenAddress = (address) => {
+    if (!address || address.length < 8) return address || "...";
+    return `${address.slice(0, 4)}...${address.slice(-4)}`;
   };
 
-  const handleCopy2 = () => {
-    navigator.clipboard.writeText(username);
-    setCopied2(true);
-    setTimeout(() => setCopied2(false), 2000);
+
+
+  const tierKey =
+    selectedTier === 1 ? "firstTier" :
+      selectedTier === 2 ? "secondTier" :
+        "thirdTier";
+
+  const tierData = refData?.referrals?.[tierKey] || [];
+
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return toast.error('Please Login')
+      }
+      const res = await axios.get(`${URL}user/get3TierRefferals`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+
+      const responce = res.data.data;
+      setRefData(responce)
+    } catch (e) {
+      console.log("🚀 ~ fetchData ~ error:", e);
+    }
   };
+
+  const handleWithdrawClick = () => {
+    const tokenInStorage = localStorage.getItem("token");
+    if (solWalletAddress && tokenInStorage) {
+      setShowWithdrawPopup(true);
+    } else {
+      toast.error("Please login");
+    }
+  };
+
+
+
+  useEffect(() => {
+    fetchData()
+  }, [solWalletAddress])
 
   const handleCopy3 = () => {
-    navigator.clipboard.writeText(username);
+    navigator.clipboard.writeText(solWalletAddress);
     setCopied3(true);
     setTimeout(() => setCopied3(false), 2000);
   };
@@ -93,18 +138,10 @@ const ReferralPage = () => {
                 onClick={handleCopy3}
                 className="font-semibold hover:text-blue-400 cursor-pointer"
               >
-                {username}
+                {shortenAddress(token ? solWalletAddress : "")}
               </div>
-              <div className="text-sm font-medium text-gray-400">0 Points</div>
             </div>
 
-            <div className="flex items-center gap-2 text-sm text-gray-400">
-              <LuUpload className="cursor-not-allowed text-[#4f628a]" />
-              <div className="flex items-center gap-1 cursor-pointer" onClick={handleCopy}>
-                {copied ? <TbCopyCheck className="text-green-600" /> : <LuCopyPlus />}
-                <span>{username}</span>
-              </div>
-            </div>
           </div>
 
           {/* Progress Bar */}
@@ -149,13 +186,20 @@ const ReferralPage = () => {
             <div className="flex items-center gap-2">
               <HiOutlineCurrencyDollar className="text-blue-500" size={20} />SOL Earned
             </div>
-            <button className="lg:py-2 md:py-0 py-2 lg:px-3 md:px-0 px-3 bg-blue-500 rounded-md hover:bg-blue-700">Claim SOL</button>
+            <button
+              onClick={handleWithdrawClick}
+              className="lg:py-2 md:py-0 py-2 lg:px-3 md:px-0 px-3 bg-blue-500 rounded-md hover:bg-blue-700"
+            >
+              Claim SOL
+            </button>
+
           </div>
           <div className="text-2xl font-thin pt-2">
-            0.0<sub>4</sub>66 SOL
+            {refData?.totalEarningInSol > 0 ? decimalConvert(refData?.totalEarningInSol) : 0} SOL
           </div>
 
-          <div className="text-sm text-gray-500">0 SOL claimed</div>
+          <div className="text-sm text-gray-500">{refData?.user?.totalClaimed} SOL claimed</div>
+          <div className="text-sm text-gray-500">Available to claim {refData?.totalEarningInSol - refData?.user?.totalClaimed}</div>
         </div>
 
         {/* Points Breakdown */}
@@ -173,7 +217,7 @@ const ReferralPage = () => {
       </div>
 
       {/* Referral Table */}
-      <div className="bg-[#1c1c2493] rounded-xl border border-[#2c2c34]">
+      <div className="bg-[#191919] rounded-xl border border-[#2c2c34]">
         <div className="text-white text-sm">
           {/* Header */}
           <div className="flex justify-between border-b border-[#2c2c34] px-4 py-2 overflow-x-auto whitespace-nowrap">
@@ -181,24 +225,16 @@ const ReferralPage = () => {
               <FiUserPlus className="text-blue-500" size={18} /> Referrals
             </div>
 
-            <div className="flex items-center gap-3 text-sm text-gray-400 flex-shrink-0">
-              <span className="text-blue-400 whitespace-nowrap">30%+ Referral Rate</span>
-
-              <span
-                className="flex items-center gap-1 cursor-pointer whitespace-nowrap"
-                onClick={handleCopy2}
+            <div className="flex items-center gap-3 text-sm text-gray-400 flex-shrink-0 ">
+              <select
+                value={selectedTier}
+                onChange={(e) => setSelectedTier(Number(e.target.value))}
+                className="bg-gray-800 text-white px-3 py-2 rounded"
               >
-                {copied2 ? (
-                  <TbCopyCheck className="text-green-600" />
-                ) : (
-                  <LuCopyPlus />
-                )}
-                <span>{username}</span>
-              </span>
-
-              <span className="flex items-center gap-2 whitespace-nowrap">
-                <FaUserFriends /> 1
-              </span>
+                <option value={1}>1 Tier</option>
+                <option value={2}>2 Tier</option>
+                <option value={3}>3 Tier</option>
+              </select>
             </div>
           </div>
 
@@ -208,27 +244,47 @@ const ReferralPage = () => {
             <table className="w-full text-left text-sm border-collapse">
               <thead className="text-gray-500 border-b border-[#2c2c34]">
                 <tr>
-                  <th className="px-4 py-2 text-nowrap">Email/Wallet</th>
-                  <th className="px-4 py-2 text-nowrap">Date Joined</th>
-                  <th className="px-4 py-2 text-nowrap">Type</th>
-                  <th className="px-4 py-2 text-nowrap">Points Earned</th>
-                  <th className="px-4 py-2 text-nowrap">SOL Earned</th>
+                  <th className="px-4 py-2 whitespace-nowrap">Email/Wallet</th>
+                  <th className="px-4 py-2 whitespace-nowrap">Date Joined</th>
+                  <th className="px-4 py-2 whitespace-nowrap">SOL Earned</th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="text-white border-b border-[#2c2c34]">
-                  <td className="px-4 py-2 text-nowrap">m********</td>
-                  <td className="px-4 py-2 text-nowrap">3mo</td>
-                  <td className="px-4 py-2 text-nowrap">Direct</td>
-                  <td className="px-4 py-2 text-nowrap">0.2202</td>
-                  <td className="px-4 py-2 text-nowrap">0.0466 SOL</td>
-                </tr>
+                {tierData.length === 0 ? (
+                  <tr>
+                    <td colSpan={3} className="text-center text-gray-400 py-4">
+                      <div className="flex flex-col w-full items-center justify-center mt-5">
+                        <div className="text-4xl mb-2">
+                          <Image
+                            src={NoDataFish}
+                            alt="No Data Available"
+                            width={200}
+                            height={100}
+                            className="rounded-lg"
+                          />
+                        </div>
+                        <h1 className="text-[#89888e] text-lg">No Referrals found.</h1>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  tierData.map((row, idx) => (
+                    <tr key={row._id || idx} className="text-white border-b border-[#2c2c34]">
+                      <td className="px-4 py-2 whitespace-nowrap">{row.email}</td>
+                      <td className="px-4 py-2 whitespace-nowrap">{new Date(row.referralAddedAt).toLocaleDateString()}</td>
+                      <td className="px-4 py-2 whitespace-nowrap">{row.feeCollected}</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
+
             </table>
           </div>
         </div>
       </div>
-
+      {showWithdrawPopup && (
+        <RefPopup Available={refData?.totalEarningInSol - refData?.user?.totalClaimed} address={solWalletAddress} onClose={() => setShowWithdrawPopup(false)} />
+      )}
     </div>
   );
 };
