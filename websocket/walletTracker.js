@@ -55,6 +55,7 @@ export async function subscribeToWalletTracker() {
           item?.Trade?.Currency?.MintAddress ==
           "So11111111111111111111111111111111111111112"
       );
+      console.log("🚀 ~ awaitsocket.on ~ solPrice?.Trade?.PriceInUSD:", solPrice?.Trade?.PriceInUSD)
       if (solPrice?.Trade?.PriceInUSD) {
         store.dispatch(setSolanaLivePrice(solPrice?.Trade?.PriceInUSD));
       }
