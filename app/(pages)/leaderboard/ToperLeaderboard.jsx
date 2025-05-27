@@ -51,8 +51,9 @@ const ToperLeaderboard = ({
           </p>
         </div>
         <div
-          className={`flex gap-5 boxGradient ${boxGradientClassName} pt-5 text-center`}
+          className={`flex sm:flex-nowrap flex-wrap gap-5 boxGradient ${boxGradientClassName} pt-5 text-center`}
         >
+
           <div>
             <h4 className="text-[#A8A8A8] text-[10px] md:text-xs">
               {leaderboardPage?.stage?.totaltrades}
