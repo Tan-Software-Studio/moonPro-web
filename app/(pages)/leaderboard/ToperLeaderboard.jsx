@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 const ToperLeaderboard = ({
-  walletAddress,
+  email,
   TotalTrades,
   value,
   boxGradientClassName,
@@ -46,14 +46,13 @@ const ToperLeaderboard = ({
           style={clipPathStyle}
         >
           <p className="text-[#6E6E6E] font-normal text-xs md:text-sm lg:text-base">
-            <a
-              href={`https://solscan.io/account/${walletAddress}`}
-              target="_blank"
-            >{`${
-              flag
-                ? "----"
-                : `${walletAddress?.slice(0, 3)}...${walletAddress?.slice(-4)}`
-            }`}</a>
+            {`${flag
+              ? "----"
+              : `${email?.slice(
+                0,
+                3
+              )}...${email?.slice(-4)}`
+              }`}
           </p>
         </div>
         <div
