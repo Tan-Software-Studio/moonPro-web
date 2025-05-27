@@ -27,6 +27,7 @@ const LeaderBoard = () => {
   const solanaLivePrice = useSelector(
     (state) => state?.AllStatesData?.solanaLivePrice
   );
+  console.log("🚀 ~ LeaderBoard ~ solanaLivePrice:", solanaLivePrice);
   const tableHeader = [
     { id: 1, title: "#" },
     { id: 2, title: "email" },
