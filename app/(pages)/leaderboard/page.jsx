@@ -86,7 +86,7 @@ const LeaderBoard = () => {
     <>
       {/* container mx-auto px-4 */}
       <div className="font-poppins">
-        <div className={`container mx-auto px-4 mb-4 h-[93vh] overflow-auto`}>
+        <div className={`container mx-auto sm:px-4 px-2 mb-4 h-[93vh] overflow-auto`}>
           <div className={`mx-[-1px] md:mx-0`}>
             <div
               className={`flex justify-start items-start xl:items-center pt-4 w-full`}
@@ -218,7 +218,7 @@ const LeaderBoard = () => {
                           {tableHeader.map((header, i) => (
                             <th
                               key={i + 1}
-                              className={` text-base font-medium py-5 !text-start`}
+                              className={` text-base whitespace-nowrap font-medium py-5 px-4 !text-start`}
                             >
                               <span className={`text-[#A8A8A8]`}>
                                 {header.title}
@@ -227,46 +227,45 @@ const LeaderBoard = () => {
                           ))}
                         </tr>
                       </thead>
-                      <tbody className={`mt-5`}>
+                      <tbody>
                         {leaderboardData
                           ?.slice(3, leaderboardData.length)
                           .map((item, i) => (
                             <tr
                               key={i + 1}
-                              className={`py-2 text-white border-b border-[#404040]`}
+                              className={`py-2 text-white whitespace-nowrap border-b border-[#404040]`}
                             >
-                              <td className=" text-lg font-medium py-4 ">
+                              <td className=" text-lg font-medium py-4 px-4">
                                 {i + 4}
                               </td>
-                              <td className=" text-base font-medium py-4 ">
-                                {`${
-                                  flag
+                              <td className=" text-base font-medium py-4 px-4">
+                                {`${flag
                                     ? "----"
                                     : `${item?.email?.slice(
-                                        0,
-                                        3
-                                      )}...${item?.email?.slice(-4)}`
-                                }`}
+                                      0,
+                                      3
+                                    )}...${item?.email?.slice(-4)}`
+                                  }`}
                               </td>
-                              <td className=" text-base font-medium py-4 ">
+                              <td className=" text-base font-medium py-4 px-4">
                                 {flag ? "----" : item?.totalTrades}
                               </td>
-                              <td className=" text-base font-medium py-4">
+                              <td className=" text-base font-medium py-4 px-4">
                                 {flag
                                   ? "----"
                                   : `${Number(item?.totalTradeAmount).toFixed(
-                                      5
-                                    )}`}
+                                    5
+                                  )}`}
                               </td>
-                              <td className=" text-base font-medium py-4">
+                              <td className=" text-base font-medium py-4 px-4">
                                 {flag
                                   ? "----"
                                   : `$${(
-                                      Number(item?.totalTradeAmount) *
-                                      solanaLivePrice
-                                    ).toFixed(2)}`}
+                                    Number(item?.totalTradeAmount) *
+                                    solanaLivePrice
+                                  ).toFixed(2)}`}
                               </td>
-                              <td className=" text-base font-medium py-4">
+                              <td className=" text-base font-medium py-4 px-4">
                                 {flag ? "----" : item?.referralId}
                               </td>
                             </tr>
