@@ -23,20 +23,26 @@ let isTrendingSocketOn = false;
 export async function subscribeToWalletTracker() {
   try {
     const token = localStorage.getItem("token");
-    if (!token) return;
-    const wallets = await axios({
-      method: "get",
-      url: `${BASE_URL_MOON}wallettracker/walletTracking`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    let walletsToTrack = [];
-    await wallets?.data?.data?.wallets?.map((item) => {
-      if (item?.alert == true) {
-        walletsToTrack.push(item?.walletAddress?.toLowerCase());
+    let wallets = null;
+    try {
+      if (token) {
+        wallets = await axios({
+          method: "get",
+          url: `${BASE_URL_MOON}wallettracker/walletTracking`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
       }
-    });
+    } catch (error) {}
+    let walletsToTrack = [];
+    if (wallets?.data?.data?.wallets?.length > 0) {
+      await wallets?.data?.data?.wallets?.map((item) => {
+        if (item?.alert == true) {
+          walletsToTrack.push(item?.walletAddress?.toLowerCase());
+        }
+      });
+    }
     if (isSocketOn) {
       console.log("Trades websocket is already connected.");
       return;
@@ -58,22 +64,24 @@ export async function subscribeToWalletTracker() {
       if (solPrice?.Trade?.PriceInUSD) {
         store.dispatch(setSolanaLivePrice(solPrice?.Trade?.PriceInUSD));
       }
-      const filteredData = await data?.filter((item) =>
-        walletsToTrack.includes(item?.Transaction?.Signer?.toLowerCase())
-      );
-      if (filteredData?.length > 0) {
-        // console.log("🚀 ~ socket.on ~ filteredData:", filteredData);
-        let finalFilteredData = [];
-        for (const item of filteredData) {
-          const walletName = await wallets?.data?.data?.wallets?.find(
-            (item1) => item?.Transaction?.Signer === item1?.walletAddress
-          );
-          finalFilteredData.push({
-            ...item,
-            tag: walletName?.walletName,
-          });
+      if (walletsToTrack?.length > 0) {
+        const filteredData = await data?.filter((item) =>
+          walletsToTrack.includes(item?.Transaction?.Signer?.toLowerCase())
+        );
+        if (filteredData?.length > 0) {
+          // console.log("🚀 ~ socket.on ~ filteredData:", filteredData);
+          let finalFilteredData = [];
+          for (const item of filteredData) {
+            const walletName = await wallets?.data?.data?.wallets?.find(
+              (item1) => item?.Transaction?.Signer === item1?.walletAddress
+            );
+            finalFilteredData.push({
+              ...item,
+              tag: walletName?.walletName,
+            });
+          }
+          store.dispatch(addNewTransactionForWalletTracking(finalFilteredData));
         }
-        store.dispatch(addNewTransactionForWalletTracking(finalFilteredData));
       }
     });
     socket.on("disconnect", async () => {
@@ -104,22 +112,22 @@ export async function subscribeToTrendingTokens() {
     // trending tokens live data
     await socket.on("trendingtokens", async (data) => {
       switch (data?.time) {
-        case "1+min":
+        case "1+m":
           store.dispatch(
             updateTrendingData({ time: "1m", data: data?.tokens })
           );
           break;
-        case "5+min":
+        case "5+m":
           store.dispatch(
             updateTrendingData({ time: "15m", data: data?.tokens })
           );
           break;
-        case "30+min":
+        case "30+m":
           store.dispatch(
             updateTrendingData({ time: "30m", data: data?.tokens })
           );
           break;
-        case "1+hr":
+        case "1+h":
           store.dispatch(
             updateTrendingData({ time: "1h", data: data?.tokens })
           );

@@ -1,0 +1,97 @@
+'use client';
+import { solana } from '@/app/Images';
+import Image from 'next/image';
+import React, { useState, useEffect } from 'react';
+import { FaTimes } from 'react-icons/fa';
+
+function RefPopup({ Available, address, onClose }) {
+    const [walletAddress, setWalletAddress] = useState('');
+    const [claimAmount, setClaimAmount] = useState(Available);
+
+
+    useEffect(() => {
+        setWalletAddress(address || '');
+    }, [address]);
+
+    const handleAddressChange = (e) => {
+        setWalletAddress(e.target.value);
+    };
+    const handleAmountChange = (e) => {
+        setClaimAmount(e.target.value);
+    };
+
+
+    return (
+        <div className="fixed inset-0 bg-[#00000093] bg-opacity-60 flex items-center justify-center z-50">
+            <div className="bg-[#191919] text-white rounded-md w-[90%] max-w-md p-5 relative space-y-4 shadow-xl">
+                <button
+                    onClick={onClose}
+                    className="absolute top-3 right-4 text-gray-400 hover:text-white"
+                >
+                    <FaTimes size={18} />
+                </button>
+
+                <h2 className="text-lg font-semibold">Claim</h2>
+
+                {/* Coin Selector & Balance */}
+                <div className=" items-center w-fit bg-[#2c2c34] px-3 py-2 rounded-md">
+                    <div className="text-sm text-gray-400 w-fit">Balance: {Available}</div>
+                </div>
+
+                {/* Wallet Address */}
+                <input
+                    value={walletAddress}
+                    onChange={handleAddressChange}
+                    type="text"
+                    placeholder="Address of destination wallet"
+                    className="w-full bg-[#2c2c34] p-3 mt-2 rounded-md text-white placeholder-gray-500 outline-none"
+                />
+
+                {/* Claim Amount */}
+                <div className="bg-[#2c2c34] p-3 rounded-md space-y-1">
+                    <div className="flex justify-between text-sm text-gray-400">
+                        <label>Claim Amount</label>
+                        <button
+                            className="text-blue-500"
+                            type="button"
+                            onClick={() => setClaimAmount(Available?.toString())}
+                        >
+                            Max
+                        </button>
+
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <input
+                            type="number"
+                            value={claimAmount}
+                            onChange={handleAmountChange}
+                            placeholder={Available?.toString() || "0.0"}
+                            className="bg-transparent w-full text-white placeholder-gray-500 outline-none"
+                        />
+
+                        <div className="flex items-center gap-1 text-sm text-gray-300">
+                            <Image src={solana} className='w-5 h-5' alt="solana" />
+                            <span>SOL</span>
+                        </div>
+                    </div>
+                    <div className="text-xs text-gray-500 text-right">$0.02</div>
+                </div>
+
+                {/* Action Button */}
+                <button
+                    disabled={Available <= 0}
+                    className={`w-full py-2 rounded-full text-white font-medium transition 
+        ${Available <= 0
+                            ? 'bg-gray-600 cursor-not-allowed'
+                            : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
+                        }`}
+                >
+                    {walletAddress ? 'Claim' : 'Missing Destination Address'}
+                </button>
+
+            </div>
+        </div>
+    );
+}
+
+export default RefPopup;

@@ -14,22 +14,24 @@ import {
 import ToperLeaderboard from "./ToperLeaderboard";
 import axios from "axios";
 import toast from "react-hot-toast";
-import Infotip from "@/components/common/Tooltip/Infotip.jsx";
-import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
 const LeaderBoard = () => {
-  const [activeButton, setActiveButton] = useState("Trading");
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [flag, setFlag] = useState(false);
   const { t } = useTranslation();
   const leaderboardPage = t("leaderboard");
+  const solanaLivePrice = useSelector(
+    (state) => state?.AllStatesData?.solanaLivePrice
+  );
   const tableHeader = [
     { id: 1, title: "#" },
-    { id: 3, title: leaderboardPage?.table?.trading?.wallet },
-    { id: 4, title: leaderboardPage?.table?.trading?.totaltrads },
+    { id: 2, title: "email" },
+    { id: 3, title: leaderboardPage?.table?.trading?.totaltrads },
+    { id: 4, title: "amount" },
     { id: 5, title: leaderboardPage?.table?.trading?.value },
     { id: 6, title: leaderboardPage?.table?.trading?.referralid },
   ];
@@ -50,10 +52,6 @@ const LeaderBoard = () => {
       infoTipString: leaderboardPage?.mainHeader?.referralpointstooltip,
     },
   ];
-
-  const handleButtonClick = (buttonName) => {
-    setActiveButton(buttonName);
-  };
 
   const clipPathTop1Style = {
     clipPath: "polygon(10% 0%, 90% 0%, 100% 100%, 0 100%)",
@@ -88,20 +86,20 @@ const LeaderBoard = () => {
     <>
       {/* container mx-auto px-4 */}
       <div className="font-poppins">
-        <div className={`container mx-auto px-4 mb-4 h-[93vh] overflow-auto`}>
+        <div className={`container mx-auto sm:px-4 px-2 mb-4 h-[93vh] overflow-auto`}>
           <div className={`mx-[-1px] md:mx-0`}>
             <div
-              className={`flex justify-between items-start xl:items-center pt-4 w-full`}
+              className={`flex justify-start items-start xl:items-center pt-4 w-full`}
             >
               <div className="flex items-center gap-2">
-                <Image src={LeaderboardIcon} alt="" />
+                {/* <Image src={LeaderboardIcon} alt="" /> */}
                 <p
-                  className={`md:text-[28px] text-[14px] font-semibold text-white`}
+                  className={`md:text-[20px] text-[14px] font-semibold text-white`}
                 >
                   {leaderboardPage?.mainHeader?.title}
                 </p>
               </div>
-              <div
+              {/* <div
                 className={`w-full lg:flex justify-end gap-4 text-end items-center`}
               >
                 <p
@@ -135,13 +133,13 @@ const LeaderBoard = () => {
                     );
                   })}
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
           <div className={`flex flex-col items-center justify-end w-full `}>
             {/* Weekly Leaderboard */}
-            <div
+            {/* <div
               className={`w-full my-7 xl:my-4 mx-auto flex flex-col items-end gap-2 text-center`}
             >
               <Tooltip body={"Total points of all users this week"}>
@@ -154,16 +152,16 @@ const LeaderBoard = () => {
               >
                 500,000 pts
               </p>
-            </div>
+            </div> */}
 
             <div className="w-full">
               {/* top 3 */}
               <div className="flex items-end justify-center">
                 <ToperLeaderboard
                   upperSideCss={" pr-[85px]"}
-                  walletAddress={leaderboardData[1]?._id}
-                  TotalTrades={leaderboardData[1]?.totalTransaction}
-                  value={leaderboardData[1]?.totalValueOfTrades}
+                  email={leaderboardData[1]?.email}
+                  TotalTrades={leaderboardData[1]?.totalTrades}
+                  value={leaderboardData[1]?.totalTradeAmount}
                   boxGradientClassName={"h-24 pr-[85px] justify-center"}
                   mainDivClass={" -mr-20 -z-10"}
                   clipPathDivClass={"pr-16 lg:pr-[85px] text-center"}
@@ -172,13 +170,14 @@ const LeaderBoard = () => {
                   clipPathStyle={clipPathTopStyle}
                   boxStyle={"md:w-[300px] lg:w-[380px] xl:w-[420px]"}
                   flag={flag}
+                  solanaLivePrice={solanaLivePrice}
                 />
 
                 <ToperLeaderboard
                   upperSideCss={""}
-                  walletAddress={leaderboardData[0]?._id}
-                  TotalTrades={leaderboardData[0]?.totalTransaction}
-                  value={leaderboardData[0]?.totalValueOfTrades}
+                  email={leaderboardData[0]?.email}
+                  TotalTrades={leaderboardData[0]?.totalTrades}
+                  value={leaderboardData[0]?.totalTradeAmount}
                   boxGradientClassName={"h-44 self-start justify-center "}
                   mainDivClass={""}
                   clipPathDivClass={"text-center"}
@@ -187,13 +186,14 @@ const LeaderBoard = () => {
                   clipPathStyle={clipPathTop1Style}
                   boxStyle={"md:w-[220px] lg:w-[300px] xl:w-[340px]"}
                   flag={flag}
+                  solanaLivePrice={solanaLivePrice}
                 />
 
                 <ToperLeaderboard
                   upperSideCss={"pl-[80px]"}
-                  walletAddress={leaderboardData[2]?._id}
-                  TotalTrades={leaderboardData[2]?.totalTransaction}
-                  value={leaderboardData[2]?.totalValueOfTrades}
+                  email={leaderboardData[2]?.email}
+                  TotalTrades={leaderboardData[2]?.totalTrades}
+                  value={leaderboardData[2]?.totalTradeAmount}
                   boxGradientClassName={"pl-[80px] justify-center"}
                   mainDivClass={" -ml-20 -z-10"}
                   clipPathDivClass={"pl-16 lg:pl-[80px] text-center"}
@@ -202,38 +202,12 @@ const LeaderBoard = () => {
                   clipPathStyle={clipPathTopStyle}
                   boxStyle={"md:w-[300px] lg:w-[380px] xl:w-[420px]"}
                   flag={flag}
+                  solanaLivePrice={solanaLivePrice}
                 />
               </div>
 
               {/* table data */}
               <div className=" rounded-3xl mt-28">
-                <div
-                  className={`my-9 flex items-center justify-center gap-[17px]`}
-                >
-                  <div className="flex  border border-[#404040] rounded-lg w-52">
-                    <button
-                      onClick={() => handleButtonClick("Trading")}
-                      className={`flex-1 px-5 py-3 text-sm font-bold rounded-br-none rounded-tr-none rounded-[4px] transition ${
-                        activeButton === "Trading"
-                          ? "bg-[#1F73FC] text-[#F6F6F6]"
-                          : "bg-transparent text-[#404040]"
-                      }`}
-                    >
-                      {leaderboardPage?.table?.trading?.trading}
-                    </button>
-                    <button
-                      onClick={() => handleButtonClick("Referral")}
-                      className={`flex-1 px-5 py-3 text-sm font-bold rounded-bl-none rounded-tl-none rounded-[4px] transition ${
-                        activeButton === "Referral"
-                          ? "bg-[#1F73FC] text-[#F6F6F6]"
-                          : "bg-transparent text-[#404040]"
-                      }`}
-                    >
-                      {leaderboardPage?.table?.referral}
-                    </button>
-                  </div>
-                </div>
-
                 <div className="w-full h-[50vh]">
                   <div className="overflow-auto h-full">
                     <table
@@ -244,7 +218,7 @@ const LeaderBoard = () => {
                           {tableHeader.map((header, i) => (
                             <th
                               key={i + 1}
-                              className={` text-base font-medium py-5 !text-start`}
+                              className={` text-base whitespace-nowrap font-medium py-5 px-4 !text-start`}
                             >
                               <span className={`text-[#A8A8A8]`}>
                                 {header.title}
@@ -253,38 +227,46 @@ const LeaderBoard = () => {
                           ))}
                         </tr>
                       </thead>
-                      <tbody className={`mt-5`}>
+                      <tbody>
                         {leaderboardData
                           ?.slice(3, leaderboardData.length)
                           .map((item, i) => (
                             <tr
                               key={i + 1}
-                              className={`py-2 text-white border-b border-[#404040]`}
+                              className={`py-2 text-white whitespace-nowrap border-b border-[#404040]`}
                             >
-                              <td className=" text-lg font-medium py-4 ">
+                              <td className=" text-lg font-medium py-4 px-4">
                                 {i + 4}
                               </td>
-                              <td className=" text-base font-medium py-4 ">
-                                <a
-                                  href={`https://solscan.io/account/${item?._id}`}
-                                  target="_blank"
-                                >{`${
-                                  flag
+                              <td className=" text-base font-medium py-4 px-4">
+                                {`${flag
                                     ? "----"
-                                    : `${item?._id?.slice(
-                                        0,
-                                        3
-                                      )}...${item?._id?.slice(-4)}`
-                                }`}</a>
+                                    : `${item?.email?.slice(
+                                      0,
+                                      3
+                                    )}...${item?.email?.slice(-4)}`
+                                  }`}
                               </td>
-                              <td className=" text-base font-medium py-4 ">
-                                {flag ? "----" : item?.totalTransaction}
+                              <td className=" text-base font-medium py-4 px-4">
+                                {flag ? "----" : item?.totalTrades}
                               </td>
-                              <td className=" text-base font-medium py-4">
-                                {flag ? "----" : `${item?.totalValueOfTrades}`}
+                              <td className=" text-base font-medium py-4 px-4">
+                                {flag
+                                  ? "----"
+                                  : `${Number(item?.totalTradeAmount).toFixed(
+                                    5
+                                  )}`}
                               </td>
-                              <td className=" text-base font-medium py-4">
-                                {flag ? "----" : item?.refId}
+                              <td className=" text-base font-medium py-4 px-4">
+                                {flag
+                                  ? "----"
+                                  : `$${(
+                                    Number(item?.totalTradeAmount) *
+                                    solanaLivePrice
+                                  ).toFixed(2)}`}
+                              </td>
+                              <td className=" text-base font-medium py-4 px-4">
+                                {flag ? "----" : item?.referralId}
                               </td>
                             </tr>
                           ))}
