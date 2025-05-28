@@ -18,6 +18,16 @@ function calculateTimeDifference(dateString) {
     return `${differenceInDays}d`;
   }
 }
+function convertUTCToLocalTimeString(isoString) {
+  const date = new Date(isoString);
+  return date.toLocaleTimeString('en-GB', {
+    hour12: false,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+}
+
 function humanReadableFormat(number) {
   const units = ["", "K", "M", "B", "T"];
   let unitIndex = 0;
@@ -253,4 +263,5 @@ export {
   formatNumberNoLoop,
   getTimeAgo,
   convertUTCToIST,
+  convertUTCToLocalTimeString
 };

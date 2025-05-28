@@ -8,6 +8,7 @@ import {
   calculateTimeDifference,
   humanReadableFormat,
   humanReadableFormatWithOutUsd,
+  convertUTCToLocalTimeString
 } from "@/utils/calculation";
 import Moralis from "moralis";
 import { usePathname } from "next/navigation";
@@ -20,6 +21,10 @@ import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import { useTranslation } from "react-i18next";
 import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFunctions";
 import { solana } from "@/app/Images";
+import { RiExchangeDollarLine } from "react-icons/ri";
+import { RiArrowLeftRightFill } from "react-icons/ri";
+import { FaArrowUpLong } from "react-icons/fa6";
+import { FaArrowDownLong } from "react-icons/fa6";
 
 const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSupply }) => {
   const { t } = useTranslation();
@@ -36,6 +41,8 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
   const [top100Percentage, setTop100Percentage] = useState(0);
   const [totalUsdActive, setTotalUsdActive] = useState(true);
   const [marketCapActive, setMarketCapActive] = useState(true);
+  const [ageActive, setAgeActive] = useState(true);
+  const [descTimeActive , setdescTimeActive] = useState(true);
 
   const solanaLivePrice = useSelector(
     (state) => state?.AllStatesData?.solanaLivePrice
@@ -53,6 +60,22 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
       return;
     } 
     setMarketCapActive((prev) => !prev);
+  };
+
+  const onAgeClick = () => {
+    if (ageActive) {
+      setdescTimeActive((prev) => !prev);
+    } else {
+      setAgeActive(true);
+    }
+  };
+
+  const onTimeClick = () => {
+    if (!ageActive) {
+      setdescTimeActive((prev) => !prev);
+    } else {
+      setAgeActive(false);
+    }
   };
 
   useEffect(() => {
@@ -88,7 +111,6 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
     setTop100Percentage(
       totalBalance > 0 ? ((top100Total / totalBalance) * 100).toFixed(0) : 0
     );
-    console.log("latestTradesData", latestTradesData);
   }, [topHoldingData, top10Percentage, top49Percentage, top100Percentage]);
 
   const pathname = usePathname();
@@ -158,6 +180,34 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
     {
       id: 1,
       title: "Age / Time",
+      customHeader: 
+      <div className="flex gap-1 items-center justify-center text-[#A8A8A8]">
+        <button 
+          onClick={onAgeClick}
+          className={`flex items-center justify-center gap-1 ${ageActive ? "text-white" : ""}`}
+        >
+          <p>Age</p>
+          {ageActive && (
+            descTimeActive ? 
+              <FaArrowDownLong size={10} />
+            :
+              <FaArrowUpLong size={10} />
+          )}
+        </button>
+        <p>/</p>
+        <button 
+          onClick={onTimeClick}
+          className={`flex items-center justify-center gap-1 ${ageActive ? "" : "text-white" }`}
+        >
+          <p>Time</p>
+          {!ageActive && ( 
+            descTimeActive ? 
+              <FaArrowDownLong size={10} />
+            :
+              <FaArrowUpLong size={10} />
+          )}
+        </button>
+      </div>
     },
     {
       id: 2,
@@ -166,7 +216,8 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
     {
       id: 3,
       title: marketCapActive ? "MC" : "Price",
-      onClick: toggleMarketCapActive
+      onClick: toggleMarketCapActive,
+      icon: <RiArrowLeftRightFill className="text-[#A8A8A8]" size={12} />
     },
     {
       id: 4,
@@ -175,7 +226,8 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
     {
       id: 5,
       title: totalUsdActive ? "Total USD" : "Total SOL",
-      onClick: toggleTotalUsdActive
+      onClick: toggleTotalUsdActive,
+      icon: <RiExchangeDollarLine className={`${totalUsdActive ? 'text-[#21CB6B]' : 'text-[#A8A8A8]'}`} size={15} />
     },
     {
       id: 6,
@@ -412,19 +464,35 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                         <th
                           key={header.id}
                           className="px-2 py-3 text-center text-xs font-medium text-[#A8A8A8] whitespace-nowrap leading-4"
-                        >
-                          <div onClick={header?.onClick} className={`flex items-center gap-1 justify-center ${header?.onClick && "cursor-pointer"}`}>
+                        > 
+                        {!header?.customHeader ? 
+                        <>
+                         <div onClick={header?.onClick} className={`flex items-center gap-1 justify-center ${header?.onClick && "cursor-pointer"}`}>
                             <p>{header.title}</p>
                             {header?.infoTipString && (
                               <Infotip body={header?.infoTipString} />
                             )}
+                            {header?.icon && header.icon}
                           </div>
+                        </> 
+                        : 
+                        <>
+                          {header?.customHeader}
+                        </>
+                        }
                         </th>
                       ))}
                     </tr>
                   </thead>
                   <tbody className="bg-transparent">
-                    {latestTradesData?.latestTrades?.map((data, index) => {
+                    {[...latestTradesData?.latestTrades]
+                    ?.sort((a, b) => {
+                      if (!a?.Block?.Time || !b?.Block?.Time) return 0;
+                      const aTime = new Date(a.Block.Time).getTime();
+                      const bTime = new Date(b.Block.Time).getTime();
+                      return descTimeActive ? bTime - aTime : aTime - bTime;
+                    })
+                    .map((data, index) => {
                       const isBuy = data?.Trade?.Side?.Type == "buy";
                       let readableTotalPrice = "N/A"
                       if (data?.Trade?.Amount) {
@@ -440,15 +508,21 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                       const supply = tokenSupply === undefined ? 1 : tokenSupply;
                       const marketCapPrice = price * supply;
                       const showPrice = marketCapActive ? marketCapPrice : price;
+                      
+                      let readableTime = "N/A"
+                      if (data?.Block?.Time) {
+                        const utcTime = data.Block.Time;
+                        const localTime = convertUTCToLocalTimeString(utcTime);
+                        const timeAgo = calculateTimeDifference(utcTime);
+                        readableTime = ageActive ? timeAgo : localTime;
+                      }
                       return (
                         <tr
                           key={index}
                           className={`capitalize bg-[#08080E] text-[#F6F6F6] font-normal text-xs leading-4 onest border-b border-[#404040]`}
                         >
                           <td className="text-center px-6 py-4">
-                            {data?.Block?.Time
-                              ? calculateTimeDifference(data.Block.Time)
-                              : "N/A"}
+                            {readableTime}
                           </td>
                           <td className="flex items-center justify-center">
                             <div className={`min-w-8 rounded px-3 py-1.5 text-center ${
