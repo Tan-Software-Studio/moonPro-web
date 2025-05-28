@@ -30,6 +30,7 @@ const ReferralPage = () => {
   const progress = 100;
   const tierKey = selectedTier === 1 ? "firstTier" : selectedTier === 2 ? "secondTier" : "thirdTier";
   const tierData = refData?.referrals?.[tierKey] || [];
+  const [addClaimed, setAddClaimed] = useState(0)
 
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
@@ -45,6 +46,7 @@ const ReferralPage = () => {
       const token = localStorage.getItem("token");
       if (!token) {
 
+
         return toast.error('Please Login')
       }
       const res = await axios.get(`${URL_LINK}user/get3TierRefferals`, {
@@ -58,6 +60,7 @@ const ReferralPage = () => {
     } catch (e) {
       console.log("🚀 ~ fetchData ~ error:", e);
     }
+
   };
 
   const handleWithdrawClick = () => {
@@ -94,7 +97,7 @@ const ReferralPage = () => {
 
   return (
     <>
-      <div className=" text-white p-6 rounded-2xl space-y-6 overflow-y-auto h-[90vh]">
+      <div className=" text-white py-6 md:px-6 px-3  rounded-2xl space-y-6 overflow-y-auto h-[90vh]">
 
         {/* User Header */}
         <div className="flex md:flex-row flex-col items-center md:items-start gap-4 w-full">
@@ -191,8 +194,8 @@ const ReferralPage = () => {
               {refData?.totalEarningInSol > 0 ? decimalConvert(refData?.totalEarningInSol) : 0} SOL
             </div>
 
-            <div className="text-sm text-gray-500">SOL claimed {refData?.user?.totalClaimed}</div>
-            <div className="text-sm text-gray-500">Available to claim {refData?.totalEarningInSol - refData?.user?.totalClaimed}</div>
+            <div className="text-sm text-gray-500">SOL claimed {Number((Number(refData?.user?.totalClaimed) + Number(addClaimed))).toFixed(5)}</div>
+            <div className="text-sm text-gray-500">Available to claim {Number((refData?.totalEarningInSol - Number(refData?.user?.totalClaimed)) - Number(addClaimed)).toFixed(5)}</div>
           </div>
 
           {/* Points Breakdown */}
@@ -277,7 +280,7 @@ const ReferralPage = () => {
         </div>
       </div>
       {showWithdrawPopup && (
-        <RefPopup Available={refData?.totalEarningInSol - refData?.user?.totalClaimed} address={solWalletAddress} onClose={() => setShowWithdrawPopup(false)} />
+        <RefPopup setAddClaimed={setAddClaimed} Available={refData?.totalEarningInSol - refData?.user?.totalClaimed} address={solWalletAddress} onClose={() => setShowWithdrawPopup(false)} />
       )}
 
     </>

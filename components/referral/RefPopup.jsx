@@ -4,8 +4,10 @@ import axios from 'axios';
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
+import { showToastLoader } from '../common/toastLoader/ToastLoder';
+import toast from 'react-hot-toast';
 
-function RefPopup({ Available, address, onClose }) {
+function RefPopup({ Available, address, onClose, setAddClaimed }) {
     const URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
     const [loading, setLoading] = useState(false);
     const [walletAddress, setWalletAddress] = useState('');
@@ -19,23 +21,26 @@ function RefPopup({ Available, address, onClose }) {
     };
     const handleAmountChange = (e) => {
         setClaimAmount(e.target.value);
+
     };
 
     const fetchData = async () => {
         if (cooldown) return;
-      
+
 
         setLoading(true);
+        showToastLoader("Claiming...", "switch-toast");
         setCooldown(true);
         try {
             const token = localStorage.getItem("token");
             if (!token) {
 
+
                 return toast.error('Please Login')
             }
             const paylodData = {
                 address: walletAddress,
-                amount: claimAmount,
+                amount: Number(claimAmount),
             }
 
             const res = await axios.post(`${URL}transactions/claimSolana`, paylodData, {
@@ -45,10 +50,19 @@ function RefPopup({ Available, address, onClose }) {
             });
 
             const responce = res.data.data;
-            console.log("🚀 ~ fetchData ~ responce:", responce)
-            // onClose()
+            //   console.log("🚀 ~ fetchData ~ responce:", responce)
+            setAddClaimed(claimAmount)
+            toast.success(`Claim SOL ${claimAmount}`, {
+                id: "switch-toast",
+                duration: 2000,
+            });
+            onClose()
         } catch (e) {
-            console.log("🚀 ~ fetchData ~ error:", e);
+
+            toast.error("All fields are required.", {
+                id: "switch-toast",
+                duration: 2000,
+            });
         } finally {
             setLoading(false);
 
@@ -58,6 +72,8 @@ function RefPopup({ Available, address, onClose }) {
             }, 5000);
         }
     };
+
+    
 
     useEffect(() => {
         setWalletAddress(address || '');
@@ -77,7 +93,7 @@ function RefPopup({ Available, address, onClose }) {
 
                 {/* Coin Selector & Balance */}
                 <div className=" items-center w-fit bg-[#2c2c34] px-3 py-2 rounded-md">
-                    <div className="text-sm text-gray-400 w-fit">Balance: {Available}</div>
+                    <div className="text-sm text-gray-400 w-fit">Balance: {Number(Available).toFixed(5)}</div>
                 </div>
 
                 {/* Wallet Address */}
@@ -116,7 +132,6 @@ function RefPopup({ Available, address, onClose }) {
                             <span>SOL</span>
                         </div>
                     </div>
-                    <div className="text-xs text-gray-500 text-right">$0.02</div>
                 </div>
 
                 {/* Action Button */}
