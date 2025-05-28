@@ -88,6 +88,7 @@ import CryptoWithoutColor from "../public/assets/crypto-Stack/CryptoWithoutColor
 import CryptoColor from "../public/assets/crypto-Stack/CryptoColor.svg";
 
 import Solana from "../public/assets/Trading/Solana.png";
+import usdc from "../public/assets/Trading/usdc.png";
 import Copy from "../public/assets/Trading/Copy.svg";
 import Telegram from "../public/assets/Trading/Telegram.svg";
 import Facebook from "../public/assets/Trading/Facebook.svg";
@@ -222,6 +223,7 @@ export {
   proWalletColor,
   NoDataFish,
   Solana,
+  usdc,
   Copy,
   Telegram,
   Facebook,

@@ -32,10 +32,7 @@ import SolDeposit from "./popup/SolDeposit";
 import ReferralCodePopup from "./login/RefferalPopup";
 import axios from "axios";
 import { fetchMemescopeData } from "@/app/redux/memescopeData/Memescope";
-import {
-  setFilterTime,
-  setLoading,
-} from "@/app/redux/trending/solTrending.slice";
+import { setFilterTime, setLoading } from "@/app/redux/trending/solTrending.slice";
 import RecoveryKey from "./login/RecoveryKey";
 import { decodeData } from "@/utils/decryption/decryption";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
@@ -47,6 +44,7 @@ const Navbar = () => {
   const [isAccountPopup, setIsAccountPopup] = useState(false);
   const [isWatchlistPopup, setIsWatchlistPopup] = useState(false);
   const [isSolDepositPopup, setIsSolDepositPopup] = useState(false);
+  const [isWalletDropdownOpen, setIsWalletDropdownOpen] = useState(false);
   const [solPhrase, setSolPhrase] = useState("");
   const [openRecovery, setOpenRecovery] = useState(false);
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
@@ -68,9 +66,7 @@ const Navbar = () => {
         // const decryptPK = await decrypt(res?.data?.data?.solanaPk, FE_SEC);
         // console.log("🚀 ~ .then ~ decryptPK:", decryptPK);
         setIsAccountPopup(false);
-        const decodeKey = await decodeData(
-          res?.data?.data?.seedPhrases?.solana
-        );
+        const decodeKey = await decodeData(res?.data?.data?.seedPhrases?.solana);
         setSolPhrase(decodeKey);
         setOpenRecovery(true);
       })
@@ -80,42 +76,28 @@ const Navbar = () => {
   }
   // login signup
   // const [isLoginPopup, setIsLoginPopup] = useState(false);
-  const isLoginPopup = useSelector(
-    (state) => state?.AllStatesData?.isRegLoginPopup
-  );
+  const isLoginPopup = useSelector((state) => state?.AllStatesData?.isRegLoginPopup);
   // referral add popup
-  const isReffaralCode = useSelector(
-    (state) => state?.AllStatesData?.referralPopupAfterLogin
-  );
-  const authName = useSelector(
-    (state) => state?.AllStatesData?.isRegisterOrLogin
-  );
+  const isReffaralCode = useSelector((state) => state?.AllStatesData?.referralPopupAfterLogin);
+  const authName = useSelector((state) => state?.AllStatesData?.isRegisterOrLogin);
   // const [authName, setAuthName] = useState("");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   // X===================X Use selectors X===================X //
-  const nativeTokenbalance = useSelector(
-    (state) => state?.AllStatesData?.solNativeBalance
-  );
-  const solWalletAddress = useSelector(
-    (state) => state?.AllStatesData?.solWalletAddress
-  );
-  const isSidebarOpen = useSelector(
-    (state) => state?.AllthemeColorData?.isSidebarOpen
-  );
+  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
+  const solWalletAddress = useSelector((state) => state?.AllStatesData?.solWalletAddress);
+  const isSidebarOpen = useSelector((state) => state?.AllthemeColorData?.isSidebarOpen);
   const isEnabled = useSelector((state) => state?.AllStatesData?.isEnabled);
 
   const dropdownRef = useRef(null);
+  const walletDropdownRef = useRef(null);
   const router = useRouter();
   const { t } = useTranslation();
   const navbar = t("navbar");
   const dispatch = useDispatch();
   const pathname = usePathname();
 
-  const path =
-    pathname === "/settings" ||
-    pathname === "/copytrade" ||
-    pathname === "/transfer-funds";
+  const path = pathname === "/settings" || pathname === "/copytrade" || pathname === "/transfer-funds";
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -157,7 +139,7 @@ const Navbar = () => {
         const price = res?.data?.data[res?.data?.data?.length - 1]?.price;
         dispatch(setSolanaLivePrice(price));
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }
   useEffect(() => {
     fetchData();
@@ -182,6 +164,9 @@ const Navbar = () => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsProfileOpen(false);
       }
+      if (walletDropdownRef.current && !walletDropdownRef.current.contains(event.target)) {
+        setIsWalletDropdownOpen(false);
+      }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -199,62 +184,130 @@ const Navbar = () => {
             <div className={`md:hidden w-10 h-auto`}>
               <Image src={logo} alt="logo" className="w-full h-full" />
             </div>
-            <div className=" flex items-center gap-2  ">
+            <div className=" flex items-center gap-2 ">
               {/* Search bar */}
               <div
-                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
-                  } border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${
+                  isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                 onClick={() => dispatch(setIsSearchPopup(true))}
               >
                 <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                 <input
-                  className={` ${isSidebarOpen ? "w-0" : "w-12"
-                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                  className={` ${
+                    isSidebarOpen ? "w-0" : "w-12"
+                  } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                   placeholder={navbar?.profile?.search}
                 />
               </div>
 
+              {/* Wallet Balance and Address - Now with dropdown */}
               {solWalletAddress && (
-                <div
-                  onClick={() => setIsSolDepositPopup(!isSolDepositPopup)}
-                  className={`flex items-center cursor-pointer gap-3 rounded-lg h-8 px-2 bg-[#1A1A1A]   `}
-                >
-                  <div className="flex items-center gap-2">
-                    <Image
-                      src={walletBalance}
-                      alt="solana"
-                      height={30}
-                      width={30}
-                      className="rounded-full"
-                    />
-                    <div>{Number(nativeTokenbalance).toFixed(5) || 0}</div>
-                  </div>
+                <div className={`relative`} ref={walletDropdownRef}>
+                  <div
+                    onClick={() => setIsWalletDropdownOpen(!isWalletDropdownOpen)}
+                    className={`flex items-center cursor-pointer gap-3 rounded-lg h-8 px-2 bg-[#1A1A1A] hover:bg-[#252525] transition-colors`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Image src={walletBalance} alt="solana" height={30} width={30} className="rounded-full" />
+                      <div>{Number(nativeTokenbalance).toFixed(2) || 0}</div>
+                    </div>
 
-                  <div className="sm:flex  hidden items-center gap-3">
-                    <FaWallet className="h-4 w-4 text-[#FFFFFF]" />
-                    <div className={` text-[#A8A8A8] text-sm font-thin `}>
-                      {solWalletAddress?.toString()?.slice(0, 4)}...
-                      {solWalletAddress?.toString()?.slice(-4)}
+                    <div className="sm:flex  hidden items-center gap-3">
+                      <FaWallet className="h-4 w-4 text-[#FFFFFF]" />
+                      <div className={` text-[#A8A8A8] text-sm font-thin `}>
+                        {solWalletAddress?.toString()?.slice(0, 4)}...
+                        {solWalletAddress?.toString()?.slice(-4)}
+                      </div>
                     </div>
                   </div>
+
+                  {/* Wallet Dropdown */}
+                  {isWalletDropdownOpen && (
+                    <div className="absolute right-0 mt-2 border-[1px] border-[#404040] w-80 bg-[#141414] shadow-[#000000CC] rounded-md shadow-lg z-50">
+                      <div className="p-4">
+                        <div className="text-sm text-[#A8A8A8] mb-2">Total Value</div>
+                        <div className="text-2xl font-bold text-white mb-4">
+                          ${(Number(nativeTokenbalance) * 200).toFixed(0)}
+                        </div>
+
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-[#14F195]"></div>
+                            <span className="text-sm text-white">Solana</span>
+                          </div>
+                        </div>
+
+                        <div className="mb-4">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              {/* Solana Icon */}
+                              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#9945FF] to-[#14F195] flex items-center justify-center">
+                                <span className="text-white text-xs font-bold">S</span>
+                              </div>
+                              <span className="text-white font-medium">{Number(nativeTokenbalance).toFixed(3)}</span>
+                            </div>
+                            <div
+                              className="text-[#A8A8A8] cursor-pointer hover:text-white transition-colors text-sm"
+                              onClick={() => {
+                                navigator.clipboard.writeText(solWalletAddress);
+                                // You can add a toast notification here if you have one
+                              }}
+                              title="Click to copy address"
+                            >
+                              {solWalletAddress?.toString()?.slice(0, 4)}...{solWalletAddress?.toString()?.slice(-4)}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="mb-4">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              {/* USDC Icon */}
+                              <div className="w-6 h-6 rounded-full bg-[#2775CA] flex items-center justify-center">
+                                <span className="text-white text-xs font-bold">$</span>
+                              </div>
+                              <span className="text-white font-medium">0</span>
+                            </div>
+                            <div className="text-[#A8A8A8] text-sm">USDC</div>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => {
+                              setIsWalletDropdownOpen(false);
+                              setIsSolDepositPopup(true);
+                            }}
+                            className="flex-1 bg-[#1F73FC] hover:bg-[#1F73FC]/80 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors"
+                          >
+                            Deposit
+                          </button>
+                          <button className="flex-1 bg-[#2A2A2A] hover:bg-[#3A3A3A] text-white py-2 px-4 rounded-md text-sm font-medium transition-colors">
+                            Withdraw
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
               {/* Only sm search bar */}
-              <div
-                onClick={() => dispatch(setIsSearchPopup(true))}
-                className="cursor-pointer md:hidden block"
-              >
+              <div onClick={() => dispatch(setIsSearchPopup(true))} className="cursor-pointer md:hidden block">
                 <LuSearch size={24} />
               </div>
 
+              {/* Watchlist - Now outside profile dropdown */}
+              {mounted && solWalletAddress && (
+                <div onClick={() => setIsWatchlistPopup(true)} className="cursor-pointer">
+                  <FaRegStar size={24} className="text-white transition-colors" />
+                </div>
+              )}
+
               {/* Notifications */}
               {mounted && solWalletAddress && (
-                <div
-                  onClick={() => dispatch(setIsEnabled(!isEnabled))}
-                  className="cursor-pointer relative"
-                >
+                <div onClick={() => dispatch(setIsEnabled(!isEnabled))} className="cursor-pointer relative">
                   <RiNotification4Line size={24} />
                   <div className="w-2 h-2 rounded-full bg-[#ED1B24] absolute right-[0.6px] top-[0.6px]"></div>
                 </div>
@@ -270,11 +323,7 @@ const Navbar = () => {
 
                     {isProfileOpen && (
                       <div className="absolute md:right-5 right-0 mt-2 border-[1px] border-[#404040] w-72 bg-[#141414] shadow-[#000000CC] rounded-md shadow-lg z-50">
-                        <Link
-                          onClick={() => setIsProfileOpen(false)}
-                          href="/profile?"
-                          className=""
-                        >
+                        <Link onClick={() => setIsProfileOpen(false)} href="/profile?" className="">
                           <div className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md">
                             <PiUserLight className="text-xl" />
                             {navbar?.profile?.myProfile}
@@ -291,26 +340,7 @@ const Navbar = () => {
                           <MdLockOutline className="text-xl" />
                           {navbar?.profile?.account}
                         </div>
-                        <div
-                          onClick={() => {
-                            setIsProfileOpen(false);
-                            setIsWatchlistPopup(true);
-                          }}
-                          className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md"
-                        >
-                          <FaRegStar className="text-xl" />
-                          {navbar?.profile?.watchList}
-                        </div>
-                        <div
-                          onClick={() => {
-                            setIsProfileOpen(false);
-                            setIsSettingPopup(true);
-                          }}
-                          className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md"
-                        >
-                          <IoSettingsOutline className="text-xl" />
-                          {navbar?.profile?.setting}
-                        </div>
+
                         <hr className="border-gray-700 my-1" />
                         <div
                           onClick={handleLogout}
@@ -359,36 +389,19 @@ const Navbar = () => {
       </div>
 
       <AnimatePresence>
-        {isLoginPopup && (
-          <LoginPopup isLoginPopup={isLoginPopup} authName={authName} />
-        )}
+        {isLoginPopup && <LoginPopup isLoginPopup={isLoginPopup} authName={authName} />}
 
         {isSettingPopup && <Setting setIsSettingPopup={setIsSettingPopup} />}
 
         {isAccountPopup && (
-          <AccountSecurity
-            setIsAccountPopup={setIsAccountPopup}
-            handlePhrase={handleToGetSolanaPhrase}
-          />
+          <AccountSecurity setIsAccountPopup={setIsAccountPopup} handlePhrase={handleToGetSolanaPhrase} />
         )}
 
-        {isWatchlistPopup && (
-          <Watchlist setIsWatchlistPopup={setIsWatchlistPopup} />
-        )}
+        {isWatchlistPopup && <Watchlist setIsWatchlistPopup={setIsWatchlistPopup} />}
 
-        {isSolDepositPopup && (
-          <SolDeposit
-            isOpen={isSolDepositPopup}
-            onClose={setIsSolDepositPopup}
-          />
-        )}
+        {isSolDepositPopup && <SolDeposit isOpen={isSolDepositPopup} onClose={setIsSolDepositPopup} />}
         {openRecovery && solPhrase && (
-          <RecoveryKey
-            PK={solPhrase}
-            setPK={setSolPhrase}
-            setOpenRecovery={setOpenRecovery}
-            flag={true}
-          />
+          <RecoveryKey PK={solPhrase} setPK={setSolPhrase} setOpenRecovery={setOpenRecovery} flag={true} />
         )}
       </AnimatePresence>
       {isReffaralCode && <ReferralCodePopup />}
