@@ -164,9 +164,9 @@ const TokenDetails = ({
     <div className="bg-transparent border-b-[1px] border-b-[#26262e] w-full">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center ">
         {/* Token Details */}
-        <div className="sm:pl-[10px] p-3 flex items-center sm:gap-2 gap-1">
+        <div className="sm:pl-[10px] sm:p-3 sm:py-0 py-3 flex items-center gap-2">
           {tokenImage ? (
-            <div className="rounded-sm sm:w-[46px] sm:h-[46px] w-[40px] h-[40px] overflow-hidden">
+            <div className="rounded-sm w-[46px] h-[46px] overflow-hidden">
               <img
                 src={tokenImage || Solana}
                 alt="Token Image"
@@ -232,7 +232,7 @@ const TokenDetails = ({
           </div>
         </div>
         {/* Numbers */}
-        <div className="sm:p-[0px] p-3 flex items-center">
+        <div className="sm:p-0 sm:px-0 px-1 py-3 flex items-center">
           <div className="grid grid-cols-4 lg:gap-5 md:gap-4 gap-2">
             {TokenDetailsNumberData?.map((num, index) => {
               return (
@@ -261,7 +261,7 @@ const TokenDetails = ({
             />
           </button> */}
         </div>
-        <div className="flex items-center justify-between mb-[5px] md:mb-[0px] px-3 md:px-[0px]">
+        <div className="flex items-center justify-between mb-[5px] md:mb-[0px]">
           <div className="flex items-center md:flex-col">
             <div className="cursor-pointer border-[1px] md:!border-t-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center">
               {isFavourite ? (

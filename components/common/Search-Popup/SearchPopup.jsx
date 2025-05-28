@@ -104,9 +104,9 @@ const SearchPopup = () => {
         className={`h-svh bg-black bg-opacity-60  w-full fixed top-0 left-0 right0 z-[999] duration-75 transition-all ease-in-out block cursor-pointer`}
       ></div>
       <div className="fixed inset-0 flex items-center justify-center z-[999999] h-[100dvh] w-full">
-        <div className="overflow-auto visibleScroll " ref={popupRef}>
-          <div className="relative z-[999999] w-full">
-            <div className="mt-3 bg-[#08080e] md:mx-5 w-full md:w-[40rem] lg:w-[56rem] xl:w-[64rem] ">
+        <div className="overflow-y-auto md:w-auto w-full visibleScroll" ref={popupRef}>
+          <div className="relative z-[999999] w-full flex items-center justify-center">
+            <div className="mt-3 bg-[#08080e] md:mx-5 w-[90%] sm:w-[80%] md:w-[40rem] lg:w-[56rem] xl:w-[64rem] ">
               {/* Searchbar */}
               <div className="sticky top-0 z-[9999999] ">
                 <div className="flex bg-[#191919] py-3">
