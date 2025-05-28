@@ -6,17 +6,16 @@ import axios from "axios";
 
 function DataSecurity({
   tokenCA,
+  tokenSymbol,
   tragindViewPage,
   activeTab,
   dataAndSecurity,
   dataLoaderForChart,
+  tokenSupply
 }) {
   const [isDataSecurity, setIsDataSecurity] = useState(true);
   const [top10holdersPercetnage, setTop10holdersPercetnage] = useState(null);
-
-  async function getRawSupply() {
-    return await localStorage.getItem("chartSupply");
-  }
+  const [totalBalance, setTotalBalance] = useState(-1);
 
   useEffect(() => {
     const init = async () => {
@@ -24,6 +23,13 @@ function DataSecurity({
     };
     init();
   }, []);
+
+  useEffect(() => {
+    if (tokenSupply !== undefined && totalBalance !== -1) {
+      const top10percentage = ((totalBalance / tokenSupply) * 100).toFixed(0);
+      setTop10holdersPercetnage(top10percentage);
+    }
+  }, [tokenSupply, totalBalance]);
 
     const topHoldersApiCall = async () => {
       const date = await new Date();
@@ -61,15 +67,11 @@ function DataSecurity({
             },
           }
         );
-        let rawSupply = await Number(getRawSupply());
-        if (rawSupply !== 0) {
-          const balances = response?.data?.data?.Solana?.BalanceUpdates.map((item) =>
-            Number(item?.BalanceUpdate?.balance)
-          ).sort((a, b) => b - a);
-          const totalBalance = balances.reduce((sum, balance) => sum + balance, 0);
-          const top10percentage = totalBalance > 0 ? ((totalBalance / rawSupply) * 100).toFixed(0) : 0;
-          setTop10holdersPercetnage(top10percentage);
-        }
+        const balances = response?.data?.data?.Solana?.BalanceUpdates.map((item) =>
+          Number(item?.BalanceUpdate?.balance)
+        ).sort((a, b) => b - a);
+        const sumBalance = balances.reduce((sum, balance) => sum + balance, 0);
+        setTotalBalance(sumBalance);
       } catch (error) {
         console.error("Error:", error.response?.data || error.message || error);
       }
@@ -215,7 +217,7 @@ function DataSecurity({
             </div>
               <p className={`text-[#F6F6F6] text-[12px] font-[500]`}>              
               {" "}
-              {typeof top10holdersPercetnage === "number" ? top10holdersPercetnage + "%" : "------"}
+              {top10holdersPercetnage !== null ? top10holdersPercetnage + "%" : "------"}
             </p>
           </div>{" "}
           <div className="flex items-center justify-between mb-[16px]">
@@ -239,7 +241,7 @@ function DataSecurity({
                 </svg>
               </div>
               <p className="text-[#A8A8A8] text-[12px] font-[500]">
-                Pooled CLOAK
+                {`Pooled ${tokenSymbol}`}
               </p>
               <Infotip body={tragindViewPage?.pooled1} />
             </div>
