@@ -31,7 +31,7 @@ import {
 import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 import { IoSearchSharp } from "react-icons/io5";
 
-const MscopePumpTable = ({ MemscopeData }) => {
+const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoverRow, sethoverRow] = useState(false);
   // solana live price
@@ -289,11 +289,8 @@ const MscopePumpTable = ({ MemscopeData }) => {
                             </div>
                             {hoverRow === index && (
                               <>
-                                <div
-                                  className={`absolute ${
-                                    index == 0 ? "-top-4" : "-top-12"
-                                  } right-44 rounded-md text-[#21CB6B] text-xs font-light border-[1px]  border-[#333333] bg-[#191919]  px-4 py-1 flex items-center justify-between z-500 w-fit whitespace-nowrap transition-all duration-100 ease-in-out`}
-                                >
+
+                                <div className={`absolute ${index == 0 ? "-top-2" : "-top-12"} right-44 rounded-md text-[#21CB6B] text-xs font-light border-[1px]  border-[#333333] bg-[#191919]  px-4 py-1 flex items-center justify-between !z-[9999] w-fit whitespace-nowrap transition-all duration-100 ease-in-out`}>
                                   <p>Bonding : </p>
                                   {block?.bonding_curv >= 100
                                     ? "100%"
@@ -326,8 +323,7 @@ const MscopePumpTable = ({ MemscopeData }) => {
                                           : `${quickBuy} SOL`
                                       }`
                                     : "Buy"}
-                                </button>
-                              </>
+                                </button></>
                             )}
                           </div>
                         </div>
@@ -373,12 +369,15 @@ const MscopePumpTable = ({ MemscopeData }) => {
                             }`}
                           >
                             <div className="flex items-center gap-[4px]">
-                              <Image src={MC} alt="MC" />
-                              <div className="text-[#F1F0F0] text-xs md:text-[12px] font-400">
+                              <Image
+                                src={MC}
+                                alt="MC"
+                                className={selectedMetric ? `w-[${selectedMetric}px] h-[${selectedMetric}px]` : null}
+                              />
+                              <div className={`text-[#F1F0F0] text-xs md:text-[${selectedMetric}px] font-[400]`}>
                                 {block?.MKC
                                   ? humanReadableFormat(block?.MKC)
                                   : 0}
-                                {/* {humanReadableMarketCap(block?.marketCap)} */}
                               </div>
                             </div>
                           </Tooltip>
