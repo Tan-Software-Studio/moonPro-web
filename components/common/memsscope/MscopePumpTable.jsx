@@ -288,30 +288,40 @@ const MscopePumpTable = ({ MemscopeData }) => {
                               <ChartComponent block={block} />
                             </div>
                             {hoverRow === index && (
-                              <button
-                                className="absolute z-10 w-fit whitespace-nowrap rounded-md bg-[#1d73fc] hover:bg-[#438bff] text-[#111111] font-bold py-1 px-5 text-xs transition-all duration-100 ease-in-out"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  buySolanaTokensQuickBuyHandler(
-                                    solanaLivePrice,
-                                    block?.address,
-                                    quickBuy,
-                                    solWalletAddress,
-                                    nativeTokenbalance,
-                                    e,
-                                    "6ef8rrecthr5dkzon8nwu78hrvfckubj14m5ubewf6p",
-                                    block?.bonding_curv,
-                                    dispatch
-                                  );
-                                }}
-                              >
-                                {quickBuy > 0
-                                  ? `${quickBuy?.length > 6
-                                    ? `${quickBuy.slice(0, 7)}...`
-                                    : `${quickBuy} SOL`
-                                  }`
-                                  : "Buy"}
-                              </button>
+                              <>
+                              
+                                <div className={`absolute ${index == 0 ? "-top-4" : "-top-12"} right-44 rounded-md text-[#21CB6B] text-xs font-light border-[1px]  border-[#333333] bg-[#191919]  px-4 py-1 flex items-center justify-between z-500 w-fit whitespace-nowrap transition-all duration-100 ease-in-out`}>
+                                <p>Bonding : </p>
+                                  {block?.bonding_curv >= 100
+                                    ? "100%"
+                                    : block?.bonding_curv
+                                      ? `${block?.bonding_curv?.toFixed(2)} %`
+                                      : "0%"}</div>
+                                <button
+                                  className="absolute  w-fit whitespace-nowrap rounded-md bg-[#1d73fc] hover:bg-[#438bff] text-[#111111] font-bold py-1 px-5 text-xs transition-all duration-100 ease-in-out"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    buySolanaTokensQuickBuyHandler(
+                                      solanaLivePrice,
+                                      block?.address,
+                                      quickBuy,
+                                      solWalletAddress,
+                                      nativeTokenbalance,
+                                      e,
+                                      "6ef8rrecthr5dkzon8nwu78hrvfckubj14m5ubewf6p",
+                                      block?.bonding_curv,
+                                      dispatch
+                                    );
+                                  }}
+                                >
+                                  {quickBuy > 0
+                                    ? `${quickBuy?.length > 6
+                                      ? `${quickBuy.slice(0, 7)}...`
+                                      : `${quickBuy} SOL`
+                                    }`
+                                    : "Buy"}
+                                </button></>
+
                             )}
                           </div>
                         </div>
