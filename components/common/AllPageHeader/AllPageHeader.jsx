@@ -9,17 +9,8 @@ import RightModalOpenSetting from "@/components/Settings/RightModalOpenSetting";
 import { IoSettingsOutline } from "react-icons/io5";
 import { setGlobalBuyAmt, setOpenOrderSetting } from "@/app/redux/states";
 import { useTranslation } from "react-i18next";
-const AllPageHeader = ({
-  HeaderData,
-  duration,
-  FilterData,
-  localFilterTime,
-  setLocalFilterTime,
-  setFilterValues,
-  filterValues,
-  onApply,
-  onReset,
-}) => {
+import { ChevronDown, List, Eye, LayoutGrid, Search } from "lucide-react";
+const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime, setFilterValues, filterValues, onApply, onReset, }) => {
   const filterPopupRef = useRef(null);
   const dexesPopupRef = useRef(null);
   const { t } = useTranslation();
@@ -32,6 +23,7 @@ const AllPageHeader = ({
   const [isScrolled, setIsScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [open, setOpen] = useState(false);
+  const [isDisplayOpen, setIsDisplayOpen] = useState(false);
   const dropdownRef = useRef(null);
   const [presist, setPresist] = useState("P1");
   const buttonRef = useRef(null);
@@ -259,7 +251,96 @@ const AllPageHeader = ({
           </div>
         )}*/}
         {!holdingsPage && (
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center ">
+
+            <div className="">
+              {/* Display Button */}
+              {pathname.startsWith("/memescope") && (
+                <button
+                  onClick={() => setIsDisplayOpen(!isDisplayOpen)}
+                  className="flex items-center px-4 py-1.5 bg-[#1f1f25] rounded-full text-sm font-semibold text-white hover:bg-[#2b2b33] transition"
+                >
+                  <List size={16} className="mr-2" />
+                  Display
+                  <ChevronDown size={16} className="ml-2" />
+                </button>
+              )}
+
+              {/* Dropdown Panel */}
+              {isDisplayOpen && (
+                <div className="absolute right-44 mt-2 w-[320px] bg-[#1a1a1a] border border-gray-700 text-white rounded-md shadow-lg !z-50">
+                  <div className="p-4 space-y-4">
+                    {/* Metrics Section */}
+                    <div>
+                      <p className="text-sm font-semibold mb-2">Metrics</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="py-2 px-3 bg-[#2a2a2a] rounded text-xs text-center">MC 77K <br /> Small</div>
+                        <div className="py-2 px-3 bg-[#444] rounded text-xs text-center font-bold">MC 77K <br /> Large</div>
+                      </div>
+                    </div>
+
+                    {/* Quick Buy Section */}
+                    <div>
+                      <p className="text-sm font-semibold mb-2">Quick Buy</p>
+                      <div className="grid grid-cols-3 gap-2">
+                        {["Small", "Large", "Mega"].map((size) => (
+                          <div
+                            key={size}
+                            className="py-2 px-2 bg-[#2a2a2a] rounded text-center text-xs font-medium"
+                          >
+                            <span className="block text-blue-400">⚡</span>
+                            {size}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Toggle Features */}
+                    <div className="border-t border-gray-600 pt-4 space-y-3 text-sm">
+                      <div className="flex items-center gap-2 cursor-pointer hover:text-blue-400">
+                        <Search size={16} />
+                        Show Search Bar
+                      </div>
+                      <div className="flex items-center gap-2 cursor-pointer hover:text-blue-400">
+                        <Eye size={16} />
+                        Show Hidden Tokens
+                      </div>
+                      <div className="flex items-center gap-2 cursor-pointer hover:text-blue-400">
+                        <LayoutGrid size={16} />
+                        Circle Images
+                      </div>
+                      <div className="flex items-center gap-2 cursor-pointer hover:text-blue-400">
+                        <div className="w-4 h-1 bg-gray-400 rounded-full" />
+                        Progress Bar
+                      </div>
+                      <div className="flex items-center gap-2 cursor-pointer hover:text-blue-400">
+                        <div className="w-4 h-4 border-2 border-gray-400 rounded-sm" />
+                        Spaced Tables
+                      </div>
+                    </div>
+
+                    {/* Customize Rows */}
+                    <div className="border-t border-gray-600 pt-4">
+                      <p className="text-sm font-semibold mb-2">Customize rows</p>
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          "Market Cap", "Volume", "TX", "Socials", "Holders", "Pro Traders", "Dev Migrations",
+                          "Top 10 Holders", "Dev Holding", "Snipers", "Insiders", "Bundlers", "Dex Paid",
+                        ].map((item) => (
+                          <span
+                            key={item}
+                            className="bg-[#2a2a2a] px-2 py-1 rounded text-xs cursor-pointer hover:bg-[#3b3b3b]"
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div>
               <button
                 onClick={() => dispatch(setOpenOrderSetting(true))}
@@ -449,7 +530,7 @@ const AllPageHeader = ({
               </div>
 
               {/* Middle section: Amount input */}
-              <div className="px-3 py-1 text-gray-400 font-medium">
+              <div className="px-2 py-1 text-gray-400 font-medium">
                 <div className="">
                   <input
                     type="number"
