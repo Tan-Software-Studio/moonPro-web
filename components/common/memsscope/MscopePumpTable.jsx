@@ -30,7 +30,6 @@ import {
 } from "@/app/redux/states";
 import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 import { IoSearchSharp } from "react-icons/io5";
-import { useRouter } from "next/navigation";
 
 const MscopePumpTable = ({ MemscopeData }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -52,7 +51,6 @@ const MscopePumpTable = ({ MemscopeData }) => {
   );
 
   const dispatch = useDispatch();
-  const router = useRouter();
 
   const quickBuy = useSelector((state) => state?.AllStatesData?.globalBuyAmt);
 
@@ -86,6 +84,7 @@ const MscopePumpTable = ({ MemscopeData }) => {
 
   const copyAddress = (address, index, e) => {
     e.stopPropagation();
+    e.preventDefault()
     navigator?.clipboard?.writeText(address);
     setCopied(index);
     // toast.success("address copied successfully");
