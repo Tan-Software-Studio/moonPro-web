@@ -13,7 +13,11 @@ import { useSelector } from "react-redux";
 import Image from "next/image";
 import { solana, solanaBlackLogo } from "@/app/Images";
 import RightModalOpenSetting from "@/components/Settings/RightModalOpenSetting";
-import { setOpenOrderSetting, setPreSetOrderSetting } from "@/app/redux/states";
+import {
+  setOpenOrderSetting,
+  setPresetActive,
+  setPreSetOrderSetting,
+} from "@/app/redux/states";
 const TradingPopup = ({
   tragindViewPage,
   activeTab,
@@ -42,7 +46,7 @@ const TradingPopup = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [customInput, setCustomInput] = useState("");
-  const [presist, setPresist] = useState("P1");
+  // const [presist, setPresist] = useState("P1");
   const [buyValues, setBuyValues] = useState(() => {
     const saved = localStorage.getItem("buyValues");
     return saved ? JSON.parse(saved) : [0.1, 0.2, 1, 2];
@@ -51,6 +55,8 @@ const TradingPopup = ({
     const saved = localStorage.getItem("sellValues");
     return saved ? JSON.parse(saved) : [20, 50, 80, 100];
   });
+  // preset value
+  const presist = useSelector((state) => state?.AllStatesData?.presetActive);
   // order settings flag
   const orderSettingFlag = useSelector(
     (state) => state?.AllStatesData?.openOrderSetting
@@ -150,7 +156,8 @@ const TradingPopup = ({
           setTokenBalance,
           bondingProgress >= 100 ? "djasodnasuodhasoduashd" : progranAddress,
           solanaLivePrice,
-          dispatch
+          dispatch,
+          price
         );
       } else {
         toast.error("Insufficient funds.");
@@ -208,12 +215,12 @@ const TradingPopup = ({
     const preSetFromLocalStorage = JSON.parse(
       localStorage.getItem("preSetAllData")
     );
-    const orderActiveChart = localStorage.getItem("preSetSettingActiveChart");
+    const orderActiveChart = localStorage.getItem("preSetSettingActive");
     if (preSetFromLocalStorage) {
       dispatch(setPreSetOrderSetting(preSetFromLocalStorage));
     }
     if (orderActiveChart) {
-      setPresist(orderActiveChart);
+      dispatch(setPresetActive(orderActiveChart));
     }
   }, []);
   useEffect(() => {
@@ -269,7 +276,7 @@ const TradingPopup = ({
           <button
             key={index + 1}
             onClick={() => {
-              setPresist(item);
+              dispatch(setPresetActive(item));
               localStorage.setItem("preSetSettingActiveChart", item);
             }}
             className={`w-full py-[7px] text-[#F6F6F6] font-[700] text-[12px] border-r-[0.5px] border-r-[#404040] duration-300 ease-in-out ${

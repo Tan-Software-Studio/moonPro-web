@@ -14,7 +14,8 @@ const buySolanaTokens = async (
   setTokenBalance,
   programAddress,
   solanaLivePrice,
-  dispatch
+  dispatch,
+  tokenPrice
 ) => {
   // console.log("🚀 ~ setTokenBalance:", setTokenBalance);
   // console.log("🚀 ~ priorityFee:", priorityFee);
@@ -63,6 +64,7 @@ const buySolanaTokens = async (
       slippage: slipTolerance,
       priorityFee: priorityFee,
       price: Number(solanaLivePrice),
+      tokenPrice: Number(tokenPrice),
       programAddress: programAddress
         ? programAddress
         : "nasdiuasdnasdudhsdjasbhid",
@@ -105,7 +107,8 @@ const buySolanaTokensQuickBuyHandler = async (
   e,
   programAddress,
   bondingCurv = 0,
-  dispatch
+  dispatch,
+  tokenPrice
 ) => {
   e && e.stopPropagation();
   const token = localStorage.getItem("token");
@@ -166,6 +169,7 @@ const buySolanaTokensQuickBuyHandler = async (
       priorityFee: priorityFee,
       price: Number(solanaLivePrice),
       programAddress: program,
+      tokenPrice: tokenPrice,
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -197,7 +201,8 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
   nativeTokenbalance,
   e,
   programAddress,
-  dispatch
+  dispatch,
+  tokenPrice
 ) => {
   e && e.stopPropagation();
   const amt = await localStorage.getItem("copyBuySol");
@@ -261,6 +266,7 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
       slippage: slippage,
       priorityFee: priorityFee,
       price: Number(solanaLivePrice),
+      tokenPrice: tokenPrice,
       programAddress: programAddress
         ? programAddress
         : "nasdiuasdnasdudhsdjasbhid",

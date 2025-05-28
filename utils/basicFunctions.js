@@ -70,7 +70,7 @@ function decimalConvert(price) {
   }
 }
 
-function formatDecimal(num) {
+function formatDecimal(num, numAfterCount = 3) {
   // Defensive check to ensure input is a finite number
   if (typeof num !== "number" || !isFinite(num)) {
     console.warn("Invalid input to formatDecimal:", num);
@@ -78,27 +78,26 @@ function formatDecimal(num) {
   }
 
   if (num >= 1 || num <= -1 || num === 0) {
-    return num.toString();
+    return num.toFixed(numAfterCount); // Round like toFixed
   }
 
   const isNegative = num < 0;
   const absNum = Math.abs(num);
-  const decimalStr = absNum.toFixed(20).split(".")[1];
+
+  // Round number to (leading zeros + numAfterCount) digits to avoid precision issues
+  const fullPrecision = 20;
+  const roundedStr = absNum.toFixed(fullPrecision);
+  const decimalStr = roundedStr.split(".")[1];
   const leadingZerosMatch = decimalStr.match(/^0*/);
   const leadingZeros = leadingZerosMatch[0].length;
-  const trimmed = decimalStr.slice(leadingZeros);
+
+  const totalPrecision = leadingZeros + numAfterCount;
+  const rounded = absNum.toFixed(totalPrecision).split(".")[1];
+  const trimmed = rounded.slice(leadingZeros);
 
   const subscripts = {
-    0: "₀",
-    1: "₁",
-    2: "₂",
-    3: "₃",
-    4: "₄",
-    5: "₅",
-    6: "₆",
-    7: "₇",
-    8: "₈",
-    9: "₉",
+    0: "₀", 1: "₁", 2: "₂", 3: "₃", 4: "₄",
+    5: "₅", 6: "₆", 7: "₇", 8: "₈", 9: "₉",
   };
 
   function toSubscript(n) {
@@ -110,13 +109,14 @@ function formatDecimal(num) {
 
   let result;
   if (leadingZeros > 2) {
-    result = `0${toSubscript(leadingZeros)}${trimmed.slice(0, 3)}`;
+    result = `0.0${toSubscript(leadingZeros)}${trimmed}`;
   } else {
-    result = `0.${decimalStr.slice(0, 3)}`;
+    result = `${absNum.toFixed(3)}`;
   }
 
   return isNegative ? `-${result}` : result;
 }
+
 
 function calculatePercentageDifference(newValue, oldValue) {
   if (oldValue == 0) {
