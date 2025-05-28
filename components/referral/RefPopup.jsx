@@ -1,17 +1,18 @@
 'use client';
 import { solana } from '@/app/Images';
+import axios from 'axios';
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
 
 function RefPopup({ Available, address, onClose }) {
+    const URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
+    const [loading, setLoading] = useState(false);
     const [walletAddress, setWalletAddress] = useState('');
     const [claimAmount, setClaimAmount] = useState(Available);
+    const [cooldown, setCooldown] = useState(false);
 
 
-    useEffect(() => {
-        setWalletAddress(address || '');
-    }, [address]);
 
     const handleAddressChange = (e) => {
         setWalletAddress(e.target.value);
@@ -20,6 +21,47 @@ function RefPopup({ Available, address, onClose }) {
         setClaimAmount(e.target.value);
     };
 
+    const fetchData = async () => {
+        if (cooldown) return;
+      
+
+        setLoading(true);
+        setCooldown(true);
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+
+                return toast.error('Please Login')
+            }
+            const paylodData = {
+                address: walletAddress,
+                amount: claimAmount,
+            }
+
+            const res = await axios.post(`${URL}transactions/claimSolana`, paylodData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+
+            const responce = res.data.data;
+            console.log("🚀 ~ fetchData ~ responce:", responce)
+            // onClose()
+        } catch (e) {
+            console.log("🚀 ~ fetchData ~ error:", e);
+        } finally {
+            setLoading(false);
+
+            // Start cooldown timer for 5 seconds
+            setTimeout(() => {
+                setCooldown(false);
+            }, 5000);
+        }
+    };
+
+    useEffect(() => {
+        setWalletAddress(address || '');
+    }, [address]);
 
     return (
         <div className="fixed inset-0 bg-[#00000093] bg-opacity-60 flex items-center justify-center z-50">
@@ -79,15 +121,19 @@ function RefPopup({ Available, address, onClose }) {
 
                 {/* Action Button */}
                 <button
-                    disabled={Available <= 0}
+                    disabled={Available <= 0 || !walletAddress || loading || cooldown}
+                    onClick={fetchData}
                     className={`w-full py-2 rounded-full text-white font-medium transition 
-        ${Available <= 0
-                            ? 'bg-gray-600 cursor-not-allowed'
-                            : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
+    ${Available <= 0 || !walletAddress || loading || cooldown
+                            ? 'bg-[#0000ff46] cursor-not-allowed'
+                            : 'bg-[#2626ce] hover:bg-[blue] cursor-pointer'
                         }`}
                 >
-                    {walletAddress ? 'Claim' : 'Missing Destination Address'}
+                    {loading ? 'Claiming...' : (walletAddress ? 'Claim' : 'Missing Destination Address')}
                 </button>
+
+
+
 
             </div>
         </div>
