@@ -10,7 +10,17 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { setGlobalBuyAmt, setOpenOrderSetting } from "@/app/redux/states";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, List, Eye, LayoutGrid, Search } from "lucide-react";
-const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime, setFilterValues, filterValues, onApply, onReset, }) => {
+const AllPageHeader = ({
+  HeaderData,
+  duration,
+  FilterData,
+  localFilterTime,
+  setLocalFilterTime,
+  setFilterValues,
+  filterValues,
+  onApply,
+  onReset,
+}) => {
   const filterPopupRef = useRef(null);
   const dexesPopupRef = useRef(null);
   const { t } = useTranslation();
@@ -25,7 +35,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
   const [open, setOpen] = useState(false);
   const [isDisplayOpen, setIsDisplayOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const [presist, setPresist] = useState("P1");
+  // const [presist, setPresist] = useState("P1");
   const buttonRef = useRef(null);
 
   // Close dropdown when clicking outside
@@ -34,6 +44,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
   const isRightModalOpenSetting = useSelector(
     (state) => state?.AllStatesData?.openOrderSetting
   );
+  const presist = useSelector((state) => state?.AllStatesData?.presetActive);
 
   const borderColor = useSelector(
     (state) => state?.AllthemeColorData?.borderColor
@@ -252,7 +263,6 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
         )}*/}
         {!holdingsPage && (
           <div className="flex gap-2 items-center ">
-
             <div className="">
               {/* Display Button */}
               {pathname.startsWith("/memescope") && (
@@ -274,8 +284,12 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                     <div>
                       <p className="text-sm font-semibold mb-2">Metrics</p>
                       <div className="grid grid-cols-2 gap-2">
-                        <div className="py-2 px-3 bg-[#2a2a2a] rounded text-xs text-center">MC 77K <br /> Small</div>
-                        <div className="py-2 px-3 bg-[#444] rounded text-xs text-center font-bold">MC 77K <br /> Large</div>
+                        <div className="py-2 px-3 bg-[#2a2a2a] rounded text-xs text-center">
+                          MC 77K <br /> Small
+                        </div>
+                        <div className="py-2 px-3 bg-[#444] rounded text-xs text-center font-bold">
+                          MC 77K <br /> Large
+                        </div>
                       </div>
                     </div>
 
@@ -321,11 +335,24 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
 
                     {/* Customize Rows */}
                     <div className="border-t border-gray-600 pt-4">
-                      <p className="text-sm font-semibold mb-2">Customize rows</p>
+                      <p className="text-sm font-semibold mb-2">
+                        Customize rows
+                      </p>
                       <div className="flex flex-wrap gap-2">
                         {[
-                          "Market Cap", "Volume", "TX", "Socials", "Holders", "Pro Traders", "Dev Migrations",
-                          "Top 10 Holders", "Dev Holding", "Snipers", "Insiders", "Bundlers", "Dex Paid",
+                          "Market Cap",
+                          "Volume",
+                          "TX",
+                          "Socials",
+                          "Holders",
+                          "Pro Traders",
+                          "Dev Migrations",
+                          "Top 10 Holders",
+                          "Dev Holding",
+                          "Snipers",
+                          "Insiders",
+                          "Bundlers",
+                          "Dex Paid",
                         ].map((item) => (
                           <span
                             key={item}
@@ -357,8 +384,6 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
               isOpen={isRightModalOpenSetting}
               onClose={() => dispatch(setOpenOrderSetting(false))}
               tredingPage={tredingPage}
-              setPresist={setPresist}
-              presist={presist}
             />
 
             {/* <div className="flex items-center mr-2 space-x-2 px-5 py-2 bg-[#1a1a1a] rounded-full text-white text-sm font-medium w-fit">

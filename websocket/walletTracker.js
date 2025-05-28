@@ -5,7 +5,7 @@ import {
   setNewLaunchData,
   updateAllDataByNode,
 } from "@/app/redux/memescopeData/Memescope";
-import { setSolanaLivePrice } from "@/app/redux/states";
+import { setSolanaLivePrice, setUsdcLivePrice } from "@/app/redux/states";
 import store from "@/app/redux/store";
 import {
   updateTrendingData,
@@ -61,8 +61,16 @@ export async function subscribeToWalletTracker() {
           item?.Trade?.Currency?.MintAddress ==
           "So11111111111111111111111111111111111111112"
       );
+      const usdcLivePrice = await data?.find(
+        (item) =>
+          item?.Trade?.Currency?.MintAddress ==
+          "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+      );
       if (solPrice?.Trade?.PriceInUSD) {
         store.dispatch(setSolanaLivePrice(solPrice?.Trade?.PriceInUSD));
+      }
+      if (usdcLivePrice?.Trade?.PriceInUSD) {
+        store.dispatch(setUsdcLivePrice(solPrice?.Trade?.PriceInUSD));
       }
       if (walletsToTrack?.length > 0) {
         const filteredData = await data?.filter((item) =>

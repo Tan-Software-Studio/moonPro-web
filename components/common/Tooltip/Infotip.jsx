@@ -25,7 +25,7 @@ export default function Tooltip({
     if (!iconRef.current) return;
   
     requestAnimationFrame(() => {
-      const iconRect = iconRef.current.getBoundingClientRect();
+      const iconRect = iconRef?.current?.getBoundingClientRect();
       const iconCenterX = iconRect.left + iconRect.width / 2;
     
       const element = floatingRef.current;
