@@ -30,8 +30,10 @@ const AllStatesData = createSlice({
     referralPopupAfterLogin: false,
     recoverPopUpOpen: false,
     solanaLivePrice: 0,
+    usdcLivePrice: 0,
     isFaviourite: false,
     openOrderSetting: false,
+    presetActive: "P1",
   },
   reducers: {
     setWalletAddress: (state, action) => {
@@ -94,11 +96,17 @@ const AllStatesData = createSlice({
     setSolanaLivePrice: (state, action) => {
       state.solanaLivePrice = action.payload;
     },
+    setUsdcLivePrice: (state, action) => {
+      state.usdcLivePrice = action.payload;
+    },
     setOpenOrderSetting: (state, action) => {
       state.openOrderSetting = action.payload;
     },
     setPreSetOrderSetting: (state, action) => {
       state.preSetOrderSettings = action.payload;
+    },
+    setPresetActive: (state, action) => {
+      state.presetActive = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -126,8 +134,10 @@ export const {
   setreferralPopupAfterLogin,
   setRecoverPopupOpen,
   setSolanaLivePrice,
+  setUsdcLivePrice,
   setIsFaviouriteToken,
   setOpenOrderSetting,
   setPreSetOrderSetting,
+  setPresetActive,
 } = AllStatesData.actions;
 export default AllStatesData.reducer;

@@ -64,24 +64,31 @@ const MainWalletTrackingNotificationPopUp = ({ tx }) => {
             Just {tx?.Trade?.Side?.Type?.toUpperCase()}
           </div>
           <div
-            className={`${tx?.Trade?.Side?.Type === "buy"
-              ? "text-green-500"
-              : "text-red-500"
-              }`}
+            className={`${
+              tx?.Trade?.Side?.Type === "buy"
+                ? "text-green-500"
+                : "text-red-500"
+            }`}
           >
-            ${Number(tx?.Trade?.AmountInUSD).toFixed(2)} 
-          </div> 
+            ${Number(tx?.Trade?.AmountInUSD).toFixed(2)}
+          </div>
           <div className="relative inline-flex items-center justify-center h-6 w-6 rounded-full bg-black border border-gray-500 text-white font-bold text-xs uppercase">
             {tx?.Trade?.Currency?.Name?.charAt(0)}
           </div>
           <div className="font-bold">{tx?.Trade?.Currency?.Name}</div>
-        </div> 
+        </div>
       </div>
       <div className="flex items-center gap-3">
         {tx?.Trade?.Side?.Type === "buy" ? (
-          <BuyBtn toToken={tx?.Trade?.Currency?.MintAddress} />
+          <BuyBtn
+            toToken={tx?.Trade?.Currency?.MintAddress}
+            price={tx?.Trade?.PriceInUSD}
+          />
         ) : (
-          <SellBtn fromToken={tx?.Trade?.Currency?.MintAddress} />
+          <SellBtn
+            fromToken={tx?.Trade?.Currency?.MintAddress}
+            price={tx?.Trade?.PriceInUSD}
+          />
         )}
         <div className="text-[#6E6E6E] text-sm">{relativeTime}</div>
       </div>
