@@ -46,8 +46,8 @@ const ToperLeaderboard = ({
           className={` mx-auto bg-[#262626] clip-path-custom ${clipPathDivClass}  text-sm pt-2 pb-3`}
           style={clipPathStyle}
         >
-          <p className="text-[#6E6E6E] font-normal text-xs md:text-sm lg:text-base">
-            {`${flag ? "----" : `${email?.slice(0, 3)}...${email?.slice(-4)}`}`}
+          <p className="text-[#FFFFFF] font-normal text-xs md:text-sm lg:text-base">
+            {`${flag ? "----" : `${email?.slice(0, 5)}...${email?.slice(-4)}`}`}
           </p>
         </div>
         <div
@@ -56,7 +56,7 @@ const ToperLeaderboard = ({
 
           <div>
             <h4 className="text-[#A8A8A8] text-[10px] md:text-xs">
-              {leaderboardPage?.stage?.totaltrades}
+              {"Total Trades"}
             </h4>
             <h3 className="text-[#F6F6F6] md:font-semibold lg:font-bold text-xs md:text-sm lg:text-base">
               {flag ? "----" : TotalTrades}
@@ -64,7 +64,7 @@ const ToperLeaderboard = ({
           </div>
           <div>
             <h4 className="text-[#A8A8A8] text-[10px] md:text-xs">
-              {"amount"}
+              {"Amount"}
             </h4>
             <h3 className="text-[#F6F6F6] md:font-semibold lg:font-bold text-xs md:text-sm lg:text-base">
               {flag ? "----" : `${Number(value).toFixed(5)}`}
@@ -72,7 +72,7 @@ const ToperLeaderboard = ({
           </div>
           <div>
             <h4 className="text-[#A8A8A8] text-[10px] md:text-xs">
-              {leaderboardPage?.stage?.value}
+              {"Value"}
             </h4>
             <h3 className="text-[#F6F6F6] md:font-semibold lg:font-bold text-xs md:text-sm lg:text-base">
               {flag

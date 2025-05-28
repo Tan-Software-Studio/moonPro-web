@@ -22,8 +22,8 @@ import { useDispatch } from "react-redux";
 export default function Portfolio() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [allWallets, setAllWallets] = useState([]);
-  const [copied, setCopied] = useState(false);
+  const [allWallets, setAllWallets] = useState([]); 
+  const [copiedWallet, setCopiedWallet] = useState(null);
   const [walletAddresses, setWalletAddresses] = useState([]);
   const [pkParticulerWallet, setPkParticulerWallet] = useState("");
   const [openRecovery, setOpenRecovery] = useState(false);
@@ -136,20 +136,17 @@ export default function Portfolio() {
       });
   }
 
-  const copyToClipboard = (mintAddress) => {
-    setCopied(true);
-    if (mintAddress) {
-      const formattedAddress = mintAddress;
-      navigator.clipboard
-        ?.writeText(formattedAddress)
-        .then(() => {})
-        .catch((err) => {
-          console.error("Failed to copy: ", err?.message);
-        });
+  const copyToClipboard = async (walletAddress) => {
+    try {
+      await navigator.clipboard.writeText(walletAddress);
+      setCopiedWallet(walletAddress);
+      // Reset after 2 seconds
+      setTimeout(() => {
+        setCopiedWallet(null);
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy: ', err);
     }
-    setTimeout(() => {
-      setCopied(false);
-    }, 2000);
   };
 
   function handleSearchWallet(e) {
@@ -213,15 +210,10 @@ export default function Portfolio() {
               </div>
 
               <div className="flex gap-3 w-full md:w-auto">
-                {/* <button
-                className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-sm `}
-              >
-                <span>{portfolio?.Show} </span>
-              </button> */}
 
-                <button className="flex items-center space-x-2 px-3 py-1.5 bg-gray-800 rounded-lg text-sm">
+                {/* <button className="flex items-center space-x-2 px-3 py-1.5 bg-gray-800 rounded-lg text-sm">
                   <span>{portfolio?.Import}</span>
-                </button>
+                </button> */}
 
                 <button
                   onClick={handleCreateMultiWallet}
@@ -267,13 +259,12 @@ export default function Portfolio() {
                     walletAddresses.map((wallet, index) => (
                       <tr
                         key={index + 1}
-                        className={`transition-colors hover:bg-gray-800/50 ${
-                          wallet.primary
-                            ? "bg-gradient-to-r from-amber-900/30 to-transparent border-l-4 border-amber-500"
-                            : index % 2 === 0
+                        className={`transition-colors hover:bg-gray-800/50 ${wallet.primary
+                          ? "bg-gradient-to-r from-amber-900/30 to-transparent border-l-4 border-amber-500"
+                          : index % 2 === 0
                             ? "bg-gray-800/20"
                             : ""
-                        }`}
+                          }`}
                       >
                         {/* Wallet number */}
                         <td className="py-4 px-6">{index + 1}</td>
@@ -286,22 +277,18 @@ export default function Portfolio() {
                                 <FaStar className="text-amber-500" size={16} />
                               )}
                               <div
-                                className={`font-medium ${
-                                  wallet.primary ? "text-amber-500" : ""
-                                }`}
+                                className={`font-medium ${wallet.primary ? "text-amber-500" : ""
+                                  }`}
                               >
                                 {wallet.primary ? "Primary Wallet" : "Wallet"}
                               </div>
                             </div>
                             <button
                               onClick={() => copyToClipboard(wallet.wallet)}
-                              className="text-xs text-gray-400 flex items-center hover:text-gray-200 transition-colors bg-gray-800/50 py-1 px-2 rounded-md"
+                              className="text-xs text-gray-400 flex gap-1 items-center hover:text-gray-200 transition-colors bg-gray-800/50 py-1 px-2 rounded-md"
                             >
-                              {`${wallet?.wallet.slice(
-                                0,
-                                4
-                              )}...${wallet?.wallet.slice(-4)}`}
-                              {copied ? (
+                              {`${wallet?.wallet.slice(0, 4)}...${wallet?.wallet.slice(-4)}`}
+                              {copiedWallet === wallet.wallet ? ( // Check if THIS specific wallet was copied
                                 <BiCheckDouble className="text-[20px]" />
                               ) : (
                                 <FaCopy className="cursor-pointer flex-shrink-0" />

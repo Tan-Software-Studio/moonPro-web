@@ -10,6 +10,8 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { setGlobalBuyAmt, setOpenOrderSetting } from "@/app/redux/states";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, List, Eye, LayoutGrid, Search } from "lucide-react";
+import { LuWalletMinimal } from "react-icons/lu";
+import { FaAngleDown } from "react-icons/fa";
 const AllPageHeader = ({
   HeaderData,
   duration,
@@ -125,7 +127,7 @@ const AllPageHeader = ({
     "appearance-none w-4 h-4 border border-gray-400 rounded-sm bg-transparent flex items-center justify-center checked:bg-[#3e9fd6] checked:border-[#3e9fd6] checked:after:content-['✔'] checked:after:text-xs";
   return (
     <div
-      className={`text-white relative bg-[#08080E] md:flex justify-between items-start lg:items-center pt-[18px] py-[6.3px] px-3 md:px-4 border-b-[1px] ${borderColor} pb-5 transition-all duration-500 ease-in-out 
+      className={`text-white relative bg-[#08080E] md:flex justify-between items-start lg:items-center md:pt-[18px] py-[6.3px]  px-2 md:px-4 border-b-[1px] ${borderColor} md:pb-5 transition-all duration-500 ease-in-out 
         ${isScrolled && pathData === false && "-translate-y-full opacity-0 "}`}
     >
       {/* pagename + description */}
@@ -148,7 +150,7 @@ const AllPageHeader = ({
         </div> */}
       </div>
       {/* filter + buy etc button */}
-      <div className="flex flex-wrap lg:items-center md:justify-end gap-2 overflow-x-auto md:mt-0 mt-5">
+      <div className="flex flex-wrap lg:items-center md:justify-end gap-2 overflow-x-auto md:mt-0">
         {duration && (
           <div
             // w-[348px]
@@ -278,7 +280,7 @@ const AllPageHeader = ({
 
               {/* Dropdown Panel */}
               {isDisplayOpen && (
-                <div className="absolute right-44 mt-2 w-[320px] bg-[#1a1a1a] border border-gray-700 text-white rounded-md shadow-lg !z-50">
+                <div className="absolute md:right-44 right-0 mt-2 w-[320px] bg-[#1a1a1a] border border-gray-700 text-white rounded-md shadow-lg !z-50">
                   <div className="p-4 space-y-4">
                     {/* Metrics Section */}
                     <div>
@@ -386,23 +388,6 @@ const AllPageHeader = ({
               tredingPage={tredingPage}
             />
 
-            {/* <div className="flex items-center mr-2 space-x-2 px-5 py-2 bg-[#1a1a1a] rounded-full text-white text-sm font-medium w-fit">
-
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a4 4 0 00-4-4H5a2 2 0 00-2 2v12a2 2 0 002 2h8a4 4 0 004-4v-2M9 13h6" />
-              </svg>
-
-              <span>1</span>
-
-              <Image src={solana} width={20} height={20} alt="solana" />
-
-              <span>0</span>
-
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </div> */}
-
             <div className=" inline-block">
               {/* Wallet Button */}
               <div
@@ -411,20 +396,7 @@ const AllPageHeader = ({
                 className="flex items-center mr-2 space-x-2 px-5 py-2 bg-[#1a1a1a] rounded-full text-[#ecf6fd] text-sm font-medium cursor-pointer"
               >
                 {/* Wallet Icon */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 9V7a4 4 0 00-4-4H5a2 2 0 00-2 2v12a2 2 0 002 2h8a4 4 0 004-4v-2M9 13h6"
-                  />
-                </svg>
+                <LuWalletMinimal size={20} />
                 <span>1</span>
 
                 {/* Solana Icon */}
@@ -432,26 +404,13 @@ const AllPageHeader = ({
                 <span>0</span>
 
                 {/* Dropdown Icon */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
+                <FaAngleDown size={20} />
               </div>
 
               {open && (
                 <div
                   ref={dropdownRef}
-                  className="absolute right-20 mt-2 w-96 bg-[#1a1a1a] border border-gray-700 text-white rounded-md shadow-lg z-50"
+                  className="absolute sm:right-20 right-0 mt-2 w-full sm:w-96 bg-[#1a1a1a] border border-gray-700 text-white rounded-md shadow-lg z-50"
                 >
                   {/* Wallet List */}
                   {[

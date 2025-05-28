@@ -234,7 +234,7 @@ const Memescope = () => {
         <div
           className={`${pathname === "/memescope"
             ? "sticky z-10 top-0"
-            : "sticky z-10 top-[56.5px]"
+            : "sticky z-10 top-[50px]"
             }  `}
         >
           <AllPageHeader HeaderData={HeaderData} duration={true} />
