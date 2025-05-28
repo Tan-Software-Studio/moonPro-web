@@ -21,6 +21,7 @@ export const fetchTradesData = createAsyncThunk(
         Time: Time
       }
       Transaction {
+        Signer
         Signature
       }
       Trade {

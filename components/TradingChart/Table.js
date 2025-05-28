@@ -154,17 +154,11 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
         tragindViewPagePage?.table?.transactions?.tableHeaders?.qtytool,
     },
     {
-      id: 9,
+      id: 5,
       title: `Total USD($)`,
     },
     {
-      id: 10,
-      title: tragindViewPagePage?.table?.transactions?.tableHeaders?.pool,
-      infoTipString:
-        tragindViewPagePage?.table?.transactions?.tableHeaders?.pooltool,
-    },
-    {
-      id: 11,
+      id: 6,
       title: tragindViewPagePage?.table?.transactions?.tableHeaders?.hash,
       infoTipString:
         tragindViewPagePage?.table?.transactions?.tableHeaders?.hashtool,
@@ -440,17 +434,15 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
                                 )
                               : "N/A"}
                           </td>
-                          <td className="text-center px-6 py-4 text-white">
-                            {data?.Transaction?.Signature
-                              ? `${data?.Transaction?.Signature.slice(
+                          <td className="flex items-center justify-center px-6 py-4 text-white text-center gap-2">
+                            {data?.Transaction?.Signer
+                              ? `${data?.Transaction?.Signer.slice(
                                   0,
                                   3
-                                )}...${data?.Transaction?.Signature.slice(
+                                )}...${data?.Transaction?.Signer.slice(
                                   -3
                                 )}`
                               : "N/A"}
-                          </td>
-                          <td className="flex items-center justify-center px-6 py-4 font-normal text-white text-[20px]">
                             <a
                               href={`https://solscan.io/tx/${data?.Transaction?.Signature}`}
                               target="_blank"

@@ -19,7 +19,6 @@ function DataSecurity({
   }
 
   useEffect(() => {
-    console.log("hi");
     const init = async () => {
       await topHoldersApiCall();
     };
