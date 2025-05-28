@@ -427,6 +427,7 @@ const TableBody = ({ data, img }) => {
                           nativeTokenbalance,
                           e,
                           row?.address,
+                          100,
                           dispatch,
                           row?.current_price
                         )
