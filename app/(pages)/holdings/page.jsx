@@ -1,22 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  solana,
-  HoldingImg,
-  Filter,
-  buyIcon,
-  bitcoinIcon,
-} from "@/app/Images";
+import { solana, HoldingImg, Filter, buyIcon, bitcoinIcon } from "@/app/Images";
 import TableHeaderData from "@/components/common/TableHeader/TableHeaderData";
 import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
 import HolderDataTable from "@/components/common/HolderTable/HolderDataTable";
-import Moralis from "moralis";
 import NoDataMessage from "@/components/NoDataMessage/NoDataMessage";
-import { usePathname } from "next/navigation";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
+import toast from "react-hot-toast";
+const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
 const Holdings = () => {
   const { t } = useTranslation();
@@ -66,30 +59,34 @@ const Holdings = () => {
     // },
   ];
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!Moralis.Core.isStarted) {
-        const apiKey = process.env.NEXT_PUBLIC_MORALIS_API_KEY;
-        if (!apiKey) throw new Error("API key is missing!");
-        await Moralis.start({ apiKey });
-      }
-      setLoading(true);
+  const fetchData = async () => {
+    setLoading(true);
+    const token = localStorage.getItem("token");
+    if (token) {
       await axios({
-        url: `${BASE_URL}wavePro/users/solanaHoldings`,
-        method: "post",
-        data: {
-          walletAddress: solWalletAddress,
+        url: `${BASE_URL}transactions/PNLSolana/${solWalletAddress}`,
+        method: "get",
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
       })
         .then((response) => {
-          setHoldingsData(response?.data?.data?.buyTokens);
+          console.log(
+            "🚀 ~ .then ~ response?.data?.data?.pnlCalculation:",
+            response?.data?.data?.pnl
+          );
+          setHoldingsData(response?.data?.data?.pnl);
           setLoading(false);
         })
         .catch((err) => {
           console.log("🚀 ~ fetchData ~ err:", err?.message);
           setLoading(false);
         });
-    };
+    } else {
+      return toast.error("Unauthorized request.");
+    }
+  };
+  useEffect(() => {
     if (solWalletAddress) {
       fetchData();
     }
