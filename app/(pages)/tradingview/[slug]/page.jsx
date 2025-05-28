@@ -395,6 +395,7 @@ const Tradingview = () => {
                 scrollPosition={scrollPosition}
                 tvChartRef={tvChartRef}
                 solWalletAddress={solWalletAddress}
+                tokenSupply={chartTokenData?.currentSupply}
               />
             </div>
           )}
@@ -449,10 +450,12 @@ const Tradingview = () => {
           <div className="w-full border border-[#4D4D4D] md:border-l-0 md:border-r-0">
             <DataSecurity
               tokenCA={tokenaddress}
+              tokenSymbol={tokenSymbol}
               tragindViewPage={tragindViewPage?.right?.datasecurity}
               activeTab={activeTab}
               dataAndSecurity={dataAndSecurity}
               dataLoaderForChart={dataLoaderForChart}
+              tokenSupply={chartTokenData?.currentSupply}
             />
           </div>
         </div>
