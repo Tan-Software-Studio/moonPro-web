@@ -144,6 +144,7 @@ function RightSideWallet({ wallettrackerPage }) {
                 {alert?.Trade?.Side?.Type == "buy" && (
                   <BuyWalletTracker
                     toToken={alert.Trade.Currency?.MintAddress}
+                    price={alert?.Trade?.PriceInUSD}
                     solWalletAddress={solWalletAddress}
                   />
                 )}

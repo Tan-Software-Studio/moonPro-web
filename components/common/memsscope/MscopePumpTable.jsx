@@ -84,7 +84,7 @@ const MscopePumpTable = ({ MemscopeData }) => {
 
   const copyAddress = (address, index, e) => {
     e.stopPropagation();
-    e.preventDefault()
+    e.preventDefault();
     navigator?.clipboard?.writeText(address);
     setCopied(index);
     // toast.success("address copied successfully");
@@ -270,8 +270,8 @@ const MscopePumpTable = ({ MemscopeData }) => {
                                 {block?.bonding_curv >= 100
                                   ? "100%"
                                   : block?.bonding_curv
-                                    ? `${block?.bonding_curv?.toFixed(2)} %`
-                                    : "0%"}
+                                  ? `${block?.bonding_curv?.toFixed(2)} %`
+                                  : "0%"}
                               </div>
                             </Tooltip>
                           </div>
@@ -279,23 +279,28 @@ const MscopePumpTable = ({ MemscopeData }) => {
                         <div>
                           <div className="w-[90px] h-[60px] relative flex items-center justify-center">
                             <div
-                              className={`${hoverRow === index
-                                ? "opacity-40 absolute inset-0 flex items-center justify-center"
-                                : "opacity-100"
-                                } `}
+                              className={`${
+                                hoverRow === index
+                                  ? "opacity-40 absolute inset-0 flex items-center justify-center"
+                                  : "opacity-100"
+                              } `}
                             >
                               <ChartComponent block={block} />
                             </div>
                             {hoverRow === index && (
                               <>
-                              
-                                <div className={`absolute ${index == 0 ? "-top-4" : "-top-12"} right-44 rounded-md text-[#21CB6B] text-xs font-light border-[1px]  border-[#333333] bg-[#191919]  px-4 py-1 flex items-center justify-between z-500 w-fit whitespace-nowrap transition-all duration-100 ease-in-out`}>
-                                <p>Bonding : </p>
+                                <div
+                                  className={`absolute ${
+                                    index == 0 ? "-top-4" : "-top-12"
+                                  } right-44 rounded-md text-[#21CB6B] text-xs font-light border-[1px]  border-[#333333] bg-[#191919]  px-4 py-1 flex items-center justify-between z-500 w-fit whitespace-nowrap transition-all duration-100 ease-in-out`}
+                                >
+                                  <p>Bonding : </p>
                                   {block?.bonding_curv >= 100
                                     ? "100%"
                                     : block?.bonding_curv
-                                      ? `${block?.bonding_curv?.toFixed(2)} %`
-                                      : "0%"}</div>
+                                    ? `${block?.bonding_curv?.toFixed(2)} %`
+                                    : "0%"}
+                                </div>
                                 <button
                                   className="absolute  w-fit whitespace-nowrap rounded-md bg-[#1d73fc] hover:bg-[#438bff] text-[#111111] font-bold py-1 px-5 text-xs transition-all duration-100 ease-in-out"
                                   onClick={(e) => {
@@ -309,18 +314,20 @@ const MscopePumpTable = ({ MemscopeData }) => {
                                       e,
                                       "6ef8rrecthr5dkzon8nwu78hrvfckubj14m5ubewf6p",
                                       block?.bonding_curv,
-                                      dispatch
+                                      dispatch,
+                                      block?.current_price
                                     );
                                   }}
                                 >
                                   {quickBuy > 0
-                                    ? `${quickBuy?.length > 6
-                                      ? `${quickBuy.slice(0, 7)}...`
-                                      : `${quickBuy} SOL`
-                                    }`
+                                    ? `${
+                                        quickBuy?.length > 6
+                                          ? `${quickBuy.slice(0, 7)}...`
+                                          : `${quickBuy} SOL`
+                                      }`
                                     : "Buy"}
-                                </button></>
-
+                                </button>
+                              </>
                             )}
                           </div>
                         </div>
@@ -329,8 +336,9 @@ const MscopePumpTable = ({ MemscopeData }) => {
                       <div className="flex justify-between">
                         <div className="flex gap-[12px] order-2">
                           <Tooltip
-                            body={`Number of Holders: ${block?.holders ? block.holders : 0
-                              }`}
+                            body={`Number of Holders: ${
+                              block?.holders ? block.holders : 0
+                            }`}
                           >
                             <div className="flex items-center gap-[4px]">
                               <Image src={Users} alt="user" />
@@ -341,26 +349,28 @@ const MscopePumpTable = ({ MemscopeData }) => {
                           </Tooltip>
 
                           <Tooltip
-                            body={`Volume: ${block?.volume
-                              ? humanReadableFormat(block?.volume.toFixed(2))
-                              : 0
-                              }`}
+                            body={`Volume: ${
+                              block?.volume
+                                ? humanReadableFormat(block?.volume.toFixed(2))
+                                : 0
+                            }`}
                           >
                             <div className="flex items-center gap-[4px]">
                               <Image src={Vol} alt="volume" />
                               <div className="text-[#F1F0F0] text-xs md:text-[12px] font-400">
                                 {block?.volume
                                   ? humanReadableFormat(
-                                    block?.volume.toFixed(2)
-                                  )
+                                      block?.volume.toFixed(2)
+                                    )
                                   : 0}{" "}
                               </div>
                             </div>
                           </Tooltip>
 
                           <Tooltip
-                            body={`Market Cap: ${block?.MKC ? humanReadableFormat(block?.MKC) : 0
-                              }`}
+                            body={`Market Cap: ${
+                              block?.MKC ? humanReadableFormat(block?.MKC) : 0
+                            }`}
                           >
                             <div className="flex items-center gap-[4px]">
                               <Image src={MC} alt="MC" />

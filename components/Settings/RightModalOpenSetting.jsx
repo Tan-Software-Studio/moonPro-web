@@ -8,13 +8,13 @@ import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 import { VscDebugRestart } from "react-icons/vsc";
 import Image from "next/image";
 import { solana } from "@/app/Images";
-import { useDispatch } from "react-redux";
-import { setPreSetOrderSetting } from "@/app/redux/states";
+import { useDispatch, useSelector } from "react-redux";
+import { setPresetActive, setPreSetOrderSetting } from "@/app/redux/states";
 const RightModalOpenSetting = ({
   ordersettingLang,
   isOpen,
   onClose,
-  tredingPage,presist,setPresist
+  tredingPage,
 }) => {
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("buy");
@@ -81,6 +81,8 @@ const RightModalOpenSetting = ({
       },
     },
   });
+  // presetActive like P1 P2 and all
+  const presist = useSelector((state) => state?.AllStatesData?.presetActive);
   // onchange function for data update
   function updatePreSetSetting(target) {
     const { name, value } = target;
@@ -159,7 +161,7 @@ const RightModalOpenSetting = ({
       localStorage.setItem("preSetAllData", JSON.stringify(preSetData));
     }
     if (preSetActiveFLag) {
-      setPresist(preSetActiveFLag);
+      dispatch(setPresetActive(preSetActiveFLag));
     }
   }, []);
   return (
@@ -227,7 +229,7 @@ const RightModalOpenSetting = ({
                   >
                     <button
                       onClick={() => {
-                        setPresist(item);
+                        dispatch(setPresetActive(item));
                         localStorage.setItem("preSetSettingActive", item);
                       }}
                       className={`w-full py-[10px] text-[#F6F6F6] font-[700] text-[12px] border-r-[0.5px] border-r-[#404040] duration-300 ease-in-out ${

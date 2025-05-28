@@ -65,6 +65,7 @@ import Clear from "../public/assets/Searchbar/Clear.svg";
 import X from "../public/assets/Searchbar/X.png";
 import upIcon from "../public/assets/common/upIcon.svg";
 import pump_img from "../public/assets/pump_img/pump_img.png";
+import nftProfileImage from "../public/assets/common/nftimg.webp";
 
 import userIcon from "../public/assets/Leaderboard/userIcon.png";
 import LeaderboardIcon from "../public/assets/Leaderboard/leaderboard.svg";
@@ -129,6 +130,7 @@ import tableImage from "../public/assets/Profile/table.png";
 import walletBalance from "../public/assets/Navbar/walletBalance.png";
 
 export {
+  nftProfileImage,
   LeaderboardIcon,
   SecondUserIcon,
   firstUserIcon,

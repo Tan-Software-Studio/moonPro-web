@@ -1,14 +1,17 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { setselectToken, setselectTokenLogo } from "@/app/redux/CommonUiData";
 import Table from "@/components/TradingChart/Table";
 import { solana } from "@/app/Images";
+import { getSoalanaTokenBalance } from "@/utils/solanaNativeBalance";
 import {
-  getSoalanaTokenBalance,
-} from "@/utils/solanaNativeBalance";
-import { calculatePercentageDifference, convertAnyPriceToSol, decimalConvert, numberFormated } from "@/utils/basicFunctions";
+  calculatePercentageDifference,
+  convertAnyPriceToSol,
+  decimalConvert,
+  numberFormated,
+} from "@/utils/basicFunctions";
 import TVChartContainer from "@/components/TradingChart/TradingChart";
 import TokenDetails from "@/components/common/tradingview/TokenDetails";
 import TradingStats from "@/components/common/tradingview/TradingStats";
@@ -26,7 +29,7 @@ const Tradingview = () => {
   const tredingPage = t("tredingPage");
   const [activeTab, setActiveTab] = useState("buy");
   const [dataLoaderForChart, setDataLoaderForChart] = useState(false);
-  const latestTradesData = useSelector((state) => state.allCharTokenData);
+  const latestTradesData = useSelector((state) => state?.allCharTokenData);
   const [copied, setCopied] = useState(false);
   const dispatch = useDispatch();
   const [tokenBalance, setTokenBalance] = useState(0);
@@ -42,12 +45,16 @@ const Tradingview = () => {
     (state) => state?.AllStatesData?.solWalletAddress
   );
   // native balance
-  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
+  const nativeTokenbalance = useSelector(
+    (state) => state?.AllStatesData?.solNativeBalance
+  );
 
   // chart data from redux
-  const chartTokenData = useSelector((state) => state?.allCharTokenData?.chartData);
+  const chartTokenData = useSelector(
+    (state) => state?.allCharTokenData?.chartData
+  );
 
-  // solana live price 
+  // solana live price
   const solanaLivePrice = useSelector(
     (state) => state?.AllStatesData?.solanaLivePrice
   );
@@ -61,9 +68,9 @@ const Tradingview = () => {
 
     checkScreenSize();
 
-    window.addEventListener('resize', checkScreenSize);
+    window?.addEventListener("resize", checkScreenSize);
 
-    return () => window.removeEventListener('resize', checkScreenSize);
+    return () => window?.removeEventListener("resize", checkScreenSize);
   }, []);
 
   useEffect(() => {
@@ -74,19 +81,19 @@ const Tradingview = () => {
   useEffect(() => {
     localStorage.setItem("chartTokenAddress", tokenaddress);
     const handleScroll = () => {
-      if (containerRef.current) {
-        const scrollAmount = containerRef.current.scrollTop;
+      if (containerRef?.current) {
+        const scrollAmount = containerRef?.current.scrollTop;
         setScrollPosition(scrollAmount);
       }
     };
 
-    const currentRef = containerRef.current;
+    const currentRef = containerRef?.current;
     if (currentRef) {
-      currentRef.addEventListener("scroll", handleScroll);
+      currentRef?.addEventListener("scroll", handleScroll);
     }
     return () => {
       if (currentRef) {
-        currentRef.removeEventListener("scroll", handleScroll);
+        currentRef?.removeEventListener("scroll", handleScroll);
       }
     };
   }, []);
@@ -110,9 +117,9 @@ const Tradingview = () => {
     // });
     if (mintAddress) {
       const formattedAddress = mintAddress;
-      navigator.clipboard
+      navigator?.clipboard
         ?.writeText(formattedAddress)
-        .then(() => { })
+        .then(() => {})
         .catch((err) => {
           console.error("Failed to copy: ", err?.message);
         });
@@ -135,11 +142,17 @@ const Tradingview = () => {
     },
     {
       label: "FDV",
-      price: humanReadableFormat(chartTokenData?.currentSupply * latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD),
+      price: humanReadableFormat(
+        chartTokenData?.currentSupply *
+          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+      ),
     },
     {
       label: tragindViewPage?.right?.tokeninfo?.mc,
-      price: humanReadableFormat(chartTokenData?.currentSupply * latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD),
+      price: humanReadableFormat(
+        chartTokenData?.currentSupply *
+          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+      ),
     },
   ];
 
@@ -196,32 +209,40 @@ const Tradingview = () => {
       value:
         chartTokenData?.perfomancePertnage_5min == "NaN"
           ? 0
-          : `${calculatePercentageDifference(latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD, chartTokenData?.perfomancePertnage_5min).toFixed(2)}` ||
-          "N/A",
+          : `${calculatePercentageDifference(
+              latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+              chartTokenData?.perfomancePertnage_5min
+            ).toFixed(2)}` || "N/A",
     },
     {
       label: "1H",
       value:
         chartTokenData?.perfomancePertnage_1h == "NaN"
           ? 0
-          : `${calculatePercentageDifference(latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD, chartTokenData?.perfomancePertnage_1h).toFixed(2)}` ||
-          "N/A",
+          : `${calculatePercentageDifference(
+              latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+              chartTokenData?.perfomancePertnage_1h
+            ).toFixed(2)}` || "N/A",
     },
     {
       label: "6H",
       value:
         chartTokenData?.perfomancePertnage_6h == "NaN"
           ? 0
-          : `${calculatePercentageDifference(latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD, chartTokenData?.perfomancePertnage_6h).toFixed(2)}` ||
-          "N/A",
+          : `${calculatePercentageDifference(
+              latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+              chartTokenData?.perfomancePertnage_6h
+            ).toFixed(2)}` || "N/A",
     },
     {
       label: "24H",
       value:
         chartTokenData?.perfomancePertnage_24h == "NaN"
           ? 0
-          : `${calculatePercentageDifference(latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD, chartTokenData?.perfomancePertnage_24h).toFixed(2)}` ||
-          "N/A",
+          : `${calculatePercentageDifference(
+              latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+              chartTokenData?.perfomancePertnage_24h
+            ).toFixed(2)}` || "N/A",
     },
   ];
 
@@ -234,7 +255,12 @@ const Tradingview = () => {
     },
     {
       label: `${tragindViewPage?.right?.tokeninfo?.price} SOL`,
-      price: `${decimalConvert(convertAnyPriceToSol(latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD, solanaLivePrice) || 0)}`,
+      price: `${decimalConvert(
+        convertAnyPriceToSol(
+          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+          solanaLivePrice
+        ) || 0
+      )}`,
     },
     {
       label: tragindViewPage?.right?.tokeninfo?.supply,
@@ -246,11 +272,17 @@ const Tradingview = () => {
     },
     {
       label: "FDV",
-      price: humanReadableFormat(chartTokenData?.currentSupply * latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD),
+      price: humanReadableFormat(
+        chartTokenData?.currentSupply *
+          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+      ),
     },
     {
       label: tragindViewPage?.right?.tokeninfo?.mc,
-      price: humanReadableFormat(chartTokenData?.currentSupply * latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD),
+      price: humanReadableFormat(
+        chartTokenData?.currentSupply *
+          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+      ),
     },
   ];
 
@@ -273,18 +305,29 @@ const Tradingview = () => {
     },
     {
       label: `Pooled ${tokenSymbol}`,
-      value: `${numberFormated(chartTokenData?.Pooled_Base || 0)} | ${humanReadableFormat(chartTokenData?.Pooled_Base * latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD)}`,
+      value: `${numberFormated(
+        chartTokenData?.Pooled_Base || 0
+      )} | ${humanReadableFormat(
+        chartTokenData?.Pooled_Base *
+          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+      )}`,
     },
     {
       label: "Pooled SOL",
-      value: `${numberFormated(chartTokenData?.Pooled_Quote_Native || 0)} | ${humanReadableFormat(chartTokenData?.Pooled_Quote_Native * solanaLivePrice)}`,
+      value: `${numberFormated(
+        chartTokenData?.Pooled_Quote_Native || 0
+      )} | ${humanReadableFormat(
+        chartTokenData?.Pooled_Quote_Native * solanaLivePrice
+      )}`,
     },
   ];
   // Token Chart Data (Right Side)
   useEffect(() => {
     if (tokenaddress) {
       setDataLoaderForChart(true);
-      dispatch(fetchChartAllData({ tokenaddress, pairAddress, setDataLoaderForChart }));
+      dispatch(
+        fetchChartAllData({ tokenaddress, pairAddress, setDataLoaderForChart })
+      );
     }
   }, [tokenaddress]);
 
@@ -294,21 +337,22 @@ const Tradingview = () => {
 
   return (
     <div
-      className={`lg:flex relative overflow-y-auto h-[86vh] md:h-[91vh] lg:h-[100vh] ${isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5 ml-2 mr-2"
-        }`}
+      className={`lg:flex relative overflow-y-auto h-[86vh] md:h-[91vh] lg:h-[100vh] ${
+        isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5 ml-2 mr-2"
+      }`}
     >
       {isSmallScreen && (
-
         <div className="md:hidden flex  items-center justify-start bg-[#1F1F1F] rounded-md mt-2 text-white   text-[12px] font-semibold px-2 py-1">
-
           {["Trades", "Transaction"].map((item, index) => (
             <div
               onClick={() => setIsSmallScreenTab(item)}
-              className={`${smallScreenTab === item
-                ? "bg-[#11265B] border-2 border-[#0E43BD]"
-                : "border-[1px] border-[#1F1F1F]"
-                } cursor-pointer  min-w-fit w-20 text-sm font-light flex justify-center tracking-wider px-2 py-1 rounded-md`}
-              key={index}>
+              className={`${
+                smallScreenTab === item
+                  ? "bg-[#11265B] border-2 border-[#0E43BD]"
+                  : "border-[1px] border-[#1F1F1F]"
+              } cursor-pointer  min-w-fit w-20 text-sm font-light flex justify-center tracking-wider px-2 py-1 rounded-md`}
+              key={index}
+            >
               {item}
             </div>
           ))}
@@ -317,7 +361,10 @@ const Tradingview = () => {
       {/* left side */}
       <div className="lg:!h-[91vh] h-svh mb-2 lg:w-[80%] grid place-items-center text-[#8d93b752] overflow-y-auto w-full">
         {/* original live chart */}
-        <div ref={containerRef} className="md:h-screen h-fit w-full overflow-y-auto">
+        <div
+          ref={containerRef}
+          className="md:h-screen h-fit w-full overflow-y-auto"
+        >
           {(!isSmallScreen || smallScreenTab === "Trades") && (
             <>
               <div>
@@ -339,8 +386,7 @@ const Tradingview = () => {
                 />
               </div>
             </>
-          )
-          }
+          )}
           {(!isSmallScreen || smallScreenTab === "Transaction") && (
             <div className="overflow-y-auto border-t border-t-[#4D4D4D]">
               <Table
@@ -349,6 +395,7 @@ const Tradingview = () => {
                 scrollPosition={scrollPosition}
                 tvChartRef={tvChartRef}
                 solWalletAddress={solWalletAddress}
+                tokenSupply={chartTokenData?.currentSupply}
               />
             </div>
           )}
@@ -357,8 +404,6 @@ const Tradingview = () => {
 
       {/* right side */}
       {(!isSmallScreen || smallScreenTab === "Trades") && (
-
-
         <div
           ref={scrollableDivRef4}
           className="lg:h-[91.5vh] overflow-y-auto w-full lg:w-[25%] border-b border-b-[#404040] md:border-l md:border-l-[#404040] space-y-2 md:space-y-0"
@@ -405,10 +450,12 @@ const Tradingview = () => {
           <div className="w-full border border-[#4D4D4D] md:border-l-0 md:border-r-0">
             <DataSecurity
               tokenCA={tokenaddress}
+              tokenSymbol={tokenSymbol}
               tragindViewPage={tragindViewPage?.right?.datasecurity}
               activeTab={activeTab}
               dataAndSecurity={dataAndSecurity}
               dataLoaderForChart={dataLoaderForChart}
+              tokenSupply={chartTokenData?.currentSupply}
             />
           </div>
         </div>

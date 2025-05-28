@@ -19,8 +19,8 @@ export default function Tooltip({ body, children }) {
     if (!triggerRef.current || !floatingRef.current) return;
 
     requestAnimationFrame(() => {
-      const rect = triggerRef.current.getBoundingClientRect();
-      const tooltipRect = floatingRef.current.getBoundingClientRect();
+      const rect = triggerRef?.current?.getBoundingClientRect();
+      const tooltipRect = floatingRef?.current?.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const elementHeight = tooltipRect.height;
       const elementWidth = tooltipRect.width;

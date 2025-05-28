@@ -92,6 +92,7 @@ const allMemescopeData = createSlice({
           (item) => item?.address == payload?.mint
         );
         if (findTokenFromNewLaunch >= 0) {
+          state.newLaunch[findTokenFromNewLaunch].current_price = payload.price;
           state.newLaunch[findTokenFromNewLaunch].volume +=
             payload?.price * payload?.amount;
           state.newLaunch[findTokenFromNewLaunch].MKC =
@@ -109,6 +110,8 @@ const allMemescopeData = createSlice({
           (item) => item?.address == payload?.mint
         );
         if (findTokenFromGraduate >= 0) {
+          state.MscopeGraduateData[findTokenFromGraduate].current_price =
+            payload.price;
           state.MscopeGraduateData[findTokenFromGraduate].volume +=
             payload?.price * payload?.amount;
           state.MscopeGraduateData[findTokenFromGraduate].MKC =
@@ -129,6 +132,8 @@ const allMemescopeData = createSlice({
         );
 
         if (findTokenFromGraduated >= 0) {
+          state.MscopeGraduatedData[findTokenFromGraduated].current_price =
+            payload?.price;
           state.MscopeGraduatedData[findTokenFromGraduated].volume +=
             payload?.price * payload?.amount;
           state.MscopeGraduatedData[findTokenFromGraduated].MKC =

@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { buySolanaTokensQuickBuyHandlerCopyTrading } from "@/utils/solanaBuySell/solanaBuySell";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSolanaNativeBalance } from "@/app/redux/states";
-export default function BuyWalletTracker({ solWalletAddress, toToken }) {
+export default function BuyWalletTracker({ solWalletAddress, toToken,price }) {
   const dispatch = useDispatch();
   const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
   // solana live price 
@@ -25,7 +25,8 @@ export default function BuyWalletTracker({ solWalletAddress, toToken }) {
           nativeTokenbalance,
           e,
           toToken,
-          dispatch
+          dispatch,
+          price
         )
       }
       className="text-[#278BFE] text-[12px] cursor-pointer"

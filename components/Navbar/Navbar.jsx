@@ -144,7 +144,7 @@ const Navbar = () => {
   useEffect(() => {
     fetchData();
     dispatch(fetchMemescopeData());
-    // fetchSolPrice();
+    fetchSolPrice();
   }, []);
   // update and get solana balance
   useEffect(() => {

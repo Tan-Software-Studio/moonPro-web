@@ -18,8 +18,10 @@ import { fetchTradesData } from "@/app/redux/chartDataSlice/chartData.slice.js";
 import TabNavigation from "../common/tradingview/TabNavigation.jsx";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import { useTranslation } from "react-i18next";
+import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFunctions";
+import { solana } from "@/app/Images";
 
-const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
+const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSupply }) => {
   const { t } = useTranslation();
   const tragindViewPagePage = t("tragindViewPage");
   const dispatch = useDispatch();
@@ -28,14 +30,33 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
   const [topHoldingData, setTopHoldingData] = useState([]);
   const [topTraderData, setTopTraderData] = useState([]);
   const [holdingsData, setHoldingsData] = useState([]);
-  const [activeTab, setActiveTab] = useState("Transactions");
+  const [activeTab, setActiveTab] = useState("Trades");
   const [top10Percentage, setTop10Percentage] = useState(0);
   const [top49Percentage, setTop49Percentage] = useState(0);
   const [top100Percentage, setTop100Percentage] = useState(0);
+  const [totalUsdActive, setTotalUsdActive] = useState(true);
+  const [marketCapActive, setMarketCapActive] = useState(true);
+
+  const solanaLivePrice = useSelector(
+    (state) => state?.AllStatesData?.solanaLivePrice
+  );
+
+  const toggleTotalUsdActive = () => {
+    if (solanaLivePrice === 0) {
+      return;
+    } 
+    setTotalUsdActive((prev) => !prev);
+  };
+
+  const toggleMarketCapActive = () => {
+    if (tokenSupply === undefined) {
+      return;
+    } 
+    setMarketCapActive((prev) => !prev);
+  };
 
   useEffect(() => {
     if (!topHoldingData?.BalanceUpdates) return;
-    console.log("latest trades", latestTradesData);
 
     // Extract balances and sort in descending order
     const balances = topHoldingData.BalanceUpdates.map((item) =>
@@ -67,13 +88,14 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
     setTop100Percentage(
       totalBalance > 0 ? ((top100Total / totalBalance) * 100).toFixed(0) : 0
     );
+    console.log("latestTradesData", latestTradesData);
   }, [topHoldingData, top10Percentage, top49Percentage, top100Percentage]);
 
   const pathname = usePathname();
   const chainName = pathname.split("/")[2];
 
   const tabList = [
-    { name: "Transactions" },
+    { name: "Trades" },
     { name: "Top Holders" },
     { name: "Top Traders" },
     { name: "My Holdings" },
@@ -135,33 +157,29 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
   const TopTransactionHeader = [
     {
       id: 1,
-      title: tragindViewPagePage?.table?.transactions?.tableHeaders?.time,
+      title: "Age / Time",
     },
     {
       id: 2,
-      title: tragindViewPagePage?.table?.transactions?.tableHeaders?.type,
+      title: "Type"
     },
     {
       id: 3,
-      title: tragindViewPagePage?.table?.transactions?.tableHeaders?.price,
-      infoTipString:
-        tragindViewPagePage?.table?.transactions?.tableHeaders?.pricetool,
+      title: marketCapActive ? "MC" : "Price",
+      onClick: toggleMarketCapActive
     },
     {
       id: 4,
-      title: tragindViewPagePage?.table?.transactions?.tableHeaders?.qty,
-      infoTipString:
-        tragindViewPagePage?.table?.transactions?.tableHeaders?.qtytool,
+      title: "Amount"
     },
     {
       id: 5,
-      title: `Total USD($)`,
+      title: totalUsdActive ? "Total USD" : "Total SOL",
+      onClick: toggleTotalUsdActive
     },
     {
       id: 6,
-      title: tragindViewPagePage?.table?.transactions?.tableHeaders?.hash,
-      infoTipString:
-        tragindViewPagePage?.table?.transactions?.tableHeaders?.hashtool,
+      title: "Trader"
     },
   ];
 
@@ -333,7 +351,18 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
   // useeffect
   useEffect(() => {
     dispatch(fetchTradesData(tokenCA));
+    if (tokenSupply === undefined) {
+      setMarketCapActive(false);
+    }
   }, [tokenCA]);
+
+  useEffect(() => {
+      if (tokenSupply === undefined) {
+      setMarketCapActive(false);
+    } else { 
+      setMarketCapActive(true);
+    }
+  }, [tokenSupply]);
 
   useEffect(() => {
     if (solWalletAddress) {
@@ -373,7 +402,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
           } `}
         >
           <div>
-            {activeTab === "Transactions" &&
+            {activeTab === "Trades" &&
             latestTradesData?.latestTrades?.length > 0 ? (
               <div className="lg:h-[85vh] h-svh overflow-y-scroll visibleScroll">
                 <table className="min-w-[100%] table-auto overflow-y-scroll">
@@ -382,9 +411,9 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
                       {TopTransactionHeader.map((header) => (
                         <th
                           key={header.id}
-                          className="px-2 py-3 text-center text-xs font-medium text-[#A8A8A8] uppercase whitespace-nowrap leading-4"
+                          className="px-2 py-3 text-center text-xs font-medium text-[#A8A8A8] whitespace-nowrap leading-4"
                         >
-                          <div className="flex items-center gap-1">
+                          <div onClick={header?.onClick} className={`flex items-center gap-1 justify-center ${header?.onClick && "cursor-pointer"}`}>
                             <p>{header.title}</p>
                             {header?.infoTipString && (
                               <Infotip body={header?.infoTipString} />
@@ -397,7 +426,20 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
                   <tbody className="bg-transparent">
                     {latestTradesData?.latestTrades?.map((data, index) => {
                       const isBuy = data?.Trade?.Side?.Type == "buy";
-
+                      let readableTotalPrice = "N/A"
+                      if (data?.Trade?.Amount) {
+                        const totalUsd = data?.Trade?.Amount * data?.Trade?.PriceInUSD;
+                        const solPrice = solanaLivePrice === 0 ? 1 : solanaLivePrice;
+                        const totalSol = totalUsd / solPrice;
+                        const totalPrice = totalUsdActive ? totalUsd : totalSol;
+                        readableTotalPrice = totalPrice >= 1 || totalPrice <= -1
+                              ? humanReadableFormatWithNoDollar(totalPrice, 2)
+                              : formatDecimal(totalPrice, 1);
+                      }
+                      const price = data?.Trade?.PriceInUSD
+                      const supply = tokenSupply === undefined ? 1 : tokenSupply;
+                      const marketCapPrice = price * supply;
+                      const showPrice = marketCapActive ? marketCapPrice : price;
                       return (
                         <tr
                           key={index}
@@ -408,18 +450,20 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
                               ? calculateTimeDifference(data.Block.Time)
                               : "N/A"}
                           </td>
-                          <td
-                            className={`inline-block min-w-8 rounded px-3 py-1.5 text-white text-center ${
-                              isBuy
-                                ? "bg-[#21CB6B] bg-opacity-30"
-                                : "bg-[#ED1B24] bg-opacity-30"
-                            }`}
-                          >
-                            {data?.Trade?.Side?.Type || ""}
+                          <td className="flex items-center justify-center">
+                            <div className={`min-w-8 rounded px-3 py-1.5 text-center ${
+                              isBuy? 
+                                "text-[#21CB6B]"
+                              : "text-[#ed1b26]"
+                              }`}>
+                              {data?.Trade?.Side?.Type || ""}
+                            </div>
                           </td>
                           <td className="text-center px-6 py-4">
                             {data?.Trade?.PriceInUSD
-                              ? Number(data.Trade.PriceInUSD).toFixed(5)
+                              ?  showPrice >= 1 || showPrice <= -1
+                                  ? "$" + humanReadableFormatWithNoDollar(showPrice, 2)
+                                  : "$" + formatDecimal(showPrice, 1)
                               : "N/A"}
                           </td>
                           <td className="text-center px-6 py-4">
@@ -427,12 +471,22 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
                               ? humanReadableFormatWithOutUsd(data.Trade.Amount)
                               : "N/A"}
                           </td>
-                          <td className="text-center px-6 py-4">
-                            {data?.Trade?.Amount
-                              ? humanReadableFormat(
-                                  data.Trade.Amount * data.Trade.PriceInUSD
-                                )
-                              : "N/A"}
+                          <td className={`text-center px-6 py-4 
+                            ${isBuy? 
+                              "text-[#21CB6B]"
+                            : "text-[#ed1b26]"
+                            }`}>
+                              <div className="flex items-center justify-center gap-1">
+                              {!totalUsdActive && 
+                                <Image
+                                  src={solana}
+                                  width={15}
+                                  height={15}
+                                  alt="solana"
+                                />
+                              }
+                              <p>{(totalUsdActive ? "$" : "") + readableTotalPrice}</p>
+                              </div>
                           </td>
                           <td className="flex items-center justify-center px-6 py-4 text-white text-center gap-2">
                             {data?.Transaction?.Signer
