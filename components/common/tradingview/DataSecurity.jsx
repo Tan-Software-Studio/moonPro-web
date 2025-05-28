@@ -71,7 +71,6 @@ function DataSecurity({
           const top10percentage = totalBalance > 0 ? ((totalBalance / rawSupply) * 100).toFixed(0) : 0;
           setTop10holdersPercetnage(top10percentage);
         }
-        console.log("top10holdersPercetnage", top10holdersPercetnage)
       } catch (error) {
         console.error("Error:", error.response?.data || error.message || error);
       }

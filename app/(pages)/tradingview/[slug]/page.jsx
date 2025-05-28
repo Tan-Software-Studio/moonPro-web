@@ -332,12 +332,12 @@ const Tradingview = () => {
                 />
               </div>
 
-              <div ref={tvChartRef} className="h-[600px] w-full">
+              {/* <div ref={tvChartRef} className="h-[600px] w-full">
                 <TVChartContainer
                   tokenSymbol={tokenSymbol}
                   tokenaddress={tokenaddress}
                 />
-              </div>
+              </div> */}
             </>
           )
           }

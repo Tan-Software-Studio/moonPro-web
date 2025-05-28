@@ -35,6 +35,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
 
   useEffect(() => {
     if (!topHoldingData?.BalanceUpdates) return;
+    console.log("latest trades", latestTradesData);
 
     // Extract balances and sort in descending order
     const balances = topHoldingData.BalanceUpdates.map((item) =>
@@ -141,49 +142,29 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
       title: tragindViewPagePage?.table?.transactions?.tableHeaders?.type,
     },
     {
-      id: 5,
-      title: tragindViewPagePage?.table?.transactions?.tableHeaders?.qty,
-      infoTipString:
-        tragindViewPagePage?.table?.transactions?.tableHeaders?.qtytool,
-    },
-    {
-      id: 6,
-      title: tragindViewPagePage?.table?.transactions?.tableHeaders?.currency,
-    },
-    {
-      id: 7,
-      title: tragindViewPagePage?.table?.transactions?.tableHeaders?.sideqty,
-      infoTipString:
-        tragindViewPagePage?.table?.transactions?.tableHeaders?.sideqtytool,
-    },
-    {
-      id: 8,
-      title:
-        tragindViewPagePage?.table?.transactions?.tableHeaders?.sidecurrency,
-      infoTipString:
-        tragindViewPagePage?.table?.transactions?.tableHeaders
-          ?.sidecurrencytool,
-    },
-    {
-      id: 9,
+      id: 3,
       title: tragindViewPagePage?.table?.transactions?.tableHeaders?.price,
       infoTipString:
         tragindViewPagePage?.table?.transactions?.tableHeaders?.pricetool,
     },
     {
-      id: 10,
-      title: `${tragindViewPagePage?.table?.transactions?.tableHeaders?.value} ($)`,
+      id: 4,
+      title: tragindViewPagePage?.table?.transactions?.tableHeaders?.qty,
       infoTipString:
-        tragindViewPagePage?.table?.transactions?.tableHeaders?.valuetool,
+        tragindViewPagePage?.table?.transactions?.tableHeaders?.qtytool,
     },
     {
-      id: 11,
+      id: 9,
+      title: `Total USD($)`,
+    },
+    {
+      id: 10,
       title: tragindViewPagePage?.table?.transactions?.tableHeaders?.pool,
       infoTipString:
         tragindViewPagePage?.table?.transactions?.tableHeaders?.pooltool,
     },
     {
-      id: 12,
+      id: 11,
       title: tragindViewPagePage?.table?.transactions?.tableHeaders?.hash,
       infoTipString:
         tragindViewPagePage?.table?.transactions?.tableHeaders?.hashtool,
@@ -443,30 +424,13 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
                             {data?.Trade?.Side?.Type || ""}
                           </td>
                           <td className="text-center px-6 py-4">
-                            {data?.Trade?.Amount
-                              ? humanReadableFormatWithOutUsd(data.Trade.Amount)
-                              : "N/A"}
-                          </td>
-                          <td className="text-center px-6 py-4">
-                            {data?.Trade?.Currency?.Symbol
-                              ? data.Trade.Currency.Symbol
-                              : "N/A"}
-                          </td>
-                          <td className="text-center px-6 py-4">
-                            {data?.Trade?.Side?.Amount
-                              ? humanReadableFormatWithOutUsd(
-                                  data.Trade.Side.Amount
-                                )
-                              : "N/A"}
-                          </td>
-                          <td className="text-center px-6 py-4">
-                            {data?.Trade?.Side?.Currency?.Symbol
-                              ? data.Trade.Side.Currency.Symbol
-                              : "N/A"}
-                          </td>
-                          <td className="text-center px-6 py-4">
                             {data?.Trade?.PriceInUSD
                               ? Number(data.Trade.PriceInUSD).toFixed(5)
+                              : "N/A"}
+                          </td>
+                          <td className="text-center px-6 py-4">
+                            {data?.Trade?.Amount
+                              ? humanReadableFormatWithOutUsd(data.Trade.Amount)
                               : "N/A"}
                           </td>
                           <td className="text-center px-6 py-4">
@@ -477,12 +441,12 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress }) => {
                               : "N/A"}
                           </td>
                           <td className="text-center px-6 py-4 text-white">
-                            {data?.Trade?.Market?.MarketAddress
-                              ? `${data?.Trade?.Market?.MarketAddress?.slice(
+                            {data?.Transaction?.Signature
+                              ? `${data?.Transaction?.Signature.slice(
                                   0,
-                                  4
-                                )}...${data?.Trade?.Market?.MarketAddress?.slice(
-                                  -4
+                                  3
+                                )}...${data?.Transaction?.Signature.slice(
+                                  -3
                                 )}`
                               : "N/A"}
                           </td>
