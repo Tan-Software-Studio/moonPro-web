@@ -33,6 +33,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
   // console.log("TVChartContainer called.");
   useEffect(() => {
     clearMarks();
+    window.chartReady = false;
     const tvWidget = new widget({
       symbol: tokenSymbol,
       datafeed: Datafeed,
@@ -89,6 +90,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
     });
     // console.log("TradingView widget initialized.", tvWidget);
     tvWidget.onChartReady(async () => {
+      window.chartReady = true;
       // console.log("Chart has loaded!");  
       await setPriceLines(tvWidget);
       const priceScale = tvWidget

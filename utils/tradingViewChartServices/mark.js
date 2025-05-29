@@ -48,8 +48,8 @@ export const addMark = async (time, isBuy, usdTraded, atPricePoint, tokenAmount,
     userMarks.sort((a, b) => a.time - b.time);
   }
   const chart = window?.tvWidget;
-  if (chart?.ready) {
-    chart.activeChart().clearMarks(); // Clear existing marks
+
+  if (chart) {
     chart.activeChart().refreshMarks(); // Force re-request of marks
     await setPriceLines(chart);
   }

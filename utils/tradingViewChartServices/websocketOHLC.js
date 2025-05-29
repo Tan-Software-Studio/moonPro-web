@@ -1,10 +1,7 @@
 import { addNewTransaction } from "@/app/redux/chartDataSlice/chartData.slice";
 import store from "@/app/redux/store";
 import { io } from "socket.io-client";
-import { addMark, getStoredMarks } from "./mark";
-
-import { addFlagToChart } from "./chartFlagDraw";
-import { getMarks } from "./getMarks";
+import { setNewLatestBarTime } from "./latestBarTime";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const socket = io(BASE_URL, {
   transports: ["websocket"],
@@ -31,8 +28,6 @@ export async function subscribeToWebSocket(
   marketCapActive,
   supply,
   solPrice,
-  tokenCreator,
-  userSolWallet
 ) {
   if (
     activeSubscriberUID !== subscriberUID ||
@@ -110,6 +105,7 @@ export async function subscribeToWebSocket(
         // New bar
         if (lastBar[subscriberUID]) {
           onRealtimeCallback(lastBar[subscriberUID]);
+          setNewLatestBarTime(lastBar[subscriberUID]?.time)
         }
         let newOpen = price;
         let newClose = close;
@@ -144,28 +140,8 @@ export async function subscribeToWebSocket(
       const isBuy = item?.Trade?.Side?.Type == "buy";
       const usdTraded = Number(item?.Trade?.Side?.AmountInUSD);
 
-      if (signer === tokenCreator) {
-        await addMark(
-          tradeTime / 1000,
-          isBuy,
-          usdTraded,
-          price,
-          usdActive,
-          marketCapActive,
-          "dev"
-        );
-      } else if (signer === userSolWallet) {
-        await addMark(
-          tradeTime / 1000,
-          isBuy,
-          usdTraded,
-          price,
-          usdActive,
-          marketCapActive,
-          "user"
-        );
-      }
       onRealtimeCallback(lastBar[subscriberUID]);
+      setNewLatestBarTime(lastBar[subscriberUID]?.time)
     });
   });
 }
