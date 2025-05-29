@@ -173,12 +173,15 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                     <div className="flex items-center gap-1">
                       <span>User ID:</span>
                       <span>{truncateId(userDetails?._id || userDetails?.userId)}</span>
-                      <IoCopyOutline
-                        className="cursor-pointer text-xs hover:text-white transition-colors"
-                        onClick={() => copyToClipboard(userDetails?._id || userDetails?.userId || "", "userId")}
-                        title={copiedUserId ? "Copied!" : "Copy User ID"}
-                      />
-                      {copiedUserId && <span className="text-green-400 text-xs">✓</span>}
+                      {copiedUserId ? (
+                        <FaCheck className="text-green-400 text-xs" />
+                      ) : (
+                        <IoCopyOutline
+                          className="cursor-pointer text-xs hover:text-white transition-colors"
+                          onClick={() => copyToClipboard(userDetails?._id || userDetails?.userId || "", "userId")}
+                          title="Copy User ID"
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -197,12 +200,15 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                       <span>{userDetails?.referralId || "N/A"}</span>
                       {userDetails?.referralId && (
                         <>
-                          {/* <IoCopyOutline
-                            className="cursor-pointer text-xs hover:text-white transition-colors"
-                            onClick={() => copyToClipboard(userDetails.referralId, "referral")}
-                            title={copiedReferral ? "Copied!" : "Copy Referral Code"}
-                          />
-                          {copiedReferral && <span className="text-green-400 text-xs">✓</span>} */}
+                          {copiedReferral ? (
+                            <FaCheck className="text-green-400 text-xs" />
+                          ) : (
+                            <IoCopyOutline
+                              className="cursor-pointer text-xs hover:text-white transition-colors"
+                              onClick={() => copyToClipboard(userDetails.referralId, "referral")}
+                              title="Copy Referral Code"
+                            />
+                          )}
                           <div className="relative">
                             <PiShare
                               className="cursor-pointer text-xs hover:text-white transition-colors ml-1"
@@ -380,13 +386,17 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                   <div className="text-[#6E6E6E] text-xs">Earn free SOL. Visit the rewards page to get started</div>
                 </div>
 
-                <button className="px-4 py-2 flex items-center gap-2 text-xs border border-[#404040] rounded cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all text-[#A8A8A8] w-[140px] justify-center">
+                <Link
+                  onClick={() => setIsAccountPopup(false)}
+                  href="/referral"
+                  className="px-4 py-2 flex items-center gap-2 text-xs border border-[#404040] rounded cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all text-[#A8A8A8] w-[140px] justify-center"
+                >
                   <span>📈</span>
                   <span>Earn Rewards</span>
-                </button>
+                </Link>
               </div>
 
-              <div className="flex items-center justify-between py-3 border-t border-[#1A1A1A]">
+              {/* <div className="flex items-center justify-between py-3 border-t border-[#1A1A1A]">
                 <div className="flex-1">
                   <div className="text-white text-sm font-medium mb-1">Yields</div>
                   <div className="text-[#6E6E6E] text-xs">
@@ -398,7 +408,7 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                   <span>🔗</span>
                   <span>Enable Yield</span>
                 </button>
-              </div>
+              </div> */}
 
               <div className="flex items-center justify-between py-3 border-t border-[#1A1A1A]">
                 <div className="flex-1">

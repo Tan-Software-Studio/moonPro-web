@@ -142,7 +142,7 @@ const ExchangePopup = ({ isOpen, onClose }) => {
   const fromBalance = isSwapped ? usdcBalance : nativeTokenbalance;
   const toBalance = isSwapped ? nativeTokenbalance : usdcBalance;
   const solPrice = solanaLivePrice || 174.21;
-  const rateText = isSwapped ? `1 USDC ≈ ${(1 / solPrice).toFixed(6)} SOL` : `1 SOL = ${solPrice} USDC`;
+  const rateText = isSwapped ? `1 USDC ≈ ${(1 / solPrice).toFixed(5)} SOL` : `1 SOL = ${solPrice.toFixed(2)} USDC`;
 
   return (
     <motion.div
@@ -174,7 +174,7 @@ const ExchangePopup = ({ isOpen, onClose }) => {
         {/* Tabs Container */}
         <div className="p-4">
           <div className="bg-[#1A1A1A] rounded-lg p-1 flex mb-4">
-            {["Convert", "Deposit", "Buy"].map((tab) => (
+            {["Convert", "Deposit"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -305,8 +305,8 @@ const ExchangePopup = ({ isOpen, onClose }) => {
                 </div>
 
                 {/* QR code and address */}
-                <div className="bg-[#08080E] hover:bg-[#1E1E1ECC] rounded-lg p-4 cursor-pointer border-gray-800 px-2 py-2 mb-4 flex-1 ">
-                  <div className="flex gap-4">
+                <div className="bg-[#08080E]  rounded-lg p-4 cursor-pointer border-gray-800 px-2 py-2 mb-4 flex-1 ">
+                  <div className="flex gap-4 hover:bg-[#1E1E1ECC] p-3 rounded-md">
                     <div className="bg-white p-3 rounded-lg w-32 h-32 flex items-center justify-center flex-shrink-0">
                       <QRCode
                         size={256}
@@ -329,11 +329,6 @@ const ExchangePopup = ({ isOpen, onClose }) => {
                   </div>
                 </div>
 
-                <div className="text-center mb-4">
-                  <span className="text-[#A8A8A8] text-sm">Don&apos;t have any Solana? </span>
-                  <button className="text-blue-500 hover:text-blue-400 text-sm underline">Buy through Wavepro</button>
-                </div>
-
                 <div className="sm:px-4 px-3 pb-4 pt-2 ">
                   <button
                     onClick={handleCopyAddress}
@@ -346,7 +341,7 @@ const ExchangePopup = ({ isOpen, onClose }) => {
             )}
 
             {/* Buy Tab */}
-            {activeTab === "Buy" && (
+            {/* {activeTab === "Buy" && (
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-2">
@@ -399,7 +394,7 @@ const ExchangePopup = ({ isOpen, onClose }) => {
                   </button>
                 </div>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </motion.div>
