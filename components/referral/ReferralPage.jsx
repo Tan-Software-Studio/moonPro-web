@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useRef, useState } from "react";
-import { LuUpload } from "react-icons/lu";
 import { MdOutlineKeyboardDoubleArrowUp } from "react-icons/md";
 import { FaGem } from "react-icons/fa6";
 import { FiUserPlus } from "react-icons/fi";
@@ -15,18 +14,20 @@ import { token } from "@/utils/tradingViewChartServices/constant";
 import toast from "react-hot-toast";
 import { decimalConvert } from "@/utils/basicFunctions";
 import RefPopup from "./RefPopup";
+import { RiLinkM } from "react-icons/ri";
+
+
 
 const ReferralPage = () => {
   const nftImages = [nftImg, nftImg2, nftImg3, nftImg4, nftImg5];
 
-  console.log('chack')
-
   const URL_LINK = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
 
   const fileInputRef = useRef(null);
-  const [hovered, setHovered] = useState(false);
   const [imageURL, setImageURL] = useState(null);
   const [copied3, setCopied3] = useState(false);
+  const [copiedRef1, setCopiedRef1] = useState(false);
+  const [copiedRef2, setCopiedRef2] = useState(false);
   const [refData, setRefData] = useState([])
   const [selectedTier, setSelectedTier] = useState(1);
   const [showWithdrawPopup, setShowWithdrawPopup] = useState(false);
@@ -39,6 +40,7 @@ const ReferralPage = () => {
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
+
 
   const shortenAddress = (address) => {
     if (!address || address.length < 8) return address || "...";
@@ -99,10 +101,24 @@ const ReferralPage = () => {
 
 
 
+  const handleCopy1 = (ref) => {
+    navigator.clipboard.writeText(`https://moonpro.wavebot.app/referral/${ref}`);
+    setCopiedRef1(true);
+    toast.success('Referral link copied!')
+    setTimeout(() => setCopiedRef1(false), 2000);
+  };
+
+  const handleCopy2 = (ref) => {
+    navigator.clipboard.writeText(`https://moonpro.wavebot.app/referral/${ref}`);
+    setCopiedRef2(true);
+    toast.success('Referral link copied!')
+    setTimeout(() => setCopiedRef2(false), 2000);
+  };
+
   const handleCopy3 = () => {
     navigator.clipboard.writeText(solWalletAddress);
     setCopied3(true);
-    toast.success('Copy Address!')
+    toast.success('Wallet address copied!');
     // setTimeout(() => setCopied3(false), 2000);
   };
 
@@ -171,14 +187,29 @@ const ReferralPage = () => {
                 </div>
               </div>
 
+              <div>
+                {solWalletAddress && <div
+                  onClick={() => handleCopy1(refData?.user?.referralId)}
+                  className="flex items-center gap-1 cursor-pointer text-sm group"
+                >
+                  <RiLinkM size={18} className="text-[#a0a4b8] group-hover:text-white transition-colors duration-200" />
+                  <span className="text-[#a0a4b8]">{refData?.user?.referralId}</span>
+                </div>}
+
+
+              </div>
             </div>
 
             {/* Progress Bar */}
-            <div className="mt-4 w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
+            <div className="mt-2 w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
               <div
                 className="h-full bg-blue-500 transition-all duration-300"
                 style={{ width: `${progress}%` }}
               ></div>
+            </div>
+
+            <div className="mt-2">
+              <p className="tracking-wider text-sm">{refData?.user?.email}</p>
             </div>
           </div>
         </div>
@@ -254,18 +285,35 @@ const ReferralPage = () => {
                 <FiUserPlus className="text-blue-500" size={18} /> Referrals
               </div>
 
-              <div className="flex items-center gap-3 text-sm text-gray-400 flex-shrink-0 border-none focus:outline-none focus:ring-0">
-                <select
-                  value={selectedTier}
-                  onChange={(e) => setSelectedTier(Number(e.target.value))}
-                  className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 rounded border-none focus:outline-none focus:ring-0 cursor-pointer"
-                >
-                  <option className="bg-black text-white cursor-pointer" value={1}>1 Tier</option>
-                  <option className="bg-black text-white cursor-pointer" value={2}>2 Tier</option>
-                  <option className="bg-black text-white cursor-pointer" value={3}>3 Tier</option>
-                </select>
+              <div className="flex gap-3 items-center">
+                <div>
+                  {solWalletAddress && <div
+                    onClick={() => handleCopy2(refData?.user?.referralId)}
+                    className="flex items-center gap-1 cursor-pointer text-[14px] group"
+                  >
+                    <RiLinkM size={18} className="text-[#a0a4b8] group-hover:text-white transition-colors duration-200" />
+                    <span className="text-[#a0a4b8]">{refData?.user?.referralId}</span>
+                  </div>}
+
+
+                </div>
+                <div className="flex items-center gap-3 text-sm text-gray-400 flex-shrink-0 border-none focus:outline-none focus:ring-0">
+                  <select
+                    value={selectedTier}
+                    onChange={(e) => setSelectedTier(Number(e.target.value))}
+                    className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 rounded border-none focus:outline-none focus:ring-0 cursor-pointer"
+                  >
+                    <option className="bg-black text-white cursor-pointer" value={1}>1 Tier</option>
+                    <option className="bg-black text-white cursor-pointer" value={2}>2 Tier</option>
+                    <option className="bg-black text-white cursor-pointer" value={3}>3 Tier</option>
+                  </select>
+                </div>
               </div>
+
+
             </div>
+
+
 
 
             {/* Table */}
