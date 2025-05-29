@@ -32,7 +32,7 @@ import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 import { IoSearchSharp } from "react-icons/io5";
 import RoundProgressBar from "@/components/RoundProgressBar/RoundProgressBar";
 
-const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, setSelectedMetric, setShowMarketCap ,showMarketCap, showVolume, setShowVolume}) => {
+const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, setSelectedMetric, setShowMarketCap, showMarketCap, showVolume, setShowVolume, showSocials, setShowSocials, showHolders, setShowHolders, setshowHolders10, showHolders10 }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoverRow, sethoverRow] = useState(false);
   // solana live price
@@ -57,25 +57,31 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
 
 
   useEffect(() => {
-  const savedMetric = localStorage.getItem('selectedMetric');
-  if (savedMetric) {
-    setSelectedMetric(savedMetric);
-  }
-}, []);
+    const savedMetric = localStorage.getItem('selectedMetric');
+    if (savedMetric) {
+      setSelectedMetric(savedMetric);
+    }
+  }, []);
 
-//  useEffect(() => {
-//     // Initialize from localStorage on component mount
-//     const saved = localStorage.getItem("showMarketCap");
-//     if (saved === "true") {
-//       setShowMarketCap(true);
-//     }
-//   }, []);
+  //  useEffect(() => {
+  //     // Initialize from localStorage on component mount
+  //     const saved = localStorage.getItem("showMarketCap");
+  //     if (saved === "true") {
+  //       setShowMarketCap(true);
+  //     }
+  //   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     const savedMarketCap = localStorage.getItem("showMarketCap") === "true";
     const savedVolume = localStorage.getItem("showVolume") === "true";
+    const savedSocials = localStorage.getItem("showSocials") === "true";
+    const savedHolder = localStorage.getItem("showHolders") === "true";
+    const savedHolder10 = localStorage.getItem("showHolders10") === "true";
     setShowMarketCap(savedMarketCap);
     setShowVolume(savedVolume);
+    setShowSocials(savedSocials);
+    setShowHolders(savedHolder);
+    setshowHolders10(savedHolder10)
   }, []);
 
   const percentages = [
@@ -237,7 +243,7 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                             </div>
                           )} */}
                           </div>
-                          {/* time and social links */}
+
                           <div className={`flex items-center gap-[8px]`}>
                             <div
                               className={`text-[#6E6E6E] text-[14px] font-[400]`}
@@ -254,7 +260,7 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                                   );
 
                                   return (
-                                    <Link
+                                    showSocials ? <Link
                                       key={index}
                                       href={item?.uri}
                                       target="_blank"
@@ -269,7 +275,8 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                                           />
                                         )}
                                       </div>
-                                    </Link>
+                                    </Link> : null
+
                                   );
                                 })}
                               <Link
@@ -306,6 +313,8 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                               </div>
                             </Tooltip> */}
                           </div>
+
+
                         </div>
                         <div>
                           <div className="w-[90px] h-[60px] relative flex items-center justify-center">
@@ -352,7 +361,8 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                                       : `${quickBuy} SOL`
                                     }`
                                     : "Buy"}
-                                </button></>
+                                </button>
+                              </>
                             )}
                           </div>
                         </div>
@@ -360,7 +370,7 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
 
                       <div className="flex justify-between">
                         <div className="flex gap-[12px] order-2">
-                          <Tooltip
+                          {showHolders ? <Tooltip
                             body={`Number of Holders: ${block?.holders ? block.holders : 0
                               }`}
                           >
@@ -370,9 +380,10 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                                 {block?.holders ? block?.holders : 0}
                               </div>
                             </div>
-                          </Tooltip>
+                          </Tooltip> : null}
 
-                              {showVolume ?   <Tooltip
+
+                          {showVolume ? <Tooltip
                             body={`Volume: ${block?.volume
                               ? humanReadableFormat(block?.volume.toFixed(2))
                               : 0
@@ -388,8 +399,8 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                                   : 0}{" "}
                               </div>
                             </div>
-                          </Tooltip>: null}
-                        
+                          </Tooltip> : null}
+
 
                           {showMarketCap ? <Tooltip
                             body={`Market Cap: ${block?.MKC ? humanReadableFormat(block?.MKC) : 0
@@ -409,37 +420,32 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                             </div>
                           </Tooltip> : null}
 
-                          
                         </div>
                         <div className="flex gap-[8px] order-1">
                           {block?.additionalInfo?.map((item, index) => {
                             const matchedData = percentages.find(
                               (iconItem) => iconItem.title === item.title
                             );
-                            return (
+                            return showHolders10 ? (
                               <Tooltip
                                 key={index}
                                 body={`${matchedData?.getToolTip(item?.value)}`}
                               >
-                                <div
-                                  className={`flex gap-[4px] items-center font-[400]`}
-                                >
+                                <div className="flex gap-[4px] items-center font-[400]">
                                   {matchedData && (
                                     <Image
                                       src={matchedData?.icon}
                                       alt={matchedData?.title}
                                     />
                                   )}
-                                  <div
-                                    className={`text-[12px]  ${matchedData?.color}`}
-                                  >
-                                    {matchedData?.title == "sniper_count"
+                                  <div className={`text-[12px] ${matchedData?.color}`}>
+                                    {matchedData?.title === "sniper_count"
                                       ? item.value
                                       : `${item.value}%`}
                                   </div>
                                 </div>
                               </Tooltip>
-                            );
+                            ) : null;
                           })}
                         </div>
                       </div>

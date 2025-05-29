@@ -38,7 +38,10 @@ const Memescope = () => {
   const [searchbar, setSearchbar] = useState(null);
   const [showCircle , setShowCircle] = useState(null);
   const [showMarketCap, setShowMarketCap] = useState(null);
-   const [showVolume, setShowVolume] = useState(false);
+  const [showVolume, setShowVolume] = useState(null);
+  const [showSocials, setShowSocials] = useState(null);
+  const [showHolders , setShowHolders] = useState(null);
+  const [showHolders10 , setshowHolders10] = useState(null);
 
 
   // =======*=*= All about graduate data filter ==========//
@@ -254,7 +257,7 @@ const Memescope = () => {
             : "sticky z-10 top-[50px]"
             }  `}
         >
-          <AllPageHeader HeaderData={HeaderData} duration={true} setSelectedMetric={setSelectedMetric} selectedMetric={selectedMetric} setSearchbar={setSearchbar} searchbar={searchbar} setShowCircle={setShowCircle} showCircle={showCircle} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume}/>
+          <AllPageHeader HeaderData={HeaderData} duration={true} setSelectedMetric={setSelectedMetric} selectedMetric={selectedMetric} setSearchbar={setSearchbar} searchbar={searchbar} setShowCircle={setShowCircle} showCircle={showCircle} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10}/>
         </div>
         <div className={`grid xl:grid-cols-3 w-full  `}>
           {/* box 1 */}
@@ -347,7 +350,7 @@ const Memescope = () => {
               className={`${selectedScope === 1 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={newCreationDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap}  setShowVolume={setShowVolume} showVolume={showVolume}/>
+              <MscopePumpTable MemscopeData={newCreationDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap}  setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10}/>
             </div>
           </div>
 
@@ -400,7 +403,7 @@ const Memescope = () => {
               className={`${selectedScope === 2 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={aboutDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric}  setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap}  setShowVolume={setShowVolume} showVolume={showVolume}/>
+              <MscopePumpTable MemscopeData={aboutDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric}  setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap}  setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10}/>
             </div>
           </div>
 
@@ -455,7 +458,7 @@ const Memescope = () => {
               className={`${selectedScope === 3 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={graduateDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric}  setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume}/>
+              <MscopePumpTable MemscopeData={graduateDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric}  setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10}/>
             </div>
           </div>
 

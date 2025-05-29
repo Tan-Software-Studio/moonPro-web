@@ -17,7 +17,8 @@ import { IoCopyOutline } from "react-icons/io5";
 import { LuWalletMinimal } from "react-icons/lu";
 import { FaAngleDown } from "react-icons/fa";
 import { BsFillSearchHeartFill } from "react-icons/bs";
-const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime, setFilterValues, filterValues, onApply, onReset, setSelectedMetric, selectedMetric, setSearchbar, searchbar, setShowCircle, showCircle, setShowMarketCap, showMarketCap, showVolume, setShowVolume }) => {
+import { FaRegCircle } from "react-icons/fa";
+const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime, setFilterValues, filterValues, onApply, onReset, setSelectedMetric, selectedMetric, setSearchbar, searchbar, setShowCircle, showCircle, setShowMarketCap, showMarketCap, showVolume, setShowVolume, showSocials, setShowSocials, setShowHolders, showHolders, setshowHolders10, showHolders10 }) => {
   const filterPopupRef = useRef(null);
   const dexesPopupRef = useRef(null);
   const { t } = useTranslation();
@@ -38,9 +39,9 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [walletAddresses, setWalletAddresses] = useState([]);
-  const [allWallets, setAllWallets] = useState([]);
 
   // Close dropdown when clicking outside
+   const userDetails = useSelector((state) => state?.userData?.userDetails?.walletAddressSOL);
 
   // order setting popup flag
   const isRightModalOpenSetting = useSelector(
@@ -145,32 +146,6 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
     };
   }, []);
 
-
-  const getAllWallets = async (e) => {
-    const jwtToken = localStorage.getItem("token");
-    if (!jwtToken) return 0;
-    try {
-      setIsLoading(true);
-      const response = await axios.get(`${baseUrl}user/getAllWallets`, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      });
-      const wallets = response?.data?.data?.wallets?.walletAddressSOL;
-      setAllWallets(wallets);
-
-      setWalletAddresses(response?.data?.data?.wallets?.walletAddressSOL);
-      setIsLoading(false);
-    } catch (error) {
-      console.error(error);
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getAllWallets();
-  }, []);
-
   const toggleSearchbar = () => {
     setSearchbar(prev => {
       const updated = !prev;
@@ -187,16 +162,34 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
     });
   };
 
-   const mktShowHide = () => {
+  const mktShowHide = () => {
     const newValue = !showMarketCap;
     setShowMarketCap(newValue);
     localStorage.setItem("showMarketCap", newValue);
   };
 
-    const volumeShowHide = () => {
+  const volumeShowHide = () => {
     const newValue = !showVolume;
     setShowVolume(newValue);
     localStorage.setItem("showVolume", newValue);
+  };
+
+  const socialsShowHide = () => {
+    const newValue = !showSocials;
+    setShowSocials(newValue);
+    localStorage.setItem("showSocials", newValue);
+  };
+
+    const holderShowHide = () => {
+    const newValue = !showHolders;
+    setShowHolders(newValue);
+    localStorage.setItem("showHolders", newValue);
+  };
+
+      const holderShowHide10 = () => {
+    const newValue = !showHolders10;
+    setshowHolders10(newValue);
+    localStorage.setItem("showHolders", newValue);
   };
 
   const handlePrimary = async (walletIndex, loopIndex) => {
@@ -463,7 +456,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                       </div>
 
                       <div className="flex items-center gap-2 cursor-pointer font-semibold" onClick={() => toggleShowCircle(prev => !prev)}>
-                        <LayoutGrid size={16} />
+                        {showCircle ? <LayoutGrid size={16} /> : <FaRegCircle />}
                         {showCircle ? 'Square Image' : 'Circle Imange'}
                       </div>
                       <div className="flex items-center gap-2 cursor-pointer font-semibold">
@@ -474,34 +467,43 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
 
                     {/* Customize Rows */}
                     <div className="border-t border-gray-700 pt-4">
-      <p className="text-xs text-gray-400 font-semibold mb-2">Customize rows</p>
-      <div className="flex flex-wrap gap-2">
-        {[
-          "Market Cap", "Volume", "TX", "Socials", "Holders", "Dev Migrations",
-          "Top 10 Holders", "Dev Holding",
-        ].map((item) => {
-          const isActive =
-            (item === "Market Cap" && showMarketCap) ||
-            (item === "Volume" && showVolume);
+                      <p className="text-xs text-gray-400 font-semibold mb-2">Customize rows</p>
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          "Market Cap", "Volume", "Socials", "Holders",
+                          "Top 10 Holders",
+                        ].map((item) => {
+                          const isActive =
+                            (item === "Market Cap" && showMarketCap) ||
+                            (item === "Volume" && showVolume) ||
+                            (item === "Socials" && showSocials) || 
+                            (item === "Holders" && showHolders) || 
+                            (item === "Top 10 Holders" && showHolders10)
 
-          return (
-            <button
-              key={item}
-              className={`${isActive ? "bg-[#282b32]" : "border border-[#282b32] text-gray-500"} text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]`}
-              onClick={() => {
-                if (item === "Market Cap") {
-                  mktShowHide();
-                } else if (item === "Volume") {
-                  volumeShowHide();
-                }
-              }}
-            >
-              {item}
-            </button>
-          );
-        })}
-      </div>
-    </div>
+                          return (
+                            <button
+                              key={item}
+                              className={`${isActive ? "bg-[#282b32]" : "border border-[#282b32] text-gray-500"} text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]`}
+                              onClick={() => {
+                                if (item === "Market Cap") {
+                                  mktShowHide();
+                                } else if (item === "Volume") {
+                                  volumeShowHide();
+                                } else if (item === "Socials") {
+                                  socialsShowHide();
+                                }else if(item === "Holders"){
+                                  holderShowHide()
+                                }else if(item === "Top 10 Holders"){
+                                  holderShowHide10()
+                                }
+                              }}
+                            >
+                              {item}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
 
                   </div>
                 </div>
@@ -553,7 +555,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                 >
 
                   {/* Wallet List */}
-                  {allWallets.map((wallet, idx) => {
+                  {userDetails.map((wallet, idx) => {
                     // Move state and handler inside the map for each wallet
 
 
