@@ -34,118 +34,145 @@ const ActivityTable = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleTransaction = async (e) => {
+    setIsLoading(true)
     await axiosInstanceAuth
       .get(`transactions/history/${entriesPerPages}/${currentPage}`)
       .then((response) => {
+        setIsLoading(false)
         setTransactionData(response?.data?.data?.transaction);
         setTotalPage(response?.data?.data?.totalPage);
       })
       .catch((error) => {
         console.log(error);
+        setIsLoading(false)
       });
   };
 
   useEffect(() => {
-    handleTransaction();
+    if (!transactionData.length > 0) {
+      handleTransaction();
+    }
   }, [currentPage]);
 
   return (
     <>
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-800">
-          <thead className="w-full ">
-            {[
-              "From",
-              "To",
-              "Amount",
-              "Value (USD)",
-              "Type",
-              "TX",
-              "Date & Time",
-            ].map((item, index) => (
-              <th key={index}>
-                <th className="px-3 py-3 text-left text-xs font-medium text-[#A8A8A8] uppercase tracking-wider">
-                  <div className="flex gap-4 items-center">
-                    {item == "From" && <div>#</div>}
-                    <div>{item}</div>
-                  </div>
-                </th>
-              </th>
-            ))}
-          </thead>
-          <tbody className="divide-y divide-gray-800">
-            {isLoading ? (
-              <tr>
-                <td colSpan="5">
-                  <div className="flex justify-center items-center min-h-[40vh]  ">
-                    <span class="Tableloader"></span>
-                  </div>
-                </td>
-              </tr>
-            ) : transactionData?.length > 0 ? (
-              transactionData.map((item, index) => (
-                <tr key={index}>
-                  <td className="px-3 py-4 whitespace-nowrap text-sm">
+      <div className="overflow-auto max-h-[400px]">
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center h-64 text-center">
+            <div className="flex justify-center items-center min-h-[40vh]">
+              <span className="Tableloader"></span>
+            </div>
+          </div>
+        ) : !transactionData?.length > 0 ? (
+          <div className="flex flex-col items-center justify-center h-64 text-center">
+            <div className="w-16 h-16 rounded-full bg-slate-800/50 flex items-center justify-center mb-4">
+              <Image
+                src="/assets/NoDataImages/qwe.svg"
+                alt="No Data Available"
+                width={24}
+                height={24}
+                className="text-slate-400"
+              />
+            </div>
+            <p className="text-slate-400 text-lg mb-2">{"You don't have any transaction history yet."}</p>
+            <p className="text-slate-500 text-sm">
+              Transaction information will appear here when available
+            </p>
+          </div>
+        ) : (
+          <div className="min-w-full">
+            <table className="w-full text-left text-sm">
+              <thead className="sticky top-0 border-b bg-[#08080E] border-gray-800 z-10">
+                <tr>
+                  <th className="p-4 text-slate-300 font-medium">
                     <div className="flex gap-4 items-center">
-                      <div>{index + 1}</div>
-                      <div>{truncateString(item.fromToken)}</div>
+                      <div>#</div>
+                      <div>From</div>
                     </div>
-                  </td>
-                  <td className="px-3 py-4 whitespace-nowrap text-sm">
-                    <div className="flex items-center">
-                      <span>{truncateString(item.toToken)}</span>
-                    </div>
-                  </td>
-                  <td className="px-3 py-4 whitespace-nowrap text-sm">
-                    {item.amount.toFixed(5)}
-                  </td>
-                  <td className="px-3 py-4 whitespace-nowrap text-sm">
-                    ${item.amountInDollar.toFixed(2)}
-                  </td>
-                  <td className="px-3 py-4 whitespace-nowrap text-sm">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getTypeBadgeColor(
-                        item.type
-                      )}`}
-                    >
-                      {item.type.toUpperCase()}
-                    </span>
-                  </td>
-                  <td className="px-3 py-4 whitespace-nowrap text-sm">
-                    <div className="flex items-center">
-                      <span className="mr-1">{truncateString(item.tx)}</span>
-                      <Link
-                        href={`https://solscan.io/tx/${item.tx}`}
-                        target="_blank"
-                        className="text-blue-400 hover:text-blue-300"
-                      >
-                        <ExternalLink className="h-3 w-3" />
-                      </Link>
-                    </div>
-                  </td>
-                  <td className="px-3 py-4 whitespace-nowrap text-sm">
-                    {convertUTCToIST(item.createdAt)}
-                  </td>
+                  </th>
+                  <th className="p-4 text-slate-300 font-medium">
+                    To
+                  </th>
+                  <th className="p-4 text-slate-300 font-medium">
+                    Amount
+                  </th>
+                  <th className="p-4 text-slate-300 font-medium">
+                    Value (USD)
+                  </th>
+                  <th className="p-4 text-slate-300 font-medium">
+                    Type
+                  </th>
+                  <th className="p-4 text-slate-300 font-medium">
+                    TX
+                  </th>
+                  <th className="p-4 text-slate-300 font-medium">
+                    Date & Time
+                  </th>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={7} className="py-10">
-                  <div className="flex flex-col items-center justify-center text-gray-400">
-                    <Image
-                      src="/assets/NoDataImages/qwe.svg"
-                      alt="No Data Available"
-                      width={200}
-                      height={100}
-                      className="rounded-lg mb-2"
-                    />
-                    <div>You don&apos;t have any transaction history yet.</div>
-                  </div>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {isLoading ? (
+                  <tr>
+                    <td colSpan="7" className="p-4">
+                      <div className="flex justify-center items-center min-h-[40vh]">
+                        <span className="Tableloader"></span>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  transactionData.map((item, index) => (
+                    <tr
+                      key={index}
+                      className="border-b border-slate-700/20 hover:bg-slate-800/30 transition-colors duration-200"
+                    >
+                      <td className="p-4">
+                        <div className="flex gap-4 items-center">
+                          <div className="text-white font-medium">{index + 1}</div>
+                          <div className="min-w-0">
+                            <p className="font-medium text-white">{truncateString(item.fromToken)}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <p className="font-medium text-white">{truncateString(item.toToken)}</p>
+                      </td>
+                      <td className="p-4">
+                        <p className="font-medium text-white">{item.amount.toFixed(5)}</p>
+                      </td>
+                      <td className="p-4">
+                        <p className="font-medium text-white">${item.amountInDollar.toFixed(2)}</p>
+                      </td>
+                      <td className="p-4">
+                        <span
+                          className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getTypeBadgeColor(
+                            item.type
+                          )}`}
+                        >
+                          {item.type.toUpperCase()}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-white">{truncateString(item.tx)}</span>
+                          <Link
+                            href={`https://solscan.io/tx/${item.tx}`}
+                            target="_blank"
+                            className="flex-shrink-0 p-1 hover:bg-slate-700/50 rounded transition-colors duration-200"
+                          >
+                            <ExternalLink className="h-3 w-3 text-slate-400 hover:text-slate-200" />
+                          </Link>
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <p className="font-medium text-white">{convertUTCToIST(item.createdAt)}</p>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
       {totalPage > 1 && (
         <Pagination

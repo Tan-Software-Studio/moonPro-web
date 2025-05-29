@@ -1,4 +1,5 @@
 import { addNewTransactionForWalletTracking } from "@/app/redux/chartDataSlice/chartData.slice";
+import { updatePnlDataPriceOnly } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import {
   setMemeScopeGraduateData,
   setMemeScopeGraduatedData,
@@ -55,7 +56,6 @@ export async function subscribeToWalletTracker() {
     // watch all solana trades
     await socket.on("new_trades", async (data) => {
       // console.log("🚀 ~ socket.on ~ data:", data?.length);
-      // await store.dispatch(addNewTransactionForWalletTracking(data[0]));
       const solPrice = await data?.find(
         (item) =>
           item?.Trade?.Currency?.MintAddress ==
@@ -157,8 +157,10 @@ export async function subscribeToTrendingTokens() {
 
     // live solana price
     let liveSolanaPrice = 0;
+    let solanaWalletAddress = 0;
     store.subscribe(() => {
       liveSolanaPrice = store?.getState()?.AllStatesData?.solanaLivePrice;
+      solanaWalletAddress = store?.getState()?.AllStatesData?.solWalletAddress;
     });
 
     // gRPC node data
@@ -167,10 +169,11 @@ export async function subscribeToTrendingTokens() {
         if (
           data?.bought?.mint != "So11111111111111111111111111111111111111112"
         ) {
+          const solAmountInUsd = data?.priceInSolOfToken * liveSolanaPrice;
           store.dispatch(
             updateAllDataByNode({
               type: "buy",
-              price: data?.priceInSolOfToken * liveSolanaPrice,
+              price: solAmountInUsd,
               mint: data?.bought?.mint,
               amount: data?.bought?.uiTokenAmount?.amount,
               holderAction: data?.holder,
@@ -179,19 +182,28 @@ export async function subscribeToTrendingTokens() {
           store.dispatch(
             updateTrendingLiveData({
               type: "buy",
-              price: data?.priceInSolOfToken * liveSolanaPrice,
+              price: solAmountInUsd,
               mint: data?.bought?.mint,
               amount: data?.bought?.uiTokenAmount?.amount,
               holderAction: data?.holder,
             })
           );
+          // if (solanaWalletAddress) {
+          //   store.dispatch(
+          //     updatePnlDataPriceOnly({
+          //       price: solAmountInUsd,
+          //       mint: data?.bought?.mint,
+          //     })
+          //   );
+          // }
         }
       } else if (data?.action == "sell") {
         if (data?.sold?.mint != "So11111111111111111111111111111111111111112") {
+          const solAmountInUsd = data?.priceInSolOfToken * liveSolanaPrice;
           store.dispatch(
             updateAllDataByNode({
               type: "sell",
-              price: data?.priceInSolOfToken * liveSolanaPrice,
+              price: solAmountInUsd,
               mint: data?.sold?.mint,
               amount: data?.sold?.uiTokenAmount?.amount,
               holderAction: data?.holder,
@@ -200,12 +212,20 @@ export async function subscribeToTrendingTokens() {
           store.dispatch(
             updateTrendingLiveData({
               type: "sell",
-              price: data?.priceInSolOfToken * liveSolanaPrice,
+              price: solAmountInUsd,
               mint: data?.sold?.mint,
               amount: data?.sold?.uiTokenAmount?.amount,
               holderAction: data?.holder,
             })
           );
+          // if (solanaWalletAddress) {
+          //   store.dispatch(
+          //     updatePnlDataPriceOnly({
+          //       price: solAmountInUsd,
+          //       mint: data?.bought?.mint,
+          //     })
+          //   );
+          // }
         }
       }
     });
