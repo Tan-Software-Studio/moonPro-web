@@ -258,7 +258,7 @@ const ReferralPage = () => {
               {refData?.totalEarningInSol > 0 ? decimalConvert(refData?.totalEarningInSol) : 0} SOL
             </div>
 
-            <div className="text-sm text-[#a0a4b8] tracking-wider">claimed {((Number(refData?.user?.totalClaimed) || 0) + (Number(addClaimed) || 0)).toFixed(5)} SOL</div>
+            <div className="text-sm text-[#a0a4b8] tracking-wider">Claimed {((Number(refData?.user?.totalClaimed) || 0) + (Number(addClaimed) || 0)).toFixed(5)} SOL</div>
             <div className="text-sm text-[#a0a4b8] tracking-wider">Available to claim {((Number(refData?.totalEarningInSol) || 0) - (Number(refData?.user?.totalClaimed) || 0) - (Number(addClaimed) || 0)).toFixed(5)} SOL</div>
           </div>
 
