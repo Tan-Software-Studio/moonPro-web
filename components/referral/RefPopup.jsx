@@ -8,6 +8,7 @@ import { showToastLoader } from '../common/toastLoader/ToastLoder';
 import toast from 'react-hot-toast';
 
 function RefPopup({ Available, address, onClose, setAddClaimed }) {
+
     const URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
     const [loading, setLoading] = useState(false);
     const [walletAddress, setWalletAddress] = useState('');
@@ -73,15 +74,15 @@ function RefPopup({ Available, address, onClose, setAddClaimed }) {
         }
     };
 
-    
+
 
     useEffect(() => {
         setWalletAddress(address || '');
     }, [address]);
 
     return (
-        <div className="fixed inset-0 bg-[#00000093] bg-opacity-60 flex items-center justify-center z-50">
-            <div className="bg-[#191919] text-white rounded-md w-[90%] max-w-md p-5 relative space-y-4 shadow-xl">
+        <div className="fixed inset-0 bg-[#00000052] bg-opacity-60 flex items-center justify-center z-50">
+            <div className="bg-[#08080e] text-white rounded-md w-[90%]  max-w-lg p-5 relative space-y-4 shadow-xl border border-[#191919]">
                 <button
                     onClick={onClose}
                     className="absolute top-3 right-4 text-gray-400 hover:text-white"
@@ -92,8 +93,9 @@ function RefPopup({ Available, address, onClose, setAddClaimed }) {
                 <h2 className="text-lg font-semibold">Claim</h2>
 
                 {/* Coin Selector & Balance */}
-                <div className=" items-center w-fit bg-[#2c2c34] px-3 py-2 rounded-md">
-                    <div className="text-sm text-gray-400 w-fit">Balance: {Number(Available).toFixed(5)}</div>
+                <div className=" items-center w-fit bg-[#191919] px-3 py-2 rounded-md">
+                    <div className="text-sm w-fit text-[#a0a4b8] tracking-wider"> Balance: {(Number(Available) || 0).toFixed(5)} </div>
+
                 </div>
 
                 {/* Wallet Address */}
@@ -102,17 +104,19 @@ function RefPopup({ Available, address, onClose, setAddClaimed }) {
                     onChange={handleAddressChange}
                     type="text"
                     placeholder="Address of destination wallet"
-                    className="w-full bg-[#2c2c34] p-3 mt-2 rounded-md text-white placeholder-gray-500 outline-none"
+                    className="w-full bg-[#191919] p-3 mt-2 rounded-md text-white font-thin tracking-wider placeholder-gray-500 outline-none"
                 />
 
                 {/* Claim Amount */}
-                <div className="bg-[#2c2c34] p-3 rounded-md space-y-1">
-                    <div className="flex justify-between text-sm text-gray-400">
+                <div className="bg-[#191919] p-3 rounded-md space-y-1">
+                    <div className="flex justify-between text-sm text-gray-400 tracking-wider">
                         <label>Claim Amount</label>
                         <button
                             className="text-blue-500"
                             type="button"
-                            onClick={() => setClaimAmount(Available?.toString())}
+                            // onClick={() => setClaimAmount(Available?.toString())}
+                            onClick={() => setClaimAmount(Number(Available) || 0)}
+
                         >
                             Max
                         </button>
@@ -138,10 +142,10 @@ function RefPopup({ Available, address, onClose, setAddClaimed }) {
                 <button
                     disabled={Available <= 0 || !walletAddress || loading || cooldown}
                     onClick={fetchData}
-                    className={`w-full py-2 rounded-full text-white font-medium transition 
+                    className={`w-full py-2 rounded-md text-white font-medium transition tracking-wider 
     ${Available <= 0 || !walletAddress || loading || cooldown
                             ? 'bg-[#0000ff46] cursor-not-allowed'
-                            : 'bg-[#2626ce] hover:bg-[blue] cursor-pointer'
+                            : 'bg-blue-500 hover:bg-blue-700 cursor-pointer'
                         }`}
                 >
                     {loading ? 'Claiming...' : (walletAddress ? 'Claim' : 'Missing Destination Address')}

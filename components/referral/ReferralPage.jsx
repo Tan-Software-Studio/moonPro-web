@@ -9,7 +9,7 @@ import { IoPieChartOutline } from "react-icons/io5";
 import { HiOutlineCurrencyDollar } from "react-icons/hi2";
 import axios from "axios";
 import Image from "next/image";
-import { NoDataFish } from "@/app/Images";
+import { nftImg, nftImg2, nftImg3, nftImg4, nftImg5, NoDataFish } from "@/app/Images";
 import { useSelector } from "react-redux";
 import { token } from "@/utils/tradingViewChartServices/constant";
 import toast from "react-hot-toast";
@@ -17,6 +17,9 @@ import { decimalConvert } from "@/utils/basicFunctions";
 import RefPopup from "./RefPopup";
 
 const ReferralPage = () => {
+  const nftImages = [nftImg, nftImg2, nftImg3, nftImg4, nftImg5];
+
+  console.log('chack')
 
   const URL_LINK = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
 
@@ -31,6 +34,7 @@ const ReferralPage = () => {
   const tierKey = selectedTier === 1 ? "firstTier" : selectedTier === 2 ? "secondTier" : "thirdTier";
   const tierData = refData?.referrals?.[tierKey] || [];
   const [addClaimed, setAddClaimed] = useState(0)
+  const [rendomImg, setRendomImg] = useState(nftImg)
 
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
@@ -72,11 +76,34 @@ const ReferralPage = () => {
     }
   };
 
+  // date time ago
+  function formatTimeAgo(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = now - date;
+
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(diff / (1000 * 60));
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const months = Math.floor(days / 30);
+    const years = Math.floor(days / 365);
+
+    if (years > 0) return `${years}y`;
+    if (months > 0) return `${months}mo`;
+    if (days > 0) return `${days}d`;
+    if (hours > 0) return `${hours}h`;
+    if (minutes > 0) return `${minutes}m`;
+    return `${seconds}s`;
+  }
+
+
 
   const handleCopy3 = () => {
     navigator.clipboard.writeText(solWalletAddress);
     setCopied3(true);
-    setTimeout(() => setCopied3(false), 2000);
+    toast.success('Copy Address!')
+    // setTimeout(() => setCopied3(false), 2000);
   };
 
   const handleBoxClick = () => {
@@ -92,7 +119,11 @@ const ReferralPage = () => {
   };
 
   useEffect(() => {
-    fetchData()
+    const randomImage = nftImages[Math.floor(Math.random() * nftImages.length)];
+    setRendomImg(randomImage)
+    if (solWalletAddress) {
+      fetchData()
+    }
   }, [solWalletAddress])
 
   return (
@@ -103,26 +134,28 @@ const ReferralPage = () => {
         <div className="flex md:flex-row flex-col items-center md:items-start gap-4 w-full">
           {/* Image */}
           <div
-            className={`w-20 h-20 min-w-[3.5rem] rounded-md bg-yellow-500 overflow-hidden cursor-pointer relative`}
-            onClick={handleBoxClick}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
+            className={`w-20 h-20 min-w-[3.5rem] rounded-md bg-yellow-500 overflow-hidden  relative`}
+          // onClick={handleBoxClick}
+          // onMouseEnter={() => setHovered(true)}
+          // onMouseLeave={() => setHovered(false)}
           >
-            {imageURL && (
-              <img src={imageURL} alt="Uploaded" className="w-full h-full object-cover" />
-            )}
-            {hovered && (
+            {/* {imageURL && (
+              <img src={nftImg} alt="Uploaded" className="w-full h-full object-cover" />
+            )} */}
+            <Image src={rendomImg} alt="Uploaded" className="w-full h-full object-cover" />
+
+            {/* {hovered && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white">
                 <LuUpload size={20} />
               </div>
-            )}
-            <input
+            )} */}
+            {/* <input
               type="file"
               ref={fileInputRef}
               onChange={handleImageUpload}
               className="hidden"
               accept="image/*"
-            />
+            /> */}
           </div>
 
           {/* Right Content */}
@@ -141,7 +174,7 @@ const ReferralPage = () => {
             </div>
 
             {/* Progress Bar */}
-            <div className="mt-4 w-full h-2 bg-gray-700 rounded-full overflow-hidden">
+            <div className="mt-4 w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
               <div
                 className="h-full bg-blue-500 transition-all duration-300"
                 style={{ width: `${progress}%` }}
@@ -153,16 +186,16 @@ const ReferralPage = () => {
 
         <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:items-center text-xs text-gray-400">
           {/* Left side: Level Info */}
-          <div className="flex items-start gap-1 sm:items-center flex-wrap">
+          <div className="flex items-start gap-1 sm:items-center flex-wrap tracking-wider">
             <MdOutlineKeyboardDoubleArrowUp className="text-blue-500 mt-[2px]" size={16} />
-            <span>Next Level:</span>
+            <span className="text-[#cdced4]">Next Level:</span>
             <span className="font-medium text-blue-500">2.5X Rewards rate for Points and SOL</span>
           </div>
 
           {/* Right side: Progress Info */}
-          <div className="flex items-start gap-1 sm:items-center flex-wrap">
+          <div className="flex items-start gap-1 sm:items-center flex-wrap tracking-wider">
             <FaGem className="text-blue-500 mt-[2px]" size={16} />
-            <span>{"You're almost there! Trade 20 SOL to reach"}</span>
+            <span className="text-[#a0a4b8]">{"You're almost there! Trade 20 SOL to reach"}</span>
             <span className="text-white font-medium">Silver</span>
           </div>
         </div>
@@ -171,49 +204,49 @@ const ReferralPage = () => {
         {/* Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Level Card */}
-          <div className="border-[#5b6075ce] border rounded-xl p-4 space-y-2">
-            <div className="text-sm text-orange-400">🥉 Bronze</div>
-            <div className="text-2xl font-bold  flex items-center gap-2">2X Rewards <span className="text-blue-500"><FaRegStar className="text-blue-500" size={23} /></span></div>
+          <div className=" bg-[#191919]  rounded-xl p-4 space-y-2">
+            <div className="text-sm text-orange-400 tracking-wider">🥉 Bronze</div>
+            <div className="text-2xl font-bold  flex items-center gap-2">2X Rewards <span className="text-blue-500"><FaRegStar className="text-blue-500" size={25} /></span></div>
           </div>
 
           {/* SOL Earned */}
-          <div className="border-[#5b6075ce] border rounded-xl p-4">
+          <div className=" bg-[#191919]  rounded-xl p-4">
             <div className="text-sm text-[rgb(200,201,209)] flex justify-between items-center gap-2">
-              <div className="flex items-center gap-2">
-                <HiOutlineCurrencyDollar className="text-blue-500" size={20} />SOL Earned
+              <div className="flex items-center gap-2 tracking-wider">
+                <HiOutlineCurrencyDollar className="text-blue-500" size={22} />SOL Earned
               </div>
               <button
                 onClick={handleWithdrawClick}
-                className="lg:py-2 md:py-0 py-2 lg:px-3 md:px-0 px-3 bg-blue-500 rounded-md hover:bg-blue-700"
+                className="lg:py-2 md:py-2 py-2 lg:px-3 md:px-2 px-3 bg-blue-500 rounded-md hover:bg-blue-700 tracking-wider"
               >
-                Claim SOL
+                Claim
               </button>
 
             </div>
-            <div className="text-2xl font-thin pt-2">
+            <div className="text-2xl font-thin pt-2 tracking-wider">
               {refData?.totalEarningInSol > 0 ? decimalConvert(refData?.totalEarningInSol) : 0} SOL
             </div>
 
-            <div className="text-sm text-gray-500">SOL claimed {Number((Number(refData?.user?.totalClaimed) + Number(addClaimed))).toFixed(5)}</div>
-            <div className="text-sm text-gray-500">Available to claim {Number((refData?.totalEarningInSol - Number(refData?.user?.totalClaimed)) - Number(addClaimed)).toFixed(5)}</div>
+            <div className="text-sm text-[#a0a4b8] tracking-wider">SOL claimed {((Number(refData?.user?.totalClaimed) || 0) + (Number(addClaimed) || 0)).toFixed(5)}</div>
+            <div className="text-sm text-[#a0a4b8] tracking-wider">Available to claim {((Number(refData?.totalEarningInSol) || 0) - (Number(refData?.user?.totalClaimed) || 0) - (Number(addClaimed) || 0)).toFixed(5)}</div>
           </div>
 
           {/* Points Breakdown */}
-          <div className="border-[#5b6075ce] border rounded-xl p-4">
-            <div className="text-sm text-[rgb(200,201,209)] flex items-center gap-2">
-              <IoPieChartOutline className="text-blue-500" size={20} />
+          <div className=" bg-[#191919]  rounded-xl p-4">
+            <div className="text-sm text-[rgb(200,201,209)] flex items-center gap-2 tracking-wider">
+              <IoPieChartOutline className="text-blue-500" size={22} />
               Points Breakdown
             </div>
             <div className="flex flex-col gap-1 text-sm mt-2 pt-1.5">
-              <div className="text-[#5B6075]">Trading <span className="float-right text-[rgb(200,201,209)]">0</span></div>
-              <div className="text-[#5B6075]">Referrals <span className="float-right text-[rgb(200,201,209)]">0</span></div>
-              <div className="text-[#5B6075]">Quests <span className="float-right text-[rgb(200,201,209)]">0</span></div>
+              <div className="text-[#a0a4b8] tracking-wider">Trading <span className="float-right text-[#a0a4b8]">0</span></div>
+              <div className="text-[#a0a4b8] tracking-wider">Referrals <span className="float-right text-[#a0a4b8]">0</span></div>
+              <div className="text-[#a0a4b8] tracking-wider">Quests <span className="float-right text-[#a0a4b8]">0</span></div>
             </div>
           </div>
         </div>
 
         {/* Referral Table */}
-        <div className="bg-[#191919] rounded-xl border border-[#2c2c34]">
+        <div className="bg-[#191919]  rounded-t-xl ">
           <div className="text-white text-sm">
             {/* Header */}
             <div className="flex justify-between border-b border-[#2c2c34] px-4 py-2 overflow-x-auto whitespace-nowrap">
@@ -221,15 +254,15 @@ const ReferralPage = () => {
                 <FiUserPlus className="text-blue-500" size={18} /> Referrals
               </div>
 
-              <div className="flex items-center gap-3 text-sm text-gray-400 flex-shrink-0 ">
+              <div className="flex items-center gap-3 text-sm text-gray-400 flex-shrink-0 border-none focus:outline-none focus:ring-0">
                 <select
                   value={selectedTier}
                   onChange={(e) => setSelectedTier(Number(e.target.value))}
-                  className="bg-gray-800 text-white px-3 py-2 rounded"
+                  className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 rounded border-none focus:outline-none focus:ring-0 cursor-pointer"
                 >
-                  <option value={1}>1 Tier</option>
-                  <option value={2}>2 Tier</option>
-                  <option value={3}>3 Tier</option>
+                  <option className="bg-black text-white cursor-pointer" value={1}>1 Tier</option>
+                  <option className="bg-black text-white cursor-pointer" value={2}>2 Tier</option>
+                  <option className="bg-black text-white cursor-pointer" value={3}>3 Tier</option>
                 </select>
               </div>
             </div>
@@ -237,12 +270,12 @@ const ReferralPage = () => {
 
             {/* Table */}
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm border-collapse">
+              <table className="w-full border border-[#2c2c34] rounded-b-lg text-left text-sm  border-collapse">
                 <thead className="text-gray-500 border-b border-[#2c2c34]">
                   <tr>
-                    <th className="px-4 py-2 whitespace-nowrap">Email/Wallet</th>
-                    <th className="px-4 py-2 whitespace-nowrap">Date Joined</th>
-                    <th className="px-4 py-2 whitespace-nowrap">SOL Earned</th>
+                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">Email/Wallet</th>
+                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">Date Joined</th>
+                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">SOL Earned</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -265,10 +298,11 @@ const ReferralPage = () => {
                     </tr>
                   ) : (
                     tierData.map((row, idx) => (
-                      <tr key={row._id || idx} className="text-white border-b border-[#2c2c34]">
-                        <td className="px-4 py-2 whitespace-nowrap">{row.email}</td>
-                        <td className="px-4 py-2 whitespace-nowrap">{new Date(row.referralAddedAt).toLocaleDateString()}</td>
-                        <td className="px-4 py-2 whitespace-nowrap">{row.feeCollected}</td>
+                      <tr key={row._id || idx} className="text-white border-b border-[#2c2c34] last:border-b-0 hover:bg-[#08080e]">
+                        <td className="px-4 py-4 whitespace-nowrap tracking-wider font-spaceGrotesk">{row.email}</td>
+                        {/* <td className="px-4 py-4 whitespace-nowrap">{new Date(row.referralAddedAt).toLocaleDateString()}</td> */}
+                        <td className="px-4 py-4 whitespace-nowrap text-gray-400"> {formatTimeAgo(row.referralAddedAt)} </td>
+                        <td className="px-4 py-4 whitespace-nowrap">{row.feeCollected}</td>
                       </tr>
                     ))
                   )}
