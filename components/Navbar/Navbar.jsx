@@ -419,7 +419,11 @@ const Navbar = () => {
         {isSettingPopup && <Setting setIsSettingPopup={setIsSettingPopup} />}
 
         {isAccountPopup && (
-          <AccountSecurity setIsAccountPopup={setIsAccountPopup} handlePhrase={handleToGetSolanaPhrase} />
+          <AccountSecurity
+            setIsAccountPopup={setIsAccountPopup}
+            handlePhrase={handleToGetSolanaPhrase}
+            userDetails={userDetails}
+          />
         )}
 
         {isWatchlistPopup && <Watchlist setIsWatchlistPopup={setIsWatchlistPopup} />}
