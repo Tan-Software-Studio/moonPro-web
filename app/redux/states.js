@@ -5,6 +5,7 @@ export const fetchSolanaNativeBalance = createAsyncThunk(
   "wallet/fetchSolanaNativeBalance",
   async (walletAddress) => {
     const balance = await getSolanaBalanceAndPrice(walletAddress);
+    console.log("🚀 ~ balance:", balance)
     return balance;
   }
 );

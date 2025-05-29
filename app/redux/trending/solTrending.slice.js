@@ -32,6 +32,7 @@ const solTrendingData = createSlice({
         );
         if (findTokenFrom1m > 0) {
           const totalTradeValue = payload?.price * payload?.amount;
+          state.filterTime["1m"][findTokenFrom1m].current_price = payload.price;
           if (payload.type == "buy") {
             state.filterTime["1m"][findTokenFrom1m].buys += 1;
             state.filterTime["1m"][findTokenFrom1m].liquidity +=
@@ -55,7 +56,7 @@ const solTrendingData = createSlice({
           state.filterTime["1m"][findTokenFrom1m].Percentage =
             calculatePercentageDifference(
               newMKC,
-              state.filterTime["1m"][findTokenFrom1m].marketCap,
+              state.filterTime["1m"][findTokenFrom1m].marketCap
             );
           state.filterTime["1m"][findTokenFrom1m].marketCap = newMKC;
         }
@@ -67,6 +68,7 @@ const solTrendingData = createSlice({
         );
         if (findTokenFrom5m > 0) {
           const totalTradeValue = payload?.price * payload?.amount;
+          state.filterTime["1m"][findTokenFrom5m].current_price = payload.price;
           if (payload.type == "buy") {
             state.filterTime["5m"][findTokenFrom5m].buys += 1;
             state.filterTime["5m"][findTokenFrom5m].liquidity +=
@@ -90,7 +92,7 @@ const solTrendingData = createSlice({
           state.filterTime["5m"][findTokenFrom5m].Percentage =
             calculatePercentageDifference(
               newMKC,
-              state.filterTime["5m"][findTokenFrom5m].marketCap,
+              state.filterTime["5m"][findTokenFrom5m].marketCap
             );
           state.filterTime["5m"][findTokenFrom5m].marketCap = newMKC;
         }
@@ -102,6 +104,8 @@ const solTrendingData = createSlice({
         );
         if (findTokenFrom30m > 0) {
           const totalTradeValue = payload?.price * payload?.amount;
+          state.filterTime["30m"][findTokenFrom30m].current_price =
+            payload.price;
           if (payload.type == "buy") {
             state.filterTime["30m"][findTokenFrom30m].buys += 1;
             state.filterTime["30m"][findTokenFrom30m].liquidity +=
@@ -125,7 +129,7 @@ const solTrendingData = createSlice({
           state.filterTime["30m"][findTokenFrom30m].Percentage =
             calculatePercentageDifference(
               newMKC,
-              state.filterTime["30m"][findTokenFrom30m].marketCap,
+              state.filterTime["30m"][findTokenFrom30m].marketCap
             );
           state.filterTime["30m"][findTokenFrom30m].marketCap = newMKC;
         }
@@ -137,6 +141,7 @@ const solTrendingData = createSlice({
         );
         if (findTokenFrom1h > 0) {
           const totalTradeValue = payload?.price * payload?.amount;
+          state.filterTime["1h"][findTokenFrom1h].current_price = payload.price;
           if (payload.type == "buy") {
             state.filterTime["1h"][findTokenFrom1h].buys += 1;
             state.filterTime["1h"][findTokenFrom1h].liquidity +=
@@ -160,7 +165,7 @@ const solTrendingData = createSlice({
           state.filterTime["1h"][findTokenFrom1h].Percentage =
             calculatePercentageDifference(
               newMKC,
-              state.filterTime["1h"][findTokenFrom1h].marketCap,
+              state.filterTime["1h"][findTokenFrom1h].marketCap
             );
           state.filterTime["1h"][findTokenFrom1h].marketCap = newMKC;
         }

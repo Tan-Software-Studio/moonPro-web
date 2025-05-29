@@ -129,6 +129,13 @@ import profileImage from "../public/assets/Profile/profile.png";
 import tableImage from "../public/assets/Profile/table.png";
 import walletBalance from "../public/assets/Navbar/walletBalance.png";
 
+// referral
+import nftImg from "../public/assets/referral/nft.jpeg";
+import nftImg2 from "../public/assets/referral/nft.jpeg";
+import nftImg3 from "../public/assets/referral/nft1.jpg";
+import nftImg4 from "../public/assets/referral/nft2.png";
+import nftImg5 from "../public/assets/referral/nft4.png";
+
 export {
   nftProfileImage,
   LeaderboardIcon,
@@ -254,4 +261,10 @@ export {
   tableImage,
   profileImage,
   walletBalance,
+  // referral
+  nftImg,
+  nftImg2,
+  nftImg3,
+  nftImg4,
+  nftImg5,
 };

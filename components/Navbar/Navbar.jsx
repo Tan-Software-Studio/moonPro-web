@@ -35,6 +35,7 @@ import { setFilterTime, setLoading } from "@/app/redux/trending/solTrending.slic
 import RecoveryKey from "./login/RecoveryKey";
 import { decodeData } from "@/utils/decryption/decryption";
 import ExchangePopup from "./popup/ExchangePopup";
+import { fetchUserData } from "@/app/redux/userDataSlice/UserData.slice";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
@@ -47,8 +48,6 @@ const Navbar = () => {
   const [isWalletDropdownOpen, setIsWalletDropdownOpen] = useState(false);
   const [solPhrase, setSolPhrase] = useState("");
   const [openRecovery, setOpenRecovery] = useState(false);
-  const [copySuccess, setCopySuccess] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
@@ -85,6 +84,8 @@ const Navbar = () => {
   const authName = useSelector((state) => state?.AllStatesData?.isRegisterOrLogin);
   // const [authName, setAuthName] = useState("");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  const userDetails = useSelector((state) => state?.userData?.userDetails);
 
   // X===================X Use selectors X===================X //
   const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
@@ -156,6 +157,12 @@ const Navbar = () => {
   }, [solWalletAddress]);
 
   useEffect(() => {
+    if (!userDetails?.email) {
+      dispatch(fetchUserData());
+    }
+  }, [solWalletAddress]);
+
+  useEffect(() => {
     setMounted(true);
 
     dispatch(setSolWalletAddress());
@@ -180,7 +187,6 @@ const Navbar = () => {
       await navigator.clipboard.writeText(solWalletAddress);
       setToastMessage("SOL address copied to clipboard");
       setShowToast(true);
-      setShowTooltip(false);
       setTimeout(() => setShowToast(false), 3000);
     } catch (err) {
       console.error("Failed to copy address:", err);
