@@ -48,6 +48,9 @@ const Navbar = () => {
   const [solPhrase, setSolPhrase] = useState("");
   const [openRecovery, setOpenRecovery] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
   // handle to get phrase of solana
   async function handleToGetSolanaPhrase() {
@@ -146,7 +149,6 @@ const Navbar = () => {
     dispatch(fetchMemescopeData());
     // fetchSolPrice();
   }, []);
-  // update and get solana balance
   useEffect(() => {
     if (solWalletAddress) {
       dispatch(fetchSolanaNativeBalance(solWalletAddress));
@@ -156,10 +158,8 @@ const Navbar = () => {
   useEffect(() => {
     setMounted(true);
 
-    // set SolWalletAddress
     dispatch(setSolWalletAddress());
 
-    // Click out side for closing dropdown of profile
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsProfileOpen(false);
@@ -178,10 +178,15 @@ const Navbar = () => {
     e.stopPropagation();
     try {
       await navigator.clipboard.writeText(solWalletAddress);
-      setCopySuccess(true);
-      setTimeout(() => setCopySuccess(false), 2000);
+      setToastMessage("SOL address copied to clipboard");
+      setShowToast(true);
+      setShowTooltip(false);
+      setTimeout(() => setShowToast(false), 3000);
     } catch (err) {
       console.error("Failed to copy address:", err);
+      setToastMessage("Failed to copy address");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
     }
   };
 
@@ -223,7 +228,16 @@ const Navbar = () => {
                 <LuSearch size={24} />
               </div>
 
-              {/* Watchlist - Now outside profile dropdown */}
+              {mounted && solWalletAddress && (
+                <button
+                  onClick={() => handleOpenDeposit("deposit")}
+                  className="px-3 py-1.5 bg-[#11265B] hover:bg-[#5856EB] text-white rounded-md text-sm font-medium transition-colors cursor-pointer"
+                >
+                  Deposit
+                </button>
+              )}
+
+              {/* Watchlist */}
               {mounted && solWalletAddress && (
                 <div onClick={() => setIsWatchlistPopup(true)} className="cursor-pointer">
                   <FaRegStar size={24} className="text-white transition-colors" />
@@ -238,7 +252,6 @@ const Navbar = () => {
                 </div>
               )}
 
-              {/* Wallet Balance and Address - Now with dropdown */}
               {solWalletAddress && (
                 <div className={`relative`} ref={walletDropdownRef}>
                   <div
@@ -262,38 +275,28 @@ const Navbar = () => {
                   {isWalletDropdownOpen && (
                     <div className="absolute right-0 mt-2 border-[1px] border-[#404040] w-64 bg-[#1A1A1A] shadow-xl rounded-lg z-50">
                       <div className="p-4">
-                        {/* Total Value - Clickable */}
-                        <div
-                          className="flex items-center justify-between mb-3 cursor-pointer hover:bg-[#252525]  rounded-lg transition-colors border"
-                          onClick={() => handleOpenDeposit("total", Number(nativeTokenbalance) * 200)}
-                        >
-                          <div className="border">
-                            <div className="text-xs text-[#898989] mb-1">Total Value</div>
-                            <div className="text-2xl font-bold text-white">
-                              ${(Number(nativeTokenbalance) * 200).toFixed(2)}
+                        <div className="mb-4">
+                          <div className="flex items-center justify-between mb-1">
+                            <div className="text-xs text-[#898989]">Total Value</div>
+                            <div className="flex items-center gap-2 cursor-pointer ">
+                              <div
+                                className="flex items-center gap-1 text-xs text-[#898989] hover:bg-[#404040] p-1 rounded-md"
+                                onClick={handleCopyAddress}
+                              >
+                                <button className="flex items-center gap-1 rounded text-xs transition-colors">
+                                  <FaCopy className="w-3 h-3" />
+                                </button>
+                                <span>Solana</span>
+                              </div>
                             </div>
                           </div>
-                          {/* Copy Address section */}
-                          <div className="text-right border">
-                            <div className="flex items-right gap-2 mb-1">
-                              <button
-                                onClick={handleCopyAddress}
-                                className="flex gap-1 bg-[#374151] hover:bg-[#4B5563] p-1 rounded text-xs transition-colors"
-                              >
-                                <FaCopy className="w-3 h-3" />
-                              </button>
-                              <span className="text-xs text-[#898989]">solana</span>
-                            </div>
-                            {/* <div className="text-xs text-[#666666] font-mono">
-                              {solWalletAddress?.toString()?.slice(0, 6)}...
-                              {solWalletAddress?.toString()?.slice(-6)}
-                            </div> */}
+                          <div className="text-2xl font-bold text-white mb-2">
+                            ${(Number(nativeTokenbalance) * 200).toFixed(2)}
                           </div>
                         </div>
 
-                        {/* Balance Display - Clickable */}
                         <div
-                          className="flex items-center justify-between mb-3 cursor-pointer hover:bg-[#252525] p-2 rounded-lg transition-colors"
+                          className="flex items-center justify-between mb-3 cursor-pointer hover:bg-[#252525] p-1.5 rounded-lg transition-colors"
                           onClick={() => handleOpenDeposit("balance", Number(nativeTokenbalance))}
                         >
                           <div className="flex items-center gap-2">
@@ -319,10 +322,7 @@ const Navbar = () => {
                           >
                             Deposit
                           </button>
-                          <button
-                            // onClick={() => handleOpenDeposit("withdraw")}
-                            className="flex-1 bg-[#374151] hover:bg-[#4B5563] text-white py-2.5 px-4 rounded-md text-sm font-medium transition-colors"
-                          >
+                          <button className="flex-1 bg-[#374151] hover:bg-[#4B5563] text-white py-2.5 px-4 rounded-md text-sm font-medium transition-colors">
                             Withdraw
                           </button>
                         </div>
@@ -341,7 +341,7 @@ const Navbar = () => {
                     </div>
 
                     {isProfileOpen && (
-                      <div className="absolute md:right-5 right-0 mt-2 border-[1px] border-[#404040] w-72 bg-[#141414] shadow-[#000000CC] rounded-md shadow-lg z-50">
+                      <div className="absolute md:right-5 right-0 mt-2 border-[1px] border-[#404040] w-50 bg-[#141414] shadow-[#000000CC] rounded-md shadow-lg z-50">
                         <Link onClick={() => setIsProfileOpen(false)} href="/profile?" className="">
                           <div className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md">
                             <PiUserLight className="text-xl" />
@@ -424,6 +424,24 @@ const Navbar = () => {
         )}
       </AnimatePresence>
       {isReffaralCode && <ReferralCodePopup />}
+
+      {showToast && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-[#2A2A2A] border border-[#404040] text-white px-4 py-2 rounded-lg shadow-lg z-[70] flex items-center gap-2">
+          <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+            <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
+          <span className="text-sm">{toastMessage}</span>
+          <button onClick={() => setShowToast(false)} className="ml-2 text-[#666666] hover:text-white">
+            ×
+          </button>
+        </div>
+      )}
     </>
   );
 };
