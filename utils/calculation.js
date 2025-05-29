@@ -28,22 +28,33 @@ function convertUTCToLocalTimeString(isoString) {
   });
 }
 
-function humanReadableFormat(number) {
+function humanReadableFormat(number, withDollar = true) {
   const units = ["", "K", "M", "B", "T"];
   let unitIndex = 0;
 
   number = parseFloat(number);
+  if (isNaN(number)) return "$0";
 
-  if (isNaN(number)) {
-    return "$0.00";
-  }
-
+  // Scale down
   while (Math.abs(number) >= 1000 && unitIndex < units.length - 1) {
     number /= 1000;
     unitIndex++;
   }
 
-  return `$${number.toFixed(2)}${units[unitIndex]}`;
+  // Check if rounding brings it to 1000
+  const rounded = Number(number.toFixed(2));
+  if (rounded >= 1000 && unitIndex < units.length - 1) {
+    number = number / 1000;
+    unitIndex++;
+  }
+
+  // Format cleanly: remove .00 if not needed
+  const roundedStr = number.toFixed(2);
+  const displayStr = roundedStr.endsWith(".00")
+    ? parseInt(roundedStr).toString()
+    : roundedStr;
+
+  return withDollar ? `$${displayStr}${units[unitIndex]}` : `${displayStr}${units[unitIndex]}`;
 }
 
 function humanReadableFormatWithOutUsd(number) {

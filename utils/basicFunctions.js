@@ -134,6 +134,10 @@ function numberFormated(value) {
     maximumFractionDigits: 2,
   });
 }
+function capitalizeFirstLetter(str) {
+  str = str.toLowerCase(); // convert whole string to lowercase
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 export {
   humanReadableFormat,
@@ -144,4 +148,5 @@ export {
   calculatePercentageDifference,
   convertAnyPriceToSol,
   numberFormated,
+  capitalizeFirstLetter
 };
