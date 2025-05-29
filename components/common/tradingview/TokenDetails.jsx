@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Solana, Copy, Telegram, linkedin, NewX } from "@/app/Images";
 import Image from "next/image";
 import { IoMdDoneAll } from "react-icons/io";
-import { decimalConvert } from "@/utils/basicFunctions";
+import { formatDecimal } from "@/utils/basicFunctions";
 import { useDispatch, useSelector } from "react-redux";
 import {
   removeFavouriteToken,
@@ -32,6 +32,13 @@ import { RiFacebookCircleLine } from "react-icons/ri";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { IoSearchSharp } from "react-icons/io5";
+import SquareProgressBar from "../../common/SquareProgressBarcom/SquareProgressBar";
+import {
+  pumpfun,
+  telegrams,
+  twitter,
+  website,
+} from "@/app/Images";
 
 const TokenDetails = ({
   tokenSymbol,
@@ -39,11 +46,19 @@ const TokenDetails = ({
   copied,
   handleCopy,
   TokenDetailsNumberData,
+  tokenDetailsMarketCap,
   chartTokenData,
   walletAddress,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCopyUrl, setIsCopyUrl] = useState(false);
+
+  const socialIcons = [
+    { icon: twitter, title: "twitter" },
+    { icon: telegrams, title: "telegram" },
+    { icon: website, title: "website" },
+    { icon: pumpfun, title: "pumpfun" },
+  ];
 
   const dispatch = useDispatch();
   const tokenImage = useSelector(
@@ -164,102 +179,139 @@ const TokenDetails = ({
     <div className="bg-transparent border-b-[1px] border-b-[#26262e] w-full">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center ">
         {/* Token Details */}
-        <div className="sm:pl-[10px] sm:p-3 sm:py-0 py-3 flex items-center gap-2">
-          {tokenImage ? (
-            <div className="rounded-sm w-[46px] h-[46px] overflow-hidden">
-              <img
-                src={tokenImage || Solana}
-                alt="Token Image"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ) : (
-            <h1 className=" text-[22px] rounded-sm sm:w-[46px] sm:h-[46px] w-[40px] h-[40px] border-[1px] border-[#26262e] bg-[#191919] flex items-center justify-center ">
-              {tokenSymbol?.toString()?.slice(0, 1)}
-            </h1>
-          )}
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <div className="text-white font-semibold text-base sm:text-lg font-spaceGrotesk">
-                {tokenSymbol}
-              </div>
-              <div className="text-[#A8A8A8] text-xs md:text-[14px]">
-                {tokenaddress && tokenaddress.length >= 10
-                  ? `${tokenaddress.slice(0, 5)}...${tokenaddress.slice(-3)}`
-                  : tokenaddress}
-              </div>
-              <div onClick={() => handleCopy(tokenaddress)}>
-                {copied ? (
-                  <IoMdDoneAll className="text-white cursor-pointer" />
-                ) : (
-                  <Image
-                    src={Copy}
-                    alt="Copy"
-                    width={18}
-                    height={18}
-                    className="cursor-pointer"
-                    onClick={() => handleCopy(tokenaddress)}
-                  />
-                )}
-              </div>
-              <Link
-                href={`https://www.pump.news/en/${tokenaddress}-solana`}
-                target="_blank"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="text-[10px] h-[17px] w-[17px] border border-[#4CAF50] text-[#ffffff] rounded-md flex items-center justify-center cursor-pointer bg-gradient-to-br from-[#409143] to-[#093d0c] shadow-[0_0_4px_rgba(76,255,80,0.4)]">
-                  AI
-                </div>
-              </Link>
-              <Link
-                href={`https://x.com/search?q=${tokenaddress}`}
-                target="_blank"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <IoSearchSharp color="#BBBBBC" size={19} />
-              </Link>
-            </div>
-            <div className="flex gap-3">
-              {[Telegram, linkedin, NewX].map((img, index) => (
-                <Image
-                  key={index}
-                  src={img}
-                  alt={`icon-${index}`}
-                  className="sm:w-[18px] sm:h-[18px] w-[17px] h-[17px] cursor-pointer"
+        <div className="sm:pl-[10px] p-3 flex items-center sm:gap-2 gap-1">
+            {/* Token Image */}
+            <div className="relative w-[36px] h-[36px]">
+              {/* change value to actual bonding curve later on and trail color depending on graduation status */}
+                <SquareProgressBar
+                  value={chartTokenData?.bondingCurveProgress || 100}
+                  maxValue={100}
+                  size={36.5}
+                  trailColor="#7b8085"
+                  progressColor={"#4FAFFE"}
                 />
-              ))}
+                {tokenImage ? (
+                  <img
+                    key={tokenImage || Solana}
+                    src={
+                      tokenImage || Solana
+                        ? tokenImage || Solana
+                        : "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/in/wp-content/uploads/2022/03/monkey-g412399084_1280.jpg"
+                    }
+                    alt="Profile"
+                    className="absolute inset-0 m-auto w-[30px] h-[30px] rounded-sm"
+                  />
+                ) : (
+                  <h1 className="absolute inset-0 m-auto w-[30px] h-[30px] rounded-sm text-[22px] border-[1px] border-[#26262e] bg-[#191919] flex items-center justify-center ">
+                    {tokenSymbol?.toString()?.slice(0, 1)}
+                  </h1>
+                )}
             </div>
-          </div>
-        </div>
-        {/* Numbers */}
-        <div className="sm:p-0 sm:px-0 px-1 py-3 flex items-center">
-          <div className="grid grid-cols-4 lg:gap-5 md:gap-4 gap-2">
-            {TokenDetailsNumberData?.map((num, index) => {
-              return (
-                <div key={index} className="flex flex-col items-center">
-                  <span className="text-[#A8A8A8] text-xs capitalize">
-                    {num.label}
-                  </span>
-                  <span className="text-white font-semibold  text-sm">
-                    {num?.label == "Price USD"
-                      ? decimalConvert(num?.price)
-                      : num?.price}
-                  </span>
+            {/* Token Details */}
+            <div className="flex flex-col mr-5">
+              <div className="flex items-center gap-2">
+                <div className="text-white text-base sm:text-lg font-spaceGrotesk">
+                  {tokenSymbol}
                 </div>
-              );
-            })}
-          </div>
+                <div className="text-[#A8A8A8] text-xs md:text-[14px]">
+                  {tokenaddress && tokenaddress.length >= 10
+                    ? `${tokenaddress.slice(0, 5)}...${tokenaddress.slice(-3)}`
+                    : tokenaddress}
+                </div>
+                <div onClick={() => handleCopy(tokenaddress)}>
+                  {copied ? (
+                    <IoMdDoneAll className="text-white cursor-pointer" />
+                  ) : (
+                    <Image
+                      src={Copy}
+                      alt="Copy"
+                      width={18}
+                      height={18}
+                      className="cursor-pointer"
+                      onClick={() => handleCopy(tokenaddress)}
+                    />
+                  )}
+                </div>
+              
+              </div>
+              <div className="flex gap-2 items-center">
+                {chartTokenData?.socialIconsLink
+                  ?.filter((item) => item?.uri)
+                  .map((item, index) => {
+                    const matchedIcon = socialIcons.find(
+                      (iconItem) => iconItem.title === item.alt
+                    );
 
-          {/* Like Icon */}
-          {/* <button className="p-2">
-            <Image
-              src={Like}
-              alt="Like"
-              width={28}
-              height={24}
-              className="sm:w-7 sm:h-6 w-5 h-4"
-            />
-          </button> */}
+                    return (
+                      <Link
+                        key={index}
+                        href={item?.uri}
+                        target="_blank"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <div className="grid place-items-center rounded-full">
+                          {matchedIcon && (
+                            <Image
+                              src={matchedIcon?.icon}
+                              alt={matchedIcon?.title}
+                              className="mx-auto text-white"
+                            />
+                          )}
+                        </div>
+                      </Link>
+                    );
+                  })}
+                <Link
+                  href={`https://www.pump.news/en/${tokenaddress}-solana`}
+                  target="_blank"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="text-[10px] h-[17px] w-[17px] border border-[#4CAF50] text-[#ffffff] rounded-md flex items-center justify-center cursor-pointer bg-gradient-to-br from-[#409143] to-[#093d0c] shadow-[0_0_4px_rgba(76,255,80,0.4)]">
+                    AI
+                  </div>
+                </Link>
+                <Link
+                  href={`https://x.com/search?q=${tokenaddress}`}
+                  target="_blank"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <IoSearchSharp color="#BBBBBC" size={19} />
+                </Link>
+              </div>
+            </div>
+            <div className="text-white text-base font-medium mx-4">
+              {tokenDetailsMarketCap}
+            </div>
+            {/* Numbers */}
+            <div className="sm:p-[0px] p-3 flex items-center">
+              <div className="grid grid-cols-4 lg:gap-5 md:gap-4 gap-2">
+                {TokenDetailsNumberData?.map((num, index) => {
+                  return (
+                    <div key={index} className="flex flex-col items-start">
+                      <span className="text-[#A8A8A8] text-xs capitalize">
+                        {num.label}
+                      </span>
+                      <span className="text-white text-sm">
+                        {num?.label == "Price USD"
+                          ? formatDecimal(num?.price)
+                          : num?.price}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Like Icon */}
+              {/* <button className="p-2">
+                <Image
+                  src={Like}
+                  alt="Like"
+                  width={28}
+                  height={24}
+                  className="sm:w-7 sm:h-6 w-5 h-4"
+                />
+              </button> */}
+            </div>
         </div>
         <div className="flex items-center justify-between mb-[5px] md:mb-[0px]">
           <div className="flex items-center md:flex-col">
