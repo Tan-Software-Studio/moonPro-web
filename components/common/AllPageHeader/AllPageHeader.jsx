@@ -39,9 +39,9 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [walletAddresses, setWalletAddresses] = useState([]);
+  const [allWallets, setAllWallets] = useState([]);
 
   // Close dropdown when clicking outside
-   const userDetails = useSelector((state) => state?.userData?.userDetails?.walletAddressSOL);
 
   // order setting popup flag
   const isRightModalOpenSetting = useSelector(
@@ -144,6 +144,32 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+  }, []);
+
+
+  const getAllWallets = async (e) => {
+    const jwtToken = localStorage.getItem("token");
+    if (!jwtToken) return 0;
+    try {
+      setIsLoading(true);
+      const response = await axios.get(`${baseUrl}user/getAllWallets`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      const wallets = response?.data?.data?.wallets?.walletAddressSOL;
+      setAllWallets(wallets);
+
+      setWalletAddresses(response?.data?.data?.wallets?.walletAddressSOL);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getAllWallets();
   }, []);
 
   const toggleSearchbar = () => {
@@ -555,7 +581,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                 >
 
                   {/* Wallet List */}
-                  {userDetails.map((wallet, idx) => {
+                  {allWallets.map((wallet, idx) => {
                     // Move state and handler inside the map for each wallet
 
 
