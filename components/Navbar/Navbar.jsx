@@ -8,7 +8,7 @@ import { AnimatePresence } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import { IoMenu, IoSettingsOutline } from "react-icons/io5";
 import { setIsSidebarOpen } from "@/app/redux/CommonUiData";
-import { logo, walletBalance } from "@/app/Images";
+import { logo, walletBalance, Solana, usdc } from "@/app/Images";
 import {
   fetchSolanaNativeBalance,
   openCloseLoginRegPopup,
@@ -23,18 +23,18 @@ import LoginPopup from "./login/LoginPopup";
 import { RiLogoutBoxLine, RiNotification4Line } from "react-icons/ri";
 import { googleLogout } from "@react-oauth/google";
 import { MdLockOutline } from "react-icons/md";
-import { FaRegStar, FaWallet } from "react-icons/fa";
+import { FaCopy, FaRegStar, FaWallet } from "react-icons/fa";
 import Setting from "./popup/Setting";
 import AccountSecurity from "./popup/AccountSecurity";
 import Watchlist from "./popup/Watchlist";
 import { useTranslation } from "react-i18next";
-import SolDeposit from "./popup/SolDeposit";
 import ReferralCodePopup from "./login/RefferalPopup";
 import axios from "axios";
 import { fetchMemescopeData } from "@/app/redux/memescopeData/Memescope";
 import { setFilterTime, setLoading } from "@/app/redux/trending/solTrending.slice";
 import RecoveryKey from "./login/RecoveryKey";
 import { decodeData } from "@/utils/decryption/decryption";
+import ExchangePopup from "./popup/ExchangePopup";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
@@ -47,8 +47,8 @@ const Navbar = () => {
   const [isWalletDropdownOpen, setIsWalletDropdownOpen] = useState(false);
   const [solPhrase, setSolPhrase] = useState("");
   const [openRecovery, setOpenRecovery] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
-
   // handle to get phrase of solana
   async function handleToGetSolanaPhrase() {
     const token = localStorage.getItem("token");
@@ -144,7 +144,7 @@ const Navbar = () => {
   useEffect(() => {
     fetchData();
     dispatch(fetchMemescopeData());
-    fetchSolPrice();
+    // fetchSolPrice();
   }, []);
   // update and get solana balance
   useEffect(() => {
@@ -174,6 +174,23 @@ const Navbar = () => {
     };
   }, []);
 
+  const handleCopyAddress = async (e) => {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(solWalletAddress);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy address:", err);
+    }
+  };
+
+  const handleOpenDeposit = (depositType = "general", amount = null) => {
+    setIsWalletDropdownOpen(false);
+    // dispatch(setDepositData({ type: depositType, amount: amount }));
+    setIsSolDepositPopup(true);
+  };
+
   return (
     <>
       <div
@@ -201,98 +218,6 @@ const Navbar = () => {
                 />
               </div>
 
-              {/* Wallet Balance and Address - Now with dropdown */}
-              {solWalletAddress && (
-                <div className={`relative`} ref={walletDropdownRef}>
-                  <div
-                    onClick={() => setIsWalletDropdownOpen(!isWalletDropdownOpen)}
-                    className={`flex items-center cursor-pointer gap-3 rounded-lg h-8 px-2 bg-[#1A1A1A] hover:bg-[#252525] transition-colors`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Image src={walletBalance} alt="solana" height={30} width={30} className="rounded-full" />
-                      <div>{Number(nativeTokenbalance).toFixed(2) || 0}</div>
-                    </div>
-
-                    <div className="sm:flex  hidden items-center gap-3">
-                      <FaWallet className="h-4 w-4 text-[#FFFFFF]" />
-                      <div className={` text-[#A8A8A8] text-sm font-thin `}>
-                        {solWalletAddress?.toString()?.slice(0, 4)}...
-                        {solWalletAddress?.toString()?.slice(-4)}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Wallet Dropdown */}
-                  {isWalletDropdownOpen && (
-                    <div className="absolute right-0 mt-2 border-[1px] border-[#404040] w-80 bg-[#141414] shadow-[#000000CC] rounded-md shadow-lg z-50">
-                      <div className="p-4">
-                        <div className="text-sm text-[#A8A8A8] mb-2">Total Value</div>
-                        <div className="text-2xl font-bold text-white mb-4">
-                          ${(Number(nativeTokenbalance) * 200).toFixed(0)}
-                        </div>
-
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-[#14F195]"></div>
-                            <span className="text-sm text-white">Solana</span>
-                          </div>
-                        </div>
-
-                        <div className="mb-4">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              {/* Solana Icon */}
-                              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#9945FF] to-[#14F195] flex items-center justify-center">
-                                <span className="text-white text-xs font-bold">S</span>
-                              </div>
-                              <span className="text-white font-medium">{Number(nativeTokenbalance).toFixed(3)}</span>
-                            </div>
-                            <div
-                              className="text-[#A8A8A8] cursor-pointer hover:text-white transition-colors text-sm"
-                              onClick={() => {
-                                navigator.clipboard.writeText(solWalletAddress);
-                                // You can add a toast notification here if you have one
-                              }}
-                              title="Click to copy address"
-                            >
-                              {solWalletAddress?.toString()?.slice(0, 4)}...{solWalletAddress?.toString()?.slice(-4)}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="mb-4">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              {/* USDC Icon */}
-                              <div className="w-6 h-6 rounded-full bg-[#2775CA] flex items-center justify-center">
-                                <span className="text-white text-xs font-bold">$</span>
-                              </div>
-                              <span className="text-white font-medium">0</span>
-                            </div>
-                            <div className="text-[#A8A8A8] text-sm">USDC</div>
-                          </div>
-                        </div>
-
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => {
-                              setIsWalletDropdownOpen(false);
-                              setIsSolDepositPopup(true);
-                            }}
-                            className="flex-1 bg-[#1F73FC] hover:bg-[#1F73FC]/80 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors"
-                          >
-                            Deposit
-                          </button>
-                          <button className="flex-1 bg-[#2A2A2A] hover:bg-[#3A3A3A] text-white py-2 px-4 rounded-md text-sm font-medium transition-colors">
-                            Withdraw
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
               {/* Only sm search bar */}
               <div onClick={() => dispatch(setIsSearchPopup(true))} className="cursor-pointer md:hidden block">
                 <LuSearch size={24} />
@@ -310,6 +235,100 @@ const Navbar = () => {
                 <div onClick={() => dispatch(setIsEnabled(!isEnabled))} className="cursor-pointer relative">
                   <RiNotification4Line size={24} />
                   <div className="w-2 h-2 rounded-full bg-[#ED1B24] absolute right-[0.6px] top-[0.6px]"></div>
+                </div>
+              )}
+
+              {/* Wallet Balance and Address - Now with dropdown */}
+              {solWalletAddress && (
+                <div className={`relative`} ref={walletDropdownRef}>
+                  <div
+                    onClick={() => setIsWalletDropdownOpen(!isWalletDropdownOpen)}
+                    className={`flex items-center cursor-pointer gap-3 rounded-lg h-8 px-2 bg-[#1A1A1A] hover:bg-[#252525] transition-colors`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Image src={Solana} alt="solana" height={30} width={30} className="rounded-full" />
+                      <div>{Number(nativeTokenbalance).toFixed(5) || 0}</div>
+                    </div>
+
+                    <div className="sm:flex  hidden items-center gap-3">
+                      <FaWallet className="h-4 w-4 text-[#FFFFFF]" />
+                      <div className={` text-[#A8A8A8] text-sm font-thin `}>
+                        {solWalletAddress?.toString()?.slice(0, 4)}...
+                        {solWalletAddress?.toString()?.slice(-4)}
+                      </div>
+                    </div>
+                  </div>
+
+                  {isWalletDropdownOpen && (
+                    <div className="absolute right-0 mt-2 border-[1px] border-[#404040] w-64 bg-[#1A1A1A] shadow-xl rounded-lg z-50">
+                      <div className="p-4">
+                        {/* Total Value - Clickable */}
+                        <div
+                          className="flex items-center justify-between mb-3 cursor-pointer hover:bg-[#252525]  rounded-lg transition-colors border"
+                          onClick={() => handleOpenDeposit("total", Number(nativeTokenbalance) * 200)}
+                        >
+                          <div className="border">
+                            <div className="text-xs text-[#898989] mb-1">Total Value</div>
+                            <div className="text-2xl font-bold text-white">
+                              ${(Number(nativeTokenbalance) * 200).toFixed(2)}
+                            </div>
+                          </div>
+                          {/* Copy Address section */}
+                          <div className="text-right border">
+                            <div className="flex items-right gap-2 mb-1">
+                              <button
+                                onClick={handleCopyAddress}
+                                className="flex gap-1 bg-[#374151] hover:bg-[#4B5563] p-1 rounded text-xs transition-colors"
+                              >
+                                <FaCopy className="w-3 h-3" />
+                              </button>
+                              <span className="text-xs text-[#898989]">solana</span>
+                            </div>
+                            {/* <div className="text-xs text-[#666666] font-mono">
+                              {solWalletAddress?.toString()?.slice(0, 6)}...
+                              {solWalletAddress?.toString()?.slice(-6)}
+                            </div> */}
+                          </div>
+                        </div>
+
+                        {/* Balance Display - Clickable */}
+                        <div
+                          className="flex items-center justify-between mb-3 cursor-pointer hover:bg-[#252525] p-2 rounded-lg transition-colors"
+                          onClick={() => handleOpenDeposit("balance", Number(nativeTokenbalance))}
+                        >
+                          <div className="flex items-center gap-2">
+                            <Image src={Solana} alt="solana" width={20} height={20} className="rounded-full" />
+                            <span className="text-lg font-semibold text-white">
+                              {Number(nativeTokenbalance).toFixed(5)}
+                            </span>
+                          </div>
+
+                          <div className="text-[#666666] text-lg">⇄</div>
+
+                          <div className="flex items-center gap-2">
+                            <Image src={usdc} alt="usdc" width={20} height={20} className="rounded-full" />
+                            <span className="text-lg font-semibold text-white">0</span>
+                          </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleOpenDeposit("deposit")}
+                            className="flex-1 rounded-md bg-[#11265B] hover:bg-[#5856EB] text-white py-2.5 px-4 text-sm font-medium transition-colors"
+                          >
+                            Deposit
+                          </button>
+                          <button
+                            // onClick={() => handleOpenDeposit("withdraw")}
+                            className="flex-1 bg-[#374151] hover:bg-[#4B5563] text-white py-2.5 px-4 rounded-md text-sm font-medium transition-colors"
+                          >
+                            Withdraw
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -399,7 +418,7 @@ const Navbar = () => {
 
         {isWatchlistPopup && <Watchlist setIsWatchlistPopup={setIsWatchlistPopup} />}
 
-        {isSolDepositPopup && <SolDeposit isOpen={isSolDepositPopup} onClose={setIsSolDepositPopup} />}
+        {isSolDepositPopup && <ExchangePopup isOpen={isSolDepositPopup} onClose={setIsSolDepositPopup} />}
         {openRecovery && solPhrase && (
           <RecoveryKey PK={solPhrase} setPK={setSolPhrase} setOpenRecovery={setOpenRecovery} flag={true} />
         )}

@@ -9,15 +9,14 @@ import { useTranslation } from "react-i18next";
 import { lang } from "@/app/contsants/lang";
 import { useSelector } from "react-redux";
 import Link from "next/link";
+
 const AccountSecurity = ({ setIsAccountPopup, handlePhrase }) => {
   const [language, setLanguage] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { t } = useTranslation();
   const accountPopupLng = t("accountPopup");
 
-  const solWalletAddress = useSelector(
-    (state) => state?.AllStatesData?.solWalletAddress
-  );
+  const solWalletAddress = useSelector((state) => state?.AllStatesData?.solWalletAddress);
 
   const { i18n } = useTranslation();
 
@@ -58,10 +57,7 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase }) => {
               <div className="md:text-2xl sm:text-xl text-lg sm:font-bold font-semibold text-white ">
                 {accountPopupLng?.security?.accountSecurity}
               </div>
-              <div
-                onClick={() => setIsAccountPopup(false)}
-                className="cursor-pointer"
-              >
+              <div onClick={() => setIsAccountPopup(false)} className="cursor-pointer">
                 <IoClose size={20} />
               </div>
             </div>
@@ -76,14 +72,14 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase }) => {
                     className="w-[60px] h-[60px] md:w-[80px] md:h-[80px] rounded-md"
                   />
                   <div>
-                    <p>{`example@gmail.com`}</p>
-                    {/* <div className="flex items-center gap-1 text-[#A8A8A8] text-sm">
-                    <div>{accountPopupLng?.security?.userID} </div>
-                    <div>95a2...3f95</div>
-                    <div>
-                      <IoCopyOutline />
+                    <p className="text-white font-medium">{`rtanthetaa@gmail.com`}</p>
+                    <div className="flex items-center gap-1 text-[#A8A8A8] text-sm">
+                      <div>User ID:</div>
+                      <div>e19c...da62</div>
+                      <div className="cursor-pointer">
+                        <IoCopyOutline />
+                      </div>
                     </div>
-                  </div> */}
                     <div className="flex items-center gap-1 text-[#A8A8A8] text-sm">
                       <div>
                         <IoWalletOutline />
@@ -97,31 +93,21 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase }) => {
                   </div>
                 </div>
                 <div className="flex items-center sm:flex-nowrap flex-wrap lg:gap-10 gap-3">
-                  {/* <div>
-                    <div className="text-[#A8A8A8] text-sm uppercase">
-                      {accountPopupLng?.security?.dayCreated}
+                  <div>
+                    <div className="text-[#A8A8A8] text-sm">Rewards Level</div>
+                    <div className="text-white font-semibold py-1.5 text-base">Wood 🏆</div>
+                  </div>
+                  <div>
+                    <div className="text-[#A8A8A8] text-sm">Last Login</div>
+                    <div className="text-white font-semibold py-1.5  text-base">1mo</div>
+                  </div>
+                  <div>
+                    <div className="text-[#A8A8A8] text-sm">Referral Link</div>
+                    <div className="border-b-[1px] border-b-[#FFFFFF] py-1.5 gap-1  cursor-pointer text-white flex items-center font-semibold text-base">
+                      <div>Set Referral Code</div>
+                      <span className="text-lg">+</span>
                     </div>
-                    <div className="text-white font-semibold py-1.5 text-base">
-                      23/02/2025
-                    </div>
-                  </div> */}
-                  {/* <div>
-                  <div className="text-[#A8A8A8] text-sm uppercase">
-                    {accountPopupLng?.security?.lastLogin}
                   </div>
-                  <div className="text-white font-semibold py-1.5  text-base">
-                    1w
-                  </div>
-                </div> */}
-                  {/* <div>
-                  <div className="text-[#A8A8A8] text-sm uppercase">
-                    {accountPopupLng?.security?.referralLink}   {" "}
-                  </div>
-                  <div className="border-b-[1px] border-b-[#FFFFFF] py-1.5 gap-1  cursor-pointer text-white flex items-center font-semibold text-base">
-                    <div> {accountPopupLng?.security?.setReferralCode}</div>
-                    <PiShare />
-                  </div>
-                </div> */}
                 </div>
               </div>
             </div>
@@ -129,25 +115,28 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase }) => {
             <div className="sm:px-6 px-3 py-6">
               <div className="flex gap-2 sm:flex-row flex-col sm:items-center my-5  justify-between">
                 <div>
-                  <div>{accountPopupLng?.security?.recoveryKey}</div>
+                  <div className="text-white font-medium">
+                    {accountPopupLng?.security?.recoveryKey || "Recovery Key"}
+                  </div>
                   <div className="text-[#6E6E6E] text-sm font-normal">
-                    {accountPopupLng?.security?.DONOTSHARE}
+                    {accountPopupLng?.security?.DONOTSHARE ||
+                      "Access your seed phrase to export your accounts. DO NOT SHARE!"}
                   </div>
                 </div>
                 <button
                   onClick={() => handlePhrase()}
                   className="py-2 px-5 border-[1px] border-[#ED1B24] text-[#ED1B24] hover:bg-[#ED1B24] hover:text-[#FFFFFF] rounded-md transition-all duration-500 ease-in-out "
                 >
-                  {accountPopupLng?.security?.viewrecoveryVey}
+                  {accountPopupLng?.security?.viewrecoveryVey || "View Recovery Key"}
                 </button>
               </div>
               <hr className="border-[#1A1A1A] border-b-[1px]  w-full" />
 
               <div className="flex gap-2 sm:flex-row flex-col sm:items-center my-5  justify-between">
                 <div>
-                  <div>{accountPopupLng?.security?.language}</div>
+                  <div className="text-white font-medium">{accountPopupLng?.security?.language || "Language"}</div>
                   <div className="text-[#6E6E6E] text-sm font-normal">
-                    {accountPopupLng?.security?.changeLanguage}{" "}
+                    {accountPopupLng?.security?.changeLanguage || "Change the application language"}{" "}
                   </div>
                 </div>
 
@@ -157,14 +146,8 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase }) => {
                     className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#A8A8A8] border border-[#404040] rounded-md cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition"
                     onClick={() => setIsModalOpen(!isModalOpen)}
                   >
-                    <Image
-                      alt="lang"
-                      src={language.img}
-                      className="w-[22px] h-[22px] rounded-full"
-                    />
-                    <span className="uppercase">
-                      {language?.lang || "English"}
-                    </span>
+                    <Image alt="lang" src={language.img} className="w-[22px] h-[22px] rounded-full" />
+                    <span className="uppercase">{language?.lang || "English"}</span>
                     <FaCaretDown className="text-[#A8A8A8]" />
                   </div>
 
@@ -181,15 +164,9 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase }) => {
                           >
                             <div className="flex items-center gap-3">
                               <div className="w-[25px] h-[25px] overflow-hidden rounded-full">
-                                <Image
-                                  alt="lang"
-                                  src={item.img}
-                                  className="w-full h-full  object-cover"
-                                />
+                                <Image alt="lang" src={item.img} className="w-full h-full  object-cover" />
                               </div>
-                              <span className="text-[15px] font-medium text-[#A8A8A8]">
-                                {item.lang}
-                              </span>
+                              <span className="text-[15px] font-medium text-[#A8A8A8]">{item.lang}</span>
                             </div>
                             {isSelected && (
                               <div
@@ -210,20 +187,68 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase }) => {
 
               <div className="flex gap-2 sm:flex-row flex-col sm:items-center my-5  justify-between">
                 <div>
-                  <div>{accountPopupLng?.security?.wallets}</div>
+                  <div className="text-white font-medium">{accountPopupLng?.security?.wallets || "Wallets"}</div>
                   <div className="text-[#6E6E6E] text-sm font-normal">
-                    {accountPopupLng?.security?.walletAccounts}{" "}
+                    {accountPopupLng?.security?.walletAccounts || "Add or manage your external wallet accounts"}{" "}
                   </div>
                 </div>
 
                 <Link
                   onClick={() => setIsAccountPopup(false)}
                   href="/portfolio"
-                  className="py-2 px-5 flex items-center gap-2 border-[#404040] rounded-md cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all duration-500 ease-in-out "
+                  className="py-2 px-5 flex items-center gap-2 border border-[#404040] rounded-md cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all duration-500 ease-in-out text-[#A8A8A8]"
                 >
                   <IoWalletOutline />
-                  <span>{accountPopupLng?.security?.manageWallets}</span>
+                  <span>{accountPopupLng?.security?.manageWallets || "Manage Wallets"}</span>
                 </Link>
+              </div>
+              <hr className="border-[#1A1A1A] border-b-[1px]  w-full" />
+
+              <div className="flex gap-2 sm:flex-row flex-col sm:items-center my-5  justify-between">
+                <div>
+                  <div className="text-white font-medium">Rewards</div>
+                  <div className="text-[#6E6E6E] text-sm font-normal">
+                    Earn free SOL. Visit the rewards page to get started
+                  </div>
+                </div>
+
+                <button className="py-2 px-5 flex items-center gap-2 border border-[#404040] rounded-md cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all duration-500 ease-in-out text-[#A8A8A8]">
+                  <span>📈</span>
+                  <span>Earn Rewards</span>
+                </button>
+              </div>
+              <hr className="border-[#1A1A1A] border-b-[1px]  w-full" />
+
+              <div className="flex gap-2 sm:flex-row flex-col sm:items-center my-5  justify-between">
+                <div>
+                  <div className="text-white font-medium">Yields</div>
+                  <div className="text-[#6E6E6E] text-sm font-normal">
+                    Earn passive income through Yields. Visit the Yields page to start earning
+                  </div>
+                </div>
+
+                <button className="py-2 px-5 flex items-center gap-2 border border-[#404040] rounded-md cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all duration-500 ease-in-out text-[#A8A8A8]">
+                  <span>🔗</span>
+                  <span>Enable Yield</span>
+                </button>
+              </div>
+              <hr className="border-[#1A1A1A] border-b-[1px]  w-full" />
+
+              <div className="flex gap-2 sm:flex-row flex-col sm:items-center my-5  justify-between">
+                <div>
+                  <div className="text-[#ED1B24] font-medium">Log Out</div>
+                  <div className="text-[#6E6E6E] text-sm font-normal">Log out of your account</div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    // Add your logout logic here
+                    setIsAccountPopup(false);
+                  }}
+                  className="py-2 px-5 border border-[#ED1B24] text-[#ED1B24] hover:bg-[#ED1B24] hover:text-[#FFFFFF] rounded-md transition-all duration-500 ease-in-out"
+                >
+                  Log Out
+                </button>
               </div>
             </div>
           </div>
