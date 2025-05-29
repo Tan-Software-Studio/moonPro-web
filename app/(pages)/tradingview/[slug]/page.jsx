@@ -11,6 +11,8 @@ import {
   convertAnyPriceToSol,
   decimalConvert,
   numberFormated,
+  formatDecimal,
+  capitalizeFirstLetter
 } from "@/utils/basicFunctions";
 import TVChartContainer from "@/components/TradingChart/TradingChart";
 import TokenDetails from "@/components/common/tradingview/TokenDetails";
@@ -129,29 +131,26 @@ const Tradingview = () => {
     }, 2000);
   };
 
+  const tokenDetailsMarketCap =  humanReadableFormat(
+        chartTokenData?.currentSupply *
+          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+        );
+
   const TokenDetailsNumberData = [
     {
-      label: `${tragindViewPage?.right?.tokeninfo?.price} USD`,
-      price: `$${decimalConvert(
-        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD || 0
+      label: capitalizeFirstLetter(`${tragindViewPage?.right?.tokeninfo?.price}`),
+      price: `$${formatDecimal(
+        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD || 0, 1
       )}`,
     },
     {
-      label: tragindViewPage?.right?.tokeninfo?.liq,
+      label: capitalizeFirstLetter(tragindViewPage?.right?.tokeninfo?.liq),
       price: chartTokenData?.Liqudity || 0,
     },
     {
-      label: "FDV",
+      label: tragindViewPage?.right?.tokeninfo?.supply,
       price: humanReadableFormat(
-        chartTokenData?.currentSupply *
-          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
-      ),
-    },
-    {
-      label: tragindViewPage?.right?.tokeninfo?.mc,
-      price: humanReadableFormat(
-        chartTokenData?.currentSupply *
-          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+        chartTokenData?.currentSupply, false
       ),
     },
   ];
@@ -249,22 +248,22 @@ const Tradingview = () => {
   const tokenInfo = [
     {
       label: `${tragindViewPage?.right?.tokeninfo?.price} USD`,
-      price: `$${decimalConvert(
-        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD || 0
+      price: `$${formatDecimal(
+        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD || 0, 1
       )}`,
     },
     {
       label: `${tragindViewPage?.right?.tokeninfo?.price} SOL`,
-      price: `${decimalConvert(
+      price: `${formatDecimal(
         convertAnyPriceToSol(
           latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
           solanaLivePrice
-        ) || 0
+        ) || 0, 1
       )}`,
     },
     {
       label: tragindViewPage?.right?.tokeninfo?.supply,
-      price: humanReadableFormat(chartTokenData?.currentSupply),
+      price: humanReadableFormat(chartTokenData?.currentSupply, false),
     },
     {
       label: tragindViewPage?.right?.tokeninfo?.liq,
@@ -375,6 +374,7 @@ const Tradingview = () => {
                   copied={copied}
                   handleCopy={handleCopy}
                   TokenDetailsNumberData={TokenDetailsNumberData}
+                  tokenDetailsMarketCap={tokenDetailsMarketCap}
                   chartTokenData={chartTokenData}
                   walletAddress={solWalletAddress}
                 />
