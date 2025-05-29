@@ -9,6 +9,7 @@ import allMemescopeData from "./memescopeData/Memescope";
 import allCharTokenData from "./chartDataSlice/chartData.slice";
 import solTrendingData from "./trending/solTrending.slice";
 import AllStatesData from "./states";
+import userData from "./userDataSlice/UserData.slice";
 
 export default configureStore({
   reducer: {
@@ -20,5 +21,6 @@ export default configureStore({
     allNewPairEthData,
     allMemescopeData,
     allCharTokenData,
+    userData,
   },
 });
