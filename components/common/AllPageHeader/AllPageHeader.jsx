@@ -206,17 +206,50 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
     localStorage.setItem("showSocials", newValue);
   };
 
-    const holderShowHide = () => {
+  const holderShowHide = () => {
     const newValue = !showHolders;
     setShowHolders(newValue);
     localStorage.setItem("showHolders", newValue);
   };
 
-      const holderShowHide10 = () => {
+  const holderShowHide10 = () => {
     const newValue = !showHolders10;
     setshowHolders10(newValue);
-    localStorage.setItem("showHolders", newValue);
+    localStorage.setItem("showHolders10", newValue);
   };
+
+  useEffect(() => {
+    const showHolders = localStorage.getItem("showHolders")
+    if (showHolders == null || showHolders == undefined) {
+      localStorage.setItem("showHolders", true);
+    }
+    const showSocials = localStorage.getItem("showSocials")
+    if (showSocials == null || showSocials == undefined) {
+      localStorage.setItem("showSocials", true);
+    }
+    const showVolume = localStorage.getItem("showVolume")
+    if (showVolume == null || showVolume == undefined) {
+      localStorage.setItem("showVolume", true);
+    }
+    const showMarketCap = localStorage.getItem("showMarketCap")
+    if (showMarketCap == null || showMarketCap == undefined) {
+      localStorage.setItem("showMarketCap", true);
+    }
+    const showCircle = localStorage.getItem("showCircle")
+    if (showCircle == null || showCircle == undefined) {
+      localStorage.setItem("showCircle", true);
+    }
+    const searchbar = localStorage.getItem("searchbar")
+    if (searchbar == null || searchbar == undefined) {
+      localStorage.setItem("searchbar", true);
+    }
+    const showHolders10 = localStorage.getItem("showHolders10")
+    if (showHolders10 == null || showHolders10 == undefined) {
+      localStorage.setItem("showHolders10", true);
+    }
+
+
+  }, [])
 
   const handlePrimary = async (walletIndex, loopIndex) => {
     console.log("===<><>", walletIndex, loopIndex)
@@ -502,8 +535,8 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                           const isActive =
                             (item === "Market Cap" && showMarketCap) ||
                             (item === "Volume" && showVolume) ||
-                            (item === "Socials" && showSocials) || 
-                            (item === "Holders" && showHolders) || 
+                            (item === "Socials" && showSocials) ||
+                            (item === "Holders" && showHolders) ||
                             (item === "Top 10 Holders" && showHolders10)
 
                           return (
@@ -517,9 +550,9 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                                   volumeShowHide();
                                 } else if (item === "Socials") {
                                   socialsShowHide();
-                                }else if(item === "Holders"){
+                                } else if (item === "Holders") {
                                   holderShowHide()
-                                }else if(item === "Top 10 Holders"){
+                                } else if (item === "Top 10 Holders") {
                                   holderShowHide10()
                                 }
                               }}
