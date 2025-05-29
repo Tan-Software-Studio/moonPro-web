@@ -59,7 +59,7 @@ const HolderDataTable = ({ data, img, loading }) => {
       ) : (
         <>
           {data.map((row, ind) => (
-            <tbody key={ind} className={`text-center border-b ${borderColor}`}>
+            <tbody key={ind} className={`border-b ${borderColor}`}>
               <tr
                 className={`cursor-pointer`}
                 onClick={() => redirectHandler(row?.mint, row?.symbol)}
@@ -101,11 +101,7 @@ const HolderDataTable = ({ data, img, loading }) => {
                       /> */}
                     <p className="flex items-center">
                       <span className="text-[16px] whitespace-nowrap overflow-hidden text-ellipsis">
-                        {parseFloat(
-                          row.balance_formatted
-                            ? row.balance_formatted
-                            : row.amount
-                        ).toFixed(5)}
+                        {parseFloat(row.quantity).toFixed(5)}
                       </span>
                     </p>
                   </div>
@@ -113,34 +109,14 @@ const HolderDataTable = ({ data, img, loading }) => {
 
                 {/* Column 4: pnl in usd */}
                 <td className="whitespace-nowrap px-6 py-4">
-                  <div className="grid place-content-center text-start">
-                    {row?.pnlAmountUsd > 0 ? (
-                      <p className={`text-[16px] text-[#3E9FD6]`}>
-                        ${Number(row?.pnlAmountUsd || 0).toFixed(5)}
-                      </p>
-                    ) : (
-                      <p className={`text-[16px] text-[#F0488B]`}>
-                        ${Number(row?.pnlAmountUsd || 0).toFixed(5)}
-                      </p>
-                    )}
-                  </div>
+                  <div className="grid place-content-center text-start">0</div>
                 </td>
 
                 {/* Column 5:  P&L in % */}
                 <td className="whitespace-nowrap px-6 py-4">
                   <div className="grid place-content-center text-start">
                     <div className="flex gap-1.5">
-                      <div className="space-y-1">
-                        {row?.pnl >= 0 ? (
-                          <p className="mt-0.5 text-[#3E9FD6] font-thin text-[16px]">
-                            +{Number(row?.pnl ? row?.pnl : 0).toFixed(2)}%
-                          </p>
-                        ) : (
-                          <p className="mt-0.5 text-[#F0488B] font-thin text-[16px]">
-                            {Number(row?.pnl ? row?.pnl : 0).toFixed(2)}%
-                          </p>
-                        )}
-                      </div>
+                      <div className="space-y-1">0</div>
                     </div>
                   </div>
                 </td>

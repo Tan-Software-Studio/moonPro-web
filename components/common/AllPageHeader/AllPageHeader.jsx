@@ -7,20 +7,16 @@ import FilterMemescope from "../filter/FilterMemescope";
 import { solana } from "@/app/Images";
 import RightModalOpenSetting from "@/components/Settings/RightModalOpenSetting";
 import { IoSettingsOutline } from "react-icons/io5";
-import { setGlobalBuyAmt, setOpenOrderSetting } from "@/app/redux/states";
+import { setGlobalBuyAmt, setOpenOrderSetting, setSolWalletAddress } from "@/app/redux/states";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, List, Eye, LayoutGrid, Search } from "lucide-react";
-const AllPageHeader = ({
-  HeaderData,
-  duration,
-  FilterData,
-  localFilterTime,
-  setLocalFilterTime,
-  setFilterValues,
-  filterValues,
-  onApply,
-  onReset,
-}) => {
+import axios from "axios";
+import toast from "react-hot-toast";
+import { IoCheckmarkDone } from "react-icons/io5";
+import { IoCopyOutline } from "react-icons/io5";
+import { LuWalletMinimal } from "react-icons/lu";
+import { FaAngleDown } from "react-icons/fa";
+const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime, setFilterValues, filterValues, onApply, onReset, setSelectedMetric, selectedMetric, setSearchbar, searchbar }) => {
   const filterPopupRef = useRef(null);
   const dexesPopupRef = useRef(null);
   const { t } = useTranslation();
@@ -37,6 +33,11 @@ const AllPageHeader = ({
   const dropdownRef = useRef(null);
   // const [presist, setPresist] = useState("P1");
   const buttonRef = useRef(null);
+  const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
+  const [isLoading, setIsLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [walletAddresses, setWalletAddresses] = useState([]);
+  const [allWallets, setAllWallets] = useState([]);
 
   // Close dropdown when clicking outside
 
@@ -54,6 +55,18 @@ const AllPageHeader = ({
     // setInputValue(event.target.value);
     dispatch(setGlobalBuyAmt(event.target.value));
   };
+
+  const handleCopy = async (e) => {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(wallet.wallet || "BEsA4G");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+  };
+
   const handleButtonClick = (option) => {
     // Dispatch the action and ensure the state updates
     setLocalFilterTime(option);
@@ -115,6 +128,83 @@ const AllPageHeader = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+
+  const getAllWallets = async (e) => {
+    const jwtToken = localStorage.getItem("token");
+    if (!jwtToken) return 0;
+    try {
+      setIsLoading(true);
+      const response = await axios.get(`${baseUrl}user/getAllWallets`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      const wallets = response?.data?.data?.wallets?.walletAddressSOL;
+      setAllWallets(wallets);
+
+      setWalletAddresses(response?.data?.data?.wallets?.walletAddressSOL);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getAllWallets();
+  }, []);
+
+  const handlePrimary = async (walletIndex, loopIndex) => {
+    console.log("===<><>", walletIndex, loopIndex)
+    const jwtToken = localStorage.getItem("token");
+    if (!jwtToken) return 0;
+    try {
+      // showToastLoader("Switching primary wallet", "switch-toast");
+      await axios
+        .put(
+          `${baseUrl}user/makeSolWalletPrimary`,
+          {
+            index: walletIndex,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        )
+        .then(async (res) => {
+          const findXPrimaryIndex = await walletAddresses.findIndex(
+            (item) => item?.primary
+          );
+          setWalletAddresses((pre) => {
+            const preArr = [...pre];
+            if (findXPrimaryIndex !== -1) preArr[findXPrimaryIndex].primary = false;
+            preArr[loopIndex].primary = true;
+            return preArr;
+          });
+          localStorage.setItem(
+            "walletAddress",
+            res?.data?.data?.wallet?.wallet
+          );
+          toast.success("Primary wallet switched", {
+            id: "switch-toast",
+            duration: 2000,
+          });
+          dispatch(setSolWalletAddress());
+        })
+        .catch((err) => {
+          console.log("🚀 ~ ).then ~ err:", err?.message);
+        });
+    } catch (error) {
+      console.error(error);
+      toast.error("Primary not wallet switched", {
+        id: "switch-toast",
+        duration: 2000,
+      });
+    }
+  }
+
   // Filter button
   const handleSidebarToggle = (id) => {
     setOpenDropdown((prev) => (prev === id ? null : id));
@@ -125,7 +215,7 @@ const AllPageHeader = ({
     "appearance-none w-4 h-4 border border-gray-400 rounded-sm bg-transparent flex items-center justify-center checked:bg-[#3e9fd6] checked:border-[#3e9fd6] checked:after:content-['✔'] checked:after:text-xs";
   return (
     <div
-      className={`text-white relative bg-[#08080E] md:flex justify-between items-start lg:items-center pt-[18px] py-[6.3px] px-3 md:px-4 border-b-[1px] ${borderColor} pb-5 transition-all duration-500 ease-in-out 
+      className={`text-white relative bg-[#08080E] md:flex justify-between items-start lg:items-center pt-[18px] py-[6.3px] px-3 md:px-4 z-50 border-b-[1px] ${borderColor} pb-5 transition-all duration-500 ease-in-out 
         ${isScrolled && pathData === false && "-translate-y-full opacity-0 "}`}
     >
       {/* pagename + description */}
@@ -148,7 +238,7 @@ const AllPageHeader = ({
         </div> */}
       </div>
       {/* filter + buy etc button */}
-      <div className="flex flex-wrap lg:items-center md:justify-end gap-2 overflow-x-auto md:mt-0 mt-5">
+      <div className="flex flex-wrap lg:items-center md:justify-end gap-2 overflow-x-auto md:mt-0">
         {duration && (
           <div
             // w-[348px]
@@ -158,9 +248,8 @@ const AllPageHeader = ({
               <button
                 key={index}
                 onClick={() => handleButtonClick(option)}
-                className={`py-2 px-3 text-sm  font-semibold hover:bg-[#1F73FC]/[30%] rounded-md ${
-                  option === localFilterTime && " !text-[#1F73FC]"
-                } transition duration-300 text-[#edebe5]`}
+                className={`py-2 px-3 text-sm  font-semibold hover:bg-[#1F73FC]/[30%] rounded-md ${option === localFilterTime && " !text-[#1F73FC]"
+                  } transition duration-300 text-[#edebe5]`}
               >
                 {/* bg-[#1F73FC] text-white first-of-type:rounded-l-md last-of-type:rounded-r-md */}
                 {option}
@@ -278,47 +367,57 @@ const AllPageHeader = ({
 
               {/* Dropdown Panel */}
               {isDisplayOpen && (
-                <div className="absolute right-44 mt-2 w-[320px] bg-[#1a1a1a] border border-gray-700 text-white rounded-md shadow-lg !z-50">
+                <div className="absolute right-44 mt-2 w-[320px] bg-[#0f0f0f] border border-gray-700 text-white rounded-md shadow-xl z-50">
                   <div className="p-4 space-y-4">
-                    {/* Metrics Section */}
+
+                    {/* Metrics */}
                     <div>
-                      <p className="text-sm font-semibold mb-2">Metrics</p>
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="py-2 px-3 bg-[#2a2a2a] rounded text-xs text-center">
+                      <p className="text-xs text-gray-400 font-semibold mb-2">Metrics</p>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <button
+                          className={`py-2 px-3 rounded hover:bg-[#2a2a2a] ${selectedMetric === '12' ? 'bg-[#1f1f1f] text-white font-bold' : 'bg-[#3b3b3b] text-gray-300'
+                            }`}
+                          onClick={() => setSelectedMetric('12')}
+                        >
                           MC 77K <br /> Small
-                        </div>
-                        <div className="py-2 px-3 bg-[#444] rounded text-xs text-center font-bold">
+                        </button>
+                        <button
+                          className={`py-2 px-3 rounded hover:bg-[#3b3b3b] ${selectedMetric === '20' ? 'bg-[#1f1f1f] text-white font-bold' : 'bg-[#3b3b3b] text-gray-300'
+                            }`}
+                          onClick={() => setSelectedMetric('20')}
+                        >
                           MC 77K <br /> Large
-                        </div>
+                        </button>
                       </div>
                     </div>
 
-                    {/* Quick Buy Section */}
-                    <div>
-                      <p className="text-sm font-semibold mb-2">Quick Buy</p>
-                      <div className="grid grid-cols-3 gap-2">
+
+                    {/* Quick Buy */}
+                    {/* <div>
+                      <p className="text-xs text-gray-400 font-semibold mb-2">Quick Buy</p>
+                      <div className="grid grid-cols-3 gap-2 text-xs">
                         {["Small", "Large", "Mega"].map((size) => (
-                          <div
+                          <button
                             key={size}
-                            className="py-2 px-2 bg-[#2a2a2a] rounded text-center text-xs font-medium"
+                            className="bg-[#1f1f1f] py-2 px-2 rounded text-center font-medium hover:bg-[#2a2a2a]"
                           >
-                            <span className="block text-blue-400">⚡</span>
+                            <div className="text-blue-400">⚡</div>
                             {size}
-                          </div>
+                          </button>
                         ))}
                       </div>
-                    </div>
+                    </div> */}
 
-                    {/* Toggle Features */}
-                    <div className="border-t border-gray-600 pt-4 space-y-3 text-sm">
-                      <div className="flex items-center gap-2 cursor-pointer hover:text-blue-400">
+                    {/* Toggles */}
+                    <div className="border-t border-gray-700 pt-4 space-y-3 text-sm">
+                      <div
+                        className="flex items-center gap-2 cursor-pointer hover:text-blue-400"
+                        onClick={() => setSearchbar(prev => !prev)}
+                      >
                         <Search size={16} />
-                        Show Search Bar
+                        {searchbar ? 'Hide Search Bar' : 'Show Search Bar'}
                       </div>
-                      <div className="flex items-center gap-2 cursor-pointer hover:text-blue-400">
-                        <Eye size={16} />
-                        Show Hidden Tokens
-                      </div>
+
                       <div className="flex items-center gap-2 cursor-pointer hover:text-blue-400">
                         <LayoutGrid size={16} />
                         Circle Images
@@ -327,45 +426,30 @@ const AllPageHeader = ({
                         <div className="w-4 h-1 bg-gray-400 rounded-full" />
                         Progress Bar
                       </div>
-                      <div className="flex items-center gap-2 cursor-pointer hover:text-blue-400">
-                        <div className="w-4 h-4 border-2 border-gray-400 rounded-sm" />
-                        Spaced Tables
-                      </div>
                     </div>
 
                     {/* Customize Rows */}
-                    <div className="border-t border-gray-600 pt-4">
-                      <p className="text-sm font-semibold mb-2">
-                        Customize rows
-                      </p>
+                    <div className="border-t border-gray-700 pt-4">
+                      <p className="text-xs text-gray-400 font-semibold mb-2">Customize rows</p>
                       <div className="flex flex-wrap gap-2">
                         {[
-                          "Market Cap",
-                          "Volume",
-                          "TX",
-                          "Socials",
-                          "Holders",
-                          "Pro Traders",
-                          "Dev Migrations",
-                          "Top 10 Holders",
-                          "Dev Holding",
-                          "Snipers",
-                          "Insiders",
-                          "Bundlers",
-                          "Dex Paid",
+                          "Market Cap", "Volume", "TX", "Socials", "Holders", "Dev Migrations",
+                          "Top 10 Holders", "Dev Holding",
                         ].map((item) => (
-                          <span
+                          <button
                             key={item}
-                            className="bg-[#2a2a2a] px-2 py-1 rounded text-xs cursor-pointer hover:bg-[#3b3b3b]"
+                            className="bg-[#1f1f1f] text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]"
                           >
                             {item}
-                          </span>
+                          </button>
                         ))}
                       </div>
                     </div>
+
                   </div>
                 </div>
               )}
+
             </div>
 
             <div>
@@ -386,23 +470,6 @@ const AllPageHeader = ({
               tredingPage={tredingPage}
             />
 
-            {/* <div className="flex items-center mr-2 space-x-2 px-5 py-2 bg-[#1a1a1a] rounded-full text-white text-sm font-medium w-fit">
-
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a4 4 0 00-4-4H5a2 2 0 00-2 2v12a2 2 0 002 2h8a4 4 0 004-4v-2M9 13h6" />
-              </svg>
-
-              <span>1</span>
-
-              <Image src={solana} width={20} height={20} alt="solana" />
-
-              <span>0</span>
-
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </div> */}
-
             <div className=" inline-block">
               {/* Wallet Button */}
               <div
@@ -411,20 +478,7 @@ const AllPageHeader = ({
                 className="flex items-center mr-2 space-x-2 px-5 py-2 bg-[#1a1a1a] rounded-full text-[#ecf6fd] text-sm font-medium cursor-pointer"
               >
                 {/* Wallet Icon */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 9V7a4 4 0 00-4-4H5a2 2 0 00-2 2v12a2 2 0 002 2h8a4 4 0 004-4v-2M9 13h6"
-                  />
-                </svg>
+                <LuWalletMinimal size={20} />
                 <span>1</span>
 
                 {/* Solana Icon */}
@@ -432,99 +486,110 @@ const AllPageHeader = ({
                 <span>0</span>
 
                 {/* Dropdown Icon */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
+                <FaAngleDown size={20} />
               </div>
 
               {open && (
                 <div
                   ref={dropdownRef}
-                  className="absolute right-20 mt-2 w-96 bg-[#1a1a1a] border border-gray-700 text-white rounded-md shadow-lg z-50"
+                  className="absolute right-20 mt-2 w-96 bg-[#18181a] border border-gray-700 min-h-fit text-white rounded-md shadow-lg z-50"
                 >
                   {/* Wallet List */}
-                  {[
-                    {
-                      name: "Moon Pro Main",
-                      status: "Off",
-                      address: "BEsA4",
-                      balance: 0,
-                      toggle: 0,
-                      active: true,
-                    },
-                    {
-                      name: "Wallet",
-                      status: "Off",
-                      address: "8cYVF",
-                      balance: 0,
-                      toggle: 0,
-                      active: false,
-                    },
-                  ].map((wallet, idx) => (
-                    <div
-                      key={idx}
-                      className={`flex items-center justify-between p-3 ${
-                        wallet.active ? "bg-[#1a1a1a]" : ""
-                      }`}
-                    >
-                      {/* Checkbox and wallet info */}
-                      <div className="flex items-center gap-2 w-1/2">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox text-orange-400 bg-transparent border-gray-600"
-                          checked={wallet.active}
-                          readOnly
-                        />
-                        <div>
-                          <span
-                            className={`text-sm font-semibold ${
-                              wallet.active ? "text-orange-400" : ""
-                            }`}
-                          >
-                            {wallet.name}
-                          </span>
-                          <p className="text-xs text-gray-400">
-                            {wallet.status} · {wallet.address}
-                          </p>
+                  {allWallets.map((wallet, idx) => {
+                    // Move state and handler inside the map for each wallet
+
+
+                    const handleCopy = async (e) => {
+                      e.stopPropagation();
+                      try {
+                        await navigator.clipboard.writeText(wallet.wallet || "BEsA4G");
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+                      } catch (err) {
+                        console.error('Failed to copy: ', err);
+                      }
+                    };
+
+                    return (
+                      <div
+                        key={idx}
+                        className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${wallet.active ? "bg-[#1a1a1a]" : ""
+                          }`}
+                      >
+                        {/* Checkbox and wallet info */}
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            className="w-4 h-4 rounded border border-gray-500 bg-transparent checked:bg-[#ff8f1b] checked:border-[#ff8f1b] focus:ring-2 focus:ring-[#ff8f1b] focus:ring-opacity-50"
+                            checked={wallet.primary}
+                            onChange={() => handlePrimary(wallet.index, idx)}
+                          />
+                          <div className="flex flex-col">
+                            <span
+                              className={`text-sm font-medium ${wallet.primary ? "text-orange-400" : "text-white"
+                                }`}
+                            >
+                              {idx === 0 ? "Moon Pro Main" : "Wallet"}
+                            </span>
+                            <div className="flex items-center gap-1 text-xs text-gray-400">
+                              <span className="flex items-center gap-1">
+                                <span className="text-green-400">⚡</span>
+                                <span>{wallet.status || "off"}</span>
+                              </span>
+                              <span>·</span>
+                              <span>{wallet.wallet?.slice(0, 5) || "BEsA4"}</span>
+                              <button
+                                className="w-4 h-4 flex items-center justify-center text-xs transition-colors duration-200 hover:bg-gray-600 rounded"
+                                onClick={handleCopy}
+                                title={copied ? "Copied!" : "Copy wallet address"}
+                              >
+                                {copied ? (
+                                  // Check mark icon
+                                  <IoCheckmarkDone />
+
+                                ) : (
+                                  // Copy icon
+                                  <IoCopyOutline />
+                                )}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Right side - Add your balance and toggle sections here */}
+                        <div className="flex items-center gap-4">
+                          {/* Solana balance */}
+                          <div className="flex items-center gap-2">
+                            <Image
+                              src={solana}
+                              width={16}
+                              height={16}
+                              alt="solana"
+                            />
+                            <span className="text-sm font-medium">0</span>
+                          </div>
+
+                          {/* Toggle switch */}
+                          <div className="flex items-center gap-2">
+                            <div
+                              className={`relative w-10 h-5 rounded-full transition-colors duration-200 ${wallet.active
+                                ? 'bg-gray-600'
+                                : 'bg-gray-700'
+                                }`}
+                            >
+                              <div
+                                className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform duration-200 ${wallet.active
+                                  ? 'translate-x-0.5'
+                                  : 'translate-x-5'
+                                  }`}
+                              />
+                            </div>
+                            <span className="text-sm font-medium">0</span>
+                          </div>
                         </div>
                       </div>
-
-                      {/* Solana balance */}
-                      <div className="flex items-center gap-1">
-                        <Image
-                          src={solana}
-                          width={16}
-                          height={16}
-                          alt="solana"
-                        />
-                        <span className="text-sm">0</span>
-                      </div>
-
-                      {/* Toggle section */}
-                      <div className="flex items-center gap-1">
-                        <div className="w-10 h-5 bg-gray-600 rounded-full flex items-center px-1">
-                          <div className="w-3 h-3 bg-white rounded-full"></div>
-                        </div>
-                        <span className="text-sm">0</span>
-                      </div>
-                    </div>
-                  ))}
-
-                  {/* Add Wallet */}
-                  <div className="border-t border-gray-700 px-4 py-2 text-sm hover:bg-gray-800 cursor-pointer">
-                    + Add Wallet
-                  </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -550,17 +615,17 @@ const AllPageHeader = ({
 
             <div className="flex items-center rounded-full py-1 bg-[#141414] border border-[#26262e] text-white text-xs overflow-hidden w-fit">
               {/* Left section: Quick Buy */}
-              <div className="px-4 py-1 bg-[#1F1F1F] font-semibold text-[#f4fcff">
+              <div className="px-2 py-1 font-semibold text-[#f4fcff">
                 Quick Buy
               </div>
 
               {/* Middle section: Amount input */}
-              <div className="px-2 py-1 text-gray-400 font-medium">
+              <div className="px-2 py-1 text-[#777f94] font-medium">
                 <div className="">
                   <input
                     type="number"
                     placeholder="Amount"
-                    className="bg-transparent text-gray-400 text-xs w-8 outline-none"
+                    className="bg-transparent text-[#777f94] text-xs w-8 outline-none"
                     value={quickBuy}
                     onChange={handleInputChange}
                   />

@@ -28,12 +28,12 @@ const LeaderBoard = () => {
     (state) => state?.AllStatesData?.solanaLivePrice
   );
   const tableHeader = [
-    { id: 1, title: "#" },
-    { id: 2, title: "email" },
-    { id: 3, title: leaderboardPage?.table?.trading?.totaltrads },
-    { id: 4, title: "amount" },
-    { id: 5, title: leaderboardPage?.table?.trading?.value },
-    { id: 6, title: leaderboardPage?.table?.trading?.referralid },
+    { id: 1, title: "#"},
+    { id: 2, title: "Email"},
+    { id: 3, title: "Total Trades"},
+    { id: 4, title: "Amount"},
+    { id: 5, title: "Value"},
+    { id: 6, title: "ReferralId"},
   ];
 
   const YourStats = [
@@ -240,11 +240,11 @@ const LeaderBoard = () => {
                               </td>
                               <td className=" text-base font-medium py-4 px-4">
                                 {`${flag
-                                    ? "----"
-                                    : `${item?.email?.slice(
-                                      0,
-                                      3
-                                    )}...${item?.email?.slice(-4)}`
+                                  ? "----"
+                                  : `${item?.email?.slice(
+                                    0,
+                                    3
+                                  )}...${item?.email?.slice(-4)}`
                                   }`}
                               </td>
                               <td className=" text-base font-medium py-4 px-4">

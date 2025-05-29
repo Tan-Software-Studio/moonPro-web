@@ -34,7 +34,8 @@ const Memescope = () => {
   const [newCreationDataFilterValues, setNewCreationDataFilterValues] = useState(initialNewCreationDataFilterValues);
   const [newCreationDataFiltersApplied, setNewCreationDataFiltersApplied] = useState(false); // filter applied or not
   const [filteredNewCreationData, setFilteredNewCreationData] = useState([]); // filtered data
-
+  const [selectedMetric, setSelectedMetric] = useState(null);
+  const [searchbar, setSearchbar] = useState(null)
 
 
   // =======*=*= All about graduate data filter ==========//
@@ -234,10 +235,10 @@ const Memescope = () => {
         <div
           className={`${pathname === "/memescope"
             ? "sticky z-10 top-0"
-            : "sticky z-10 top-[56.5px]"
+            : "sticky z-10 top-[50px]"
             }  `}
         >
-          <AllPageHeader HeaderData={HeaderData} duration={true} />
+          <AllPageHeader HeaderData={HeaderData} duration={true} setSelectedMetric={setSelectedMetric} selectedMetric={selectedMetric} setSearchbar={setSearchbar} searchbar={searchbar} />
         </div>
         <div className={`grid xl:grid-cols-3 w-full  `}>
           {/* box 1 */}
@@ -249,14 +250,16 @@ const Memescope = () => {
               className={`md:flex border-r ${borderColor} justify-between items-center w-full sticky px-1 sm:px-3 md:px-[24px] md:pt-[24px]`}
             >
               <div className="xl:flex xl:items-center xl:gap-1 hidden">
-                <div className={`text-[18px] font-[700] w-auto text-[#FFFFFF]`}>
+                <div className={`text-[18px] font-[400] w-auto text-[#FFFFFF]`}>
                   {memescopePage?.tableheaders?.newcreations}
                 </div>
+
                 <Infotip
                   iconSize={20}
                   body={memescopePage?.tableheaders?.newcreationstooltip}
                 />
               </div>
+
 
               {/* Mobile screen header */}
               <div className="flex justify-between items-center xl:hidden w-full ease-in-out duration-200 !my-[15px]">
@@ -301,9 +304,15 @@ const Memescope = () => {
                   <FilterButton onClick={() => handleSidebarToggle(2)} />
                 )}
               </div>
-
-              <div className="hidden xl:block">
-                <FilterButton onClick={() => handleSidebarToggle(0)} />
+              <div className="flex gap-1">
+                {searchbar ? <input
+                  type="text"
+                  placeholder="Search by ticker or name"
+                  className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-4 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
+                /> : null}
+                <div className="hidden xl:block">
+                  <FilterButton onClick={() => handleSidebarToggle(0)} />
+                </div>
               </div>
             </div>
             {/* Box body */}
@@ -311,7 +320,7 @@ const Memescope = () => {
               className={`${selectedScope === 1 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={newCreationDataToShow} />
+              <MscopePumpTable MemscopeData={newCreationDataToShow} selectedMetric={selectedMetric} />
             </div>
           </div>
 
@@ -326,7 +335,7 @@ const Memescope = () => {
             >
               <div className="flex items-center gap-1">
                 <div
-                  className={`text-[18px] font-[700] w-auto h-[21p] text-[#FFFFFF]`}
+                  className={`text-[18px] font-[400] w-auto h-[21p] text-[#FFFFFF]`}
                 >
                   {memescopePage?.tableheaders?.abouttogra}
                 </div>
@@ -334,16 +343,24 @@ const Memescope = () => {
                   iconSize={20}
                   body={memescopePage?.tableheaders?.abouttogratooltip}
                 />
+
               </div>
-              {/* Filter button */}
-              <FilterButton onClick={() => handleSidebarToggle(1)} />
+              <div className="flex gap-1">
+                {searchbar ? <input
+                  type="text"
+                  placeholder="Search by ticker or name"
+                  className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-4 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
+                /> : null}
+                {/* Filter button */}
+                <FilterButton onClick={() => handleSidebarToggle(1)} />
+              </div>
             </div>
             {/* Box body */}
             <div
               className={`${selectedScope === 2 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={aboutDataToShow} />
+              <MscopePumpTable MemscopeData={aboutDataToShow} selectedMetric={selectedMetric} />
             </div>
           </div>
 
@@ -360,7 +377,7 @@ const Memescope = () => {
             >
               <div className="flex items-center gap-1">
                 <div
-                  className={`text-[18px] font-[700] w-auto h-[21p] text-[#FFFFFF]`}
+                  className={`text-[18px] font-[400] w-auto h-[21p] text-[#FFFFFF]`}
                 >
                   {memescopePage?.tableheaders?.graduated}
                 </div>
@@ -368,16 +385,24 @@ const Memescope = () => {
                   iconSize={20}
                   body={memescopePage?.tableheaders?.graduatedtooltip}
                 />
+
               </div>
-              {/* Filter button */}
-              <FilterButton onClick={() => handleSidebarToggle(2)} />
+              <div className="flex gap-1">
+                {/* Filter button */}
+                {searchbar ? <input
+                  type="text"
+                  placeholder="Search by ticker or name"
+                  className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-4 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
+                /> : null}
+                <FilterButton onClick={() => handleSidebarToggle(2)} />
+              </div>
             </div>
             {/* Box body */}
             <div
               className={`${selectedScope === 3 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={graduateDataToShow} />
+              <MscopePumpTable MemscopeData={graduateDataToShow} selectedMetric={selectedMetric} />
             </div>
           </div>
 
