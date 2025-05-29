@@ -16,7 +16,8 @@ import { IoCheckmarkDone } from "react-icons/io5";
 import { IoCopyOutline } from "react-icons/io5";
 import { LuWalletMinimal } from "react-icons/lu";
 import { FaAngleDown } from "react-icons/fa";
-const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime, setFilterValues, filterValues, onApply, onReset, setSelectedMetric, selectedMetric, setSearchbar, searchbar }) => {
+import { BsFillSearchHeartFill } from "react-icons/bs";
+const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime, setFilterValues, filterValues, onApply, onReset, setSelectedMetric, selectedMetric, setSearchbar, searchbar, setShowCircle, showCircle, setShowMarketCap, showMarketCap, showVolume, setShowVolume }) => {
   const filterPopupRef = useRef(null);
   const dexesPopupRef = useRef(null);
   const { t } = useTranslation();
@@ -52,8 +53,23 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
   );
   const quickBuy = useSelector((state) => state?.AllStatesData?.globalBuyAmt);
   const handleInputChange = (event) => {
-    // setInputValue(event.target.value);
-    dispatch(setGlobalBuyAmt(event.target.value));
+    let value = event.target.value;
+
+    // Allow only numbers and a single dot
+    if (!/^\d*\.?\d*$/.test(value)) return;
+
+    // Remove dot for digit count check
+    const digitCount = value.replace('.', '');
+
+    // Only allow if total digits (excluding dot) are <= 10
+    if (digitCount.length <= 10) {
+      dispatch(setGlobalBuyAmt(value));
+    }
+  };
+
+  const handleMetricChange = (value) => {
+    setSelectedMetric(value);
+    localStorage.setItem('selectedMetric', value);
   };
 
   const handleCopy = async (e) => {
@@ -155,6 +171,34 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
     getAllWallets();
   }, []);
 
+  const toggleSearchbar = () => {
+    setSearchbar(prev => {
+      const updated = !prev;
+      localStorage.setItem('searchbar', updated);
+      return updated;
+    });
+  };
+
+  const toggleShowCircle = () => {
+    setShowCircle(prev => {
+      const updated = !prev;
+      localStorage.setItem('showCircle', updated);
+      return updated;
+    });
+  };
+
+   const mktShowHide = () => {
+    const newValue = !showMarketCap;
+    setShowMarketCap(newValue);
+    localStorage.setItem("showMarketCap", newValue);
+  };
+
+    const volumeShowHide = () => {
+    const newValue = !showVolume;
+    setShowVolume(newValue);
+    localStorage.setItem("showVolume", newValue);
+  };
+
   const handlePrimary = async (walletIndex, loopIndex) => {
     console.log("===<><>", walletIndex, loopIndex)
     const jwtToken = localStorage.getItem("token");
@@ -215,7 +259,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
     "appearance-none w-4 h-4 border border-gray-400 rounded-sm bg-transparent flex items-center justify-center checked:bg-[#3e9fd6] checked:border-[#3e9fd6] checked:after:content-['✔'] checked:after:text-xs";
   return (
     <div
-      className={`text-white relative bg-[#08080E] md:flex justify-between items-start lg:items-center pt-[18px] py-[6.3px] px-3 md:px-4 z-50 border-b-[1px] ${borderColor} pb-5 transition-all duration-500 ease-in-out 
+      className={`text-white relative bg-[#08080E] md:flex justify-between items-start lg:items-center pt-[18px] py-[6.3px] px-3 md:px-4 border-b-[1px] ${borderColor} pb-5 transition-all duration-500 ease-in-out 
         ${isScrolled && pathData === false && "-translate-y-full opacity-0 "}`}
     >
       {/* pagename + description */}
@@ -367,7 +411,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
 
               {/* Dropdown Panel */}
               {isDisplayOpen && (
-                <div className="absolute right-44 mt-2 w-[320px] bg-[#0f0f0f] border border-gray-700 text-white rounded-md shadow-xl z-50">
+                <div className="absolute right-44 mt-2 w-[320px] bg-[#18181a] border border-gray-700 text-white rounded-md shadow-xl z-50">
                   <div className="p-4 space-y-4">
 
                     {/* Metrics */}
@@ -375,16 +419,16 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                       <p className="text-xs text-gray-400 font-semibold mb-2">Metrics</p>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <button
-                          className={`py-2 px-3 rounded hover:bg-[#2a2a2a] ${selectedMetric === '12' ? 'bg-[#1f1f1f] text-white font-bold' : 'bg-[#3b3b3b] text-gray-300'
+                          className={`py-2 px-3 rounded border border-[#323642] ${selectedMetric === '12' ? 'bg-[#323642] text-white font-bold' : ' text-gray-300'
                             }`}
-                          onClick={() => setSelectedMetric('12')}
+                          onClick={() => handleMetricChange('12')}
                         >
                           MC 77K <br /> Small
                         </button>
                         <button
-                          className={`py-2 px-3 rounded hover:bg-[#3b3b3b] ${selectedMetric === '20' ? 'bg-[#1f1f1f] text-white font-bold' : 'bg-[#3b3b3b] text-gray-300'
+                          className={`py-2 px-3 rounded border border-[#323642] ${selectedMetric === '20' ? 'bg-[#323642] text-white font-bold' : ' text-gray-300'
                             }`}
-                          onClick={() => setSelectedMetric('20')}
+                          onClick={() => handleMetricChange('20')}
                         >
                           MC 77K <br /> Large
                         </button>
@@ -411,18 +455,18 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                     {/* Toggles */}
                     <div className="border-t border-gray-700 pt-4 space-y-3 text-sm">
                       <div
-                        className="flex items-center gap-2 cursor-pointer hover:text-blue-400"
-                        onClick={() => setSearchbar(prev => !prev)}
+                        className="flex items-center gap-2 cursor-pointer font-semibold"
+                        onClick={() => toggleSearchbar(prev => !prev)}
                       >
-                        <Search size={16} />
+                        {searchbar ? <Search size={16} /> : <BsFillSearchHeartFill />}
                         {searchbar ? 'Hide Search Bar' : 'Show Search Bar'}
                       </div>
 
-                      <div className="flex items-center gap-2 cursor-pointer hover:text-blue-400">
+                      <div className="flex items-center gap-2 cursor-pointer font-semibold" onClick={() => toggleShowCircle(prev => !prev)}>
                         <LayoutGrid size={16} />
-                        Circle Images
+                        {showCircle ? 'Square Image' : 'Circle Imange'}
                       </div>
-                      <div className="flex items-center gap-2 cursor-pointer hover:text-blue-400">
+                      <div className="flex items-center gap-2 cursor-pointer font-semibold">
                         <div className="w-4 h-1 bg-gray-400 rounded-full" />
                         Progress Bar
                       </div>
@@ -430,21 +474,34 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
 
                     {/* Customize Rows */}
                     <div className="border-t border-gray-700 pt-4">
-                      <p className="text-xs text-gray-400 font-semibold mb-2">Customize rows</p>
-                      <div className="flex flex-wrap gap-2">
-                        {[
-                          "Market Cap", "Volume", "TX", "Socials", "Holders", "Dev Migrations",
-                          "Top 10 Holders", "Dev Holding",
-                        ].map((item) => (
-                          <button
-                            key={item}
-                            className="bg-[#1f1f1f] text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]"
-                          >
-                            {item}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
+      <p className="text-xs text-gray-400 font-semibold mb-2">Customize rows</p>
+      <div className="flex flex-wrap gap-2">
+        {[
+          "Market Cap", "Volume", "TX", "Socials", "Holders", "Dev Migrations",
+          "Top 10 Holders", "Dev Holding",
+        ].map((item) => {
+          const isActive =
+            (item === "Market Cap" && showMarketCap) ||
+            (item === "Volume" && showVolume);
+
+          return (
+            <button
+              key={item}
+              className={`${isActive ? "bg-[#282b32]" : "border border-[#282b32] text-gray-500"} text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]`}
+              onClick={() => {
+                if (item === "Market Cap") {
+                  mktShowHide();
+                } else if (item === "Volume") {
+                  volumeShowHide();
+                }
+              }}
+            >
+              {item}
+            </button>
+          );
+        })}
+      </div>
+    </div>
 
                   </div>
                 </div>
@@ -492,8 +549,9 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
               {open && (
                 <div
                   ref={dropdownRef}
-                  className="absolute right-20 mt-2 w-96 bg-[#18181a] border border-gray-700 min-h-fit text-white rounded-md shadow-lg z-50"
+                  className="absolute right-20 mt-2 w-96 max-h-80 overflow-y-auto bg-[#18181a] border border-gray-700 text-white rounded-md shadow-lg z-50"
                 >
+
                   {/* Wallet List */}
                   {allWallets.map((wallet, idx) => {
                     // Move state and handler inside the map for each wallet
@@ -513,7 +571,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                     return (
                       <div
                         key={idx}
-                        className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${wallet.active ? "bg-[#1a1a1a]" : ""
+                        className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${wallet.active ? "bg-[#18181a]" : ""
                           }`}
                       >
                         {/* Checkbox and wallet info */}

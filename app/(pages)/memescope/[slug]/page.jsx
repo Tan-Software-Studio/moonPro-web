@@ -35,7 +35,10 @@ const Memescope = () => {
   const [newCreationDataFiltersApplied, setNewCreationDataFiltersApplied] = useState(false); // filter applied or not
   const [filteredNewCreationData, setFilteredNewCreationData] = useState([]); // filtered data
   const [selectedMetric, setSelectedMetric] = useState(null);
-  const [searchbar, setSearchbar] = useState(null)
+  const [searchbar, setSearchbar] = useState(null);
+  const [showCircle , setShowCircle] = useState(null);
+  const [showMarketCap, setShowMarketCap] = useState(null);
+   const [showVolume, setShowVolume] = useState(false);
 
 
   // =======*=*= All about graduate data filter ==========//
@@ -227,6 +230,19 @@ const Memescope = () => {
     (state) => state?.AllthemeColorData?.borderColor
   );
 
+  useEffect(() => {
+  const savedSearchbar = localStorage.getItem('searchbar');
+  const savedShowCircle = localStorage.getItem('showCircle');
+
+  if (savedSearchbar !== null) {
+    setSearchbar(savedSearchbar === 'true'); // convert string to boolean
+  }
+
+  if (savedShowCircle !== null) {
+    setShowCircle(savedShowCircle === 'true');
+  }
+}, []);
+
 
 
   return (
@@ -238,7 +254,7 @@ const Memescope = () => {
             : "sticky z-10 top-[50px]"
             }  `}
         >
-          <AllPageHeader HeaderData={HeaderData} duration={true} setSelectedMetric={setSelectedMetric} selectedMetric={selectedMetric} setSearchbar={setSearchbar} searchbar={searchbar} />
+          <AllPageHeader HeaderData={HeaderData} duration={true} setSelectedMetric={setSelectedMetric} selectedMetric={selectedMetric} setSearchbar={setSearchbar} searchbar={searchbar} setShowCircle={setShowCircle} showCircle={showCircle} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume}/>
         </div>
         <div className={`grid xl:grid-cols-3 w-full  `}>
           {/* box 1 */}
@@ -310,9 +326,20 @@ const Memescope = () => {
                   placeholder="Search by ticker or name"
                   className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-4 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
                 /> : null}
-                <div className="hidden xl:block">
+                <div className="relative hidden xl:block group">
                   <FilterButton onClick={() => handleSidebarToggle(0)} />
+
+                  {/* Tooltip shown on top with delay */}
+                  <div
+                    className="absolute bottom-full left-1/2 -translate-x-1/2 px-2 py-1 z-50 text-sm text-[#c6c5cb] bg-[#101115] rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap border border-[#1a1b22]"
+                    style={{ transitionDelay: '300ms' }}
+                  >
+                    Filter
+                  </div>
                 </div>
+
+
+
               </div>
             </div>
             {/* Box body */}
@@ -320,7 +347,7 @@ const Memescope = () => {
               className={`${selectedScope === 1 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={newCreationDataToShow} selectedMetric={selectedMetric} />
+              <MscopePumpTable MemscopeData={newCreationDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap}  setShowVolume={setShowVolume} showVolume={showVolume}/>
             </div>
           </div>
 
@@ -352,7 +379,20 @@ const Memescope = () => {
                   className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-4 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
                 /> : null}
                 {/* Filter button */}
-                <FilterButton onClick={() => handleSidebarToggle(1)} />
+
+
+                <div className="relative hidden xl:block group">
+                  <FilterButton onClick={() => handleSidebarToggle(1)} />
+
+                  {/* Tooltip shown on top with delay */}
+                  <div
+                    className="absolute bottom-full left-1/2 -translate-x-1/2 px-2 py-1 !z-50 text-sm text-[#c6c5cb] bg-[#101115] rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap border border-[#1a1b22]"
+                    style={{ transitionDelay: '300ms' }}
+                  >
+                    Filter
+                  </div>
+                </div>
+
               </div>
             </div>
             {/* Box body */}
@@ -360,7 +400,7 @@ const Memescope = () => {
               className={`${selectedScope === 2 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={aboutDataToShow} selectedMetric={selectedMetric} />
+              <MscopePumpTable MemscopeData={aboutDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric}  setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap}  setShowVolume={setShowVolume} showVolume={showVolume}/>
             </div>
           </div>
 
@@ -394,7 +434,20 @@ const Memescope = () => {
                   placeholder="Search by ticker or name"
                   className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-4 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
                 /> : null}
-                <FilterButton onClick={() => handleSidebarToggle(2)} />
+
+
+                <div className="relative hidden xl:block group">
+                  <FilterButton onClick={() => handleSidebarToggle(2)} />
+
+                  {/* Tooltip shown on top with delay */}
+                  <div
+                    className="absolute bottom-full left-1/2 -translate-x-1/2 px-2 py-1 z-[9999] text-sm text-[#c6c5cb] bg-[#101115] rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap border border-[#1a1b22]"
+                    style={{ transitionDelay: '300ms' }}
+                  >
+                    Filter
+                  </div>
+                </div>
+
               </div>
             </div>
             {/* Box body */}
@@ -402,7 +455,7 @@ const Memescope = () => {
               className={`${selectedScope === 3 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={graduateDataToShow} selectedMetric={selectedMetric} />
+              <MscopePumpTable MemscopeData={graduateDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric}  setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume}/>
             </div>
           </div>
 
