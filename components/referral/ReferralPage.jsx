@@ -9,7 +9,7 @@ import { IoPieChartOutline } from "react-icons/io5";
 import { HiOutlineCurrencyDollar } from "react-icons/hi2";
 import axios from "axios";
 import Image from "next/image";
-import { nftImg,nftImg2,nftImg3,nftImg4,nftImg5, NoDataFish } from "@/app/Images";
+import { nftImg, nftImg2, nftImg3, nftImg4, nftImg5, NoDataFish } from "@/app/Images";
 import { useSelector } from "react-redux";
 import { token } from "@/utils/tradingViewChartServices/constant";
 import toast from "react-hot-toast";
@@ -18,7 +18,8 @@ import RefPopup from "./RefPopup";
 
 const ReferralPage = () => {
   const nftImages = [nftImg, nftImg2, nftImg3, nftImg4, nftImg5];
-  const randomImage = nftImages[Math.floor(Math.random() * nftImages.length)];
+
+  console.log('chack')
 
   const URL_LINK = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
 
@@ -33,6 +34,7 @@ const ReferralPage = () => {
   const tierKey = selectedTier === 1 ? "firstTier" : selectedTier === 2 ? "secondTier" : "thirdTier";
   const tierData = refData?.referrals?.[tierKey] || [];
   const [addClaimed, setAddClaimed] = useState(0)
+  const [rendomImg, setRendomImg] = useState(nftImg)
 
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
@@ -117,6 +119,8 @@ const ReferralPage = () => {
   };
 
   useEffect(() => {
+    const randomImage = nftImages[Math.floor(Math.random() * nftImages.length)];
+    setRendomImg(randomImage)
     if (solWalletAddress) {
       fetchData()
     }
@@ -138,7 +142,7 @@ const ReferralPage = () => {
             {/* {imageURL && (
               <img src={nftImg} alt="Uploaded" className="w-full h-full object-cover" />
             )} */}
-            <Image src={randomImage} alt="Uploaded" className="w-full h-full object-cover" />
+            <Image src={rendomImg} alt="Uploaded" className="w-full h-full object-cover" />
 
             {/* {hovered && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white">
