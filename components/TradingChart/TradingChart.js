@@ -14,7 +14,8 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
   const chartContainerRef = useRef(null);
   const [isUsdSolToggled, setIsUsdSolToggled] = useState(true); // Track USD/SOL toggle state
   const [isMcPriceToggled, setIsMcPriceToggled] = useState(true); // Track MarketCap/Price toggle state
-  
+  const [chartResolution, setChartResolution] = useState("15S"); // Track USD/SOL toggle state
+
   useEffect(() => {
     const fetchToggle = async () => {
       const usdSolToggle = await localStorage.getItem("chartUsdSolToggleActive");
@@ -28,7 +29,16 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
       }
     };
 
+    const getChartResolution = async () => {
+      let chartResolution = await localStorage.getItem("chartResolution");
+      chartResolution = chartResolution === null ? "15S" : chartResolution;
+      setChartResolution(chartResolution);
+    }
+
+    getChartResolution();
+
     fetchToggle();
+
   }, []);
 
   // console.log("TVChartContainer called.");
@@ -52,7 +62,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
           },
       },
       tokenAddress: tokenaddress,
-      interval: "15S",
+      interval: chartResolution,
       container: chartContainerRef.current,
       library_path: "/charting_library/",
       locale: "en",
@@ -102,6 +112,8 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
       priceScale.setAutoScale(true);
       tvWidget.activeChart().onIntervalChanged().subscribe(null, async (interval, timeframeObj) => {
         await setPriceLines(tvWidget);
+        setChartResolution(interval);
+        localStorage.setItem("chartResolution", interval);
         clearMarks();
       });
     });
