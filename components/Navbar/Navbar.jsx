@@ -143,22 +143,19 @@ const Navbar = () => {
         const price = res?.data?.data[res?.data?.data?.length - 1]?.price;
         dispatch(setSolanaLivePrice(price));
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }
   useEffect(() => {
     fetchData();
     dispatch(fetchMemescopeData());
-    // fetchSolPrice();
+    fetchSolPrice();
   }, []);
   useEffect(() => {
     if (solWalletAddress) {
       dispatch(fetchSolanaNativeBalance(solWalletAddress));
-    }
-  }, [solWalletAddress]);
-
-  useEffect(() => {
-    if (!userDetails?.email) {
-      dispatch(fetchUserData());
+      if (!userDetails?.email) {
+        dispatch(fetchUserData());
+      }
     }
   }, [solWalletAddress]);
 
@@ -215,16 +212,14 @@ const Navbar = () => {
             <div className=" flex items-center gap-2 ">
               {/* Search bar */}
               <div
-                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${
-                  isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                 onClick={() => dispatch(setIsSearchPopup(true))}
               >
                 <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                 <input
-                  className={` ${
-                    isSidebarOpen ? "w-0" : "w-12"
-                  } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                  className={` ${isSidebarOpen ? "w-0" : "w-12"
+                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                   placeholder={navbar?.profile?.search}
                 />
               </div>
@@ -348,12 +343,12 @@ const Navbar = () => {
 
                     {isProfileOpen && (
                       <div className="absolute md:right-5 right-0 mt-2 border-[1px] border-[#404040] w-50 bg-[#141414] shadow-[#000000CC] rounded-md shadow-lg z-50">
-                        <Link onClick={() => setIsProfileOpen(false)} href="/profile?" className="">
+                        {/* <Link onClick={() => setIsProfileOpen(false)} href="/profile?" className="">
                           <div className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md">
                             <PiUserLight className="text-xl" />
                             {navbar?.profile?.myProfile}
                           </div>
-                        </Link>
+                        </Link> */}
 
                         <div
                           onClick={() => {

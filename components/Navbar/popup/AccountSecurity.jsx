@@ -10,6 +10,7 @@ import { lang } from "@/app/contsants/lang";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import { setSolWalletAddress } from "@/app/redux/states";
+import { updatePnlTableData } from "@/app/redux/holdingDataSlice/holdingData.slice";
 
 const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
   const [language, setLanguage] = useState({});
@@ -371,7 +372,10 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                 </div>
 
                 <Link
-                  onClick={() => setIsAccountPopup(false)}
+                  onClick={() => {
+                    setIsAccountPopup(false);
+                    dispatch(updatePnlTableData("portfolio"));
+                  }}
                   href="/portfolio"
                   className="px-3 py-2 flex items-center gap-2 text-xs border border-[#404040] rounded cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all text-[#A8A8A8] w-[140px] justify-center"
                 >
