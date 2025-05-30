@@ -64,13 +64,13 @@ const Sidebar = () => {
       img: holdings,
       size: "",
     },
-    {
-      id: 6,
-      pathname: `/leaderboard`,
-      pagename: sidebarPage?.leaderboard,
-      img: leaderboard,
-      size: "",
-    },
+    // {
+    //   id: 6,
+    //   pathname: `/leaderboard`,
+    //   pagename: sidebarPage?.leaderboard,
+    //   img: leaderboard,
+    //   size: "",
+    // },
     {
       id: 7,
       pathname: `/referral`,
@@ -78,13 +78,13 @@ const Sidebar = () => {
       img: referral,
       size: "",
     },
-    {
-      id: 9,
-      pathname: `/wallet-tracker`,
-      pagename: sidebarPage?.wallettracker,
-      img: walletTrackerWhiteImg,
-      size: "w-5 h-5",
-    },
+    // {
+    //   id: 9,
+    //   pathname: `/wallet-tracker`,
+    //   pagename: sidebarPage?.wallettracker,
+    //   img: walletTrackerWhiteImg,
+    //   size: "w-5 h-5",
+    // },
   ];
 
   const isLargeScreen = useSelector(
