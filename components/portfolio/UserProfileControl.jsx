@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import ActivityTable from "@/components/profile/ActivityTable";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import ActivePosition from "@/components/profile/ActivePosition";
-import TopHundredHolding from "./TopHundredHolding";
+import TopHundredHolding from "../profile/TopHundredHolding";
 
 const UserProfileControl = () => {
   const [isActive, setIsActive] = useState("All");
@@ -169,7 +169,7 @@ const UserProfileControl = () => {
           {/* left side table tab */}
           <div className="border-r border-gray-800">
             <div className="flex gap-1 px-4 border-b border-gray-800 overflow-x-auto">
-              {["Active position", "Top 100"].map((tab) => (
+              {["Active position",].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setLeftTableTab(tab)}
@@ -187,11 +187,11 @@ const UserProfileControl = () => {
                 <ActivePosition />
               </div>
             }
-            {leftTableTab == "Top 100" &&
+            {/* {leftTableTab == "Top 100" &&
               <div className="">
                 <TopHundredHolding />
               </div>
-            }
+            } */}
           </div>
 
           {/* right side table tab */}

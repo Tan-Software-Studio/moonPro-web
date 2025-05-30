@@ -26,6 +26,10 @@ const ActivePosition = () => {
     const isDataLoaded = useSelector(
         (state) => state?.setPnlData?.isDataLoaded
     );
+    const hasAttemptedLoad = useSelector(
+        (state) => state?.setPnlData?.hasAttemptedLoad
+    );
+
     const handleCopy = (address, index, e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -34,7 +38,9 @@ const ActivePosition = () => {
         setTimeout(() => setCopiedIndex(null), 2000);
     };
 
-
+    const shouldShowLoading = initialLoading || (!hasAttemptedLoad && !isDataLoaded);
+    const shouldShowData = !initialLoading && isDataLoaded && currentTabData?.length > 0;
+    const shouldShowNoData = !initialLoading && hasAttemptedLoad && isDataLoaded && currentTabData?.length === 0;
     const navigateToChartSreen = (item) => {
         router.push(
             `/tradingview/solana?tokenaddress=${item?.token}&symbol=${item?.symbol}`
@@ -46,15 +52,15 @@ const ActivePosition = () => {
     return (
         <>
             <div className="overflow-auto h-[400px] max-h-[450px]">
-                {initialLoading && !isDataLoaded ?
+                {shouldShowLoading ?
                     <div
-                        className="snippet flex justify-center mt-20   "
+                        className="snippet flex justify-center items-center mt-24   "
                         data-title=".dot-spin"
                     >
                         <div className="stage">
                             <div className="dot-spin"></div>
                         </div>
-                    </div> : currentTabData?.length > 0 && isDataLoaded ?
+                    </div> : shouldShowData ?
                         <div className="min-w-full">
                             <table className="w-full text-left text-sm">
                                 <thead className="sticky top-0 border-b bg-[#08080E] border-gray-800 z-40">
@@ -139,11 +145,11 @@ const ActivePosition = () => {
                                                 </span>
                                             </td>
                                         </tr>
-                                    ))} 
+                                    ))}
                                 </tbody>
                             </table >
-                        </div > : 
-                            <div className="flex flex-col items-center justify-center h-64 text-center">
+                        </div > : shouldShowNoData ?
+                            <div className="flex flex-col items-center justify-center h-64 mt-10 text-center">
                                 <div className="flex items-center justify-center mb-4">
                                     <Image
                                         src={NoDataFish}
@@ -157,7 +163,7 @@ const ActivePosition = () => {
                                 <p className="text-slate-500 text-sm">
                                     information will appear here when available
                                 </p>
-                            </div> 
+                            </div> : null
                 }
             </div >
         </>
