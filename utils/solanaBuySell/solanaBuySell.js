@@ -1,7 +1,7 @@
 import { getSoalanaTokenBalance } from "../solanaNativeBalance";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { fetchSolanaNativeBalance } from "@/app/redux/states";
+import { fetchSolanaNativeBalance, fetchUsdcBalance } from "@/app/redux/states";
 import { addMark } from "@/utils/tradingViewChartServices/mark"
 import { getLatestBar, getLatestBarTime } from "../tradingViewChartServices/latestBarTime"; 
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
@@ -501,9 +501,10 @@ const convertSOLtoUSDC = async (
     setLoaderSwap(false);
 
     setTimeout(async () => {
-      const [usdcBalanceUpdate, solBalance] = await Promise.all([
+      const [usdcBalanceUpdate] = await Promise.all([
         getSoalanaTokenBalance(address, USDC_MINT_ADDRESS),
         dispatch(fetchSolanaNativeBalance(address)),
+        dispatch(fetchUsdcBalance(address)),
       ]);
       setUsdcBalance(usdcBalanceUpdate);
     }, 5000);
@@ -593,9 +594,10 @@ const convertUSDCtoSOL = async (
 
     // Update balances after successful conversion
     setTimeout(async () => {
-      const [usdcBalanceUpdate, solBalance] = await Promise.all([
+      const [usdcBalanceUpdate] = await Promise.all([
         getSoalanaTokenBalance(address, USDC_MINT_ADDRESS),
         dispatch(fetchSolanaNativeBalance(address)),
+        dispatch(fetchUsdcBalance(address)),
       ]);
       setUsdcBalance(usdcBalanceUpdate);
     }, 5000);

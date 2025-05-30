@@ -3,9 +3,49 @@ import { RiExchangeDollarLine } from "react-icons/ri";
 import { formatDecimal, humanReadableFormatWithNoDollar } from '@/utils/basicFunctions';
 
 // use map instead change in future
-const UserPnL = ({userTokenHoldings}) => {
+const UserPnL = ({userTokenHoldings, currentPrice}) => {
+    const getUnrealizedPnL = (
+      averageBuyPrice,
+      quantityHeld
+    ) => {
+      if (!averageBuyPrice || !quantityHeld) {
+        return {
+          isPositive: true,
+          formatString: `+$0 (+0%)`
+        }
+      }
+      const priceDiff = currentPrice - averageBuyPrice
+      const pnlAmount = priceDiff * quantityHeld
+      const pnlPercent =
+        averageBuyPrice && averageBuyPrice !== 0
+          ? (priceDiff / averageBuyPrice) * 100
+          : 0;
+      const sign = pnlAmount >= 0 ? '+' : '-'
+
+      const formattedAmount = `${pnlAmount > 1 || pnlAmount < -1
+          ? Math.abs(humanReadableFormatWithNoDollar(pnlAmount))
+          : Math.abs(formatDecimal(pnlAmount))
+      }`
+
+      // Format percentage with .00 check
+      let formattedPercent;
+      const fixedPercent = Math.abs(pnlPercent).toFixed(2);
+      if (fixedPercent.endsWith('.00')) {
+        formattedPercent = `${Math.abs(pnlPercent).toFixed(0)}%`;
+      } else {
+        formattedPercent = `${fixedPercent}%`;
+      }
+
+      return {
+        isPositive: sign === '+',
+        formatString: `${sign}$${formattedAmount} (${sign}${formattedPercent})`
+      }
+    }
     const tempSoldAmount = userTokenHoldings?.quantitySold * userTokenHoldings?.averageBuyPrice;
     const tempHoldingAmount = userTokenHoldings?.activeQtyHeld * userTokenHoldings?.averageBuyPrice;
+    const pnl = getUnrealizedPnL(userTokenHoldings?.averageBuyPrice, userTokenHoldings?.activeQtyHeld);
+    const positivePnl = pnl?.isPositive;
+    const pnlValue = pnl?.formatString;
   return (
         <div className="bg-[#08080E] border-t w-full px-3 py-1 border-[#4D4D4D] items-center flex justify-between">
           <div
@@ -71,13 +111,9 @@ const UserPnL = ({userTokenHoldings}) => {
                     <RiExchangeDollarLine className={'text-[#21CB6B]'} size={15} />
                 </div>
                 <div
-                    className={`text-center text-[14px] font-[600] ${userTokenHoldings?.realizedProfit < 0 ? `text-[#ED1B24]` : `text-[#21CB6B]`} `}
+                    className={`text-center text-[12px] text-nowrap font-[550] ${positivePnl ? `text-[#21CB6B]` : `text-[#ED1B24]`} `}
                 >
-                    {`$${userTokenHoldings?.realizedProfit > 1 || userTokenHoldings?.realizedProfit < -1 ?
-                    humanReadableFormatWithNoDollar(userTokenHoldings?.realizedProfit) 
-                    :
-                    formatDecimal(userTokenHoldings?.realizedProfit)
-                    }`}
+                  {pnlValue}
                 </div>
             </div>
           </div>

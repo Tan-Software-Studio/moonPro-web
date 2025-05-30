@@ -1,13 +1,18 @@
-import { getSolanaBalanceAndPrice } from "@/utils/solanaNativeBalance";
+import { getSolanaBalanceAndPrice, getSoalanaTokenBalance } from "@/utils/solanaNativeBalance";
 const { createSlice, createAsyncThunk } = require("@reduxjs/toolkit");
 
-export const fetchSolanaNativeBalance = createAsyncThunk(
-  "wallet/fetchSolanaNativeBalance",
-  async (walletAddress) => {
-    const balance = await getSolanaBalanceAndPrice(walletAddress);
-    return balance;
-  }
-);
+const USDC_MINT_ADDRESS = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+
+export const fetchSolanaNativeBalance = createAsyncThunk("wallet/fetchSolanaNativeBalance", async (walletAddress) => {
+  const balance = await getSolanaBalanceAndPrice(walletAddress);
+  return balance;
+});
+
+export const fetchUsdcBalance = createAsyncThunk("wallet/fetchUsdcBalance", async (walletAddress) => {
+  const balance = await getSoalanaTokenBalance(walletAddress, USDC_MINT_ADDRESS);
+  return balance;
+});
+
 const AllStatesData = createSlice({
   name: "AllStatesData",
   initialState: {
@@ -23,6 +28,7 @@ const AllStatesData = createSlice({
     favouriteTokens: [],
     solWalletAddress: null,
     solNativeBalance: 0,
+    usdcBalance: 0,
     jwtToken: null,
     isRegisterOrLogin: "",
     isRegLoginPopup: false,
@@ -78,6 +84,9 @@ const AllStatesData = createSlice({
       const solBalance = await getSolanaBalanceAndPrice(state.solWalletAddress);
       state.solNativeBalance = solBalance;
     },
+    setUsdcBalance: (state, action) => {
+      state.usdcBalance = action.payload;
+    },
     openCloseLoginRegPopup: (state, action) => {
       state.isRegLoginPopup = action.payload;
     },
@@ -110,9 +119,13 @@ const AllStatesData = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchSolanaNativeBalance.fulfilled, (state, action) => {
-      state.solNativeBalance = action.payload;
-    });
+    builder
+      .addCase(fetchSolanaNativeBalance.fulfilled, (state, action) => {
+        state.solNativeBalance = action.payload;
+      })
+      .addCase(fetchUsdcBalance.fulfilled, (state, action) => {
+        state.usdcBalance = action.payload;
+      });
   },
 });
 
@@ -128,6 +141,7 @@ export const {
   setUserInfo,
   setSolWalletAddress,
   setSolanaNativeBalance,
+  setUsdcBalance,
   openCloseLoginRegPopup,
   setLoginRegPopupAuth,
   setSignupReferral,
