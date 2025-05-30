@@ -25,9 +25,11 @@ function RefPopup({ Available, address, onClose, setAddClaimed }) {
 
     };
 
-    const fetchData = async () => {
+    const claimSolanaHandler = async () => {
         if (cooldown) return;
-
+        if (claimAmount < 0.01) {
+            return toast.error("Amount must be more than 0.01")
+        }
 
         setLoading(true);
         showToastLoader("Claiming...", "switch-toast");
@@ -140,10 +142,10 @@ function RefPopup({ Available, address, onClose, setAddClaimed }) {
 
                 {/* Action Button */}
                 <button
-                    disabled={Available <= 0 || !walletAddress || loading || cooldown}
-                    onClick={fetchData}
+                    disabled={Available <= 0.01 || !walletAddress || loading || cooldown}
+                    onClick={claimSolanaHandler}
                     className={`w-full py-2 rounded-md text-white font-medium transition tracking-wider 
-    ${Available <= 0 || !walletAddress || loading || cooldown
+    ${Available <= 0.01 || !walletAddress || loading || cooldown
                             ? 'bg-[#0000ff46] cursor-not-allowed'
                             : 'bg-blue-500 hover:bg-blue-700 cursor-pointer'
                         }`}

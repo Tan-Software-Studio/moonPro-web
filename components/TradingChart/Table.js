@@ -118,9 +118,9 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
 
   const tabList = [
     { name: "Trades" },
-    { name: "Top Holders" },
+    { name: "Positions" },
+    { name: "Holders" },
     { name: "Top Traders" },
-    { name: "My Holdings" },
   ];
 
   const tableHeader = [
@@ -238,22 +238,22 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
   const tableHeaderHolding = [
     {
       id: 1,
-      title: tragindViewPagePage?.table?.myholding?.tableHeaders?.tokenname,
+      title: "Token"
     },
-    { id: 2, title: tragindViewPagePage?.table?.myholding?.tableHeaders?.qty },
+    { id: 2, title: "Bought" },
     {
       id: 3,
-      title: tragindViewPagePage?.table?.myholding?.tableHeaders?.remaining,
+      title: "Sold"
     },
-    { id: 4, title: tragindViewPagePage?.table?.myholding?.tableHeaders?.sold },
-    { id: 5, title: tragindViewPagePage?.table?.myholding?.tableHeaders?.pnl },
+    { id: 4, title: "Remaining" },
+    { id: 5, title: "PnL" },
     {
       id: 6,
-      title: tragindViewPagePage?.table?.myholding?.tableHeaders?.quicksell,
+      title: "Actions",
     },
   ];
 
-  //  top holders api call
+  //  Holders api call
   const topHoldersApiCall = async () => {
     const date = await new Date();
     const currentTime = await date.toISOString();
@@ -391,6 +391,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
           address: solWalletAddress,
         });
         const res = response.toJSON();
+        // console.log("holdings", res);
         setHoldingsData(res.tokens);
       } catch (error) {
         console.error("Error fetching token balances and prices:", error);
@@ -650,7 +651,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                   </tbody>
                 </table>
               </div>
-            ) : activeTab === "Top Holders" &&
+            ) : activeTab === "Holders" &&
               topHoldingData?.BalanceUpdates?.length > 0 ? (
               <>
                 <div className="lg:h-[85vh] h-[50vh] md:grid grid-cols-2">
@@ -784,7 +785,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                   </div>
                 </div>
               </>
-            ) : activeTab === "My Holdings" && holdingsData?.length > 0 ? (
+            ) : activeTab === "Positions" && holdingsData?.length > 0 ? (
               <div className="lg:h-[85vh] h-[50vh] visibleScroll overflow-y-scroll">
                 <table className="min-w-full table-auto ">
                   <thead className="bg-[#08080E] sticky top-0">
@@ -792,7 +793,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                       {tableHeaderHolding.map((header) => (
                         <th
                           key={header.id}
-                          className="px-6 py-3 text-left text-xs font-medium text-[#A8A8A8] uppercase leading-4 whitespace-nowrap"
+                          className={`${header.id === 6 && 'flex justify-end'} px-6 py-3 text-left text-xs font-medium text-[#A8A8A8] leading-4 whitespace-nowrap`}
                         >
                           {header.title}
                         </th>
@@ -805,33 +806,60 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                         key={index}
                         className={`capitalize bg-[#08080E] text-[#F6F6F6] border-[#404040] font-medium text-xs whitespace-nowrap leading-4 border-b onest`}
                       >
-                        <td className="px-6 py-4text-[#3E9FD6]">
-                          {data.symbol}
+                        {/* Token */}
+                        <td className="px-6 py-4 flex">
+                          <a 
+                            href={`/tradingview/solana?tokenaddress=${data?.associatedTokenAddress}&symbol=${data?.symbol}`}
+                            className="group/name hover:opacity-80 flex flex-col sm:flex-row items-start text-xs leading-4 font-semibold h-full justify-start"
+                          >
+                            <div className="flex items-center">
+                              <div className="w-7 h-7 flex-shrink-0 group-hover/image:opacity-80 relative rounded-[4px]">
+                                <Image 
+                                  src={data?.logo}
+                                  alt={data?.symbol}
+                                  width={28}
+                                  height={28}
+                                  className="w-full h-full object-cover rounded-[4px]"
+                                />
+                              </div>
+                              <span className="pl-2 group-hover/name:underline">{data?.symbol}</span>
+                            </div>
+                          </a>
                         </td>
-                        <td className="px-6 py-4">{data.amount}</td>
-                        <td className="px-6 py-4">
-                          <span>{"0.00439"}</span>
-                          <br />
-                          <span className="text-[#9b9999]">{"8.5K"}</span>
+                        {/* Bought */}
+                        <td className="px-6 py-4 items-start">
+                          <div className="flex flex-col gap-[2px] h-full justify-center">
+                            <p className="text-[#21CB6B] text-sm leading-4">$0</p>
+                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`0 ${data?.symbol}`}</p>
+                          </div>
                         </td>
-                        <td className="px-6 py-4">
-                          <span className="">{"0.00439"}</span>
-                          <br />
-                          <span className="text-[#9b9999]">{"70M"}</span>
+                        {/* Sold */}
+                        <td className="px-6 py-4 items-start">
+                          <div className="flex flex-col gap-[2px] h-full justify-center">
+                            <p className="text-[#ed1b26] text-sm leading-4">$0</p>
+                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`0 ${data?.symbol}`}</p>
+                          </div>
                         </td>
-                        <td className="px-6 py-4">
-                          <span className="text-[#F0488B] font-thin">
-                            {"-7.51%"}
+                        {/* Remaining */}
+                        <td className="px-6 py-4 items-start">
+                          <div className="flex flex-col gap-[2px] h-full justify-center">
+                            <p className="text-sm leading-4">$0</p>
+                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${data?.amount ? Number(data?.amount)?.toFixed(2) : `0`} ${data?.symbol}`}</p>
+                          </div>
+                        </td>
+                        {/* PnL */}
+                        <td className="px-6 py-4 items-center">
+                          <span className="text-[#21CB6B] font-thin">
+                            {"$0(0%)"}  
                           </span>
-                          <br />
-                          <span className="text-[#3E9FD6] font-thin">
-                            {"+0.051%"}
-                          </span>
                         </td>
-                        <td className="whitespace-nowrap px-6 py-4 text-xs font-medium ">
-                          <button className="border border-[#3E9FD6] rounded-lg px-6 py-1 bg-[#16171D] hover:bg-[#3E9FD6] hover:text-black transition-all duration-300 ease-in-out">
-                            {"Sell"}
-                          </button>
+                        {/* Actions */}
+                        <td className="whitespace-nowrap px-6 py-4 text-xs font-medium">
+                          <div className="flex justify-end items-center h-full w-full">
+                            <button className="text-[#ed1b26] hover:text-[#bd3c42] font-bold transition-all duration-200 ease-in-out">
+                              {"Sell"}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -856,7 +884,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                     <p className="mt-2 text-[15px] text-[#b5b7da] font-bold">
                       {loader ? (
                         "Loading data..."
-                      ) : activeTab === "My Holdings" ? (
+                      ) : activeTab === "Positions" ? (
                         !solWalletAddress ? ( // Wallet disconnected condition
                           <p className="text-[12px] md:text-[15px]">
                             {"Please login."}

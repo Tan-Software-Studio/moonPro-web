@@ -35,6 +35,7 @@ const TradingPopup = ({
   dispatch,
   solanaLivePrice,
   tredingPage,
+  currentSupply
 }) => {
   const [loaderSwap, setLoaderSwap] = useState(false);
   const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
@@ -103,6 +104,25 @@ const TradingPopup = ({
   const tokenImage = useSelector(
     (state) => state?.AllStatesData?.chartSymbolImage
   );
+
+  async function getChartUsdSolToggleActive() {
+    const isUsdActive = await localStorage.getItem("chartUsdSolToggleActive");
+    let usdActive = true;
+    if (isUsdActive !== null) {
+      usdActive = isUsdActive === "true";
+    }
+    return usdActive
+  }
+
+  async function getChartMarketCapPriceToggleActive() {
+    const isMarketCapActive = await localStorage.getItem("chartMarketCapPriceToggleActive");
+    let marketCapActive = true;
+    if (isMarketCapActive !== null) {
+      marketCapActive = isMarketCapActive === "true";
+    }
+    return marketCapActive;
+  }
+
   // handle priority fee
   const handlepriorityFeeChange = (value) => {
     if (!value) {
@@ -142,10 +162,23 @@ const TradingPopup = ({
     setPriorityFee(preSetData?.[presist]?.[activeTab]?.priorityFee);
     setIsMev(preSetData?.[presist]?.[activeTab]?.mev);
   }
+
+  async function convertToUsdtoSolAndMC(price, isUsdActive, isMarketCapActive) {
+      const supply = currentSupply ? currentSupply : 1_000_000_000;
+      const solPrice = solanaLivePrice ? solanaLivePrice : 1;
+
+      const atPrice = isUsdActive ? price : price / solPrice;
+      const finalAtPrice = isMarketCapActive ? atPrice * supply : atPrice;
+
+      return finalAtPrice;
+  }
   // buy handler
   async function buyHandler() {
     if (walletAddress) {
       if (quantity < nativeTokenbalance) {
+        const usdActive = await getChartUsdSolToggleActive();
+        const marketCapActive = await getChartMarketCapPriceToggleActive();
+        const convertedPrice = await convertToUsdtoSolAndMC(price, usdActive, marketCapActive);
         buySolanaTokens(
           token,
           quantity,
@@ -157,7 +190,10 @@ const TradingPopup = ({
           bondingProgress >= 100 ? "djasodnasuodhasoduashd" : progranAddress,
           solanaLivePrice,
           dispatch,
-          price
+          price,
+          convertedPrice,
+          usdActive,
+          marketCapActive
         );
       } else {
         toast.error("Insufficient funds.");
@@ -170,6 +206,9 @@ const TradingPopup = ({
   async function sellHandler() {
     if (walletAddress) {
       if (quantity <= tokenBalance) {
+        const usdActive = await getChartUsdSolToggleActive();
+        const marketCapActive = await getChartMarketCapPriceToggleActive();
+        const convertedPrice = await convertToUsdtoSolAndMC(price, usdActive, marketCapActive);
         sellSolanaTokens(
           token,
           quantity,
@@ -182,7 +221,10 @@ const TradingPopup = ({
           setTokenBalance,
           bondingProgress >= 100 ? "djasodnasuodhasoduashd" : progranAddress,
           dispatch,
-          recQty
+          recQty,
+          convertedPrice,
+          usdActive,
+          marketCapActive
         );
       } else {
         toast.error("Insufficient funds.");

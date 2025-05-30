@@ -55,14 +55,13 @@ async function setPriceLines(chart) {
     // console.log('userMarks', userMarks);
     if (userMarks?.length > 0) {
         const fifoPrices = calculateFIFOWithLines(userMarks);
-        if (!buyPositiionLine) {
+        if (!buyPositiionLine && window.chartReady === true) {
             buyPositiionLine = await chart.chart().createPositionLine();
         } 
         
-        // if (!exitPositionLine) {
-        //     exitPositionLine = await chart.chart().createPositionLine();
-        // }
-        // console.log('fifoprices', fifoPrices)
+        if (!exitPositionLine && window.chartReady === true) {
+            exitPositionLine = await chart.chart().createPositionLine();
+        }
         if (buyPositiionLine) {
             buyPositiionLine
                 .setText("Current Average Cost Basis")
@@ -78,21 +77,21 @@ async function setPriceLines(chart) {
                 .setLineLength(0)
                 .setLineColor("#427A2C");
         }
-        // if (exitPositionLine) {
-        //     exitPositionLine
-        //         .setText("Current Average Exit Price")
-        //         .setQuantity("")
-        //         .setPrice(fifoPrices.averageExitPrice)
-        //         .setQuantityBackgroundColor("#AB5039")
-        //         .setQuantityBorderColor("#AB5039")
-        //         .setBodyBorderColor("#FFFFFF00")
-        //         .setBodyTextColor("#AB5039")
-        //         .setBodyBackgroundColor("#FFFFFF00")
-        //         .setExtendLeft(true)
-        //         .setLineStyle(2)
-        //         .setLineLength(0)
-        //         .setLineColor("#AB5039");
-        // }
+        if (exitPositionLine) {
+            exitPositionLine
+                .setText("Current Average Exit Price")
+                .setQuantity("")
+                .setPrice(fifoPrices.averageExitPrice)
+                .setQuantityBackgroundColor("#AB5039")
+                .setQuantityBorderColor("#AB5039")
+                .setBodyBorderColor("#FFFFFF00")
+                .setBodyTextColor("#AB5039")
+                .setBodyBackgroundColor("#FFFFFF00")
+                .setExtendLeft(true)
+                .setLineStyle(2)
+                .setLineLength(0)
+                .setLineColor("#AB5039");
+        }
     }
 }
 
