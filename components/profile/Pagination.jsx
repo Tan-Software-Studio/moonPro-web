@@ -54,31 +54,36 @@ const Pagination = ({ currentPage, setCurrentPage, totalPages }) => {
     }, [currentPage, totalPages]);
 
     return (
-        <div className="flex items-center justify-center gap-2  sm:gap-5 cursor-pointer my-5">
-            <div
-                className="sm:text-[28px] text-[25px] text-[#FFFFFF] bg-[#1F1F1F] rounded-md px-1 py-1"
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            >
-                <FiChevronLeft />
-            </div> 
-            {pageNumbers.map((page, index) => (
+        <div className="flex items-center justify-between px-5 gap-3 cursor-pointer my-3">
+            <div className="text-[#A8A8A8] text-base font-light">
+                {currentPage} out of {totalPages} pages
+            </div>
+            <div className="flex items-center gap-3 cursor-pointer">
                 <div
-                    key={index}
-                    className={`rounded-md px-3 py-0.5 text-lg sm:text-xl transition-all duration-300 ease-in-out focus:outline-none ${page === currentPage
-                        ? "bg-[#1F1F1F] text-[#FFFFFF] border border-[#333333]"
-                        : "text-[#A8A8A8]  border border-[#1F1F1F] hover:bg-[#404040]"
-                        }`}
-                    onClick={() => typeof page === "number" && setCurrentPage(page)}
+                    className="text-[25px] text-[#FFFFFF] bg-[#1F1F1F] rounded-md px-1 py-1"
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 >
-                    {page}
+                    <FiChevronLeft />
                 </div>
-            ))}
+                {pageNumbers.map((page, index) => (
+                    <div
+                        key={index}
+                        className={`rounded-md px-3 py-0.5 text-lg   transition-all duration-300 ease-in-out focus:outline-none ${page === currentPage
+                            ? "bg-[#1F1F1F] text-[#FFFFFF] border border-[#333333]"
+                            : "text-[#A8A8A8]  border border-[#1F1F1F] hover:bg-[#404040]"
+                            }`}
+                        onClick={() => typeof page === "number" && setCurrentPage(page)}
+                    >
+                        {page}
+                    </div>
+                ))}
 
-            <div
-                className="sm:text-[28px] text-[25px] text-[#FFFFFF] bg-[#1F1F1F] rounded-md px-1 py-1"
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-            >
-                <FiChevronRight />
+                <div
+                    className="  text-[25px] text-[#FFFFFF] bg-[#1F1F1F] rounded-md px-1 py-1"
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                >
+                    <FiChevronRight />
+                </div>
             </div>
         </div>
     );

@@ -28,7 +28,8 @@ const holdingData = createSlice({
   name: "PnlData",
   initialState: {
     PnlData: [],
-    initialLoading: true,
+    initialLoading: false,
+    isDataLoaded: false,
     error: null,
     pnlTableData: "profile",
   },
@@ -59,12 +60,17 @@ const holdingData = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchPNLData.pending, (state) => {
+        state.initialLoading = true;
+      })
       .addCase(fetchPNLData.fulfilled, (state, { payload }) => {
         state.initialLoading = false;
+        state.isDataLoaded = true;
         state.PnlData = payload;
       })
       .addCase(fetchPNLData.rejected, (state, { payload }) => {
         state.initialLoading = false;
+        state.isDataLoaded = false;
       });
   },
 });
