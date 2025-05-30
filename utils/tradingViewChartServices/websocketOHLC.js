@@ -2,6 +2,7 @@ import { addNewTransaction } from "@/app/redux/chartDataSlice/chartData.slice";
 import store from "@/app/redux/store";
 import { io } from "socket.io-client";
 import { setNewLatestBarTime } from "./latestBarTime";
+import { getLatestHistoricalBar } from "./latestHistoricalBar";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const socket = io(BASE_URL, {
   transports: ["websocket"],
@@ -39,6 +40,16 @@ export async function subscribeToWebSocket(
     currentResolution = resolution;
     lastBar[subscriberUID] = null;
   }
+  const lastHistoricalBar = getLatestHistoricalBar();
+  if (lastHistoricalBar) {
+    lastBar[subscriberUID] = {
+      ...lastHistoricalBar,
+      volume: lastHistoricalBar.volume || 0,
+    };
+  } else {
+    lastBar[subscriberUID] = null;
+  }
+
   if (!isSocketOn) {
     socket.connect();
     isSocketOn = true;

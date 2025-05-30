@@ -8,6 +8,7 @@ import { unsubscribeFromWebSocket } from "@/utils/tradingViewChartServices/webso
 import { clearMarks } from "@/utils/tradingViewChartServices/mark";
 import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFunctions";
 import { setPriceLines } from "@/utils/tradingViewChartServices/fifoPrice"
+import { clearLatestHistoricalBar } from "@/utils/tradingViewChartServices/latestHistoricalBar";
 
 const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
   const chartContainerRef = useRef(null);
@@ -33,6 +34,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
   // console.log("TVChartContainer called.");
   useEffect(() => {
     clearMarks();
+    clearLatestHistoricalBar();
     window.chartReady = false;
     const tvWidget = new widget({
       symbol: tokenSymbol,
