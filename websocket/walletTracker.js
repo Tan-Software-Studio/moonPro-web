@@ -53,9 +53,18 @@ export async function subscribeToWalletTracker() {
     await socket.on("connect", () => {
       console.log("Trades websocket connected.");
     });
+    // solana wallet address
+    let solanaWalletAddress = 0;
+    store.subscribe(() => {
+      solanaWalletAddress = store?.getState()?.AllStatesData?.solWalletAddress;
+    });
     // watch all solana trades
     await socket.on("new_trades", async (data) => {
       // console.log("🚀 ~ socket.on ~ data:", data?.length);
+      // send data to update pnl
+      if (solanaWalletAddress) {
+        store.dispatch(updatePnlDataPriceOnly(data));
+      }
       const solPrice = await data?.find(
         (item) =>
           item?.Trade?.Currency?.MintAddress ==
@@ -157,10 +166,9 @@ export async function subscribeToTrendingTokens() {
 
     // live solana price
     let liveSolanaPrice = 0;
-    let solanaWalletAddress = 0;
+    // solana wallet address
     store.subscribe(() => {
       liveSolanaPrice = store?.getState()?.AllStatesData?.solanaLivePrice;
-      solanaWalletAddress = store?.getState()?.AllStatesData?.solWalletAddress;
     });
 
     // gRPC node data
@@ -188,14 +196,6 @@ export async function subscribeToTrendingTokens() {
               holderAction: data?.holder,
             })
           );
-          // if (solanaWalletAddress) {
-          //   store.dispatch(
-          //     updatePnlDataPriceOnly({
-          //       price: solAmountInUsd,
-          //       mint: data?.bought?.mint,
-          //     })
-          //   );
-          // }
         }
       } else if (data?.action == "sell") {
         if (data?.sold?.mint != "So11111111111111111111111111111111111111112") {
@@ -218,14 +218,6 @@ export async function subscribeToTrendingTokens() {
               holderAction: data?.holder,
             })
           );
-          // if (solanaWalletAddress) {
-          //   store.dispatch(
-          //     updatePnlDataPriceOnly({
-          //       price: solAmountInUsd,
-          //       mint: data?.bought?.mint,
-          //     })
-          //   );
-          // }
         }
       }
     });

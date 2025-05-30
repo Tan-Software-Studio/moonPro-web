@@ -18,6 +18,7 @@ import { LuWalletMinimal } from "react-icons/lu";
 import { FaAngleDown } from "react-icons/fa";
 import { BsFillSearchHeartFill } from "react-icons/bs";
 import { FaRegCircle } from "react-icons/fa";
+import { showToastLoader } from "../toastLoader/ToastLoder";
 const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime, setFilterValues, filterValues, onApply, onReset, setSelectedMetric, selectedMetric, setSearchbar, searchbar, setShowCircle, showCircle, setShowMarketCap, showMarketCap, showVolume, setShowVolume, showSocials, setShowSocials, setShowHolders, showHolders, setshowHolders10, showHolders10 }) => {
   const filterPopupRef = useRef(null);
   const dexesPopupRef = useRef(null);
@@ -219,44 +220,44 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
   };
 
   useEffect(() => {
-    const showHolders = localStorage.getItem("showHolders")
+    const showHolders = localStorage.getItem("showHolders");
     if (showHolders == null || showHolders == undefined) {
       localStorage.setItem("showHolders", true);
     }
-    const showSocials = localStorage.getItem("showSocials")
+    const showSocials = localStorage.getItem("showSocials");
     if (showSocials == null || showSocials == undefined) {
       localStorage.setItem("showSocials", true);
     }
-    const showVolume = localStorage.getItem("showVolume")
+    const showVolume = localStorage.getItem("showVolume");
     if (showVolume == null || showVolume == undefined) {
       localStorage.setItem("showVolume", true);
     }
-    const showMarketCap = localStorage.getItem("showMarketCap")
+    const showMarketCap = localStorage.getItem("showMarketCap");
     if (showMarketCap == null || showMarketCap == undefined) {
       localStorage.setItem("showMarketCap", true);
     }
-    const showCircle = localStorage.getItem("showCircle")
+    const showCircle = localStorage.getItem("showCircle");
     if (showCircle == null || showCircle == undefined) {
       localStorage.setItem("showCircle", true);
     }
-    const searchbar = localStorage.getItem("searchbar")
+    const searchbar = localStorage.getItem("searchbar");
     if (searchbar == null || searchbar == undefined) {
       localStorage.setItem("searchbar", true);
     }
-    const showHolders10 = localStorage.getItem("showHolders10")
+    const showHolders10 = localStorage.getItem("showHolders10");
     if (showHolders10 == null || showHolders10 == undefined) {
       localStorage.setItem("showHolders10", true);
     }
 
 
-  }, [])
+  }, []);
 
   const handlePrimary = async (walletIndex, loopIndex) => {
-    console.log("===<><>", walletIndex, loopIndex)
+    console.log("===<><>", walletIndex, loopIndex);
     const jwtToken = localStorage.getItem("token");
     if (!jwtToken) return 0;
     try {
-      // showToastLoader("Switching primary wallet", "switch-toast");
+      showToastLoader("Switching primary wallet", "switch-toast");
       await axios
         .put(
           `${baseUrl}user/makeSolWalletPrimary`,
@@ -299,7 +300,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
         duration: 2000,
       });
     }
-  }
+  };
 
   // Filter button
   const handleSidebarToggle = (id) => {
@@ -537,7 +538,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                             (item === "Volume" && showVolume) ||
                             (item === "Socials" && showSocials) ||
                             (item === "Holders" && showHolders) ||
-                            (item === "Top 10 Holders" && showHolders10)
+                            (item === "Top 10 Holders" && showHolders10);
 
                           return (
                             <button
@@ -551,9 +552,9 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                                 } else if (item === "Socials") {
                                   socialsShowHide();
                                 } else if (item === "Holders") {
-                                  holderShowHide()
+                                  holderShowHide();
                                 } else if (item === "Top 10 Holders") {
-                                  holderShowHide10()
+                                  holderShowHide10();
                                 }
                               }}
                             >
