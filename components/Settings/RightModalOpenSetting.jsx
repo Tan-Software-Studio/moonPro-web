@@ -22,61 +22,61 @@ const RightModalOpenSetting = ({
   const [preSetData, setPreSetData] = useState({
     P1: {
       buy: {
-        slippage: 20,
-        priorityFee: 0.0001,
+        slippage: 40,
+        priorityFee: 0.002,
         mev: false,
       },
       sell: {
-        slippage: 20,
-        priorityFee: 0.0001,
+        slippage: 40,
+        priorityFee: 0.002,
         mev: false,
       },
     },
     P2: {
       buy: {
-        slippage: 20,
-        priorityFee: 0.0001,
+        slippage: 40,
+        priorityFee: 0.002,
         mev: false,
       },
       sell: {
-        slippage: 20,
-        priorityFee: 0.0001,
+        slippage: 40,
+        priorityFee: 0.002,
         mev: false,
       },
     },
     P3: {
       buy: {
-        slippage: 20,
-        priorityFee: 0.0001,
+        slippage: 40,
+        priorityFee: 0.002,
         mev: false,
       },
       sell: {
-        slippage: 20,
-        priorityFee: 0.0001,
+        slippage: 40,
+        priorityFee: 0.002,
         mev: false,
       },
     },
     P4: {
       buy: {
-        slippage: 20,
-        priorityFee: 0.0001,
+        slippage: 40,
+        priorityFee: 0.001,
         mev: false,
       },
       sell: {
-        slippage: 20,
-        priorityFee: 0.0001,
+        slippage: 40,
+        priorityFee: 0.001,
         mev: false,
       },
     },
     P5: {
       buy: {
-        slippage: 20,
-        priorityFee: 0.0001,
+        slippage: 40,
+        priorityFee: 0.001,
         mev: false,
       },
       sell: {
-        slippage: 20,
-        priorityFee: 0.0001,
+        slippage: 40,
+        priorityFee: 0.001,
         mev: false,
       },
     },
@@ -118,26 +118,49 @@ const RightModalOpenSetting = ({
   }
   // handleReset for selected preset
   async function handleReset() {
-    await setPreSetData((pre) => {
-      const update = {
-        ...pre,
-        [presist]: {
-          buy: {
-            slippage: 20,
-            priorityFee: 0.0001,
-            mev: false,
+    if (presist == "P4" || presist == "P5") {
+      await setPreSetData((pre) => {
+        const update = {
+          ...pre,
+          [presist]: {
+            buy: {
+              slippage: 40,
+              priorityFee: 0.001,
+              mev: false,
+            },
+            sell: {
+              slippage: 40,
+              priorityFee: 0.001,
+              mev: false,
+            },
           },
-          sell: {
-            slippage: 20,
-            priorityFee: 0.0001,
-            mev: false,
+        };
+        localStorage.setItem("preSetAllData", JSON.stringify(update));
+        dispatch(setPreSetOrderSetting(update));
+        return update;
+      });
+    } else {
+      await setPreSetData((pre) => {
+        const update = {
+          ...pre,
+          [presist]: {
+            buy: {
+              slippage: 40,
+              priorityFee: 0.002,
+              mev: false,
+            },
+            sell: {
+              slippage: 40,
+              priorityFee: 0.002,
+              mev: false,
+            },
           },
-        },
-      };
-      localStorage.setItem("preSetAllData", JSON.stringify(update));
-      dispatch(setPreSetOrderSetting(update));
-      return update;
-    });
+        };
+        localStorage.setItem("preSetAllData", JSON.stringify(update));
+        dispatch(setPreSetOrderSetting(update));
+        return update;
+      });
+    }
   }
 
   // save function
