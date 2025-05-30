@@ -137,6 +137,12 @@ import nftImg3 from "../public/assets/referral/nft1.jpg";
 import nftImg4 from "../public/assets/referral/nft2.png";
 import nftImg5 from "../public/assets/referral/nft4.png";
 
+// footer
+import barchart from "../public/assets/Footer/barchart.svg";
+import discord from "../public/assets/Footer/discord.svg";
+import docs from "../public/assets/Footer/docs.svg";
+
+
 export {
   nftProfileImage,
   LeaderboardIcon,
@@ -268,5 +274,12 @@ export {
   nftImg3,
   nftImg4,
   nftImg5,
+<<<<<<< HEAD
   iconImage
+=======
+  // footer
+  barchart,
+  discord,
+  docs
+>>>>>>> 86e65b6ea78c795d124d1b90d6226a032bf5ebd9
 };
