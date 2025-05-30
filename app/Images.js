@@ -274,12 +274,9 @@ export {
   nftImg3,
   nftImg4,
   nftImg5,
-<<<<<<< HEAD
-  iconImage
-=======
+  iconImage,
   // footer
   barchart,
   discord,
   docs
->>>>>>> 86e65b6ea78c795d124d1b90d6226a032bf5ebd9
 };
