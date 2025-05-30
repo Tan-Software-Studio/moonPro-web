@@ -35,8 +35,7 @@ const UserProfileControl = () => {
   return (
     <>
       <div className="overflow-y-scroll h-[95vh]">
-        <div className="lg:p-8 p-4 ">
-          {/* Profile Header - Made responsive with flex-col on small screens */}
+        {/* <div className="lg:p-8 p-4 ">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex items-center gap-4">
               <Image
@@ -85,7 +84,7 @@ const UserProfileControl = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 md:border-l-0 border border-gray-800 backdrop-blur-sm overflow-hidden">
           {/* Balance Section */}
@@ -104,21 +103,21 @@ const UserProfileControl = () => {
                     body="The current total market value of all assets held in the wallet. This includes both realized and unrealized gains/losses."
                   />
                 </div>
-                <p className="text-base font-semibold tracking-wider text-white">$293.2K</p>
+                <p className="text-base font-semibold tracking-wider text-white">---</p>
               </div>
 
               <div className="py-2">
                 <div className="flex items-center gap-2 mb-2">
                   <p className="text-sm text-gray-400">Unrealized PNL</p>
                 </div>
-                <p className="text-base font-semibold tracking-wider text-red-400">-$20.2K</p>
+                <p className="text-base font-semibold tracking-wider text-red-400">---</p>
               </div>
 
               <div className="py-2">
                 <div className="flex items-center gap-2 mb-2">
                   <p className="text-sm text-gray-400">Available Balance</p>
                 </div>
-                <p className="text-base font-semibold tracking-wider text-emerald-400">$10.94K</p>
+                <p className="text-base font-semibold tracking-wider text-emerald-400">---</p>
               </div>
             </div>
           </div>
@@ -148,7 +147,7 @@ const UserProfileControl = () => {
                 <div className="flex items-center gap-2">
                   <p className="text-xs text-slate-400">Total PnL</p>
                 </div>
-                <p className="text-red-400 text-sm font-semibold">-$20.2K</p>
+                <p className="text-red-400 text-sm font-semibold">---</p>
               </div>
 
               <div className="flex justify-between items-center py-3 border-gray-800 rounded-lg">
@@ -156,20 +155,20 @@ const UserProfileControl = () => {
                   <p className="text-xs text-slate-400">Total Transactions</p>
                 </div>
                 <div className="text-xs font-mono">
-                  <span className="text-slate-300">$293.2K</span>
-                  <span className="text-emerald-400 mx-1">$293.2K</span>
-                  <span className="text-red-400">/ $293.2K</span>
+                  <span className="text-slate-300">---</span>
+                  <span className="text-emerald-400 mx-1">---</span>
+                  <span className="text-red-400">---</span>
                 </div>
               </div>
 
               {/* Performance Distribution */}
               <div className=" ">
                 {[
-                  { color: "bg-emerald-500", label: ">500%", value: "1", textColor: "text-emerald-400" },
-                  { color: "bg-emerald-400", label: "100% - 500%", value: "3", textColor: "text-emerald-300" },
-                  { color: "bg-emerald-300", label: "0% - 200%", value: "7", textColor: "text-emerald-200" },
-                  { color: "bg-red-400", label: "0 - -50%", value: "2", textColor: "text-red-400" },
-                  { color: "bg-red-500", label: "<-50%", value: "12", textColor: "text-red-500" },
+                  { color: "bg-emerald-500", label: ">500%", value: "---", textColor: "text-emerald-400" },
+                  { color: "bg-emerald-400", label: "100% - 500%", value: "---", textColor: "text-emerald-300" },
+                  { color: "bg-emerald-300", label: "0% - 200%", value: "---", textColor: "text-emerald-200" },
+                  { color: "bg-red-400", label: "0 - -50%", value: "---", textColor: "text-red-400" },
+                  { color: "bg-red-500", label: "<-50%", value: "---", textColor: "text-red-500" },
                 ].map((item, index) => (
                   <div key={index} className="flex justify-between items-center py-1">
                     <div className="flex items-center gap-2">

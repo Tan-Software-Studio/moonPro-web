@@ -23,27 +23,27 @@ let isSocketOn = false;
 let isTrendingSocketOn = false;
 export async function subscribeToWalletTracker() {
   try {
-    const token = localStorage.getItem("token");
-    let wallets = null;
+    // const token = localStorage.getItem("token");
+    // let wallets = null;
     try {
-      if (token) {
-        wallets = await axios({
-          method: "get",
-          url: `${BASE_URL_MOON}wallettracker/walletTracking`,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      }
+      // if (token) {
+      //   wallets = await axios({
+      //     method: "get",
+      //     url: `${BASE_URL_MOON}wallettracker/walletTracking`,
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   });
+      // }
     } catch (error) {}
-    let walletsToTrack = [];
-    if (wallets?.data?.data?.wallets?.length > 0) {
-      await wallets?.data?.data?.wallets?.map((item) => {
-        if (item?.alert == true) {
-          walletsToTrack.push(item?.walletAddress?.toLowerCase());
-        }
-      });
-    }
+    // let walletsToTrack = [];
+    // if (wallets?.data?.data?.wallets?.length > 0) {
+    //   await wallets?.data?.data?.wallets?.map((item) => {
+    //     if (item?.alert == true) {
+    //       walletsToTrack.push(item?.walletAddress?.toLowerCase());
+    //     }
+    //   });
+    // }
     if (isSocketOn) {
       console.log("Trades websocket is already connected.");
       return;
@@ -53,9 +53,18 @@ export async function subscribeToWalletTracker() {
     await socket.on("connect", () => {
       console.log("Trades websocket connected.");
     });
+    // solana wallet address
+    let solanaWalletAddress = 0;
+    store.subscribe(() => {
+      solanaWalletAddress = store?.getState()?.AllStatesData?.solWalletAddress;
+    });
     // watch all solana trades
     await socket.on("new_trades", async (data) => {
       // console.log("🚀 ~ socket.on ~ data:", data?.length);
+      // send data to update pnl
+      if (solanaWalletAddress) {
+        store.dispatch(updatePnlDataPriceOnly(data));
+      }
       const solPrice = await data?.find(
         (item) =>
           item?.Trade?.Currency?.MintAddress ==
@@ -72,25 +81,25 @@ export async function subscribeToWalletTracker() {
       if (usdcLivePrice?.Trade?.PriceInUSD) {
         store.dispatch(setUsdcLivePrice(solPrice?.Trade?.PriceInUSD));
       }
-      if (walletsToTrack?.length > 0) {
-        const filteredData = await data?.filter((item) =>
-          walletsToTrack.includes(item?.Transaction?.Signer?.toLowerCase())
-        );
-        if (filteredData?.length > 0) {
-          // console.log("🚀 ~ socket.on ~ filteredData:", filteredData);
-          let finalFilteredData = [];
-          for (const item of filteredData) {
-            const walletName = await wallets?.data?.data?.wallets?.find(
-              (item1) => item?.Transaction?.Signer === item1?.walletAddress
-            );
-            finalFilteredData.push({
-              ...item,
-              tag: walletName?.walletName,
-            });
-          }
-          store.dispatch(addNewTransactionForWalletTracking(finalFilteredData));
-        }
-      }
+      // if (walletsToTrack?.length > 0) {
+      //   const filteredData = await data?.filter((item) =>
+      //     walletsToTrack.includes(item?.Transaction?.Signer?.toLowerCase())
+      //   );
+      //   if (filteredData?.length > 0) {
+      //     // console.log("🚀 ~ socket.on ~ filteredData:", filteredData);
+      //     let finalFilteredData = [];
+      //     for (const item of filteredData) {
+      //       const walletName = await wallets?.data?.data?.wallets?.find(
+      //         (item1) => item?.Transaction?.Signer === item1?.walletAddress
+      //       );
+      //       finalFilteredData.push({
+      //         ...item,
+      //         tag: walletName?.walletName,
+      //       });
+      //     }
+      //     store.dispatch(addNewTransactionForWalletTracking(finalFilteredData));
+      //   }
+      // }
     });
     socket.on("disconnect", async () => {
       console.log("Trades webSocket disconnected.");
@@ -157,10 +166,9 @@ export async function subscribeToTrendingTokens() {
 
     // live solana price
     let liveSolanaPrice = 0;
-    let solanaWalletAddress = 0;
+    // solana wallet address
     store.subscribe(() => {
       liveSolanaPrice = store?.getState()?.AllStatesData?.solanaLivePrice;
-      solanaWalletAddress = store?.getState()?.AllStatesData?.solWalletAddress;
     });
 
     // gRPC node data
@@ -188,14 +196,6 @@ export async function subscribeToTrendingTokens() {
               holderAction: data?.holder,
             })
           );
-          // if (solanaWalletAddress) {
-          //   store.dispatch(
-          //     updatePnlDataPriceOnly({
-          //       price: solAmountInUsd,
-          //       mint: data?.bought?.mint,
-          //     })
-          //   );
-          // }
         }
       } else if (data?.action == "sell") {
         if (data?.sold?.mint != "So11111111111111111111111111111111111111112") {
@@ -218,14 +218,6 @@ export async function subscribeToTrendingTokens() {
               holderAction: data?.holder,
             })
           );
-          // if (solanaWalletAddress) {
-          //   store.dispatch(
-          //     updatePnlDataPriceOnly({
-          //       price: solAmountInUsd,
-          //       mint: data?.bought?.mint,
-          //     })
-          //   );
-          // }
         }
       }
     });

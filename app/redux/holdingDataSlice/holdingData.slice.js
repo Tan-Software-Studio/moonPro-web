@@ -41,11 +41,18 @@ const holdingData = createSlice({
     },
     updatePnlDataPriceOnly: (state, { payload }) => {
       if (state.PnlData?.length > 0) {
-        const findTokenIndex = state?.PnlData?.findIndex(
-          (item) => item?.mint == payload?.data?.mint
-        );
-        if (findTokenIndex >= 0) {
-          state.PnlData[findTokenIndex].current_price = payload?.price;
+        if (payload?.length > 0) {
+          for (const element of payload) {
+            const findTokenIndex = state?.PnlData?.findIndex(
+              (item) => item?.token == element?.Trade?.Currency?.MintAddress
+            );
+            if (findTokenIndex >= 0) {
+              if (element?.Trade?.PriceInUSD) {
+                state.PnlData[findTokenIndex].current_price =
+                  element?.Trade?.PriceInUSD;
+              }
+            }
+          }
         }
       }
     },

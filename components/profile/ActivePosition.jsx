@@ -1,4 +1,3 @@
-import { fetchPNLData } from '@/app/redux/holdingDataSlice/holdingData.slice';
 import { Check, Copy } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { PiWallet } from 'react-icons/pi';
@@ -25,14 +24,6 @@ const ActivePosition = () => {
         setCopiedIndex(index);
         setTimeout(() => setCopiedIndex(null), 2000);
     };
-
-    useEffect(() => {
-        if (solWalletAddress) {
-            if (!currentTabData?.length > 0) {
-                dispatch(fetchPNLData(solWalletAddress));
-            }
-        }
-    }, []);
     return (
         <>
             <div className="overflow-auto max-h-[400px]">
