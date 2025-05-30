@@ -22,6 +22,8 @@ import toast from "react-hot-toast";
 import { decimalConvert } from "@/utils/basicFunctions";
 import RefPopup from "./RefPopup";
 import { RiLinkM } from "react-icons/ri";
+import { SlUserFollow } from "react-icons/sl";
+
 
 const ReferralPage = () => {
   const nftImages = [nftImg, nftImg2, nftImg3, nftImg4, nftImg5];
@@ -41,9 +43,18 @@ const ReferralPage = () => {
     selectedTier === 1
       ? "firstTier"
       : selectedTier === 2
-      ? "secondTier"
-      : "thirdTier";
+        ? "secondTier"
+        : "thirdTier";
+
+  const rewardPercentage = selectedTier === 1
+    ? refData?.user?.referealRewardsFirstTierPer
+    : selectedTier === 2
+      ? refData?.user?.referealRewardsSecondTierPer
+      : refData?.user?.referealRewardsThirdTierPer;
+  // console.log("🚀 ~ ReferralPage ~ rewardPercentage:<<>>", rewardPercentage)
+
   const tierData = refData?.referrals?.[tierKey] || [];
+
   const [addClaimed, setAddClaimed] = useState(0);
   const [rendomImg, setRendomImg] = useState(nftImg);
 
@@ -158,9 +169,9 @@ const ReferralPage = () => {
           {/* Image */}
           <div
             className={`w-20 h-20 min-w-[3.5rem] rounded-md bg-yellow-500 overflow-hidden  relative`}
-            // onClick={handleBoxClick}
-            // onMouseEnter={() => setHovered(true)}
-            // onMouseLeave={() => setHovered(false)}
+          // onClick={handleBoxClick}
+          // onMouseEnter={() => setHovered(true)}
+          // onMouseLeave={() => setHovered(false)}
           >
             {/* {imageURL && (
               <img src={nftImg} alt="Uploaded" className="w-full h-full object-cover" />
@@ -380,6 +391,7 @@ const ReferralPage = () => {
                     </option>
                   </select>
                 </div>
+                <div className="flex justify-center items-center gap-1"><SlUserFollow className="text-blue-500" /> <span className="text-[#89888e]">{tierData.length}</span></div>
               </div>
             </div>
 
@@ -437,7 +449,7 @@ const ReferralPage = () => {
                           {formatTimeAgo(row.referralAddedAt)}{" "}
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap">
-                          {row.feeCollected}
+                          {(row.feeCollected * (rewardPercentage / 100)).toFixed(5)}
                         </td>
                       </tr>
                     ))
