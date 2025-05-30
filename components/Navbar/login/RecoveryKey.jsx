@@ -4,7 +4,6 @@ import { IoMdClose } from "react-icons/io";
 import { MdContentCopy } from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 
 const RecoveryKey = ({ PK, setPK, setOpenRecovery, flag }) => {
   const [isRevealed, setIsRevealed] = useState(false);
@@ -65,9 +64,8 @@ const RecoveryKey = ({ PK, setPK, setOpenRecovery, flag }) => {
                   : navbar?.recovery?.privateKey}
               </div>
               <div
-                className={`flex w-full border-[1px] border-[#404040] rounded-md  mt-1 p-3  bg-[#1F1F1F] ${
-                  !isRevealed ? "blur-sm select-none" : ""
-                }`}
+                className={`flex w-full border-[1px] border-[#404040] rounded-md  mt-1 p-3  bg-[#1F1F1F] ${!isRevealed ? "blur-sm select-none" : ""
+                  }`}
               >
                 <div className="w-[90%] overflow-x-hidden  break-words text-sm ">
                   {PK}

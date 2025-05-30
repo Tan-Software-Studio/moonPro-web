@@ -28,7 +28,6 @@ const userDataSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserData.fulfilled, (state, { payload }) => {
-      console.log("🚀 ~ builder.addCase ~ payload:", payload?.user)
       state.userDetails = payload?.user;
     });
   },

@@ -1,4 +1,5 @@
 import { addNewTransactionForWalletTracking } from "@/app/redux/chartDataSlice/chartData.slice";
+import { updatePnlDataPriceOnly } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import {
   setMemeScopeGraduateData,
   setMemeScopeGraduatedData,
@@ -52,10 +53,18 @@ export async function subscribeToWalletTracker() {
     await socket.on("connect", () => {
       console.log("Trades websocket connected.");
     });
+    // solana wallet address
+    let solanaWalletAddress = 0;
+    store.subscribe(() => {
+      solanaWalletAddress = store?.getState()?.AllStatesData?.solWalletAddress;
+    });
     // watch all solana trades
     await socket.on("new_trades", async (data) => {
       // console.log("🚀 ~ socket.on ~ data:", data?.length);
-      // await store.dispatch(addNewTransactionForWalletTracking(data[0]));
+      // send data to update pnl
+      if (solanaWalletAddress) {
+        store.dispatch(updatePnlDataPriceOnly(data));
+      }
       const solPrice = await data?.find(
         (item) =>
           item?.Trade?.Currency?.MintAddress ==
@@ -157,6 +166,7 @@ export async function subscribeToTrendingTokens() {
 
     // live solana price
     let liveSolanaPrice = 0;
+    // solana wallet address
     store.subscribe(() => {
       liveSolanaPrice = store?.getState()?.AllStatesData?.solanaLivePrice;
     });
@@ -167,10 +177,11 @@ export async function subscribeToTrendingTokens() {
         if (
           data?.bought?.mint != "So11111111111111111111111111111111111111112"
         ) {
+          const solAmountInUsd = data?.priceInSolOfToken * liveSolanaPrice;
           store.dispatch(
             updateAllDataByNode({
               type: "buy",
-              price: data?.priceInSolOfToken * liveSolanaPrice,
+              price: solAmountInUsd,
               mint: data?.bought?.mint,
               amount: data?.bought?.uiTokenAmount?.amount,
               holderAction: data?.holder,
@@ -179,7 +190,7 @@ export async function subscribeToTrendingTokens() {
           store.dispatch(
             updateTrendingLiveData({
               type: "buy",
-              price: data?.priceInSolOfToken * liveSolanaPrice,
+              price: solAmountInUsd,
               mint: data?.bought?.mint,
               amount: data?.bought?.uiTokenAmount?.amount,
               holderAction: data?.holder,
@@ -188,10 +199,11 @@ export async function subscribeToTrendingTokens() {
         }
       } else if (data?.action == "sell") {
         if (data?.sold?.mint != "So11111111111111111111111111111111111111112") {
+          const solAmountInUsd = data?.priceInSolOfToken * liveSolanaPrice;
           store.dispatch(
             updateAllDataByNode({
               type: "sell",
-              price: data?.priceInSolOfToken * liveSolanaPrice,
+              price: solAmountInUsd,
               mint: data?.sold?.mint,
               amount: data?.sold?.uiTokenAmount?.amount,
               holderAction: data?.holder,
@@ -200,7 +212,7 @@ export async function subscribeToTrendingTokens() {
           store.dispatch(
             updateTrendingLiveData({
               type: "sell",
-              price: data?.priceInSolOfToken * liveSolanaPrice,
+              price: solAmountInUsd,
               mint: data?.sold?.mint,
               amount: data?.sold?.uiTokenAmount?.amount,
               holderAction: data?.holder,
