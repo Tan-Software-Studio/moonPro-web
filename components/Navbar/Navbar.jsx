@@ -11,12 +11,14 @@ import { setIsSidebarOpen } from "@/app/redux/CommonUiData";
 import { logo, walletBalance, Solana, usdc } from "@/app/Images";
 import {
   fetchSolanaNativeBalance,
+  fetchUsdcBalance,
   openCloseLoginRegPopup,
   setIsEnabled,
   setIsSearchPopup,
   setLoginRegPopupAuth,
   setSolanaLivePrice,
   setSolWalletAddress,
+  setUsdcBalance,
 } from "@/app/redux/states";
 import { PiUserBold, PiUserLight } from "react-icons/pi";
 import LoginPopup from "./login/LoginPopup";
@@ -51,6 +53,7 @@ const Navbar = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
+
   // handle to get phrase of solana
   async function handleToGetSolanaPhrase() {
     const token = localStorage.getItem("token");
@@ -76,22 +79,23 @@ const Navbar = () => {
         console.log("🚀 ~ handleToGetSolanaPk ~ err:", err);
       });
   }
+
   // login signup
-  // const [isLoginPopup, setIsLoginPopup] = useState(false);
   const isLoginPopup = useSelector((state) => state?.AllStatesData?.isRegLoginPopup);
   // referral add popup
   const isReffaralCode = useSelector((state) => state?.AllStatesData?.referralPopupAfterLogin);
   const authName = useSelector((state) => state?.AllStatesData?.isRegisterOrLogin);
-  // const [authName, setAuthName] = useState("");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const userDetails = useSelector((state) => state?.userData?.userDetails);
 
   // X===================X Use selectors X===================X //
   const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
+  const usdcBalance = useSelector((state) => state?.AllStatesData?.usdcBalance);
   const solWalletAddress = useSelector((state) => state?.AllStatesData?.solWalletAddress);
   const isSidebarOpen = useSelector((state) => state?.AllthemeColorData?.isSidebarOpen);
   const isEnabled = useSelector((state) => state?.AllStatesData?.isEnabled);
+  const solanaLivePrice = useSelector((state) => state?.AllStatesData?.solanaLivePrice);
 
   const dropdownRef = useRef(null);
   const walletDropdownRef = useRef(null);
@@ -111,6 +115,7 @@ const Navbar = () => {
     setIsProfileOpen(false);
     googleLogout();
   };
+
   async function fetchData() {
     dispatch(setLoading(true));
     await axios
@@ -131,6 +136,7 @@ const Navbar = () => {
         dispatch(setLoading(false));
       });
   }
+
   async function fetchSolPrice() {
     await axios({
       method: "get",
@@ -143,16 +149,19 @@ const Navbar = () => {
         const price = res?.data?.data[res?.data?.data?.length - 1]?.price;
         dispatch(setSolanaLivePrice(price));
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }
+
   useEffect(() => {
     fetchData();
     dispatch(fetchMemescopeData());
     fetchSolPrice();
   }, []);
+
   useEffect(() => {
     if (solWalletAddress) {
       dispatch(fetchSolanaNativeBalance(solWalletAddress));
+      dispatch(fetchUsdcBalance(solWalletAddress));
       if (!userDetails?.email) {
         dispatch(fetchUserData());
       }
@@ -195,7 +204,6 @@ const Navbar = () => {
 
   const handleOpenDeposit = (depositType = "general", amount = null) => {
     setIsWalletDropdownOpen(false);
-    // dispatch(setDepositData({ type: depositType, amount: amount }));
     setIsSolDepositPopup(true);
   };
 
@@ -212,14 +220,16 @@ const Navbar = () => {
             <div className=" flex items-center gap-2 ">
               {/* Search bar */}
               <div
-                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${
+                  isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                 onClick={() => dispatch(setIsSearchPopup(true))}
               >
                 <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                 <input
-                  className={` ${isSidebarOpen ? "w-0" : "w-12"
-                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                  className={` ${
+                    isSidebarOpen ? "w-0" : "w-12"
+                  } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                   placeholder={navbar?.profile?.search}
                 />
               </div>
@@ -232,7 +242,7 @@ const Navbar = () => {
               {mounted && solWalletAddress && (
                 <button
                   onClick={() => handleOpenDeposit("deposit")}
-                  className="px-3 py-1.5 bg-[#11265B] hover:bg-[#5856EB] text-white rounded-md text-sm font-medium transition-colors cursor-pointer"
+                  className="px-3 py-1.5 bg-[#1d73fc] hover:bg-[#438bff] text-black rounded-md text-sm font-bold transition-colors cursor-pointer"
                 >
                   Deposit
                 </button>
@@ -246,12 +256,12 @@ const Navbar = () => {
               )}
 
               {/* Notifications */}
-              {mounted && solWalletAddress && (
+              {/* {mounted && solWalletAddress && (
                 <div onClick={() => dispatch(setIsEnabled(!isEnabled))} className="cursor-pointer relative">
                   <RiNotification4Line size={24} />
                   <div className="w-2 h-2 rounded-full bg-[#ED1B24] absolute right-[0.6px] top-[0.6px]"></div>
                 </div>
-              )}
+              )} */}
 
               {solWalletAddress && (
                 <div className={`relative`} ref={walletDropdownRef}>
@@ -292,7 +302,8 @@ const Navbar = () => {
                             </div>
                           </div>
                           <div className="text-2xl font-bold text-white mb-2">
-                            ${(Number(nativeTokenbalance) * 200).toFixed(2)}
+                            {/* ${(Number(nativeTokenbalance) * (solanaLivePrice || 0)).toFixed(2)}$ */}
+                            ${(Number(nativeTokenbalance) * (solanaLivePrice || 0) + Number(usdcBalance) * 1).toFixed(2)}
                           </div>
                         </div>
 
@@ -311,7 +322,9 @@ const Navbar = () => {
 
                           <div className="flex items-center gap-2">
                             <Image src={usdc} alt="usdc" width={20} height={20} className="rounded-full" />
-                            <span className="text-lg font-semibold text-white">0</span>
+                            <span className="text-lg font-semibold text-white">
+                              {Number(usdcBalance || 0).toFixed(2)}
+                            </span>
                           </div>
                         </div>
 
@@ -319,11 +332,11 @@ const Navbar = () => {
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleOpenDeposit("deposit")}
-                            className="flex-1 rounded-md bg-[#11265B] hover:bg-[#5856EB] text-white py-2.5 px-4 text-sm font-medium transition-colors"
+                            className="flex-1 rounded-md bg-[#1d73fc] hover:bg-[#438bff] text-black py-2.5 px-4 text-sm font-bold transition-colors"
                           >
                             Deposit
                           </button>
-                          <button className="flex-1 bg-[#374151] hover:bg-[#4B5563] text-white py-2.5 px-4 rounded-md text-sm font-medium transition-colors">
+                          <button className="flex-1 bg-[#374151] hover:bg-[#4B5563] text-white py-2.5 px-4 rounded-md text-sm font-bold transition-colors">
                             Withdraw
                           </button>
                         </div>

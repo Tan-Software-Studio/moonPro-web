@@ -28,7 +28,9 @@ const holdingData = createSlice({
   name: "PnlData",
   initialState: {
     PnlData: [],
-    initialLoading: true,
+    initialLoading: false,
+    isDataLoaded: false,
+    hasAttemptedLoad: false,
     error: null,
     pnlTableData: "profile",
   },
@@ -56,20 +58,40 @@ const holdingData = createSlice({
         }
       }
     },
+    resetPnlDataState: (state) => {
+      state.initialLoading = false;
+      state.isDataLoaded = false;
+      state.hasAttemptedLoad = false; // Reset this too
+      state.PnlData = [];
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchPNLData.pending, (state) => {
+        state.initialLoading = true;
+        state.isDataLoaded = false;
+        state.hasAttemptedLoad = true; 
+        state.error = null;
+      })
       .addCase(fetchPNLData.fulfilled, (state, { payload }) => {
         state.initialLoading = false;
-        state.PnlData = payload;
+        state.isDataLoaded = true;
+        state.hasAttemptedLoad = true;
+        state.PnlData = payload || [];
+        state.error = null;
       })
       .addCase(fetchPNLData.rejected, (state, { payload }) => {
         state.initialLoading = false;
+        state.isDataLoaded = true;
+        state.hasAttemptedLoad = true;
+        state.PnlData = [];
+        state.error = payload;
       });
   },
 });
 
-export const { setPnlData, updatePnlDataPriceOnly, updatePnlTableData } =
+export const { setPnlData, updatePnlDataPriceOnly, updatePnlTableData, resetPnlDataState  } =
   holdingData.actions;
 
 export default holdingData.reducer;

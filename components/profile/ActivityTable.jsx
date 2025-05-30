@@ -49,28 +49,30 @@ const ActivityTable = () => {
   };
 
   useEffect(() => {
-    if (!transactionData.length > 0) {
-      handleTransaction();
-    }
+
+    handleTransaction();
   }, [currentPage]);
 
   return (
     <>
-      <div className="overflow-auto max-h-[400px]">
+      <div className="overflow-auto h-[400px] max-h-[400px]">
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center h-64 text-center">
-            <div className="flex justify-center items-center min-h-[40vh]">
-              <span className="Tableloader"></span>
+          <div
+            className="snippet flex justify-center mt-20   "
+            data-title=".dot-spin"
+          >
+            <div className="stage">
+              <div className="dot-spin"></div>
             </div>
           </div>
         ) : !transactionData?.length > 0 ? (
           <div className="flex flex-col items-center justify-center h-64 text-center">
-            <div className="w-16 h-16 rounded-full bg-slate-800/50 flex items-center justify-center mb-4">
+            <div className=" flex items-center justify-center mb-4">
               <Image
                 src="/assets/NoDataImages/qwe.svg"
                 alt="No Data Available"
-                width={24}
-                height={24}
+                width={200}
+                height={100}
                 className="text-slate-400"
               />
             </div>
@@ -82,31 +84,25 @@ const ActivityTable = () => {
         ) : (
           <div className="min-w-full">
             <table className="w-full text-left text-sm">
-              <thead className="sticky top-0 border-b bg-[#08080E] border-gray-800 z-10">
+              <thead className="sticky top-0 border-b-[1px] bg-[#08080E] border-gray-800 z-40">
                 <tr>
-                  <th className="p-4 text-slate-300 font-medium">
-                    <div className="flex gap-4 items-center">
-                      <div>#</div>
-                      <div>From</div>
+                  <th className="px-4 py-2 text-slate-300 font-medium">
+                    <div className="flex gap-6 items-center">
+                      <div>Type</div>
+                      <div>Token</div>
                     </div>
                   </th>
-                  <th className="p-4 text-slate-300 font-medium">
-                    To
-                  </th>
-                  <th className="p-4 text-slate-300 font-medium">
+                  <th className="px-4 py-2  text-slate-300 font-medium whitespace-nowrap">
                     Amount
                   </th>
-                  <th className="p-4 text-slate-300 font-medium">
+                  <th className="px-4 py-2  text-slate-300 font-medium whitespace-nowrap">
                     Value (USD)
                   </th>
-                  <th className="p-4 text-slate-300 font-medium">
-                    Type
+                  <th className="px-4 py-2  text-slate-300 font-medium whitespace-nowrap">
+                    Age
                   </th>
-                  <th className="p-4 text-slate-300 font-medium">
-                    TX
-                  </th>
-                  <th className="p-4 text-slate-300 font-medium">
-                    Date & Time
+                  <th className="px-4 py-2  text-slate-300 font-medium whitespace-nowrap">
+                    Explorer
                   </th>
                 </tr>
               </thead>
@@ -123,35 +119,37 @@ const ActivityTable = () => {
                   transactionData.map((item, index) => (
                     <tr
                       key={index}
-                      className="border-b border-slate-700/20 hover:bg-slate-800/30 transition-colors duration-200"
+                      className={`${index % 2 === 0
+                        ? "bg-gray-800/20"
+                        : ""} border-b border-slate-700/20 hover:bg-slate-800/30 transition-colors duration-200`}
                     >
-                      <td className="p-4">
-                        <div className="flex gap-4 items-center">
-                          <div className="text-white font-medium">{index + 1}</div>
+                      <td className="px-4 py-[18px] whitespace-nowrap">
+                        <div className="flex gap-6 items-center">
+                          <div className="text-white font-medium">
+                            <span
+                              className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getTypeBadgeColor(
+                                item.type
+                              )}`}
+                            >
+                              {item.type.toUpperCase()}
+                            </span>
+                          </div>
                           <div className="min-w-0">
-                            <p className="font-medium text-white">{truncateString(item.fromToken)}</p>
+                            <p className="font-medium text-white">{truncateString(item.toToken)}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="p-4">
-                        <p className="font-medium text-white">{truncateString(item.toToken)}</p>
-                      </td>
-                      <td className="p-4">
+                      <td className="px-4 py-[18px] whitespace-nowrap">
                         <p className="font-medium text-white">{item.amount.toFixed(5)}</p>
+
                       </td>
-                      <td className="p-4">
+                      <td className="px-4 py-[18px] whitespace-nowrap">
                         <p className="font-medium text-white">${item.amountInDollar.toFixed(2)}</p>
                       </td>
-                      <td className="p-4">
-                        <span
-                          className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getTypeBadgeColor(
-                            item.type
-                          )}`}
-                        >
-                          {item.type.toUpperCase()}
-                        </span>
+                      <td className="px-4 py-[18px] whitespace-nowrap">
+                        <p className="font-medium text-white">{convertUTCToIST(item.createdAt)}</p>
                       </td>
-                      <td className="p-4">
+                      <td className="px-4 py-[18px] whitespace-nowrap">
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-white">{truncateString(item.tx)}</span>
                           <Link
@@ -162,9 +160,6 @@ const ActivityTable = () => {
                             <ExternalLink className="h-3 w-3 text-slate-400 hover:text-slate-200" />
                           </Link>
                         </div>
-                      </td>
-                      <td className="p-4">
-                        <p className="font-medium text-white">{convertUTCToIST(item.createdAt)}</p>
                       </td>
                     </tr>
                   ))

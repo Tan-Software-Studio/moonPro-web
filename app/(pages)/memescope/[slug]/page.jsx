@@ -42,7 +42,10 @@ const Memescope = () => {
   const [showSocials, setShowSocials] = useState(null);
   const [showHolders , setShowHolders] = useState(null);
   const [showHolders10 , setshowHolders10] = useState(null);
-
+  const [progerssBar , setProgerssBar] = useState(null);
+  const [newSearchData , setNewSearchData] = useState('');
+  const [newAboutToSearchData , setAboutToSearchData] = useState('');
+  const [graduateSearchData , setGraduateSearchData] = useState('');
 
   // =======*=*= All about graduate data filter ==========//
   const Graduatedata = useSelector(
@@ -85,12 +88,15 @@ const Memescope = () => {
     }
   }, [Graduatedata]);
 
-  // Check if filters are or not
-  const aboutDataToShow = aboutGraduateDataFiltersApplied && filteredAboutGraduatData.length >= 0
-    ? filteredAboutGraduatData
-    : Graduatedata;
+const aboutSearchedData = Graduatedata.filter((item) =>
+  item.symbol.toUpperCase().includes(newAboutToSearchData.toUpperCase())
+);
 
+const hasAboutSearch = newAboutToSearchData.trim() !== "";
 
+const aboutDataToShow = aboutGraduateDataFiltersApplied
+  ? (hasAboutSearch ? aboutSearchedData : filteredAboutGraduatData)
+  : (hasAboutSearch ? aboutSearchedData : Graduatedata);
 
 
   // =======*=*= All graduated data filter ==========//
@@ -140,13 +146,19 @@ const Memescope = () => {
     }
   }, [GraduateddataSortedData]);
 
-  const graduateDataToShow = graduatedDataFiltersApplied && filteredGraduatedData.length >= 0
-    ? filteredGraduatedData
-    : GraduateddataSortedData;
+const graduatedSearchData = GraduateddataSortedData.filter((item) =>
+  item.symbol.toUpperCase().includes(graduateSearchData.toUpperCase())
+);
 
+const hasGraduateSearch = graduateSearchData.trim() !== "";
+
+const graduateDataToShow = graduatedDataFiltersApplied
+  ? (hasGraduateSearch ? graduatedSearchData : filteredGraduatedData)
+  : (hasGraduateSearch ? graduatedSearchData : GraduateddataSortedData);
 
   // == new creation data filter == \\
   const NewData = useSelector((state) => state?.allMemescopeData?.newLaunch);
+
   const NewCreationFilterDataJson = newCreationFilterData(memescopePage);
 
   function onApplyNewCreationData() {
@@ -188,9 +200,15 @@ const Memescope = () => {
     }
   }, [NewData]);
 
-  const newCreationDataToShow = newCreationDataFiltersApplied && filteredNewCreationData.length >= 0
-    ? filteredNewCreationData
-    : NewData;
+const searchedData = NewData.filter((item) =>
+  item.symbol.toUpperCase().includes(newSearchData.toUpperCase())
+);
+
+const hasSearch = newSearchData.trim() !== "";
+
+const newCreationDataToShow = newCreationDataFiltersApplied
+  ? (hasSearch ? searchedData : filteredNewCreationData)
+  : (hasSearch ? searchedData : NewData);
 
   const handleSidebarToggle = (id) => {
     setOpenDropdown((prev) => (prev === id ? null : id));
@@ -257,7 +275,7 @@ const Memescope = () => {
             : "sticky z-10 top-[50px]"
             }  `}
         >
-          <AllPageHeader HeaderData={HeaderData} duration={true} setSelectedMetric={setSelectedMetric} selectedMetric={selectedMetric} setSearchbar={setSearchbar} searchbar={searchbar} setShowCircle={setShowCircle} showCircle={showCircle} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10}/>
+          <AllPageHeader HeaderData={HeaderData} duration={true} setSelectedMetric={setSelectedMetric} selectedMetric={selectedMetric} setSearchbar={setSearchbar} searchbar={searchbar} setShowCircle={setShowCircle} showCircle={showCircle} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar} />
         </div>
         <div className={`grid xl:grid-cols-3 w-full  `}>
           {/* box 1 */}
@@ -324,11 +342,13 @@ const Memescope = () => {
                 )}
               </div>
               <div className="flex gap-1">
-                {searchbar ? <input
-                  type="text"
-                  placeholder="Search by ticker or name"
-                  className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-4 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
-                /> : null}
+                {searchbar ?  <input
+    type="text"
+    placeholder="Search by ticker or name"
+    className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-4 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
+    value={newSearchData}
+    onChange={(e) => setNewSearchData(e.target.value)}
+  /> : null}
                 <div className="relative hidden xl:block group">
                   <FilterButton onClick={() => handleSidebarToggle(0)} />
 
@@ -350,7 +370,7 @@ const Memescope = () => {
               className={`${selectedScope === 1 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={newCreationDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap}  setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10}/>
+              <MscopePumpTable MemscopeData={newCreationDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap}  setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar}/>
             </div>
           </div>
 
@@ -377,10 +397,12 @@ const Memescope = () => {
               </div>
               <div className="flex gap-1">
                 {searchbar ? <input
-                  type="text"
-                  placeholder="Search by ticker or name"
-                  className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-4 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
-                /> : null}
+    type="text"
+    placeholder="Search by ticker or name"
+    className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-4 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
+    value={newAboutToSearchData}
+    onChange={(e) => setAboutToSearchData(e.target.value)}
+  /> : null}
                 {/* Filter button */}
 
 
@@ -403,7 +425,7 @@ const Memescope = () => {
               className={`${selectedScope === 2 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={aboutDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric}  setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap}  setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10}/>
+              <MscopePumpTable MemscopeData={aboutDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric}  setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap}  setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar}/>
             </div>
           </div>
 
@@ -433,10 +455,12 @@ const Memescope = () => {
               <div className="flex gap-1">
                 {/* Filter button */}
                 {searchbar ? <input
-                  type="text"
-                  placeholder="Search by ticker or name"
-                  className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-4 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
-                /> : null}
+    type="text"
+    placeholder="Search by ticker or name"
+    className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-4 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
+    value={graduateSearchData}
+    onChange={(e) => setGraduateSearchData(e.target.value)}
+  />: null}
 
 
                 <div className="relative hidden xl:block group">
@@ -458,7 +482,7 @@ const Memescope = () => {
               className={`${selectedScope === 3 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={graduateDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric}  setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10}/>
+              <MscopePumpTable MemscopeData={graduateDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric}  setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar}/>
             </div>
           </div>
 

@@ -66,6 +66,7 @@ import X from "../public/assets/Searchbar/X.png";
 import upIcon from "../public/assets/common/upIcon.svg";
 import pump_img from "../public/assets/pump_img/pump_img.png";
 import nftProfileImage from "../public/assets/common/nftimg.webp";
+import iconImage from "../public/assets/Memescope/filterIcon.png"
 
 import userIcon from "../public/assets/Leaderboard/userIcon.png";
 import LeaderboardIcon from "../public/assets/Leaderboard/leaderboard.svg";
@@ -135,6 +136,15 @@ import nftImg2 from "../public/assets/referral/nft.jpeg";
 import nftImg3 from "../public/assets/referral/nft1.jpg";
 import nftImg4 from "../public/assets/referral/nft2.png";
 import nftImg5 from "../public/assets/referral/nft4.png";
+
+// footer
+import barchart from "../public/assets/Footer/barchart.svg";
+import discord from "../public/assets/Footer/discord.svg";
+import docs from "../public/assets/Footer/docs.svg";
+import solanasollogo from "../public/assets/Footer/solana-sol-logo.png";
+import pnlbg from "../public/assets/Footer/pnlbg.png";
+import articlefill from "../public/assets/Footer/article-fill.svg";
+
 
 export {
   nftProfileImage,
@@ -267,4 +277,12 @@ export {
   nftImg3,
   nftImg4,
   nftImg5,
+  iconImage,
+  // footer
+  barchart,
+  discord,
+  docs,
+  solanasollogo,
+  pnlbg,
+  articlefill,
 };

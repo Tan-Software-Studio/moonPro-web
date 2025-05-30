@@ -19,21 +19,24 @@ const PortfolioMainPage = () => {
     <>
       {solWalletAddress ?
         <>
-          <div className='flex items-center gap-5 p-5'>
-            <div className={`text-xl font-bold cursor-pointer ${activeTab == "profile" ? "text-white" : "text-gray-400"}`} onClick={() => dispatch(updatePnlTableData("profile"))}>
-              Spots
-            </div>
-            <div className={`text-xl font-bold cursor-pointer ${activeTab == "portfolio" ? "text-white" : "text-gray-400"}`} onClick={() => dispatch(updatePnlTableData("portfolio"))}>
-              Wallets
-            </div>
-          </div>
+          <div className='overflow-y-scroll h-[95vh]'>
 
-          {activeTab == "profile" &&
-            <UserProfileControl />
-          }
-          {activeTab == "portfolio" &&
-            <PNLProtfolio />
-          }
+            <div className='flex items-center gap-5 p-5'>
+              <div className={`text-xl font-bold cursor-pointer ${activeTab == "profile" ? "text-white" : "text-gray-400"}`} onClick={() => dispatch(updatePnlTableData("profile"))}>
+                Spots
+              </div>
+              <div className={`text-xl font-bold cursor-pointer ${activeTab == "portfolio" ? "text-white" : "text-gray-400"}`} onClick={() => dispatch(updatePnlTableData("portfolio"))}>
+                Wallets
+              </div>
+            </div>
+
+            {activeTab == "profile" &&
+              <UserProfileControl />
+            }
+            {activeTab == "portfolio" &&
+              <PNLProtfolio />
+            }
+          </div>
         </> :
 
         <div className="flex flex-col items-center justify-center min-h-[400px] p-8">

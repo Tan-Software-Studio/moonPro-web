@@ -8,6 +8,7 @@ import WalletScan from "@/components/walletTrackerNotification/WalletScan";
 import { setGlobalBuyAmt } from "./redux/states";
 import "../app/i18n";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import Footer from "@/components/Footer/Footer";
 
 const PagesLayout = ({ childrens }) => {
   const dispatch = useDispatch();
@@ -69,6 +70,7 @@ const PagesLayout = ({ childrens }) => {
           <WalletScan />
 
           <div className="w-full">{childrens}</div>
+          <Footer />
         </div>
       </GoogleOAuthProvider>
     </>
