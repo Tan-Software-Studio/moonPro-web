@@ -420,10 +420,195 @@ const getDateMinus24Hours = async (hours) => {
   return date.toISOString();
 };
 
+// convert SOL to USDC using BUY endpoint
+const convertSOLtoUSDC = async (
+  amount,
+  slippage = 50,
+  priorityFee = 0.0001,
+  solanaPrice,
+  usdcPrice,
+  address,
+  setLoaderSwap,
+  setUsdcBalance,
+  dispatch
+) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return toast.error("User not login!", {
+      position: "top-right",
+    });
+  }
+
+  if (amount <= 0) {
+    return toast.error("Invalid amount!", {
+      position: "top-right",
+    });
+  }
+
+  setLoaderSwap(true);
+  toast(
+    <div className="flex items-center gap-5">
+      <div className="loaderPopup"></div>
+      <div className="text-white text-sm">Converting SOL to USDC...</div>
+    </div>,
+    {
+      id: "convertToast",
+      position: "top-center",
+      duration: Infinity,
+      style: {
+        border: "1px solid #4D4D4D",
+        color: "#FFFFFF",
+        fontSize: "14px",
+        letterSpacing: "1px",
+        backgroundColor: "#1F1F1F",
+      },
+    }
+  );
+
+  const USDC_MINT_ADDRESS = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+
+  try {
+    await axios({
+      url: `${BASE_URL}transactions/solbuy`,
+      method: "post",
+      data: {
+        token: USDC_MINT_ADDRESS,
+        amount: Number(amount),
+        slippage: slippage,
+        priorityFee: priorityFee,
+        price: Number(solanaPrice),
+        programAddress: "uqhdweudhods",
+        tokenPrice: Number(usdcPrice),
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    await toast.success("SOL to USDC conversion successful!", {
+      id: "convertToast",
+      duration: 3000,
+    });
+
+    setLoaderSwap(false);
+
+    setTimeout(async () => {
+      const [usdcBalanceUpdate, solBalance] = await Promise.all([
+        getSoalanaTokenBalance(address, USDC_MINT_ADDRESS),
+        dispatch(fetchSolanaNativeBalance(address)),
+      ]);
+      setUsdcBalance(usdcBalanceUpdate);
+    }, 5000);
+
+  } catch (err) {
+    setLoaderSwap(false);
+    console.log("🚀 ~ convertSOLtoUSDC error:", err?.message);
+    await toast.error("Conversion failed. Please try again later.", {
+      id: "convertToast",
+      duration: 3000,
+    });
+  }
+};
+
+// convert USDC to SOL using SELL endpoint
+const convertUSDCtoSOL = async (
+  amount,
+  amountRecInSol,
+  slippage = 50,
+  priorityFee = 0.0001,
+  usdcPrice,
+  address,
+  setLoaderSwap,
+  setUsdcBalance,
+  dispatch
+) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return toast.error("User not login!", {
+      position: "top-right",
+    });
+  }
+
+  if (amount <= 0) {
+    return toast.error("Invalid amount!", {
+      position: "top-right",
+    });
+  }
+
+  setLoaderSwap(true);
+  toast(
+    <div className="flex items-center gap-5">
+      <div className="loaderPopup"></div>
+      <div className="text-white text-sm">Converting USDC to SOL...</div>
+    </div>,
+    {
+      id: "convertToast",
+      position: "top-center",
+      duration: Infinity,
+      style: {
+        border: "1px solid #4D4D4D",
+        color: "#FFFFFF",
+        fontSize: "14px",
+        letterSpacing: "1px",
+        backgroundColor: "#1F1F1F",
+      },
+    }
+  );
+
+  const USDC_MINT_ADDRESS = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+
+  try {
+    await axios({
+      url: `${BASE_URL}transactions/solsell`,
+      method: "post",
+      data: {
+        token: USDC_MINT_ADDRESS,
+        amount: Number(amount),
+        slippage: slippage,
+        priorityFee: priorityFee,
+        decimal: 6, // USDC has 6 decimals
+        price: Number(usdcPrice),
+        programAddress: "sodsduoshks",
+        amountRecInsol: Number(amountRecInSol),
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    await toast.success("USDC to SOL conversion successful!", {
+      id: "convertToast",
+      duration: 3000,
+    });
+
+    setLoaderSwap(false);
+
+    // Update balances after successful conversion
+    setTimeout(async () => {
+      const [usdcBalanceUpdate, solBalance] = await Promise.all([
+        getSoalanaTokenBalance(address, USDC_MINT_ADDRESS),
+        dispatch(fetchSolanaNativeBalance(address)),
+      ]);
+      setUsdcBalance(usdcBalanceUpdate);
+    }, 5000);
+
+  } catch (err) {
+    setLoaderSwap(false);
+    console.log("🚀 ~ convertUSDCtoSOL error:", err?.message);
+    await toast.error("Conversion failed. Please try again later.", {
+      id: "convertToast",
+      duration: 3000,
+    });
+  }
+};
+
+
 export {
   buySolanaTokens,
   sellSolanaTokens,
   getDateMinus24Hours,
   buySolanaTokensQuickBuyHandler,
   buySolanaTokensQuickBuyHandlerCopyTrading,
+  convertSOLtoUSDC,
+  convertUSDCtoSOL,
 };

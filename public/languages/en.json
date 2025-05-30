@@ -3,7 +3,7 @@
     "trending": "Trending",
     "recentcalls": "Recent Calls",
     "memescope": "Memescope",
-    "holdings": "Holdings",
+    "holdings": "portfolio",
     "leaderboard": "Leaderboard",
     "referral": "Referral",
     "alphapicks": "Alpha Picks",
@@ -258,7 +258,7 @@
       "importwallets": {
         "importwallets": "Import wallets",
         "desc": "Please enter the wallet addresses for wave pro import",
-        "cancel": "Cencel",
+        "cancel": "Cancel",
         "add": "Add"
       },
       "addnew": {
@@ -269,7 +269,7 @@
           "entername": "Enter Wallet name",
           "walletaddress": "Wallet Address",
           "enteraddress": "Enter Wallet address",
-          "cancel": "Cencel"
+          "cancel": "Cancel"
         }
       },
       "nodataavailable": "No Data Available"
