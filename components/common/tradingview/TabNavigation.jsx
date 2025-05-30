@@ -25,14 +25,14 @@ const TabNavigation = ({
     setActiveTab(tabName);
 
     // Call the appropriate API function based on which tab was clicked
-    if (tabName == "Top Holders" && typeof topHoldersApiCall == "function") {
+    if (tabName == "Holders" && typeof topHoldersApiCall == "function") {
       topHoldersApiCall();
     } else if (
       tabName == "Top Traders" &&
       typeof toptradersApiCall == "function"
     ) {
       toptradersApiCall();
-    } else if (tabName == "My Holdings" && typeof myHoldingData == "function") {
+    } else if (tabName == "Positions" && typeof myHoldingData == "function") {
       myHoldingData();
     }
 
