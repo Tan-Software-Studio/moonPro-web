@@ -12,9 +12,14 @@ import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { BiCheckDouble } from "react-icons/bi";
 import { FaCopy, FaStar } from "react-icons/fa";
-import { IoIosKey } from "react-icons/io";
 import { RiShareBoxLine } from "react-icons/ri";
 import { useDispatch } from "react-redux";
+import { BsKey } from "react-icons/bs";
+import { CiStar } from "react-icons/ci";
+
+
+
+
 export default function PNLProtfolio() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -67,15 +72,21 @@ export default function PNLProtfolio() {
           }
         )
         .then(async (res) => {
-          const findXPrimaryIndex = await walletAddresses.findIndex(
-            (item) => item?.primary
+
+          const updatedAllWallets = allWallets.map((wallet) => ({
+            ...wallet,
+            primary: wallet.index === walletIndex,
+          }));
+
+          setAllWallets(updatedAllWallets);
+          setWalletAddresses((prevVisibleWallets) =>
+            // Update only if the wallet is visible in the filtered list
+            prevVisibleWallets.map((wallet) => ({
+              ...wallet,
+              primary: wallet.index === walletIndex,
+            }))
           );
-          setWalletAddresses((pre) => {
-            const preArr = [...pre];
-            preArr[findXPrimaryIndex].primary = false;
-            preArr[loopIndex].primary = true;
-            return preArr;
-          });
+
           localStorage.setItem(
             "walletAddress",
             res?.data?.data?.wallet?.wallet
@@ -186,9 +197,7 @@ export default function PNLProtfolio() {
   return (
     <>
       <div className="bg-[#08080E] text-white p-3 md:p-6">
-        <div className="md:text-2xl text-xl py-2 font-semibold ">
-          Create Wallet
-        </div>
+
         <div className="border-[#404040] border-[1px] rounded-lg">
           <div className="flex flex-col  ">
             {/* Header & Search Bar */}
@@ -196,12 +205,12 @@ export default function PNLProtfolio() {
               className="flex flex-col md:flex-row items-start md:items-center justify-between border-[#404040] border-b-[1px] 
             gap-4 px-3 py-3"
             >
-              <div className=" selection: w-full md:w-64">
+              <div className="w-full md:w-64 ">
                 <input
-                  type="text"
+                  type="search"
                   onChange={handleSearchWallet}
                   placeholder="Search by address"
-                  className="w-full bg-gray-900 border border-gray-800 rounded-lg p-2 pl-4 pr-10 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full bg-gray-900 border border-gray-800 rounded-lg p-2  text-sm focus:outline-none cursor-pointer "
                 />
               </div>
 
@@ -213,7 +222,7 @@ export default function PNLProtfolio() {
 
                 <button
                   onClick={handleCreateMultiWallet}
-                  className="flex items-center space-x-2 px-3 py-1.5 bg-blue-600 rounded-lg text-sm"
+                  className="flex items-center space-x-2 px-3 py-1.5 bg-[#11265B] hover:bg-[rgb(88_86_235/_var(--tw-bg-opacity))] rounded-lg text-sm"
                 >
                   <span>{portfolio?.CreateWallet}</span>
                 </button>
@@ -263,14 +272,14 @@ export default function PNLProtfolio() {
                           }`}
                       >
                         {/* Wallet number */}
-                        <td className="py-4 px-6">{index + 1}</td>
+                        <td className="py-2 px-4">{index + 1}</td>
 
                         {/* Wallet address */}
-                        <td className="py-4 px-6">
+                        <td className="py-2 px-4">
                           <div className="flex items-center gap-3">
                             <div className="flex items-center gap-2">
                               {wallet.primary && (
-                                <FaStar className="text-amber-500" size={16} />
+                                <CiStar className="text-amber-500 " size={16} />
                               )}
                               <div
                                 className={`font-medium ${wallet.primary ? "text-amber-500" : ""
@@ -294,7 +303,7 @@ export default function PNLProtfolio() {
                         </td>
 
                         {/* Balance */}
-                        <td className="py-4 px-6">
+                        <td className="py-2 px-4">
                           <div className="flex items-center gap-2 ">
                             <Image
                               src={solana}
@@ -308,15 +317,25 @@ export default function PNLProtfolio() {
                         </td>
 
                         {/* Holdings */}
-                        <td className="py-4 px-6">
-                          <div className="flex items-center justify-center text-center md:justify-start space-x-2">
-                            {/* <div className="w-5 h-5 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full"></div> */}
-                            <div>{wallet?.holdings || 0}</div>
+                        <td className="py-2 px-4">
+                          <div className="relative flex flex-row items-center gap-2">
+                            {/* Icon stack container */}
+                            <div className="relative w-[26px] h-[13px]">
+                              <div className="absolute left-[0px] bg-[#6f6f8b] h-[13px] w-[13px] rounded-[4px] z-[3]" />
+                              <div className="absolute left-[6px] bg-[#6f6f8b9c] h-[13px] w-[13px] rounded-[4px] z-[2]" />
+                              <div className="absolute left-[12px] bg-[#6f6f8b36] h-[13px] w-[13px] rounded-[4px] z-[1]" />
+                            </div>
+
+                            {/* Holdings text */}
+                            <div className=" ">
+                              {wallet?.holdings || 0}
+                            </div>
                           </div>
                         </td>
 
+
                         {/* Actions */}
-                        <td className="py-4 px-6">
+                        <td className="py-2 px-4">
                           <div className="flex items-center justify-end space-x-1">
                             {/* <button className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-gray-100" title="Archive wallet">
                             <IoEyeOff size={18} />
@@ -328,14 +347,14 @@ export default function PNLProtfolio() {
                               className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-gray-100"
                               title="Open in Solscan"
                             >
-                              <RiShareBoxLine size={18} />
+                              <RiShareBoxLine size={15} />
                             </Link>
                             <button
                               className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-gray-100"
                               title="Export private key"
                               onClick={() => handleToGetSolanaPk(wallet)}
                             >
-                              <IoIosKey size={18} />
+                              <BsKey size={18} />
                             </button>
                             {!wallet?.primary && (
                               <button
@@ -345,7 +364,7 @@ export default function PNLProtfolio() {
                                 className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-amber-500"
                                 title="Set as primary"
                               >
-                                <FaStar size={18} />
+                                <CiStar size={18} />
                               </button>
                             )}
                           </div>
