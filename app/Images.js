@@ -66,6 +66,7 @@ import X from "../public/assets/Searchbar/X.png";
 import upIcon from "../public/assets/common/upIcon.svg";
 import pump_img from "../public/assets/pump_img/pump_img.png";
 import nftProfileImage from "../public/assets/common/nftimg.webp";
+import iconImage from "../public/assets/Memescope/filterIcon.png"
 
 import userIcon from "../public/assets/Leaderboard/userIcon.png";
 import LeaderboardIcon from "../public/assets/Leaderboard/leaderboard.svg";
@@ -273,6 +274,7 @@ export {
   nftImg3,
   nftImg4,
   nftImg5,
+  iconImage,
   // footer
   barchart,
   discord,
