@@ -12,7 +12,7 @@ import {
   decimalConvert,
   numberFormated,
   formatDecimal,
-  capitalizeFirstLetter
+  capitalizeFirstLetter,
 } from "@/utils/basicFunctions";
 import TVChartContainer from "@/components/TradingChart/TradingChart";
 import TokenDetails from "@/components/common/tradingview/TokenDetails";
@@ -35,6 +35,9 @@ const Tradingview = () => {
   const [activeTab, setActiveTab] = useState("buy");
   const [dataLoaderForChart, setDataLoaderForChart] = useState(false);
   const latestTradesData = useSelector((state) => state?.allCharTokenData);
+  const decimalFindInArray = latestTradesData?.latestTrades?.find(
+    (item) => item?.Trade?.Currency?.Decimals
+  )?.Trade?.Currency?.Decimals;
   const [copied, setCopied] = useState(false);
   const dispatch = useDispatch();
   const [tokenBalance, setTokenBalance] = useState(0);
@@ -45,7 +48,7 @@ const Tradingview = () => {
   const containerRef = useRef(null);
   const tvChartRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [userTokenHoldings, setUserTokenHoldings] = useState({})
+  const [userTokenHoldings, setUserTokenHoldings] = useState({});
   const scrollableDivRef4 = useRef(null);
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
@@ -72,16 +75,16 @@ const Tradingview = () => {
     if (!jwtToken) return 0;
     try {
       const response = await axios({
-      method: "get",
-      url: `${BASE_URL}transactions/getSingleTokenPnl/${tokenaddress}/${solWalletAddress}`,
-      headers: {
-        Authorization: `Bearer ${jwtToken}`,
-      },
-    });
+        method: "get",
+        url: `${BASE_URL}transactions/getSingleTokenPnl/${tokenaddress}/${solWalletAddress}`,
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       // console.log(response?.data?.data?.token);
       setUserTokenHoldings(response?.data?.data?.token);
     } catch (error) {
-      console.error('error getting holdings', error);
+      console.error("error getting holdings", error);
     }
   };
 
@@ -140,9 +143,9 @@ const Tradingview = () => {
       if (tokenBalance > 0) {
         await getHoldings();
       }
-    }
+    };
     fetchTokenHoldings();
-  }, [tokenBalance])
+  }, [tokenBalance]);
 
   const handleCopy = (mintAddress) => {
     setCopied(true);
@@ -163,16 +166,19 @@ const Tradingview = () => {
     }, 2000);
   };
 
-  const tokenDetailsMarketCap =  humanReadableFormat(
-        chartTokenData?.currentSupply *
-          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
-        );
+  const tokenDetailsMarketCap = humanReadableFormat(
+    chartTokenData?.currentSupply *
+      latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+  );
 
   const TokenDetailsNumberData = [
     {
-      label: capitalizeFirstLetter(`${tragindViewPage?.right?.tokeninfo?.price}`),
+      label: capitalizeFirstLetter(
+        `${tragindViewPage?.right?.tokeninfo?.price}`
+      ),
       price: `$${formatDecimal(
-        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD || 0, 1
+        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD || 0,
+        1
       )}`,
     },
     {
@@ -181,9 +187,7 @@ const Tradingview = () => {
     },
     {
       label: tragindViewPage?.right?.tokeninfo?.supply,
-      price: humanReadableFormat(
-        chartTokenData?.currentSupply, false
-      ),
+      price: humanReadableFormat(chartTokenData?.currentSupply, false),
     },
   ];
 
@@ -281,7 +285,8 @@ const Tradingview = () => {
     {
       label: `${tragindViewPage?.right?.tokeninfo?.price} USD`,
       price: `$${formatDecimal(
-        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD || 0, 1
+        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD || 0,
+        1
       )}`,
     },
     {
@@ -290,7 +295,8 @@ const Tradingview = () => {
         convertAnyPriceToSol(
           latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
           solanaLivePrice
-        ) || 0, 1
+        ) || 0,
+        1
       )}`,
     },
     {
@@ -368,13 +374,12 @@ const Tradingview = () => {
 
   return (
     <div
-      className={`lg:flex relative overflow-y-auto  h-[90vh] md:h-[91vh] lg:h-[100vh] ${isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5"
-        }`}
+      className={`lg:flex relative overflow-y-auto  h-[90vh] md:h-[91vh] lg:h-[100vh] ${
+        isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5"
+      }`}
     >
       {isSmallScreen && (
-
         <div className="md:hidden flex  items-center justify-start bg-[#1F1F1F] rounded-md mt-2 text-white mx-2  text-[12px] font-semibold px-2 py-1">
-
           {["Trades", "Transaction"].map((item, index) => (
             <div
               onClick={() => setIsSmallScreenTab(item)}
@@ -461,7 +466,7 @@ const Tradingview = () => {
                 tokenBalance={tokenBalance}
                 tokenName={tokenSymbol}
                 nativeTokenbalance={nativeTokenbalance}
-                decimal={chartTokenData?.decimal}
+                decimal={chartTokenData?.decimal || decimalFindInArray}
                 progranAddress={chartTokenData?.programAddress}
                 bondingProgress={chartTokenData?.bondingCurveProgress || 0}
                 price={latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD}
@@ -474,10 +479,12 @@ const Tradingview = () => {
           </div>
 
           <div className="w-full border-[#4D4D4D] md:border-t-0 md:border-l-0 md:border-r-0 md:border-b-0">
-            <UserPnL 
+            <UserPnL
               userTokenHoldings={userTokenHoldings}
-              currentPrice={latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD}
-            />          
+              currentPrice={
+                latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+              }
+            />
           </div>
 
           <div className="w-full border border-[#4D4D4D] md:border-l-0 md:border-r-0 md:border-b-0">

@@ -41,6 +41,7 @@ export const fetchTradesData = createAsyncThunk(
             Symbol
             MintAddress
             Name
+            Decimals
           }
           AmountInUSD
           Amount
@@ -49,6 +50,7 @@ export const fetchTradesData = createAsyncThunk(
           MintAddress
           Name
           Symbol
+          Decimals
         }
       }
     }
