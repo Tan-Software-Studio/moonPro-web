@@ -31,8 +31,9 @@ import {
 import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 import { IoSearchSharp } from "react-icons/io5";
 import RoundProgressBar from "@/components/RoundProgressBar/RoundProgressBar";
+import SingleLineProgressBar from "@/components/SingleLineProgressBar/SingleLineProgressBar";
 
-const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, setSelectedMetric, setShowMarketCap, showMarketCap, showVolume, setShowVolume, showSocials, setShowSocials, showHolders, setShowHolders, setshowHolders10, showHolders10 }) => {
+const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, setSelectedMetric, setShowMarketCap, showMarketCap, showVolume, setShowVolume, showSocials, setShowSocials, showHolders, setShowHolders, setshowHolders10, showHolders10, setProgerssBar,  progerssBar}) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoverRow, sethoverRow] = useState(false);
   // solana live price
@@ -55,34 +56,42 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
 
   const quickBuy = useSelector((state) => state?.AllStatesData?.globalBuyAmt);
 
+useEffect(() => {
+  const defaultSettings = {
+    showMarketCap: true,
+    showVolume: true,
+    showSocials: true,
+    showHolders: true,
+    showHolders10: true,
+    selectedMetric: "12", // this can be a string or number depending on your usage
+    showCircle: false,
+    searchbar: true,
+    progerssBar: true,
+  };
 
-  useEffect(() => {
-    const savedMetric = localStorage.getItem('selectedMetric');
-    if (savedMetric) {
-      setSelectedMetric(savedMetric);
-    }
-  }, []);
+  // Get stored settings object from localStorage
+  const storedSettings = localStorage.getItem("DisplaySettings");
 
-  //  useEffect(() => {
-  //     // Initialize from localStorage on component mount
-  //     const saved = localStorage.getItem("showMarketCap");
-  //     if (saved === "true") {
-  //       setShowMarketCap(true);
-  //     }
-  //   }, []);
+  let parsedSettings;
 
-  useEffect(() => {
-    const savedMarketCap = localStorage.getItem("showMarketCap") === "true";
-    const savedVolume = localStorage.getItem("showVolume") === "true";
-    const savedSocials = localStorage.getItem("showSocials") === "true";
-    const savedHolder = localStorage.getItem("showHolders") === "true";
-    const savedHolder10 = localStorage.getItem("showHolders10") === "true";
-    setShowMarketCap(savedMarketCap);
-    setShowVolume(savedVolume);
-    setShowSocials(savedSocials);
-    setShowHolders(savedHolder);
-    setshowHolders10(savedHolder10)
-  }, []);
+  if (storedSettings === null || storedSettings === undefined) {
+    // Store defaults if nothing exists
+    localStorage.setItem("DisplaySettings", JSON.stringify(defaultSettings));
+    parsedSettings = defaultSettings;
+  } else {
+    parsedSettings = JSON.parse(storedSettings);
+  }
+
+  // Apply values to state
+  setShowMarketCap(parsedSettings.showMarketCap);
+  setShowVolume(parsedSettings.showVolume);
+  setShowSocials(parsedSettings.showSocials);
+  setShowHolders(parsedSettings.showHolders);
+  setshowHolders10(parsedSettings.showHolders10);
+  setSelectedMetric(parsedSettings.selectedMetric);
+  setProgerssBar(parsedSettings.progerssBar);
+}, []);
+
 
   const percentages = [
     {
@@ -173,14 +182,19 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                           value={block?.bonding_curv || 0}
                           maxValue={100}
                           trailColor="#7b8085"
-                          progressColor="#4FAFFE"
+                          progressColor={`${!progerssBar ? '#4FAFFE' : '#7b8085'}`}
                         /> : <SquareProgressBar
                           value={block?.bonding_curv || 0}
                           maxValue={100}
                           trailColor="#7b8085"
-                          progressColor={"#4FAFFE"}
+                          progressColor={`${!progerssBar ? '#4FAFFE' : '#7b8085'}`}
                         />
                         }
+                                          {progerssBar ? <div className="mt-2">
+                          <SingleLineProgressBar value={block?.bonding_curv || 0} maxValue={100} />
+                        </div> : null}
+                     
+
                         <img
                           key={block?.img}
                           src={
