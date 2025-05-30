@@ -822,7 +822,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                                   className="w-full h-full object-cover rounded-[4px]"
                                 />
                               </div>
-                              <span className="pl-2 group-hover/name:underline">{data.symbol}</span>
+                              <span className="pl-2 group-hover/name:underline">{data?.symbol}</span>
                             </div>
                           </a>
                         </td>
@@ -830,21 +830,21 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                         <td className="px-6 py-4 items-start">
                           <div className="flex flex-col gap-[2px] h-full justify-center">
                             <p className="text-[#21CB6B] text-sm leading-4">$0</p>
-                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`0 ${data.symbol}`}</p>
+                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`0 ${data?.symbol}`}</p>
                           </div>
                         </td>
                         {/* Sold */}
                         <td className="px-6 py-4 items-start">
                           <div className="flex flex-col gap-[2px] h-full justify-center">
                             <p className="text-[#ed1b26] text-sm leading-4">$0</p>
-                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`0 ${data.symbol}`}</p>
+                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`0 ${data?.symbol}`}</p>
                           </div>
                         </td>
                         {/* Remaining */}
                         <td className="px-6 py-4 items-start">
                           <div className="flex flex-col gap-[2px] h-full justify-center">
                             <p className="text-sm leading-4">$0</p>
-                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${data?.amount ? Number(data?.amount)?.toFixed(2) : `0`} ${data.symbol}`}</p>
+                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${data?.amount ? Number(data?.amount)?.toFixed(2) : `0`} ${data?.symbol}`}</p>
                           </div>
                         </td>
                         {/* PnL */}
