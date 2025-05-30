@@ -3,6 +3,7 @@ import {
   subscribeToWebSocket,
   unsubscribeFromWebSocket,
 } from "./websocketOHLC";
+import { setNewLatestBarTime } from "./latestBarTime";
 
 async function toGetTokenAddressFromLocalStorage() {
   return await localStorage.getItem("chartTokenAddress");
@@ -71,6 +72,7 @@ export const getBars = async (
     );
     if (bars?.length > 0) {
       onHistoryCallback(bars, { noData: false });
+      setNewLatestBarTime(bars[bars?.length - 1]?.time)
     } else {
       onHistoryCallback([], { noData: true });
     }
@@ -102,8 +104,6 @@ export const subscribeBars = async (
 
   const supply = await getChartSupply();
   const solPrice = await getSolPrice();
-  const tokenCreator = await getChartTokenCreator();
-  const walletAddress = await getSolWalletAddress();
 
   await subscribeToWebSocket(
     onRealtimeCallback,
@@ -114,8 +114,6 @@ export const subscribeBars = async (
     marketCapActive,
     supply,
     solPrice,
-    tokenCreator,
-    walletAddress
   );
 };
 

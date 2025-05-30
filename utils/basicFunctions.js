@@ -73,8 +73,8 @@ function decimalConvert(price) {
 function formatDecimal(num, numAfterCount = 3) {
   // Defensive check to ensure input is a finite number
   if (typeof num !== "number" || !isFinite(num)) {
-    console.warn("Invalid input to formatDecimal:", num);
-    return ""; // Or return a fallback like '–'
+    // console.warn("Invalid input to formatDecimal:", num);
+    return "------"; // Or return a fallback like '–'
   }
 
   if (num >= 1 || num <= -1 || num === 0) {

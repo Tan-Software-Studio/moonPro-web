@@ -2,6 +2,8 @@ import { getSoalanaTokenBalance } from "../solanaNativeBalance";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { fetchSolanaNativeBalance } from "@/app/redux/states";
+import { addMark } from "@/utils/tradingViewChartServices/mark"
+import { getLatestBar, getLatestBarTime } from "../tradingViewChartServices/latestBarTime"; 
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 // handler to buy solana tokens
 const buySolanaTokens = async (
@@ -15,7 +17,10 @@ const buySolanaTokens = async (
   programAddress,
   solanaLivePrice,
   dispatch,
-  tokenPrice
+  tokenPrice,
+  convertedPrice,
+  usdActive,
+  marketCapActive
 ) => {
   // console.log("🚀 ~ setTokenBalance:", setTokenBalance);
   // console.log("🚀 ~ priorityFee:", priorityFee);
@@ -78,6 +83,16 @@ const buySolanaTokens = async (
         id: "saveToast",
         duration: 3000,
       });
+      addMark(
+        getLatestBarTime(),
+        true,
+        price * quantity,
+        convertedPrice,
+        quantity,
+        usdActive,
+        marketCapActive,
+        "user"
+      )
       setLoaderSwap(false);
       setTimeout(async () => {
         const [tokenBalanceUpdate, solBalance] = await Promise.all([
@@ -306,7 +321,10 @@ const sellSolanaTokens = async (
   setTokenBalance,
   programAddress,
   dispatch,
-  recQty
+  recQty,
+  convertedPrice,
+  usdActive,
+  marketCapActive
 ) => {
   // console.log("🚀 ~ setTokenBalance:", setTokenBalance);
   // console.log("🚀 ~ setLoaderSwap:", setLoaderSwap);
@@ -367,6 +385,16 @@ const sellSolanaTokens = async (
         id: "saveToast",
         duration: 3000,
       });
+      addMark(
+        getLatestBarTime(),
+        false,
+        price * quantity,
+        convertedPrice,
+        quantity,
+        usdActive,
+        marketCapActive,
+        "user"
+      )
       setTimeout(async () => {
         const [tokenBalanceUpdate, solBalance] = await Promise.all([
           getSoalanaTokenBalance(address, fromToken),
