@@ -277,7 +277,7 @@ const ExchangePopup = ({ isOpen, onClose }) => {
                 <div className="mt-auto">
                   <button
                     onClick={handleConfirmConvert}
-                    className="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-medium text-sm text-white transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed"
+                    className="w-full bg-[#1d73fc] hover:bg-[#438bff] py-3 rounded-lg font-bold text-sm text-black transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed"
                     disabled={!convertAmount || parseFloat(convertAmount) <= 0 || isLoading}
                   >
                     {isLoading ? "Processing..." : "Confirm"}
@@ -332,7 +332,7 @@ const ExchangePopup = ({ isOpen, onClose }) => {
                 <div className="sm:px-4 px-3 pb-4 pt-2 ">
                   <button
                     onClick={handleCopyAddress}
-                    className="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-medium text-sm text-white transition-colors"
+                    className="w-full bg-[#1d73fc] hover:bg-[#438bff] py-3 rounded-lg font-bold text-sm text-black transition-colors"
                   >
                     {copied ? "Address Copied!" : "Copy Address"}
                   </button>
@@ -387,7 +387,7 @@ const ExchangePopup = ({ isOpen, onClose }) => {
                   </div>
 
                   <button
-                    className="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-medium text-sm text-white transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
+                    className="w-full bg-[#1d73fc] hover:bg-[#438bff] py-3 rounded-lg font-medium text-sm text-white transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
                     disabled
                   >
                     Buy
