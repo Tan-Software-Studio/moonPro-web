@@ -4,6 +4,7 @@ import {
   unsubscribeFromWebSocket,
 } from "./websocketOHLC";
 import { setNewLatestBarTime } from "./latestBarTime";
+import { setNewLatestHistoricalBar } from "./latestHistoricalBar";
 
 async function toGetTokenAddressFromLocalStorage() {
   return await localStorage.getItem("chartTokenAddress");
@@ -73,6 +74,7 @@ export const getBars = async (
     if (bars?.length > 0) {
       onHistoryCallback(bars, { noData: false });
       setNewLatestBarTime(bars[bars?.length - 1]?.time)
+      setNewLatestHistoricalBar(bars[bars?.length - 1]);
     } else {
       onHistoryCallback([], { noData: true });
     }

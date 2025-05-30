@@ -19,7 +19,7 @@ import { FaAngleDown } from "react-icons/fa";
 import { BsFillSearchHeartFill } from "react-icons/bs";
 import { FaRegCircle } from "react-icons/fa";
 import { showToastLoader } from "../toastLoader/ToastLoder";
-const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime, setFilterValues, filterValues, onApply, onReset, setSelectedMetric, selectedMetric, setSearchbar, searchbar, setShowCircle, showCircle, setShowMarketCap, showMarketCap, showVolume, setShowVolume, showSocials, setShowSocials, setShowHolders, showHolders, setshowHolders10, showHolders10 }) => {
+const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setLocalFilterTime, setFilterValues, filterValues, onApply, onReset, setSelectedMetric, selectedMetric, setSearchbar, searchbar, setShowCircle, showCircle, setShowMarketCap, showMarketCap, showVolume, setShowVolume, showSocials, setShowSocials, setShowHolders, showHolders, setshowHolders10, showHolders10, setProgerssBar, progerssBar }) => {
   const filterPopupRef = useRef(null);
   const dexesPopupRef = useRef(null);
   const { t } = useTranslation();
@@ -67,11 +67,6 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
     if (digitCount.length <= 10) {
       dispatch(setGlobalBuyAmt(value));
     }
-  };
-
-  const handleMetricChange = (value) => {
-    setSelectedMetric(value);
-    localStorage.setItem('selectedMetric', value);
   };
 
   const handleCopy = async (e) => {
@@ -173,84 +168,60 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
     getAllWallets();
   }, []);
 
+  // Utility function to toggle or set values in localStorage and component state
+  const toggleSetting = (key, currentValue, setState, newValue = null) => {
+    const settings = JSON.parse(localStorage.getItem("DisplaySettings")) || {};
+
+    // If newValue is explicitly provided (e.g., for string settings), use it; otherwise toggle the boolean
+    const updatedValue = newValue !== null ? newValue : !currentValue;
+
+    const updatedSettings = {
+      ...settings,
+      [key]: updatedValue,
+    };
+
+    localStorage.setItem("DisplaySettings", JSON.stringify(updatedSettings));
+    setState(updatedValue);
+  };
+
+  // Toggle functions for boolean settings
   const toggleSearchbar = () => {
-    setSearchbar(prev => {
-      const updated = !prev;
-      localStorage.setItem('searchbar', updated);
-      return updated;
-    });
+    toggleSetting("searchbar", searchbar, setSearchbar);
   };
 
   const toggleShowCircle = () => {
-    setShowCircle(prev => {
-      const updated = !prev;
-      localStorage.setItem('showCircle', updated);
-      return updated;
-    });
+    toggleSetting("showCircle", showCircle, setShowCircle);
   };
 
+  const toggleProgerssBar = () => {
+    toggleSetting("showProgessBar", progerssBar , setProgerssBar)
+  }
+
   const mktShowHide = () => {
-    const newValue = !showMarketCap;
-    setShowMarketCap(newValue);
-    localStorage.setItem("showMarketCap", newValue);
+    toggleSetting("showMarketCap", showMarketCap, setShowMarketCap);
   };
 
   const volumeShowHide = () => {
-    const newValue = !showVolume;
-    setShowVolume(newValue);
-    localStorage.setItem("showVolume", newValue);
+    toggleSetting("showVolume", showVolume, setShowVolume);
   };
 
   const socialsShowHide = () => {
-    const newValue = !showSocials;
-    setShowSocials(newValue);
-    localStorage.setItem("showSocials", newValue);
+    toggleSetting("showSocials", showSocials, setShowSocials);
   };
 
   const holderShowHide = () => {
-    const newValue = !showHolders;
-    setShowHolders(newValue);
-    localStorage.setItem("showHolders", newValue);
+    toggleSetting("showHolders", showHolders, setShowHolders);
   };
 
   const holderShowHide10 = () => {
-    const newValue = !showHolders10;
-    setshowHolders10(newValue);
-    localStorage.setItem("showHolders10", newValue);
+    toggleSetting("showHolders10", showHolders10, setshowHolders10);
   };
 
-  useEffect(() => {
-    const showHolders = localStorage.getItem("showHolders");
-    if (showHolders == null || showHolders == undefined) {
-      localStorage.setItem("showHolders", true);
-    }
-    const showSocials = localStorage.getItem("showSocials");
-    if (showSocials == null || showSocials == undefined) {
-      localStorage.setItem("showSocials", true);
-    }
-    const showVolume = localStorage.getItem("showVolume");
-    if (showVolume == null || showVolume == undefined) {
-      localStorage.setItem("showVolume", true);
-    }
-    const showMarketCap = localStorage.getItem("showMarketCap");
-    if (showMarketCap == null || showMarketCap == undefined) {
-      localStorage.setItem("showMarketCap", true);
-    }
-    const showCircle = localStorage.getItem("showCircle");
-    if (showCircle == null || showCircle == undefined) {
-      localStorage.setItem("showCircle", true);
-    }
-    const searchbar = localStorage.getItem("searchbar");
-    if (searchbar == null || searchbar == undefined) {
-      localStorage.setItem("searchbar", true);
-    }
-    const showHolders10 = localStorage.getItem("showHolders10");
-    if (showHolders10 == null || showHolders10 == undefined) {
-      localStorage.setItem("showHolders10", true);
-    }
+  // Function for updating a string setting (like a selected metric)
+  const handleMetricChange = (newMetric) => {
+    toggleSetting("selectedMetric", selectedMetric, setSelectedMetric, newMetric);
+  };
 
-
-  }, []);
 
   const handlePrimary = async (walletIndex, loopIndex) => {
     console.log("===<><>", walletIndex, loopIndex);
@@ -519,9 +490,9 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                         {showCircle ? <LayoutGrid size={16} /> : <FaRegCircle />}
                         {showCircle ? 'Square Image' : 'Circle Imange'}
                       </div>
-                      <div className="flex items-center gap-2 cursor-pointer font-semibold">
+                      <div className="flex items-center gap-2 cursor-pointer font-semibold" onClick={()=> toggleProgerssBar(prev => !prev)}>
                         <div className="w-4 h-1 bg-gray-400 rounded-full" />
-                        Progress Bar
+                        {progerssBar ? "Progress Bar Ring" : "Progress Bar Line"}
                       </div>
                     </div>
 

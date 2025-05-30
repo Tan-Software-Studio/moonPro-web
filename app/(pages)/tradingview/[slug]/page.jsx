@@ -476,6 +476,7 @@ const Tradingview = () => {
           <div className="w-full border-[#4D4D4D] md:border-t-0 md:border-l-0 md:border-r-0 md:border-b-0">
             <UserPnL 
               userTokenHoldings={userTokenHoldings}
+              currentPrice={latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD}
             />          
           </div>
 
