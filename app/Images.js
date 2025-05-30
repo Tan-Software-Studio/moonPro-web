@@ -140,6 +140,9 @@ import nftImg5 from "../public/assets/referral/nft4.png";
 import barchart from "../public/assets/Footer/barchart.svg";
 import discord from "../public/assets/Footer/discord.svg";
 import docs from "../public/assets/Footer/docs.svg";
+import solanasollogo from "../public/assets/Footer/solana-sol-logo.png";
+import pnlbg from "../public/assets/Footer/pnlbg.png";
+import articlefill from "../public/assets/Footer/article-fill.svg";
 
 
 export {
@@ -276,5 +279,8 @@ export {
   // footer
   barchart,
   discord,
-  docs
+  docs,
+  solanasollogo,
+  pnlbg,
+  articlefill,
 };

@@ -11,12 +11,14 @@ import { setIsSidebarOpen } from "@/app/redux/CommonUiData";
 import { logo, walletBalance, Solana, usdc } from "@/app/Images";
 import {
   fetchSolanaNativeBalance,
+  fetchUsdcBalance,
   openCloseLoginRegPopup,
   setIsEnabled,
   setIsSearchPopup,
   setLoginRegPopupAuth,
   setSolanaLivePrice,
   setSolWalletAddress,
+  setUsdcBalance,
 } from "@/app/redux/states";
 import { PiUserBold, PiUserLight } from "react-icons/pi";
 import LoginPopup from "./login/LoginPopup";
@@ -51,6 +53,7 @@ const Navbar = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
+
   // handle to get phrase of solana
   async function handleToGetSolanaPhrase() {
     const token = localStorage.getItem("token");
@@ -76,19 +79,19 @@ const Navbar = () => {
         console.log("🚀 ~ handleToGetSolanaPk ~ err:", err);
       });
   }
+
   // login signup
-  // const [isLoginPopup, setIsLoginPopup] = useState(false);
   const isLoginPopup = useSelector((state) => state?.AllStatesData?.isRegLoginPopup);
   // referral add popup
   const isReffaralCode = useSelector((state) => state?.AllStatesData?.referralPopupAfterLogin);
   const authName = useSelector((state) => state?.AllStatesData?.isRegisterOrLogin);
-  // const [authName, setAuthName] = useState("");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const userDetails = useSelector((state) => state?.userData?.userDetails);
 
   // X===================X Use selectors X===================X //
   const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
+  const usdcBalance = useSelector((state) => state?.AllStatesData?.usdcBalance);
   const solWalletAddress = useSelector((state) => state?.AllStatesData?.solWalletAddress);
   const isSidebarOpen = useSelector((state) => state?.AllthemeColorData?.isSidebarOpen);
   const isEnabled = useSelector((state) => state?.AllStatesData?.isEnabled);
@@ -112,6 +115,7 @@ const Navbar = () => {
     setIsProfileOpen(false);
     googleLogout();
   };
+
   async function fetchData() {
     dispatch(setLoading(true));
     await axios
@@ -132,6 +136,7 @@ const Navbar = () => {
         dispatch(setLoading(false));
       });
   }
+
   async function fetchSolPrice() {
     await axios({
       method: "get",
@@ -146,14 +151,17 @@ const Navbar = () => {
       })
       .catch((err) => {});
   }
+
   useEffect(() => {
     fetchData();
     dispatch(fetchMemescopeData());
     fetchSolPrice();
   }, []);
+
   useEffect(() => {
     if (solWalletAddress) {
       dispatch(fetchSolanaNativeBalance(solWalletAddress));
+      dispatch(fetchUsdcBalance(solWalletAddress));
       if (!userDetails?.email) {
         dispatch(fetchUserData());
       }
@@ -196,7 +204,6 @@ const Navbar = () => {
 
   const handleOpenDeposit = (depositType = "general", amount = null) => {
     setIsWalletDropdownOpen(false);
-    // dispatch(setDepositData({ type: depositType, amount: amount }));
     setIsSolDepositPopup(true);
   };
 
@@ -295,7 +302,8 @@ const Navbar = () => {
                             </div>
                           </div>
                           <div className="text-2xl font-bold text-white mb-2">
-                            ${(Number(nativeTokenbalance) * (solanaLivePrice || 0)).toFixed(2)}
+                            {/* ${(Number(nativeTokenbalance) * (solanaLivePrice || 0)).toFixed(2)}$ */}
+                            ${(Number(nativeTokenbalance) * (solanaLivePrice || 0) + Number(usdcBalance) * 1).toFixed(2)}
                           </div>
                         </div>
 
@@ -314,7 +322,9 @@ const Navbar = () => {
 
                           <div className="flex items-center gap-2">
                             <Image src={usdc} alt="usdc" width={20} height={20} className="rounded-full" />
-                            <span className="text-lg font-semibold text-white">0</span>
+                            <span className="text-lg font-semibold text-white">
+                              {Number(usdcBalance || 0).toFixed(2)}
+                            </span>
                           </div>
                         </div>
 
