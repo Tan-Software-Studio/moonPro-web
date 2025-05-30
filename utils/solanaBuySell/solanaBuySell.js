@@ -83,16 +83,20 @@ const buySolanaTokens = async (
         id: "saveToast",
         duration: 3000,
       });
-      addMark(
-        getLatestBarTime(),
-        true,
-        price * quantity,
-        convertedPrice,
-        quantity,
-        usdActive,
-        marketCapActive,
-        "user"
-      )
+      try {
+        addMark(
+          getLatestBarTime(),
+          true,
+          tokenPrice * amt,
+          convertedPrice,
+          amt,
+          usdActive,
+          marketCapActive,
+          "user"
+        )
+      } catch (err) {
+        console.log("Buy Add Mark error", err);
+      }
       setLoaderSwap(false);
       setTimeout(async () => {
         const [tokenBalanceUpdate, solBalance] = await Promise.all([
@@ -385,16 +389,20 @@ const sellSolanaTokens = async (
         id: "saveToast",
         duration: 3000,
       });
-      addMark(
-        getLatestBarTime(),
-        false,
-        price * quantity,
-        convertedPrice,
-        quantity,
-        usdActive,
-        marketCapActive,
-        "user"
-      )
+      try {
+        addMark(
+          getLatestBarTime(),
+          false,
+          price * amt,
+          convertedPrice,
+          amt,
+          usdActive,
+          marketCapActive,
+          "user"
+        )
+      } catch (err) {
+        console.log("Sell Add Mark error", err);
+      }
       setTimeout(async () => {
         const [tokenBalanceUpdate, solBalance] = await Promise.all([
           getSoalanaTokenBalance(address, fromToken),

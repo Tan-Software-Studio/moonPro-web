@@ -74,7 +74,7 @@ function formatDecimal(num, numAfterCount = 3) {
   // Defensive check to ensure input is a finite number
   if (typeof num !== "number" || !isFinite(num)) {
     // console.warn("Invalid input to formatDecimal:", num);
-    return "------"; // Or return a fallback like '–'
+    return 0;
   }
 
   if (num >= 1 || num <= -1 || num === 0) {
