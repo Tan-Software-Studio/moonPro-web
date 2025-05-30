@@ -47,8 +47,10 @@ const holdingData = createSlice({
               (item) => item?.token == element?.Trade?.Currency?.MintAddress
             );
             if (findTokenIndex >= 0) {
-              state.PnlData[findTokenIndex].current_price =
-                element?.Trade?.PriceInUSD;
+              if (element?.Trade?.PriceInUSD) {
+                state.PnlData[findTokenIndex].current_price =
+                  element?.Trade?.PriceInUSD;
+              }
             }
           }
         }
