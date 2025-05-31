@@ -97,6 +97,7 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
   // console.log("🚀 ~ fetchHistoricalData ~ resolution:", resolution);
   supply = supply ? Number(supply) === 0 ? 1_000_000_000 : Number(supply) : 1_000_000_000;
   solPrice = solPrice ? Number(solPrice) === 0 ? 1 : Number(solPrice) : 1; 
+  const isSecondsResolution = resolution.endsWith("S");
   const { from, to, countBack } = periodParams;
   const walletsToMark = [];
   if (tokenCreator != 0) {
@@ -111,6 +112,7 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
   const timeFromTv = new Date(from * 1000).toISOString();
   const timeToTv = new Date(to * 1000).toISOString();
   const oneDay = 86400;
+
   // console.log("🚀 ~ fetchHistoricalData ~ timeFromTv:", timeFromTv);
   let finalInterval = 60;
 
@@ -150,31 +152,50 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
     // console.log('trades', trades);
     // console.log('creatorTransactions', creatorTransactions);
     // Preprocess the bars data
-    let bars = trades?.map((trade) => {
-      // Parse and convert Block Timefield to Unix timestamp in milliseconds
-      const blockTime = new Date(trade.Block.Time).getTime();
-      
-      const usdOpen = isUsdActive ? trade?.open?.PriceInUSD : trade?.open?.PriceInUSD / solPrice;
-      const open = isMarketCapActive ? usdOpen * supply : usdOpen;
+    let bars = trades
+      ?.filter(trade => {
+        const usdOpen = isUsdActive
+          ? trade?.open?.PriceInUSD ?? 0
+          : (trade?.open?.PriceInUSD ?? 0) / (solPrice || 1);
+        const open = isMarketCapActive ? usdOpen * (supply || 1) : usdOpen;
 
-      const usdClose = isUsdActive ? trade?.close?.PriceInUSD : trade?.close?.PriceInUSD / solPrice;
-      const close = isMarketCapActive ? usdClose * supply : usdClose;
+        const usdClose = isUsdActive
+          ? trade?.close?.PriceInUSD ?? 0
+          : (trade?.close?.PriceInUSD ?? 0) / (solPrice || 1);
+        const close = isMarketCapActive ? usdClose * (supply || 1) : usdClose;
 
-      const usdSolHigh = isUsdActive ? trade?.high : trade?.high / solPrice;
-      const high = isMarketCapActive ? usdSolHigh * supply : usdSolHigh;
+        return open !== 0 && close !== 0; // Keep trades where both open and close are non-zero
+      })
+      .map(trade => {
+        const blockTime = new Date(trade.Block.Time).getTime();
+        if (isNaN(blockTime)) return null; // Skip invalid dates
 
-      const usdSolLow = isUsdActive ? trade?.low : trade?.low / solPrice;
-      const low = isMarketCapActive ? usdSolLow * supply: usdSolLow;
+        const usdOpen = isUsdActive
+          ? trade?.open?.PriceInUSD ?? 0
+          : (trade?.open?.PriceInUSD ?? 0) / (solPrice || 1);
+        const open = isMarketCapActive ? usdOpen * (supply || 1) : usdOpen;
 
-      return {
-        time: blockTime,
-        open,
-        high,
-        low,
-        close,
-        volume: Number(trade?.volume) || 0,
-      };
-    });
+        const usdClose = isUsdActive
+          ? trade?.close?.PriceInUSD ?? 0
+          : (trade?.close?.PriceInUSD ?? 0) / (solPrice || 1);
+        const close = isMarketCapActive ? usdClose * (supply || 1) : usdClose;
+
+        const usdSolHigh = isUsdActive ? trade?.high ?? 0 : (trade?.high ?? 0) / (solPrice || 1);
+        const high = isMarketCapActive ? usdSolHigh * (supply || 1) : usdSolHigh;
+
+        const usdSolLow = isUsdActive ? trade?.low ?? 0 : (trade?.low ?? 0) / (solPrice || 1);
+        const low = isMarketCapActive ? usdSolLow * (supply || 1) : usdSolLow;
+
+        return {
+          time: blockTime,
+          open,
+          high: isSecondsResolution ? open : high,
+          low: isSecondsResolution ? close : low,
+          close,
+          volume: isNaN(Number(trade?.volume)) ? 0 : Number(trade?.volume),
+        };
+      })
+      .filter(item => item != null);
 
     if (creatorTransactions?.length > 0) {
       for (let i = 0; i < creatorTransactions.length; i++) {
@@ -197,21 +218,44 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
       }
     }
 
-    // If resolution is in seconds, adjust candlestick data by comparing open/close
     if (bars?.length > 0) {
       bars = bars.map((bar, index, arr) => {
       if (index === 0) return bar; // Skip the first bar
-
+      
       const prevBar = arr[index - 1];
       const newOpen = prevBar.close;
       const newClose = bar.close;
+
+      const bodyTop = Math.max(newOpen, newClose);
+      const bodyBottom = Math.min(newOpen, newClose);
+      const candleSize = Math.abs(newOpen - newClose);
+
+      const maxHigh = bodyTop + candleSize;
+      const minLow = bodyBottom - candleSize;
+      
+      const clampedHigh = Math.min(bar.high, maxHigh);
+      const clampedLow = Math.max(bar.low, minLow);
+      if (clampedLow <= 0) {
+        console.log({
+          ...bar,
+          newClose,
+          newOpen,
+          clampedHigh,
+          clampedLow,
+          bodyTop,
+          bodyBottom,
+          candleSize,
+          maxHigh,
+          minLow
+        })
+      }
 
       return {
         ...bar,
         open: newOpen,
         close: newClose,
-        high: Math.max(newOpen, newClose, bar.high, prevBar.close),
-        low: Math.min(newOpen, newClose, bar.low, prevBar.close),
+        high: clampedHigh,
+        low: clampedLow
         };
       });
     }
