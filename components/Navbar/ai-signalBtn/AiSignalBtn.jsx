@@ -20,13 +20,13 @@ const SvgIcon = (props) => (
 const AISignalsButton = () => {
     return (
         <Link href='/ai-signal'>
-            <button className="group relative inline-flex items-center gap-3 px-4 py-1.5  border-[1.5px] border-blue-500 rounded-md transition-all duration-300 ">
+            <button className="group relative inline-flex items-center sm:gap-3 gap-2 pag-1 sm:px-4 px-3 py-1.5  border-[1.5px] border-blue-500 rounded-md transition-all duration-300 ">
 
                 {/* Icon with glow */}
-                <SvgIcon className="w-5 h-5 text-blue-500 group-hover:text-blue-400 transition-all duration-300 " />
+                <SvgIcon className="sm:w-5 sm:h-5 h-4 w-4 text-blue-500 group-hover:text-blue-400 transition-all duration-300 " />
 
                 {/* Text with glow effect */}
-                <span className="text-sm font-medium text-blue-500 group-hover:text-blue-400 transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.4)]">
+                <span className="sm:text-sm text-xs font-medium text-blue-500 group-hover:text-blue-400 transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.4)]">
                     AI Signals
                 </span>
  

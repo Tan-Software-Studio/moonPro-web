@@ -277,7 +277,7 @@ const Navbar = () => {
                     >
                       <div className="flex items-center gap-2">
                         <Image src={Solana} alt="solana" height={30} width={30} className="rounded-full" />
-                        <div>{Number(nativeTokenbalance).toFixed(5) || 0}</div>
+                        <div className="sm:flex hidden">{Number(nativeTokenbalance).toFixed(5) || 0}</div>
                       </div>
 
                       <div className="sm:flex  hidden items-center gap-3">
