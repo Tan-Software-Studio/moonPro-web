@@ -70,14 +70,12 @@ const Navbar = () => {
     })
       .then(async (res) => {
         // const decryptPK = await decrypt(res?.data?.data?.solanaPk, FE_SEC);
-        // console.log("🚀 ~ .then ~ decryptPK:", decryptPK);
         setIsAccountPopup(false);
         const decodeKey = await decodeData(res?.data?.data?.seedPhrases?.solana);
         setSolPhrase(decodeKey);
         setOpenRecovery(true);
       })
       .catch((err) => {
-        console.log("🚀 ~ handleToGetSolanaPk ~ err:", err);
       });
   }
 
@@ -133,7 +131,6 @@ const Navbar = () => {
         dispatch(setLoading(false));
       })
       .catch((error) => {
-        console.log("🚀 ~ awaitaxios.get ~ error:", error);
         dispatch(setLoading(false));
       });
   }
@@ -216,16 +213,16 @@ const Navbar = () => {
         <div className="transition-all duration-500 ease-in-out  ">
           <div className="flex items-center sm:gap-2 py-2   justify-between  sm:mx-4 md:mx-0">
             <div className="md:block hidden">
-              <AISignalsButton />
+              {/* <AISignalsButton /> */}
             </div>
             <div className="flex items-center md:w-auto w-full justify-between">
               <div className={`md:hidden flex w-10 h-auto`}>
                 <Image src={logo} alt="logo" className="w-full h-full" />
               </div>
               <div className=" flex items-center gap-2 ">
-                <div className="md:hidden block">
-                  <AISignalsButton />
-                </div>
+                {/* <div className="md:hidden block">
+                   <AISignalsButton />  
+                </div> */}
                 {/* Search bar */}
                 <div
                   className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "

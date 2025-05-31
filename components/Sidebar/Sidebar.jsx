@@ -27,6 +27,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { fetchPNLData } from "@/app/redux/holdingDataSlice/holdingData.slice";
+import AISignalsButton from "../Navbar/ai-signalBtn/AiSignalBtn";
 
 const Sidebar = () => {
   const { t } = useTranslation();
@@ -127,12 +128,11 @@ const Sidebar = () => {
   return (
     <>
       <div
-        className={`sidebar ${
-          (isSidebarOpen && isLargeScreen) ||
+        className={`sidebar ${(isSidebarOpen && isLargeScreen) ||
           (isSidebarOpen && isSmallScreenData)
-            ? `w-full md:w-[192.4px]`
-            : " hidden md:block md:w-[64px]"
-        } transition-all duration-1000 ease-in-out h-full overflow-x-hidden z-50 fixed top-0 left-0 bg-[#08080E] border-r-[1px] border-r-[#404040]`}
+          ? `w-full md:w-[192.4px]`
+          : " hidden md:block md:w-[64px]"
+          } transition-all duration-1000 ease-in-out h-full overflow-x-hidden z-50 fixed top-0 left-0 bg-[#08080E] border-r-[1px] border-r-[#404040]`}
       >
         {/* logo + text */}
         <div className="flex  py-[17.8px] px-2 md:px-[2.4px]  items-center gap-3 justify-between md:justify-center text-[#B5B7DA] w-full">
@@ -177,20 +177,21 @@ const Sidebar = () => {
         </div>
         <div className="mt-[38px]">
           <ul className={`flex flex-col gap-6 mt-6`}>
+            
+            <div className="flex items-center justify-center">
+              <AISignalsButton />
+            </div>
             {sidebardata?.map((data) => (
               <Link key={data.id} href={data?.pathname}>
                 <div
-                  className={`font-[400] p-2 transition-all border-[1px] border-transparent duration-300 ease-in-out text-[14px] mx-3 cursor-pointer text-[#ffffff] ${
-                    data.pathname === pathname
-                      ? `${
-                          isSidebarOpen
-                            ? "!rounded-md bg-[#11265B]"
-                            : "rounded-full bg-gradient"
-                        } border-[1px] !border-[#0E43BD]`
-                      : `text-[#ffffff]   hover:bg-[#11265B] ${
-                          isSidebarOpen ? "rounded-md" : "rounded-full"
-                        }`
-                  } 
+                  className={`font-[400] p-2 transition-all border-[1px] border-transparent duration-300 ease-in-out text-[14px] mx-3 cursor-pointer text-[#ffffff] ${data.pathname === pathname
+                    ? `${isSidebarOpen
+                      ? "!rounded-md bg-[#11265B]"
+                      : "rounded-full bg-gradient"
+                    } border-[1px] !border-[#0E43BD]`
+                    : `text-[#ffffff]   hover:bg-[#11265B] ${isSidebarOpen ? "rounded-md" : "rounded-full"
+                    }`
+                    } 
                   `}
                   onClick={() => {
                     isMobileScreenData && dispatch(setIsSidebarOpen(false));
@@ -205,17 +206,15 @@ const Sidebar = () => {
                       />
                     </div>
                     <span
-                      className={`items-center justify-between flex-grow font-[400] text-nowrap ${
-                        (isSidebarOpen && isLargeScreen) ||
+                      className={`items-center justify-between flex-grow font-[400] text-nowrap ${(isSidebarOpen && isLargeScreen) ||
                         (isSidebarOpen && isSmallScreenData)
-                          ? "block"
-                          : "hidden"
-                      }
-                        ${
-                          selectToken == "Solana" &&
+                        ? "block"
+                        : "hidden"
+                        }
+                        ${selectToken == "Solana" &&
                           pathname === "memescope/solana"
-                            ? "hidden"
-                            : "flex"
+                          ? "hidden"
+                          : "flex"
                         }
                        `}
                     >
