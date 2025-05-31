@@ -67,7 +67,7 @@ const TradingPopup = ({
   );
   const saveEditedValue = () => {
     const value = parseFloat(customInput);
-    if (value > 0) {
+    // if (value > 0) {
       if (activeTab === "buy") {
         const newValues = [...buyValues];
         newValues[editIndex] = value;
@@ -82,7 +82,7 @@ const TradingPopup = ({
       setIsEditing(false);
       setEditIndex(null);
       setCustomInput("");
-    }
+    // }
   };
   // function to calculate rec. amount
   function calculateRecAmountSolToAnytoken(
@@ -452,7 +452,7 @@ const TradingPopup = ({
           <button
             onClick={saveEditedValue}
             className="px-2"
-            disabled={editIndex === null}
+            // disabled={editIndex === null}
           >
             <FaCheck />
           </button>

@@ -48,12 +48,12 @@ const Navbar = () => {
   const [isAccountPopup, setIsAccountPopup] = useState(false);
   const [isWatchlistPopup, setIsWatchlistPopup] = useState(false);
   const [isSolDepositPopup, setIsSolDepositPopup] = useState(false);
-  const [isWithdrawPopup, setIsWithdrawPopup] = useState(false);
   const [isWalletDropdownOpen, setIsWalletDropdownOpen] = useState(false);
   const [solPhrase, setSolPhrase] = useState("");
   const [openRecovery, setOpenRecovery] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const [isWithdrawPopup, setIsWithdrawPopup] = useState(false);
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
   // handle to get phrase of solana
@@ -71,15 +71,12 @@ const Navbar = () => {
     })
       .then(async (res) => {
         // const decryptPK = await decrypt(res?.data?.data?.solanaPk, FE_SEC);
-        // console.log("🚀 ~ .then ~ decryptPK:", decryptPK);
         setIsAccountPopup(false);
         const decodeKey = await decodeData(res?.data?.data?.seedPhrases?.solana);
         setSolPhrase(decodeKey);
         setOpenRecovery(true);
       })
-      .catch((err) => {
-        console.log("🚀 ~ handleToGetSolanaPk ~ err:", err);
-      });
+      .catch((err) => {});
   }
 
   // login signup
@@ -134,7 +131,6 @@ const Navbar = () => {
         dispatch(setLoading(false));
       })
       .catch((error) => {
-        console.log("🚀 ~ awaitaxios.get ~ error:", error);
         dispatch(setLoading(false));
       });
   }
@@ -212,214 +208,222 @@ const Navbar = () => {
   return (
     <>
       <div
-        className={`backdrop-blur-3xl bg-[#08080E] transition-all duration-500 px-3 md:px-[8px] ease-in-out border-b-[1px] border-b-[#404040]`}
+        className={`backdrop-blur-3xl bg-[#08080E] transition-all duration-500 sm:px-1 px-2  md:px-[8px] ease-in-out border-b-[1px] border-b-[#404040]`}
       >
-        <div className="transition-all duration-500 ease-in-out sm:mr-2">
-          <div className="flex items-center sm:gap-2 py-2 md:justify-end justify-between  sm:mx-4 md:mx-0">
-            <div className={`md:hidden w-10 h-auto`}>
-              <Image src={logo} alt="logo" className="w-full h-full" />
-            </div>
-            <div className=" flex items-center gap-2 ">
-              {/* Search bar */}
-              <div
-                className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${
-                  isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                } rounded-lg h-8 px-2 bg-[#191919] hidden `}
-                onClick={() => dispatch(setIsSearchPopup(true))}
-              >
-                <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
-                <input
-                  className={` ${
-                    isSidebarOpen ? "w-0" : "w-12"
-                  } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
-                  placeholder={navbar?.profile?.search}
-                />
+        <div className="transition-all duration-500 ease-in-out  ">
+          <div className="flex items-center sm:gap-2 py-2   justify-between  sm:mx-4 md:mx-0">
+            <div className="md:block hidden">{/* <AISignalsButton /> */}</div>
+            <div className="flex items-center md:w-auto w-full justify-between">
+              <div className={`md:hidden flex w-10 h-auto`}>
+                <Image src={logo} alt="logo" className="w-full h-full" />
               </div>
-
-              {/* Only sm search bar */}
-              <div onClick={() => dispatch(setIsSearchPopup(true))} className="cursor-pointer md:hidden block">
-                <LuSearch size={24} />
-              </div>
-
-              {mounted && solWalletAddress && (
-                <button
-                  onClick={() => handleOpenDeposit("deposit")}
-                  className="px-3 py-1.5 bg-[#1d73fc] hover:bg-[#438bff] text-black rounded-md text-sm font-bold transition-colors cursor-pointer"
+              <div className=" flex items-center gap-2 ">
+                {/* <div className="md:hidden block">
+                   <AISignalsButton />  
+                </div> */}
+                {/* Search bar */}
+                <div
+                  className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${
+                    isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                  onClick={() => dispatch(setIsSearchPopup(true))}
                 >
-                  Deposit
-                </button>
-              )}
-
-              {/* Watchlist */}
-              {mounted && solWalletAddress && (
-                <div onClick={() => setIsWatchlistPopup(true)} className="cursor-pointer">
-                  <FaRegStar size={24} className="text-white transition-colors" />
+                  <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
+                  <input
+                    className={` ${
+                      isSidebarOpen ? "w-0" : "w-12"
+                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                    placeholder={navbar?.profile?.search}
+                  />
                 </div>
-              )}
 
-              {/* Notifications */}
-              {/* {mounted && solWalletAddress && (
+                {/* Only sm search bar */}
+                <div onClick={() => dispatch(setIsSearchPopup(true))} className="cursor-pointer md:hidden block">
+                  <LuSearch size={24} />
+                </div>
+
+                {mounted && solWalletAddress && (
+                  <button
+                    onClick={() => handleOpenDeposit("deposit")}
+                    className="px-3 py-1.5 sm:block hidden bg-[#1d73fc] hover:bg-[#438bff] text-black rounded-md text-sm font-bold transition-colors cursor-pointer"
+                  >
+                    Deposit
+                  </button>
+                )}
+
+                {/* Watchlist */}
+                {mounted && solWalletAddress && (
+                  <div onClick={() => setIsWatchlistPopup(true)} className="cursor-pointer">
+                    <FaRegStar size={24} className="text-white transition-colors" />
+                  </div>
+                )}
+
+                {/* Notifications */}
+                {/* {mounted && solWalletAddress && (
                 <div onClick={() => dispatch(setIsEnabled(!isEnabled))} className="cursor-pointer relative">
                   <RiNotification4Line size={24} />
                   <div className="w-2 h-2 rounded-full bg-[#ED1B24] absolute right-[0.6px] top-[0.6px]"></div>
                 </div>
               )} */}
 
-              {solWalletAddress && (
-                <div className={`relative`} ref={walletDropdownRef}>
-                  <div
-                    onClick={() => setIsWalletDropdownOpen(!isWalletDropdownOpen)}
-                    className={`flex items-center cursor-pointer gap-3 rounded-lg h-8 px-2 bg-[#1A1A1A] hover:bg-[#252525] transition-colors`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Image src={Solana} alt="solana" height={30} width={30} className="rounded-full" />
-                      <div>{Number(nativeTokenbalance).toFixed(5) || 0}</div>
-                    </div>
+                {solWalletAddress && (
+                  <div className={`relative`} ref={walletDropdownRef}>
+                    <div
+                      onClick={() => setIsWalletDropdownOpen(!isWalletDropdownOpen)}
+                      className={`flex items-center cursor-pointer gap-3 rounded-lg h-8 px-2 bg-[#1A1A1A] hover:bg-[#252525] transition-colors`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Image src={Solana} alt="solana" height={30} width={30} className="rounded-full" />
+                        <div className="sm:flex hidden">{Number(nativeTokenbalance).toFixed(5) || 0}</div>
+                      </div>
 
-                    <div className="sm:flex  hidden items-center gap-3">
-                      <FaWallet className="h-4 w-4 text-[#FFFFFF]" />
-                      <div className={` text-[#A8A8A8] text-sm font-thin `}>
-                        {solWalletAddress?.toString()?.slice(0, 4)}...
-                        {solWalletAddress?.toString()?.slice(-4)}
+                      <div className="sm:flex  hidden items-center gap-3">
+                        <FaWallet className="h-4 w-4 text-[#FFFFFF]" />
+                        <div className={` text-[#A8A8A8] text-sm font-thin `}>
+                          {solWalletAddress?.toString()?.slice(0, 4)}...
+                          {solWalletAddress?.toString()?.slice(-4)}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {isWalletDropdownOpen && (
-                    <div className="absolute right-0 mt-2 border-[1px] border-[#404040] w-64 bg-[#1A1A1A] shadow-xl rounded-lg z-50">
-                      <div className="p-4">
-                        <div className="mb-4">
-                          <div className="flex items-center justify-between mb-1">
-                            <div className="text-xs text-[#898989]">Total Value</div>
-                            <div className="flex items-center gap-2 cursor-pointer ">
-                              <div
-                                className="flex items-center gap-1 text-xs text-[#898989] hover:bg-[#404040] p-1 rounded-md"
-                                onClick={handleCopyAddress}
-                              >
-                                <button className="flex items-center gap-1 rounded text-xs transition-colors">
-                                  <FaCopy className="w-3 h-3" />
-                                </button>
-                                <span>Solana</span>
+                    {isWalletDropdownOpen && (
+                      <div className="absolute right-0 mt-2 border-[1px] border-[#404040] w-64 bg-[#1A1A1A] shadow-xl rounded-lg z-50">
+                        <div className="p-4">
+                          <div className="mb-4">
+                            <div className="flex items-center justify-between mb-1">
+                              <div className="text-xs text-[#898989]">Total Value</div>
+                              <div className="flex items-center gap-2 cursor-pointer ">
+                                <div
+                                  className="flex items-center gap-1 text-xs text-[#898989] hover:bg-[#404040] p-1 rounded-md"
+                                  onClick={handleCopyAddress}
+                                >
+                                  <button className="flex items-center gap-1 rounded text-xs transition-colors">
+                                    <FaCopy className="w-3 h-3" />
+                                  </button>
+                                  <span>Solana</span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div className="text-2xl font-bold text-white mb-2">
-                            {/* ${(Number(nativeTokenbalance) * (solanaLivePrice || 0)).toFixed(2)}$ */}$
-                            {(Number(nativeTokenbalance) * (solanaLivePrice || 0) + Number(usdcBalance) * 1).toFixed(2)}
-                          </div>
-                        </div>
-
-                        <div
-                          className="flex items-center justify-between mb-3 cursor-pointer hover:bg-[#252525] p-1.5 rounded-lg transition-colors"
-                          onClick={() => handleOpenDeposit("balance", Number(nativeTokenbalance))}
-                        >
-                          <div className="flex items-center gap-2">
-                            <Image src={Solana} alt="solana" width={20} height={20} className="rounded-full" />
-                            <span className="text-lg font-semibold text-white">
-                              {Number(nativeTokenbalance).toFixed(5)}
-                            </span>
+                            <div className="text-2xl font-bold text-white mb-2">
+                              {/* ${(Number(nativeTokenbalance) * (solanaLivePrice || 0)).toFixed(2)}$ */}$
+                              {(Number(nativeTokenbalance) * (solanaLivePrice || 0) + Number(usdcBalance) * 1).toFixed(
+                                2
+                              )}
+                            </div>
                           </div>
 
-                          <div className="text-[#666666] text-lg">⇄</div>
-
-                          <div className="flex items-center gap-2">
-                            <Image src={usdc} alt="usdc" width={20} height={20} className="rounded-full" />
-                            <span className="text-lg font-semibold text-white">
-                              {Number(usdcBalance || 0).toFixed(2)}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Action Buttons */}
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleOpenDeposit("deposit")}
-                            className="flex-1 rounded-md bg-[#1d73fc] hover:bg-[#438bff] text-black py-2.5 px-4 text-sm font-bold transition-colors"
+                          <div
+                            className="flex items-center justify-between mb-3 cursor-pointer hover:bg-[#252525] p-1.5 rounded-lg transition-colors"
+                            onClick={() => handleOpenDeposit("balance", Number(nativeTokenbalance))}
                           >
-                            Deposit
-                          </button>
-                          <button
-                            onClick={() => setIsWithdrawPopup(true)}
-                            className="flex-1 bg-[#374151] hover:bg-[#4B5563] text-white py-2.5 px-4 rounded-md text-sm font-bold transition-colors"
-                          >
-                            Withdraw
-                          </button>
+                            <div className="flex items-center gap-2">
+                              <Image src={Solana} alt="solana" width={20} height={20} className="rounded-full" />
+                              <span className="text-lg font-semibold text-white">
+                                {Number(nativeTokenbalance).toFixed(5)}
+                              </span>
+                            </div>
+
+                            <div className="text-[#666666] text-lg">⇄</div>
+
+                            <div className="flex items-center gap-2">
+                              <Image src={usdc} alt="usdc" width={20} height={20} className="rounded-full" />
+                              <span className="text-lg font-semibold text-white">
+                                {Number(usdcBalance || 0).toFixed(2)}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleOpenDeposit("deposit")}
+                              className="flex-1 rounded-md bg-[#1d73fc] hover:bg-[#438bff] text-black py-2.5 px-4 text-sm font-bold transition-colors"
+                            >
+                              Deposit
+                            </button>
+                            <button
+                              onClick={() => setIsWithdrawPopup(true)}
+                              className="flex-1 bg-[#374151] hover:bg-[#4B5563] text-white py-2.5 px-4 rounded-md text-sm font-bold transition-colors"
+                            >
+                              Withdraw
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              )}
+                    )}
+                  </div>
+                )}
 
-              {/* Profile */}
-              <div className="flex items-center gap-2 ">
-                {solWalletAddress ? (
-                  <div className=" " ref={dropdownRef}>
-                    <div onClick={() => setIsProfileOpen((prev) => !prev)}>
-                      <PiUserBold size={26} className={`cursor-pointer`} />
-                    </div>
+                {/* Profile */}
+                <div className="flex items-center gap-2 ">
+                  {solWalletAddress ? (
+                    <div className=" " ref={dropdownRef}>
+                      <div onClick={() => setIsProfileOpen((prev) => !prev)}>
+                        <PiUserBold size={26} className={`cursor-pointer`} />
+                      </div>
 
-                    {isProfileOpen && (
-                      <div className="absolute md:right-5 right-0 mt-2 border-[1px] border-[#404040] w-50 bg-[#141414] shadow-[#000000CC] rounded-md shadow-lg z-50">
-                        {/* <Link onClick={() => setIsProfileOpen(false)} href="/profile?" className="">
+                      {isProfileOpen && (
+                        <div className="absolute md:right-5 right-0 mt-2 border-[1px] border-[#404040] w-50 bg-[#141414] shadow-[#000000CC] rounded-md shadow-lg z-50">
+                          {/* <Link onClick={() => setIsProfileOpen(false)} href="/profile?" className="">
                           <div className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md">
                             <PiUserLight className="text-xl" />
                             {navbar?.profile?.myProfile}
                           </div>
                         </Link> */}
 
-                        <div
-                          onClick={() => {
-                            setIsProfileOpen(false);
-                            setIsAccountPopup(true);
-                          }}
-                          className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md"
-                        >
-                          <MdLockOutline className="text-xl" />
-                          {navbar?.profile?.account}
-                        </div>
+                          <div
+                            onClick={() => {
+                              setIsProfileOpen(false);
+                              setIsAccountPopup(true);
+                            }}
+                            className="px-4 py-2 text-base text-white hover:text-[#1F73FC] flex items-center gap-2 cursor-pointer rounded-md"
+                          >
+                            <MdLockOutline className="text-xl" />
+                            {navbar?.profile?.account}
+                          </div>
 
-                        <hr className="border-gray-700 my-1" />
-                        <div
-                          onClick={handleLogout}
-                          className="px-4 py-2 text-sm text-red-600 hover:bg-red-800 hover:text-white flex items-center gap-2 cursor-pointer rounded-md"
-                        >
-                          <RiLogoutBoxLine size={16} />
-                          {navbar?.profile?.logout}
+                          <hr className="border-gray-700 my-1" />
+                          <div
+                            onClick={handleLogout}
+                            className="px-4 py-2 text-sm text-red-600 hover:bg-red-800 hover:text-white flex items-center gap-2 cursor-pointer rounded-md"
+                          >
+                            <RiLogoutBoxLine size={16} />
+                            {navbar?.profile?.logout}
+                          </div>
                         </div>
+                      )}
+                    </div>
+                  ) : (
+                    <>
+                      <div
+                        onClick={() => {
+                          dispatch(openCloseLoginRegPopup(true));
+                          dispatch(setLoginRegPopupAuth("login"));
+                        }}
+                        className="px-5 py-1 bg-[#1F1F1F] border-[1px] border-[#1F1F1F]  rounded-md cursor-pointer"
+                      >
+                        {navbar?.profile?.login}
                       </div>
-                    )}
-                  </div>
-                ) : (
-                  <>
-                    <div
-                      onClick={() => {
-                        dispatch(openCloseLoginRegPopup(true));
-                        dispatch(setLoginRegPopupAuth("login"));
-                      }}
-                      className="px-5 py-1 bg-[#1F1F1F] border-[1px] border-[#1F1F1F]  rounded-md cursor-pointer"
-                    >
-                      {navbar?.profile?.login}
-                    </div>
-                    <div
-                      onClick={() => {
-                        dispatch(openCloseLoginRegPopup(true));
-                        dispatch(setLoginRegPopupAuth("signup"));
-                      }}
-                      className="border-[1px] border-[#0E43BD] rounded-md cursor-pointer bg-[#11265B] px-5 py-1 "
-                    >
-                      {navbar?.profile?.signup}
-                    </div>
-                  </>
-                )}
-              </div>
+                      <div
+                        onClick={() => {
+                          dispatch(openCloseLoginRegPopup(true));
+                          dispatch(setLoginRegPopupAuth("signup"));
+                        }}
+                        className="border-[1px] border-[#0E43BD] rounded-md cursor-pointer bg-[#11265B] px-5 py-1 "
+                      >
+                        {navbar?.profile?.signup}
+                      </div>
+                    </>
+                  )}
+                </div>
 
-              {/* Hamburger menu */}
-              <div
-                className={`md:hidden flex items-center justify-center cursor-pointer border-[1px] border-[#2e2e2e] rounded-md  `}
-                onClick={() => dispatch(setIsSidebarOpen(!isSidebarOpen))}
-              >
-                <IoMenu className="text-[30px] text-[#fdf5f5] p-[2px]" />
+                {/* Hamburger menu */}
+                <div
+                  className={`md:hidden flex items-center justify-center cursor-pointer border-[1px] border-[#2e2e2e] rounded-md  `}
+                  onClick={() => dispatch(setIsSidebarOpen(!isSidebarOpen))}
+                >
+                  <IoMenu className="text-[30px] text-[#fdf5f5] p-[2px]" />
+                </div>
               </div>
             </div>
           </div>

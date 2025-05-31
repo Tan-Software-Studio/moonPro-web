@@ -23,14 +23,12 @@ const UserProfileControl = () => {
   );
 
   const totalValue = currentTabData.reduce((acc, item) => {
-    const remainingQty = item?.totalBoughtQty - item?.quantitySold
-    const value = remainingQty * item?.current_price
+    const value = item?.activeQtyHeld * item?.current_price
     return acc + value
   }, 0)
 
   const UnrealizedPNL = currentTabData.reduce((acc, item) => {
-    const remainingQty = item?.totalBoughtQty - item?.quantitySold
-    const pnl = (item.current_price - item.averageBuyPrice) * remainingQty
+    const pnl = item?.activeQtyHeld * (item.current_price - item.averageBuyPrice)
     return acc + pnl
   }, 0)
 
@@ -99,7 +97,7 @@ const UserProfileControl = () => {
               </h3>
             </div>
             <div className="flex mt-24 items-center justify-center">
-              <div className="text-base text-gray-400">Chart will load here..</div>
+              <div className="text-base text-gray-400">Coming soon..</div>
             </div>
           </div>
 
@@ -110,8 +108,11 @@ const UserProfileControl = () => {
                 {"Performance"}
               </h3>
             </div>
+            <div className="flex mt-24 items-center justify-center">
+              <div className="text-base text-gray-400">Coming soon..</div>
+            </div>
 
-            <div className="">
+            {/* <div className="">
               <div className="flex justify-between items-center pt-2 border-gray-800 rounded-lg">
                 <div className="flex items-center gap-2">
                   <p className="text-xs text-slate-400">Total PnL</p>
@@ -129,8 +130,7 @@ const UserProfileControl = () => {
                   <span className="text-red-400">---</span>
                 </div>
               </div>
-
-              {/* Performance Distribution */}
+ 
               <div className=" ">
                 {[
                   { color: "bg-emerald-500", label: ">500%", value: "---", textColor: "text-emerald-400" },
@@ -149,7 +149,7 @@ const UserProfileControl = () => {
                 ))}
               </div>
 
-              {/* Performance Bar */}
+               
               <div className="w-full h-2 bg-slate-700 rounded-full mt-3 overflow-hidden">
                 <div className="flex h-full">
                   <div className="bg-emerald-500" style={{ width: "4%" }}></div>
@@ -159,7 +159,7 @@ const UserProfileControl = () => {
                   <div className="bg-red-500" style={{ width: "48%" }}></div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
