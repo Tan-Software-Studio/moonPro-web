@@ -38,6 +38,7 @@ import RecoveryKey from "./login/RecoveryKey";
 import { decodeData } from "@/utils/decryption/decryption";
 import ExchangePopup from "./popup/ExchangePopup";
 import { fetchUserData } from "@/app/redux/userDataSlice/UserData.slice";
+import WithdrawPopup from "./popup/WithdrawPopup";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
@@ -47,6 +48,7 @@ const Navbar = () => {
   const [isAccountPopup, setIsAccountPopup] = useState(false);
   const [isWatchlistPopup, setIsWatchlistPopup] = useState(false);
   const [isSolDepositPopup, setIsSolDepositPopup] = useState(false);
+  const [isWithdrawPopup, setIsWithdrawPopup] = useState(false);
   const [isWalletDropdownOpen, setIsWalletDropdownOpen] = useState(false);
   const [solPhrase, setSolPhrase] = useState("");
   const [openRecovery, setOpenRecovery] = useState(false);
@@ -302,8 +304,8 @@ const Navbar = () => {
                             </div>
                           </div>
                           <div className="text-2xl font-bold text-white mb-2">
-                            {/* ${(Number(nativeTokenbalance) * (solanaLivePrice || 0)).toFixed(2)}$ */}
-                            ${(Number(nativeTokenbalance) * (solanaLivePrice || 0) + Number(usdcBalance) * 1).toFixed(2)}
+                            {/* ${(Number(nativeTokenbalance) * (solanaLivePrice || 0)).toFixed(2)}$ */}$
+                            {(Number(nativeTokenbalance) * (solanaLivePrice || 0) + Number(usdcBalance) * 1).toFixed(2)}
                           </div>
                         </div>
 
@@ -336,7 +338,10 @@ const Navbar = () => {
                           >
                             Deposit
                           </button>
-                          <button className="flex-1 bg-[#374151] hover:bg-[#4B5563] text-white py-2.5 px-4 rounded-md text-sm font-bold transition-colors">
+                          <button
+                            onClick={() => setIsWithdrawPopup(true)}
+                            className="flex-1 bg-[#374151] hover:bg-[#4B5563] text-white py-2.5 px-4 rounded-md text-sm font-bold transition-colors"
+                          >
                             Withdraw
                           </button>
                         </div>
@@ -437,6 +442,14 @@ const Navbar = () => {
         {isWatchlistPopup && <Watchlist setIsWatchlistPopup={setIsWatchlistPopup} />}
 
         {isSolDepositPopup && <ExchangePopup isOpen={isSolDepositPopup} onClose={setIsSolDepositPopup} />}
+        {isWithdrawPopup && (
+          <WithdrawPopup
+            isOpen={isWithdrawPopup}
+            onClose={() => setIsWithdrawPopup(false)}
+            balance={nativeTokenbalance} // Pass the actual balance
+            tokenSymbol="SOL"
+          />
+        )}
         {openRecovery && solPhrase && (
           <RecoveryKey PK={solPhrase} setPK={setSolPhrase} setOpenRecovery={setOpenRecovery} flag={true} />
         )}

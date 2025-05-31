@@ -623,10 +623,6 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                               {idx === 0 ? "Moon Pro Main" : "Wallet"}
                             </span>
                             <div className="flex items-center gap-1 text-xs text-gray-400">
-                              <span className="flex items-center gap-1">
-                                <span className="text-green-400">⚡</span>
-                                <span>{wallet.status || "off"}</span>
-                              </span>
                               <span>·</span>
                               <span>{wallet.wallet?.slice(0, 5) || "BEsA4"}</span>
                               <button
@@ -660,23 +656,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                             <span className="text-sm font-medium">0</span>
                           </div>
 
-                          {/* Toggle switch */}
-                          <div className="flex items-center gap-2">
-                            <div
-                              className={`relative w-10 h-5 rounded-full transition-colors duration-200 ${wallet.active
-                                ? 'bg-gray-600'
-                                : 'bg-gray-700'
-                                }`}
-                            >
-                              <div
-                                className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform duration-200 ${wallet.active
-                                  ? 'translate-x-0.5'
-                                  : 'translate-x-5'
-                                  }`}
-                              />
-                            </div>
-                            <span className="text-sm font-medium">0</span>
-                          </div>
+                          
                         </div>
                       </div>
                     );
