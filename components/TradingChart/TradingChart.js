@@ -7,14 +7,27 @@ import { intervalTV } from "../../utils/tradingViewChartServices/constant";
 import { unsubscribeFromWebSocket } from "@/utils/tradingViewChartServices/websocketOHLC";
 import { clearMarks } from "@/utils/tradingViewChartServices/mark";
 import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFunctions";
-import { setPriceLines } from "@/utils/tradingViewChartServices/fifoPrice"
 import { clearLatestHistoricalBar } from "@/utils/tradingViewChartServices/latestHistoricalBar";
+import { subscribeSellItems } from "@/utils/tradingViewChartServices/sellItems";
 
-const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
+const TVChartContainer = ({ tokenSymbol, tokenaddress, userTokenHoldings, solanaLivePrice, supply }) => {
   const chartContainerRef = useRef(null);
   const [isUsdSolToggled, setIsUsdSolToggled] = useState(true); // Track USD/SOL toggle state
   const [isMcPriceToggled, setIsMcPriceToggled] = useState(true); // Track MarketCap/Price toggle state
   const [chartResolution, setChartResolution] = useState("15S"); // Track USD/SOL toggle state
+  const [chart, setChart] = useState(null);
+  const [chartReady, setChartReady] = useState(false);
+  const [averageSell, setAverageSell] = useState(0);
+
+  const buyPositionLineRef = useRef(null);
+  const sellPositionLineRef = useRef(null);
+
+  const convertPrice = (price) => {
+    let convertedPrice = price;
+    convertedPrice = isUsdSolToggled ? convertedPrice : convertedPrice / solanaLivePrice;
+    convertedPrice = isMcPriceToggled ? convertedPrice * supply : convertedPrice;
+    return convertedPrice;
+  }
 
   useEffect(() => {
     const fetchToggle = async () => {
@@ -41,10 +54,72 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
 
   }, []);
 
+  // Subscribe to array changes
+  useEffect(() => {
+    // Update state when array changes
+    const unsubscribe = subscribeSellItems((avgSell) => {
+      console.log(avgSell);
+      setAverageSell(avgSell); // Create a new array to trigger re-render
+    });
+
+    // Cleanup subscription on component unmount
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!chart) return;
+    if (!chartReady) return;
+    console.log("userTokenHoldings", userTokenHoldings);
+    if (!userTokenHoldings) return;
+    if (userTokenHoldings?.activeQtyHeld <= 0) return;
+    const createChartLines = async () => {
+      // Average Buy Sell
+      if (userTokenHoldings?.averageBuyPrice && buyPositionLineRef.current === null) {
+        buyPositionLineRef.current = await chart.activeChart().createPositionLine();
+      }
+      if (buyPositionLineRef.current) {
+        buyPositionLineRef.current
+                  .setText("Current Average Cost Basis")
+                  .setQuantity("")
+                  .setPrice(Number(convertPrice(userTokenHoldings?.averageBuyPrice)))
+                  .setQuantityBackgroundColor("#427A2C")
+                  .setQuantityBorderColor("#427A2C")
+                  .setBodyBorderColor("#FFFFFF00")
+                  .setBodyTextColor("#427A2C")
+                  .setBodyBackgroundColor("#FFFFFF00")
+                  .setExtendLeft(true)
+                  .setLineStyle(2)
+                  .setLineLength(0)
+                  .setLineColor("#427A2C");
+      }
+      if (averageSell > 0 && sellPositionLineRef.current === null) {
+        sellPositionLineRef.current = await chart.activeChart().createPositionLine();
+      }
+      if (sellPositionLineRef.current) {
+        sellPositionLineRef.current
+                .setText("Current Average Exit Price")
+                .setQuantity("")
+                .setPrice(averageSell)
+                .setQuantityBackgroundColor("#AB5039")
+                .setQuantityBorderColor("#AB5039")
+                .setBodyBorderColor("#FFFFFF00")
+                .setBodyTextColor("#AB5039")
+                .setBodyBackgroundColor("#FFFFFF00")
+                .setExtendLeft(true)
+                .setLineStyle(2)
+                .setLineLength(0)
+                .setLineColor("#AB5039");
+      }
+    };
+    createChartLines();
+  }, [userTokenHoldings, chartReady, userTokenHoldings?.averageBuyPrice, isUsdSolToggled, isMcPriceToggled, averageSell])
+
   // console.log("TVChartContainer called.");
   useEffect(() => {
     clearMarks();
     clearLatestHistoricalBar();
+    setChart(null);
+    setChartReady(false);
     window.chartReady = false;
     const tvWidget = new widget({
       symbol: tokenSymbol,
@@ -100,18 +175,18 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
         "mainSeriesProperties.candleStyle.borderDownColor": "#ef5350",
       },
     });
+    setChart(tvWidget);
     // console.log("TradingView widget initialized.", tvWidget);
     tvWidget.onChartReady(async () => {
+      setChartReady(true);
       window.chartReady = true;
       // console.log("Chart has loaded!");  
-      await setPriceLines(tvWidget);
       const priceScale = tvWidget
         .activeChart()
         .getPanes()[0]
         .getMainSourcePriceScale();
       priceScale.setAutoScale(true);
       tvWidget.activeChart().onIntervalChanged().subscribe(null, async (interval, timeframeObj) => {
-        await setPriceLines(tvWidget);
         setChartResolution(interval);
         localStorage.setItem("chartResolution", interval);
         clearMarks();

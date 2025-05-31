@@ -1,5 +1,5 @@
 import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFunctions";
-import { setPriceLines } from "./fifoPrice";
+import { addSellItems } from "./sellItems";
 
 const marks = [];
 const userMarks = [];
@@ -51,7 +51,9 @@ export const addMark = async (time, isBuy, usdTraded, atPricePoint, tokenAmount,
 
   if (chart) {
     chart.activeChart().refreshMarks(); // Force re-request of marks
-    await setPriceLines(chart);
+  }
+  if (!isBuy) {
+    addSellItems(atPricePoint);
   }
 };
 
