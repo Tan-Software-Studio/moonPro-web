@@ -429,6 +429,9 @@ const Tradingview = () => {
                 <TVChartContainer
                   tokenSymbol={tokenSymbol}
                   tokenaddress={tokenaddress}
+                  userTokenHoldings={userTokenHoldings}
+                  solanaLivePrice={solanaLivePrice}
+                  supply={chartTokenData?.currentSupply}
                 />
               </div>
             </>
@@ -492,6 +495,7 @@ const Tradingview = () => {
               currentPrice={
                 latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
               }
+              tokenSymbol={tokenSymbol}
             />
           </div>
 
