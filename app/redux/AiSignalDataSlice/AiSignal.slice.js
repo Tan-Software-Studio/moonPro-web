@@ -20,7 +20,8 @@ export const fetchAiSignalData = createAsyncThunk(
 const aiSignalSlice = createSlice({
     name: "aiSignalSlice",
     initialState: {
-        aiSignalData: []
+        aiSignalData: [],
+        initialLoading: true,
     },
     reducers: {
         setAiSignalData: (state, { payload }) => {
@@ -29,7 +30,10 @@ const aiSignalSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(fetchAiSignalData.fulfilled, (state, { payload }) => {
-            state.aiSignalData = payload
+            state.aiSignalData = payload;
+            state.initialLoading = false
+        }).addCase(fetchAiSignalData.rejected, (state) => {
+            state.initialLoading = false
         })
     }
 })

@@ -40,12 +40,12 @@ const AiSignal = () => {
   const [sortOrder, setSortOrder] = useState("");
   const [localFilterTime, setLocalFilterTime] = useState("5m");
   const [filteredData, setFilteredData] = useState([]);
-  const [filtersApplied, setFiltersApplied] = useState(false);
-  const [isLoading, setIsLoading] = useState(false)
+  const [filtersApplied, setFiltersApplied] = useState(false); 
   const [filterValues, setFilterValues] = useState(initialFilterValues);
 
   // ai signal tokens data 
   const aiSignalData = useSelector((state) => state?.aiSignal?.aiSignalData)
+  const isLoading = useSelector((state) => state?.aiSignal?.initialLoading)
 
   const Trendings = {
     Title: tredingPage?.mainHeader?.filter?.filter,
@@ -395,12 +395,10 @@ const AiSignal = () => {
     const savedFilters = loadFiltersFromStorage();
     if (savedFilters) {
       setFilterValues(savedFilters);
-    }
-    setIsLoading(true)
+    } 
     dispatch(fetchAiSignalData())
     subscribeToAiSignalTokens()
-    subscribeToAiSignalTokensNewAddedToken()
-    setIsLoading(false)
+    subscribeToAiSignalTokensNewAddedToken() 
   }, []);
 
   // Apply saved filters when data becomes available
