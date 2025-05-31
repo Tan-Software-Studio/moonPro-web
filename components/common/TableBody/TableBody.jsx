@@ -27,7 +27,7 @@ import { FaStarOfLife } from "react-icons/fa6";
 import { RiFireFill } from "react-icons/ri";
 
 
-const TableBody = ({ data, img }) => {
+const TableBody = ({ isLoading, data, img }) => {
   const pathname = usePathname();
   const dispatch = useDispatch();
 
@@ -47,8 +47,7 @@ const TableBody = ({ data, img }) => {
 
   const getNetwork = pathname.split("/")[2];
 
-  const bigLoader = useSelector((state) => state?.AllStatesData?.bigLoader);
-  const isLoading = useSelector((state) => state?.solTrendingData?.loading);
+  const bigLoader = useSelector((state) => state?.AllStatesData?.bigLoader); 
 
   const quickBuy = useSelector((state) => state?.AllStatesData?.globalBuyAmt);
 

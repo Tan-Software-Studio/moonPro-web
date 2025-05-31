@@ -20,9 +20,7 @@ import { CiStar } from "react-icons/ci";
 
 
 
-
-
-export default function PNLProtfolio() {
+export default function WalletManagement() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [allWallets, setAllWallets] = useState([]);
