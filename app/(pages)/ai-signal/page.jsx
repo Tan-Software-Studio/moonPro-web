@@ -9,50 +9,43 @@ import {
   TrendingImg,
   solana,
 } from "@/app/Images";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
 import TableHeaderData from "@/components/common/TableHeader/TableHeaderData";
 import TableBody from "@/components/common/TableBody/TableBody";
 import { useTranslation } from "react-i18next";
 import handleSort from "@/utils/sortTokenData";
-
-const Trending = () => {
+import { fetchAiSignalData } from "@/app/redux/AiSignalDataSlice/AiSignal.slice";
+import { subscribeToAiSignalTokens, subscribeToAiSignalTokensNewAddedToken } from "@/websocket/walletTracker";
+// Initial filter values - all empty/false
+const initialFilterValues = {
+  mintauth: { checked: false },
+  freezeauth: { checked: false },
+  lpburned: { checked: false },
+  top10holders: { checked: false },
+  liquidity: { min: "", max: "" },
+  volume: { min: "", max: "" },
+  age: { min: "", max: "" },
+  MKT: { min: "", max: "" },
+  TXNS: { min: "", max: "" },
+  buys: { min: "", max: "" },
+  sells: { min: "", max: "" },
+};
+const AiSignal = () => {
   const { t } = useTranslation();
   const tredingPage = t("tredingPage");
   const tableRef = useRef(null);
+  const dispatch = useDispatch()
   const [sortColumn, setSortColumn] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [localFilterTime, setLocalFilterTime] = useState("5m");
   const [filteredData, setFilteredData] = useState([]);
-  const [filtersApplied, setFiltersApplied] = useState(false);
-
-  // Initial filter values - all empty/false
-  const initialFilterValues = {
-    mintauth: { checked: false },
-    freezeauth: { checked: false },
-    lpburned: { checked: false },
-    top10holders: { checked: false },
-    liquidity: { min: "", max: "" },
-    volume: { min: "", max: "" },
-    age: { min: "", max: "" },
-    MKT: { min: "", max: "" },
-    TXNS: { min: "", max: "" },
-    buys: { min: "", max: "" },
-    sells: { min: "", max: "" },
-  };
-
+  const [filtersApplied, setFiltersApplied] = useState(false); 
   const [filterValues, setFilterValues] = useState(initialFilterValues);
-  const isLoading = useSelector((state) => state?.solTrendingData?.loading);
 
-  // Get data from Redux store
-  const getTimeFilterData = useSelector(
-    (state) => state?.solTrendingData.filterTime[`${localFilterTime}`]
-  );
-
-  // Convert data to array (safety check)
-  let filterDataArray = Array.isArray(getTimeFilterData)
-    ? getTimeFilterData
-    : [];
+  // ai signal tokens data 
+  const aiSignalData = useSelector((state) => state?.aiSignal?.aiSignalData)
+  const isLoading = useSelector((state) => state?.aiSignal?.initialLoading)
 
   const Trendings = {
     Title: tredingPage?.mainHeader?.filter?.filter,
@@ -213,10 +206,10 @@ const Trending = () => {
   const HeaderData = {
     newPairsIcon: {
       menuIcon: TrendingImg,
-      headTitle: tredingPage?.mainHeader?.trending,
+      headTitle: "AI Signal",
       discription: tredingPage?.mainHeader?.desc,
     },
-    timeDuration: ["1m", "5m", "30m", "1h"],
+    // timeDuration: ["1m", "5m", "30m", "1h"],
     Filter: {
       menuIcon: Filter,
       menuTitle: tredingPage?.mainHeader?.filter?.filter,
@@ -342,7 +335,7 @@ const Trending = () => {
   // Save filters
   function saveFiltersToStorage(filters) {
     try {
-      localStorage.setItem("trendingFilters", JSON.stringify(filters));
+      localStorage.setItem("aiSignalFilters", JSON.stringify(filters));
     } catch (error) {
       console.error("Could not save filters:", error);
     }
@@ -351,7 +344,7 @@ const Trending = () => {
   // get filter
   function loadFiltersFromStorage() {
     try {
-      const saved = localStorage.getItem("trendingFilters");
+      const saved = localStorage.getItem("aiSignalFilters");
       if (saved) {
         return JSON.parse(saved);
       }
@@ -364,7 +357,7 @@ const Trending = () => {
   // remove filters
   function clearFiltersFromStorage() {
     try {
-      localStorage.removeItem("trendingFilters");
+      localStorage.removeItem("aiSignalFilters");
     } catch (error) {
       console.error("Could not clear filters:", error);
     }
@@ -375,7 +368,7 @@ const Trending = () => {
 
     if (hasFilters) {
       // Apply filters to data
-      const filteredResult = applyAllFilters(filterDataArray, filterValues);
+      const filteredResult = applyAllFilters(aiSignalData, filterValues);
       setFilteredData(filteredResult);
       setFiltersApplied(true);
 
@@ -402,34 +395,37 @@ const Trending = () => {
     const savedFilters = loadFiltersFromStorage();
     if (savedFilters) {
       setFilterValues(savedFilters);
-    }
+    } 
+    dispatch(fetchAiSignalData())
+    subscribeToAiSignalTokens()
+    subscribeToAiSignalTokensNewAddedToken() 
   }, []);
 
   // Apply saved filters when data becomes available
   useEffect(() => {
     const savedFilters = loadFiltersFromStorage();
 
-    if (savedFilters && filterDataArray.length > 0) {
+    if (savedFilters && aiSignalData.length > 0) {
       const hasFilters = checkIfFiltersExist(savedFilters);
 
       if (hasFilters) {
-        const filteredResult = applyAllFilters(filterDataArray, savedFilters);
+        const filteredResult = applyAllFilters(aiSignalData, savedFilters);
         setFilteredData(filteredResult);
         setFiltersApplied(true);
       }
     }
-  }, [filterDataArray]);
+  }, [aiSignalData]);
 
   // time filter data render
   useEffect(() => {
-    if (filtersApplied && filterDataArray.length > 0) {
-      const filteredResult = applyAllFilters(filterDataArray, filterValues);
+    if (filtersApplied && aiSignalData.length > 0) {
+      const filteredResult = applyAllFilters(aiSignalData, filterValues);
       setFilteredData(filteredResult);
     }
   }, [localFilterTime]);
 
   const dataToShow =
-    filtersApplied && filteredData.length >= 0 ? filteredData : filterDataArray;
+    filtersApplied && filteredData.length >= 0 ? filteredData : aiSignalData;
 
   // asc dsc function
   const sortedData = handleSort(sortColumn, dataToShow, sortOrder);
@@ -474,4 +470,4 @@ const Trending = () => {
     </>
   );
 };
-export default Trending;
+export default AiSignal;

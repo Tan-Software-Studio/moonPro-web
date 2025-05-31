@@ -1,10 +1,10 @@
 "use client";
 import { updatePnlTableData } from '@/app/redux/holdingDataSlice/holdingData.slice';
-import PNLProtfolio from '@/components/portfolio/PNLPage';
 import UserProfileControl from '@/components/portfolio/UserProfileControl';
 import Image from 'next/image';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import WalletManagement from './WalletManagement';
 
 const PortfolioMainPage = () => {
   const dispatch = useDispatch();
@@ -34,7 +34,7 @@ const PortfolioMainPage = () => {
               <UserProfileControl />
             }
             {activeTab == "portfolio" &&
-              <PNLProtfolio />
+              <WalletManagement />
             }
           </div>
         </> :

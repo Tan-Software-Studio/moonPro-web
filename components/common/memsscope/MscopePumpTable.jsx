@@ -106,13 +106,7 @@ useEffect(() => {
       color: "text-[#21CB6B]",
       title: "devHoldingsPercentage",
       getToolTip: (dynamicValue) => `Token Developer holds ${dynamicValue}%`,
-    },
-    {
-      icon: sniper,
-      color: "text-[#ED1B24]",
-      title: "sniper_count",
-      getToolTip: (dynamicValue) => `Number of Snipers: ${dynamicValue}`,
-    },
+    }, 
   ];
   const socialIcons = [
     { icon: twitter, title: "twitter" },
