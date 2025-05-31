@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { RiExchangeDollarLine } from 'react-icons/ri';
 import { formatDecimal, humanReadableFormatWithNoDollar } from '@/utils/basicFunctions';
 
@@ -32,7 +32,7 @@ const UserPnL = ({ userTokenHoldings, currentPrice, tokenSymbol }) => {
       hoverValue: (
         <span>
           {userTokenHoldings?.activeQtyHeld > 1 || userTokenHoldings?.activeQtyHeld < -1
-            ? humanReadableFormatWithNoDollar(userTokenHoldings?.activeQtyHeld, 2)
+            ? humanReadableFormatWithNoDollar(userTokenHoldings?.activeQtyHeld)
             : formatDecimal(userTokenHoldings?.activeQtyHeld, 1)}{' '}
           {tokenSymbol ? tokenSymbol.slice(0, 3) : ''}
         </span>
@@ -55,28 +55,9 @@ const UserPnL = ({ userTokenHoldings, currentPrice, tokenSymbol }) => {
       style={{ boxSizing: 'border-box' }}
     >
       {sections.map((section, index) => {
-        const textRef = useRef(null);
-        const containerRef = useRef(null);
-
-        useEffect(() => {
-          const textEl = textRef.current;
-          const containerEl = containerRef.current;
-          if (textEl && containerEl) {
-            const containerWidth = containerEl.offsetWidth;
-            let fontSize = parseFloat(getComputedStyle(textEl).fontSize);
-            const textWidth = textEl.scrollWidth;
-
-            if (textWidth > containerWidth && fontSize > 8) {
-              const scale = containerWidth / textWidth;
-              textEl.style.fontSize = `${Math.max(fontSize * scale, 8)}px`;
-            }
-          }
-        }, [section.value, section.extra, section.hoverValue]);
-
         return (
           <React.Fragment key={section.title}>
             <div
-              ref={containerRef}
               className="select-none outline-none flex items-center justify-center flex-1 h-[54px] rounded-[4px] ease-linear duration-200 group"
               style={{ minWidth: '20%', maxWidth: '25%', boxSizing: 'border-box', padding: '0 2px' }}
             >
@@ -92,14 +73,15 @@ const UserPnL = ({ userTokenHoldings, currentPrice, tokenSymbol }) => {
                   )}
                 </div>
                 <div
-                  ref={textRef}
                   className={`flex items-center justify-center text-center text-[14px] font-[500] ${section.color}`}
                   style={{
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
-                    lineHeight: '1.2', // Tighter line height for better centering
-                    marginTop: '2px', // Small adjustment to balance vertical spacing
+                    lineHeight: '1.2',
+                    marginTop: '2px',
+                    maxWidth: '100%', // Ensure text fits within container
+                    fontSize: '14px', // Fixed font size to avoid dynamic adjustment
                   }}
                 >
                   {section.title === 'PnL' ? (
