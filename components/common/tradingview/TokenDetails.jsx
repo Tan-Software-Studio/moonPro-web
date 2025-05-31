@@ -98,7 +98,7 @@ const TokenDetails = ({
         img: tokenImage,
         tokenAddress: tokenaddress,
         marketCap: tokenDetailsMarketCap,
-        volume: '0',
+        // volume: '0',
         Liqudity: TokenDetailsNumberData[1].price,
         pairaddress: pairAddress
       },
@@ -186,7 +186,7 @@ const TokenDetails = ({
         {/* Token Details */}
         <div className="sm:pl-[10px] p-3 flex items-center sm:gap-2 gap-1">
           {/* Token Image */}
-          <div className="relative w-[36px] h-[36px]">
+          <div className="relative w-[36px] h-[36px] z-0">
             {/* change value to actual bonding curve later on and trail color depending on graduation status */}
             <SquareProgressBar
               value={chartTokenData?.bondingCurveProgress || 100}
@@ -216,7 +216,7 @@ const TokenDetails = ({
           <div className="flex flex-col mr-5">
             <div className="flex items-center gap-2">
               <div className="text-white text-base sm:text-lg font-spaceGrotesk">
-                {tokenSymbol}
+                {tokenSymbol?.length > 7 ? `${tokenSymbol.slice(0, 5)}...` : tokenSymbol}
               </div>
               <div className="text-[#A8A8A8] text-xs md:text-[14px]">
                 {tokenaddress && tokenaddress.length >= 10
@@ -293,8 +293,19 @@ const TokenDetails = ({
               {TokenDetailsNumberData?.map((num, index) => {
                 return (
                   <div key={index} className="flex flex-col items-start">
-                    <span className="text-[#A8A8A8] text-xs capitalize">
+                    {/* <span className="text-[#A8A8A8] text-xs capitalize">
                       {num.label}
+                    </span> */}
+                    <span className="text-[#A8A8A8] text-xs capitalize">
+                      <span className="hidden sm:inline">{num.label}</span>
+                      <span className="inline sm:hidden">
+                        {num.label === "Market Cap" && "M"}
+                        {num.label === "Liquidity" && "L"}
+                        {num.label === "Volume" && "V"}
+                        {num.label === "SUPPLY" && "S"}
+                        {num.label === "Price" && "P"}
+                        {/* Add more if you have more labels */}
+                      </span>
                     </span>
                     <span className="text-white text-sm">
                       {num?.label == "Price USD"

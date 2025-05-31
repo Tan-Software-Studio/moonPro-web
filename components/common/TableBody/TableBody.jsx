@@ -47,7 +47,7 @@ const TableBody = ({ isLoading, data, img }) => {
 
   const getNetwork = pathname.split("/")[2];
 
-  const bigLoader = useSelector((state) => state?.AllStatesData?.bigLoader); 
+  const bigLoader = useSelector((state) => state?.AllStatesData?.bigLoader);
 
   const quickBuy = useSelector((state) => state?.AllStatesData?.globalBuyAmt);
 
@@ -300,10 +300,10 @@ const TableBody = ({ isLoading, data, img }) => {
                   </td> */}
                   <td className="whitespace-nowrap w-60 py-2 flex justify-center font-mono">
                     <div className="flex flex-col gap-1 text-sm  rounded">
-                      <div className="flex w-fit px-1 border border-[#2a2d38] rounded-md items-center gap-1 text-green-500 text-[12px] group-hover:bg-black group-hover:border-black">
+                      {/* <div className="flex w-fit px-1 border border-[#2a2d38] rounded-md items-center gap-1 text-green-500 text-[12px] group-hover:bg-black group-hover:border-black">
                         <RiUserAddLine size={10} />
                         <span>14.02%</span>
-                      </div>
+                      </div> */}
                       <div className={`flex w-fit px-1 border border-[#2a2d38] rounded-md items-center gap-1 ${row.LP == null || row.LP == false ? "text-green-500" : "text-red-500"}  text-[12px] group-hover:bg-black group-hover:border-black`}>
                         <RiFireFill size={10} />
                         <span>{row.LP == null || row.LP == false ? '100%' : '???'}</span>

@@ -17,6 +17,28 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
     const dispatch = useDispatch()
     const router = useRouter();
 
+    // Format Number Compact
+    const formatNumberCompact = (number) => {
+        if (number === null || number === undefined || isNaN(number)) return '0';
+
+        const absNum = Math.abs(Number(number));
+        const suffixes = [
+            { value: 1e12, symbol: 'T' },
+            { value: 1e9, symbol: 'B' },
+            { value: 1e6, symbol: 'M' },
+            { value: 1e3, symbol: 'K' }
+        ];
+
+        for (let i = 0; i < suffixes.length; i++) {
+            if (absNum >= suffixes[i].value) {
+                return (number / suffixes[i].value).toFixed(2).replace(/\.00$/, '') + suffixes[i].symbol;
+            }
+        }
+
+        return number.toString();
+    };
+
+
     const token = localStorage.getItem("token");
     async function getWatchlist() {
         if (!token) {
@@ -185,7 +207,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
                                                         onClick={() => navigateToChartSreen(item)}
                                                         className="px-6 py-4">
                                                         <span className="text-gray-300 text-sm">
-                                                            {item.volume || "N/A"}
+                                                            {"$"}{formatNumberCompact(item.tradedVolumeUSD || 0)}
                                                         </span>
                                                     </td>
 
