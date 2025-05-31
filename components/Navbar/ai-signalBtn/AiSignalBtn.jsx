@@ -19,8 +19,8 @@ const SvgIcon = (props) => (
 
 const AISignalsButton = () => {
     return (
-        <Link href='ai-signal'>
-            <button className="group relative inline-flex items-center gap-3 px-6 py-2  border-[1.5px] border-blue-500 rounded-md transition-all duration-300 ">
+        <Link href='/ai-signal'>
+            <button className="group relative inline-flex items-center gap-3 px-4 py-1.5  border-[1.5px] border-blue-500 rounded-md transition-all duration-300 ">
 
                 {/* Icon with glow */}
                 <SvgIcon className="w-5 h-5 text-blue-500 group-hover:text-blue-400 transition-all duration-300 " />

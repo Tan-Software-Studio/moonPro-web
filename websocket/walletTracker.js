@@ -1,4 +1,7 @@
-import { setAiSignalData } from "@/app/redux/AiSignalDataSlice/AiSignal.slice";
+import {
+  setAiSignalData,
+  setAiSignalLiveDataUpdate,
+} from "@/app/redux/AiSignalDataSlice/AiSignal.slice";
 import { addNewTransactionForWalletTracking } from "@/app/redux/chartDataSlice/chartData.slice";
 import { updatePnlDataPriceOnly } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import {
@@ -13,23 +16,22 @@ import {
   updateTrendingData,
   updateTrendingLiveData,
 } from "@/app/redux/trending/solTrending.slice";
-import axios from "axios";
 import { io } from "socket.io-client";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const BASE_URL_MOON = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL_SOCKET;
 const BASE_URL_AI_SIGNAL = process.env.NEXT_PUBLIC_AI_SIGNAL_BASE_URL;
-// connection with wavecore 
+// connection with wavecore
 export const socket = io(BASE_URL, {
   transports: ["websocket"],
 });
 // connection with mooncore
 export const socketMoonCore = io(BASE_URL_MOON, {
-  transports: ["websocket"]
-})
+  transports: ["websocket"],
+});
 // connect with ai-signal-backend
 export const socketAiSignalBackend = io(BASE_URL_AI_SIGNAL, {
-  transports: ["websocket"]
-})
+  transports: ["websocket"],
+});
 
 let isSocketOn = false;
 let isSocketOnMoon = false;
@@ -49,7 +51,7 @@ export async function subscribeToWalletTracker() {
       //     },
       //   });
       // }
-    } catch (error) { }
+    } catch (error) {}
     // let walletsToTrack = [];
     // if (wallets?.data?.data?.wallets?.length > 0) {
     //   await wallets?.data?.data?.wallets?.map((item) => {
@@ -75,6 +77,7 @@ export async function subscribeToWalletTracker() {
     // watch all solana trades
     await socket.on("new_trades", async (data) => {
       // console.log("🚀 ~ socket.on ~ data:", data?.length);
+      store.dispatch(setAiSignalLiveDataUpdate(data));
       // send data to update pnl
       if (solanaWalletAddress) {
         store.dispatch(updatePnlDataPriceOnly(data));
@@ -270,12 +273,14 @@ export async function subscribeToAiSignalTokensNewAddedToken() {
     aiSignalDataFromStore = store?.getState().aiSignal.aiSignalData;
   });
   socketAiSignalBackend.on("aiSignleLiveData", async (data) => {
-    console.log("🚀 ~ socketAiSignalBackend.on ~ data:", data)
-    let newDataArr = []
+    let newDataArr = [];
     if (data?.length >= 100) {
-      newDataArr = [...data,]
+      newDataArr = [...data];
     } else {
-      newDataArr = [...data, ...aiSignalDataFromStore?.slice(0, 100 - data?.length)]
+      newDataArr = [
+        ...data,
+        ...aiSignalDataFromStore?.slice(0, 100 - data?.length),
+      ];
     }
     store.dispatch(setAiSignalData(newDataArr));
   });
