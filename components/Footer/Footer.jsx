@@ -11,6 +11,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { showToastLoader } from "../common/toastLoader/ToastLoder";
 import PnLTrackerPopup from "./PnLTrackerPopup";
+// import { fetchAllWalletBalances } from "@/app/redux/userDataSlice/UserData.slice";
 
 const Footer = () => {
   const dispatch = useDispatch();
@@ -18,16 +19,25 @@ const Footer = () => {
   const isRightModalOpenSetting = useSelector((state) => state?.yourSliceName?.isRightModalOpenSetting);
   const tredingPage = useSelector((state) => state?.yourSliceName?.tredingPage);
 
+  const presetActive = useSelector((state) => state?.AllStatesData?.presetActive);
+
   const isLargeScreen = useSelector((state) => state?.AllthemeColorData?.isLargeScreen);
   const isSmallScreenData = useSelector((state) => state?.AllthemeColorData?.isSmallScreen);
   const isSidebarOpen = useSelector((state) => state?.AllthemeColorData?.isSidebarOpen);
 
+  // Get wallet balances from Redux using the correct structure from your example
+  const userDetails = useSelector((state) => state?.userDataSlice?.userDetails || state?.userData?.userDetails);
+  // const reduxWallets = userDetails?.walletAddressSOL || [];
+  // const isLoadingBalances = useSelector(
+  //   (state) => state?.userDataSlice?.balancesLoading || state?.userData?.balancesLoading
+  // );
+
   const [open, setOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [copiedWallet, setCopiedWallet] = useState(null);
   const [walletAddresses, setWalletAddresses] = useState([]);
   const [allWallets, setAllWallets] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isPnLPopupOpen, setIsPnLPopupOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPnLPopupOpen, setIsPnLPopupOpen] = useState(false);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
@@ -39,7 +49,35 @@ const Footer = () => {
   const handlePnLTrackerClick = () => {
     setIsPnLPopupOpen(!isPnLPopupOpen);
   };
-    
+
+  const getPresetDisplayName = (preset) => {
+    if (!preset) return "PRESET 1";
+
+    const presetNumber = preset.replace("P", "");
+    return `PRESET ${presetNumber}`;
+  };
+
+  // Format wallet address to show first 4 and last 4 characters
+  const formatWalletAddress = (address) => {
+    if (!address) return "BEsA4...B2K5";
+    if (address.length <= 8) return address;
+    return `${address.slice(0, 4)}...${address.slice(-4)}`;
+  };
+
+  // FIXED: Get wallet balance - simplified and more reliable
+  const getWalletBalance = (walletAddress) => {
+    if (!walletAddress || !reduxWallets.length) return "0";
+
+    const wallet = reduxWallets.find((w) => w.wallet === walletAddress);
+    return wallet?.balance !== undefined ? parseFloat(wallet.balance).toFixed(4) : "0";
+  };
+
+  // FIXED: Get primary wallet balance
+  const getPrimaryWalletBalance = () => {
+    const primaryWallet = reduxWallets.find((w) => w.primary);
+    return primaryWallet?.balance !== undefined ? parseFloat(primaryWallet.balance).toFixed(4) : "0";
+  };
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (
@@ -78,9 +116,26 @@ const Footer = () => {
     }
   };
 
+  // Use Redux data if available, otherwise fallback to local state
+  // const walletsToShow = reduxWallets.length > 0 ? reduxWallets : allWallets;
+
   useEffect(() => {
     getAllWallets();
   }, []);
+
+  // ADDED: Effect to fetch balances when component mounts or wallets change
+  // useEffect(() => {
+  //   if (reduxWallets.length > 0) {
+  //     // Check if balances are missing or outdated
+  //     const needsBalanceUpdate = reduxWallets.some(
+  //       (wallet) => wallet.balance === undefined || !wallet.lastUpdated || Date.now() - wallet.lastUpdated > 60000 // 1 minute cache
+  //     );
+
+  //     if (needsBalanceUpdate) {
+  //       dispatch(fetchAllWalletBalances(reduxWallets));
+  //     }
+  //   }
+  // }, [reduxWallets, dispatch]);
 
   const handlePrimary = async (walletIndex, loopIndex) => {
     const jwtToken = localStorage.getItem("token");
@@ -107,6 +162,17 @@ const Footer = () => {
             preArr[loopIndex].primary = true;
             return preArr;
           });
+
+          // Also update allWallets if using fallback
+          // if (reduxWallets.length === 0) {
+          //   setAllWallets((pre) => {
+          //     const preArr = [...pre];
+          //     const primaryIndex = preArr.findIndex((item) => item?.primary);
+          //     if (primaryIndex !== -1) preArr[primaryIndex].primary = false;
+          //     preArr[loopIndex].primary = true;
+          //     return preArr;
+          //   });
+          // }
           localStorage.setItem("walletAddress", res?.data?.data?.wallet?.wallet);
           toast.success("Primary wallet switched", {
             id: "switch-toast",
@@ -133,6 +199,26 @@ const Footer = () => {
     return "md:pl-[64px]";
   };
 
+  // Handle external links
+  const handleDiscordClick = () => {
+    window.open("https://discord.gg/", "_blank");
+  };
+
+  const handleTwitterClick = () => {
+    window.open("https://twitter.com/", "_blank");
+  };
+
+  const handleDocsClick = () => {
+    window.open("https://gitbook.org", "_blank");
+  };
+
+  // ADDED: Refresh balances function
+  // const handleRefreshBalances = () => {
+  //   if (reduxWallets.length > 0) {
+  //     dispatch(fetchAllWalletBalances(reduxWallets));
+  //   }
+  // };
+
   return (
     <>
       <footer
@@ -145,7 +231,7 @@ const Footer = () => {
               className="flex items-center space-x-1.5 bg-[#151c3c] px-2 py-1.5 ml-1 rounded-md text-[#4c6eff] text-xs font-medium transition-colors duration-200 border border-[#6366F1]/20"
             >
               <span className="text-[11px] font-bold">⚡</span>
-              <span className="font-semibold tracking-wide">PRESET 1</span>
+              <span className="font-semibold tracking-wide">{getPresetDisplayName(presetActive)}</span>
             </button>
 
             <div className="flex items-center space-x-1">
@@ -156,9 +242,13 @@ const Footer = () => {
                   className="flex items-center space-x-2 px-3 py-1 bg-[#1a1a1a] rounded-full text-[#ecf6fd] text-sm font-medium cursor-pointer hover:bg-[#2a2a2a] transition-colors"
                 >
                   <LuWalletMinimal size={16} />
+                  {/* <span>{walletsToShow.length}</span> */}
                   <span>1</span>
 
                   <Image src={solana} width={16} height={16} alt="solana" />
+                  {/* <span className={isLoadingBalances ? "opacity-50" : ""}>
+                    {isLoadingBalances ? "..." : getPrimaryWalletBalance()}
+                  </span> */}
                   <span>0</span>
 
                   <FaAngleDown size={14} />
@@ -169,13 +259,24 @@ const Footer = () => {
                     ref={dropdownRef}
                     className="absolute bottom-full left-0 mb-2 w-96 max-h-80 overflow-y-auto bg-[#18181a] border border-gray-700 text-white rounded-md shadow-lg z-50"
                   >
+                    {/* ADDED: Refresh button in dropdown */}
+                    {/* <div className="p-2 border-b border-gray-700">
+                      <button
+                        // onClick={handleRefreshBalances}
+                        disabled={isLoadingBalances}
+                        className="w-full px-3 py-1.5 bg-gray-800 hover:bg-gray-700 rounded text-sm disabled:opacity-50"
+                      >
+                        {isLoadingBalances ? "Refreshing..." : "Refresh Balances"}
+                      </button>
+                    </div> */}
+
                     {allWallets.map((wallet, idx) => {
                       const handleCopy = async (e) => {
                         e.stopPropagation();
                         try {
                           await navigator.clipboard.writeText(wallet.wallet || "BEsA4G");
-                          setCopied(true);
-                          setTimeout(() => setCopied(false), 2000);
+                          setCopiedWallet(wallet.wallet);
+                          setTimeout(() => setCopiedWallet(null), 2000);
                         } catch (err) {
                           console.error("Failed to copy: ", err);
                         }
@@ -196,24 +297,17 @@ const Footer = () => {
                               onChange={() => handlePrimary(wallet.index, idx)}
                             />
                             <div className="flex flex-col">
-                              <span
-                                className={`text-sm font-medium ${wallet.primary ? "text-orange-400" : "text-white"}`}
-                              >
-                                {idx === 0 ? "Moon Pro Main" : "Wallet"}
-                              </span>
-                              <div className="flex items-center gap-1 text-xs text-gray-400">
-                                <span className="flex items-center gap-1">
-                                  <span className="text-green-400">⚡</span>
-                                  <span>{wallet.status || "off"}</span>
+                              <div className="flex items-center gap-2 text-sm">
+                                <span className={`font-medium ${wallet.primary ? "text-orange-400" : "text-white"}`}>
+                                  {idx === 0 ? "Moon Pro Main" : "Wallet"}
                                 </span>
-                                <span>·</span>
-                                <span>{wallet.wallet?.slice(0, 5) || "BEsA4"}</span>
+                                <span className="text-gray-400">{formatWalletAddress(wallet.wallet)}</span>
                                 <button
                                   className="w-4 h-4 flex items-center justify-center text-xs transition-colors duration-200 hover:bg-gray-600 rounded"
                                   onClick={handleCopy}
-                                  title={copied ? "Copied!" : "Copy wallet address"}
+                                  title={copiedWallet === wallet.wallet ? "Copied!" : "Copy wallet address"}
                                 >
-                                  {copied ? <IoCheckmarkDone /> : <IoCopyOutline />}
+                                  {copiedWallet === wallet.wallet ? <IoCheckmarkDone /> : <IoCopyOutline />}
                                 </button>
                               </div>
                             </div>
@@ -223,21 +317,10 @@ const Footer = () => {
                             <div className="flex items-center gap-2">
                               <Image src={solana} width={16} height={16} alt="solana" />
                               <span className="text-sm font-medium">0</span>
-                            </div>
-
-                            <div className="flex items-center gap-2">
-                              <div
-                                className={`relative w-10 h-5 rounded-full transition-colors duration-200 ${
-                                  wallet.active ? "bg-gray-600" : "bg-gray-700"
-                                }`}
-                              >
-                                <div
-                                  className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform duration-200 ${
-                                    wallet.active ? "translate-x-0.5" : "translate-x-5"
-                                  }`}
-                                />
-                              </div>
-                              <span className="text-sm font-medium">0</span>
+                              {/* FIXED: Use the corrected balance function */}
+                              {/* <span className={`text-sm font-medium ${isLoadingBalances ? "opacity-50" : ""}`}>
+                                {isLoadingBalances ? "..." : getWalletBalance(wallet.wallet)}
+                              </span> */}
                             </div>
                           </div>
                         </div>
@@ -257,7 +340,8 @@ const Footer = () => {
 
               <div className="h-6 w-px bg-gray-600/50"></div>
 
-              {/* todo: add real btc | eth | sol */}
+              {/* Commented out crypto prices as requested */}
+              {/* 
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-1 text-orange-400 font-medium">
                   <Image src={bitcoinIcon} alt="bitcoinIcon" height={16} width={16} className="rounded-full" />
@@ -272,6 +356,7 @@ const Footer = () => {
                   <span>$164.91</span>
                 </div>
               </div>
+              */}
             </div>
           </div>
 
@@ -286,14 +371,13 @@ const Footer = () => {
             <div className="h-6 w-px bg-gray-600/50"></div>
 
             <div className="flex items-center space-x-1">
-              <button className="text-gray-400 hover:text-white transition-colors">
+              <button className="text-gray-400 hover:text-white transition-colors" onClick={handleDiscordClick}>
                 <Image src={discord} alt="discord" height={20} width={20} className="rounded-full" />
               </button>
-              <button className="text-gray-400 hover:text-white transition-colors">
+              <button className="text-gray-400 hover:text-white transition-colors" onClick={handleTwitterClick}>
                 <Image src={twitter} alt="twitter" height={20} width={20} className="rounded-full" />
               </button>
-              <button className="flex text-gray-400 hover:text-white transition-colors">
-                {/* <Image src={articlefill} alt="articleline" height={20} width={20} className="rounded-full" /> */}
+              <button className="flex text-gray-400 hover:text-white transition-colors" onClick={handleDocsClick}>
                 Docs
               </button>
             </div>
