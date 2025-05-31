@@ -35,19 +35,25 @@ const aiSignalSlice = createSlice({
               (item) => item?.address == element?.Trade?.Currency?.MintAddress
             );
             if (findIndex >= 0) {
+              const totalTradedValue =
+                element?.Trade?.Amount * element?.Trade?.PriceInUSD;
               state.aiSignalData[findIndex].current_price =
                 element?.Trade?.PriceInUSD;
               if (element?.Trade?.Side?.Type == "buy") {
                 state.aiSignalData[findIndex].buys += 1;
-                state.aiSignalData[findIndex].liquidity +=
-                  element?.Trade?.AmountInUSD;
+                state.aiSignalData[findIndex].liquidity += totalTradedValue;
               } else {
                 state.aiSignalData[findIndex].sells += 1;
-                state.aiSignalData[findIndex].liquidity -=
-                  element?.Trade?.AmountInUSD;
+                if (
+                  state.aiSignalData[findIndex].liquidity - totalTradedValue <=
+                  0
+                ) {
+                  state.aiSignalData[findIndex].liquidity = 0;
+                } else {
+                  state.aiSignalData[findIndex].liquidity -= totalTradedValue;
+                }
               }
-              state.aiSignalData[findIndex].traded_volume +=
-                element?.Trade?.AmountInUSD;
+              state.aiSignalData[findIndex].traded_volume += totalTradedValue;
               const newMKC =
                 state.aiSignalData[findIndex].totalsupply *
                 element?.Trade?.PriceInUSD;

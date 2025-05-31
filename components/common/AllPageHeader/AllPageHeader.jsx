@@ -34,6 +34,9 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
   const [open, setOpen] = useState(false);
   const [isDisplayOpen, setIsDisplayOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const displayPanelRef = useRef(null);
+  const displayButtonRef = useRef(null);
+
   // const [presist, setPresist] = useState("P1");
   const buttonRef = useRef(null);
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
@@ -273,6 +276,50 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
     }
   };
 
+    useEffect(() => {
+    const handleClickOutsideDisplay = (event) => {
+      if (
+        displayPanelRef.current &&
+        !displayPanelRef.current.contains(event.target) &&
+        displayButtonRef.current &&
+        !displayButtonRef.current.contains(event.target)
+      ) {
+        setIsDisplayOpen(false);
+      }
+    };
+
+    if (isDisplayOpen) {
+      document.addEventListener('mousedown', handleClickOutsideDisplay);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideDisplay);
+    };
+  }, [isDisplayOpen]);
+
+  // --- Effect to close Wallet dropdown on outside click ---
+  useEffect(() => {
+    const handleClickOutsideWallet = (event) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutsideWallet);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideWallet);
+    };
+  }, [open]);
+
+
   // Filter button
   const handleSidebarToggle = (id) => {
     setOpenDropdown((prev) => (prev === id ? null : id));
@@ -426,7 +473,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                 <button
                   onClick={() => setIsDisplayOpen(!isDisplayOpen)}
                   className="flex items-center px-4 py-1.5 bg-[#1f1f25] rounded-full text-sm font-semibold text-white hover:bg-[#2b2b33] transition"
-                >
+                ref={displayButtonRef}>
                   <List size={16} className="mr-2" />
                   Display
                   <ChevronDown size={16} className="ml-2" />
@@ -435,7 +482,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
 
               {/* Dropdown Panel */}
               {isDisplayOpen && (
-                <div className="absolute right-44 mt-2 w-[320px] bg-[#18181a] border border-gray-700 text-white rounded-md shadow-xl z-50">
+                <div className="absolute right-44 mt-2 w-[320px] bg-[#18181a] border border-gray-700 text-white rounded-md shadow-xl !z-[9999]" ref={displayPanelRef} >
                   <div className="p-4 space-y-4">
 
                     {/* Metrics */}

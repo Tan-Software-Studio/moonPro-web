@@ -211,18 +211,21 @@ const Navbar = () => {
   return (
     <>
       <div
-        className={`backdrop-blur-3xl bg-[#08080E] transition-all duration-500 px-3 md:px-[8px] ease-in-out border-b-[1px] border-b-[#404040]`}
+        className={`backdrop-blur-3xl bg-[#08080E] transition-all duration-500 sm:px-1 px-2  md:px-[8px] ease-in-out border-b-[1px] border-b-[#404040]`}
       >
-        <div className="transition-all duration-500 ease-in-out sm:mr-2">
+        <div className="transition-all duration-500 ease-in-out  ">
           <div className="flex items-center sm:gap-2 py-2   justify-between  sm:mx-4 md:mx-0">
-            <div>
+            <div className="md:block hidden">
               <AISignalsButton />
             </div>
-            <div>
-              <div className={`md:hidden w-10 h-auto`}>
+            <div className="flex items-center md:w-auto w-full justify-between">
+              <div className={`md:hidden flex w-10 h-auto`}>
                 <Image src={logo} alt="logo" className="w-full h-full" />
               </div>
               <div className=" flex items-center gap-2 ">
+                <div className="md:hidden block">
+                  <AISignalsButton />
+                </div>
                 {/* Search bar */}
                 <div
                   className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
@@ -245,7 +248,7 @@ const Navbar = () => {
                 {mounted && solWalletAddress && (
                   <button
                     onClick={() => handleOpenDeposit("deposit")}
-                    className="px-3 py-1.5 bg-[#1d73fc] hover:bg-[#438bff] text-black rounded-md text-sm font-bold transition-colors cursor-pointer"
+                    className="px-3 py-1.5 sm:block hidden bg-[#1d73fc] hover:bg-[#438bff] text-black rounded-md text-sm font-bold transition-colors cursor-pointer"
                   >
                     Deposit
                   </button>
@@ -274,7 +277,7 @@ const Navbar = () => {
                     >
                       <div className="flex items-center gap-2">
                         <Image src={Solana} alt="solana" height={30} width={30} className="rounded-full" />
-                        <div>{Number(nativeTokenbalance).toFixed(5) || 0}</div>
+                        <div className="sm:flex hidden">{Number(nativeTokenbalance).toFixed(5) || 0}</div>
                       </div>
 
                       <div className="sm:flex  hidden items-center gap-3">
