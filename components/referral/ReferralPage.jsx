@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { MdOutlineKeyboardDoubleArrowUp } from "react-icons/md";
 import { FaGem } from "react-icons/fa6";
 import { FiUserPlus } from "react-icons/fi";
-import { FaRegStar } from "react-icons/fa";
+import { FaRegEye, FaRegEyeSlash, FaRegStar } from "react-icons/fa";
 import { IoPieChartOutline } from "react-icons/io5";
 import { HiOutlineCurrencyDollar } from "react-icons/hi2";
 import axios from "axios";
@@ -38,6 +38,7 @@ const ReferralPage = () => {
   const [refData, setRefData] = useState([]);
   const [selectedTier, setSelectedTier] = useState(1);
   const [showWithdrawPopup, setShowWithdrawPopup] = useState(false);
+  const [hideEmail, setHideEmail] = useState(false)
   const progress = 100;
   const tierKey =
     selectedTier === 1
@@ -235,8 +236,16 @@ const ReferralPage = () => {
               ></div>
             </div>
 
-            <div className="mt-2">
-              <p className="tracking-wider text-sm">{refData?.user?.email}</p>
+            <div className="mt-2 flex items-center gap-2">
+              <p className="tracking-wider text-sm">{hideEmail ? "******" : refData?.user?.email}</p>
+              <div className="cursor-pointer" onClick={() => setHideEmail(!hideEmail)}>
+                {hideEmail ?
+                  <FaRegEye />
+                  :
+                  <FaRegEyeSlash />
+                }
+              </div>
+
             </div>
           </div>
         </div>
@@ -268,7 +277,7 @@ const ReferralPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Level Card */}
           <div className=" bg-[#191919]  rounded-xl p-4 space-y-2">
-            <div className="text-sm text-orange-400 tracking-wider">
+            {/* <div className="text-sm text-orange-400 tracking-wider">
               🥉 Bronze
             </div>
             <div className="text-2xl font-bold  flex items-center gap-2">
@@ -276,6 +285,9 @@ const ReferralPage = () => {
               <span className="text-blue-500">
                 <FaRegStar className="text-blue-500" size={25} />
               </span>
+            </div> */}
+            <div className="flex items-center justify-center">
+              <div className="text-base mt-12 text-gray-400">Coming soon..</div>
             </div>
           </div>
 
@@ -321,7 +333,7 @@ const ReferralPage = () => {
 
           {/* Points Breakdown */}
           <div className=" bg-[#191919]  rounded-xl p-4">
-            <div className="text-sm text-[rgb(200,201,209)] flex items-center gap-2 tracking-wider">
+            {/* <div className="text-sm text-[rgb(200,201,209)] flex items-center gap-2 tracking-wider">
               <IoPieChartOutline className="text-blue-500" size={22} />
               Points Breakdown
             </div>
@@ -334,6 +346,10 @@ const ReferralPage = () => {
               </div>
               <div className="text-[#a0a4b8] tracking-wider">
                 Quests <span className="float-right text-[#a0a4b8]">0</span>
+              </div>
+            </div> */}
+            <div className="flex items-center justify-center">
+              <div className="text-base mt-12 text-gray-400">Coming soon..
               </div>
             </div>
           </div>
@@ -441,7 +457,7 @@ const ReferralPage = () => {
                         className="text-white border-b border-[#2c2c34] last:border-b-0 hover:bg-[#08080e]"
                       >
                         <td className="px-4 py-4 whitespace-nowrap tracking-wider font-spaceGrotesk">
-                          {row.email}
+                          {hideEmail ?  "*******" :row.email}
                         </td>
                         {/* <td className="px-4 py-4 whitespace-nowrap">{new Date(row.referralAddedAt).toLocaleDateString()}</td> */}
                         <td className="px-4 py-4 whitespace-nowrap text-gray-400">
