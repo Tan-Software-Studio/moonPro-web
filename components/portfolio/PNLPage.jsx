@@ -20,6 +20,8 @@ import { CiStar } from "react-icons/ci";
 
 
 
+
+
 export default function PNLProtfolio() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -279,7 +281,7 @@ export default function PNLProtfolio() {
                           <div className="flex items-center gap-3">
                             <div className="flex items-center gap-2">
                               {wallet.primary && (
-                                <CiStar className="text-amber-500 " size={16} />
+                                <FaStar className="text-amber-500 " size={16} />
                               )}
                               <div
                                 className={`font-medium ${wallet.primary ? "text-amber-500" : ""
