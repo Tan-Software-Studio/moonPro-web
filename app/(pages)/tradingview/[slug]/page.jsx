@@ -186,10 +186,18 @@ const Tradingview = () => {
       price: chartTokenData?.Liqudity || 0,
     },
     {
-      label: tragindViewPage?.right?.tokeninfo?.supply,
+      label: capitalizeFirstLetter(tragindViewPage?.right?.tokeninfo?.supply),
       price: humanReadableFormat(chartTokenData?.currentSupply, false),
     },
   ];
+
+  const bondingCurveValue = chartTokenData?.bondingCurveProgress || 0;
+  if (bondingCurveValue < 100) {
+    TokenDetailsNumberData.push({
+      label: "B.Curve",
+      price: `${bondingCurveValue.toFixed(2)}%`,
+    });
+  }
 
   const tradeData = {
     "5M": {

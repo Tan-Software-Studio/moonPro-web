@@ -291,7 +291,7 @@ const TokenDetails = ({
                       <span className="text-[#A8A8A8] text-xs capitalize">
                         {num.label}
                       </span>
-                      <span className="text-white text-sm">
+                      <span className={`${index === 3 ? "text-[#4CAF50]" : "text-white"} text-sm`}>
                         {num?.label == "Price USD"
                           ? formatDecimal(num?.price)
                           : num?.price}
