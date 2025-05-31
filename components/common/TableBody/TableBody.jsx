@@ -22,6 +22,10 @@ import Link from "next/link";
 import { MdOutlineLanguage } from "react-icons/md";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaTelegramPlane } from "react-icons/fa";
+import { RiUserAddLine } from "react-icons/ri";
+import { FaStarOfLife } from "react-icons/fa6";
+import { RiFireFill } from "react-icons/ri";
+
 
 const TableBody = ({ isLoading, data, img }) => {
   const pathname = usePathname();
@@ -104,11 +108,11 @@ const TableBody = ({ isLoading, data, img }) => {
             return (
               <tbody key={ind} className="text-start geist">
                 <tr
-                  className={`border-b border-b-[#1A1A1A] hover:bg-[#1A1A1A] cursor-pointer`}
+                  className={`group border-b border-b-[#1A1A1A] hover:bg-[#1A1A1A] cursor-pointer`}
                   onClick={() => navigateToChartScreen(row)}
                 >
                   {/* Column 1: Icon and Pair Info */}
-                  <td className="whitespace-nowrap w-60 md:px-6 px-3 py-3 ">
+                  <td className="whitespace-nowrap w-60 md:px-6 px-3 py-2 ">
                     <div className="flex items-center gap-3 !text-left">
                       {row?.img ? (
                         <img
@@ -239,7 +243,7 @@ const TableBody = ({ isLoading, data, img }) => {
                   </td>
 
                   {/* Column 2: Market Cap and Price */}
-                  <td className="whitespace-nowrap w-32 py-3 md:px-6 px-3">
+                  <td className="whitespace-nowrap w-32 py-2 md:px-6 px-3">
                     <div className="flex flex-col gap-1">
                       <div>
                         <p className="text-[15px] font-medium">
@@ -254,25 +258,25 @@ const TableBody = ({ isLoading, data, img }) => {
                       >
                         {`${row?.Percentage > 0 ? "+" : ""}${Number(
                           row?.Percentage || 0
-                        ).toFixed(2)}`}
+                        ).toFixed(2)}`}{"%"}
                       </p>
                     </div>
                   </td>
 
                   {/* Column 3: Liquidity */}
-                  <td className="whitespace-nowrap w-32 py-3 md:px-6 px-3">
+                  <td className="whitespace-nowrap w-32 py-2 md:px-6 px-3">
                     <span className="text-white text-[15px] font-medium">
                       {humanReadableFormat(row?.liquidity || 0)}
                     </span>
                   </td>
 
                   {/* Column 4: Volume */}
-                  <td className="whitespace-nowrap w-32 text-[15px] py-3 md:px-6 px-3">
+                  <td className="whitespace-nowrap w-32 text-[15px] py-2 md:px-6 px-3">
                     {humanReadableFormat(row?.traded_volume)}
                   </td>
 
                   {/* Column 5: Swaps */}
-                  <td className="whitespace-nowrap w-32 py-3 md:px-6 px-3">
+                  <td className="whitespace-nowrap w-32 py-2 md:px-6 px-3">
                     <p className="mt-0.5 text-[15px] font-medium">
                       {row?.buys + row?.sells}
                     </p>
@@ -294,122 +298,25 @@ const TableBody = ({ isLoading, data, img }) => {
                   {/* <td className="whitespace-nowrap px-6 py-4 text-[16px]">
                     {data[ind]?.tradesCountWithUniqueTraders}
                   </td> */}
-                  <td className="whitespace-nowrap w-60 py-3 flex justify-center">
-                    <div
-                      className={`flex  gap-2 ${!row.mint_authority ? "text-white" : "text-[#828282]"
-                        }`}
-                    >
-                      <Tooltip
-                        body={
-                          "The token can’t be minted anymore — no one can create new tokens."
-                        }
-                      >
-                        <div className="grid  text-start">
-                          <div className="flex flex-col text-start opacity-75">
-                            {!row.mint_authority ? (
-                              <CiCircleCheck
-                                size={20}
-                                className="text-[#21CB6B]"
-                              />
-                            ) : (
-                              <IoCloseCircleOutline
-                                size={20}
-                                className="text-[#ED1B24]"
-                              />
-                            )}
-                            <div className="mt-1">
-                              <div>Mint Auth</div>
-                              <div>Disabled</div>
-                            </div>
-                          </div>
-                        </div>
-                      </Tooltip>
-
-                      <Tooltip body={"No one can freeze token transfers."}>
-                        <div className="grid  text-start">
-                          <div
-                            className={`flex flex-col text-start opacity-75 ${!row.freeze_authority
-                              ? "text-white"
-                              : "text-[#828282]"
-                              }`}
-                          >
-                            {!row.freeze_authority ? (
-                              <CiCircleCheck
-                                size={20}
-                                className="text-[#21CB6B]"
-                              />
-                            ) : (
-                              <IoCloseCircleOutline
-                                size={20}
-                                className="text-[#ED1B24]"
-                              />
-                            )}
-                            <div className="mt-1">
-                              <div>Freeze Auth</div>
-                              <div>Disabled</div>
-                            </div>
-                          </div>
-                        </div>
-                      </Tooltip>
-
-                      <Tooltip
-                        body={
-                          "Liquidity Pool tokens were burned — this helps lock the liquidity in place."
-                        }
-                      >
-                        <div className="grid  text-start">
-                          <div
-                            className={`flex flex-col text-start opacity-75 ${true ? "text-white" : "text-[#828282]"
-                              }`}
-                          >
-                            {true ? (
-                              <CiCircleCheck
-                                size={20}
-                                className="text-[#21CB6B]"
-                              />
-                            ) : (
-                              <IoCloseCircleOutline
-                                size={20}
-                                className="text-[#ED1B24]"
-                              />
-                            )}
-                            <div className="mt-1">
-                              <div>LP</div>
-                              <div>Burned</div>
-                            </div>
-                          </div>
-                        </div>
-                      </Tooltip>
-
-                      <Tooltip body={"Shows if token has 10 holders."}>
-                        <div className="grid  text-start">
-                          <div
-                            className={`flex flex-col text-start opacity-75 ${row?.top10Holder ? "text-white" : "text-[#828282]"
-                              }`}
-                          >
-                            {row?.top10Holder ? (
-                              <CiCircleCheck
-                                size={20}
-                                className="text-[#21CB6B]"
-                              />
-                            ) : (
-                              <IoCloseCircleOutline
-                                size={20}
-                                className="text-[#ED1B24]"
-                              />
-                            )}
-                            <div className="mt-1">
-                              <div>Top 10</div>
-                              <div>Holders</div>
-                            </div>
-                          </div>
-                        </div>
-                      </Tooltip>
+                  <td className="whitespace-nowrap w-60 py-2 flex justify-center font-mono">
+                    <div className="flex flex-col gap-1 text-sm  rounded">
+                      <div className="flex w-fit px-1 border border-[#2a2d38] rounded-md items-center gap-1 text-green-500 text-[12px] group-hover:bg-black group-hover:border-black">
+                        <RiUserAddLine size={10} />
+                        <span>14.02%</span>
+                      </div>
+                      <div className={`flex w-fit px-1 border border-[#2a2d38] rounded-md items-center gap-1 ${row.LP == null || row.LP == false ? "text-green-500" : "text-red-500"}  text-[12px] group-hover:bg-black group-hover:border-black`}>
+                        <RiFireFill size={10} />
+                        <span>{row.LP == null || row.LP == false ? '100%' : '???'}</span>
+                      </div>
+                      <div className={`flex w-fit px-1 border border-[#2a2d38] rounded-md  items-center gap-1 ${!row.mint_authority && !row.freeze_authority ? 'text-green-500' : 'text-red-500'} text-green-500 text-[12px] group-hover:bg-black group-hover:border-black `}>
+                        <FaStarOfLife size={10} />
+                        <span>{row.mint_authority && row.freeze_authority ? 'Off' : 'Off'}</span>
+                      </div>
                     </div>
                   </td>
 
                   {/* Column 6: Quick Buy Button */}
-                  <td className="whitespace-nowrap w-32 py-3 place-items-center">
+                  <td className="whitespace-nowrap w-32 py-2 place-items-center">
                     <button
                       className={`text-[#111111] font-bold rounded-[20px] py-2 ${quickBuy > 0 ? "px-2" : "px-3"
                         } bg-[#1d73fc] hover:bg-[#438bff] transition-all duration-300 ease-in-out flex items-center justify-center`}

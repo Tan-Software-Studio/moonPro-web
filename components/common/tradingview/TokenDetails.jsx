@@ -49,6 +49,7 @@ const TokenDetails = ({
   tokenDetailsMarketCap,
   chartTokenData,
   walletAddress,
+  pairAddress
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCopyUrl, setIsCopyUrl] = useState(false);
@@ -96,6 +97,10 @@ const TokenDetails = ({
         name: chartTokenData?.name,
         img: tokenImage,
         tokenAddress: tokenaddress,
+        marketCap: tokenDetailsMarketCap,
+        volume: '0',
+        Liqudity: TokenDetailsNumberData[1].price,
+        pairaddress: pairAddress
       },
       headers: {
         "Content-Type": "application/json",
@@ -180,129 +185,129 @@ const TokenDetails = ({
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center ">
         {/* Token Details */}
         <div className="sm:pl-[10px] p-3 flex items-center sm:gap-2 gap-1">
-            {/* Token Image */}
-            <div className="relative w-[36px] h-[36px]">
-              {/* change value to actual bonding curve later on and trail color depending on graduation status */}
-                <SquareProgressBar
-                  value={chartTokenData?.bondingCurveProgress || 100}
-                  maxValue={100}
-                  size={36.5}
-                  trailColor="#7b8085"
-                  progressColor={"#4FAFFE"}
-                />
-                {tokenImage ? (
-                  <img
-                    key={tokenImage || Solana}
-                    src={
-                      tokenImage || Solana
-                        ? tokenImage || Solana
-                        : "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/in/wp-content/uploads/2022/03/monkey-g412399084_1280.jpg"
-                    }
-                    alt="Profile"
-                    className="absolute inset-0 m-auto w-[30px] h-[30px] rounded-sm"
-                  />
+          {/* Token Image */}
+          <div className="relative w-[36px] h-[36px]">
+            {/* change value to actual bonding curve later on and trail color depending on graduation status */}
+            <SquareProgressBar
+              value={chartTokenData?.bondingCurveProgress || 100}
+              maxValue={100}
+              size={36.5}
+              trailColor="#7b8085"
+              progressColor={"#4FAFFE"}
+            />
+            {tokenImage ? (
+              <img
+                key={tokenImage || Solana}
+                src={
+                  tokenImage || Solana
+                    ? tokenImage || Solana
+                    : "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/in/wp-content/uploads/2022/03/monkey-g412399084_1280.jpg"
+                }
+                alt="Profile"
+                className="absolute inset-0 m-auto w-[30px] h-[30px] rounded-sm"
+              />
+            ) : (
+              <h1 className="absolute inset-0 m-auto w-[30px] h-[30px] rounded-sm text-[22px] border-[1px] border-[#26262e] bg-[#191919] flex items-center justify-center ">
+                {tokenSymbol?.toString()?.slice(0, 1)}
+              </h1>
+            )}
+          </div>
+          {/* Token Details */}
+          <div className="flex flex-col mr-5">
+            <div className="flex items-center gap-2">
+              <div className="text-white text-base sm:text-lg font-spaceGrotesk">
+                {tokenSymbol}
+              </div>
+              <div className="text-[#A8A8A8] text-xs md:text-[14px]">
+                {tokenaddress && tokenaddress.length >= 10
+                  ? `${tokenaddress.slice(0, 5)}...${tokenaddress.slice(-3)}`
+                  : tokenaddress}
+              </div>
+              <div onClick={() => handleCopy(tokenaddress)}>
+                {copied ? (
+                  <IoMdDoneAll className="text-white cursor-pointer" />
                 ) : (
-                  <h1 className="absolute inset-0 m-auto w-[30px] h-[30px] rounded-sm text-[22px] border-[1px] border-[#26262e] bg-[#191919] flex items-center justify-center ">
-                    {tokenSymbol?.toString()?.slice(0, 1)}
-                  </h1>
+                  <Image
+                    src={Copy}
+                    alt="Copy"
+                    width={18}
+                    height={18}
+                    className="cursor-pointer"
+                    onClick={() => handleCopy(tokenaddress)}
+                  />
                 )}
-            </div>
-            {/* Token Details */}
-            <div className="flex flex-col mr-5">
-              <div className="flex items-center gap-2">
-                <div className="text-white text-base sm:text-lg font-spaceGrotesk">
-                  {tokenSymbol}
-                </div>
-                <div className="text-[#A8A8A8] text-xs md:text-[14px]">
-                  {tokenaddress && tokenaddress.length >= 10
-                    ? `${tokenaddress.slice(0, 5)}...${tokenaddress.slice(-3)}`
-                    : tokenaddress}
-                </div>
-                <div onClick={() => handleCopy(tokenaddress)}>
-                  {copied ? (
-                    <IoMdDoneAll className="text-white cursor-pointer" />
-                  ) : (
-                    <Image
-                      src={Copy}
-                      alt="Copy"
-                      width={18}
-                      height={18}
-                      className="cursor-pointer"
-                      onClick={() => handleCopy(tokenaddress)}
-                    />
-                  )}
-                </div>
-              
               </div>
-              <div className="flex gap-2 items-center">
-                {chartTokenData?.socialIconsLink
-                  ?.filter((item) => item?.uri)
-                  .map((item, index) => {
-                    const matchedIcon = socialIcons.find(
-                      (iconItem) => iconItem.title === item.alt
-                    );
 
-                    return (
-                      <Link
-                        key={index}
-                        href={item?.uri}
-                        target="_blank"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <div className="grid place-items-center rounded-full">
-                          {matchedIcon && (
-                            <Image
-                              src={matchedIcon?.icon}
-                              alt={matchedIcon?.title}
-                              className="mx-auto text-white"
-                            />
-                          )}
-                        </div>
-                      </Link>
-                    );
-                  })}
-                <Link
-                  href={`https://www.pump.news/en/${tokenaddress}-solana`}
-                  target="_blank"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="text-[10px] h-[17px] w-[17px] border border-[#4CAF50] text-[#ffffff] rounded-md flex items-center justify-center cursor-pointer bg-gradient-to-br from-[#409143] to-[#093d0c] shadow-[0_0_4px_rgba(76,255,80,0.4)]">
-                    AI
-                  </div>
-                </Link>
-                <Link
-                  href={`https://x.com/search?q=${tokenaddress}`}
-                  target="_blank"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <IoSearchSharp color="#BBBBBC" size={19} />
-                </Link>
-              </div>
             </div>
-            <div className="text-white text-base font-medium mx-4">
-              {tokenDetailsMarketCap}
-            </div>
-            {/* Numbers */}
-            <div className="sm:p-[0px] p-3 flex items-center">
-              <div className="grid grid-cols-4 lg:gap-5 md:gap-4 gap-2">
-                {TokenDetailsNumberData?.map((num, index) => {
+            <div className="flex gap-2 items-center">
+              {chartTokenData?.socialIconsLink
+                ?.filter((item) => item?.uri)
+                .map((item, index) => {
+                  const matchedIcon = socialIcons.find(
+                    (iconItem) => iconItem.title === item.alt
+                  );
+
                   return (
-                    <div key={index} className="flex flex-col items-start">
-                      <span className="text-[#A8A8A8] text-xs capitalize">
-                        {num.label}
-                      </span>
-                      <span className="text-white text-sm">
-                        {num?.label == "Price USD"
-                          ? formatDecimal(num?.price)
-                          : num?.price}
-                      </span>
-                    </div>
+                    <Link
+                      key={index}
+                      href={item?.uri}
+                      target="_blank"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="grid place-items-center rounded-full">
+                        {matchedIcon && (
+                          <Image
+                            src={matchedIcon?.icon}
+                            alt={matchedIcon?.title}
+                            className="mx-auto text-white"
+                          />
+                        )}
+                      </div>
+                    </Link>
                   );
                 })}
-              </div>
+              <Link
+                href={`https://www.pump.news/en/${tokenaddress}-solana`}
+                target="_blank"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="text-[10px] h-[17px] w-[17px] border border-[#4CAF50] text-[#ffffff] rounded-md flex items-center justify-center cursor-pointer bg-gradient-to-br from-[#409143] to-[#093d0c] shadow-[0_0_4px_rgba(76,255,80,0.4)]">
+                  AI
+                </div>
+              </Link>
+              <Link
+                href={`https://x.com/search?q=${tokenaddress}`}
+                target="_blank"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <IoSearchSharp color="#BBBBBC" size={19} />
+              </Link>
+            </div>
+          </div>
+          <div className="text-white text-base font-medium mx-4">
+            {tokenDetailsMarketCap}
+          </div>
+          {/* Numbers */}
+          <div className="sm:p-[0px] p-3 flex items-center">
+            <div className="grid grid-cols-4 lg:gap-5 md:gap-4 gap-2">
+              {TokenDetailsNumberData?.map((num, index) => {
+                return (
+                  <div key={index} className="flex flex-col items-start">
+                    <span className="text-[#A8A8A8] text-xs capitalize">
+                      {num.label}
+                    </span>
+                    <span className="text-white text-sm">
+                      {num?.label == "Price USD"
+                        ? formatDecimal(num?.price)
+                        : num?.price}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
 
-              {/* Like Icon */}
-              {/* <button className="p-2">
+            {/* Like Icon */}
+            {/* <button className="p-2">
                 <Image
                   src={Like}
                   alt="Like"
@@ -311,7 +316,7 @@ const TokenDetails = ({
                   className="sm:w-7 sm:h-6 w-5 h-4"
                 />
               </button> */}
-            </div>
+          </div>
         </div>
         <div className="flex items-center justify-between mb-[5px] md:mb-[0px]">
           <div className="flex items-center md:flex-col">
@@ -373,7 +378,7 @@ const TokenDetails = ({
                 />
               </div>
               <div className="bg-[#404040] h-[1.5px]"></div>
-              <div className="py-[12px] px-[24px]"> 
+              <div className="py-[12px] px-[24px]">
                 {/* social icons */}
                 <div className="grid grid-cols-4 place-content-between">
                   <div className="mt-[16px] flex flex-col items-center justify-center gap-[4px]">

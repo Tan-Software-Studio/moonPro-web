@@ -29,6 +29,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
             },
         })
             .then((res) => {
+                // console.log("🚀 ~ .then ~ res:--->>>>", res)
                 setLoading(false)
                 setGetWatchlistData(res?.data?.data?.tokenFavorites || []);
             })
@@ -193,7 +194,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
                                                         onClick={() => navigateToChartSreen(item)}
                                                         className="px-6 py-4">
                                                         <span className="text-gray-300 text-sm">
-                                                            {item.liquidity || "N/A"}
+                                                            {item.Liqudity || "N/A"}
                                                         </span>
                                                     </td>
 
