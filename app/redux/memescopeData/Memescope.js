@@ -81,69 +81,59 @@ const allMemescopeData = createSlice({
       state.newLaunch = [action.payload, ...temp];
     },
     updateAllDataByNode: (state, { payload }) => {
-      // console.log(payload);
-      if (
-        state.newLaunch.length > 0 &&
-        state.MscopeGraduateData.length > 0 &&
-        state.MscopeGraduatedData.length
-      ) {
-        // new launch
-        const findTokenFromNewLaunch = state?.newLaunch?.findIndex(
-          (item) => item?.address == payload?.mint
-        );
-        if (findTokenFromNewLaunch >= 0) {
-          state.newLaunch[findTokenFromNewLaunch].current_price = payload.price;
-          state.newLaunch[findTokenFromNewLaunch].volume +=
-            payload?.price * payload?.amount;
-          state.newLaunch[findTokenFromNewLaunch].MKC =
-            state.newLaunch[findTokenFromNewLaunch].supply * payload?.price;
-          if (payload.holderAction == "add") {
-            state.newLaunch[findTokenFromNewLaunch].holders += 1;
-          } else if (payload.holderAction == "remove") {
-            if (state.newLaunch[findTokenFromNewLaunch].holders > 0) {
-              state.newLaunch[findTokenFromNewLaunch].holders -= 1;
+      console.log("🚀 ~ payload:", payload?.length);
+      if (payload?.length > 0) {
+        for (const element of payload) {
+          if (element?.Trade?.PriceInUSD) {
+            // new launch
+            if (state.newLaunch.length > 0) {
+              const findTokenFromNewLaunch = state?.newLaunch?.findIndex(
+                (item) => item?.address == element?.Trade?.Currency?.MintAddress
+              );
+              if (findTokenFromNewLaunch >= 0) {
+                state.newLaunch[findTokenFromNewLaunch].current_price =
+                  element?.Trade?.PriceInUSD;
+                state.newLaunch[findTokenFromNewLaunch].volume +=
+                  element?.Trade?.PriceInUSD * element?.Trade?.Amount;
+                state.newLaunch[findTokenFromNewLaunch].MKC =
+                  state.newLaunch[findTokenFromNewLaunch].supply *
+                  element?.Trade?.PriceInUSD;
+              }
             }
-          }
-        }
-        // about to graduate
-        const findTokenFromGraduate = state?.MscopeGraduateData?.findIndex(
-          (item) => item?.address == payload?.mint
-        );
-        if (findTokenFromGraduate >= 0) {
-          state.MscopeGraduateData[findTokenFromGraduate].current_price =
-            payload.price;
-          state.MscopeGraduateData[findTokenFromGraduate].volume +=
-            payload?.price * payload?.amount;
-          state.MscopeGraduateData[findTokenFromGraduate].MKC =
-            state.MscopeGraduateData[findTokenFromGraduate].totalsupply *
-            payload?.price;
-          if (payload.holderAction == "add") {
-            state.MscopeGraduateData[findTokenFromGraduate].holders += 1;
-          } else if (payload.holderAction == "remove") {
-            if (state.MscopeGraduateData[findTokenFromGraduate].holders) {
-              state.MscopeGraduateData[findTokenFromGraduate].holders -= 1;
+            // about to graduated
+            if (state.MscopeGraduateData.length > 0) {
+              const findTokenFromGraduate =
+                state?.MscopeGraduateData?.findIndex(
+                  (item) =>
+                    item?.address == element?.Trade?.Currency?.MintAddress
+                );
+              if (findTokenFromGraduate >= 0) {
+                state.MscopeGraduateData[findTokenFromGraduate].current_price =
+                  element?.Trade?.PriceInUSD;
+                state.MscopeGraduateData[findTokenFromGraduate].volume +=
+                  element?.Trade?.PriceInUSD * element?.Trade?.Amount;
+                state.MscopeGraduateData[findTokenFromGraduate].MKC =
+                  state.newLaunch[findTokenFromGraduate].supply *
+                  element?.Trade?.PriceInUSD;
+              }
             }
-          }
-        }
-
-        // graduated
-        const findTokenFromGraduated = state?.MscopeGraduatedData?.findIndex(
-          (item) => item?.address == payload?.mint
-        );
-
-        if (findTokenFromGraduated >= 0) {
-          state.MscopeGraduatedData[findTokenFromGraduated].current_price =
-            payload?.price;
-          state.MscopeGraduatedData[findTokenFromGraduated].volume +=
-            payload?.price * payload?.amount;
-          state.MscopeGraduatedData[findTokenFromGraduated].MKC =
-            state.MscopeGraduatedData[findTokenFromGraduated].totalsupply *
-            payload?.price;
-          if (payload.holderAction == "add") {
-            state.MscopeGraduatedData[findTokenFromGraduated].holders += 1;
-          } else if (payload.holderAction == "remove") {
-            if (state.MscopeGraduatedData[findTokenFromGraduated].holders) {
-              state.MscopeGraduatedData[findTokenFromGraduated].holders -= 1;
+            // graduated
+            if (state.MscopeGraduatedData.length >= 0) {
+              const findTokenFromGraduated =
+                state?.MscopeGraduatedData?.findIndex(
+                  (item) =>
+                    item?.address == element?.Trade?.Currency?.MintAddress
+                );
+              if (findTokenFromGraduated >= 0) {
+                state.MscopeGraduatedData[
+                  findTokenFromGraduated
+                ].current_price = element?.Trade?.PriceInUSD;
+                state.MscopeGraduatedData[findTokenFromGraduated].volume +=
+                  element?.Trade?.PriceInUSD * element?.Trade?.Amount;
+                state.MscopeGraduatedData[findTokenFromGraduated].MKC =
+                  state.newLaunch[findTokenFromGraduated].supply *
+                  element?.Trade?.PriceInUSD;
+              }
             }
           }
         }

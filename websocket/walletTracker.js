@@ -2,7 +2,7 @@ import {
   setAiSignalData,
   setAiSignalLiveDataUpdate,
 } from "@/app/redux/AiSignalDataSlice/AiSignal.slice";
-import { addNewTransactionForWalletTracking } from "@/app/redux/chartDataSlice/chartData.slice";
+// import { addNewTransactionForWalletTracking } from "@/app/redux/chartDataSlice/chartData.slice";
 import { updatePnlDataPriceOnly } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import {
   setMemeScopeGraduateData,
@@ -78,6 +78,8 @@ export async function subscribeToWalletTracker() {
     await socket.on("new_trades", async (data) => {
       // console.log("🚀 ~ socket.on ~ data:", data?.length);
       store.dispatch(setAiSignalLiveDataUpdate(data));
+      store.dispatch(updateTrendingLiveData(data));
+      store.dispatch(updateAllDataByNode(data));
       // send data to update pnl
       if (solanaWalletAddress) {
         store.dispatch(updatePnlDataPriceOnly(data));
@@ -189,55 +191,37 @@ export async function subscribeToTrendingTokens() {
     });
 
     // gRPC node data
-    socket.on("gRPC_node_tx", async (data) => {
-      if (data?.action == "buy") {
-        if (
-          data?.bought?.mint != "So11111111111111111111111111111111111111112"
-        ) {
-          const solAmountInUsd = data?.priceInSolOfToken * liveSolanaPrice;
-          store.dispatch(
-            updateAllDataByNode({
-              type: "buy",
-              price: solAmountInUsd,
-              mint: data?.bought?.mint,
-              amount: data?.bought?.uiTokenAmount?.amount,
-              holderAction: data?.holder,
-            })
-          );
-          store.dispatch(
-            updateTrendingLiveData({
-              type: "buy",
-              price: solAmountInUsd,
-              mint: data?.bought?.mint,
-              amount: data?.bought?.uiTokenAmount?.amount,
-              holderAction: data?.holder,
-            })
-          );
-        }
-      } else if (data?.action == "sell") {
-        if (data?.sold?.mint != "So11111111111111111111111111111111111111112") {
-          const solAmountInUsd = data?.priceInSolOfToken * liveSolanaPrice;
-          store.dispatch(
-            updateAllDataByNode({
-              type: "sell",
-              price: solAmountInUsd,
-              mint: data?.sold?.mint,
-              amount: data?.sold?.uiTokenAmount?.amount,
-              holderAction: data?.holder,
-            })
-          );
-          store.dispatch(
-            updateTrendingLiveData({
-              type: "sell",
-              price: solAmountInUsd,
-              mint: data?.sold?.mint,
-              amount: data?.sold?.uiTokenAmount?.amount,
-              holderAction: data?.holder,
-            })
-          );
-        }
-      }
-    });
+    // socket.on("gRPC_node_tx", async (data) => {
+    //   if (data?.action == "buy") {
+    //     if (
+    //       data?.bought?.mint != "So11111111111111111111111111111111111111112"
+    //     ) {
+    //       const solAmountInUsd = data?.priceInSolOfToken * liveSolanaPrice;
+    //       store.dispatch(
+    //         updateAllDataByNode({
+    //           type: "buy",
+    //           price: solAmountInUsd,
+    //           mint: data?.bought?.mint,
+    //           amount: data?.bought?.uiTokenAmount?.amount,
+    //           holderAction: data?.holder,
+    //         })
+    //       );
+    //     }
+    //   } else if (data?.action == "sell") {
+    //     if (data?.sold?.mint != "So11111111111111111111111111111111111111112") {
+    //       const solAmountInUsd = data?.priceInSolOfToken * liveSolanaPrice;
+    //       store.dispatch(
+    //         updateAllDataByNode({
+    //           type: "sell",
+    //           price: solAmountInUsd,
+    //           mint: data?.sold?.mint,
+    //           amount: data?.sold?.uiTokenAmount?.amount,
+    //           holderAction: data?.holder,
+    //         })
+    //       );
+    //     }
+    //   }
+    // });
   } catch (error) {
     console.log("🚀 ~ subscribeToTrendingTokens ~ error:", error?.message);
   }
