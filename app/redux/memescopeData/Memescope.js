@@ -81,7 +81,6 @@ const allMemescopeData = createSlice({
       state.newLaunch = [action.payload, ...temp];
     },
     updateAllDataByNode: (state, { payload }) => {
-      console.log("🚀 ~ payload:", payload?.length);
       if (payload?.length > 0) {
         for (const element of payload) {
           if (element?.Trade?.PriceInUSD) {
