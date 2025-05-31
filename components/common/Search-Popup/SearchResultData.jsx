@@ -145,11 +145,9 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
             <>
               <Link
                 key={ind}
-                href={`/tradingview/solana?tokenaddress=${
-                  e?.Trade?.Currency?.MintAddress
-                }&symbol=${e?.Trade?.Currency?.Symbol || "unknown"}&pair=${
-                  e?.Trade?.Market?.MarketAddress
-                }`}
+                href={`/tradingview/solana?tokenaddress=${e?.Trade?.Currency?.MintAddress
+                  }&symbol=${e?.Trade?.Currency?.Symbol || "unknown"}&pair=${e?.Trade?.Market?.MarketAddress
+                  }`}
               >
                 <div
                   className="flex flex-col lg:flex-row lg:flex-1 items-center overflow-hidden hover:bg-[#3333339c] bg-[#08080E] cursor-pointer rounded-md border border-[#333333] mb-3 py-[11px] px-3"
@@ -195,7 +193,7 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                       </div>
                     </div>
                     <div className="ml-3 flex-1 overflow-hidden">
-                      <div className="flex flex-col justify-center lg:justify-between lg:flex-row lg:gap-2 relative">
+                      <div className="grid lg:grid-cols-4 lg:gap-2 relative">
                         <div className="">
                           <div className="flex gap-[0.375rem] w-full items-center grow-[2]  ">
                             <span className="text-sm text-ellipsis overflow-hidden min-w-[14px] font-semibold whitespace-nowrap">
@@ -262,7 +260,7 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                         {/* <div className="flex justify-between w-full gap-3"> */}
 
                         {/* <div className="flex gap-3 whitespace-nowrap"> */}
-                        <div className="flex gap-1 items-center justify-center">
+                        <div className="lg:flex hidden gap-1 items-center justify-center">
                           <span className="text-[#B2B2B7] text-xs">
                             Mkt Cap:
                           </span>
@@ -270,23 +268,21 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                             {` $ ${formatNumber(parseInt(MarketCap)) || null}`}
                           </span>
                         </div>
-                        <div className="flex gap-1 items-center justify-center">
+                        <div className="lg:flex hidden gap-1 items-center justify-center">
                           <span className="text-[#B2B2B7] text-xs">Liq: </span>
                           <span className="text-sm font-semibold text-[#FFFFFF]">
-                            {` $ ${
-                              formatNumber(parseInt(e?.liquidityUSD)) || null
-                            }`}
+                            {` $ ${formatNumber(parseInt(e?.liquidityUSD)) || null
+                              }`}
                           </span>
                         </div>
-                        <div className="flex   items-center gap-1">
+                        <div className="lg:flex hidden   items-center gap-1">
                           <span className="text-[#B2B2B7] text-xs">
                             24h Vol:{" "}
                           </span>
                           <span className="text-sm font-semibold text-[#FFFFFF]">
-                            {` $ ${
-                              formatNumber(parseInt(e?.traded_volume_total)) ||
+                            {` $ ${formatNumber(parseInt(e?.traded_volume_total)) ||
                               null
-                            }`}
+                              }`}
                           </span>
                         </div>
                       </div>
@@ -307,9 +303,8 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                         <div className="flex flex-1 items-center justify-center border border-gray-700 rounded h-6 px-[0.375rem]">
                           <span className="text-[#B2B2B7] text-xs">Liq: </span>
                           <span className="text-sm text-[#D5D5DA] ml-1">
-                            {` $ ${
-                              formatNumber(parseInt(e?.liquidityUSD)) || null
-                            }`}
+                            {` $ ${formatNumber(parseInt(e?.liquidityUSD)) || null
+                              }`}
                           </span>
                         </div>
                       </div>
@@ -319,10 +314,9 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                             24h Vol:{" "}
                           </span>
                           <span className="text-sm text-[#D5D5DA] ml-1">
-                            {` $ ${
-                              formatNumber(parseInt(e?.traded_volume_total)) ||
+                            {` $ ${formatNumber(parseInt(e?.traded_volume_total)) ||
                               null
-                            }`}
+                              }`}
                           </span>
                         </div>
                         <div className="flex flex-1 items-center justify-center border border-gray-700 rounded h-6 px-[0.375rem] gap-1">
@@ -340,9 +334,8 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                             <path d="M512 32c0 113.6-84.6 207.5-194.2 222c-7.1-53.4-30.6-101.6-65.3-139.3C290.8 46.3 364 0 448 0h32c17.7 0 32 14.3 32 32zM0 96C0 78.3 14.3 64 32 64H64c123.7 0 224 100.3 224 224v32V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V320C100.3 320 0 219.7 0 96z"></path>
                           </svg>
                           <span className="text-xs text-[#D5D5DA]">
-                            {`${
-                              convertToRelativeTime(e?.Block?.createdAt) || null
-                            }`}
+                            {`${convertToRelativeTime(e?.Block?.createdAt) || null
+                              }`}
                           </span>
                         </div>
                       </div>
