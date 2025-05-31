@@ -11,7 +11,6 @@ import { useRouter } from 'next/navigation';
 import { setChartSymbolImage, setIsFaviouriteToken } from '@/app/redux/states';
 
 const Watchlist = ({ setIsWatchlistPopup }) => {
-    console.log("🚀 ~ Watchlist ~ setIsWatchlistPopup:--->>>", setIsWatchlistPopup)
     const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
     const [getWatchlistData, setGetWatchlistData] = useState([]);
     const [loading, setLoading] = useState(false)

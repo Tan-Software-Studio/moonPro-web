@@ -51,7 +51,6 @@ const TokenDetails = ({
   walletAddress,
   pairAddress
 }) => {
-  console.log("🚀 ~ pairAddress:--->>><<<<", pairAddress)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCopyUrl, setIsCopyUrl] = useState(false);
 
