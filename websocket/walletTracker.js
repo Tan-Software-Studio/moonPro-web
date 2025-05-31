@@ -1,4 +1,8 @@
-import { addNewTransactionForWalletTracking } from "@/app/redux/chartDataSlice/chartData.slice";
+import {
+  setAiSignalData,
+  setAiSignalLiveDataUpdate,
+} from "@/app/redux/AiSignalDataSlice/AiSignal.slice";
+// import { addNewTransactionForWalletTracking } from "@/app/redux/chartDataSlice/chartData.slice";
 import { updatePnlDataPriceOnly } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import {
   setMemeScopeGraduateData,
@@ -12,14 +16,26 @@ import {
   updateTrendingData,
   updateTrendingLiveData,
 } from "@/app/redux/trending/solTrending.slice";
-import axios from "axios";
 import { io } from "socket.io-client";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
-const BASE_URL_MOON = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
+const BASE_URL_MOON = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL_SOCKET;
+const BASE_URL_AI_SIGNAL = process.env.NEXT_PUBLIC_AI_SIGNAL_BASE_URL;
+// connection with wavecore
 export const socket = io(BASE_URL, {
   transports: ["websocket"],
 });
+// connection with mooncore
+export const socketMoonCore = io(BASE_URL_MOON, {
+  transports: ["websocket"],
+});
+// connect with ai-signal-backend
+export const socketAiSignalBackend = io(BASE_URL_AI_SIGNAL, {
+  transports: ["websocket"],
+});
+
 let isSocketOn = false;
+let isSocketOnMoon = false;
+let isSocketOnAISignalCore = false;
 let isTrendingSocketOn = false;
 export async function subscribeToWalletTracker() {
   try {
@@ -61,6 +77,9 @@ export async function subscribeToWalletTracker() {
     // watch all solana trades
     await socket.on("new_trades", async (data) => {
       // console.log("🚀 ~ socket.on ~ data:", data?.length);
+      store.dispatch(setAiSignalLiveDataUpdate(data));
+      store.dispatch(updateTrendingLiveData(data));
+      store.dispatch(updateAllDataByNode(data));
       // send data to update pnl
       if (solanaWalletAddress) {
         store.dispatch(updatePnlDataPriceOnly(data));
@@ -172,59 +191,85 @@ export async function subscribeToTrendingTokens() {
     });
 
     // gRPC node data
-    socket.on("gRPC_node_tx", async (data) => {
-      if (data?.action == "buy") {
-        if (
-          data?.bought?.mint != "So11111111111111111111111111111111111111112"
-        ) {
-          const solAmountInUsd = data?.priceInSolOfToken * liveSolanaPrice;
-          store.dispatch(
-            updateAllDataByNode({
-              type: "buy",
-              price: solAmountInUsd,
-              mint: data?.bought?.mint,
-              amount: data?.bought?.uiTokenAmount?.amount,
-              holderAction: data?.holder,
-            })
-          );
-          store.dispatch(
-            updateTrendingLiveData({
-              type: "buy",
-              price: solAmountInUsd,
-              mint: data?.bought?.mint,
-              amount: data?.bought?.uiTokenAmount?.amount,
-              holderAction: data?.holder,
-            })
-          );
-        }
-      } else if (data?.action == "sell") {
-        if (data?.sold?.mint != "So11111111111111111111111111111111111111112") {
-          const solAmountInUsd = data?.priceInSolOfToken * liveSolanaPrice;
-          store.dispatch(
-            updateAllDataByNode({
-              type: "sell",
-              price: solAmountInUsd,
-              mint: data?.sold?.mint,
-              amount: data?.sold?.uiTokenAmount?.amount,
-              holderAction: data?.holder,
-            })
-          );
-          store.dispatch(
-            updateTrendingLiveData({
-              type: "sell",
-              price: solAmountInUsd,
-              mint: data?.sold?.mint,
-              amount: data?.sold?.uiTokenAmount?.amount,
-              holderAction: data?.holder,
-            })
-          );
-        }
-      }
-    });
+    // socket.on("gRPC_node_tx", async (data) => {
+    //   if (data?.action == "buy") {
+    //     if (
+    //       data?.bought?.mint != "So11111111111111111111111111111111111111112"
+    //     ) {
+    //       const solAmountInUsd = data?.priceInSolOfToken * liveSolanaPrice;
+    //       store.dispatch(
+    //         updateAllDataByNode({
+    //           type: "buy",
+    //           price: solAmountInUsd,
+    //           mint: data?.bought?.mint,
+    //           amount: data?.bought?.uiTokenAmount?.amount,
+    //           holderAction: data?.holder,
+    //         })
+    //       );
+    //     }
+    //   } else if (data?.action == "sell") {
+    //     if (data?.sold?.mint != "So11111111111111111111111111111111111111112") {
+    //       const solAmountInUsd = data?.priceInSolOfToken * liveSolanaPrice;
+    //       store.dispatch(
+    //         updateAllDataByNode({
+    //           type: "sell",
+    //           price: solAmountInUsd,
+    //           mint: data?.sold?.mint,
+    //           amount: data?.sold?.uiTokenAmount?.amount,
+    //           holderAction: data?.holder,
+    //         })
+    //       );
+    //     }
+    //   }
+    // });
   } catch (error) {
     console.log("🚀 ~ subscribeToTrendingTokens ~ error:", error?.message);
   }
 }
+
+export async function subscribeToAiSignalTokens() {
+  if (isSocketOnMoon) {
+    console.log("Trades websocket is already connected.");
+    return;
+  }
+  await socketMoonCore.connect();
+  isSocketOnMoon = true;
+  await socketMoonCore.on("connect", () => {
+    console.log("Trades websocket connected.");
+  });
+  socketMoonCore.on("aiSignleLiveAllDataUpdate", async (data) => {
+    store.dispatch(setAiSignalData(data));
+  });
+}
+
+export async function subscribeToAiSignalTokensNewAddedToken() {
+  if (isSocketOnAISignalCore) {
+    console.log("Trades websocket is already connected.");
+    return;
+  }
+  await socketAiSignalBackend.connect();
+  isSocketOnAISignalCore = true;
+  await socketAiSignalBackend.on("connect", () => {
+    console.log("Trades websocket connected.");
+  });
+  let aiSignalDataFromStore = [];
+  store.subscribe(() => {
+    aiSignalDataFromStore = store?.getState().aiSignal.aiSignalData;
+  });
+  socketAiSignalBackend.on("aiSignleLiveData", async (data) => {
+    let newDataArr = [];
+    if (data?.length >= 100) {
+      newDataArr = [...data];
+    } else {
+      newDataArr = [
+        ...data,
+        ...aiSignalDataFromStore?.slice(0, 100 - data?.length),
+      ];
+    }
+    store.dispatch(setAiSignalData(newDataArr));
+  });
+}
+
 export function unsubscribeFromWalletTracker() {
   try {
     console.log("unscribed called!");
@@ -232,6 +277,29 @@ export function unsubscribeFromWalletTracker() {
       socket.off("new_trades");
       socket.disconnect();
       isSocketOn = false;
+    }
+  } catch (error) {
+    console.log("🚀 ~ unsubscribeFromWalletTracker ~ error:", error)?.message;
+  }
+}
+
+export function unsubscribeFromMooncore() {
+  try {
+    console.log("unscribed called!");
+    if (socketMoonCore) {
+      socketMoonCore.disconnect();
+      isSocketOnMoon = false;
+    }
+  } catch (error) {
+    console.log("🚀 ~ unsubscribeFromWalletTracker ~ error:", error)?.message;
+  }
+}
+export function unsubscribeFromAiSignal() {
+  try {
+    console.log("unscribed called!");
+    if (socketAiSignalBackend) {
+      socketAiSignalBackend.disconnect();
+      isSocketOnAISignalCore = false;
     }
   } catch (error) {
     console.log("🚀 ~ unsubscribeFromWalletTracker ~ error:", error)?.message;

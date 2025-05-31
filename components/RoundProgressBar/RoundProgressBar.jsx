@@ -58,7 +58,7 @@ const RoundProgressBar = ({
 
         {/* top-left icon */}
         <div
-          className={`absolute rounded-full bg-black border -top-1.5 -left-2.1 z-10`}
+          className={`absolute rounded-full bg-black border -top-1.5 -left-2.1 !z-10`}
           style={{ borderColor: progressColor }}
         >
           <Image src={pump_img} alt="pump_img" className="w-4" />

@@ -25,149 +25,171 @@ const solTrendingData = createSlice({
       state.filterTime[payload.time] = payload.data;
     },
     updateTrendingLiveData: (state, { payload }) => {
-      // 1m update from node
-      if (state.filterTime["1m"].length > 0) {
-        const findTokenFrom1m = state.filterTime["1m"]?.findIndex(
-          (item) => item?.address == payload?.mint
-        );
-        if (findTokenFrom1m > 0) {
-          const totalTradeValue = payload?.price * payload?.amount;
-          state.filterTime["1m"][findTokenFrom1m].current_price = payload.price;
-          if (payload.type == "buy") {
-            state.filterTime["1m"][findTokenFrom1m].buys += 1;
-            state.filterTime["1m"][findTokenFrom1m].liquidity +=
-              totalTradeValue;
-          } else {
-            state.filterTime["1m"][findTokenFrom1m].sells += 1;
-            const totalLQD = (state.filterTime["1m"][
-              findTokenFrom1m
-            ].liquidity -= totalTradeValue);
-            if (totalLQD < 0) {
-              state.filterTime["1m"][findTokenFrom1m].liquidity = 0;
-            } else {
-              state.filterTime["1m"][findTokenFrom1m].liquidity = totalLQD;
+      if (payload?.length > 0) {
+        console.log("🚀 ~ payload:", payload?.length);
+        for (const element of payload) {
+          if (element?.Trade?.PriceInUSD) {
+            // 1m update from node
+            if (state.filterTime["1m"].length > 0) {
+              const findIndex = state.filterTime["1m"]?.findIndex(
+                (item) => item?.address == element?.Trade?.Currency?.MintAddress
+              );
+              if (findIndex >= 0) {
+                const totalTradedValue =
+                  element?.Trade?.Amount * element?.Trade?.PriceInUSD;
+                state.filterTime["1m"][findIndex].current_price =
+                  element?.Trade?.PriceInUSD;
+                if (element?.Trade?.Side?.Type == "buy") {
+                  state.filterTime["1m"][findIndex].buys += 1;
+                  state.filterTime["1m"][findIndex].liquidity +=
+                    totalTradedValue;
+                } else {
+                  state.filterTime["1m"][findIndex].sells += 1;
+                  if (
+                    state.filterTime["1m"][findIndex].liquidity -
+                      totalTradedValue <=
+                    0
+                  ) {
+                    state.filterTime["1m"][findIndex].liquidity = 0;
+                  } else {
+                    state.filterTime["1m"][findIndex].liquidity -=
+                      totalTradedValue;
+                  }
+                }
+                state.filterTime["1m"][findIndex].traded_volume +=
+                  totalTradedValue;
+                const newMKC =
+                  state.filterTime["1m"][findIndex].totalsupply *
+                  element?.Trade?.PriceInUSD;
+                state.filterTime["1m"][findIndex].Percentage =
+                  calculatePercentageDifference(
+                    newMKC,
+                    state.filterTime["1m"][findIndex].marketCap
+                  );
+                state.filterTime["1m"][findIndex].marketCap = newMKC;
+              }
+            }
+            // 5m update from node
+            if (state.filterTime["5m"].length > 0) {
+              const findIndex = state.filterTime["5m"]?.findIndex(
+                (item) => item?.address == element?.Trade?.Currency?.MintAddress
+              );
+              if (findIndex >= 0) {
+                const totalTradedValue =
+                  element?.Trade?.Amount * element?.Trade?.PriceInUSD;
+                state.filterTime["5m"][findIndex].current_price =
+                  element?.Trade?.PriceInUSD;
+                if (element?.Trade?.Side?.Type == "buy") {
+                  state.filterTime["5m"][findIndex].buys += 1;
+                  state.filterTime["5m"][findIndex].liquidity +=
+                    totalTradedValue;
+                } else {
+                  state.filterTime["5m"][findIndex].sells += 1;
+                  if (
+                    state.filterTime["5m"][findIndex].liquidity -
+                      totalTradedValue <=
+                    0
+                  ) {
+                    state.filterTime["5m"][findIndex].liquidity = 0;
+                  } else {
+                    state.filterTime["5m"][findIndex].liquidity -=
+                      totalTradedValue;
+                  }
+                }
+                state.filterTime["5m"][findIndex].traded_volume +=
+                  totalTradedValue;
+                const newMKC =
+                  state.filterTime["5m"][findIndex].totalsupply *
+                  element?.Trade?.PriceInUSD;
+                state.filterTime["5m"][findIndex].Percentage =
+                  calculatePercentageDifference(
+                    newMKC,
+                    state.filterTime["5m"][findIndex].marketCap
+                  );
+                state.filterTime["5m"][findIndex].marketCap = newMKC;
+              }
+            }
+            // 30m update from node
+            if (state.filterTime["30m"].length > 0) {
+              const findIndex = state.filterTime["30m"]?.findIndex(
+                (item) => item?.address == element?.Trade?.Currency?.MintAddress
+              );
+              if (findIndex >= 0) {
+                const totalTradedValue =
+                  element?.Trade?.Amount * element?.Trade?.PriceInUSD;
+                state.filterTime["30m"][findIndex].current_price =
+                  element?.Trade?.PriceInUSD;
+                if (element?.Trade?.Side?.Type == "buy") {
+                  state.filterTime["30m"][findIndex].buys += 1;
+                  state.filterTime["30m"][findIndex].liquidity +=
+                    totalTradedValue;
+                } else {
+                  state.filterTime["30m"][findIndex].sells += 1;
+                  if (
+                    state.filterTime["30m"][findIndex].liquidity -
+                      totalTradedValue <=
+                    0
+                  ) {
+                    state.filterTime["30m"][findIndex].liquidity = 0;
+                  } else {
+                    state.filterTime["30m"][findIndex].liquidity -=
+                      totalTradedValue;
+                  }
+                }
+                state.filterTime["30m"][findIndex].traded_volume +=
+                  totalTradedValue;
+                const newMKC =
+                  state.filterTime["30m"][findIndex].totalsupply *
+                  element?.Trade?.PriceInUSD;
+                state.filterTime["30m"][findIndex].Percentage =
+                  calculatePercentageDifference(
+                    newMKC,
+                    state.filterTime["30m"][findIndex].marketCap
+                  );
+                state.filterTime["30m"][findIndex].marketCap = newMKC;
+              }
+            }
+            // 1h update from node
+            if (state.filterTime["1h"].length > 0) {
+              const findIndex = state.filterTime["1h"]?.findIndex(
+                (item) => item?.address == element?.Trade?.Currency?.MintAddress
+              );
+              if (findIndex >= 0) {
+                const totalTradedValue =
+                  element?.Trade?.Amount * element?.Trade?.PriceInUSD;
+                state.filterTime["1h"][findIndex].current_price =
+                  element?.Trade?.PriceInUSD;
+                if (element?.Trade?.Side?.Type == "buy") {
+                  state.filterTime["1h"][findIndex].buys += 1;
+                  state.filterTime["1h"][findIndex].liquidity +=
+                    totalTradedValue;
+                } else {
+                  state.filterTime["1h"][findIndex].sells += 1;
+                  if (
+                    state.filterTime["1h"][findIndex].liquidity -
+                      totalTradedValue <=
+                    0
+                  ) {
+                    state.filterTime["1h"][findIndex].liquidity = 0;
+                  } else {
+                    state.filterTime["1h"][findIndex].liquidity -=
+                      totalTradedValue;
+                  }
+                }
+                state.filterTime["1h"][findIndex].traded_volume +=
+                  totalTradedValue;
+                const newMKC =
+                  state.filterTime["1h"][findIndex].totalsupply *
+                  element?.Trade?.PriceInUSD;
+                state.filterTime["1h"][findIndex].Percentage =
+                  calculatePercentageDifference(
+                    newMKC,
+                    state.filterTime["1h"][findIndex].marketCap
+                  );
+                state.filterTime["1h"][findIndex].marketCap = newMKC;
+              }
             }
           }
-          state.filterTime["1m"][findTokenFrom1m].traded_volume +=
-            totalTradeValue;
-          const newMKC =
-            state.filterTime["1m"][findTokenFrom1m].totalsupply *
-            payload?.price;
-          state.filterTime["1m"][findTokenFrom1m].Percentage =
-            calculatePercentageDifference(
-              newMKC,
-              state.filterTime["1m"][findTokenFrom1m].marketCap
-            );
-          state.filterTime["1m"][findTokenFrom1m].marketCap = newMKC;
-        }
-      }
-      // 5m update from node
-      if (state.filterTime["5m"].length > 0) {
-        const findTokenFrom5m = state.filterTime["5m"]?.findIndex(
-          (item) => item?.address == payload?.mint
-        );
-        if (findTokenFrom5m > 0) {
-          const totalTradeValue = payload?.price * payload?.amount;
-          state.filterTime["1m"][findTokenFrom5m].current_price = payload.price;
-          if (payload.type == "buy") {
-            state.filterTime["5m"][findTokenFrom5m].buys += 1;
-            state.filterTime["5m"][findTokenFrom5m].liquidity +=
-              totalTradeValue;
-          } else {
-            state.filterTime["5m"][findTokenFrom5m].sells += 1;
-            const totalLQD = (state.filterTime["5m"][
-              findTokenFrom5m
-            ].liquidity -= totalTradeValue);
-            if (totalLQD < 0) {
-              state.filterTime["5m"][findTokenFrom5m].liquidity = 0;
-            } else {
-              state.filterTime["5m"][findTokenFrom5m].liquidity = totalLQD;
-            }
-          }
-          state.filterTime["5m"][findTokenFrom5m].traded_volume +=
-            totalTradeValue;
-          const newMKC =
-            state.filterTime["5m"][findTokenFrom5m].totalsupply *
-            payload?.price;
-          state.filterTime["5m"][findTokenFrom5m].Percentage =
-            calculatePercentageDifference(
-              newMKC,
-              state.filterTime["5m"][findTokenFrom5m].marketCap
-            );
-          state.filterTime["5m"][findTokenFrom5m].marketCap = newMKC;
-        }
-      }
-      // 30m update from node
-      if (state.filterTime["30m"].length > 0) {
-        const findTokenFrom30m = state.filterTime["30m"]?.findIndex(
-          (item) => item?.address == payload?.mint
-        );
-        if (findTokenFrom30m > 0) {
-          const totalTradeValue = payload?.price * payload?.amount;
-          state.filterTime["30m"][findTokenFrom30m].current_price =
-            payload.price;
-          if (payload.type == "buy") {
-            state.filterTime["30m"][findTokenFrom30m].buys += 1;
-            state.filterTime["30m"][findTokenFrom30m].liquidity +=
-              totalTradeValue;
-          } else {
-            state.filterTime["30m"][findTokenFrom30m].sells += 1;
-            const totalLQD = (state.filterTime["30m"][
-              findTokenFrom30m
-            ].liquidity -= totalTradeValue);
-            if (totalLQD < 0) {
-              state.filterTime["30m"][findTokenFrom30m].liquidity = 0;
-            } else {
-              state.filterTime["30m"][findTokenFrom30m].liquidity = totalLQD;
-            }
-          }
-          state.filterTime["30m"][findTokenFrom30m].traded_volume +=
-            totalTradeValue;
-          const newMKC =
-            state.filterTime["30m"][findTokenFrom30m].totalsupply *
-            payload?.price;
-          state.filterTime["30m"][findTokenFrom30m].Percentage =
-            calculatePercentageDifference(
-              newMKC,
-              state.filterTime["30m"][findTokenFrom30m].marketCap
-            );
-          state.filterTime["30m"][findTokenFrom30m].marketCap = newMKC;
-        }
-      }
-      // 1h update from node
-      if (state.filterTime["1h"].length > 0) {
-        const findTokenFrom1h = state.filterTime["1h"]?.findIndex(
-          (item) => item?.address == payload?.mint
-        );
-        if (findTokenFrom1h > 0) {
-          const totalTradeValue = payload?.price * payload?.amount;
-          state.filterTime["1h"][findTokenFrom1h].current_price = payload.price;
-          if (payload.type == "buy") {
-            state.filterTime["1h"][findTokenFrom1h].buys += 1;
-            state.filterTime["1h"][findTokenFrom1h].liquidity +=
-              totalTradeValue;
-          } else {
-            state.filterTime["1h"][findTokenFrom1h].sells += 1;
-            const totalLQD = (state.filterTime["1h"][
-              findTokenFrom1h
-            ].liquidity -= totalTradeValue);
-            if (totalLQD < 0) {
-              state.filterTime["1h"][findTokenFrom1h].liquidity = 0;
-            } else {
-              state.filterTime["1h"][findTokenFrom1h].liquidity = totalLQD;
-            }
-          }
-          state.filterTime["1h"][findTokenFrom1h].traded_volume +=
-            totalTradeValue;
-          const newMKC =
-            state.filterTime["1h"][findTokenFrom1h].totalsupply *
-            payload?.price;
-          state.filterTime["1h"][findTokenFrom1h].Percentage =
-            calculatePercentageDifference(
-              newMKC,
-              state.filterTime["1h"][findTokenFrom1h].marketCap
-            );
-          state.filterTime["1h"][findTokenFrom1h].marketCap = newMKC;
         }
       }
     },
