@@ -518,20 +518,25 @@ const TradingPopup = ({
             {/* MEV */}
             <div className="flex items-center gap-[8px]">
               <div
-                onClick={() => setIsMev(!isMev)}
-                className={`flex ${
-                  isMev
-                    ? `${activeTab == "buy" ? "bg-[#278BFE]" : "bg-[#ed1819]"}`
-                    : "bg-[#4D4D4D]"
-                } w-[36px] h-[20px] items-center cursor-pointer pl-[3px] rounded-[1000px] transition-all duration-300`}
+                className={`w-4 h-4 border-[1px] ease-in-out duration-200 bg-[#21cb6b38] border-[#21CB6B] rounded-full flex items-center justify-center`}
               >
-                <div
-                  className={`w-[12px] h-[12px] bg-white rounded-full shadow-md transform transition-all duration-300 
-      ${isMev ? "translate-x-[18px]" : "translate-x-0 "}`}
-                />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke={`#21CB6B`}
+                  class="w-3 h-3"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
               </div>
               <h1 className="text-[#F6F6F6] text-[14px] font-[400]">
-                Mev Prot.
+                MEV Protection
               </h1>
             </div>
             {/* Auto approve */}
