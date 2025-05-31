@@ -156,7 +156,7 @@ const Tradingview = () => {
       const formattedAddress = mintAddress;
       navigator?.clipboard
         ?.writeText(formattedAddress)
-        .then(() => {})
+        .then(() => { })
         .catch((err) => {
           console.error("Failed to copy: ", err?.message);
         });
@@ -168,7 +168,7 @@ const Tradingview = () => {
 
   const tokenDetailsMarketCap = humanReadableFormat(
     chartTokenData?.currentSupply *
-      latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+    latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
   );
 
   const TokenDetailsNumberData = [
@@ -245,9 +245,9 @@ const Tradingview = () => {
         chartTokenData?.perfomancePertnage_5min == "NaN"
           ? 0
           : `${calculatePercentageDifference(
-              latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
-              chartTokenData?.perfomancePertnage_5min
-            ).toFixed(2)}` || "N/A",
+            latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+            chartTokenData?.perfomancePertnage_5min
+          ).toFixed(2)}` || "N/A",
     },
     {
       label: "1H",
@@ -255,9 +255,9 @@ const Tradingview = () => {
         chartTokenData?.perfomancePertnage_1h == "NaN"
           ? 0
           : `${calculatePercentageDifference(
-              latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
-              chartTokenData?.perfomancePertnage_1h
-            ).toFixed(2)}` || "N/A",
+            latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+            chartTokenData?.perfomancePertnage_1h
+          ).toFixed(2)}` || "N/A",
     },
     {
       label: "6H",
@@ -265,9 +265,9 @@ const Tradingview = () => {
         chartTokenData?.perfomancePertnage_6h == "NaN"
           ? 0
           : `${calculatePercentageDifference(
-              latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
-              chartTokenData?.perfomancePertnage_6h
-            ).toFixed(2)}` || "N/A",
+            latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+            chartTokenData?.perfomancePertnage_6h
+          ).toFixed(2)}` || "N/A",
     },
     {
       label: "24H",
@@ -275,9 +275,9 @@ const Tradingview = () => {
         chartTokenData?.perfomancePertnage_24h == "NaN"
           ? 0
           : `${calculatePercentageDifference(
-              latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
-              chartTokenData?.perfomancePertnage_24h
-            ).toFixed(2)}` || "N/A",
+            latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+            chartTokenData?.perfomancePertnage_24h
+          ).toFixed(2)}` || "N/A",
     },
   ];
 
@@ -311,14 +311,14 @@ const Tradingview = () => {
       label: "FDV",
       price: humanReadableFormat(
         chartTokenData?.currentSupply *
-          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
       ),
     },
     {
       label: tragindViewPage?.right?.tokeninfo?.mc,
       price: humanReadableFormat(
         chartTokenData?.currentSupply *
-          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
       ),
     },
   ];
@@ -346,7 +346,7 @@ const Tradingview = () => {
         chartTokenData?.Pooled_Base || 0
       )} | ${humanReadableFormat(
         chartTokenData?.Pooled_Base *
-          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
       )}`,
     },
     {
@@ -374,20 +374,18 @@ const Tradingview = () => {
 
   return (
     <div
-      className={`lg:flex relative overflow-y-auto  h-[90vh] md:h-[91vh] lg:h-[100vh] ${
-        isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5"
-      }`}
+      className={`lg:flex relative overflow-y-auto  h-[90vh] md:h-[91vh] lg:h-[100vh] ${isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5"
+        }`}
     >
       {isSmallScreen && (
         <div className="md:hidden flex  items-center justify-start bg-[#1F1F1F] rounded-md mt-2 text-white mx-2  text-[12px] font-semibold px-2 py-1">
           {["Trades", "Transaction"].map((item, index) => (
             <div
               onClick={() => setIsSmallScreenTab(item)}
-              className={`${
-                smallScreenTab === item
-                  ? "bg-[#11265B] border-2 border-[#0E43BD]"
-                  : "border-[1px] border-[#1F1F1F]"
-              } cursor-pointer  min-w-fit w-20 text-sm font-light flex justify-center tracking-wider px-2 py-1 rounded-md`}
+              className={`${smallScreenTab === item
+                ? "bg-[#11265B] border-2 border-[#0E43BD]"
+                : "border-[1px] border-[#1F1F1F]"
+                } cursor-pointer  min-w-fit w-20 text-sm font-light flex justify-center tracking-wider px-2 py-1 rounded-md`}
               key={index}
             >
               {item}
@@ -414,6 +412,7 @@ const Tradingview = () => {
                   tokenDetailsMarketCap={tokenDetailsMarketCap}
                   chartTokenData={chartTokenData}
                   walletAddress={solWalletAddress}
+                  pairAddress={latestTradesData?.chartData?.pairaddress}
                 />
               </div>
 
