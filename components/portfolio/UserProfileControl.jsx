@@ -22,15 +22,13 @@ const UserProfileControl = () => {
     (state) => state?.setPnlData?.PnlData || []
   );
 
-  const totalValue = currentTabData.reduce((acc, item) => {
-    const remainingQty = item?.totalBoughtQty - item?.quantitySold
-    const value = remainingQty * item?.current_price
+  const totalValue = currentTabData.reduce((acc, item) => { 
+    const value = item?.activeQtyHeld  * item?.current_price
     return acc + value
   }, 0)
 
   const UnrealizedPNL = currentTabData.reduce((acc, item) => {
-    const remainingQty = item?.totalBoughtQty - item?.quantitySold
-    const pnl = (item.current_price - item.averageBuyPrice) * remainingQty
+    const pnl = item?.activeQtyHeld * (item.current_price - item.averageBuyPrice)
     return acc + pnl
   }, 0)
 
