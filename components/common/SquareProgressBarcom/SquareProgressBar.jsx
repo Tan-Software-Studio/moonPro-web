@@ -68,7 +68,7 @@ const SquareProgressBar = ({
           </span>
         </div> */}
         <div
-          className={`absolute rounded-full bg-black border -top-1.5 -left-1.5 z-50`} style={{ borderColor: progressColor }}>
+          className={`absolute rounded-full bg-black border -top-1.5 -left-1.5 !z-[9]`} style={{ borderColor: progressColor }}>
             <Image src={pump_img} alt="pump_img" className="w-4"/>
         </div>
       </div>
