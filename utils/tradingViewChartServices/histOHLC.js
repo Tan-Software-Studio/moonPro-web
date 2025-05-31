@@ -235,20 +235,6 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
       
       const clampedHigh = Math.min(bar.high, maxHigh);
       const clampedLow = Math.max(bar.low, minLow);
-      if (clampedLow <= 0) {
-        console.log({
-          ...bar,
-          newClose,
-          newOpen,
-          clampedHigh,
-          clampedLow,
-          bodyTop,
-          bodyBottom,
-          candleSize,
-          maxHigh,
-          minLow
-        })
-      }
 
       return {
         ...bar,
