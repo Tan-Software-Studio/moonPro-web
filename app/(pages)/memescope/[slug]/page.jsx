@@ -381,7 +381,7 @@ const Memescope = () => {
           >
             {/* Box header */}
             <div
-              className={` border-r ${borderColor} justify-between items-center md:px-[4px] md:pt-[24px] sticky xl:flex hidden`}
+              className={` border-r ${borderColor} justify-between items-center md:px-[24px] md:pt-[24px] sm:px-3  sticky xl:flex hidden`}
             >
               <div className="flex items-center gap-0">
                 <div
