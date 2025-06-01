@@ -32,7 +32,7 @@ const UserPnL = ({ userTokenHoldings, currentPrice, tokenSymbol }) => {
       hoverValue: (
         <span>
           {userTokenHoldings?.activeQtyHeld > 1 || userTokenHoldings?.activeQtyHeld < -1
-            ? humanReadableFormatWithNoDollar(userTokenHoldings?.activeQtyHeld)
+            ? humanReadableFormatWithNoDollar(userTokenHoldings?.activeQtyHeld, 2)
             : formatDecimal(userTokenHoldings?.activeQtyHeld, 1)}{' '}
           {tokenSymbol ? tokenSymbol.slice(0, 3) : ''}
         </span>
