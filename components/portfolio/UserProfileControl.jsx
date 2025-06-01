@@ -1,26 +1,26 @@
 "use client";
 import { profileImage } from "@/app/Images";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaShare, FaCopy } from "react-icons/fa";
 import { BiCheckDouble } from "react-icons/bi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ActivityTable from "@/components/profile/ActivityTable";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import ActivePosition from "@/components/profile/ActivePosition";
 import TopHundredHolding from "../profile/TopHundredHolding";
+import { setPnlData } from "@/app/redux/holdingDataSlice/holdingData.slice";
 
 const UserProfileControl = () => {
-  const [isActive, setIsActive] = useState("All");
-  const [leftTableTab, setLeftTableTab] = useState("Active position");
+  const [leftTableTab, setLeftTableTab] = useState("Active Position");
   const [rightTableTab, setRightTableTab] = useState("Activity");
   const [copied, setCopied] = useState(false);
-
-  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
-
+  const dispatch = useDispatch()
   const currentTabData = useSelector(
     (state) => state?.setPnlData?.PnlData || []
   );
+  // const [searchPnlData, setSearchPnlData] = useState(currentTabData)
+  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
 
   const totalValue = currentTabData.reduce((acc, item) => {
     const value = item?.activeQtyHeld * item?.current_price
@@ -31,6 +31,27 @@ const UserProfileControl = () => {
     const pnl = item?.activeQtyHeld * (item.current_price - item.averageBuyPrice)
     return acc + pnl
   }, 0)
+
+
+  // function handleSearchPnl(e) {
+  //   const value = e.target.value.toLowerCase().trim();
+  //   if (value.length > 0) {
+  //     const searchItems = currentTabData.filter((item) =>
+  //       item?.token?.toLowerCase()?.includes(value) ||
+  //       item?.name?.toLowerCase()?.includes(value) ||
+  //       item?.symbol?.toLowerCase()?.includes(value)
+
+  //     );
+  //     setSearchPnlData(searchItems)
+  //   }
+  //   else {
+  //     setSearchPnlData(currentTabData)
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   setSearchPnlData(currentTabData);
+  // }, [currentTabData]);
 
 
   const handleCopy = (mintAddress) => {
@@ -84,7 +105,7 @@ const UserProfileControl = () => {
                 <div className="flex items-center gap-2 mb-2">
                   <p className="text-sm text-gray-400">Available Balance</p>
                 </div>
-                <p className="text-base font-semibold tracking-wider text-emerald-500">{`SOL${Number(nativeTokenbalance).toFixed(5) || 0}`}</p>
+                <p className="text-base font-semibold tracking-wider text-emerald-500">SOL {`${Number(nativeTokenbalance).toFixed(5) || 0}`}</p>
               </div>
             </div>
           </div>
@@ -168,23 +189,36 @@ const UserProfileControl = () => {
         <div className="w-full grid lg:grid-cols-2 border-b border-gray-800 overflow-x-auto ">
           {/* left side table tab */}
           <div className="border-r border-gray-800">
-            <div className="flex gap-1 px-4 border-b border-gray-800 overflow-x-auto">
-              {["Active position",].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setLeftTableTab(tab)}
-                  className={`px-2 py-3 text-sm font-medium  tracking-wider transition-all duration-200 flex-shrink-0 ${leftTableTab == tab
-                    ? "border-b-[1px] border-white text-white "
-                    : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
-                    }`}
-                >
-                  {tab}
-                </button>
-              ))}
+            <div className="flex items-center border-b border-gray-800 justify-between overflow-x-auto px-4 ">
+              <div className="flex gap-1   ">
+                {["Active Position",].map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setLeftTableTab(tab)}
+                    className={`px-2 py-3 text-sm font-medium  tracking-wider transition-all duration-200 flex-shrink-0 ${leftTableTab == tab
+                      ? "border-b-[1px] border-white text-white "
+                      : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
+                      }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+              <div>
+                {/* <div className="w-full md:w-72 ">
+                  <input
+                    type="search"
+                    // onChange={handleSearchPnl}
+                    placeholder="Search by Address, Name or Symbol"
+                    className="w-full bg-gray-900 border border-gray-800 rounded-lg p-2  text-sm focus:outline-none "
+                  />
+                </div> */}
+              </div>
+
             </div>
-            {leftTableTab == "Active position" &&
+            {leftTableTab == "Active Position" &&
               <div className="">
-                <ActivePosition />
+                <ActivePosition  />
               </div>
             }
             {/* {leftTableTab == "Top 100" &&

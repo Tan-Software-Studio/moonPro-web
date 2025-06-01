@@ -53,6 +53,7 @@ const TokenDetails = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCopyUrl, setIsCopyUrl] = useState(false);
+  const [isFavouriteLoading, setIsFavouriteLoading] = useState(true);
 
   const socialIcons = [
     { icon: twitter, title: "twitter" },
@@ -120,25 +121,51 @@ const TokenDetails = ({
       });
   }
 
+  // async function checkLikeOrNot() {
+  //   if (!token) {
+  //     return;
+  //   }
+  //   await axios
+  //     .get(
+  //       `${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}user/checkTokenFavorite/${tokenaddress}`,
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     )
+  //     .then((res) => {
+  //       dispatch(setIsFaviouriteToken(res?.data?.data?.exists));
+  //     })
+  //     .catch((err) => { });
+  // }
+
   async function checkLikeOrNot() {
     if (!token) {
+      setIsFavouriteLoading(false);
       return;
     }
+
+    setIsFavouriteLoading(true); // show loader while fetching
+
     await axios
-      .get(
-        `${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}user/checkTokenFavorite/${tokenaddress}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .get(`${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}user/checkTokenFavorite/${tokenaddress}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         dispatch(setIsFaviouriteToken(res?.data?.data?.exists));
       })
-      .catch((err) => { });
+      .catch((err) => {
+      })
+      .finally(() => {
+        setIsFavouriteLoading(false);
+      });
   }
+
 
   async function removeFromFavouriteHandler() {
     if (!token) {
@@ -331,7 +358,7 @@ const TokenDetails = ({
         </div>
         <div className="flex items-center justify-between mb-[5px] md:mb-[0px]">
           <div className="flex items-center md:flex-col">
-            <div className="cursor-pointer border-[1px] md:!border-t-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center">
+            {/* <div className="cursor-pointer border-[1px] md:!border-t-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center">
               {isFavourite ? (
                 <FaHeart
                   onClick={removeFromFavouriteHandler}
@@ -343,7 +370,23 @@ const TokenDetails = ({
                   className="text-[#F6F6F6] text-[22px]"
                 />
               )}
+            </div> */}
+            <div className="cursor-pointer border-[1px] md:!border-t-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center">
+              {isFavouriteLoading ? (
+                <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+              ) : isFavourite ? (
+                <FaHeart
+                  onClick={removeFromFavouriteHandler}
+                  className="text-[#1F73FC] text-[18px]"
+                />
+              ) : (
+                <CiHeart
+                  onClick={addToFavouriteHandler}
+                  className="text-[#F6F6F6] text-[22px]"
+                />
+              )}
             </div>
+
             <div className="cursor-pointer border-[1px] md:!border-b-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center">
               <MdKeyboardArrowLeft className="text-[#F6F6F6] text-[22px]" />
             </div>

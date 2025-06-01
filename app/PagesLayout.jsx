@@ -32,7 +32,7 @@ const PagesLayout = ({ childrens }) => {
   );
   useEffect(() => {
     const copyTradeValue = localStorage.getItem("copyBuySol");
-    if (copyTradeValue > 0) {
+    if (copyTradeValue >= 0) { 
       dispatch(setGlobalBuyAmt(copyTradeValue));
     } else {
       dispatch(setGlobalBuyAmt(0.1));

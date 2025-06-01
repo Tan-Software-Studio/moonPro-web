@@ -28,7 +28,7 @@ const TableHeaderData = ({ headers, onSort, sortColumn, sortOrder }) => {
 
   return (
     <thead
-      className={`!text-[#84858E] bg-[#08080E] sticky top-0 transition-all duration-500 ease-in-out ${hasScrolled ? "z-7" : "z-7"
+      className={`!text-[#84858E] bg-[#08080E] sticky top-0 transition-all duration-500 ease-in-out ${hasScrolled ? "z-10" : "z-10"
         }`}
     >
       {hasScrolled && (
