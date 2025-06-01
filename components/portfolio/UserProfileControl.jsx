@@ -19,7 +19,7 @@ const UserProfileControl = () => {
   const currentTabData = useSelector(
     (state) => state?.setPnlData?.PnlData || []
   );
-  const [searchPnlData, setSearchPnlData] = useState(currentTabData)
+  // const [searchPnlData, setSearchPnlData] = useState(currentTabData)
   const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
 
   const totalValue = currentTabData.reduce((acc, item) => {
@@ -33,25 +33,25 @@ const UserProfileControl = () => {
   }, 0)
 
 
-  function handleSearchPnl(e) {
-    const value = e.target.value.toLowerCase().trim();
-    if (value.length > 0) {
-      const searchItems = currentTabData.filter((item) =>
-        item?.token?.toLowerCase()?.includes(value) ||
-        item?.name?.toLowerCase()?.includes(value) ||
-        item?.symbol?.toLowerCase()?.includes(value)
+  // function handleSearchPnl(e) {
+  //   const value = e.target.value.toLowerCase().trim();
+  //   if (value.length > 0) {
+  //     const searchItems = currentTabData.filter((item) =>
+  //       item?.token?.toLowerCase()?.includes(value) ||
+  //       item?.name?.toLowerCase()?.includes(value) ||
+  //       item?.symbol?.toLowerCase()?.includes(value)
 
-      );
-      setSearchPnlData(searchItems)
-    }
-    else {
-      setSearchPnlData(currentTabData)
-    }
-  }
+  //     );
+  //     setSearchPnlData(searchItems)
+  //   }
+  //   else {
+  //     setSearchPnlData(currentTabData)
+  //   }
+  // }
 
-  useEffect(() => {
-    setSearchPnlData(currentTabData);
-  }, [currentTabData]);
+  // useEffect(() => {
+  //   setSearchPnlData(currentTabData);
+  // }, [currentTabData]);
 
 
   const handleCopy = (mintAddress) => {
@@ -205,20 +205,20 @@ const UserProfileControl = () => {
                 ))}
               </div>
               <div>
-                <div className="w-full md:w-72 ">
+                {/* <div className="w-full md:w-72 ">
                   <input
                     type="search"
-                    onChange={handleSearchPnl}
+                    // onChange={handleSearchPnl}
                     placeholder="Search by Address, Name or Symbol"
                     className="w-full bg-gray-900 border border-gray-800 rounded-lg p-2  text-sm focus:outline-none "
                   />
-                </div>
+                </div> */}
               </div>
 
             </div>
             {leftTableTab == "Active Position" &&
               <div className="">
-                <ActivePosition searchPnlData={searchPnlData} />
+                <ActivePosition  />
               </div>
             }
             {/* {leftTableTab == "Top 100" &&
