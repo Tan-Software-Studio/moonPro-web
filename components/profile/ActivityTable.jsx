@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { ExternalLink } from "lucide-react";
+import { Check, Copy, ExternalLink } from "lucide-react";
 import Link from "next/link";
-import axiosInstanceAuth from "@/apiInstance/axiosInstanceAuth";
-import Pagination from "./Pagination";
+import axios from "axios";
 import Image from "next/image";
-import { convertUTCToIST } from "@/utils/calculation";
+import { useDispatch, useSelector } from "react-redux";
 
 // Truncate long strings
 const truncateString = (str, start = 4, end = 4) => {
@@ -12,46 +11,177 @@ const truncateString = (str, start = 4, end = 4) => {
   return `${str.slice(0, start)}...${str.slice(-end)}`;
 };
 
-// Type badge color
-const getTypeBadgeColor = (type) => {
-  switch (type) {
-    case "buy":
-      return "bg-green-800 text-green-200";
-    case "sell":
-      return "bg-red-800 text-red-200";
-    case "swap":
-      return "bg-blue-800 text-blue-200";
-    default:
-      return "bg-gray-800 text-gray-200";
-  }
-};
 
 const ActivityTable = () => {
   const [transactionData, setTransactionData] = useState([]);
-  const [totalPage, setTotalPage] = useState(1);
-  const [currentPage, setCurrentPage] = useState(1);
-  const entriesPerPages = 10;
+  const [copiedIndex, setCopiedIndex] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [tokenImages, setTokenImages] = useState({});
 
-  const handleTransaction = async (e) => {
-    setIsLoading(true)
-    await axiosInstanceAuth
-      .get(`transactions/history/${entriesPerPages}/${currentPage}`)
-      .then((response) => {
-        setIsLoading(false)
-        setTransactionData(response?.data?.data?.transaction);
-        setTotalPage(response?.data?.data?.totalPage);
-      })
-      .catch((error) => {
-        console.log(error);
-        setIsLoading(false)
-      });
+
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
+
+  // const handleTransaction = async (e) => {
+  //   setIsLoading(true)
+  //   await axiosInstanceAuth
+  //     .get(`transactions/history/${entriesPerPages}/${currentPage}`)
+  //     .then((response) => {
+  //       setIsLoading(false)
+  //       setTransactionData(response?.data?.data?.transaction);
+  //       setTotalPage(response?.data?.data?.totalPage);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       setIsLoading(false)
+  //     });
+  // };
+
+  async function getData() {
+    try {
+      setIsLoading(true)
+      const response = await axios.post(
+        "https://streaming.bitquery.io/eap",
+        {
+          query: `
+          query WalletActivity($wallet: String!) {
+      Solana {
+        DEXTradeByTokens(
+          where: {
+            Trade: {
+              Currency: {
+                MintAddress: {
+                  notIn: [
+                    "So11111111111111111111111111111111111111112", 
+                    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", 
+                    "11111111111111111111111111111111"
+                  ]
+                }
+              }
+            }, 
+            Transaction: {
+              Result: { Success: true }, 
+              Signer: { is: $wallet }
+            }
+          },
+          limit: { count: 100 },
+          orderBy: { descending: Block_Time }
+        ) {
+          Trade {
+            Currency {
+              Symbol
+              Name
+              MintAddress
+              Uri
+            }
+            Side {
+              Type
+              Amount
+              AmountInUSD
+            }
+          }
+          Block {
+            Time
+          }
+          Transaction {
+            Signature
+          }
+        }
+      }
+    }
+        `,
+          variables: {
+            wallet: solWalletAddress,
+          },
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_STREAM_BITQUERY_API}`,
+          },
+        }
+      );
+      setIsLoading(false)
+      console.log(response?.data?.data?.Solana?.DEXTradeByTokens || []);
+      setTransactionData(response?.data?.data?.Solana?.DEXTradeByTokens)
+    } catch (err) {
+      setIsLoading(false)
+      console.error("🚀 ~ Error fetching Bitquery data:", err?.response?.data || err?.message);
+    }
+  }
+
+  const handleCopy = (address, index, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigator.clipboard.writeText(address);
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
   };
+  useEffect(() => {
+    const fetchImages = async () => {
+      const imageMap = {};
+
+      await Promise.all(
+        transactionData.map(async (item, index) => {
+          const uri = item?.Trade?.Currency?.Uri;
+          try {
+            const res = await fetch(uri);
+            const data = await res.json();
+            imageMap[index] = data?.image;
+          } catch (err) {
+            console.error("Failed to fetch image metadata:", err);
+          }
+        })
+      );
+
+      setTokenImages(imageMap);
+    };
+
+    if (transactionData?.length) fetchImages();
+  }, [transactionData]);
+
+
+  // const navigateToChartSreen = (item) => {
+  //   router.push(
+  //     `/tradingview/solana?tokenaddress=${item?.token}&symbol=${item?.symbol}`
+  //   );
+  //   localStorage.setItem("chartTokenImg", item?.img);
+  //   dispatch(setChartSymbolImage(item?.img));
+  // }
+
+
+  function timeAgo(dateStr) {
+    const now = new Date();
+    const then = new Date(dateStr);
+    const seconds = Math.floor((now - then) / 1000);
+
+    const intervals = [
+      { label: 'year', seconds: 31536000 },
+      { label: 'month', seconds: 2592000 },
+      { label: 'week', seconds: 604800 },
+      { label: 'day', seconds: 86400 },
+      { label: 'hour', seconds: 3600 },
+      { label: 'minute', seconds: 60 },
+      { label: 'second', seconds: 1 }
+    ];
+
+    for (const interval of intervals) {
+      const count = Math.floor(seconds / interval.seconds);
+      if (count >= 1) {
+        return `${count}${interval.label[0]} ago`;  // e.g. "3d ago"
+      }
+    }
+
+    return "just now";
+  }
+
+
+
 
   useEffect(() => {
-
-    handleTransaction();
-  }, [currentPage]);
+    getData();
+  }, []);
 
   return (
     <>
@@ -86,22 +216,22 @@ const ActivityTable = () => {
             <table className="w-full text-left text-sm">
               <thead className="sticky top-0 border-b-[1px] bg-[#08080E] border-gray-800 z-40">
                 <tr>
-                  <th className="px-4 py-2 text-slate-300 font-medium">
-                    <div className="flex gap-6 items-center">
-                      <div>Type</div>
-                      <div>Token</div>
-                    </div>
+                  <th className="px-2 py-2 text-slate-300 font-medium w-16">
+                    Type
                   </th>
-                  <th className="px-4 py-2  text-slate-300 font-medium whitespace-nowrap">
+                  <th className="px-4 py-2 text-slate-300 font-medium">
+                    Token
+                  </th>
+                  <th className="px-3 py-2 text-slate-300 font-medium whitespace-nowrap w-24">
                     Amount
                   </th>
-                  <th className="px-4 py-2  text-slate-300 font-medium whitespace-nowrap">
+                  <th className="px-3 py-2 text-slate-300 font-medium whitespace-nowrap w-28">
                     Value (USD)
                   </th>
-                  <th className="px-4 py-2  text-slate-300 font-medium whitespace-nowrap">
+                  <th className="px-3 py-2 text-slate-300 font-medium whitespace-nowrap w-20">
                     Age
                   </th>
-                  <th className="px-4 py-2  text-slate-300 font-medium whitespace-nowrap">
+                  <th className="px-3 py-2 text-slate-300 font-medium whitespace-nowrap w-28">
                     Explorer
                   </th>
                 </tr>
@@ -109,7 +239,7 @@ const ActivityTable = () => {
               <tbody>
                 {isLoading ? (
                   <tr>
-                    <td colSpan="7" className="p-4">
+                    <td colSpan="6" className="p-4">
                       <div className="flex justify-center items-center min-h-[40vh]">
                         <span className="Tableloader"></span>
                       </div>
@@ -118,42 +248,69 @@ const ActivityTable = () => {
                 ) : (
                   transactionData.map((item, index) => (
                     <tr
+                      // onClick={() => navigateToChartSreen(item)}
                       key={index}
                       className={`${index % 2 === 0
                         ? "bg-gray-800/20"
                         : ""} border-b border-slate-700/20 hover:bg-slate-800/30 transition-colors duration-200`}
                     >
-                      <td className="px-4 py-[18px] whitespace-nowrap">
-                        <div className="flex gap-6 items-center">
-                          <div className="text-white font-medium">
-                            <span
-                              className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getTypeBadgeColor(
-                                item.type
-                              )}`}
-                            >
-                              {item.type.toUpperCase()}
-                            </span>
-                          </div>
-                          <div className="min-w-0">
-                            <p className="font-medium text-white">{truncateString(item.toToken)}</p>
+                      <td className=" w-16  px-2 py-2  ">
+                        <div className={`font-semibold flex items-center justify-center text-center px-2 py-1 rounded-full text-sm  ${item?.Trade?.Side?.Type == "sell" ? "text-red-400 bg-red-900/20" : "text-emerald-400 bg-emerald-900/20"} font-medium`}>
+                          {item?.Trade?.Side?.Type}
+                        </div>
+                      </td>
+                      <td className="px-4 py-2">
+                        <div className="flex items-center gap-3">
+                          {item?.Trade?.Currency?.Uri ?
+                            <img
+                              src={tokenImages[index]}
+                              alt="Token Icon"
+                              className="w-10 h-10 rounded-md object-cover"
+                            /> :
+
+                            <div className="w-10 h-10 rounded-md  flex items-center justify-center bg-[#3b3b49] border border-[#1F73FC]">
+                              <span className="text-sm text-white uppercase text-center">
+                                {item?.Trade?.Currency?.Name.toString()?.slice(0, 1) || "T"}
+                              </span>
+                            </div>
+                          }
+                          <div className="min-w-0 flex-1">
+                            <div className='flex items-center gap-1'>
+                              <p className="font-medium text-base text-white">{item?.Trade?.Currency?.Symbol} /</p>
+                              <p className="font-medium text-sm text-gray-400 truncate">{item?.Trade?.Currency?.Name}</p>
+                            </div>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-xs text-slate-400 font-mono truncate max-w-[150px]">
+                                {item?.Trade?.Currency?.MintAddress}
+                              </span>
+                              <button
+                                onClick={(e) => handleCopy(item?.Trade?.Currency?.MintAddress, index, e)}
+                                className="flex-shrink-0 p-1 hover:bg-slate-700/50 rounded transition-colors duration-200"
+                              >
+                                {copiedIndex === index ? (
+                                  <Check className="w-3 h-3 text-emerald-400" />
+                                ) : (
+                                  <Copy className="w-3 h-3 text-slate-400 hover:text-slate-200" />
+                                )}
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-[18px] whitespace-nowrap">
-                        <p className="font-medium text-white">{item.amount.toFixed(5)}</p>
-
+                      <td className="px-3 py-[18px] whitespace-nowrap w-24">
+                        <p className="font-medium text-white text-sm">{Number(item?.Trade?.Side?.Amount).toFixed(5)}</p>
                       </td>
-                      <td className="px-4 py-[18px] whitespace-nowrap">
-                        <p className="font-medium text-white">${item.amountInDollar.toFixed(2)}</p>
+                      <td className="px-3 py-[18px] whitespace-nowrap w-28">
+                        <p className="font-medium text-white text-sm">${Number(item?.Trade?.Side?.AmountInUSD).toFixed(5)}</p>
                       </td>
-                      <td className="px-4 py-[18px] whitespace-nowrap">
-                        <p className="font-medium text-white">{convertUTCToIST(item.createdAt)}</p>
+                      <td className="px-3 py-[18px] whitespace-nowrap w-20">
+                        <p className="font-medium text-white text-sm">{timeAgo(item?.Block?.Time)}</p>
                       </td>
-                      <td className="px-4 py-[18px] whitespace-nowrap">
+                      <td className="px-3 py-[18px] whitespace-nowrap w-28">
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-white">{truncateString(item.tx)}</span>
+                          <span className="font-medium text-white text-sm">{item?.Transaction?.Signature.slice(0, 4) + '...' + item?.Transaction?.Signature.slice(-5)}</span>
                           <Link
-                            href={`https://solscan.io/tx/${item.tx}`}
+                            href={`https://solscan.io/tx/${item?.Transaction?.Signature}`}
                             target="_blank"
                             className="flex-shrink-0 p-1 hover:bg-slate-700/50 rounded transition-colors duration-200"
                           >
@@ -169,13 +326,13 @@ const ActivityTable = () => {
           </div>
         )}
       </div>
-      {totalPage > 1 && (
+      {/* {totalPage > 1 && (
         <Pagination
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           totalPages={totalPage}
         />
-      )}
+      )} */}
     </>
   );
 };

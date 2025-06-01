@@ -58,7 +58,7 @@ export default function WalletManagement() {
     const jwtToken = localStorage.getItem("token");
     if (!jwtToken) return 0;
     try {
-      showToastLoader("Switching primary wallet", "switch-toast");
+      showToastLoader("Switching wallet", "switch-toast");
       await axios
         .put(
           `${baseUrl}user/makeSolWalletPrimary`,

@@ -8,17 +8,17 @@ import React, { useEffect, useState } from 'react';
 import { PiWallet } from 'react-icons/pi';
 import { useDispatch, useSelector } from 'react-redux';
 
-const ActivePosition = () => {
+const ActivePosition = ({searchPnlData}) => {
 
     const router = useRouter()
     const [copiedIndex, setCopiedIndex] = useState(null);
     const dispatch = useDispatch();
+    const currentTabData = useSelector(
+        (state) => state?.setPnlData?.PnlData || []
+    );
 
     const solWalletAddress = useSelector(
         (state) => state?.AllStatesData?.solWalletAddress
-    );
-    const currentTabData = useSelector(
-        (state) => state?.setPnlData?.PnlData || []
     );
     const initialLoading = useSelector(
         (state) => state?.setPnlData?.initialLoading
@@ -41,6 +41,10 @@ const ActivePosition = () => {
     const shouldShowLoading = initialLoading || (!hasAttemptedLoad && !isDataLoaded);
     const shouldShowData = !initialLoading && isDataLoaded && currentTabData?.length > 0;
     const shouldShowNoData = !initialLoading && hasAttemptedLoad && isDataLoaded && currentTabData?.length === 0;
+
+
+
+
     const navigateToChartSreen = (item) => {
         router.push(
             `/tradingview/solana?tokenaddress=${item?.token}&symbol=${item?.symbol}`
@@ -83,7 +87,7 @@ const ActivePosition = () => {
                                     </tr >
                                 </thead >
                                 <tbody>
-                                    {currentTabData?.map((item, index) => (
+                                    {searchPnlData?.map((item, index) => (
                                         <tr
                                             onClick={() => navigateToChartSreen(item)}
                                             key={index}
@@ -102,7 +106,7 @@ const ActivePosition = () => {
                                                     <div className="min-w-0">
                                                         <div className='flex items-center gap-1'>
                                                             <p className="font-medium text-base text-white">{item?.symbol} /</p>
-                                                            <span className="font-medium  text-sm text-gray-400 ">{item?.name}</span>
+                                                            <p className="font-medium  text-sm text-gray-400 ">{item?.name}</p>
                                                         </div>
                                                         <div className="flex items-center gap-2 mt-1">
                                                             <span className="text-xs text-slate-400 font-mono truncate max-w-[120px]">
