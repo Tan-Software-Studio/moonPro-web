@@ -34,7 +34,7 @@ import RoundProgressBar from "@/components/RoundProgressBar/RoundProgressBar";
 import SingleLineProgressBar from "@/components/SingleLineProgressBar/SingleLineProgressBar";
 
 const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, setSelectedMetric, setShowMarketCap, showMarketCap, showVolume, setShowVolume, showSocials, setShowSocials, showHolders, setShowHolders, setshowHolders10, showHolders10, setProgerssBar, progerssBar }) => {
-  console.log("🚀 ~ MscopePumpTable ~ searchbar:-->", showCircle)
+  // console.log("🚀 ~ MscopePumpTable ~ searchbar:-->", showCircle)
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoverRow, sethoverRow] = useState(false);
   // solana live price
@@ -67,7 +67,7 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
       selectedMetric: "12", // this can be a string or number depending on your usage
       showCircle: false,
       searchbar: true,
-      progerssBar: true, 
+      progerssBar: true,
     };
 
     // Get stored settings object from localStorage
