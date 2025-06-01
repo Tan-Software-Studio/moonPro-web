@@ -298,20 +298,117 @@ const TableBody = ({ isLoading, data, img }) => {
                   {/* <td className="whitespace-nowrap px-6 py-4 text-[16px]">
                     {data[ind]?.tradesCountWithUniqueTraders}
                   </td> */}
-                  <td className="whitespace-nowrap w-60 py-2 flex justify-center font-mono">
-                    <div className="flex flex-col gap-1 text-sm  rounded">
-                      {/* <div className="flex w-fit px-1 border border-[#2a2d38] rounded-md items-center gap-1 text-green-500 text-[12px] group-hover:bg-black group-hover:border-black">
-                        <RiUserAddLine size={10} />
-                        <span>14.02%</span>
-                      </div> */}
-                      <div className={`flex w-fit px-1 border border-[#2a2d38] rounded-md items-center gap-1 ${row.LP == null || row.LP == false ? "text-green-500" : "text-red-500"}  text-[12px] group-hover:bg-black group-hover:border-black`}>
-                        <RiFireFill size={10} />
-                        <span>{row.LP == null || row.LP == false ? '100%' : '???'}</span>
-                      </div>
-                      <div className={`flex w-fit px-1 border border-[#2a2d38] rounded-md  items-center gap-1 ${!row.mint_authority && !row.freeze_authority ? 'text-green-500' : 'text-red-500'} text-green-500 text-[12px] group-hover:bg-black group-hover:border-black `}>
-                        <FaStarOfLife size={10} />
-                        <span>{row.mint_authority && row.freeze_authority ? 'Off' : 'Off'}</span>
-                      </div>
+                  <td className="whitespace-nowrap w-60 py-3 flex justify-center z-0">
+                    <div
+                      className={`flex  gap-2 ${!row.mint_authority ? "text-white" : "text-[#828282]"
+                        }`}
+                    >
+                      <Tooltip
+                        body={
+                          "The token can’t be minted anymore — no one can create new tokens."
+                        }
+                      >
+                        <div className="grid  text-start">
+                          <div className="flex flex-col text-start opacity-75">
+                            {!row.mint_authority ? (
+                              <CiCircleCheck
+                                size={20}
+                                className="text-[#21CB6B]"
+                              />
+                            ) : (
+                              <IoCloseCircleOutline
+                                size={20}
+                                className="text-[#ED1B24]"
+                              />
+                            )}
+                            <div className="mt-1">
+                              <div>Mint Auth</div>
+                              <div>Disabled</div>
+                            </div>
+                          </div>
+                        </div>
+                      </Tooltip>
+
+                      <Tooltip body={"No one can freeze token transfers."}>
+                        <div className="grid  text-start">
+                          <div
+                            className={`flex flex-col text-start opacity-75 ${!row.freeze_authority
+                              ? "text-white"
+                              : "text-[#828282]"
+                              }`}
+                          >
+                            {!row.freeze_authority ? (
+                              <CiCircleCheck
+                                size={20}
+                                className="text-[#21CB6B]"
+                              />
+                            ) : (
+                              <IoCloseCircleOutline
+                                size={20}
+                                className="text-[#ED1B24]"
+                              />
+                            )}
+                            <div className="mt-1">
+                              <div>Freeze Auth</div>
+                              <div>Disabled</div>
+                            </div>
+                          </div>
+                        </div>
+                      </Tooltip>
+
+                      <Tooltip
+                        body={
+                          "Liquidity Pool tokens were burned — this helps lock the liquidity in place."
+                        }
+                      >
+                        <div className="grid  text-start">
+                          <div
+                            className={`flex flex-col text-start opacity-75 ${true ? "text-white" : "text-[#828282]"
+                              }`}
+                          >
+                            {true ? (
+                              <CiCircleCheck
+                                size={20}
+                                className="text-[#21CB6B]"
+                              />
+                            ) : (
+                              <IoCloseCircleOutline
+                                size={20}
+                                className="text-[#ED1B24]"
+                              />
+                            )}
+                            <div className="mt-1">
+                              <div>LP</div>
+                              <div>Burned</div>
+                            </div>
+                          </div>
+                        </div>
+                      </Tooltip>
+
+                      <Tooltip body={"Shows if token has 10 holders."}>
+                        <div className="grid  text-start">
+                          <div
+                            className={`flex flex-col text-start opacity-75 ${row?.top10Holder ? "text-white" : "text-[#828282]"
+                              }`}
+                          >
+                            {row?.top10Holder ? (
+                              <CiCircleCheck
+                                size={20}
+                                className="text-[#21CB6B]"
+                              />
+                            ) : (
+                              <IoCloseCircleOutline
+                                size={20}
+                                className="text-[#ED1B24]"
+                              />
+                            )}
+                            <div className="mt-1">
+                              <div>Top 10</div>
+                              <div>Holders</div>
+                            </div>
+                          </div>
+                        </div>
+                      </Tooltip>
                     </div>
                   </td>
 
