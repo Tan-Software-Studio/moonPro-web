@@ -18,4 +18,8 @@ function setHistoricalChunkAndConnectBars(newChunk) {
     }
 }
 
-module.exports = { setHistoricalChunkAndConnectBars }
+function clearChunk() {
+    historicalChunk = null;
+}
+
+module.exports = { setHistoricalChunkAndConnectBars, clearChunk }

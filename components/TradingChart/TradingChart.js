@@ -9,6 +9,7 @@ import { clearMarks } from "@/utils/tradingViewChartServices/mark";
 import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFunctions";
 import { clearLatestHistoricalBar } from "@/utils/tradingViewChartServices/latestHistoricalBar";
 import { clearSellItems, subscribeSellItems } from "@/utils/tradingViewChartServices/sellItems";
+import { clearChunk } from "@/utils/tradingViewChartServices/historicalChunk";
 
 const TVChartContainer = ({ tokenSymbol, tokenaddress, userTokenHoldings, solanaLivePrice, supply }) => {
   const chartContainerRef = useRef(null);
@@ -121,6 +122,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, userTokenHoldings, solana
   useEffect(() => {
     clearMarks();
     clearLatestHistoricalBar();
+    clearChunk();
     setChart(null);
     setChartReady(false);
     window.chartReady = false;
@@ -195,6 +197,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, userTokenHoldings, solana
         clearMarks();
         clearSellItems();
         resetLines();
+        clearChunk();
       });
     });
     // Add custom toggle buttons
@@ -208,6 +211,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, userTokenHoldings, solana
         '<span style="color: #808080">USD</span>/<span style="color: #1E90FF">SOL</span>';    
       usdSolButton.addEventListener("click", () => {
         resetLines();
+        clearChunk();
         clearSellItems();
         setIsUsdSolToggled((prev) => {
           const newState = !prev;
@@ -229,6 +233,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, userTokenHoldings, solana
       '<span style="color: #808080">MarketCap</span>/<span style="color: #1E90FF">Price</span>';     
       mcUsdButton.addEventListener("click", () => {
         resetLines();
+        clearChunk();
         clearSellItems();
         setIsMcPriceToggled((prev) => {
           const newState = !prev;
