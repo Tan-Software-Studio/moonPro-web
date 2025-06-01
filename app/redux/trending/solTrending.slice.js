@@ -26,7 +26,7 @@ const solTrendingData = createSlice({
     },
     updateTrendingLiveData: (state, { payload }) => {
       if (payload?.length > 0) {
-        console.log("🚀 ~ payload:", payload?.length);
+        // console.log("🚀 ~ payload:", payload?.length);
         for (const element of payload) {
           if (element?.Trade?.PriceInUSD) {
             // 1m update from node
