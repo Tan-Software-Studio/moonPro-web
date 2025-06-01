@@ -6,8 +6,7 @@ const UserPnL = ({ userTokenHoldings, currentPrice, tokenSymbol }) => {
   const buyAmount = userTokenHoldings?.totalBoughtQty * userTokenHoldings?.averageBuyPrice || 0;
   const soldAmount = userTokenHoldings?.quantitySold * userTokenHoldings?.averageBuyPrice || 0;
   const holdingAmount = userTokenHoldings?.activeQtyHeld * currentPrice || 0;
-  const pnlAmount = holdingAmount - buyAmount;
-  const isPositivePnL = pnlAmount >= 0;
+  const pnlAmount = (holdingAmount - buyAmount) + (userTokenHoldings?.realizedProfit || 0);  const isPositivePnL = pnlAmount >= 0;
   const absolutePnL = Math.abs(pnlAmount);
   const pnlPercent = buyAmount !== 0 ? (absolutePnL / buyAmount) * 100 : 0;
   const safePnLPercent = isNaN(pnlPercent) ? 0 : pnlPercent;
@@ -44,14 +43,14 @@ const UserPnL = ({ userTokenHoldings, currentPrice, tokenSymbol }) => {
       value: absolutePnL,
       color: isPositivePnL ? 'text-[#21CB6B]' : 'text-[#ED1B24]',
       icon: <RiExchangeDollarLine className="text-[#21CB6B]" size={15} />,
-      extra: `(${isPositivePnL ? '+' : '-'}${safePnLPercent.toFixed(2)}%)`,
+      extra: `(${isPositivePnL ? '+' : '-'}${safePnLPercent.toFixed(safePnLPercent < 1 ? 2 : 0)}%)`,
       hasDollar: true,
     },
   ];
 
   return (
     <div
-      className="bg-[#08080E] border-t w-full px-3 py-1 border-[#4D4D4D] flex flex-wrap justify-between items-center"
+      className="bg-[#08080E] border-t w-full py-1 border-[#4D4D4D] flex flex-wrap justify-between items-center"
       style={{ boxSizing: 'border-box' }}
     >
       {sections.map((section, index) => {
