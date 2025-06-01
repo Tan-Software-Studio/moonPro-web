@@ -5,6 +5,7 @@ import {
 } from "./websocketOHLC";
 import { setNewLatestBarTime } from "./latestBarTime";
 import { setNewLatestHistoricalBar } from "./latestHistoricalBar";
+import { setHistoricalChunkAndConnectBars } from "./historicalChunk";
 
 async function toGetTokenAddressFromLocalStorage() {
   return await localStorage.getItem("chartTokenAddress");
@@ -72,9 +73,10 @@ export const getBars = async (
       walletAddress
     );
     if (bars?.length > 0) {
-      onHistoryCallback(bars, { noData: false });
+      setHistoricalChunkAndConnectBars(bars);
       setNewLatestBarTime(bars[bars?.length - 1]?.time)
       setNewLatestHistoricalBar(bars[bars?.length - 1]);
+      onHistoryCallback(bars, { noData: false });
     } else {
       onHistoryCallback([], { noData: true });
     }

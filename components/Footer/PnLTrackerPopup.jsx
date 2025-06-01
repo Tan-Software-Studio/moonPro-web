@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { X, RotateCcw, Settings, History } from "lucide-react";
 import { solanasollogo, pnlbg } from "@/app/Images";
 import Image from "next/image";
+import { useSelector } from "react-redux";
 
 const PnLTrackerPopup = ({ isOpen, onClose }) => {
   const [position, setPosition] = useState({ x: 100, y: 100 });
@@ -10,6 +11,21 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [hoveredControl, setHoveredControl] = useState(null);
   const popupRef = useRef(null);
+
+  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
+  const currentTabData = useSelector((state) => state?.setPnlData?.PnlData || []);
+
+  const totalValue = currentTabData.reduce((acc, item) => {
+    const remainingQty = item?.totalBoughtQty - item?.quantitySold;
+    const value = remainingQty * item?.current_price;
+    return acc + value;
+  }, 0);
+
+  const UnrealizedPNL = currentTabData.reduce((acc, item) => {
+    const remainingQty = item?.totalBoughtQty - item?.quantitySold;
+    const pnl = (item.current_price - item.averageBuyPrice) * remainingQty;
+    return acc + pnl;
+  }, 0);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -154,16 +170,16 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
               Click twice to reset PNL
             </div>
           )}
-        <button
-          className="no-drag text-gray-400 hover:text-white transition-colors p-1 rounded cursor-pointer"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onClose();
-          }}
-        >
-          <X size={14} />
-        </button>
+          <button
+            className="no-drag text-gray-400 hover:text-white transition-colors p-1 rounded cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            }}
+          >
+            <X size={14} />
+          </button>
         </div>
       </div>
 
@@ -172,7 +188,7 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-3 mb-2">
               <Image src={solanasollogo} width={32} height={32} alt="solanasollogo" />
-              <div className="text-white text-3xl font-bold">0</div>
+              <div className="text-white text-3xl font-bold">${Number(totalValue).toFixed(5)}</div>
             </div>
             <div className="text-base text-gray-300">Balance</div>
           </div>
@@ -180,7 +196,11 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-3 mb-2">
               <Image src={solanasollogo} width={32} height={32} alt="solanasollogo" />
-              <div className="text-green-400 text-3xl font-bold">+0</div>
+              <div className={`text-3xl font-bold ${UnrealizedPNL >= 0 ? "text-green-400" : "text-red-400"}`}>
+                {UnrealizedPNL >= 0 ? "+" : ""}
+                {UnrealizedPNL >= 0 ? "$" : "-$"}
+                {Math.abs(UnrealizedPNL).toFixed(5)}
+              </div>
             </div>
             <div className="text-base text-gray-300">PNL</div>
           </div>

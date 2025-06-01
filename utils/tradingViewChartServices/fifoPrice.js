@@ -51,6 +51,7 @@ function calculateFIFOWithLines(trades) {
 }
 
 async function setPriceLines(chart) {
+  return;
     const userMarks = getStoredUserMarks();
     // console.log('userMarks', userMarks);
     if (userMarks?.length > 0) {

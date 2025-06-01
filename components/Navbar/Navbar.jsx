@@ -38,7 +38,7 @@ import RecoveryKey from "./login/RecoveryKey";
 import { decodeData } from "@/utils/decryption/decryption";
 import ExchangePopup from "./popup/ExchangePopup";
 import { fetchUserData } from "@/app/redux/userDataSlice/UserData.slice";
-import AISignalsButton from "./ai-signalBtn/AiSignalBtn";
+import WithdrawPopup from "./popup/WithdrawPopup";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
@@ -53,6 +53,7 @@ const Navbar = () => {
   const [openRecovery, setOpenRecovery] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const [isWithdrawPopup, setIsWithdrawPopup] = useState(false);
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
   // handle to get phrase of solana
@@ -70,15 +71,12 @@ const Navbar = () => {
     })
       .then(async (res) => {
         // const decryptPK = await decrypt(res?.data?.data?.solanaPk, FE_SEC);
-        // console.log("🚀 ~ .then ~ decryptPK:", decryptPK);
         setIsAccountPopup(false);
         const decodeKey = await decodeData(res?.data?.data?.seedPhrases?.solana);
         setSolPhrase(decodeKey);
         setOpenRecovery(true);
       })
-      .catch((err) => {
-        console.log("🚀 ~ handleToGetSolanaPk ~ err:", err);
-      });
+      .catch((err) => {});
   }
 
   // login signup
@@ -133,7 +131,6 @@ const Navbar = () => {
         dispatch(setLoading(false));
       })
       .catch((error) => {
-        console.log("🚀 ~ awaitaxios.get ~ error:", error);
         dispatch(setLoading(false));
       });
   }
@@ -150,7 +147,7 @@ const Navbar = () => {
         const price = res?.data?.data[res?.data?.data?.length - 1]?.price;
         dispatch(setSolanaLivePrice(price));
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }
 
   useEffect(() => {
@@ -215,27 +212,27 @@ const Navbar = () => {
       >
         <div className="transition-all duration-500 ease-in-out  ">
           <div className="flex items-center sm:gap-2 py-2   justify-between  sm:mx-4 md:mx-0">
-            <div className="md:block hidden">
-              <AISignalsButton />
-            </div>
+            <div className="md:block hidden">{/* <AISignalsButton /> */}</div>
             <div className="flex items-center md:w-auto w-full justify-between">
               <div className={`md:hidden flex w-10 h-auto`}>
                 <Image src={logo} alt="logo" className="w-full h-full" />
               </div>
               <div className=" flex items-center gap-2 ">
-                <div className="md:hidden block">
-                  <AISignalsButton />
-                </div>
+                {/* <div className="md:hidden block">
+                   <AISignalsButton />  
+                </div> */}
                 {/* Search bar */}
                 <div
-                  className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                    } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                  className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${
+                    isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                   onClick={() => dispatch(setIsSearchPopup(true))}
                 >
                   <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                   <input
-                    className={` ${isSidebarOpen ? "w-0" : "w-12"
-                      } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                    className={` ${
+                      isSidebarOpen ? "w-0" : "w-12"
+                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                     placeholder={navbar?.profile?.search}
                   />
                 </div>
@@ -308,8 +305,10 @@ const Navbar = () => {
                               </div>
                             </div>
                             <div className="text-2xl font-bold text-white mb-2">
-                              {/* ${(Number(nativeTokenbalance) * (solanaLivePrice || 0)).toFixed(2)}$ */}
-                              ${(Number(nativeTokenbalance) * (solanaLivePrice || 0) + Number(usdcBalance) * 1).toFixed(2)}
+                              {/* ${(Number(nativeTokenbalance) * (solanaLivePrice || 0)).toFixed(2)}$ */}$
+                              {(Number(nativeTokenbalance) * (solanaLivePrice || 0) + Number(usdcBalance) * 1).toFixed(
+                                2
+                              )}
                             </div>
                           </div>
 
@@ -342,7 +341,10 @@ const Navbar = () => {
                             >
                               Deposit
                             </button>
-                            <button className="flex-1 bg-[#374151] hover:bg-[#4B5563] text-white py-2.5 px-4 rounded-md text-sm font-bold transition-colors">
+                            <button
+                              onClick={() => setIsWithdrawPopup(true)}
+                              className="flex-1 bg-[#374151] hover:bg-[#4B5563] text-white py-2.5 px-4 rounded-md text-sm font-bold transition-colors"
+                            >
                               Withdraw
                             </button>
                           </div>
@@ -444,6 +446,14 @@ const Navbar = () => {
         {isWatchlistPopup && <Watchlist setIsWatchlistPopup={setIsWatchlistPopup} />}
 
         {isSolDepositPopup && <ExchangePopup isOpen={isSolDepositPopup} onClose={setIsSolDepositPopup} />}
+        {isWithdrawPopup && (
+          <WithdrawPopup
+            isOpen={isWithdrawPopup}
+            onClose={() => setIsWithdrawPopup(false)}
+            balance={nativeTokenbalance} // Pass the actual balance
+            tokenSymbol="SOL"
+          />
+        )}
         {openRecovery && solPhrase && (
           <RecoveryKey PK={solPhrase} setPK={setSolPhrase} setOpenRecovery={setOpenRecovery} flag={true} />
         )}

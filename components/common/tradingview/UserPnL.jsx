@@ -1,124 +1,125 @@
-import React from 'react'
-import { RiExchangeDollarLine } from "react-icons/ri";
+import React from 'react';
+import { RiExchangeDollarLine } from 'react-icons/ri';
 import { formatDecimal, humanReadableFormatWithNoDollar } from '@/utils/basicFunctions';
 
-// use map instead change in future
-const UserPnL = ({userTokenHoldings, currentPrice}) => {
-    const getUnrealizedPnL = (
-      averageBuyPrice,
-      quantityHeld
-    ) => {
-      if (!averageBuyPrice || !quantityHeld) {
-        return {
-          isPositive: true,
-          formatString: `+$0 (+0%)`
-        }
-      }
-      const priceDiff = currentPrice - averageBuyPrice
-      const pnlAmount = priceDiff * quantityHeld
-      const pnlPercent =
-        averageBuyPrice && averageBuyPrice !== 0
-          ? (priceDiff / averageBuyPrice) * 100
-          : 0;
-      const sign = pnlAmount >= 0 ? '+' : '-'
+const UserPnL = ({ userTokenHoldings, currentPrice, tokenSymbol }) => {
+  const buyAmount = userTokenHoldings?.totalBoughtQty * userTokenHoldings?.averageBuyPrice || 0;
+  const soldAmount = userTokenHoldings?.quantitySold * userTokenHoldings?.averageBuyPrice || 0;
+  const holdingAmount = userTokenHoldings?.activeQtyHeld * currentPrice || 0;
+  const pnlAmount = holdingAmount - buyAmount;
+  const isPositivePnL = pnlAmount >= 0;
+  const absolutePnL = Math.abs(pnlAmount);
+  const pnlPercent = buyAmount !== 0 ? (absolutePnL / buyAmount) * 100 : 0;
+  const safePnLPercent = isNaN(pnlPercent) ? 0 : pnlPercent;
 
-      const formattedAmount = `${pnlAmount > 1 || pnlAmount < -1
-          ? Math.abs(humanReadableFormatWithNoDollar(pnlAmount))
-          : Math.abs(formatDecimal(pnlAmount))
-      }`
+  const sections = [
+    {
+      title: 'Bought',
+      value: buyAmount,
+      color: 'text-[#21CB6B]',
+      hasDollar: true,
+    },
+    {
+      title: 'Sold',
+      value: soldAmount,
+      color: 'text-[#ED1B24]',
+      hasDollar: true,
+    },
+    {
+      title: 'Holding',
+      value: holdingAmount,
+      color: 'text-white',
+      hoverValue: (
+        <span>
+          {userTokenHoldings?.activeQtyHeld > 1 || userTokenHoldings?.activeQtyHeld < -1
+            ? humanReadableFormatWithNoDollar(userTokenHoldings?.activeQtyHeld, 2)
+            : formatDecimal(userTokenHoldings?.activeQtyHeld, 1)}{' '}
+          {tokenSymbol ? tokenSymbol.slice(0, 3) : ''}
+        </span>
+      ),
+      hasDollar: true,
+    },
+    {
+      title: 'PnL',
+      value: absolutePnL,
+      color: isPositivePnL ? 'text-[#21CB6B]' : 'text-[#ED1B24]',
+      icon: <RiExchangeDollarLine className="text-[#21CB6B]" size={15} />,
+      extra: `(${isPositivePnL ? '+' : '-'}${safePnLPercent.toFixed(2)}%)`,
+      hasDollar: true,
+    },
+  ];
 
-      // Format percentage with .00 check
-      let formattedPercent;
-      const fixedPercent = Math.abs(pnlPercent).toFixed(2);
-      if (fixedPercent.endsWith('.00')) {
-        formattedPercent = `${Math.abs(pnlPercent).toFixed(0)}%`;
-      } else {
-        formattedPercent = `${fixedPercent}%`;
-      }
-
-      return {
-        isPositive: sign === '+',
-        formatString: `${sign}$${formattedAmount} (${sign}${formattedPercent})`
-      }
-    }
-    const tempSoldAmount = userTokenHoldings?.quantitySold * userTokenHoldings?.averageBuyPrice;
-    const tempHoldingAmount = userTokenHoldings?.activeQtyHeld * userTokenHoldings?.averageBuyPrice;
-    const pnl = getUnrealizedPnL(userTokenHoldings?.averageBuyPrice, userTokenHoldings?.activeQtyHeld);
-    const positivePnl = pnl?.isPositive;
-    const pnlValue = pnl?.formatString;
   return (
-        <div className="bg-[#08080E] border-t w-full px-3 py-1 border-[#4D4D4D] items-center flex justify-between">
-          <div
-            className={`select-none cursor-pointer outline-none flex items-center justify-center w-[77px] h-[54px] rounded-[4px] ease-linear duration-200`}>
-            <div className="flex flex-col">
-              <div className="text-center text-[12px] text-[#A8A8A8] font-[400]">Bought</div>
-              <div
-                className={`text-center text-[14px] font-[600] text-[#21CB6B]`}
-              >
-                {`$${userTokenHoldings?.totalBuyAmount > 1 || userTokenHoldings?.totalBuyAmount < -1 ?
-                    humanReadableFormatWithNoDollar(userTokenHoldings?.totalBuyAmount) 
-                    :
-                    formatDecimal(userTokenHoldings?.totalBuyAmount)
-                }`}
-              </div>
-            </div>
-          </div>
-
-          <div className='w-[1px] h-12 bg-[#4D4D4D]' />
-
-          <div
-            className={`select-none cursor-pointer outline-none flex items-center justify-center w-[77px] h-[54px] rounded-[4px] ease-linear duration-200`}>
-            <div className="flex flex-col">
-              <div className="text-center text-[12px] text-[#A8A8A8] font-[400]">Sold</div>
-              <div
-                className={`text-center text-[14px] font-[600] text-[#ED1B24]`}
-              >
-                {`$${tempSoldAmount > 1 || tempSoldAmount < -1 ?
-                    humanReadableFormatWithNoDollar(tempSoldAmount) 
-                    :
-                    formatDecimal(tempSoldAmount)
-                }`}
-              </div>
-            </div>
-          </div>
-
-        <div className='w-[1px] h-12 bg-[#4D4D4D]' />
-
-          <div
-            className={`select-none cursor-pointer outline-none flex items-center justify-center w-[77px] h-[54px] rounded-[4px] ease-linear duration-200`}>
-            <div className="flex flex-col">
-              <div className="text-center text-[12px] text-[#A8A8A8] font-[400]">Holding</div>
-              <div
-                className={`text-center text-[14px] font-[600] text-white`}
-              >
-                {`$${tempHoldingAmount > 1 || tempHoldingAmount < -1 ?
-                    humanReadableFormatWithNoDollar(tempHoldingAmount) 
-                    :
-                    formatDecimal(tempHoldingAmount)
-                }`}
-              </div>
-            </div>
-          </div>
-
-        <div className='w-[1px] h-12 bg-[#4D4D4D]' />
-
-
-          <div
-            className={`select-none cursor-pointer outline-none flex items-center justify-center w-[77px] h-[54px] rounded-[4px] ease-linear duration-200`}>
-            <div className="flex flex-col">
-                <div className='flex items-center justify-center'>
-                    <div className="text-center text-[12px] text-[#A8A8A8] font-[400]">PnL</div>
-                    <RiExchangeDollarLine className={'text-[#21CB6B]'} size={15} />
+    <div
+      className="bg-[#08080E] border-t w-full px-3 py-1 border-[#4D4D4D] flex flex-wrap justify-between items-center"
+      style={{ boxSizing: 'border-box' }}
+    >
+      {sections.map((section, index) => {
+        return (
+          <React.Fragment key={section.title}>
+            <div
+              className="select-none outline-none flex items-center justify-center flex-1 h-[54px] rounded-[4px] ease-linear duration-200 group"
+              style={{ minWidth: '20%', maxWidth: '25%', boxSizing: 'border-box', padding: '0 2px' }}
+            >
+              <div className="flex flex-col items-center justify-center h-full">
+                <div className="flex items-center justify-center gap-1 h-[14px]">
+                  <span className="text-center text-[12px] text-[#A8A8A8] font-[400]">
+                    {section.title}
+                  </span>
+                  {section.icon && (
+                    <div className="flex items-center">
+                      {section.icon}
+                    </div>
+                  )}
                 </div>
                 <div
-                    className={`text-center text-[12px] text-nowrap font-[550] ${positivePnl ? `text-[#21CB6B]` : `text-[#ED1B24]`} `}
+                  className={`flex items-center justify-center text-center text-[14px] font-[500] ${section.color}`}
+                  style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    lineHeight: '1.2',
+                    marginTop: '2px',
+                    maxWidth: '100%', // Ensure text fits within container
+                    fontSize: '14px', // Fixed font size to avoid dynamic adjustment
+                  }}
                 >
-                  {pnlValue}
+                  {section.title === 'PnL' ? (
+                    <div className="flex items-center">
+                      <span>
+                        {section.hasDollar && '$'}
+                        {section.value > 1 || section.value < -1
+                          ? humanReadableFormatWithNoDollar(section.value)
+                          : formatDecimal(section.value, 1)}
+                      </span>
+                      <span className="ml-1">{section.extra}</span>
+                    </div>
+                  ) : (
+                    <>
+                      <span className={section.title === 'Holding' ? 'group-hover:hidden' : ''}>
+                        {section.hasDollar && '$'}
+                        {section.value > 1 || section.value < -1
+                          ? humanReadableFormatWithNoDollar(section.value)
+                          : formatDecimal(section.value, section.title === 'Holding' ? 1 : undefined)}
+                      </span>
+                      {section.title === 'Holding' && (
+                        <span className="hidden group-hover:inline font-medium ml-1">
+                          {section.hoverValue}
+                        </span>
+                      )}
+                    </>
+                  )}
                 </div>
+              </div>
             </div>
-          </div>
-      </div>
-  )
-}
+            {index < sections.length - 1 && (
+              <div className="w-[1px] h-12 bg-[#4D4D4D]" style={{ flexShrink: 0 }} />
+            )}
+          </React.Fragment>
+        );
+      })}
+    </div>
+  );
+};
 
-export default UserPnL
+export default UserPnL;

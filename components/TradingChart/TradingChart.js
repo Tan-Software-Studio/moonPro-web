@@ -7,14 +7,33 @@ import { intervalTV } from "../../utils/tradingViewChartServices/constant";
 import { unsubscribeFromWebSocket } from "@/utils/tradingViewChartServices/websocketOHLC";
 import { clearMarks } from "@/utils/tradingViewChartServices/mark";
 import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFunctions";
-import { setPriceLines } from "@/utils/tradingViewChartServices/fifoPrice"
 import { clearLatestHistoricalBar } from "@/utils/tradingViewChartServices/latestHistoricalBar";
+import { clearSellItems, subscribeSellItems } from "@/utils/tradingViewChartServices/sellItems";
+import { clearChunk } from "@/utils/tradingViewChartServices/historicalChunk";
 
-const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
+const TVChartContainer = ({ tokenSymbol, tokenaddress, userTokenHoldings, solanaLivePrice, supply }) => {
   const chartContainerRef = useRef(null);
   const [isUsdSolToggled, setIsUsdSolToggled] = useState(true); // Track USD/SOL toggle state
   const [isMcPriceToggled, setIsMcPriceToggled] = useState(true); // Track MarketCap/Price toggle state
   const [chartResolution, setChartResolution] = useState("15S"); // Track USD/SOL toggle state
+  const [chart, setChart] = useState(null);
+  const [chartReady, setChartReady] = useState(false);
+  const [averageSell, setAverageSell] = useState(0);
+
+  const buyPositionLineRef = useRef(null);
+  const sellPositionLineRef = useRef(null);
+
+  const convertPrice = (price) => {
+    let convertedPrice = price;
+    convertedPrice = isUsdSolToggled ? convertedPrice : convertedPrice / solanaLivePrice;
+    convertedPrice = isMcPriceToggled ? convertedPrice * supply : convertedPrice;
+    return convertedPrice;
+  }
+
+  const resetLines = () => {
+    buyPositionLineRef.current = null;
+    sellPositionLineRef.current = null;
+  }
 
   useEffect(() => {
     const fetchToggle = async () => {
@@ -41,10 +60,71 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
 
   }, []);
 
+  // Subscribe to array changes
+  useEffect(() => {
+    clearSellItems();
+    // Update state when array changes
+    const unsubscribe = subscribeSellItems((avgSell) => {
+      setAverageSell(avgSell); // Create a new array to trigger re-render
+    });
+
+    // Cleanup subscription on component unmount
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!chart) return;
+    if (!chartReady) return;
+    if (!userTokenHoldings) return;
+    const createChartLines = async () => {
+      // Average Buy Sell
+      if (userTokenHoldings?.averageBuyPrice && buyPositionLineRef.current === null) {
+        buyPositionLineRef.current = await chart.activeChart().createPositionLine();
+      }
+      if (buyPositionLineRef.current) {
+        buyPositionLineRef.current
+                  .setText("Current Average Cost Basis")
+                  .setQuantity("")
+                  .setPrice(convertPrice(Number(userTokenHoldings?.averageBuyPrice)))
+                  .setQuantityBackgroundColor("#427A2C")
+                  .setQuantityBorderColor("#427A2C")
+                  .setBodyBorderColor("#FFFFFF00")
+                  .setBodyTextColor("#427A2C")
+                  .setBodyBackgroundColor("#FFFFFF00")
+                  .setExtendLeft(true)
+                  .setLineStyle(2)
+                  .setLineLength(0)
+                  .setLineColor("#427A2C");
+      }
+      if (averageSell > 0 && sellPositionLineRef.current === null) {
+        sellPositionLineRef.current = await chart.activeChart().createPositionLine();
+      }
+      if (sellPositionLineRef.current) {
+        sellPositionLineRef.current
+                .setText("Current Average Exit Price")
+                .setQuantity("")
+                .setPrice(averageSell)
+                .setQuantityBackgroundColor("#AB5039")
+                .setQuantityBorderColor("#AB5039")
+                .setBodyBorderColor("#FFFFFF00")
+                .setBodyTextColor("#AB5039")
+                .setBodyBackgroundColor("#FFFFFF00")
+                .setExtendLeft(true)
+                .setLineStyle(2)
+                .setLineLength(0)
+                .setLineColor("#AB5039");
+      }
+    };
+    createChartLines();
+  }, [userTokenHoldings, chartReady, userTokenHoldings?.averageBuyPrice, isUsdSolToggled, isMcPriceToggled, averageSell])
+
   // console.log("TVChartContainer called.");
   useEffect(() => {
     clearMarks();
     clearLatestHistoricalBar();
+    clearChunk();
+    setChart(null);
+    setChartReady(false);
     window.chartReady = false;
     const tvWidget = new widget({
       symbol: tokenSymbol,
@@ -100,21 +180,24 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
         "mainSeriesProperties.candleStyle.borderDownColor": "#ef5350",
       },
     });
+    setChart(tvWidget);
     // console.log("TradingView widget initialized.", tvWidget);
     tvWidget.onChartReady(async () => {
+      setChartReady(true);
       window.chartReady = true;
       // console.log("Chart has loaded!");  
-      await setPriceLines(tvWidget);
       const priceScale = tvWidget
         .activeChart()
         .getPanes()[0]
         .getMainSourcePriceScale();
       priceScale.setAutoScale(true);
       tvWidget.activeChart().onIntervalChanged().subscribe(null, async (interval, timeframeObj) => {
-        await setPriceLines(tvWidget);
         setChartResolution(interval);
         localStorage.setItem("chartResolution", interval);
         clearMarks();
+        clearSellItems();
+        resetLines();
+        clearChunk();
       });
     });
     // Add custom toggle buttons
@@ -127,6 +210,9 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
         : 
         '<span style="color: #808080">USD</span>/<span style="color: #1E90FF">SOL</span>';    
       usdSolButton.addEventListener("click", () => {
+        resetLines();
+        clearChunk();
+        clearSellItems();
         setIsUsdSolToggled((prev) => {
           const newState = !prev;
           usdSolButton.innerHTML = newState ? 
@@ -146,6 +232,9 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
       : 
       '<span style="color: #808080">MarketCap</span>/<span style="color: #1E90FF">Price</span>';     
       mcUsdButton.addEventListener("click", () => {
+        resetLines();
+        clearChunk();
+        clearSellItems();
         setIsMcPriceToggled((prev) => {
           const newState = !prev;
           mcUsdButton.innerHTML = newState ? 
@@ -160,7 +249,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress }) => {
     window.tvWidget = tvWidget;
     return () => {
       if (tvWidget) {
-        console.log("Removing TradingView widget.");
+        // console.log("Removing TradingView widget.");
         tvWidget.remove();
       }
       // Unsubscribe from WebSocket when component unmounts
