@@ -814,6 +814,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                           >
                             <div className="flex items-center">
                               <div className="w-7 h-7 flex-shrink-0 group-hover/image:opacity-80 relative rounded-[4px]">
+                              {data?.logo ? 
                                 <Image 
                                   src={data?.logo}
                                   alt={data?.symbol}
@@ -821,6 +822,11 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                                   height={28}
                                   className="w-full h-full object-cover rounded-[4px]"
                                 />
+                              :
+                              <h1 className="absolute inset-0 m-auto w-[28px] h-[28px] rounded-sm text-[12px] border-[1px] border-[#26262e] bg-[#191919] flex items-center justify-center">
+                                {data?.symbol?.toString()?.slice(0, 1)}
+                              </h1>
+                              } 
                               </div>
                               <span className="pl-2 group-hover/name:underline">{data?.symbol}</span>
                             </div>
