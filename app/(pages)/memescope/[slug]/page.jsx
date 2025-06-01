@@ -252,16 +252,27 @@ const Memescope = () => {
   );
 
   useEffect(() => {
-    const savedSearchbar = localStorage.getItem('searchbar');
-    const savedShowCircle = localStorage.getItem('showCircle');
+    const storedSettings = localStorage.getItem('DisplaySettings');
+    if (storedSettings) {
+      try {
+        const parsedSettings = JSON.parse(storedSettings);
 
-    if (savedSearchbar !== null) {
-      setSearchbar(savedSearchbar === 'true'); // convert string to boolean
+        if ('searchbar' in parsedSettings) {
+          setSearchbar(parsedSettings.searchbar === true);
+        }
+
+        if ('showCircle' in parsedSettings) {
+          setShowCircle(parsedSettings.showCircle === true);
+        }
+        if ('showProgessBar' in parsedSettings) {
+          setProgerssBar(parsedSettings.showProgessBar === true);
+        }
+
+      } catch (error) {
+        console.error("Failed to parse DisplaySettings:", error);
+      }
     }
 
-    if (savedShowCircle !== null) {
-      setShowCircle(savedShowCircle === 'true');
-    }
   }, []);
 
 

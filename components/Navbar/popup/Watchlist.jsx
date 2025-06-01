@@ -14,6 +14,9 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
     const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
     const [getWatchlistData, setGetWatchlistData] = useState([]);
     const [loading, setLoading] = useState(false)
+    const [deletingItem, setDeletingItem] = useState(null);
+    
+
     const dispatch = useDispatch()
     const router = useRouter();
 
@@ -69,23 +72,25 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
         if (!token) {
             return toast.error("Please login");
         }
-        await axios.delete(`${baseUrl}user/deleteTokenFavorite`, {
-            data: {
-                tokenAddress
-            },
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        },
-        ).then((response) => {
-            setGetWatchlistData((prev) => prev.filter(item => item.tokenAddress !== tokenAddress));
-            dispatch(setIsFaviouriteToken())
-            toast.success(response?.data?.message)
 
-        }).catch((error) => {
-            toast.success(error?.response?.data?.message)
-        })
+        try {
+            const response = await axios.delete(`${baseUrl}user/deleteTokenFavorite`, {
+                data: { tokenAddress },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            setGetWatchlistData((prev) => prev.filter(item => item.tokenAddress !== tokenAddress));
+            dispatch(setIsFaviouriteToken());
+            toast.success(response?.data?.message);
+        } catch (error) {
+            toast.error(error?.response?.data?.message || "Delete failed");
+        } finally {
+            setDeletingItem(null);
+        }
     };
+
 
     const navigateToChartSreen = (item) => {
         router.push(
@@ -131,19 +136,19 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
                         {/* Table Header */}
                         <thead>
                             <tr className="border-b border-gray-800">
-                                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider">
+                                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
                                     TOKEN
                                 </th>
-                                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider">
+                                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
                                     MARKET CAP
                                 </th>
-                                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider">
+                                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
                                     1H VOLUME
                                 </th>
-                                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider">
+                                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
                                     LIQUIDITY
                                 </th>
-                                <th className="text-center px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider">
+                                <th className="text-center px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
                                     ACTIONS
                                 </th>
                             </tr>
@@ -221,14 +226,29 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
                                                     </td>
 
                                                     {/* Actions Column */}
-                                                    <td className="px-6 py-4 text-center">
+                                                    {/* <td className="px-6 py-4 text-center">
                                                         <button
                                                             onClick={() => handleDeleteItem(item?.tokenAddress, index)}
                                                             className="text-red-500 hover:text-red-400 transition-colors"
                                                         >
                                                             <Trash2 size={18} />
                                                         </button>
+                                                    </td> */}
+                                                    <td className="px-6 py-4 text-center">
+                                                        {
+                                                            deletingItem === item?.tokenAddress ? (
+                                                                <div className="w-4 h-4 mx-auto border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                                                            ) : (
+                                                                <button
+                                                                    onClick={() => handleDeleteItem(item?.tokenAddress, index)}
+                                                                    className="text-red-500 hover:text-red-400 transition-colors"
+                                                                >
+                                                                    <Trash2 size={18} />
+                                                                </button>
+                                                            )
+                                                        }
                                                     </td>
+
                                                 </tr>
                                             ))
                                         }

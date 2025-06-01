@@ -197,7 +197,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
   };
 
   const toggleProgerssBar = () => {
-    toggleSetting("showProgessBar", progerssBar , setProgerssBar)
+    toggleSetting("showProgessBar", progerssBar, setProgerssBar)
   }
 
   const mktShowHide = () => {
@@ -276,7 +276,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
     }
   };
 
-    useEffect(() => {
+  useEffect(() => {
     const handleClickOutsideDisplay = (event) => {
       if (
         displayPanelRef.current &&
@@ -473,7 +473,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                 <button
                   onClick={() => setIsDisplayOpen(!isDisplayOpen)}
                   className="flex items-center px-4 py-1.5 bg-[#1f1f25] rounded-full text-sm font-semibold text-white hover:bg-[#2b2b33] transition"
-                ref={displayButtonRef}>
+                  ref={displayButtonRef}>
                   <List size={16} className="mr-2" />
                   Display
                   <ChevronDown size={16} className="ml-2" />
@@ -537,7 +537,7 @@ const AllPageHeader = ({ HeaderData, duration, FilterData, localFilterTime, setL
                         {showCircle ? <LayoutGrid size={16} /> : <FaRegCircle />}
                         {showCircle ? 'Square Image' : 'Circle Imange'}
                       </div>
-                      <div className="flex items-center gap-2 cursor-pointer font-semibold" onClick={()=> toggleProgerssBar(prev => !prev)}>
+                      <div className="flex items-center gap-2 cursor-pointer font-semibold" onClick={() => toggleProgerssBar(prev => !prev)}>
                         <div className="w-4 h-1 bg-gray-400 rounded-full" />
                         {progerssBar ? "Progress Bar Ring" : "Progress Bar Line"}
                       </div>
