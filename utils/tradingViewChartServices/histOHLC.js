@@ -219,33 +219,54 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
     }
 
     if (bars?.length > 0) {
-      bars = bars.map((bar, index, arr) => {
-      if (index === 0) return bar; // Skip the first bar
-      
-      const prevBar = arr[index - 1];
-      const newOpen = prevBar.close;
-      const newClose = bar.close;
+      let lastValidClose = bars[0].close; // Initialize with first bar's close
 
-      const bodyTop = Math.max(newOpen, newClose);
-      const bodyBottom = Math.min(newOpen, newClose);
-      const candleSize = Math.abs(newOpen - newClose);
+      bars = bars
+        .map((bar, index, arr) => {
+          if (index === 0) {
+            lastValidClose = bar.close; // Update for first bar
+            return bar;
+          }
 
-      const maxHigh = bodyTop + candleSize;
-      const minLow = bodyBottom - candleSize;
-      
-      const clampedHigh = Math.min(bar.high, maxHigh);
-      const clampedLow = Math.max(bar.low, minLow);
+          // Use the last valid close price for newOpen
+          const newOpen = lastValidClose;
+          const newClose = bar.close;
 
-      return {
-        ...bar,
-        open: newOpen,
-        close: newClose,
-        high: clampedHigh,
-        low: clampedLow
-        };
-      });
+          // Calculate absolute percentage change within the candle
+          const absoluteChange = Math.abs(newClose - newOpen);
+          const referencePrice = Math.min(Math.abs(newOpen), Math.abs(newClose));
+          
+          // Calculate percentage change
+          const percentageChange = referencePrice === 0 ? 0 : (absoluteChange / referencePrice) * 100;
+          
+          // If absolute change is over 1000%, return null
+          if (percentageChange > 1000) {
+            return null;
+          }
+
+          // Update lastValidClose for the next bar
+          lastValidClose = newClose;
+
+          const bodyTop = Math.max(newOpen, newClose);
+          const bodyBottom = Math.min(newOpen, newClose);
+          const candleSize = Math.abs(newOpen - newClose);
+
+          const maxHigh = bodyTop + candleSize;
+          const minLow = bodyBottom - candleSize;
+
+          const clampedHigh = Math.min(bar.high, maxHigh);
+          const clampedLow = Math.max(bar.low, minLow);
+
+          return {
+            ...bar,
+            open: newOpen,
+            close: newClose,
+            high: clampedHigh,
+            low: clampedLow,
+          };
+        })
+        .filter(bar => bar !== null); // Remove null bars
     }
-
     // console.log('remaining bars before filter', bars.length);
     // ✅ Filter out flat or no-activity bars
     if (bars?.length > 0) {
