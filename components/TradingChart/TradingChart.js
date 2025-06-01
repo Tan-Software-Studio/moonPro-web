@@ -8,7 +8,7 @@ import { unsubscribeFromWebSocket } from "@/utils/tradingViewChartServices/webso
 import { clearMarks } from "@/utils/tradingViewChartServices/mark";
 import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFunctions";
 import { clearLatestHistoricalBar } from "@/utils/tradingViewChartServices/latestHistoricalBar";
-import { subscribeSellItems } from "@/utils/tradingViewChartServices/sellItems";
+import { clearSellItems, subscribeSellItems } from "@/utils/tradingViewChartServices/sellItems";
 
 const TVChartContainer = ({ tokenSymbol, tokenaddress, userTokenHoldings, solanaLivePrice, supply }) => {
   const chartContainerRef = useRef(null);
@@ -27,6 +27,11 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, userTokenHoldings, solana
     convertedPrice = isUsdSolToggled ? convertedPrice : convertedPrice / solanaLivePrice;
     convertedPrice = isMcPriceToggled ? convertedPrice * supply : convertedPrice;
     return convertedPrice;
+  }
+
+  const resetLines = () => {
+    buyPositionLineRef.current = null;
+    sellPositionLineRef.current = null;
   }
 
   useEffect(() => {
@@ -56,9 +61,9 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, userTokenHoldings, solana
 
   // Subscribe to array changes
   useEffect(() => {
+    clearSellItems();
     // Update state when array changes
     const unsubscribe = subscribeSellItems((avgSell) => {
-      console.log(avgSell);
       setAverageSell(avgSell); // Create a new array to trigger re-render
     });
 
@@ -69,9 +74,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, userTokenHoldings, solana
   useEffect(() => {
     if (!chart) return;
     if (!chartReady) return;
-    console.log("userTokenHoldings", userTokenHoldings);
     if (!userTokenHoldings) return;
-    if (userTokenHoldings?.activeQtyHeld <= 0) return;
     const createChartLines = async () => {
       // Average Buy Sell
       if (userTokenHoldings?.averageBuyPrice && buyPositionLineRef.current === null) {
@@ -81,7 +84,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, userTokenHoldings, solana
         buyPositionLineRef.current
                   .setText("Current Average Cost Basis")
                   .setQuantity("")
-                  .setPrice(Number(convertPrice(userTokenHoldings?.averageBuyPrice)))
+                  .setPrice(convertPrice(Number(userTokenHoldings?.averageBuyPrice)))
                   .setQuantityBackgroundColor("#427A2C")
                   .setQuantityBorderColor("#427A2C")
                   .setBodyBorderColor("#FFFFFF00")
@@ -190,6 +193,8 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, userTokenHoldings, solana
         setChartResolution(interval);
         localStorage.setItem("chartResolution", interval);
         clearMarks();
+        clearSellItems();
+        resetLines();
       });
     });
     // Add custom toggle buttons
@@ -202,6 +207,8 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, userTokenHoldings, solana
         : 
         '<span style="color: #808080">USD</span>/<span style="color: #1E90FF">SOL</span>';    
       usdSolButton.addEventListener("click", () => {
+        resetLines();
+        clearSellItems();
         setIsUsdSolToggled((prev) => {
           const newState = !prev;
           usdSolButton.innerHTML = newState ? 
@@ -221,6 +228,8 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, userTokenHoldings, solana
       : 
       '<span style="color: #808080">MarketCap</span>/<span style="color: #1E90FF">Price</span>';     
       mcUsdButton.addEventListener("click", () => {
+        resetLines();
+        clearSellItems();
         setIsMcPriceToggled((prev) => {
           const newState = !prev;
           mcUsdButton.innerHTML = newState ? 
@@ -235,7 +244,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, userTokenHoldings, solana
     window.tvWidget = tvWidget;
     return () => {
       if (tvWidget) {
-        console.log("Removing TradingView widget.");
+        // console.log("Removing TradingView widget.");
         tvWidget.remove();
       }
       // Unsubscribe from WebSocket when component unmounts

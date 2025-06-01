@@ -1,24 +1,39 @@
 let sellItems = [];
-let callbacks = [];
+let callbacks = new Set();
+let averageSellPrice = 0;
+
 
 function addSellItems(sellItem) {
     sellItems.push(sellItem);
-    const averageSellPrice = sellItems.length > 0
-        ? sellItems.reduce((sum, item) => sum + (item || 0), 0) / sellItems.length
-        : 0;    
+    averageSellPrice = sellItems.length > 0
+    ? sellItems.reduce((sum, item) => sum + (item || 0), 0) / sellItems.length
+    : 0;
     callbacks.forEach((callback) => callback(averageSellPrice));
 }
-
 function subscribeSellItems(callback) {
-    callbacks.push(callback);
+    if (!callbacks.has(callback)) {
+        callbacks.add(callback);
+    } else {
+        // console.log('Callback already subscribed.');
+    }
+
+    callback(averageSellPrice);
+
     return () => {
-        callbacks = callbacks.filter((cb) => cb !== callback);
+        if (callbacks.delete(callback)) {
+            // console.log('Unsubscribed callback.');
+        }
     };
 }
 
 function clearSellItems() {
     sellItems = [];
-    callbacks.array.forEach(callback => callback(sellItems));
+    averageSellPrice = 0;
+    callbacks.forEach((callback) => callback(averageSellPrice));
 }
 
-module.exports = { addSellItems, subscribeSellItems, clearSellItems }
+module.exports = {
+    addSellItems,
+    subscribeSellItems,
+    clearSellItems,
+};
