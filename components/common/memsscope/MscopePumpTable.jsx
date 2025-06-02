@@ -338,7 +338,7 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                             {hoverRow === index && (
                               <>
 
-                                <div className={`absolute ${index == 0 ? "-top-2" : "-top-12"} right-44 rounded-md text-[#21CB6B] text-xs font-light border-[1px]  border-[#333333] bg-[#191919]  px-4 py-1 flex items-center justify-between !z-[9999] w-fit whitespace-nowrap transition-all duration-100 ease-in-out`}>
+                                <div className={`absolute ${index == 0 ? "-top-2" : "-top-12"} right-44 rounded-md text-[#21CB6B] text-xs font-light border-[1px]  border-[#333333] bg-[#191919]  px-4 py-1 flex items-center justify-between !z-[9] w-fit whitespace-nowrap transition-all duration-100 ease-in-out`}>
                                   <p>Bonding : </p>
                                   {block?.bonding_curv >= 100
                                     ? "100%"

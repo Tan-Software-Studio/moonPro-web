@@ -201,7 +201,7 @@ const Memescope = () => {
   }, [NewData]);
 
   const searchedData = NewData.filter((item) =>
-    item.symbol.toUpperCase().includes(newSearchData.toUpperCase())
+    item?.symbol?.toUpperCase()?.includes(newSearchData?.toUpperCase())
   );
 
   const hasSearch = newSearchData.trim() !== "";
