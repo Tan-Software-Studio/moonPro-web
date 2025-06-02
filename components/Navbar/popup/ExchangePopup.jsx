@@ -174,22 +174,26 @@ const ExchangePopup = ({ isOpen, onClose }) => {
         {/* Tabs Container */}
         <div className="p-4">
           <div className="bg-[#1A1A1A] rounded-lg p-1 flex mb-4">
-            {["Convert", "Deposit"].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-colors ${
-                  activeTab === tab ? "text-white bg-[#2A2A2A]" : "text-gray-400 hover:text-white"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
+            {["Deposit"].map(
+              (
+                tab //"Convert",
+              ) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-colors ${
+                    activeTab === tab ? "text-white bg-[#2A2A2A]" : "text-gray-400 hover:text-white"
+                  }`}
+                >
+                  {tab}
+                </button>
+              )
+            )}
           </div>
 
           <div className="h-[400px] flex flex-col">
             {/* Convert Tab */}
-            {activeTab === "Convert" && (
+            {/* {activeTab === "Convert" && (
               <div className="flex flex-col h-full">
                 <div className="text-[#A8A8A8] text-sm mb-4">
                   {isSwapped
@@ -284,7 +288,7 @@ const ExchangePopup = ({ isOpen, onClose }) => {
                   </button>
                 </div>
               </div>
-            )}
+            )} */}
 
             {/* Deposit Tab */}
             {activeTab === "Deposit" && (

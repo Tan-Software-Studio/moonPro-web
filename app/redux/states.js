@@ -117,6 +117,25 @@ const AllStatesData = createSlice({
     setPresetActive: (state, action) => {
       state.presetActive = action.payload;
     },
+    updateWalletPrimary: (state, action) => {
+      
+      const { walletIndex, newWalletData } = action.payload;
+
+      state.userData.userDetails.walletAddressSOL.forEach((wallet) => {
+        wallet.primary = false;
+      });
+
+      if (state.userData.userDetails.walletAddressSOL[walletIndex]) {
+        state.userData.userDetails.walletAddressSOL[walletIndex].primary = true;
+
+        if (newWalletData?.wallet) {
+          state.userData.userDetails.walletAddressSOL[walletIndex] = {
+            ...state.userData.userDetails.walletAddressSOL[walletIndex],
+            ...newWalletData.wallet,
+          };
+        }
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -153,5 +172,6 @@ export const {
   setOpenOrderSetting,
   setPreSetOrderSetting,
   setPresetActive,
+  updateWalletPrimary,
 } = AllStatesData.actions;
 export default AllStatesData.reducer;
