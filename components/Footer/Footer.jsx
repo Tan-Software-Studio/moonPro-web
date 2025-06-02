@@ -222,16 +222,16 @@ const Footer = () => {
   return (
     <>
       <footer
-        className={`fixed bottom-0 left-0 right-0 z-40 bg-[#0A0A0F] border-t ${borderColor}  py-1 ${getFooterPadding()}`}
+        className={`fixed hidden md:block bottom-0 left-0 right-0 z-40 bg-[#0A0A0F] px-3 border-t ${borderColor}  py-1 ${getFooterPadding()}`}
       >
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center space-x-2">
+        <div className="flex items-center justify-between md:gap-0 gap-10 text-xs">
+          <div className="flex items-center space-x-2 overflow-x-auto pl-3">
             <button
               onClick={handlePresetClick}
-              className="flex items-center space-x-1.5 bg-[#151c3c] px-2 py-1.5 ml-1 rounded-md text-[#4c6eff] text-xs font-medium transition-colors duration-200 border border-[#6366F1]/20"
+              className="flex items-center space-x-1.5 text-nowrap bg-[#151c3c] hover:bg-[#26357a] px-2 py-1.5 ml-1 rounded-md text-[#4c6eff] text-xs font-medium transition-colors duration-200 border border-[#6366F1]/20"
             >
-              <span className="text-[11px] font-bold">⚡</span>
-              <span className="font-semibold tracking-wide">{getPresetDisplayName(presetActive)}</span>
+              <span className="text-[11px] font-bold text-nowrap">⚡</span>
+              <span className="font-semibold tracking-wide text-nowrap">{getPresetDisplayName(presetActive)}</span>
             </button>
 
             <div className="flex items-center space-x-1">
@@ -239,7 +239,7 @@ const Footer = () => {
                 <div
                   ref={buttonRef}
                   onClick={() => setOpen(!open)}
-                  className="flex items-center space-x-2 px-3 py-1 bg-[#1a1a1a] rounded-full text-[#ecf6fd] text-sm font-medium cursor-pointer hover:bg-[#2a2a2a] transition-colors"
+                  className="flex items-center space-x-2 px-3 py-1.5 bg-[#1a1a1a] rounded-full text-[#ecf6fd] text-sm font-medium cursor-pointer hover:bg-[#2a2a2a] transition-colors"
                 >
                   <LuWalletMinimal size={16} />
                   {/* <span>{walletsToShow.length}</span> */}
@@ -285,9 +285,8 @@ const Footer = () => {
                       return (
                         <div
                           key={idx}
-                          className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${
-                            wallet.active ? "bg-[#18181a]" : ""
-                          }`}
+                          className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${wallet.active ? "bg-[#18181a]" : ""
+                            }`}
                         >
                           <div className="flex items-center gap-3">
                             <input
@@ -331,11 +330,14 @@ const Footer = () => {
               </div>
 
               <button
-                className="flex items-center space-x-2 bg-[#1F2937] hover:bg-[#374151] px-2 py-1.5 rounded-md text-gray-300 hover:text-white text-xs font-medium transition-all duration-200 border border-gray-600/30"
+                className="flex items-center space-x-2 bg-[#1F2937] hover:bg-[#374151] px-2 py-1.5 rounded-md text-gray-300 hover:text-white text-xs font-medium transition-all duration-200  border-gray-600/30"
                 onClick={handlePnLTrackerClick}
               >
                 <Image src={barchart} alt="barchart" height={16} width={16} className="rounded-sm opacity-80" />
-                <span className="font-medium">PnL Tracker</span>
+                <span className="font-medium text-sm truncate max-w-[100px] overflow-hidden text-ellipsis">
+                  PnL Tracker
+                </span>
+
               </button>
 
               <div className="h-6 w-px bg-gray-600/50"></div>
@@ -362,25 +364,38 @@ const Footer = () => {
 
           <div className="flex items-center space-x-4"></div>
 
-          <div className="flex items-center space-x-3 text-xs">
+          <div className="flex items-center space-x-3 text-xs overflow-x-auto">
             <div className="flex items-center space-x-1">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-green-400 font-medium">Connection is stable</span>
+              <span className="text-green-400 font-medium text-nowrap">Connection is stable</span>
             </div>
 
             <div className="h-6 w-px bg-gray-600/50"></div>
 
             <div className="flex items-center space-x-1">
-              <button className="text-gray-400 hover:text-white transition-colors" onClick={handleDiscordClick}>
-                <Image src={discord} alt="discord" height={20} width={20} className="rounded-full" />
+              <button className="text-gray-400 hover:text-white transition-colors flex-shrink-0" onClick={handleDiscordClick}>
+                <Image
+                  src={discord}
+                  alt="discord"
+                  height={20}
+                  width={20}
+                  className="rounded-full w-[20px] h-[20px]"
+                />
               </button>
-              <button className="text-gray-400 hover:text-white transition-colors" onClick={handleTwitterClick}>
-                <Image src={twitter} alt="twitter" height={20} width={20} className="rounded-full" />
+              <button className="text-gray-400 hover:text-white transition-colors flex-shrink-0" onClick={handleTwitterClick}>
+                <Image
+                  src={twitter}
+                  alt="twitter"
+                  height={20}
+                  width={20}
+                  className="rounded-full w-[20px] h-[20px]"
+                />
               </button>
-              <button className="flex text-gray-400 hover:text-white transition-colors" onClick={handleDocsClick}>
+              <button className="flex text-gray-400 hover:text-white transition-colors text-sm whitespace-nowrap" onClick={handleDocsClick}>
                 Docs
               </button>
             </div>
+
           </div>
         </div>
       </footer>
