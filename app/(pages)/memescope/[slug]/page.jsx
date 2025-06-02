@@ -295,7 +295,7 @@ const Memescope = () => {
               }`}
           >
             <div
-              className={`md:flex border-r ${borderColor} justify-between items-center w-full sticky px-1 sm:px-3 md:px-[24px] md:pt-[24px]`}
+              className={`md:flex border-r ${borderColor} justify-between items-center  w-full sticky px-1 sm:px-3 md:px-[24px] md:py-[12px] py-3 border-b`}
             >
               <div className="xl:flex xl:items-center xl:gap-1 hidden">
                 <div className={`text-[18px] font-[400] w-auto text-[#FFFFFF]`}>
@@ -392,9 +392,9 @@ const Memescope = () => {
           >
             {/* Box header */}
             <div
-              className={` border-r ${borderColor} justify-between items-center md:px-[24px] md:pt-[24px] sm:px-3  sticky xl:flex hidden`}
+              className={` border-r ${borderColor} justify-between items-center md:px-[24px] sm:px-3  sticky xl:flex hidden md:py-[12px] py-3 border-b`}
             >
-              <div className="flex items-center gap-0">
+              <div className="flex items-center xl:gap-1">
                 <div
                   className={`text-[17px] font-[400] text-[#FFFFFF]`}
                 >
@@ -449,7 +449,7 @@ const Memescope = () => {
           >
             {/* Box header */}
             <div
-              className={`xl:flex border-r ${borderColor} justify-between items-center w-full px-5 md:px-[24px] md:pt-[24px] sticky hidden`}
+              className={`xl:flex border-r ${borderColor} justify-between items-center w-full px-5 md:px-[24px] sticky hidden md:py-[12px] py-3 border-b`}
             >
               <div className="flex items-center">
                 <div
