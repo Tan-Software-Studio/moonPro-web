@@ -147,6 +147,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, userTokenHoldings, solana
       library_path: "/charting_library/",
       locale: "en",
       disabled_features: [
+        "header_saveload",
         "use_localstorage_for_settings",
         "time_scale_controls",
       ],
