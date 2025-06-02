@@ -40,7 +40,7 @@ const AiSignal = () => {
   const [sortOrder, setSortOrder] = useState("");
   const [localFilterTime, setLocalFilterTime] = useState("5m");
   const [filteredData, setFilteredData] = useState([]);
-  const [filtersApplied, setFiltersApplied] = useState(false); 
+  const [filtersApplied, setFiltersApplied] = useState(false);
   const [filterValues, setFilterValues] = useState(initialFilterValues);
 
   // ai signal tokens data 
@@ -160,6 +160,13 @@ const AiSignal = () => {
       key: "pairInfo",
       sortingKey: "",
       infoTipString: tredingPage?.tableheaders?.pairinfotooltip,
+    },
+    {
+      title: "Time",
+      sortable: true,
+      key: "dbCreatedAt",
+      sortingKey: "dbCreatedAt",
+      infoTipString: "Time",
     },
     {
       title: tredingPage?.tableheaders?.mcap,
@@ -395,10 +402,10 @@ const AiSignal = () => {
     const savedFilters = loadFiltersFromStorage();
     if (savedFilters) {
       setFilterValues(savedFilters);
-    } 
+    }
     dispatch(fetchAiSignalData())
     subscribeToAiSignalTokens()
-    subscribeToAiSignalTokensNewAddedToken() 
+    subscribeToAiSignalTokensNewAddedToken()
   }, []);
 
   // Apply saved filters when data becomes available
@@ -460,7 +467,7 @@ const AiSignal = () => {
                     sortColumn={sortColumn}
                     sortOrder={sortOrder}
                   />
-                  <TableBody data={sortedData} img={solana} isLoading={isLoading} />
+                  <TableBody data={sortedData} img={solana} isLoading={isLoading} isTimeCreated={true} />
                 </table>
               </div>
             </div>
