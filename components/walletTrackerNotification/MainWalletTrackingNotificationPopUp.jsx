@@ -64,11 +64,10 @@ const MainWalletTrackingNotificationPopUp = ({ tx }) => {
             Just {tx?.Trade?.Side?.Type?.toUpperCase()}
           </div>
           <div
-            className={`${
-              tx?.Trade?.Side?.Type === "buy"
+            className={`${tx?.Trade?.Side?.Type === "buy"
                 ? "text-green-500"
                 : "text-red-500"
-            }`}
+              }`}
           >
             ${Number(tx?.Trade?.AmountInUSD).toFixed(2)}
           </div>
@@ -88,6 +87,8 @@ const MainWalletTrackingNotificationPopUp = ({ tx }) => {
           <SellBtn
             fromToken={tx?.Trade?.Currency?.MintAddress}
             price={tx?.Trade?.PriceInUSD}
+            name={tx?.Trade?.Currency?.Name}
+            symbol={tx?.Trade?.Currency?.Symbol}
           />
         )}
         <div className="text-[#6E6E6E] text-sm">{relativeTime}</div>

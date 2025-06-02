@@ -55,6 +55,8 @@
       "advanced": "Advanced"
     },
     "tableheaders": {
+      "aicall": "AI Call",
+      "aicalltooltip": "This suggest time when our AI Signal has been given",
       "pairinfo": "Pair Info",
       "pairinfotooltip": "Token name, age, and socials.",
       "created": "Created",

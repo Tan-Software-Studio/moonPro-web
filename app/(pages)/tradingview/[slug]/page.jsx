@@ -48,11 +48,17 @@ const Tradingview = () => {
   const containerRef = useRef(null);
   const tvChartRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [userTokenHoldings, setUserTokenHoldings] = useState({});
   const scrollableDivRef4 = useRef(null);
+  const [currentTokenPnLData, setCurrentTokenPnLData] = useState({});
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
+
+  // token image
+  const tokenImage = useSelector(
+    (state) => state?.AllStatesData?.chartSymbolImage
+  );
+
   // native balance
   const nativeTokenbalance = useSelector(
     (state) => state?.AllStatesData?.solNativeBalance
@@ -63,30 +69,16 @@ const Tradingview = () => {
     (state) => state?.allCharTokenData?.chartData
   );
 
+  const currentTabData = useSelector(
+    (state) => state?.setPnlData?.PnlData || []
+  );
+
   // solana live price
   const solanaLivePrice = useSelector(
     (state) => state?.AllStatesData?.solanaLivePrice
   );
   const [smallScreenTab, setIsSmallScreenTab] = useState("Trades");
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-
-  const getHoldings = async () => {
-    const jwtToken = localStorage.getItem("token");
-    if (!jwtToken) return 0;
-    try {
-      const response = await axios({
-        method: "get",
-        url: `${BASE_URL}transactions/getSingleTokenPnl/${tokenaddress}/${solWalletAddress}`,
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      });
-      // console.log(response?.data?.data?.token);
-      setUserTokenHoldings(response?.data?.data?.token);
-    } catch (error) {
-      console.error("error getting holdings", error);
-    }
-  };
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -99,6 +91,14 @@ const Tradingview = () => {
 
     return () => window?.removeEventListener("resize", checkScreenSize);
   }, []);
+
+  useEffect(() => {
+    const currentPnlData = currentTabData.find(pnls => pnls?.token === tokenaddress);
+    console.log(currentPnlData);
+    if (currentPnlData?.chainBalance > 0) {
+      setCurrentTokenPnLData(currentPnlData);
+    }
+  }, [currentTabData])
 
   useEffect(() => {
     dispatch(setselectToken("Solana"));
@@ -137,15 +137,6 @@ const Tradingview = () => {
     };
     fetchTokenMeta();
   }, [solWalletAddress, tokenaddress]);
-
-  useEffect(() => {
-    const fetchTokenHoldings = async () => {
-      if (tokenBalance > 0) {
-        await getHoldings();
-      }
-    };
-    fetchTokenHoldings();
-  }, [tokenBalance]);
 
   const handleCopy = (mintAddress) => {
     setCopied(true);
@@ -421,6 +412,7 @@ const Tradingview = () => {
                   chartTokenData={chartTokenData}
                   walletAddress={solWalletAddress}
                   pairAddress={latestTradesData?.chartData?.pairaddress}
+                  tokenImage={tokenImage}
                 />
               </div>
 
@@ -428,7 +420,7 @@ const Tradingview = () => {
                 <TVChartContainer
                   tokenSymbol={tokenSymbol}
                   tokenaddress={tokenaddress}
-                  userTokenHoldings={userTokenHoldings}
+                  currentTokenPnLData={currentTokenPnLData}
                   solanaLivePrice={solanaLivePrice}
                   supply={chartTokenData?.currentSupply}
                 />
@@ -475,6 +467,8 @@ const Tradingview = () => {
                 setTokenBalance={setTokenBalance}
                 tokenBalance={tokenBalance}
                 tokenName={tokenSymbol}
+                tokenSymbol={chartTokenData?.name}
+                tokenImage={tokenImage}
                 nativeTokenbalance={nativeTokenbalance}
                 decimal={chartTokenData?.decimal || decimalFindInArray}
                 progranAddress={chartTokenData?.programAddress}
@@ -490,7 +484,7 @@ const Tradingview = () => {
 
           <div className="w-full border-[#4D4D4D] md:border-t-0 md:border-l-0 md:border-r-0 md:border-b-0">
             <UserPnL
-              userTokenHoldings={userTokenHoldings}
+              currentTokenPnLData={currentTokenPnLData}
               currentPrice={
                 latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
               }

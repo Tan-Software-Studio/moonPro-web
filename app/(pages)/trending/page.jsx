@@ -101,8 +101,9 @@ const Trending = () => {
         title: "volume",
         name: tredingPage?.mainHeader?.filter?.byvolume,
         firstInputName: "Min",
+        firstInputIcon: "$",
         secondInputName: "Max",
-        secondInputIcon: "",
+        secondInputIcon: "$",
         type: "number",
       },
       {
@@ -120,9 +121,9 @@ const Trending = () => {
         title: "MKT",
         name: tredingPage?.mainHeader?.filter?.bymc,
         firstInputName: "Min",
-        firstInputIcon: "",
+        firstInputIcon: "$",
         secondInputName: "Max",
-        secondInputIcon: "",
+        secondInputIcon: "$",
         type: "number",
       },
       {
@@ -463,7 +464,7 @@ const Trending = () => {
                     sortColumn={sortColumn}
                     sortOrder={sortOrder}
                   />
-                  <TableBody data={sortedData} img={solana} isLoading={isLoading} />
+                  <TableBody data={sortedData} img={solana} isLoading={isLoading} isTimeCreated={false} />
                 </table>
               </div>
             </div>

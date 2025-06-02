@@ -55,6 +55,8 @@
       "advanced": "Avanzato"
     },
     "tableheaders": {
+      "aicall": "Chiamata AI",
+"aicalltooltip": "Questo indica l'ora in cui è stato dato il nostro segnale AI",
       "pairinfo": "Info Coppia",
       "pairinfotooltip": "Nome token, età e social.",
       "created": "Creato",

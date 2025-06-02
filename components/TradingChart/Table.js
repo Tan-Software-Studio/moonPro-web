@@ -25,6 +25,7 @@ import { RiExchangeDollarLine } from "react-icons/ri";
 import { RiArrowLeftRightFill } from "react-icons/ri";
 import { FaArrowUpLong } from "react-icons/fa6";
 import { FaArrowDownLong } from "react-icons/fa6";
+import { CiFilter } from "react-icons/ci";
 
 const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSupply }) => {
   const { t } = useTranslation();
@@ -126,53 +127,66 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
   const tableHeader = [
     {
       id: 1,
-      title: tragindViewPagePage?.table?.topholders?.tableHeaders?.addresses,
+      title: " ",
     },
-    { id: 2, title: "%" },
+    {
+      id: 2,
+      title: "Wallet",
+    },
     {
       id: 3,
-      title: tragindViewPagePage?.table?.topholders?.tableHeaders?.value,
+      title: "SOL Balance"
+    },
+    {
+      id: 4,
+      title: "Bought"
+    },
+
+    {
+      id: 5,
+      title: "Sold"
+    },
+    {
+      id: 6,
+      title: "PnL"
+    },
+    { id: 7, title: "Remaining" },
+    {
+      id: 8,
+      title: "Edit",
     },
   ];
 
   const TopTradersHeader = [
     {
       id: 1,
-      title: tragindViewPagePage?.table?.toptraders?.tableHeaders?.rank,
+      title: " ",
     },
     {
       id: 2,
-      title: tragindViewPagePage?.table?.toptraders?.tableHeaders?.owner,
+      title: "Wallet",
     },
     {
       id: 3,
-      title: tragindViewPagePage?.table?.toptraders?.tableHeaders?.dex,
-      infoTipString:
-        tragindViewPagePage?.table?.toptraders?.tableHeaders?.dextool,
+      title: "SOL Balance"
     },
     {
       id: 4,
-      title: tragindViewPagePage?.table?.toptraders?.tableHeaders?.invest,
-      infoTipString:
-        tragindViewPagePage?.table?.toptraders?.tableHeaders?.investtool,
+      title: "Bought"
     },
+
     {
       id: 5,
-      title: tragindViewPagePage?.table?.toptraders?.tableHeaders?.sold,
-      infoTipString:
-        tragindViewPagePage?.table?.toptraders?.tableHeaders?.soldtool,
+      title: "Sold"
     },
     {
       id: 6,
-      title: tragindViewPagePage?.table?.toptraders?.tableHeaders?.volume,
-      infoTipString:
-        tragindViewPagePage?.table?.toptraders?.tableHeaders?.volumetool,
+      title: "PnL"
     },
+    { id: 7, title: "Remaining" },
     {
-      id: 7,
-      title: tragindViewPagePage?.table?.toptraders?.tableHeaders?.exp,
-      infoTipString:
-        tragindViewPagePage?.table?.toptraders?.tableHeaders?.exptool,
+      id: 8,
+      title: "Edit",
     },
   ];
 
@@ -590,16 +604,13 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                 <table className="min-w-[100%] table-auto overflow-y-scroll">
                   <thead className="bg-[#08080E] sticky top-0">
                     <tr className="">
-                      {TopTradersHeader.map((header) => (
+                      {TopTradersHeader.map((header, index) => (
                         <th
                           key={header.id}
-                          className="px-2 py-3 text-center text-xs font-medium text-[#A8A8A8] uppercase leading-4 whitespace-nowrap"
+                          className="py-3 text-xs font-medium text-[#A8A8A8] whitespace-nowrap leading-4"
                         >
-                          <div className="flex items-center gap-1">
-                            <p>{header.title}</p>
-                            {header?.infoTipString && (
-                              <Infotip body={header?.infoTipString} />
-                            )}
+                          <div className={`flex ${index + 1 === tableHeader.length ? 'justify-end pr-3' : 'justify-start'}`}>
+                            {header.title}
                           </div>
                         </th>
                       ))}
@@ -609,42 +620,113 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                     {topTraderData.map((data, index) => (
                       <tr
                         key={index}
-                        className="capitalize bg-[#08080E] text-[#F6F6F6] font-normal text-xs leading-4 onest border-b border-[#404040]"
+                        className="bg-[#08080E] text-[#F6F6F6] font-normal text-xs leading-4 onest border-b border-[#404040]"
                       >
-                        <td className="text-center text-[#707070] px-6 py-4">
-                          #{index + 1}
+                        <td className="text-center text-[#707070] px-6 py-4 w-5">
+                          {index + 1}
                         </td>
-                        <td className="px-6 py-4 text-center text-white">
-                          {data?.Trade?.Account?.Owner
-                            ? `${data.Trade.Account.Owner.slice(
-                                0,
-                                6
-                              )}...${data.Trade.Account.Owner.slice(-6)}`
-                            : "N/A"}
+                        <td className="py-3 text-center w-fit whitespace-nowrap flex-start">
+                          <div className="flex items-center justify-start gap-2">
+                            <a
+                              href={`https://solscan.io/account/${data?.Trade?.Account?.Owner}`}
+                              target="_blank"
+                            >
+                              <CiShare1 className="text-[18px]" />
+                            </a>
+                            {data?.Trade?.Account?.Owner
+                              ? `${data?.Trade?.Account?.Owner?.slice(
+                                  0,
+                                  6
+                                )}...${data?.Trade?.Account?.Owner?.slice(
+                                  -4
+                                )}`
+                              : "N/A"}
+                          </div>
                         </td>
-                        <td className="text-center px-6 py-4">
-                          {data?.Trade?.Dex?.ProtocolFamily}
+                         <td>
+                            <div className="flex items-center justify-start gap-1">
+                              <Image
+                                src={solana}
+                                width={15}
+                                height={15}
+                                alt="solana"
+                              />
+                            <p>0</p>
+                            </div>
                         </td>
-                        <td className="text-center px-6 py-4">
-                          {data?.bought
-                            ? humanReadableFormat(data.bought)
-                            : "N/A"}
+                        <td>
+                            <div className="flex flex-col gap-[2px] h-full justify-start">
+                              <p className="text-[#21CB6B] text-sm leading-4">
+                                {data?.bought
+                                  ? humanReadableFormat(data.bought)
+                                  : "N/A"}
+                              </p>
+                              <p className="text-[#9b9999] text-[11px] leading-[14px]">{`- / 0`}</p>
+                            </div>
                         </td>
-                        <td className="text-center px-6 py-4">
-                          {data?.sold ? humanReadableFormat(data.sold) : "N/A"}
+                        <td>
+                          <div className="flex flex-col gap-[2px] h-full justify-start">
+                            <p className="text-[#ed1b26] text-sm leading-4">
+                               {data?.sold ? humanReadableFormat(data.sold) : "N/A"}
+                            </p>
+                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`- / 0`}</p>
+                          </div>
                         </td>
-                        <td className="text-center px-6 py-4">
-                          {data?.volume
-                            ? humanReadableFormat(data.volumeUsd)
-                            : "N/A"}
+                        <td>
+                          <span className="text-[#21CB6B] font-thin flex justify-start">
+                            {"$0(0%)"}  
+                          </span>
                         </td>
-                        <td className="flex items-center justify-center px-6 py-4 font-normal text-white text-[20px]">
-                          <a
-                            href={`https://solscan.io/account/${data?.Trade?.Account?.Owner}`}
-                            target="_blank"
-                          >
-                            <CiShare1 className="text-[18px]" />
-                          </a>
+                        <td className="text-center py-3 pr-4">
+                            {data?.volume ? (
+                              <>
+                                <p className="pb-2">
+                                  <div className="flex items-center justify-start gap-2">
+                                    {data?.volume ? (
+                                      <>
+                                        <p className="">
+                                          {data?.volume
+                                            ? humanReadableFormat(data.volumeUsd)
+                                            : "N/A"}
+                                        </p>
+                                      </>
+                                    ) : (
+                                      "N/A"
+                                    )}
+                                    <p className="bg-[#9b99996b] rounded-md px-1 py-[2px]">
+                                      {calculateHoldersPercentage(
+                                        data?.volume, tokenSupply
+                                      )}
+                                    </p>
+                                  </div>
+                                </p>
+                                <ProgressBar
+                                  completed={Math.floor(
+                                    parseFloat(
+                                      calculateHoldersPercentage(
+                                       data?.volume, tokenSupply
+                                      ).replace("%", "") // Remove "%" before converting to number
+                                    )
+                                  )}
+                                  maxCompleted={100}
+                                  transitionDuration="2s"
+                                  transitionTimingFunction="ease-in-out"
+                                  baseBgColor="#3a415a"
+                                  bgColor="#6cc4f4"
+                                  height="3px"
+                                  borderRadius="10px"
+                                  animateOnRender={true}
+                                  labelClassName="label-bar"
+                                />
+                              </>
+                            ) : (
+                              "N/A"
+                            )}
+                        </td>
+                        <td className="text-center">
+                          <div className="flex justify-end pr-3">
+                            <CiFilter className="text-[15px] text-[#cdc8cd] font-bold" />
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -654,17 +736,19 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
             ) : activeTab === "Holders" &&
               topHoldingData?.BalanceUpdates?.length > 0 ? (
               <>
-                <div className="lg:h-[85vh] h-[50vh] md:grid grid-cols-2">
+                <div className="lg:h-[85vh] h-[50vh] md:grid grid-cols-[65%_35%]">
                   <div className="overflow-y-scroll lg:h-[85vh] h-[50vh] border-r-[#4D4D4D] border border-[#4D4D4D] visibleScroll ">
                     <table className=" min-w-[100%] table-auto overflow-y-scroll visibleScroll">
                       <thead className="bg-[#08080E] sticky top-0">
-                        <tr className="">
-                          {tableHeader.map((header) => (
+                        <tr className="px-3">
+                          {tableHeader.map((header, index) => (
                             <th
                               key={header.id}
-                              className="px-2 py-3 text-center text-xs font-medium text-[#A8A8A8] uppercase whitespace-nowrap leading-4"
+                              className="py-3 text-xs font-medium text-[#A8A8A8] whitespace-nowrap leading-4"
                             >
-                              {header.title}
+                              <div className={`flex ${index + 1 === tableHeader.length ? 'justify-end pr-3' : 'justify-start'}`}>
+                                {header.title}
+                              </div>
                             </th>
                           ))}
                         </tr>
@@ -673,69 +757,118 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                         {topHoldingData?.BalanceUpdates.map((data, index) => (
                           <tr
                             key={index}
-                            className="capitalize bg-[#08080E] text-[#F6F6F6] font-normal text-xs leading-4 onest border-b border-[#404040]"
+                            className="bg-[#08080E] text-[#F6F6F6] font-normal text-xs leading-4 onest border-b px-3 border-[#404040]"
                           >
-                            <td className="px-6 py-3 text-center w-fit whitespace-nowrap flex-start">
-                              {data?.BalanceUpdate?.Account?.Owner
-                                ? `${data?.BalanceUpdate?.Account?.Owner?.slice(
-                                    0,
-                                    6
-                                  )}...${data?.BalanceUpdate?.Account?.Owner?.slice(
-                                    -6
-                                  )}`
-                                : "N/A"}
+                            <td className="text-center text-[#707070] px-6 py-4 w-5">
+                              {index + 1}
                             </td>
-                            <td className="text-center py-3">
-                              {topHoldingData?.TokenSupplyUpdates[0]
-                                ?.TokenSupplyUpdate?.totalSupply ? (
-                                <>
-                                  <p className="pb-1">
-                                    {calculateHoldersPercentage(
-                                      data?.BalanceUpdate?.balance,
-                                      topHoldingData?.TokenSupplyUpdates[0]
-                                        ?.TokenSupplyUpdate?.totalSupply
-                                    )}
-                                  </p>
-                                  <ProgressBar
-                                    completed={Math.floor(
-                                      parseFloat(
-                                        calculateHoldersPercentage(
-                                          data?.BalanceUpdate?.balance,
-                                          topHoldingData?.TokenSupplyUpdates[0]
+                            <td className="py-3 text-center w-fit whitespace-nowrap flex-start">
+                              <div className="flex items-center justify-start gap-2">
+                                <a
+                                  href={`https://solscan.io/account/${data?.BalanceUpdate?.Account?.Owner}`}
+                                  target="_blank"
+                                >
+                                  <CiShare1 className="text-[18px]" />
+                                </a>
+                                {data?.BalanceUpdate?.Account?.Owner
+                                  ? `${data?.BalanceUpdate?.Account?.Owner?.slice(
+                                      0,
+                                      6
+                                    )}...${data?.BalanceUpdate?.Account?.Owner?.slice(
+                                      -4
+                                    )}`
+                                  : "N/A"}
+                              </div>
+                            </td>
+                             <td>
+                              <div className="flex items-center justify-start gap-1">
+                                <Image
+                                  src={solana}
+                                  width={15}
+                                  height={15}
+                                  alt="solana"
+                                />
+                                <p>0</p>
+                              </div>
+                            </td>
+                            {/* Bought */}
+                            <td>
+                              <div className="flex flex-col gap-[2px] h-full justify-start">
+                                <p className="text-[#21CB6B] text-sm leading-4">$0</p>
+                                <p className="text-[#9b9999] text-[11px] leading-[14px]">{`- / 0`}</p>
+                              </div>
+                            </td>
+                            {/* Sold */}
+                            <td>
+                              <div className="flex flex-col gap-[2px] h-full justify-start">
+                                <p className="text-[#ed1b26] text-sm leading-4">$0</p>
+                                <p className="text-[#9b9999] text-[11px] leading-[14px]">{`- / 0`}</p>
+                              </div>
+                            </td>
+                            {/* PnL */}
+                            <td>
+                              <span className="text-[#21CB6B] font-thin flex justify-start">
+                                {"$0(0%)"}  
+                              </span>
+                            </td>
+                            <td className="text-center py-3 pr-4">
+                                {topHoldingData?.TokenSupplyUpdates[0]
+                                  ?.TokenSupplyUpdate?.totalSupply ? (
+                                  <>
+                                    <p className="pb-2">
+                                      <div className="flex items-center justify-start gap-2">
+                                        {topHoldingData?.DEXTradeByTokens[0]?.Trade
+                                          ?.price ? (
+                                          <>
+                                            <p className="">
+                                              {humanReadableFormat(
+                                                data?.BalanceUpdate?.balance *
+                                                  topHoldingData?.DEXTradeByTokens[0]
+                                                    ?.Trade?.price
+                                              )}
+                                            </p>
+                                          </>
+                                        ) : (
+                                          "N/A"
+                                        )}
+                                        <p className="bg-[#9b99996b] rounded-md px-1 py-[2px]">
+                                          {calculateHoldersPercentage(
+                                            data?.BalanceUpdate?.balance,
+                                            topHoldingData?.TokenSupplyUpdates[0]
                                             ?.TokenSupplyUpdate?.totalSupply
-                                        ).replace("%", "") // Remove "%" before converting to number
-                                      )
-                                    )}
-                                    maxCompleted={100}
-                                    transitionDuration="2s"
-                                    transitionTimingFunction="ease-in-out"
-                                    baseBgColor="#3a415a"
-                                    bgColor="#6cc4f4"
-                                    height="3px"
-                                    borderRadius="10px"
-                                    animateOnRender={true}
-                                    labelClassName="label-bar"
-                                  />
-                                </>
-                              ) : (
-                                "N/A"
-                              )}
+                                          )}
+                                        </p>
+                                      </div>
+                                    </p>
+                                    <ProgressBar
+                                      completed={Math.floor(
+                                        parseFloat(
+                                          calculateHoldersPercentage(
+                                            data?.BalanceUpdate?.balance,
+                                            topHoldingData?.TokenSupplyUpdates[0]
+                                              ?.TokenSupplyUpdate?.totalSupply
+                                          ).replace("%", "") // Remove "%" before converting to number
+                                        )
+                                      )}
+                                      maxCompleted={100}
+                                      transitionDuration="2s"
+                                      transitionTimingFunction="ease-in-out"
+                                      baseBgColor="#3a415a"
+                                      bgColor="#6cc4f4"
+                                      height="3px"
+                                      borderRadius="10px"
+                                      animateOnRender={true}
+                                      labelClassName="label-bar"
+                                    />
+                                  </>
+                                ) : (
+                                  "N/A"
+                                )}
                             </td>
-                            <td className="text-center px-6 py-3">
-                              {topHoldingData?.DEXTradeByTokens[0]?.Trade
-                                ?.price ? (
-                                <>
-                                  <p className="">
-                                    {humanReadableFormat(
-                                      data?.BalanceUpdate?.balance *
-                                        topHoldingData?.DEXTradeByTokens[0]
-                                          ?.Trade?.price
-                                    )}
-                                  </p>
-                                </>
-                              ) : (
-                                "N/A"
-                              )}
+                            <td className="text-center">
+                              <div className="flex justify-end pr-3">
+                                <CiFilter className="text-[15px] text-[#cdc8cd] font-bold" />
+                              </div>
                             </td>
                           </tr>
                         ))}
@@ -876,7 +1009,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
               <>
                 <div className="flex w-full flex-col items-center justify-center lg:h-[20vh] h-[80vh] rounded-lg">
                   <div className="flex flex-col items-center justify-center">
-                    <div
+                    {/* <div
                       className={`text-4xl ${loader ? "animate-bounce" : ""}`}
                     >
                       <Image
@@ -886,7 +1019,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                         height={50}
                         className="rounded-lg"
                       />
-                    </div>
+                    </div> */}
                     <p className="mt-2 text-[15px] text-[#b5b7da] font-bold">
                       {loader ? (
                         "Loading data..."
