@@ -147,7 +147,7 @@ const Memescope = () => {
   }, [GraduateddataSortedData]);
 
   const graduatedSearchData = GraduateddataSortedData.filter((item) =>
-    item.symbol.toUpperCase().includes(graduateSearchData.toUpperCase())
+    item?.symbol?.toUpperCase()?.includes(graduateSearchData?.toUpperCase())
   );
 
   const hasGraduateSearch = graduateSearchData.trim() !== "";

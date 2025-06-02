@@ -55,6 +55,8 @@
       "advanced": "上級"
     },
     "tableheaders": {
+      "aicall": "AIコール",
+      "aicalltooltip": "これは、AIシグナルが発信された時間を示します",
       "pairinfo": "ペア情報",
       "pairinfotooltip": "トークン名、経過時間、ソーシャルリンク。",
       "created": "作成日",

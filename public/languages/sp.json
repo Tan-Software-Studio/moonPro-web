@@ -55,6 +55,8 @@
       "advanced": "Avanzado"
     },
     "tableheaders": {
+      "aicall": "Llamada de IA",
+"aicalltooltip": "Esto indica el momento en que se dio nuestra señal de IA",
       "pairinfo": "Información del par",
       "pairinfotooltip": "Nombre del token, edad y redes sociales.",
       "created": "Creado",

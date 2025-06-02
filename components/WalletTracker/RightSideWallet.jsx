@@ -86,9 +86,9 @@ function RightSideWallet({ wallettrackerPage }) {
                 >
                   {alert?.Transaction?.Signer.length > 11
                     ? `${alert?.Transaction?.Signer.slice(
-                        0,
-                        6
-                      )}...${alert?.Transaction?.Signer.slice(-5)}`
+                      0,
+                      6
+                    )}...${alert?.Transaction?.Signer.slice(-5)}`
                     : alert?.Transaction?.Signer}
                 </div>
               </div>
@@ -129,11 +129,10 @@ function RightSideWallet({ wallettrackerPage }) {
               {/* Type (Buy/Sell) */}
               <div>
                 <span
-                  className={`px-3 py-1 rounded-md text-[12px] font-normal text-[#F6F6F6] ${
-                    alert?.Trade?.Side?.Type == "buy"
-                      ? "bg-[#21CB6B52]"
-                      : "bg-[#ED1B2452]"
-                  }`}
+                  className={`px-3 py-1 rounded-md text-[12px] font-normal text-[#F6F6F6] ${alert?.Trade?.Side?.Type == "buy"
+                    ? "bg-[#21CB6B52]"
+                    : "bg-[#ED1B2452]"
+                    }`}
                 >
                   {alert?.Trade?.Side?.Type}
                 </span>
@@ -144,6 +143,8 @@ function RightSideWallet({ wallettrackerPage }) {
                 {alert?.Trade?.Side?.Type == "buy" && (
                   <BuyWalletTracker
                     toToken={alert.Trade.Currency?.MintAddress}
+                    name={alert.Trade.Currency?.Name}
+                    symbol={alert.Trade.Currency?.Symbol}
                     price={alert?.Trade?.PriceInUSD}
                     solWalletAddress={solWalletAddress}
                   />

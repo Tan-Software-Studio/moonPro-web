@@ -53,6 +53,12 @@ const Tradingview = () => {
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
+
+  // token image
+  const tokenImage = useSelector(
+    (state) => state?.AllStatesData?.chartSymbolImage
+  );
+
   // native balance
   const nativeTokenbalance = useSelector(
     (state) => state?.AllStatesData?.solNativeBalance
@@ -421,6 +427,7 @@ const Tradingview = () => {
                   chartTokenData={chartTokenData}
                   walletAddress={solWalletAddress}
                   pairAddress={latestTradesData?.chartData?.pairaddress}
+                  tokenImage={tokenImage}
                 />
               </div>
 
@@ -475,6 +482,8 @@ const Tradingview = () => {
                 setTokenBalance={setTokenBalance}
                 tokenBalance={tokenBalance}
                 tokenName={tokenSymbol}
+                tokenSymbol={chartTokenData?.name}
+                tokenImage={tokenImage}
                 nativeTokenbalance={nativeTokenbalance}
                 decimal={chartTokenData?.decimal || decimalFindInArray}
                 progranAddress={chartTokenData?.programAddress}

@@ -55,6 +55,8 @@
       "advanced": "高级"
     },
     "tableheaders": {
+      "aicall": "AI 信号",
+"aicalltooltip": "表示我们的 AI 信号已发出的时间",
       "pairinfo": "交易对信息",
       "pairinfotooltip": "代币名称、时间和社交信息。",
       "created": "创建",

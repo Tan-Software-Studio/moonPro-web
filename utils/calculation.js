@@ -162,6 +162,23 @@ function UpdateTime(timestamp, currentTime) {
   return `${seconds}s`;
 }
 
+function UpdateTimeViaUTCWithCustomTime(utcString, currentTime) {
+  const utcDate = new Date(utcString); // This handles UTC properly
+
+  const diff = Math.abs(currentTime.getTime() - utcDate.getTime());
+
+  const seconds = Math.floor((diff / 1000) % 60);
+  const minutes = Math.floor((diff / 60000) % 60);
+  const hours = Math.floor((diff / 3600000) % 24);
+  const days = Math.floor(diff / 86400000);
+
+  if (days > 0) return `${days}d`;
+  if (hours > 0) return `${hours}h`;
+  if (minutes > 0) return `${minutes}m`;
+  return `${seconds}s`;
+}
+
+
 function getTimeAgo(dateString, addAgo = true) {
   const now = new Date().getTime(); // Current UTC timestamp
   const past = new Date(dateString).getTime(); // UTC timestamp of the input
@@ -274,5 +291,6 @@ export {
   formatNumberNoLoop,
   getTimeAgo,
   convertUTCToIST,
-  convertUTCToLocalTimeString
+  convertUTCToLocalTimeString,
+  UpdateTimeViaUTCWithCustomTime
 };

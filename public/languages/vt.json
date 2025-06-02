@@ -55,6 +55,8 @@
       "advanced": "Nâng cao"
     },
     "tableheaders": {
+      "aicall": "اے آئی کال",
+      "aicalltooltip": "یہ وقت ظاہر کرتا ہے جب ہمارا اے آئی سگنل دیا گیا تھا",
       "pairinfo": "Thông tin cặp",
       "pairinfotooltip": "Tên token, tuổi và mạng xã hội.",
       "created": "Tạo lúc",

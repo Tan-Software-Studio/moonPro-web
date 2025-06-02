@@ -55,6 +55,8 @@
       "advanced": "उन्नत"
     },
     "tableheaders": {
+      "aicall": "एआई कॉल",
+      "aicalltooltip": "यह उस समय को दर्शाता है जब हमारी एआई सिग्नल दी गई थी",
       "pairinfo": "जोड़ी जानकारी",
       "pairinfotooltip": "टोकन नाम, उम्र, और सोशल लिंक",
       "created": "बनाया गया",
