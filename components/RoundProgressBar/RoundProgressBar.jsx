@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { pump_img } from "@/app/Images";
+import { pump_img, yellow_pump } from "@/app/Images";
 
 const RoundProgressBar = ({
   value,
@@ -8,7 +8,8 @@ const RoundProgressBar = ({
   size = 70.5,
   strokeWidth = 2,
   trailColor = "#3c3c44",
-  progressColor = "#4FAFFE"
+  progressColor = "#4FAFFE",
+  capculImg
 }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -61,7 +62,7 @@ const RoundProgressBar = ({
           className={`absolute rounded-full bg-black border -top-1.5 -left-2.1 !z-10`}
           style={{ borderColor: progressColor }}
         >
-          <Image src={pump_img} alt="pump_img" className="w-4" />
+          <Image src={capculImg} alt="pump_img" className="w-4" />
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 "use client";
-import { bitcoinIcon, buyIcon, memescopeImg } from "@/app/Images";
+import { bitcoinIcon, blue_pump, buyIcon, green_pump, memescopeImg, yellow_pump } from "@/app/Images";
 import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -381,7 +381,7 @@ const Memescope = () => {
               className={`${selectedScope === 1 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={newCreationDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar} barColor={"#4FAFFE"} />
+              <MscopePumpTable MemscopeData={newCreationDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar} barColor={"#4FAFFE"} capculImg={blue_pump} />
             </div>
           </div>
 
@@ -436,7 +436,7 @@ const Memescope = () => {
               className={`${selectedScope === 2 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={aboutDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar} barColor={"#21CB6B"}/>
+              <MscopePumpTable MemscopeData={aboutDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar} barColor={"#41986b"} capculImg={green_pump} />
             </div>
           </div>
 
@@ -493,7 +493,7 @@ const Memescope = () => {
               className={`${selectedScope === 3 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={graduateDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar} barColor={"#FFFF00"}/>
+              <MscopePumpTable MemscopeData={graduateDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar} barColor={"#cfc328"} capculImg={yellow_pump} />
             </div>
           </div>
 

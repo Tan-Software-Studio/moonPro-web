@@ -107,6 +107,9 @@ import sniper from "../public/assets/Memescope/sniper.svg";
 import Vol from "../public/assets/Memescope/V.svg";
 import MC from "../public/assets/Memescope/MC.svg";
 import Users from "../public/assets/Memescope/Users.svg";
+import blue_pump from "../public/assets/Memescope/blue_pump.png";
+import green_pump from "../public/assets/Memescope/green_pump.png";
+import yellow_pump from "../public/assets/Memescope/yellow_pump.png";
 
 import Import from "../public/assets/wallet-tracker/Import.svg";
 import Plus from "../public/assets/wallet-tracker/Plus.svg";
@@ -253,6 +256,9 @@ export {
   userIcon,
   Import,
   Plus,
+  yellow_pump,
+  green_pump,
+  blue_pump,
   // languages
   china,
   dubai,

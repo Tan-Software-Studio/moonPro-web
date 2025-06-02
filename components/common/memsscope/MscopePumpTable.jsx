@@ -33,7 +33,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import RoundProgressBar from "@/components/RoundProgressBar/RoundProgressBar";
 import SingleLineProgressBar from "@/components/SingleLineProgressBar/SingleLineProgressBar";
 
-const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, setSelectedMetric, setShowMarketCap, showMarketCap, showVolume, setShowVolume, showSocials, setShowSocials, showHolders, setShowHolders, setshowHolders10, showHolders10, setProgerssBar, progerssBar, barColor }) => {
+const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, setSelectedMetric, setShowMarketCap, showMarketCap, showVolume, setShowVolume, showSocials, setShowSocials, showHolders, setShowHolders, setshowHolders10, showHolders10, setProgerssBar, progerssBar, barColor, capculImg }) => {
   // console.log("🚀 ~ MscopePumpTable ~ searchbar:-->", showCircle);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoverRow, sethoverRow] = useState(false);
@@ -175,11 +175,13 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
 
                         {showCircle ? <RoundProgressBar
                           value={block?.bonding_curv || 0}
+                          capculImg={capculImg}
                           maxValue={100}
                           trailColor="#7b8085"
                           progressColor={`${!progerssBar ? barColor : '#7b8085'}`}
                         /> : <SquareProgressBar
                           value={block?.bonding_curv || 0}
+                          capculImg={capculImg}
                           maxValue={100}
                           trailColor="#7b8085"
                           progressColor={`${!progerssBar ? barColor : '#7b8085'}`}

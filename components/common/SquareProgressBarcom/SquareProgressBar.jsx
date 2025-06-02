@@ -9,7 +9,8 @@ const SquareProgressBar = ({
   maxValue = 100,
   size = 70.5,
   trailColor = "#3c3c44",
-  progressColor
+  progressColor,
+  capculImg
 }) => {
   const progress = Math.min(Math.max((value / maxValue) * 100, 0), 100); // Ensures progress is between 0 and 100
   const strokeWidth = 2; // Thinner border width
@@ -68,8 +69,8 @@ const SquareProgressBar = ({
           </span>
         </div> */}
         <div
-          className={`absolute rounded-full bg-black border -top-1.5 -left-1.5 !z-[9]`} style={{ borderColor: progressColor }}>
-            <Image src={pump_img} alt="pump_img" className="w-4"/>
+          className={`absolute rounded-full bg-black border -top-1.5 -left-1.5 !z-[9] p-0.5`} style={{ borderColor: progressColor }}>
+          <Image src={capculImg} alt="pump_img" className="w-4" />
         </div>
       </div>
     </div>
