@@ -2,7 +2,7 @@ import {
   barchart,
   discord,
   twitter,
-  // solana,
+  solana,
 } from "@/app/Images";
 import Image from "next/image";
 import React, { useState, useRef, useEffect } from "react";
@@ -12,9 +12,9 @@ import {
   setSolWalletAddress,
 } from "@/app/redux/states";
 import RightModalOpenSetting from "../Settings/RightModalOpenSetting";
-// import { LuWalletMinimal } from "react-icons/lu";
-// import { FaAngleDown } from "react-icons/fa";
-// import { IoCheckmarkDone, IoCopyOutline } from "react-icons/io5";
+import { LuWalletMinimal } from "react-icons/lu";
+import { FaAngleDown } from "react-icons/fa";
+import { IoCheckmarkDone, IoCopyOutline } from "react-icons/io5";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { showToastLoader } from "../common/toastLoader/ToastLoder";
@@ -46,14 +46,10 @@ const Footer = () => {
   );
 
   // Updated to use the new Redux state structure
-  // const userDetails = useSelector((state) => state?.userData?.userDetails);
-  // const reduxWallets = userDetails?.walletAddressSOL || [];
-
+  const userDetails = useSelector((state) => state?.userData?.userDetails);
+  const reduxWallets = userDetails?.walletAddressSOL || [];
   const [open, setOpen] = useState(false);
   const [copiedWallet, setCopiedWallet] = useState(null);
-  const [walletAddresses, setWalletAddresses] = useState([]);
-  const [allWallets, setAllWallets] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [isPnLPopupOpen, setIsPnLPopupOpen] = useState(false);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
@@ -75,34 +71,27 @@ const Footer = () => {
   };
 
   // Format wallet address to show first 4 and last 4 characters
-  // const formatWalletAddress = (address) => {
-  //   if (!address) return "BEsA4...B2K5";
-  //   if (address.length <= 8) return address;
-  //   return `${address.slice(0, 4)}...${address.slice(-4)}`;
-  // };
+  const formatWalletAddress = (address) => {
+    return `${address.slice(0, 4)}...${address.slice(-4)}`;
+  };
 
   // Updated: Get wallet balance from Redux data
-  // const getWalletBalance = (walletAddress) => {
-  //   if (!walletAddress || !reduxWallets.length) return "0";
+  const getWalletBalance = (walletAddress) => {
+    if (!walletAddress || !reduxWallets?.length) return "0";
 
-  //   const wallet = reduxWallets.find((w) => w.wallet === walletAddress);
-  //   return wallet?.balance !== undefined
-  //     ? parseFloat(wallet.balance).toFixed(4)
-  //     : "0";
-  // };
+    const wallet = reduxWallets?.find((w) => w.wallet === walletAddress);
+    return wallet?.balance !== undefined
+      ? parseFloat(wallet.balance).toFixed(4)
+      : "0";
+  };
 
   // Updated: Get primary wallet balance
-  // const getPrimaryWalletBalance = () => {
-  //   const primaryWallet = reduxWallets.find((w) => w.primary);
-  //   return primaryWallet?.balance !== undefined
-  //     ? parseFloat(primaryWallet.balance).toFixed(4)
-  //     : "0";
-  // };
-
-  // Updated: Get total wallet count
-  // const getTotalWalletCount = () => {
-  //   return reduxWallets.length || 0;
-  // };
+  const getPrimaryWalletBalance = () => {
+    const primaryWallet = reduxWallets?.find((w) => w.primary);
+    return primaryWallet?.balance !== undefined
+      ? parseFloat(primaryWallet?.balance).toFixed(4)
+      : "0";
+  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -121,44 +110,6 @@ const Footer = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  // Updated: Sync Redux wallets with local state for backward compatibility
-  // useEffect(() => {
-  //   if (reduxWallets.length > 0) {
-  //     setWalletAddresses(reduxWallets);
-  //     setAllWallets(reduxWallets);
-  //   }
-  // }, [reduxWallets]);
-
-  // const getAllWallets = async (e) => {
-  //   const jwtToken = localStorage.getItem("token");
-  //   if (!jwtToken) return 0;
-  //   try {
-  //     setIsLoading(true);
-  //     const response = await axios.get(`${baseUrl}user/getAllWallets`, {
-  //       headers: {
-  //         Authorization: `Bearer ${jwtToken}`,
-  //       },
-  //     });
-  //     const wallets = response?.data?.data?.wallets?.walletAddressSOL;
-  //     setAllWallets(wallets);
-  //     setWalletAddresses(response?.data?.data?.wallets?.walletAddressSOL);
-  //     setIsLoading(false);
-  //   } catch (error) {
-  //     console.error(error);
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  // Use Redux data if available, otherwise fallback to local state
-  // const walletsToShow = reduxWallets.length > 0 ? reduxWallets : allWallets;
-
-  // useEffect(() => {
-  //   // Only fetch if Redux doesn't have wallet data
-  //   if (reduxWallets.length === 0) {
-  //     getAllWallets();
-  //   }
-  // }, [reduxWallets.length]);
 
   // old primary
   const handlePrimary = async (walletIndex, loopIndex) => {
@@ -180,24 +131,6 @@ const Footer = () => {
           }
         )
         .then(async (res) => {
-          // const findXPrimaryIndex = await walletAddresses.findIndex((item) => item?.primary);
-          // setWalletAddresses((pre) => {
-          //   const preArr = [...pre];
-          //   if (findXPrimaryIndex !== -1) preArr[findXPrimaryIndex].primary = false;
-          //   preArr[loopIndex].primary = true;
-          //   return preArr;
-          // });
-
-          // Also update allWallets if using fallback
-          // if (reduxWallets.length === 0) {
-          //   setAllWallets((pre) => {
-          //     const preArr = [...pre];
-          //     const primaryIndex = preArr.findIndex((item) => item?.primary);
-          //     if (primaryIndex !== -1) preArr[primaryIndex].primary = false;
-          //     preArr[loopIndex].primary = true;
-          //     return preArr;
-          //   });
-          // }
           localStorage.setItem(
             "walletAddress",
             res?.data?.data?.wallet?.wallet
@@ -261,15 +194,15 @@ const Footer = () => {
               </span>
             </button>
 
-            <div className="flex items-center space-x-1">
-              {/* <div className="relative inline-block">
+            <div className="relative flex items-center space-x-1 overflow-visible">
+              {/* <div className="">
                 <div
                   ref={buttonRef}
                   onClick={() => setOpen(!open)}
                   className="flex items-center space-x-2 px-3 py-1.5 bg-[#1a1a1a] rounded-full text-[#ecf6fd] text-sm font-medium cursor-pointer hover:bg-[#2a2a2a] transition-colors"
                 >
                   <LuWalletMinimal size={16} />
-                  <span>{getTotalWalletCount()}</span>
+                  <span>{reduxWallets?.length}</span>
 
                   <Image src={solana} width={16} height={16} alt="solana" />
                   <span>{getPrimaryWalletBalance()}</span>
@@ -280,9 +213,9 @@ const Footer = () => {
                 {open && (
                   <div
                     ref={dropdownRef}
-                    className="absolute bottom-full left-0 mb-2 w-96 max-h-80 overflow-y-auto bg-[#18181a] border border-gray-700 text-white rounded-md shadow-lg z-50"
+                    className="absolute -top-20 mb-2 w-96 max-h-80 overflow-y-auto bg-[#18181a] border border-gray-700 text-white rounded-md shadow-lg z-50"
                   >
-                    {walletsToShow.map((wallet, idx) => {
+                    {reduxWallets?.map((wallet, idx) => {
                       const handleCopy = async (e) => {
                         e.stopPropagation();
                         try {
@@ -299,9 +232,8 @@ const Footer = () => {
                       return (
                         <div
                           key={wallet._id || wallet.id || idx}
-                          className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${
-                            wallet.active ? "bg-[#18181a]" : ""
-                          }`}
+                          className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${wallet.active ? "bg-[#18181a]" : ""
+                            }`}
                         >
                           <div className="flex items-center gap-3">
                             <input
@@ -313,11 +245,10 @@ const Footer = () => {
                             <div className="flex flex-col">
                               <div className="flex items-center gap-2 text-sm">
                                 <span
-                                  className={`font-medium ${
-                                    wallet.primary
-                                      ? "text-orange-400"
-                                      : "text-white"
-                                  }`}
+                                  className={`font-medium ${wallet.primary
+                                    ? "text-orange-400"
+                                    : "text-white"
+                                    }`}
                                 >
                                   {idx === 0
                                     ? "Moon Pro Main"
@@ -368,15 +299,9 @@ const Footer = () => {
                       );
                     })}
 
-                    {walletsToShow.length === 0 && !isLoading && (
+                    {reduxWallets?.length === 0 && (
                       <div className="p-4 text-center text-gray-400">
                         No wallets found
-                      </div>
-                    )}
-
-                    {isLoading && (
-                      <div className="p-4 text-center text-gray-400">
-                        Loading wallets...
                       </div>
                     )}
                   </div>
