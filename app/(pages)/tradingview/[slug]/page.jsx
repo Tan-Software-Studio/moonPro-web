@@ -50,6 +50,7 @@ const Tradingview = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [userTokenHoldings, setUserTokenHoldings] = useState({});
   const scrollableDivRef4 = useRef(null);
+  const [currentTokenPnLData, setCurrentTokenPnLData] = useState({});
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
@@ -67,6 +68,10 @@ const Tradingview = () => {
   // chart data from redux
   const chartTokenData = useSelector(
     (state) => state?.allCharTokenData?.chartData
+  );
+
+  const currentTabData = useSelector(
+    (state) => state?.setPnlData?.PnlData || []
   );
 
   // solana live price
@@ -105,6 +110,14 @@ const Tradingview = () => {
 
     return () => window?.removeEventListener("resize", checkScreenSize);
   }, []);
+
+  useEffect(() => {
+    const currentPnlData = currentTabData.find(pnls => pnls?.token === tokenaddress);
+    console.log(currentPnlData);
+    if (currentPnlData?.chainBalance > 0) {
+      setCurrentTokenPnLData(currentPnlData);
+    }
+  }, [currentTabData])
 
   useEffect(() => {
     dispatch(setselectToken("Solana"));
@@ -499,7 +512,7 @@ const Tradingview = () => {
 
           <div className="w-full border-[#4D4D4D] md:border-t-0 md:border-l-0 md:border-r-0 md:border-b-0">
             <UserPnL
-              userTokenHoldings={userTokenHoldings}
+              currentTokenPnLData={currentTokenPnLData}
               currentPrice={
                 latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
               }
