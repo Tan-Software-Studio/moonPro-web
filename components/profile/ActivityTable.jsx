@@ -4,6 +4,8 @@ import Link from "next/link";
 import axios from "axios";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
+import { setChartSymbolImage } from "@/app/redux/states";
+import { useRouter } from "next/navigation";
 
 // Truncate long strings
 const truncateString = (str, start = 4, end = 4) => {
@@ -12,31 +14,17 @@ const truncateString = (str, start = 4, end = 4) => {
 };
 
 
-const ActivityTable = () => {
+const ActivityTable = ({ activitySearchQuery }) => {
   const [transactionData, setTransactionData] = useState([]);
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [tokenImages, setTokenImages] = useState({});
-
+  const router = useRouter()
+  const dispatch = useDispatch()
 
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
-
-  // const handleTransaction = async (e) => {
-  //   setIsLoading(true)
-  //   await axiosInstanceAuth
-  //     .get(`transactions/history/${entriesPerPages}/${currentPage}`)
-  //     .then((response) => {
-  //       setIsLoading(false)
-  //       setTransactionData(response?.data?.data?.transaction);
-  //       setTotalPage(response?.data?.data?.totalPage);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       setIsLoading(false)
-  //     });
-  // };
 
   async function getData() {
     try {
@@ -103,7 +91,6 @@ const ActivityTable = () => {
         }
       );
       setIsLoading(false)
-      console.log(response?.data?.data?.Solana?.DEXTradeByTokens || []);
       setTransactionData(response?.data?.data?.Solana?.DEXTradeByTokens)
     } catch (err) {
       setIsLoading(false)
@@ -128,7 +115,7 @@ const ActivityTable = () => {
           try {
             const res = await fetch(uri);
             const data = await res.json();
-            imageMap[index] = data?.image;
+            imageMap[data?.symbol] = data?.image;
           } catch (err) {
             console.error("Failed to fetch image metadata:", err);
           }
@@ -140,15 +127,6 @@ const ActivityTable = () => {
 
     if (transactionData?.length) fetchImages();
   }, [transactionData]);
-
-
-  // const navigateToChartSreen = (item) => {
-  //   router.push(
-  //     `/tradingview/solana?tokenaddress=${item?.token}&symbol=${item?.symbol}`
-  //   );
-  //   localStorage.setItem("chartTokenImg", item?.img);
-  //   dispatch(setChartSymbolImage(item?.img));
-  // }
 
 
   function timeAgo(dateStr) {
@@ -169,12 +147,29 @@ const ActivityTable = () => {
     for (const interval of intervals) {
       const count = Math.floor(seconds / interval.seconds);
       if (count >= 1) {
-        return `${count}${interval.label[0]} ago`;  // e.g. "3d ago"
+        return `${count}${interval.label[0]} ago`;
       }
     }
 
     return "just now";
   }
+
+  const navigateToChartSreen = (item, img) => {
+    router.push(
+      `/tradingview/solana?tokenaddress=${item?.Trade?.Currency?.MintAddress}&symbol=${item?.Trade?.Currency?.Symbol}`
+    );
+    localStorage.setItem("chartTokenImg", img);
+    dispatch(setChartSymbolImage(img));
+  }
+
+
+  const hasSearch = activitySearchQuery.trim() !== "";
+  const filteredData = transactionData.filter((item) =>
+    item?.Trade?.Currency?.MintAddress.toLowerCase()?.includes(activitySearchQuery.toLowerCase()) ||
+    item?.Trade?.Currency?.Name?.toLowerCase()?.includes(activitySearchQuery.toLowerCase()) ||
+    item?.Trade?.Currency?.Symbol?.toLowerCase()?.includes(activitySearchQuery.toLowerCase())
+  )
+  const filteredActivityData = hasSearch ? filteredData : transactionData
 
 
 
@@ -195,8 +190,8 @@ const ActivityTable = () => {
               <div className="dot-spin"></div>
             </div>
           </div>
-        ) : !transactionData?.length > 0 ? (
-          <div className="flex flex-col items-center justify-center h-64 text-center">
+        ) : !transactionData?.length > 0 || !filteredActivityData?.length > 0 ? (
+          <div className="flex flex-col items-center justify-center h-64  mt-10 text-center">
             <div className=" flex items-center justify-center mb-4">
               <Image
                 src="/assets/NoDataImages/qwe.svg"
@@ -206,9 +201,13 @@ const ActivityTable = () => {
                 className="text-slate-400"
               />
             </div>
-            <p className="text-slate-400 text-lg mb-2">{"You don't have any transaction history yet."}</p>
+            <p className="text-slate-400 text-lg mb-2 break-all break-words">{!transactionData?.length > 0 ? "You don't have any transaction history yet."
+              : !filteredActivityData?.length > 0 ? `No results found for "${activitySearchQuery}"`
+                : "No data"}</p>
             <p className="text-slate-500 text-sm">
-              Transaction information will appear here when available
+              {!transactionData?.length > 0 ? "Transaction information will appear here when available" :
+                !filteredActivityData?.length > 0 ? "Try adjusting your search terms."
+                  : null}
             </p>
           </div>
         ) : (
@@ -246,24 +245,24 @@ const ActivityTable = () => {
                     </td>
                   </tr>
                 ) : (
-                  transactionData.map((item, index) => (
+                  filteredActivityData.map((item, index) => (
                     <tr
-                      // onClick={() => navigateToChartSreen(item)}
+                      onClick={() => navigateToChartSreen(item, tokenImages[item?.Trade?.Currency?.Symbol])}
                       key={index}
                       className={`${index % 2 === 0
                         ? "bg-gray-800/20"
-                        : ""} border-b border-slate-700/20 hover:bg-slate-800/30 transition-colors duration-200`}
+                        : ""} border-b border-slate-700/20 hover:bg-slate-800/30 transition-colors duration-200 cursor-pointer whitespace-nowrap`}
                     >
                       <td className=" w-16  px-2 py-2  ">
                         <div className={`font-semibold flex items-center justify-center text-center px-2 py-1 rounded-full text-sm  ${item?.Trade?.Side?.Type == "sell" ? "text-red-400 bg-red-900/20" : "text-emerald-400 bg-emerald-900/20"} font-medium`}>
                           {item?.Trade?.Side?.Type}
                         </div>
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-2 whitespace-nowrap">
                         <div className="flex items-center gap-3">
                           {item?.Trade?.Currency?.Uri ?
                             <img
-                              src={tokenImages[index]}
+                              src={tokenImages[item?.Trade?.Currency?.Symbol]}
                               alt="Token Icon"
                               className="w-10 h-10 rounded-md object-cover"
                             /> :
@@ -274,8 +273,8 @@ const ActivityTable = () => {
                               </span>
                             </div>
                           }
-                          <div className="min-w-0 flex-1">
-                            <div className='flex items-center gap-1'>
+                          <div className="min-w-0 whitespace-nowrap">
+                            <div className='flex items-center gap-1 whitespace-nowrap break-keep'>
                               <p className="font-medium text-base text-white">{item?.Trade?.Currency?.Symbol} /</p>
                               <p className="font-medium text-sm text-gray-400 truncate">{item?.Trade?.Currency?.Name}</p>
                             </div>
@@ -297,7 +296,7 @@ const ActivityTable = () => {
                           </div>
                         </div>
                       </td>
-                      <td className="px-3 py-[18px] whitespace-nowrap w-24">
+                      <td className="px-3 py-[18px] whitespace-nowrap w-24 ">
                         <p className="font-medium text-white text-sm">{Number(item?.Trade?.Side?.Amount).toFixed(5)}</p>
                       </td>
                       <td className="px-3 py-[18px] whitespace-nowrap w-28">
@@ -311,6 +310,10 @@ const ActivityTable = () => {
                           <span className="font-medium text-white text-sm">{item?.Transaction?.Signature.slice(0, 4) + '...' + item?.Transaction?.Signature.slice(-5)}</span>
                           <Link
                             href={`https://solscan.io/tx/${item?.Transaction?.Signature}`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }}
                             target="_blank"
                             className="flex-shrink-0 p-1 hover:bg-slate-700/50 rounded transition-colors duration-200"
                           >
