@@ -381,7 +381,7 @@ const Memescope = () => {
               className={`${selectedScope === 1 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={newCreationDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar} barColor={"#4FAFFE"} capculImg={blue_pump} />
+              <MscopePumpTable MemscopeData={newCreationDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar} barColor={"#4FAFFE"} capsuleImg={blue_pump} />
             </div>
           </div>
 
@@ -436,7 +436,7 @@ const Memescope = () => {
               className={`${selectedScope === 2 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={aboutDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar} barColor={"#41986b"} capculImg={green_pump} />
+              <MscopePumpTable MemscopeData={aboutDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar} barColor={"#41986b"} capsuleImg={green_pump} />
             </div>
           </div>
 
@@ -493,7 +493,7 @@ const Memescope = () => {
               className={`${selectedScope === 3 ? "block " : "hidden xl:block"
                 }`}
             >
-              <MscopePumpTable MemscopeData={graduateDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar} barColor={"#cfc328"} capculImg={yellow_pump} />
+              <MscopePumpTable MemscopeData={graduateDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar} barColor={"#cfc328"} capsuleImg={yellow_pump} />
             </div>
           </div>
 

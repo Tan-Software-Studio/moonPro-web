@@ -9,7 +9,7 @@ const RoundProgressBar = ({
   strokeWidth = 2,
   trailColor = "#3c3c44",
   progressColor = "#4FAFFE",
-  capculImg
+  capsuleImg
 }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -62,7 +62,7 @@ const RoundProgressBar = ({
           className={`absolute rounded-full bg-black border -top-1.5 -left-2.1 !z-10`}
           style={{ borderColor: progressColor }}
         >
-          <Image src={capculImg} alt="pump_img" className="w-4" />
+          <Image src={capsuleImg ? capsuleImg : pump_img} alt="pump_img" className="w-4" />
         </div>
       </div>
     </div>
