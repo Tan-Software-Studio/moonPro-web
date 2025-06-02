@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { buySolanaTokensQuickBuyHandlerCopyTrading } from "@/utils/solanaBuySell/solanaBuySell";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSolanaNativeBalance } from "@/app/redux/states";
-export default function BuyBtn({ toToken,price }) {
+export default function BuyBtn({ toToken, price, name, symbol }) {
   const dispatch = useDispatch();
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
@@ -29,7 +29,12 @@ export default function BuyBtn({ toToken,price }) {
           e,
           toToken,
           dispatch,
-          price
+          price,
+          {
+            name: symbol,
+            symbol: name,
+            img: null
+          }
         )
       }
       className="border-[#21CB6B] border-[1px] hover:text-white transition-all ease-in-out cursor-pointer text-[#21CB6B] duration-300 hover:bg-[#21CB6B] rounded-md py-2 px-6 text-sm"
