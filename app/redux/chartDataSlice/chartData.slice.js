@@ -135,7 +135,7 @@ const allCharTokenData = createSlice({
       );
     },
     updateChartData: (state, { payload }) => {
-      console.log("🚀 ~ payload:", payload);
+      // console.log("🚀 ~ payload:", payload);
     },
   },
   extraReducers: (builder) => {
