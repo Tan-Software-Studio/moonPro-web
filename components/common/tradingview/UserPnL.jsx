@@ -2,11 +2,11 @@ import React from 'react';
 import { RiExchangeDollarLine } from 'react-icons/ri';
 import { formatDecimal, humanReadableFormatWithNoDollar } from '@/utils/basicFunctions';
 
-const UserPnL = ({ userTokenHoldings, currentPrice, tokenSymbol }) => {
-  const buyAmount = userTokenHoldings?.totalBoughtQty * userTokenHoldings?.averageBuyPrice || 0;
-  const soldAmount = userTokenHoldings?.quantitySold * userTokenHoldings?.averageBuyPrice || 0;
-  const holdingAmount = userTokenHoldings?.activeQtyHeld * currentPrice || 0;
-  const pnlAmount = (holdingAmount - buyAmount) + (userTokenHoldings?.realizedProfit || 0);
+const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
+  const buyAmount = currentTokenPnLData?.totalBoughtQty * currentTokenPnLData?.averageBuyPrice || 0;
+  const soldAmount = currentTokenPnLData?.quantitySold * currentTokenPnLData?.averageHistoricalSellPrice || 0;
+  const holdingAmount = currentTokenPnLData?.activeQtyHeld * currentPrice || 0;
+  const pnlAmount = (soldAmount) + (currentTokenPnLData?.realizedProfit || 0);
   const isPositivePnL = pnlAmount >= 0;
   const absolutePnL = Math.abs(pnlAmount);
   const pnlPercent = buyAmount !== 0 ? (absolutePnL / buyAmount) * 100 : 0;
@@ -31,9 +31,9 @@ const UserPnL = ({ userTokenHoldings, currentPrice, tokenSymbol }) => {
       color: 'text-white',
       hoverValue: (
         <span>
-          {userTokenHoldings?.activeQtyHeld > 1 || userTokenHoldings?.activeQtyHeld < -1
-            ? humanReadableFormatWithNoDollar(userTokenHoldings?.activeQtyHeld, 2)
-            : formatDecimal(userTokenHoldings?.activeQtyHeld, 1)}{' '}
+          {currentTokenPnLData?.activeQtyHeld > 1 || currentTokenPnLData?.activeQtyHeld < -1
+            ? humanReadableFormatWithNoDollar(currentTokenPnLData?.activeQtyHeld, 2)
+            : formatDecimal(currentTokenPnLData?.activeQtyHeld, 1)}{' '}
           {tokenSymbol ? tokenSymbol.slice(0, 3) : ''}
         </span>
       ),
@@ -106,7 +106,7 @@ const UserPnL = ({ userTokenHoldings, currentPrice, tokenSymbol }) => {
                     <span className={section.title === 'Holding' ? 'group-hover:hidden' : ''}>
                       {section.hasDollar && '$'}
                       {section.value > 1 || section.value < -1
-                        ? humanReadableFormatWithNoDollar(section.value)
+                        ? humanReadableFormatWithNoDollar(section.value, 2)
                         : formatDecimal(section.value, section.title === 'Holding' ? 1 : undefined)}
                     </span>
                     {section.title === 'Holding' && (

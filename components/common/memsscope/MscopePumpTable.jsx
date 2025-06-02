@@ -93,7 +93,6 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
     setProgerssBar(parsedSettings.progerssBar);
   }, []);
 
-
   const percentages = [
     {
       icon: H10,
@@ -200,7 +199,7 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                               : "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/in/wp-content/uploads/2022/03/monkey-g412399084_1280.jpg"
                           }
                           alt="Profile"
-                          className={`absolute inset-0 m-auto w-[64px] h-[64px] object-cover ${showCircle ? 'rounded-full' : ''
+                          className={`absolute inset-0 m-auto w-[64px] h-[64px] object-cover ${showCircle ? "rounded-full" : ""
                             }`}
                         />
                       </div>
@@ -270,8 +269,8 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                                     (iconItem) => iconItem.title === item.alt
                                   );
 
-                                  return (
-                                    showSocials ? <Link
+                                  return showSocials ? (
+                                    <Link
                                       key={index}
                                       href={item?.uri}
                                       target="_blank"
@@ -286,9 +285,8 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                                           />
                                         )}
                                       </div>
-                                    </Link> : null
-
-                                  );
+                                    </Link>
+                                  ) : null;
                                 })}
                               <Link
                                 href={`https://www.pump.news/en/${block?.address}-solana`}
@@ -324,23 +322,23 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                               </div>
                             </Tooltip> */}
                           </div>
-
-
                         </div>
                         <div>
                           <div className="w-[90px] h-[60px] relative flex items-center justify-center">
                             <div
                               className={`${hoverRow === index
-                                ? "opacity-40 absolute inset-0 flex items-center justify-center"
-                                : "opacity-100"
+                                  ? "opacity-40 absolute inset-0 flex items-center justify-center"
+                                  : "opacity-100"
                                 } `}
                             >
                               <ChartComponent block={block} />
                             </div>
                             {hoverRow === index && (
                               <>
-
-                                <div className={`absolute ${index == 0 ? "-top-2" : "-top-12"} right-44 rounded-md text-[#21CB6B] text-xs font-light border-[1px]  border-[#333333] bg-[#191919]  px-4 py-1 flex items-center justify-between !z-[9] w-fit whitespace-nowrap transition-all duration-100 ease-in-out`}>
+                                <div
+                                  className={`absolute ${index == 0 ? "-top-2" : "-top-12"
+                                    } right-44 rounded-md text-[#21CB6B] text-xs font-light border-[1px]  border-[#333333] bg-[#191919]  px-4 py-1 flex items-center justify-between !z-[9] w-fit whitespace-nowrap transition-all duration-100 ease-in-out`}
+                                >
                                   <p>Bonding : </p>
                                   {block?.bonding_curv >= 100
                                     ? "100%"
@@ -366,7 +364,7 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                                       {
                                         name: block?.name,
                                         symbol: block?.symbol,
-                                        img: block?.img || null
+                                        img: block?.img || null,
                                       }
                                     );
                                   }}
@@ -386,61 +384,71 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
 
                       <div className="flex justify-between">
                         <div className="flex gap-[12px] order-2">
-                          {showHolders ? <Tooltip
-                            body={`Number of Holders: ${block?.holders ? block.holders : 0
-                              }`}
-                          >
-                            <div className="flex items-center gap-[4px]">
-                              <Image src={Users} alt="user" />
-                              <div className="text-[#F1F0F0] text-xs md:text-[12px] font-400">
-                                {block?.holders ? block?.holders : 0}
+                          {showHolders ? (
+                            <Tooltip
+                              body={`Number of Holders: ${block?.holders ? block.holders : 0
+                                }`}
+                            >
+                              <div className="flex items-center gap-[4px]">
+                                <Image src={Users} alt="user" />
+                                <div className="text-[#F1F0F0] text-xs md:text-[12px] font-400">
+                                  {block?.holders ? block?.holders : 0}
+                                </div>
                               </div>
-                            </div>
-                          </Tooltip> : null}
+                            </Tooltip>
+                          ) : null}
 
-
-                          {showVolume ? <Tooltip
-                            body={`Volume: ${block?.volume
-                              ? humanReadableFormat(block?.volume.toFixed(2))
-                              : 0
-                              }`}
-                          >
-                            <div className="flex items-center gap-[4px]">
-                              <Image src={Vol} alt="volume" />
-                              <div className="text-[#F1F0F0] text-xs md:text-[12px] font-400">
-                                {block?.volume
+                          {showVolume ? (
+                            <Tooltip
+                              body={`Volume: ${block?.volume
                                   ? humanReadableFormat(
                                     block?.volume.toFixed(2)
                                   )
-                                  : 0}{" "}
+                                  : 0
+                                }`}
+                            >
+                              <div className="flex items-center gap-[4px]">
+                                <Image src={Vol} alt="volume" />
+                                <div className="text-[#F1F0F0] text-xs md:text-[12px] font-400">
+                                  {block?.volume
+                                    ? humanReadableFormat(
+                                      block?.volume.toFixed(2)
+                                    )
+                                    : 0}{" "}
+                                </div>
                               </div>
-                            </div>
-                          </Tooltip> : null}
+                            </Tooltip>
+                          ) : null}
 
-
-                          {showMarketCap ? <Tooltip
-                            body={`Market Cap: ${block?.MKC ? humanReadableFormat(block?.MKC) : 0
-                              }`}
-                          >
-                            <div className="flex items-center gap-[4px]">
-                              <Image
-                                src={MC}
-                                alt="MC"
-                                className={selectedMetric ? `w-[${selectedMetric}px] h-[${selectedMetric}px]` : null}
-                              />
-                              <div
-                                className={`text-xs md:font-[400]`}
-                                style={{
-                                  color: barColor,
-                                  fontSize: `${selectedMetric}px`,
-                                }}
-                              >
-                                {block?.MKC ? humanReadableFormat(block?.MKC) : 0}
+                          {showMarketCap ? (
+                            <Tooltip
+                              body={`Market Cap: ${block?.MKC ? humanReadableFormat(block?.MKC) : 0
+                                }`}
+                            >
+                              <div className="flex items-center gap-[4px]">
+                                <Image
+                                  src={MC}
+                                  alt="MC"
+                                  className={
+                                    selectedMetric
+                                      ? `w-[${selectedMetric}px] h-[${selectedMetric}px]`
+                                      : null
+                                  }
+                                />
+                                <div
+                                  className={`text-xs md:font-[400]`}
+                                  style={{
+                                    color: barColor,
+                                    fontSize: `${selectedMetric}px`,
+                                  }}
+                                >
+                                  {block?.MKC
+                                    ? humanReadableFormat(block?.MKC)
+                                    : 0}
+                                </div>
                               </div>
-
-                            </div>
-                          </Tooltip> : null}
-
+                            </Tooltip>
+                          ) : null}
                         </div>
                         <div className="flex gap-[8px] order-1">
                           {block?.additionalInfo?.map((item, index) => {
@@ -459,7 +467,9 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                                       alt={matchedData?.title}
                                     />
                                   )}
-                                  <div className={`text-[12px] ${matchedData?.color}`}>
+                                  <div
+                                    className={`text-[12px] ${matchedData?.color}`}
+                                  >
                                     {matchedData?.title === "sniper_count"
                                       ? item.value
                                       : `${item.value}%`}
