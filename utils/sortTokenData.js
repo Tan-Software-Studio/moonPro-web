@@ -4,11 +4,11 @@ const handleSort = (key, data, order) => {
   
     return [...data].sort((a, b) => {
       if (order === "desc") {
-        return key === "date"
+        return key === "dbCreatedAt"
           ? new Date(a[key]) - new Date(b[key])
           : (a[key] || 0) - (b[key] || 0);
       } else {
-        return key === "date"
+        return key === "dbCreatedAt"
           ? new Date(b[key]) - new Date(a[key])
           : (b[key] || 0) - (a[key] || 0);
       }
