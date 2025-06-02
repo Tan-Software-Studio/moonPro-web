@@ -48,7 +48,6 @@ const Tradingview = () => {
   const containerRef = useRef(null);
   const tvChartRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [userTokenHoldings, setUserTokenHoldings] = useState({});
   const scrollableDivRef4 = useRef(null);
   const [currentTokenPnLData, setCurrentTokenPnLData] = useState({});
   const solWalletAddress = useSelector(
@@ -80,24 +79,6 @@ const Tradingview = () => {
   );
   const [smallScreenTab, setIsSmallScreenTab] = useState("Trades");
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-
-  const getHoldings = async () => {
-    const jwtToken = localStorage.getItem("token");
-    if (!jwtToken) return 0;
-    try {
-      const response = await axios({
-        method: "get",
-        url: `${BASE_URL}transactions/getSingleTokenPnl/${tokenaddress}/${solWalletAddress}`,
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      });
-      // console.log(response?.data?.data?.token);
-      setUserTokenHoldings(response?.data?.data?.token);
-    } catch (error) {
-      console.error("error getting holdings", error);
-    }
-  };
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -156,15 +137,6 @@ const Tradingview = () => {
     };
     fetchTokenMeta();
   }, [solWalletAddress, tokenaddress]);
-
-  useEffect(() => {
-    const fetchTokenHoldings = async () => {
-      if (tokenBalance > 0) {
-        await getHoldings();
-      }
-    };
-    fetchTokenHoldings();
-  }, [tokenBalance]);
 
   const handleCopy = (mintAddress) => {
     setCopied(true);
@@ -448,7 +420,7 @@ const Tradingview = () => {
                 <TVChartContainer
                   tokenSymbol={tokenSymbol}
                   tokenaddress={tokenaddress}
-                  userTokenHoldings={userTokenHoldings}
+                  currentTokenPnLData={currentTokenPnLData}
                   solanaLivePrice={solanaLivePrice}
                   supply={chartTokenData?.currentSupply}
                 />

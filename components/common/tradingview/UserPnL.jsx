@@ -106,7 +106,7 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
                     <span className={section.title === 'Holding' ? 'group-hover:hidden' : ''}>
                       {section.hasDollar && '$'}
                       {section.value > 1 || section.value < -1
-                        ? humanReadableFormatWithNoDollar(section.value)
+                        ? humanReadableFormatWithNoDollar(section.value, 2)
                         : formatDecimal(section.value, section.title === 'Holding' ? 1 : undefined)}
                     </span>
                     {section.title === 'Holding' && (
