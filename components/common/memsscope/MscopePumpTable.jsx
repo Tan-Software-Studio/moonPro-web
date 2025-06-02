@@ -34,7 +34,7 @@ import RoundProgressBar from "@/components/RoundProgressBar/RoundProgressBar";
 import SingleLineProgressBar from "@/components/SingleLineProgressBar/SingleLineProgressBar";
 
 const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, setSelectedMetric, setShowMarketCap, showMarketCap, showVolume, setShowVolume, showSocials, setShowSocials, showHolders, setShowHolders, setshowHolders10, showHolders10, setProgerssBar, progerssBar, barColor }) => {
-  // console.log("🚀 ~ MscopePumpTable ~ searchbar:-->", showCircle)
+  // console.log("🚀 ~ MscopePumpTable ~ searchbar:-->", showCircle);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoverRow, sethoverRow] = useState(false);
   // solana live price
@@ -360,7 +360,12 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                                       "6ef8rrecthr5dkzon8nwu78hrvfckubj14m5ubewf6p",
                                       block?.bonding_curv,
                                       dispatch,
-                                      block?.current_price
+                                      block?.current_price,
+                                      {
+                                        name: block?.name,
+                                        symbol: block?.symbol,
+                                        img: block?.img || null
+                                      }
                                     );
                                   }}
                                 >

@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { usePathname, useRouter } from "next/navigation";
 import { CiCircleCheck } from "react-icons/ci";
 import { IoCloseCircleOutline, IoSearchSharp } from "react-icons/io5";
-import { humanReadableFormat, UpdateTime } from "@/utils/calculation";
+import { humanReadableFormat, UpdateTime, UpdateTimeViaUTCWithCustomTime } from "@/utils/calculation";
 import { buySolanaTokensQuickBuyHandler } from "@/utils/solanaBuySell/solanaBuySell";
 import LoaderPopup from "../LoaderPopup/LoaderPopup";
 import {
@@ -22,12 +22,8 @@ import Link from "next/link";
 import { MdOutlineLanguage } from "react-icons/md";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaTelegramPlane } from "react-icons/fa";
-import { RiUserAddLine } from "react-icons/ri";
-import { FaStarOfLife } from "react-icons/fa6";
-import { RiFireFill } from "react-icons/ri";
 
-
-const TableBody = ({ isLoading, data, img }) => {
+const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
   const pathname = usePathname();
   const dispatch = useDispatch();
 
@@ -77,9 +73,9 @@ const TableBody = ({ isLoading, data, img }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
-    }, 1000); // Update every second
+    }, 1000);
 
-    return () => clearInterval(interval); // Cleanup on component unmount
+    return () => clearInterval(interval);
   }, []);
   useEffect(() => {
     if (solWalletAddress) {
@@ -102,9 +98,9 @@ const TableBody = ({ isLoading, data, img }) => {
             </tr>
           ))}
         </tbody>
-      ) : data.length > 0 ? (
+      ) : data?.length > 0 ? (
         <>
-          {data.map((row, ind) => {
+          {data?.map((row, ind) => {
             return (
               <tbody key={ind} className="text-start geist">
                 <tr
@@ -241,6 +237,13 @@ const TableBody = ({ isLoading, data, img }) => {
                       </div>
                     </div>
                   </td>
+
+                  {isTimeCreated &&
+                    <td className="whitespace-nowrap w-32 py-2 md:px-6 px-3 text-[#4CAF50] text-[15px] font-medium">
+                      {UpdateTimeViaUTCWithCustomTime(row?.dbCreatedAt, currentTime)} 
+                    </td>
+
+                  }
 
                   {/* Column 2: Market Cap and Price */}
                   <td className="whitespace-nowrap w-32 py-2 md:px-6 px-3">
@@ -428,7 +431,12 @@ const TableBody = ({ isLoading, data, img }) => {
                           row?.address,
                           100,
                           dispatch,
-                          row?.current_price
+                          row?.current_price,
+                          {
+                            name: row?.name,
+                            symbol: row?.symbol,
+                            img: row?.img || null
+                          }
                         )
                       }
                     >

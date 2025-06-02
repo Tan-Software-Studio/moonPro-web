@@ -463,7 +463,7 @@ const Trending = () => {
                     sortColumn={sortColumn}
                     sortOrder={sortOrder}
                   />
-                  <TableBody data={sortedData} img={solana} isLoading={isLoading} />
+                  <TableBody data={sortedData} img={solana} isLoading={isLoading} isTimeCreated={false} />
                 </table>
               </div>
             </div>
