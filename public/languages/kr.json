@@ -75,6 +75,8 @@
       "title": "최근 호출"
     },
     "tableheaders": {
+      "aicall": "AI 호출",
+      "aicalltooltip": "AI 신호가 제공된 시간을 나타냅니다",
       "token": "토큰",
       "before": "이전",
       "beforetooltip": "토큰이 호출된 후 경과 시간",

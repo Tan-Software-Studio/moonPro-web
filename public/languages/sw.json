@@ -55,6 +55,8 @@
       "advanced": "Avancerad"
     },
     "tableheaders": {
+      "aicall": "AI-anrop",
+      "aicalltooltip": "Detta visar tiden då vår AI-signal gavs",
       "pairinfo": "Parinfo",
       "pairinfotooltip": "Jina la tokeni, umri na mitandao ya kijamii.",
       "created": "Skapad",

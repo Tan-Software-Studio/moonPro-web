@@ -49,7 +49,8 @@ const TokenDetails = ({
   tokenDetailsMarketCap,
   chartTokenData,
   walletAddress,
-  pairAddress
+  pairAddress,
+  tokenImage
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCopyUrl, setIsCopyUrl] = useState(false);
@@ -63,9 +64,6 @@ const TokenDetails = ({
   ];
 
   const dispatch = useDispatch();
-  const tokenImage = useSelector(
-    (state) => state?.AllStatesData?.chartSymbolImage
-  );
   const tokenFavList = useSelector(
     (state) => state?.AllStatesData?.favouriteTokens
   );

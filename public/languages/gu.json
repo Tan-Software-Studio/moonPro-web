@@ -55,6 +55,8 @@
       "advanced": "ઉચ્ચ સ્તરનું"
     },
     "tableheaders": {
+      "aicall": "એઆઈ કોલ",
+"aicalltooltip": "આ સૂચવે છે કે ક્યારે અમારી એઆઈ સિગ્નલ આપવામાં આવી હતી",
       "pairinfo": "પેયર માહિતી",
       "pairinfotooltip": "નામ, વય અને સોશિયલ લિંક્સ.",
       "created": "બનાવ્યું",
