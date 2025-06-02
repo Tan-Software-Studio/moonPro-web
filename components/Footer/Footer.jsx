@@ -299,7 +299,7 @@ const Footer = () => {
             </button>
 
             <div className="flex items-center space-x-1">
-              <div className="relative inline-block">
+              {/* <div className="relative inline-block">
                 <div
                   ref={buttonRef}
                   onClick={() => setOpen(!open)}
@@ -384,7 +384,7 @@ const Footer = () => {
                     {isLoading && <div className="p-4 text-center text-gray-400">Loading wallets...</div>}
                   </div>
                 )}
-              </div>
+              </div> */}
 
               <button
                 className="flex items-center space-x-2 bg-[#1F2937] hover:bg-[#374151] px-2 py-1.5 rounded-md text-gray-300 hover:text-white text-xs font-medium transition-all duration-200  border-gray-600/30"

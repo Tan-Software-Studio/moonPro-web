@@ -7,7 +7,12 @@ import FilterMemescope from "../filter/FilterMemescope";
 import { solana } from "@/app/Images";
 import RightModalOpenSetting from "@/components/Settings/RightModalOpenSetting";
 import { IoSettingsOutline } from "react-icons/io5";
-import { setGlobalBuyAmt, setOpenOrderSetting, setSolWalletAddress, updateWalletPrimary } from "@/app/redux/states";
+import {
+  setGlobalBuyAmt,
+  setOpenOrderSetting,
+  setSolWalletAddress,
+  updateWalletPrimary,
+} from "@/app/redux/states";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, List, Eye, LayoutGrid, Search } from "lucide-react";
 import axios from "axios";
@@ -72,16 +77,22 @@ const AllPageHeader = ({
   const [copied, setCopied] = useState(false);
 
   const userDetails = useSelector((state) => state?.userData?.userDetails);
-  const walletAddresses = userDetails?.walletAddressSOL || [];
 
-  const primaryWallet = walletAddresses.find((wallet) => wallet.primary) || walletAddresses[0];
-  const totalWallets = walletAddresses.length;
+  const primaryWallet =
+    userDetails?.walletAddressSOL?.walletAddresses.find(
+      (wallet) => wallet.primary
+    ) || userDetails?.walletAddressSOL[0];
+  const totalWallets = userDetails?.walletAddressSOL?.length;
 
   // order setting popup flag
-  const isRightModalOpenSetting = useSelector((state) => state?.AllStatesData?.openOrderSetting);
+  const isRightModalOpenSetting = useSelector(
+    (state) => state?.AllStatesData?.openOrderSetting
+  );
   const presist = useSelector((state) => state?.AllStatesData?.presetActive);
 
-  const borderColor = useSelector((state) => state?.AllthemeColorData?.borderColor);
+  const borderColor = useSelector(
+    (state) => state?.AllthemeColorData?.borderColor
+  );
   const quickBuy = useSelector((state) => state?.AllStatesData?.globalBuyAmt);
 
   const handleInputChange = (event) => {
@@ -191,7 +202,7 @@ const AllPageHeader = ({
 
   const toggleProgerssBar = () => {
     toggleSetting("showProgessBar", progerssBar, setProgerssBar);
-  }
+  };
 
   const mktShowHide = () => {
     toggleSetting("showMarketCap", showMarketCap, setShowMarketCap);
@@ -215,7 +226,12 @@ const AllPageHeader = ({
 
   // Function for updating a string setting (like a selected metric)
   const handleMetricChange = (newMetric) => {
-    toggleSetting("selectedMetric", selectedMetric, setSelectedMetric, newMetric);
+    toggleSetting(
+      "selectedMetric",
+      selectedMetric,
+      setSelectedMetric,
+      newMetric
+    );
   };
 
   // old primary
@@ -245,7 +261,10 @@ const AllPageHeader = ({
           //   preArr[loopIndex].primary = true;
           //   return preArr;
           // });
-          localStorage.setItem("walletAddress", res?.data?.data?.wallet?.wallet);
+          localStorage.setItem(
+            "walletAddress",
+            res?.data?.data?.wallet?.wallet
+          );
           toast.success("Primary wallet switched", {
             id: "switch-toast",
             duration: 2000,
@@ -256,7 +275,7 @@ const AllPageHeader = ({
               newWalletData: res?.data?.data,
             })
           );
-      
+
           dispatch(setSolWalletAddress());
         })
         .catch((err) => {
@@ -305,7 +324,7 @@ const AllPageHeader = ({
   //           })
   //         );
   //         dispatch(setSolWalletAddress());
-          
+
   //         toast.success("Primary wallet switched", {
   //           id: "switch-toast",
   //           duration: 2000,
@@ -417,7 +436,12 @@ const AllPageHeader = ({
 
         {pathname.includes("/holdings") && (
           <div className="flex w-full gap-1.5 h-full py-1.5 items-center ">
-            <input type="checkbox" name="" id="" className={`${chcekBoxStyle} cursor-pointer`} />
+            <input
+              type="checkbox"
+              name=""
+              id=""
+              className={`${chcekBoxStyle} cursor-pointer`}
+            />
             <div className="flex items-center gap-2">
               <div className="text-xs font-semibold leading-[100%] text-gray-300">
                 {holdingsPageLang?.mainHeader?.withremainingtokens}
@@ -432,7 +456,11 @@ const AllPageHeader = ({
               className="flex items-center justify-center gap-2 px-[10px] md:px-[17.5px] py-[9px] font-semibold border text-white border-[#1F73FC] hover:bg-[#11265B] bg-transparent text-xs rounded-[10px] transition duration-300"
               onClick={() => handleSidebarToggle(0)}
             >
-              <Image src={HeaderData?.Filter?.menuIcon} alt="newPairsIcon" className="my-auto" />
+              <Image
+                src={HeaderData?.Filter?.menuIcon}
+                alt="newPairsIcon"
+                className="my-auto"
+              />
               {HeaderData?.Filter?.menuTitle}
             </button>
             <FilterMemescope
@@ -472,11 +500,15 @@ const AllPageHeader = ({
                   <div className="p-4 space-y-4">
                     {/* Metrics */}
                     <div>
-                      <p className="text-xs text-gray-400 font-semibold mb-2">Metrics</p>
+                      <p className="text-xs text-gray-400 font-semibold mb-2">
+                        Metrics
+                      </p>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <button
                           className={`py-2 px-3 rounded border border-[#323642] ${
-                            selectedMetric === "12" ? "bg-[#323642] text-white font-bold" : " text-gray-300"
+                            selectedMetric === "12"
+                              ? "bg-[#323642] text-white font-bold"
+                              : " text-gray-300"
                           }`}
                           onClick={() => handleMetricChange("12")}
                         >
@@ -484,7 +516,9 @@ const AllPageHeader = ({
                         </button>
                         <button
                           className={`py-2 px-3 rounded border border-[#323642] ${
-                            selectedMetric === "20" ? "bg-[#323642] text-white font-bold" : " text-gray-300"
+                            selectedMetric === "20"
+                              ? "bg-[#323642] text-white font-bold"
+                              : " text-gray-300"
                           }`}
                           onClick={() => handleMetricChange("20")}
                         >
@@ -499,7 +533,11 @@ const AllPageHeader = ({
                         className="flex items-center gap-2 cursor-pointer font-semibold"
                         onClick={() => toggleSearchbar((prev) => !prev)}
                       >
-                        {searchbar ? <Search size={16} /> : <BsFillSearchHeartFill />}
+                        {searchbar ? (
+                          <Search size={16} />
+                        ) : (
+                          <BsFillSearchHeartFill />
+                        )}
                         {searchbar ? "Hide Search Bar" : "Show Search Bar"}
                       </div>
 
@@ -507,7 +545,11 @@ const AllPageHeader = ({
                         className="flex items-center gap-2 cursor-pointer font-semibold"
                         onClick={() => toggleShowCircle((prev) => !prev)}
                       >
-                        {showCircle ? <LayoutGrid size={16} /> : <FaRegCircle />}
+                        {showCircle ? (
+                          <LayoutGrid size={16} />
+                        ) : (
+                          <FaRegCircle />
+                        )}
                         {showCircle ? "Square Image" : "Circle Imange"}
                       </div>
                       <div
@@ -515,15 +557,25 @@ const AllPageHeader = ({
                         onClick={() => toggleProgerssBar((prev) => !prev)}
                       >
                         <div className="w-4 h-1 bg-gray-400 rounded-full" />
-                        {progerssBar ? "Progress Bar Ring" : "Progress Bar Line"}
+                        {progerssBar
+                          ? "Progress Bar Ring"
+                          : "Progress Bar Line"}
                       </div>
                     </div>
 
                     {/* Customize Rows */}
                     <div className="border-t border-gray-700 pt-4">
-                      <p className="text-xs text-gray-400 font-semibold mb-2">Customize rows</p>
+                      <p className="text-xs text-gray-400 font-semibold mb-2">
+                        Customize rows
+                      </p>
                       <div className="flex flex-wrap gap-2">
-                        {["Market Cap", "Volume", "Socials", "Holders", "Top 10 Holders"].map((item) => {
+                        {[
+                          "Market Cap",
+                          "Volume",
+                          "Socials",
+                          "Holders",
+                          "Top 10 Holders",
+                        ].map((item) => {
                           const isActive =
                             (item === "Market Cap" && showMarketCap) ||
                             (item === "Volume" && showVolume) ||
@@ -535,7 +587,9 @@ const AllPageHeader = ({
                             <button
                               key={item}
                               className={`${
-                                isActive ? "bg-[#282b32]" : "border border-[#282b32] text-gray-500"
+                                isActive
+                                  ? "bg-[#282b32]"
+                                  : "border border-[#282b32] text-gray-500"
                               } text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]`}
                               onClick={() => {
                                 if (item === "Market Cap") {
@@ -602,11 +656,13 @@ const AllPageHeader = ({
                   className="absolute right-20 mt-2 w-96 max-h-80 overflow-y-auto bg-[#18181a] border border-gray-700 text-white rounded-md shadow-lg z-50"
                 >
                   {/* Wallet List */}
-                  {walletAddresses.map((wallet, idx) => {
+                  {userDetails?.walletAddressSOL?.map((wallet, idx) => {
                     const handleCopy = async (e) => {
                       e.stopPropagation();
                       try {
-                        await navigator.clipboard.writeText(wallet.wallet || "BEsA4G");
+                        await navigator.clipboard.writeText(
+                          wallet.wallet || "BEsA4G"
+                        );
                         setCopiedWallet(wallet.wallet);
                         setTimeout(() => setCopiedWallet(null), 2000);
                       } catch (err) {
@@ -630,16 +686,34 @@ const AllPageHeader = ({
                           />
                           <div className="flex flex-col">
                             <div className="flex items-center gap-2 text-sm">
-                              <span className={`font-medium ${wallet.primary ? "text-orange-400" : "text-white"}`}>
-                                {idx === 0 ? "Moon Pro Main" : `Wallet ${idx + 1}`}
+                              <span
+                                className={`font-medium ${
+                                  wallet.primary
+                                    ? "text-orange-400"
+                                    : "text-white"
+                                }`}
+                              >
+                                {idx === 0
+                                  ? "Moon Pro Main"
+                                  : `Wallet ${idx + 1}`}
                               </span>
-                              <span className="text-gray-400">{formatWalletAddress(wallet.wallet)}</span>
+                              <span className="text-gray-400">
+                                {formatWalletAddress(wallet.wallet)}
+                              </span>
                               <button
                                 className="w-4 h-4 flex items-center justify-center text-xs transition-colors duration-200 hover:bg-gray-600 rounded"
                                 onClick={handleCopy}
-                                title={copiedWallet === wallet.wallet ? "Copied!" : "Copy wallet address"}
+                                title={
+                                  copiedWallet === wallet.wallet
+                                    ? "Copied!"
+                                    : "Copy wallet address"
+                                }
                               >
-                                {copiedWallet === wallet.wallet ? <IoCheckmarkDone /> : <IoCopyOutline />}
+                                {copiedWallet === wallet.wallet ? (
+                                  <IoCheckmarkDone />
+                                ) : (
+                                  <IoCopyOutline />
+                                )}
                               </button>
                             </div>
                           </div>
@@ -647,8 +721,15 @@ const AllPageHeader = ({
 
                         <div className="flex items-center gap-4">
                           <div className="flex items-center gap-2">
-                            <Image src={solana} width={16} height={16} alt="solana" />
-                            <span className="text-sm font-medium">{wallet.balance?.toFixed(6) || "0"}</span>
+                            <Image
+                              src={solana}
+                              width={16}
+                              height={16}
+                              alt="solana"
+                            />
+                            <span className="text-sm font-medium">
+                              {wallet.balance?.toFixed(6) || "0"}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -660,7 +741,9 @@ const AllPageHeader = ({
 
             <div className="flex items-center rounded-full py-1 bg-[#141414] border border-[#26262e] text-white text-xs overflow-hidden w-fit">
               {/* Left section: Quick Buy */}
-              <div className="px-2 py-1 font-semibold text-[#f4fcff">Quick Buy</div>
+              <div className="px-2 py-1 font-semibold text-[#f4fcff">
+                Quick Buy
+              </div>
 
               {/* Middle section: Amount input */}
               <div className="px-2 py-1 text-[#777f94] font-medium">
