@@ -11,7 +11,6 @@ import {
   setGlobalBuyAmt,
   setOpenOrderSetting,
   setSolWalletAddress,
-  updateWalletPrimary,
 } from "@/app/redux/states";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, List, Eye, LayoutGrid, Search } from "lucide-react";
@@ -254,13 +253,6 @@ const AllPageHeader = ({
           }
         )
         .then(async (res) => {
-          // const findXPrimaryIndex = await walletAddresses.findIndex((item) => item?.primary);
-          // setWalletAddresses((pre) => {
-          //   const preArr = [...pre];
-          //   if (findXPrimaryIndex !== -1) preArr[findXPrimaryIndex].primary = false;
-          //   preArr[loopIndex].primary = true;
-          //   return preArr;
-          // });
           localStorage.setItem(
             "walletAddress",
             res?.data?.data?.wallet?.wallet
@@ -284,59 +276,6 @@ const AllPageHeader = ({
       });
     }
   };
-  // old primary
-
-  // const handlePrimary = async (walletIndex, loopIndex) => {
-  //   console.log("🚀 ~ handlePrimary all page hender~ walletIndex:", walletIndex)
-  //   const jwtToken = localStorage.getItem("token");
-  //   if (!jwtToken) {
-  //     toast.error("Authentication required", { duration: 2000 });
-  //     return;
-  //   }
-
-  //   try {
-  //     showToastLoader("Switching wallet", "switch-toast");
-
-  //     await axios
-  //       .put(
-  //         `${baseUrl}user/makeSolWalletPrimary`,
-  //         {
-  //           index: walletIndex,
-  //         },
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${jwtToken}`,
-  //           },
-  //         }
-  //       )
-  //       .then(async (res) => {
-  //         localStorage.setItem("walletAddress", res?.data?.data?.wallet?.wallet);
-
-  //         dispatch(
-  //           updateWalletPrimary({
-  //             walletIndex: loopIndex,
-  //             newWalletData: res?.data?.data,
-  //           })
-  //         );
-  //         dispatch(setSolWalletAddress());
-
-  //         toast.success("Primary wallet switched", {
-  //           id: "switch-toast",
-  //           duration: 2000,
-  //         });
-  //         dispatch(setSolWalletAddress());
-  //       })
-  //       .catch((err) => {
-  //         console.log("🚀 ~ ).then ~ err:", err?.message);
-  //       });
-  //   } catch (error) {
-  //     console.error("🚀 ~ handlePrimary ~ error:", error?.message);
-  //     toast.error("Failed to switch primary wallet", {
-  //       id: "switch-toast",
-  //       duration: 2000,
-  //     });
-  //   }
-  // };
 
   const formatWalletAddress = (address) => {
     if (!address) return "BEsA4...B2K5";
