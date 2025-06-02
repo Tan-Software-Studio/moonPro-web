@@ -33,7 +33,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import RoundProgressBar from "@/components/RoundProgressBar/RoundProgressBar";
 import SingleLineProgressBar from "@/components/SingleLineProgressBar/SingleLineProgressBar";
 
-const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, setSelectedMetric, setShowMarketCap, showMarketCap, showVolume, setShowVolume, showSocials, setShowSocials, showHolders, setShowHolders, setshowHolders10, showHolders10, setProgerssBar, progerssBar }) => {
+const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, setSelectedMetric, setShowMarketCap, showMarketCap, showVolume, setShowVolume, showSocials, setShowSocials, showHolders, setShowHolders, setshowHolders10, showHolders10, setProgerssBar, progerssBar, barColor }) => {
   // console.log("🚀 ~ MscopePumpTable ~ searchbar:-->", showCircle);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoverRow, sethoverRow] = useState(false);
@@ -177,16 +177,16 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                           value={block?.bonding_curv || 0}
                           maxValue={100}
                           trailColor="#7b8085"
-                          progressColor={`${!progerssBar ? '#4FAFFE' : '#7b8085'}`}
+                          progressColor={`${!progerssBar ? barColor : '#7b8085'}`}
                         /> : <SquareProgressBar
                           value={block?.bonding_curv || 0}
                           maxValue={100}
                           trailColor="#7b8085"
-                          progressColor={`${!progerssBar ? '#4FAFFE' : '#7b8085'}`}
+                          progressColor={`${!progerssBar ? barColor : '#7b8085'}`}
                         />
                         }
                         {progerssBar ? <div className="mt-2">
-                          <SingleLineProgressBar value={block?.bonding_curv || 0} maxValue={100} />
+                          <SingleLineProgressBar value={block?.bonding_curv || 0} maxValue={100} progressColor={barColor} />
                         </div> : null}
 
 
@@ -338,7 +338,7 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                             {hoverRow === index && (
                               <>
 
-                                <div className={`absolute ${index == 0 ? "-top-2" : "-top-12"} right-44 rounded-md text-[#21CB6B] text-xs font-light border-[1px]  border-[#333333] bg-[#191919]  px-4 py-1 flex items-center justify-between !z-[9999] w-fit whitespace-nowrap transition-all duration-100 ease-in-out`}>
+                                <div className={`absolute ${index == 0 ? "-top-2" : "-top-12"} right-44 rounded-md text-[#21CB6B] text-xs font-light border-[1px]  border-[#333333] bg-[#191919]  px-4 py-1 flex items-center justify-between !z-[9] w-fit whitespace-nowrap transition-all duration-100 ease-in-out`}>
                                   <p>Bonding : </p>
                                   {block?.bonding_curv >= 100
                                     ? "100%"
@@ -426,11 +426,16 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                                 alt="MC"
                                 className={selectedMetric ? `w-[${selectedMetric}px] h-[${selectedMetric}px]` : null}
                               />
-                              <div className={`text-[#F1F0F0] text-xs md:text-[${selectedMetric}px] font-[400]`}>
-                                {block?.MKC
-                                  ? humanReadableFormat(block?.MKC)
-                                  : 0}
+                              <div
+                                className={`text-xs md:font-[400]`}
+                                style={{
+                                  color: barColor,
+                                  fontSize: `${selectedMetric}px`,
+                                }}
+                              >
+                                {block?.MKC ? humanReadableFormat(block?.MKC) : 0}
                               </div>
+
                             </div>
                           </Tooltip> : null}
 
