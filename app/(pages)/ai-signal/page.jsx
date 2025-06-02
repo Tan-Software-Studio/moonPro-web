@@ -97,9 +97,9 @@ const AiSignal = () => {
         title: "volume",
         name: tredingPage?.mainHeader?.filter?.byvolume,
         firstInputName: "Min",
-        firstInputIcon: "%",
+        firstInputIcon: "$",
         secondInputName: "Max",
-        secondInputIcon: "",
+        secondInputIcon: "$",
         type: "number",
       },
       {
@@ -117,9 +117,9 @@ const AiSignal = () => {
         title: "MKT",
         name: tredingPage?.mainHeader?.filter?.bymc,
         firstInputName: "Min",
-        firstInputIcon: "",
+        firstInputIcon: "$",
         secondInputName: "Max",
-        secondInputIcon: "",
+        secondInputIcon: "$",
         type: "number",
       },
       {

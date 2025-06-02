@@ -24,7 +24,7 @@ function aboutGraduateFilterData(memescopePage) {
                 firstInputName: "Min",
                 firstInputIcon: "%",
                 secondInputName: "Max",
-                secondInputIcon: "",
+                secondInputIcon: "%",
                 type: "number",
             },
             {
@@ -82,9 +82,9 @@ function aboutGraduateFilterData(memescopePage) {
                 title: "volume",
                 name: memescopePage?.mainHeader?.filters?.newcreation?.byvolume,
                 firstInputName: "Min",
-                firstInputIcon: "",
+                firstInputIcon: "$",
                 secondInputName: "Max",
-                secondInputIcon: "",
+                secondInputIcon: "$",
                 type: "number",
             },
             {
@@ -92,9 +92,9 @@ function aboutGraduateFilterData(memescopePage) {
                 title: "MKT",
                 name: memescopePage?.mainHeader?.filters?.newcreation?.bymCap,
                 firstInputName: "Min",
-                firstInputIcon: "",
+                firstInputIcon: "$",
                 secondInputName: "Max",
-                secondInputIcon: "",
+                secondInputIcon: "$",
                 type: "number",
             },
             // {
