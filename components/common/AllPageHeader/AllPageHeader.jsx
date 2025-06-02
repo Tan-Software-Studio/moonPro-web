@@ -24,6 +24,7 @@ import { FaAngleDown } from "react-icons/fa";
 import { BsFillSearchHeartFill } from "react-icons/bs";
 import { FaRegCircle } from "react-icons/fa";
 import { showToastLoader } from "../toastLoader/ToastLoder";
+import { updateWalletToPrimary } from "@/app/redux/userDataSlice/UserData.slice";
 
 const AllPageHeader = ({
   HeaderData,
@@ -78,10 +79,9 @@ const AllPageHeader = ({
 
   const userDetails = useSelector((state) => state?.userData?.userDetails);
 
-  const primaryWallet =
-    userDetails?.walletAddressSOL?.walletAddresses.find(
-      (wallet) => wallet.primary
-    ) || userDetails?.walletAddressSOL[0];
+  const primaryWallet = userDetails?.walletAddressSOL?.find(
+    (wallet) => wallet.primary
+  );
   const totalWallets = userDetails?.walletAddressSOL?.length;
 
   // order setting popup flag
@@ -269,12 +269,7 @@ const AllPageHeader = ({
             id: "switch-toast",
             duration: 2000,
           });
-          dispatch(
-            updateWalletPrimary({
-              walletIndex: loopIndex,
-              newWalletData: res?.data?.data,
-            })
-          );
+          dispatch(updateWalletToPrimary(res?.data?.data?.wallet?.wallet));
 
           dispatch(setSolWalletAddress());
         })

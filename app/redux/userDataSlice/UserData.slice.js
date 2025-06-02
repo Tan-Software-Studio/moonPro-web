@@ -31,22 +31,25 @@ const userDataSlice = createSlice({
   reducers: {
     clearWalletBalances: (state) => {
       if (state.userDetails && state.userDetails.walletAddressSOL) {
-        state.userDetails.walletAddressSOL = state.userDetails.walletAddressSOL.map((wallet) => ({
-          ...wallet,
-          balance: undefined,
-        }));
+        state.userDetails.walletAddressSOL =
+          state.userDetails.walletAddressSOL.map((wallet) => ({
+            ...wallet,
+            balance: undefined,
+          }));
       }
     },
     setWalletBalances: (state, action) => {
       state.isLoadingBalances = false;
       state.balancesError = null;
 
-
-      if (state.userDetails && state.userDetails.walletAddressSOL && action.payload) {
+      if (
+        state.userDetails &&
+        state.userDetails.walletAddressSOL &&
+        action.payload
+      ) {
         const balancesByWallet = action.payload.reduce((acc, item) => {
           const walletAddress = item.BalanceUpdate?.Account?.Owner;
-          
-          
+
           if (walletAddress) {
             acc[walletAddress] = {
               balance: Number(item.BalanceUpdate?.Balance),
@@ -55,15 +58,16 @@ const userDataSlice = createSlice({
           }
           return acc;
         }, {});
-        
-        state.userDetails.walletAddressSOL = state.userDetails.walletAddressSOL.map((wallet) => {
-          const walletBalance = balancesByWallet[wallet.wallet]
-          return {
-            ...wallet,
-            balance: walletBalance?.balance || 0,
-            currency: walletBalance?.currency || null,
-          };
-        });
+
+        state.userDetails.walletAddressSOL =
+          state.userDetails.walletAddressSOL.map((wallet) => {
+            const walletBalance = balancesByWallet[wallet.wallet];
+            return {
+              ...wallet,
+              balance: walletBalance?.balance || 0,
+              currency: walletBalance?.currency || null,
+            };
+          });
       }
     },
     setBalancesLoading: (state, action) => {
@@ -73,6 +77,22 @@ const userDataSlice = createSlice({
       state.isLoadingBalances = false;
       state.balancesError = action.payload;
     },
+    updateWalletToPrimary: (state, { payload }) => {
+      const setOldPrimaryToFalse =
+        state.userDetails.walletAddressSOL?.findIndex((item) => item?.primary);
+      if (setOldPrimaryToFalse >= 0) {
+        state.userDetails.walletAddressSOL[
+          setOldPrimaryToFalse
+        ].primary = false;
+      }
+      const setNewPrimaryToFalse =
+        state.userDetails.walletAddressSOL?.findIndex(
+          (item) => item?.wallet == payload
+        );
+      if (setNewPrimaryToFalse >= 0) {
+        state.userDetails.walletAddressSOL[setNewPrimaryToFalse].primary = true;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserData.fulfilled, (state, { payload }) => {
@@ -81,5 +101,11 @@ const userDataSlice = createSlice({
   },
 });
 
-export const { clearWalletBalances, setWalletBalances, setBalancesLoading, setBalancesError } = userDataSlice.actions;
+export const {
+  clearWalletBalances,
+  setWalletBalances,
+  setBalancesLoading,
+  setBalancesError,
+  updateWalletToPrimary,
+} = userDataSlice.actions;
 export default userDataSlice.reducer;
