@@ -311,7 +311,7 @@ const ActivityTable = ({ activitySearchQuery }) => {
                           <Link
                             href={`https://solscan.io/tx/${item?.Transaction?.Signature}`}
                             onClick={(e) => {
-                              e.preventDefault();
+                              // e.preventDefault();
                               e.stopPropagation();
                             }}
                             target="_blank"

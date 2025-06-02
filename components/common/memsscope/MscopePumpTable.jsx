@@ -177,13 +177,13 @@ const MscopePumpTable = ({ MemscopeData, selectedMetric, searchbar, showCircle, 
                           capsuleImg={capsuleImg}
                           maxValue={100}
                           trailColor="#7b8085"
-                          progressColor={`${!progerssBar ? barColor : '#7b8085'}`}
+                          progressColor={`${!progerssBar ? barColor : barColor === '#cfc328' ? "#cfc328 ": '#7b8085'}`}
                         /> : <SquareProgressBar
                           value={block?.bonding_curv || 0}
                           capsuleImg={capsuleImg}
                           maxValue={100}
                           trailColor="#7b8085"
-                          progressColor={`${!progerssBar ? barColor : '#7b8085'}`}
+                          progressColor={`${!progerssBar ? barColor : barColor === '#cfc328' ? "#cfc328 ": '#7b8085'}`}
                         />
                         }
                         {progerssBar ? <div className="mt-2">
