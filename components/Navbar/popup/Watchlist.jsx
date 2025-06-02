@@ -1,7 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 import React, { useEffect, useState } from 'react'
 import { motion } from "framer-motion";
-import { NoDataFish, tableImage } from '@/app/Images';
+import { NoDataFish, pump, pumpfun, tableImage } from '@/app/Images';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Copy, Trash2, X } from 'lucide-react';
@@ -15,7 +16,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
     const [getWatchlistData, setGetWatchlistData] = useState([]);
     const [loading, setLoading] = useState(false)
     const [deletingItem, setDeletingItem] = useState(null);
-    
+
 
     const dispatch = useDispatch()
     const router = useRouter();
@@ -172,35 +173,43 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
                                         {
                                             getWatchlistData.map((item, index) => (
                                                 <tr key={index}
+                                                    onClick={() => navigateToChartSreen(item)}
                                                     className="hover:bg-gray-900 transition-colors">
                                                     {/* Token Column */}
                                                     <td className="px-6 py-4">
-                                                        <div className="flex items-center gap-3">
-                                                            <img
-                                                                src={item.img}
-                                                                alt={item.name}
-                                                                className="w-10 h-10 rounded-lg border border-blue-500"
-                                                            />
+                                                        <div className="flex items-center gap-3 relative">
+                                                            <div className="relative w-10 h-10">
+                                                                <img
+                                                                    src={item.img}
+                                                                    alt={item.name}
+                                                                    className="w-10 h-10 rounded-md border-2 border-gray-500 object-cover"
+                                                                />
+
+                                                                {/* Pump badge image in bottom-right corner */}
+                                                                {item.img && (
+                                                                    <img
+                                                                        src={'https://play-lh.googleusercontent.com/38AumHMi-kqROWOkerx9qhrNhEtgfu12mqfYSrUizzYd_9cf3h8l4ngNLOT3IEzC2K0=w240-h480-rw'}
+                                                                        alt="Pump"
+                                                                        className="w-4 h-4 absolute bottom-[-4px] right-[-4px] rounded-full border border-black bg-white p-[1px]"
+                                                                    />
+                                                                )}
+                                                            </div>
+
                                                             <div>
                                                                 <div className="text-white font-semibold text-base">
                                                                     {item.name || item?.symbol || "Unknown"}
                                                                 </div>
                                                                 <div className="flex items-center gap-2 text-gray-400 text-sm">
                                                                     <span>{`${item?.tokenAddress?.slice(0, 5)}...${item?.tokenAddress?.slice(-5)}`}</span>
-                                                                    <button
-                                                                        onClick={() => navigator.clipboard.writeText(item.tokenAddress)}
-                                                                        className="text-gray-500 hover:text-gray-300 transition-colors"
-                                                                    >
-                                                                        <Copy size={14} />
-                                                                    </button>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </td>
 
+
                                                     {/* Market Cap Column */}
                                                     <td
-                                                        onClick={() => navigateToChartSreen(item)}
+                                                        // onClick={() => navigateToChartSreen(item)}
                                                         className="px-6 py-4">
                                                         <span className="text-gray-300 text-sm">
                                                             {item?.marketCap || "N/A"}
@@ -209,7 +218,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
 
                                                     {/* Volume Column */}
                                                     <td
-                                                        onClick={() => navigateToChartSreen(item)}
+                                                        // onClick={() => navigateToChartSreen(item)}
                                                         className="px-6 py-4">
                                                         <span className="text-gray-300 text-sm">
                                                             {"$"}{formatNumberCompact(item.tradedVolumeUSD || 0)}
@@ -218,7 +227,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
 
                                                     {/* Liquidity Column */}
                                                     <td
-                                                        onClick={() => navigateToChartSreen(item)}
+                                                        // onClick={() => navigateToChartSreen(item)}
                                                         className="px-6 py-4">
                                                         <span className="text-gray-300 text-sm">
                                                             {item.Liqudity || "N/A"}
@@ -240,7 +249,10 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
                                                                 <div className="w-4 h-4 mx-auto border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
                                                             ) : (
                                                                 <button
-                                                                    onClick={() => handleDeleteItem(item?.tokenAddress, index)}
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        handleDeleteItem(item?.tokenAddress, index)
+                                                                    }}
                                                                     className="text-red-500 hover:text-red-400 transition-colors"
                                                                 >
                                                                     <Trash2 size={18} />

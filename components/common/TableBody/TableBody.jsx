@@ -9,7 +9,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { usePathname, useRouter } from "next/navigation";
 import { CiCircleCheck } from "react-icons/ci";
 import { IoCloseCircleOutline, IoSearchSharp } from "react-icons/io5";
-import { humanReadableFormat, UpdateTime, UpdateTimeViaUTCWithCustomTime } from "@/utils/calculation";
+import {
+  humanReadableFormat,
+  UpdateTime,
+  UpdateTimeViaUTCWithCustomTime,
+} from "@/utils/calculation";
 import { buySolanaTokensQuickBuyHandler } from "@/utils/solanaBuySell/solanaBuySell";
 import LoaderPopup from "../LoaderPopup/LoaderPopup";
 import {
@@ -60,12 +64,12 @@ const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
   const SkeletonData = Array(20).fill(null);
   // const SkeletonInnerData =
   //   chainName !== "Solana" ? Array(9).fill(null) : Array(8).fill(null);
-  const SkeletonInnerData = Array(7).fill(null);
+  const SkeletonInnerData = Array(isTimeCreated ? 8 : 7).fill(null);
   async function navigateToChartScreen(row) {
     await localStorage.setItem("chartTokenImg", row?.img);
     await dispatch(setChartSymbolImage(row?.img));
     router.push(
-      `/tradingview/solana?tokenaddress=${row?.address}&symbol=${row?.name}`
+      `/tradingview/solana?tokenaddress=${row?.address}&symbol=${row?.symbol}`
     );
     localStorage.setItem("silectChainName", getNetwork);
   }
@@ -89,7 +93,8 @@ const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
           {SkeletonData.map((_, ind) => (
             <tr
               key={ind}
-              className={` ${ind % 2 === 0 && "bg-[#16171ca4]"} w-full`}>
+              className={` ${ind % 2 === 0 && "bg-[#16171ca4]"} w-full`}
+            >
               {SkeletonInnerData.map((_, ind) => (
                 <td key={ind} className="whitespace-nowrap px-2 py-4">
                   <div className="w-full h-[32px] rounded bg-[#191919] animate-pulse"></div>
@@ -184,20 +189,20 @@ const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
 
                                 {(row?.offchainData?.extensions?.twitter ||
                                   row?.offchainData?.twitter) && (
-                                    <Link
-                                      href={
-                                        row?.offchainData?.extensions?.twitter ||
-                                        row?.offchainData?.twitter
-                                      }
-                                      target="_blank"
-                                      onClick={(e) => e.stopPropagation()}
-                                    >
-                                      <FaXTwitter
-                                        size={16}
-                                        className="text-[#6E6E6E] hover:text-[#ffffff]"
-                                      />
-                                    </Link>
-                                  )}
+                                  <Link
+                                    href={
+                                      row?.offchainData?.extensions?.twitter ||
+                                      row?.offchainData?.twitter
+                                    }
+                                    target="_blank"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <FaXTwitter
+                                      size={16}
+                                      className="text-[#6E6E6E] hover:text-[#ffffff]"
+                                    />
+                                  </Link>
+                                )}
 
                                 {row?.offchainData?.extensions?.website && (
                                   <Link
@@ -238,12 +243,14 @@ const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
                     </div>
                   </td>
 
-                  {isTimeCreated &&
+                  {isTimeCreated && (
                     <td className="whitespace-nowrap w-32 py-2 md:px-6 px-3 text-[#4CAF50] text-[15px] font-medium">
-                      {UpdateTimeViaUTCWithCustomTime(row?.dbCreatedAt, currentTime)} 
+                      {UpdateTimeViaUTCWithCustomTime(
+                        row?.dbCreatedAt,
+                        currentTime
+                      )}
                     </td>
-
-                  }
+                  )}
 
                   {/* Column 2: Market Cap and Price */}
                   <td className="whitespace-nowrap w-32 py-2 md:px-6 px-3">
@@ -254,14 +261,16 @@ const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
                         </p>
                       </div>
                       <p
-                        className={`text-[12px] font-medium ${row?.Percentage < 0
-                          ? "text-[#ED1B24]"
-                          : "text-[#21CB6B]"
-                          }`}
+                        className={`text-[12px] font-medium ${
+                          row?.Percentage < 0
+                            ? "text-[#ED1B24]"
+                            : "text-[#21CB6B]"
+                        }`}
                       >
                         {`${row?.Percentage > 0 ? "+" : ""}${Number(
                           row?.Percentage || 0
-                        ).toFixed(2)}`}{"%"}
+                        ).toFixed(2)}`}
+                        {"%"}
                       </p>
                     </div>
                   </td>
@@ -303,8 +312,9 @@ const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
                   </td> */}
                   <td className="whitespace-nowrap w-60 py-3 flex justify-center z-0">
                     <div
-                      className={`flex  gap-2 ${!row.mint_authority ? "text-white" : "text-[#828282]"
-                        }`}
+                      className={`flex  gap-2 ${
+                        !row.mint_authority ? "text-white" : "text-[#828282]"
+                      }`}
                     >
                       <Tooltip
                         body={
@@ -335,10 +345,11 @@ const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
                       <Tooltip body={"No one can freeze token transfers."}>
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${!row.freeze_authority
-                              ? "text-white"
-                              : "text-[#828282]"
-                              }`}
+                            className={`flex flex-col text-start opacity-75 ${
+                              !row.freeze_authority
+                                ? "text-white"
+                                : "text-[#828282]"
+                            }`}
                           >
                             {!row.freeze_authority ? (
                               <CiCircleCheck
@@ -366,8 +377,9 @@ const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
                       >
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${true ? "text-white" : "text-[#828282]"
-                              }`}
+                            className={`flex flex-col text-start opacity-75 ${
+                              true ? "text-white" : "text-[#828282]"
+                            }`}
                           >
                             {true ? (
                               <CiCircleCheck
@@ -391,8 +403,9 @@ const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
                       <Tooltip body={"Shows if token has 10 holders."}>
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${row?.top10Holder ? "text-white" : "text-[#828282]"
-                              }`}
+                            className={`flex flex-col text-start opacity-75 ${
+                              row?.top10Holder ? "text-white" : "text-[#828282]"
+                            }`}
                           >
                             {row?.top10Holder ? (
                               <CiCircleCheck
@@ -418,8 +431,9 @@ const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
                   {/* Column 6: Quick Buy Button */}
                   <td className="whitespace-nowrap w-32 py-2 place-items-center">
                     <button
-                      className={`text-[#111111] font-bold rounded-[20px] py-2 ${quickBuy > 0 ? "px-2" : "px-3"
-                        } bg-[#1d73fc] hover:bg-[#438bff] transition-all duration-300 ease-in-out flex items-center justify-center`}
+                      className={`text-[#111111] font-bold rounded-[20px] py-2 ${
+                        quickBuy > 0 ? "px-2" : "px-3"
+                      } bg-[#1d73fc] hover:bg-[#438bff] transition-all duration-300 ease-in-out flex items-center justify-center`}
                       onClick={(e) =>
                         buySolanaTokensQuickBuyHandler(
                           solanaLivePrice,
@@ -435,7 +449,7 @@ const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
                           {
                             name: row?.name,
                             symbol: row?.symbol,
-                            img: row?.img || null
+                            img: row?.img || null,
                           }
                         )
                       }
@@ -445,10 +459,11 @@ const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
                       </span>
                       <span>
                         {quickBuy > 0
-                          ? `${quickBuy.length > 6
-                            ? `Buy ${quickBuy.slice(0, 7)}... SOL`
-                            : `Buy ${quickBuy} SOL`
-                          }`
+                          ? `${
+                              quickBuy.length > 6
+                                ? `Buy ${quickBuy.slice(0, 7)}... SOL`
+                                : `Buy ${quickBuy} SOL`
+                            }`
                           : `Buy`}
                       </span>
                     </button>

@@ -16,7 +16,10 @@ import TableBody from "@/components/common/TableBody/TableBody";
 import { useTranslation } from "react-i18next";
 import handleSort from "@/utils/sortTokenData";
 import { fetchAiSignalData } from "@/app/redux/AiSignalDataSlice/AiSignal.slice";
-import { subscribeToAiSignalTokens, subscribeToAiSignalTokensNewAddedToken } from "@/websocket/walletTracker";
+import {
+  subscribeToAiSignalTokens,
+  subscribeToAiSignalTokensNewAddedToken,
+} from "@/websocket/walletTracker";
 // Initial filter values - all empty/false
 const initialFilterValues = {
   mintauth: { checked: false },
@@ -35,7 +38,7 @@ const AiSignal = () => {
   const { t } = useTranslation();
   const tredingPage = t("tredingPage");
   const tableRef = useRef(null);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [sortColumn, setSortColumn] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [localFilterTime, setLocalFilterTime] = useState("5m");
@@ -43,9 +46,9 @@ const AiSignal = () => {
   const [filtersApplied, setFiltersApplied] = useState(false);
   const [filterValues, setFilterValues] = useState(initialFilterValues);
 
-  // ai signal tokens data 
-  const aiSignalData = useSelector((state) => state?.aiSignal?.aiSignalData)
-  const isLoading = useSelector((state) => state?.aiSignal?.initialLoading)
+  // ai signal tokens data
+  const aiSignalData = useSelector((state) => state?.aiSignal?.aiSignalData);
+  const isLoading = useSelector((state) => state?.aiSignal?.initialLoading);
 
   const Trendings = {
     Title: tredingPage?.mainHeader?.filter?.filter,
@@ -162,11 +165,11 @@ const AiSignal = () => {
       infoTipString: tredingPage?.tableheaders?.pairinfotooltip,
     },
     {
-      title: "Time",
+      title: tredingPage?.tableheaders?.aicall,
       sortable: true,
       key: "dbCreatedAt",
       sortingKey: "dbCreatedAt",
-      infoTipString: "Time",
+      infoTipString: tredingPage?.tableheaders?.aicalltooltip,
     },
     {
       title: tredingPage?.tableheaders?.mcap,
@@ -403,9 +406,9 @@ const AiSignal = () => {
     if (savedFilters) {
       setFilterValues(savedFilters);
     }
-    dispatch(fetchAiSignalData())
-    subscribeToAiSignalTokens()
-    subscribeToAiSignalTokensNewAddedToken()
+    dispatch(fetchAiSignalData());
+    subscribeToAiSignalTokens();
+    subscribeToAiSignalTokensNewAddedToken();
   }, []);
 
   // Apply saved filters when data becomes available
@@ -467,7 +470,12 @@ const AiSignal = () => {
                     sortColumn={sortColumn}
                     sortOrder={sortOrder}
                   />
-                  <TableBody data={sortedData} img={solana} isLoading={isLoading} isTimeCreated={true} />
+                  <TableBody
+                    data={sortedData}
+                    img={solana}
+                    isLoading={isLoading}
+                    isTimeCreated={true}
+                  />
                 </table>
               </div>
             </div>

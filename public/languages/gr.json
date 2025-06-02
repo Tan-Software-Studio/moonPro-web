@@ -55,6 +55,8 @@
       "advanced": "Fortgeschritten"
     },
     "tableheaders": {
+      "aicall": "KI-Aufruf",
+"aicalltooltip": "Dies zeigt die Zeit an, zu der unser KI-Signal gegeben wurde",
       "pairinfo": "Paar-Info",
       "pairinfotooltip": "Token-Name, Alter und soziale Netzwerke.",
       "created": "Erstellt",
