@@ -2,8 +2,9 @@ import { getSoalanaTokenBalance } from "../solanaNativeBalance";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { fetchSolanaNativeBalance, fetchUsdcBalance } from "@/app/redux/states";
-import { addMark } from "@/utils/tradingViewChartServices/mark"
-import { getLatestBar, getLatestBarTime } from "../tradingViewChartServices/latestBarTime"; 
+import { addMark } from "@/utils/tradingViewChartServices/mark";
+import { getLatestBarTime } from "../tradingViewChartServices/latestBarTime";
+import { updateHoldingsDataWhileBuySell } from "@/app/redux/holdingDataSlice/holdingData.slice";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 // handler to buy solana tokens
 const buySolanaTokens = async (
@@ -20,7 +21,8 @@ const buySolanaTokens = async (
   tokenPrice,
   convertedPrice,
   usdActive,
-  marketCapActive
+  marketCapActive,
+  metaData
 ) => {
   // console.log("🚀 ~ setTokenBalance:", setTokenBalance);
   // console.log("🚀 ~ priorityFee:", priorityFee);
@@ -83,6 +85,17 @@ const buySolanaTokens = async (
         id: "saveToast",
         duration: 3000,
       });
+      dispatch(
+        updateHoldingsDataWhileBuySell({
+          token: toToken,
+          type: "buy",
+          amountInDollar: Number(Number(amt) * solanaLivePrice),
+          price: Number(tokenPrice),
+          name: metaData?.name,
+          symbol: metaData?.symbol,
+          img: metaData?.img,
+        })
+      );
       try {
         addMark(
           getLatestBarTime(),
@@ -93,7 +106,7 @@ const buySolanaTokens = async (
           usdActive,
           marketCapActive,
           "user"
-        )
+        );
       } catch (err) {
         console.log("Buy Add Mark error", err);
       }
@@ -127,7 +140,8 @@ const buySolanaTokensQuickBuyHandler = async (
   programAddress,
   bondingCurv = 0,
   dispatch,
-  tokenPrice
+  tokenPrice,
+  metaData
 ) => {
   e && e.stopPropagation();
   const token = localStorage.getItem("token");
@@ -199,6 +213,17 @@ const buySolanaTokensQuickBuyHandler = async (
         id: "saveToast",
         duration: 3000,
       });
+      dispatch(
+        updateHoldingsDataWhileBuySell({
+          token: toToken,
+          type: "buy",
+          amountInDollar: Number(Number(amt) * solanaLivePrice),
+          price: Number(tokenPrice),
+          name: metaData?.name,
+          symbol: metaData?.symbol,
+          img: metaData?.img,
+        })
+      );
       setTimeout(() => {
         dispatch(fetchSolanaNativeBalance(address));
       }, 2000);
@@ -221,7 +246,8 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
   e,
   programAddress,
   dispatch,
-  tokenPrice
+  tokenPrice,
+  metaData
 ) => {
   e && e.stopPropagation();
   const amt = await localStorage.getItem("copyBuySol");
@@ -299,6 +325,17 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
         id: "saveToast",
         duration: 3000,
       });
+      dispatch(
+        updateHoldingsDataWhileBuySell({
+          token: toToken,
+          type: "buy",
+          amountInDollar: Number(Number(amt) * solanaLivePrice),
+          price: Number(tokenPrice),
+          name: metaData?.name,
+          symbol: metaData?.symbol,
+          img: metaData?.img,
+        })
+      );
       setTimeout(() => {
         dispatch(fetchSolanaNativeBalance(address));
       }, 2000);
@@ -328,7 +365,8 @@ const sellSolanaTokens = async (
   recQty,
   convertedPrice,
   usdActive,
-  marketCapActive
+  marketCapActive,
+  metaData
 ) => {
   // console.log("🚀 ~ setTokenBalance:", setTokenBalance);
   // console.log("🚀 ~ setLoaderSwap:", setLoaderSwap);
@@ -389,6 +427,18 @@ const sellSolanaTokens = async (
         id: "saveToast",
         duration: 3000,
       });
+      dispatch(
+        updateHoldingsDataWhileBuySell({
+          token: fromToken,
+          type: "sell",
+          amountInDollar: Number(Number(amt) * price),
+          qty: Number(amt),
+          price: Number(price),
+          name: metaData?.name,
+          symbol: metaData?.symbol,
+          img: metaData?.img,
+        })
+      );
       try {
         addMark(
           getLatestBarTime(),
@@ -399,7 +449,7 @@ const sellSolanaTokens = async (
           usdActive,
           marketCapActive,
           "user"
-        )
+        );
       } catch (err) {
         console.log("Sell Add Mark error", err);
       }
@@ -508,7 +558,6 @@ const convertSOLtoUSDC = async (
       ]);
       setUsdcBalance(usdcBalanceUpdate);
     }, 5000);
-
   } catch (err) {
     setLoaderSwap(false);
     console.log("🚀 ~ convertSOLtoUSDC error:", err?.message);
@@ -601,7 +650,6 @@ const convertUSDCtoSOL = async (
       ]);
       setUsdcBalance(usdcBalanceUpdate);
     }, 5000);
-
   } catch (err) {
     setLoaderSwap(false);
     console.log("🚀 ~ convertUSDCtoSOL error:", err?.message);
@@ -611,7 +659,6 @@ const convertUSDCtoSOL = async (
     });
   }
 };
-
 
 export {
   buySolanaTokens,

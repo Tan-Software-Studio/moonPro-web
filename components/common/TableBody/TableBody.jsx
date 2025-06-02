@@ -428,7 +428,12 @@ const TableBody = ({ isLoading, data, img }) => {
                           row?.address,
                           100,
                           dispatch,
-                          row?.current_price
+                          row?.current_price,
+                          {
+                            name: row?.name,
+                            symbol: row?.symbol,
+                            img: row?.img || null
+                          }
                         )
                       }
                     >
