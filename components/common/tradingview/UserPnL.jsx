@@ -6,7 +6,7 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
   const buyAmount = currentTokenPnLData?.totalBoughtQty * currentTokenPnLData?.averageBuyPrice || 0;
   const soldAmount = currentTokenPnLData?.quantitySold * currentTokenPnLData?.averageHistoricalSellPrice || 0;
   const holdingAmount = currentTokenPnLData?.activeQtyHeld * currentPrice || 0;
-  const pnlAmount = (soldAmount) + (currentTokenPnLData?.realizedProfit || 0);
+  const pnlAmount = ((holdingAmount) + (currentTokenPnLData?.realizedProfit || 0)) - buyAmount;
   const isPositivePnL = pnlAmount >= 0;
   const absolutePnL = Math.abs(pnlAmount);
   const pnlPercent = buyAmount !== 0 ? (absolutePnL / buyAmount) * 100 : 0;
