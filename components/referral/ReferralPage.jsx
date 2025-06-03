@@ -177,19 +177,22 @@ const ReferralPage = () => {
         <div className="flex md:flex-row flex-col items-center md:items-start gap-4 w-full">
           {/* Image */}
           <div
-            className={`w-20 h-20 min-w-[3.5rem] rounded-md bg-yellow-500 overflow-hidden  relative`}
+            className={`w-20 h-20 min-w-[3.5rem] flex justify-center items-center font-bold text-[30px] rounded-md bg-yellow-500 overflow-hidden  relative`}
           // onClick={handleBoxClick}
           // onMouseEnter={() => setHovered(true)}
           // onMouseLeave={() => setHovered(false)}
           >
+
+          {refData?.user?.email[0]?.toUpperCase()}
+
             {/* {imageURL && (
               <img src={nftImg} alt="Uploaded" className="w-full h-full object-cover" />
             )} */}
-            <Image
+            {/* <Image
               src={rendomImg}
               alt="Uploaded"
               className="w-full h-full object-cover"
-            />
+            /> */}
 
             {/* {hovered && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white">
