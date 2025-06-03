@@ -9,33 +9,36 @@ import React, { useEffect, useState } from "react";
 import { PiWallet } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 
-const History = ({ }) => {
+const History = ({}) => {
   const router = useRouter();
   const [copiedIndex, setCopiedIndex] = useState(null);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const [historyData, setHistoryData] = useState([])
+  const [historyData, setHistoryData] = useState([]);
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
 
-  const backendUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
+  const backendUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
   async function getHistoryData() {
-    const token = localStorage.getItem("token")
-    if (!token) return
-    setLoading(true)
-    await axios.get(`${backendUrl}transactions/PNLHistory/${solWalletAddress}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }).then((response) => {
-      console.log("🚀 ~ awaitaxios.get ~ response:", response?.data?.data)
-      setHistoryData(response?.data?.data?.pnlHistory)
-      setLoading(false)
-    }).catch(() => {
-      setLoading(false)
-    })
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    setLoading(true);
+    await axios
+      .get(`${backendUrl}transactions/PNLHistory/${solWalletAddress}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("🚀 ~ awaitaxios.get ~ response:", response?.data?.data);
+        setHistoryData(response?.data?.data?.pnlHistory);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   }
 
   const navigateToChartSreen = (item) => {
@@ -47,8 +50,9 @@ const History = ({ }) => {
   };
 
   useEffect(() => {
-    getHistoryData()
-  }, [solWalletAddress])
+    setHistoryData([]);
+    getHistoryData();
+  }, [solWalletAddress]);
 
   return (
     <>
@@ -82,7 +86,9 @@ const History = ({ }) => {
                   <tr
                     onClick={() => navigateToChartSreen(item)}
                     key={index}
-                    className={`${index % 2 === 0 ? "bg-gray-800/20" : ""} border- b -slate-700/20 hover:bg-slate-800/30 cursor-pointer transition - colors duration - 200`}
+                    className={`${
+                      index % 2 === 0 ? "bg-gray-800/20" : ""
+                    } border- b -slate-700/20 hover:bg-slate-800/30 cursor-pointer transition - colors duration - 200`}
                   >
                     <td className="px-4 py-2">
                       <div className="flex items-center gap-3">
@@ -130,11 +136,11 @@ const History = ({ }) => {
                     </td>
                     <td className="px-4 py-2">
                       <p
-                        className={`${item?.realizedProfit >= 0
-                          ? "text-emerald-400 bg-emerald-900/20"
-                          : "text-red-400 bg-red-900/20"
-                          } font-semibold px-2 py-1 rounded-full text-sm flex items-center justify-center text-center `}
-
+                        className={`${
+                          item?.realizedProfit >= 0
+                            ? "text-emerald-400 bg-emerald-900/20"
+                            : "text-red-400 bg-red-900/20"
+                        } font-semibold px-2 py-1 rounded-full text-sm flex items-center justify-center text-center `}
                       >
                         {(item?.realizedProfit).toFixed(5)}
                       </p>
@@ -156,8 +162,12 @@ const History = ({ }) => {
                 className="text-slate-400"
               />
             </div>
-            <p className="text-slate-400 text-lg mb-2 break-words break-all">No data available</p>
-            <p className="text-slate-500 text-sm">Information will appear here when availab</p>
+            <p className="text-slate-400 text-lg mb-2 break-words break-all">
+              No data available
+            </p>
+            <p className="text-slate-500 text-sm">
+              Information will appear here when availab
+            </p>
           </div>
         ) : null}
       </div>

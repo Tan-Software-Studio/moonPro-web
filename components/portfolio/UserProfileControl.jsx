@@ -11,38 +11,46 @@ import TopHundred from "../profile/TopHundred";
 const UserProfileControl = () => {
   const [leftTableTab, setLeftTableTab] = useState("Active Position");
   const [rightTableTab, setRightTableTab] = useState("Activity");
-  const [activePositionSearchQuery, setActivePositionSearchQuery] = useState("")
-  const [activitySearchQuery, setActivitySearchQuery] = useState("")
-  const [mobileActiveTab, setMobileActiveTab] = useState("Active Position")
+  const [activePositionSearchQuery, setActivePositionSearchQuery] =
+    useState("");
+  const [activitySearchQuery, setActivitySearchQuery] = useState("");
+  const [mobileActiveTab, setMobileActiveTab] = useState("Active Position");
 
   const currentTabData = useSelector(
     (state) => state?.setPnlData?.PnlData || []
   );
-  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
+  const nativeTokenbalance = useSelector(
+    (state) => state?.AllStatesData?.solNativeBalance
+  );
 
   // total value calculation
   const totalValue = currentTabData.reduce((acc, item) => {
-    const value = item?.activeQtyHeld * item?.current_price
-    return acc + value
-  }, 0)
+    const value = item?.activeQtyHeld * item?.current_price;
+    return acc + value;
+  }, 0);
 
   // unrealized pnl calculation
   const UnrealizedPNL = currentTabData.reduce((acc, item) => {
-    const pnl = item?.activeQtyHeld * (item.current_price - item.averageBuyPrice)
-    return acc + pnl
-  }, 0)
+    const pnl =
+      item?.activeQtyHeld * (item.current_price - item.averageBuyPrice);
+    return acc + pnl;
+  }, 0);
 
-  // search active position 
+  // search active position
   const hasSearch = activePositionSearchQuery.trim() !== "";
-  const filteredData = currentTabData.filter((item) =>
-    item?.token.toLowerCase()?.includes(activePositionSearchQuery.toLowerCase()) ||
-    item?.name?.toLowerCase()?.includes(activePositionSearchQuery.toLowerCase()) ||
-    item?.symbol?.toLowerCase()?.includes(activePositionSearchQuery.toLowerCase())
-  )
-  const filteredActivePosition = hasSearch ? filteredData : currentTabData
-
-
-
+  const filteredData = currentTabData.filter(
+    (item) =>
+      item?.token
+        .toLowerCase()
+        ?.includes(activePositionSearchQuery.toLowerCase()) ||
+      item?.name
+        ?.toLowerCase()
+        ?.includes(activePositionSearchQuery.toLowerCase()) ||
+      item?.symbol
+        ?.toLowerCase()
+        ?.includes(activePositionSearchQuery.toLowerCase())
+  );
+  const filteredActivePosition = hasSearch ? filteredData : currentTabData;
 
   return (
     <>
@@ -51,28 +59,32 @@ const UserProfileControl = () => {
           {/* Balance Section */}
           <div className="p-4 bg-[#12121A] border-b lg:border-b-0 lg:border-r border-gray-800 lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <h3 className="text-slate-200 text-base font-medium">
-                Balance
-              </h3>
+              <h3 className="text-slate-200 text-base font-medium">Balance</h3>
             </div>
 
             <div className="">
               <div className="py-2">
                 <div className="flex items-center gap-2 mb-2">
                   <p className="text-sm text-gray-400">Total Value</p>
-                  <Infotip
-                    body="The current total market value of all assets held in the wallet. This includes both realized and unrealized gains/losses."
-                  />
+                  <Infotip body="The current total market value of all assets held in the wallet. This includes both realized and unrealized gains/losses." />
                 </div>
-                <p className="text-base font-semibold tracking-wider text-white">{`$${Number(totalValue).toFixed(5)}`}</p>
+                <p className="text-base font-semibold tracking-wider text-white">{`$${Number(
+                  totalValue
+                ).toFixed(5)}`}</p>
               </div>
 
               <div className="py-2">
                 <div className="flex items-center gap-2 mb-2">
                   <p className="text-sm text-gray-400">Unrealized PNL</p>
                 </div>
-                <p className={`text-base font-semibold tracking-wider ${UnrealizedPNL >= 0 ? "text-emerald-500" : "text-red-500"}`}>
-                  {`${UnrealizedPNL < 0 ? "-$" : "$"}${Math.abs(UnrealizedPNL).toFixed(5)}`}
+                <p
+                  className={`text-base font-semibold tracking-wider ${
+                    UnrealizedPNL >= 0 ? "text-emerald-500" : "text-red-500"
+                  }`}
+                >
+                  {`${UnrealizedPNL < 0 ? "-$" : "$"}${Math.abs(
+                    UnrealizedPNL
+                  ).toFixed(5)}`}
                 </p>
               </div>
 
@@ -80,7 +92,9 @@ const UserProfileControl = () => {
                 <div className="flex items-center gap-2 mb-2">
                   <p className="text-sm text-gray-400">Available Balance</p>
                 </div>
-                <p className="text-base font-semibold tracking-wider text-emerald-500">SOL {`${Number(nativeTokenbalance).toFixed(5) || 0}`}</p>
+                <p className="text-base font-semibold tracking-wider text-emerald-500">
+                  SOL {`${Number(nativeTokenbalance).toFixed(5) || 0}`}
+                </p>
               </div>
             </div>
           </div>
@@ -162,7 +176,6 @@ const UserProfileControl = () => {
         {/* Table Section */}
 
         <div className="w-full border-b border-gray-800 overflow-x-auto">
-
           {/* Desktop: Two-column layout */}
           <div className="hidden xl:grid xl:grid-cols-2">
             {/* Left side table tab */}
@@ -173,30 +186,33 @@ const UserProfileControl = () => {
                     <button
                       key={tab}
                       onClick={() => setLeftTableTab(tab)}
-                      className={`px-2 py-3 text-sm font-medium tracking-wider transition-all duration-200 flex-shrink-0 ${leftTableTab === tab
-                        ? "border-b-[1px] border-white text-white"
-                        : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
-                        }`}
+                      className={`px-2 py-3 text-sm font-medium tracking-wider transition-all duration-200 flex-shrink-0 ${
+                        leftTableTab === tab
+                          ? "border-b-[1px] border-white text-white"
+                          : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
+                      }`}
                     >
                       {tab}
                     </button>
                   ))}
                 </div>
-                <div>
-                  <div className="w-full flex items-center gap-2 md:w-72 bg-gray-900 border border-gray-800 rounded-lg p-2">
-                    <div>
-                      <CiSearch size={20} />
-                    </div>
-                    {leftTableTab === "Active Position" &&
+                {leftTableTab === "Active Position" && (
+                  <div>
+                    <div className="w-full flex items-center gap-2 md:w-72 bg-gray-900 border border-gray-800 rounded-lg p-2">
+                      <div>
+                        <CiSearch size={20} />
+                      </div>
                       <input
                         type="search"
-                        onChange={(e) => setActivePositionSearchQuery(e.target.value)}
+                        onChange={(e) =>
+                          setActivePositionSearchQuery(e.target.value)
+                        }
                         placeholder="Search by Address, Name or Symbol"
                         className="w-full text-sm bg-gray-900  focus:outline-none"
                       />
-                    }
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
               {leftTableTab === "Active Position" && (
                 <div>
@@ -232,10 +248,11 @@ const UserProfileControl = () => {
                     <button
                       key={tab}
                       onClick={() => setRightTableTab(tab)}
-                      className={`px-2 py-3 text-sm font-medium tracking-wider transition-all duration-200 flex-shrink-0 ${rightTableTab === tab
-                        ? "border-b-[1px] border-white text-white"
-                        : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
-                        }`}
+                      className={`px-2 py-3 text-sm font-medium tracking-wider transition-all duration-200 flex-shrink-0 ${
+                        rightTableTab === tab
+                          ? "border-b-[1px] border-white text-white"
+                          : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
+                      }`}
                     >
                       {tab}
                     </button>
@@ -259,7 +276,6 @@ const UserProfileControl = () => {
             </div>
           </div>
 
-
           {/* Mobile/Tablet: Tab-based view */}
           <div className="xl:hidden">
             {/* Tab Navigation */}
@@ -269,10 +285,11 @@ const UserProfileControl = () => {
                   <button
                     key={tab}
                     onClick={() => setMobileActiveTab(tab)}
-                    className={`px-2 sm:py-3 py-2 sm:text-sm text-xs font-medium sm:tracking-wider transition-all duration-200 flex-shrink-0 ${mobileActiveTab === tab
-                      ? "border-b-[1px] border-white text-white"
-                      : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
-                      }`}
+                    className={`px-2 sm:py-3 py-2 sm:text-sm text-xs font-medium sm:tracking-wider transition-all duration-200 flex-shrink-0 ${
+                      mobileActiveTab === tab
+                        ? "border-b-[1px] border-white text-white"
+                        : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
+                    }`}
                   >
                     {tab}
                   </button>
