@@ -59,7 +59,6 @@ const holdingData = createSlice({
       }
     },
     updateHoldingsDataWhileBuySell: (state, { payload }) => {
-      console.log("🚀 ~ payload:", payload);
       if (payload?.type == "buy") {
         const tokenQty = +(payload?.amountInDollar / payload?.price).toFixed(
           10
@@ -167,11 +166,6 @@ const holdingData = createSlice({
                 state?.PnlData?.[findTokenIndex]?.lots?.shift();
               }
             }
-            // update activeQtyHeld
-            state.PnlData[findTokenIndex].activeQtyHeld = Math.max(
-              0,
-              state.PnlData[findTokenIndex].activeQtyHeld - Number(payload?.qty)
-            );
             // update realizedProfit
             state.PnlData[findTokenIndex].realizedProfit += Number(
               Number(realizedProfit).toFixed(10)
