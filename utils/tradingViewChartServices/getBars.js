@@ -73,9 +73,9 @@ export const getBars = async (
       walletAddress
     );
     if (bars?.length > 0) {
-      setHistoricalChunkAndConnectBars(bars);
+      setHistoricalChunkAndConnectBars(bars, resolution);
       setNewLatestBarTime(bars[bars?.length - 1]?.time)
-      setNewLatestHistoricalBar(bars[bars?.length - 1]);
+      setNewLatestHistoricalBar(bars[bars?.length - 1], resolution);
       onHistoryCallback(bars, { noData: false });
     } else {
       onHistoryCallback([], { noData: true });

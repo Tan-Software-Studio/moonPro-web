@@ -1,7 +1,13 @@
 let historicalChunk = null;
+let currentResolution = null;
 
-function setHistoricalChunkAndConnectBars(newChunk) {
+function setHistoricalChunkAndConnectBars(newChunk, newResolution) {
     if (!newChunk || newChunk.length === 0) return;
+
+    if (currentResolution !== newResolution) {
+        historicalChunk = null;
+        currentResolution = newResolution;
+    }
 
     if (!historicalChunk) {
         historicalChunk = newChunk;
@@ -20,6 +26,7 @@ function setHistoricalChunkAndConnectBars(newChunk) {
 
 function clearChunk() {
     historicalChunk = null;
+    currentResolution = null;
 }
 
 module.exports = { setHistoricalChunkAndConnectBars, clearChunk }

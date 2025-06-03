@@ -12,7 +12,6 @@ const TabNavigation = ({
   setActiveTab,
   topHoldersApiCall,
   toptradersApiCall,
-  myHoldingData,
   tvChartRef,
 }) => {
   const tabsRef = useRef([]);
@@ -32,8 +31,6 @@ const TabNavigation = ({
       typeof toptradersApiCall == "function"
     ) {
       toptradersApiCall();
-    } else if (tabName == "Positions" && typeof myHoldingData == "function") {
-      myHoldingData();
     }
 
     // Small delay to ensure state updates
@@ -151,7 +148,7 @@ const TabNavigation = ({
 
       {/* DownToUp Icon */}
       <div
-        className="flex items-center justify-center cursor-pointer ml-4 md:ml-6 p-1 md:p-2"
+        className="hidden md:flex items-center justify-center cursor-pointer ml-4 md:ml-6 p-1 md:p-2"
         onClick={() => swapTvHeight()}
       >
         <Image
