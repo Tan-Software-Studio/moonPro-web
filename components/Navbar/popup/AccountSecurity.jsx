@@ -166,9 +166,9 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                   width={40}
                   className="w-[40px] h-[40px] rounded-md bg-orange-400 object-cover"
                 /> */}
-                <div className="w-[40px] h-[40px] flex justify-center items-center rounded-md bg-orange-400">
-  {userDetails?.email[0].toUpperCase()}
-</div>
+                <div className="w-[40px] h-[40px] flex justify-center items-center font-bold rounded-md bg-orange-400">
+                  {userDetails?.email[0]?.toUpperCase()}
+                </div>
 
                 <div className="flex-1">
                   <p className="text-white text-sm font-medium mb-1">
