@@ -232,11 +232,6 @@ const Footer = () => {
                                   {copiedWallet === wallet.wallet ? <IoCheckmarkDone /> : <IoCopyOutline />}
                                 </button>
                               </div>
-                              {wallet.currency && (
-                                <div className="text-xs text-gray-500 mt-1">
-                                  {wallet.currency.Name} ({wallet.currency.Symbol})
-                                </div>
-                              )}
                             </div>
                           </div>
 
