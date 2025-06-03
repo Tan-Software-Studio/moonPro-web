@@ -59,8 +59,11 @@ const holdingData = createSlice({
       }
     },
     updateHoldingsDataWhileBuySell: (state, { payload }) => {
+      console.log("🚀 ~ payload:", payload);
       if (payload?.type == "buy") {
-        const tokenQty = payload?.amountInDollar / payload?.price;
+        const tokenQty = +(payload?.amountInDollar / payload?.price).toFixed(
+          10
+        );
         if (state?.PnlData?.length > 0) {
           const findTokenIndex = state?.PnlData?.findIndex(
             (item) => item?.token == payload?.token
@@ -113,22 +116,22 @@ const holdingData = createSlice({
             token: payload?.token,
             lots: [
               {
-                qty: payload?.qty,
+                qty: tokenQty,
                 price: payload?.price,
               },
             ],
             realizedProfit: 0,
-            activeQtyHeld: payload?.qty,
-            totalBoughtQty: payload?.qty,
+            activeQtyHeld: tokenQty,
+            totalBoughtQty: tokenQty,
             quantitySold: 0,
-            totalBuyAmount: payload?.qty,
+            totalBuyAmount: tokenQty,
             averageBuyPrice: payload?.price,
             averageHistoricalSellPrice: 0,
             current_price: payload?.price,
             name: payload?.name,
             symbol: payload?.symbol,
             img: payload?.img,
-            chainBalance: payload.qty,
+            chainBalance: tokenQty,
           });
         }
       } else {
@@ -206,10 +209,10 @@ const holdingData = createSlice({
             state.PnlData[findTokenIndex].averageBuyPrice =
               totalQty > 0
                 ? Number(
-                  (
-                    state?.PnlData[findTokenIndex]?.totalBuyAmount / totalQty
-                  ).toFixed(10)
-                )
+                    (
+                      state?.PnlData[findTokenIndex]?.totalBuyAmount / totalQty
+                    ).toFixed(10)
+                  )
                 : 0;
             if (
               state.PnlData[findTokenIndex]?.lots?.length == 0 ||
@@ -220,6 +223,7 @@ const holdingData = createSlice({
           }
         }
       }
+      console.log("PNL Data", JSON.parse(JSON.stringify(state.PnlData)));
     },
     resetPnlDataState: (state) => {
       state.initialLoading = false;
