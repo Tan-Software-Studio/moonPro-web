@@ -3,7 +3,7 @@ import { RiExchangeDollarLine } from 'react-icons/ri';
 import { formatDecimal, humanReadableFormatWithNoDollar } from '@/utils/basicFunctions';
 
 const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
-  const buyAmount = currentTokenPnLData?.totalBoughtQty * currentTokenPnLData?.averageBuyPrice || 0;
+  const buyAmount = currentTokenPnLData?.totalBuyAmount || 0;
   const soldAmount = currentTokenPnLData?.quantitySold * currentTokenPnLData?.averageHistoricalSellPrice || 0;
   const holdingAmount = currentTokenPnLData?.activeQtyHeld * currentPrice || 0;
   const pnlAmount = ((holdingAmount) + (currentTokenPnLData?.realizedProfit || 0)) - buyAmount;

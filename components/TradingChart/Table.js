@@ -1049,7 +1049,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                   </thead>
                   <tbody className="bg-transparent">
                     {holdingsData.map((data, index) => {
-                        const usdBought = data?.totalBoughtQty * data?.averageBuyPrice;
+                        const usdBought = data?.totalBuyAmount;
                         const usdSold = data?.quantitySold * data?.averageHistoricalSellPrice;
                         const usdHoldings = data?.activeQtyHeld * data?.current_price;
                         const totalPnL = (data?.realizedProfit ?? 0) + usdHoldings - usdBought;
