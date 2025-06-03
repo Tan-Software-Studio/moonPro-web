@@ -148,7 +148,7 @@ const TabNavigation = ({
 
       {/* DownToUp Icon */}
       <div
-        className="flex items-center justify-center cursor-pointer ml-4 md:ml-6 p-1 md:p-2"
+        className="hidden md:flex items-center justify-center cursor-pointer ml-4 md:ml-6 p-1 md:p-2"
         onClick={() => swapTvHeight()}
       >
         <Image

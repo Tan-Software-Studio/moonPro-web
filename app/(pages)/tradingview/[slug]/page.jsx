@@ -125,6 +125,18 @@ const Tradingview = () => {
   }, []);
 
   useEffect(() => {
+    if (tvChartRef?.current) {
+          const el = tvChartRef.current;
+
+          if (isSmallScreen) {
+            el.style.height = "253px";
+          } else {
+            el.style.height = "600px";
+          }
+        }
+  }, [isSmallScreen])
+
+  useEffect(() => {
     const fetchTokenMeta = async () => {
       const [singleTokenBalance, solBalance] = await Promise.all([
         getSoalanaTokenBalance(solWalletAddress, tokenaddress),
@@ -415,14 +427,14 @@ const Tradingview = () => {
                 />
               </div>
 
-              <div ref={tvChartRef} className="h-[600px] w-full">
-                <TVChartContainer
+              <div ref={tvChartRef} className={`${isSmallScreen ? 'h-[253px]' : 'h-[10000px]'} w-full`}>
+                {/* <TVChartContainer
                   tokenSymbol={tokenSymbol}
                   tokenaddress={tokenaddress}
                   currentTokenPnLData={currentTokenPnLData}
                   solanaLivePrice={solanaLivePrice}
-                  supply={chartTokenData?.currentSupply}
-                />
+                  supply={chartTokenData?.currentSupply}z
+                /> */}
               </div>
             </>
           )}
