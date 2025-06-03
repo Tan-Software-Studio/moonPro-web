@@ -1,10 +1,15 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx"
-
-const TableHeaderData = ({ headers, onSort, sortColumn, sortOrder }) => {
+import { FaBell, FaBellSlash } from "react-icons/fa";
+import toast from "react-hot-toast";
+const TableHeaderData = ({ headers, onSort, sortColumn, sortOrder, data }) => {
   const [sortStates, setSortStates] = useState({});
+  const [isAiSignalNotificationOn, setIsAiSignalNotificationOn] = useState(() => {
+    const storedValue = localStorage.getItem('ai-signal-notification');
+    return storedValue ? JSON.parse(storedValue) : true;
+  });
   const borderColor = useSelector(
     (state) => state?.AllthemeColorData?.borderColor
   );
@@ -25,6 +30,11 @@ const TableHeaderData = ({ headers, onSort, sortColumn, sortOrder }) => {
     // Call the onSort function with the new sort order
     onSort(header.sortingKey, newSortOrder);
   };
+ 
+
+  useEffect(() => {
+    localStorage.setItem('ai-signal-notification', JSON.stringify(isAiSignalNotificationOn));
+  }, [isAiSignalNotificationOn]);
 
   return (
     <thead
@@ -85,10 +95,22 @@ const TableHeaderData = ({ headers, onSort, sortColumn, sortOrder }) => {
                       <path d="M3.801 4.656a.4.4 0 01-.602 0L.58 1.663A.4.4 0 01.882 1h5.236a.4.4 0 01.302.663L3.8 4.656z"></path>
                     </svg>
                   </div>
+
+
                 )}
                 {header?.infoTipString && (
                   <Infotip body={header?.infoTipString} />
                 )}
+
+                {header?.notificationIcon &&
+                  <div onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    setIsAiSignalNotificationOn(!isAiSignalNotificationOn)
+                  }}>
+                    {isAiSignalNotificationOn ? <FaBell size={18} color="#ffffff" /> : <FaBellSlash size={18} color="#ffffff" />}
+                  </div>
+                }
               </div>
             </div>
           </th>
