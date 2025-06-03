@@ -366,7 +366,8 @@ const sellSolanaTokens = async (
   convertedPrice,
   usdActive,
   marketCapActive,
-  metaData
+  metaData,
+  isSellFullAmount
 ) => {
   // console.log("🚀 ~ setTokenBalance:", setTokenBalance);
   // console.log("🚀 ~ setLoaderSwap:", setLoaderSwap);
@@ -416,6 +417,7 @@ const sellSolanaTokens = async (
         ? programAddress
         : "nasdiuasdnasdudhsdjasbhid",
       amountRecInsol: Number(recQty),
+      isSellFullAmount,
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -437,6 +439,7 @@ const sellSolanaTokens = async (
           name: metaData?.name,
           symbol: metaData?.symbol,
           img: metaData?.img,
+          isSellFullAmount,
         })
       );
       try {
