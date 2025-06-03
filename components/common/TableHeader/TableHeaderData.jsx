@@ -108,7 +108,7 @@ const TableHeaderData = ({ headers, onSort, sortColumn, sortOrder, data }) => {
                     e.stopPropagation()
                     setIsAiSignalNotificationOn(!isAiSignalNotificationOn)
                   }}>
-                    {isAiSignalNotificationOn ? <FaBell size={18} color="#ffffff" /> : <FaBellSlash size={18} color="#ffffff" />}
+                    {isAiSignalNotificationOn ? <FaBell size={15} color="#ffffff" /> : <FaBellSlash size={15} color="#ffffff" />}
                   </div>
                 }
               </div>

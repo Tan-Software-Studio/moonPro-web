@@ -1,16 +1,12 @@
 "use client";
-import { profileImage } from "@/app/Images";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { FaShare, FaCopy } from "react-icons/fa";
-import { BiCheckDouble } from "react-icons/bi";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import ActivityTable from "@/components/profile/ActivityTable";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import ActivePosition from "@/components/profile/ActivePosition";
-import TopHundredHolding from "../profile/TopHundredHolding";
-import { setPnlData } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import { CiSearch } from "react-icons/ci";
+import History from "../profile/History";
+import TopHundred from "../profile/TopHundred";
 
 const UserProfileControl = () => {
   const [leftTableTab, setLeftTableTab] = useState("Active Position");
@@ -173,7 +169,7 @@ const UserProfileControl = () => {
             <div className="border-r border-gray-800">
               <div className="flex items-center border-b border-gray-800 justify-between overflow-x-auto px-4">
                 <div className="flex gap-1">
-                  {["Active Position"].map((tab) => (
+                  {["Active Position", "History", "Top 100"].map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setLeftTableTab(tab)}
@@ -191,18 +187,36 @@ const UserProfileControl = () => {
                     <div>
                       <CiSearch size={20} />
                     </div>
-                    <input
-                      type="search"
-                      onChange={(e) => setActivePositionSearchQuery(e.target.value)}
-                      placeholder="Search by Address, Name or Symbol"
-                      className="w-full text-sm bg-gray-900  focus:outline-none"
-                    />
+                    {leftTableTab === "Active Position" &&
+                      <input
+                        type="search"
+                        onChange={(e) => setActivePositionSearchQuery(e.target.value)}
+                        placeholder="Search by Address, Name or Symbol"
+                        className="w-full text-sm bg-gray-900  focus:outline-none"
+                      />
+                    }
                   </div>
                 </div>
               </div>
               {leftTableTab === "Active Position" && (
                 <div>
                   <ActivePosition
+                    filteredActivePosition={filteredActivePosition}
+                    activePositionSearchQuery={activePositionSearchQuery}
+                  />
+                </div>
+              )}
+              {leftTableTab === "History" && (
+                <div>
+                  <History
+                    filteredActivePosition={filteredActivePosition}
+                    activePositionSearchQuery={activePositionSearchQuery}
+                  />
+                </div>
+              )}
+              {leftTableTab === "Top 100" && (
+                <div>
+                  <TopHundred
                     filteredActivePosition={filteredActivePosition}
                     activePositionSearchQuery={activePositionSearchQuery}
                   />
