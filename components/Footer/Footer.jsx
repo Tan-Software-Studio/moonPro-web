@@ -1,16 +1,8 @@
-import {
-  barchart,
-  discord,
-  twitter,
-  solana,
-} from "@/app/Images";
+import { barchart, discord, twitter, solana } from "@/app/Images";
 import Image from "next/image";
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  setOpenOrderSetting,
-  setSolWalletAddress,
-} from "@/app/redux/states";
+import { setOpenOrderSetting, setSolWalletAddress } from "@/app/redux/states";
 import RightModalOpenSetting from "../Settings/RightModalOpenSetting";
 import { LuWalletMinimal } from "react-icons/lu";
 import { FaAngleDown } from "react-icons/fa";
@@ -49,6 +41,7 @@ const Footer = () => {
   const userDetails = useSelector((state) => state?.userData?.userDetails);
   const reduxWallets = userDetails?.walletAddressSOL || [];
   const [open, setOpen] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ left: 0 });
   const [copiedWallet, setCopiedWallet] = useState(null);
   const [isPnLPopupOpen, setIsPnLPopupOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -113,7 +106,6 @@ const Footer = () => {
 
   // old primary
   const handlePrimary = async (walletIndex, loopIndex) => {
-    console.log("===<><>footer", walletIndex, loopIndex);
     const jwtToken = localStorage.getItem("token");
     if (!jwtToken) return 0;
     try {
@@ -195,10 +187,16 @@ const Footer = () => {
             </button>
 
             <div className="relative flex items-center space-x-1 overflow-visible">
-              {/* <div className="">
+              <div className="">
                 <div
                   ref={buttonRef}
-                  onClick={() => setOpen(!open)}
+                  onClick={() => {
+                    if (!open && buttonRef.current) {
+                      const rect = buttonRef.current.getBoundingClientRect();
+                      setDropdownPosition({ left: rect.left });
+                    }
+                    setOpen(!open);
+                  }}
                   className="flex items-center space-x-2 px-3 py-1.5 bg-[#1a1a1a] rounded-full text-[#ecf6fd] text-sm font-medium cursor-pointer hover:bg-[#2a2a2a] transition-colors"
                 >
                   <LuWalletMinimal size={16} />
@@ -213,7 +211,10 @@ const Footer = () => {
                 {open && (
                   <div
                     ref={dropdownRef}
-                    className="absolute -top-20 mb-2 w-96 max-h-80 overflow-y-auto bg-[#18181a] border border-gray-700 text-white rounded-md shadow-lg z-50"
+                    className="fixed bottom-10 w-96 max-h-80 overflow-y-auto bg-[#18181a] border border-gray-700 text-white rounded-md shadow-lg z-50"
+                    style={{
+                      left: `${dropdownPosition.left}px`,
+                    }}
                   >
                     {reduxWallets?.map((wallet, idx) => {
                       const handleCopy = async (e) => {
@@ -232,8 +233,9 @@ const Footer = () => {
                       return (
                         <div
                           key={wallet._id || wallet.id || idx}
-                          className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${wallet.active ? "bg-[#18181a]" : ""
-                            }`}
+                          className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${
+                            wallet.active ? "bg-[#18181a]" : ""
+                          }`}
                         >
                           <div className="flex items-center gap-3">
                             <input
@@ -245,10 +247,11 @@ const Footer = () => {
                             <div className="flex flex-col">
                               <div className="flex items-center gap-2 text-sm">
                                 <span
-                                  className={`font-medium ${wallet.primary
-                                    ? "text-orange-400"
-                                    : "text-white"
-                                    }`}
+                                  className={`font-medium ${
+                                    wallet.primary
+                                      ? "text-orange-400"
+                                      : "text-white"
+                                  }`}
                                 >
                                   {idx === 0
                                     ? "Moon Pro Main"
@@ -273,12 +276,6 @@ const Footer = () => {
                                   )}
                                 </button>
                               </div>
-                              {wallet.currency && (
-                                <div className="text-xs text-gray-500 mt-1">
-                                  {wallet.currency.Name} (
-                                  {wallet.currency.Symbol})
-                                </div>
-                              )}
                             </div>
                           </div>
 
@@ -306,7 +303,7 @@ const Footer = () => {
                     )}
                   </div>
                 )}
-              </div> */}
+              </div>
 
               <button
                 className="flex items-center space-x-2 bg-[#1F2937] hover:bg-[#374151] px-2 py-1.5 rounded-md text-gray-300 hover:text-white text-xs font-medium transition-all duration-200  border-gray-600/30"

@@ -87,6 +87,10 @@ const AllPageHeader = ({
   const isRightModalOpenSetting = useSelector(
     (state) => state?.AllStatesData?.openOrderSetting
   );
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
+
   const presist = useSelector((state) => state?.AllStatesData?.presetActive);
 
   const borderColor = useSelector(
@@ -358,9 +362,8 @@ const AllPageHeader = ({
               <button
                 key={index}
                 onClick={() => handleButtonClick(option)}
-                className={`py-2 px-3 text-sm  font-semibold hover:bg-[#1F73FC]/[30%] rounded-md ${
-                  option === localFilterTime && " !text-[#1F73FC]"
-                } transition duration-300 text-[#edebe5]`}
+                className={`py-2 px-3 text-sm  font-semibold hover:bg-[#1F73FC]/[30%] rounded-md ${option === localFilterTime && " !text-[#1F73FC]"
+                  } transition duration-300 text-[#edebe5]`}
               >
                 {option}
               </button>
@@ -439,21 +442,19 @@ const AllPageHeader = ({
                       </p>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <button
-                          className={`py-2 px-3 rounded border border-[#323642] ${
-                            selectedMetric === "12"
-                              ? "bg-[#323642] text-white font-bold"
-                              : " text-gray-300"
-                          }`}
+                          className={`py-2 px-3 rounded border border-[#323642] ${selectedMetric === "12"
+                            ? "bg-[#323642] text-white font-bold"
+                            : " text-gray-300"
+                            }`}
                           onClick={() => handleMetricChange("12")}
                         >
                           MC 77K <br /> Small
                         </button>
                         <button
-                          className={`py-2 px-3 rounded border border-[#323642] ${
-                            selectedMetric === "20"
-                              ? "bg-[#323642] text-white font-bold"
-                              : " text-gray-300"
-                          }`}
+                          className={`py-2 px-3 rounded border border-[#323642] ${selectedMetric === "20"
+                            ? "bg-[#323642] text-white font-bold"
+                            : " text-gray-300"
+                            }`}
                           onClick={() => handleMetricChange("20")}
                         >
                           MC 77K <br /> Large
@@ -520,11 +521,10 @@ const AllPageHeader = ({
                           return (
                             <button
                               key={item}
-                              className={`${
-                                isActive
-                                  ? "bg-[#282b32]"
-                                  : "border border-[#282b32] text-gray-500"
-                              } text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]`}
+                              className={`${isActive
+                                ? "bg-[#282b32]"
+                                : "border border-[#282b32] text-gray-500"
+                                } text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]`}
                               onClick={() => {
                                 if (item === "Market Cap") {
                                   mktShowHide();
@@ -551,12 +551,12 @@ const AllPageHeader = ({
             </div>
 
             <div>
-              <button
+              {solWalletAddress && <button
                 onClick={() => dispatch(setOpenOrderSetting(true))}
                 className="flex items-center justify-center gap-2 px-3 text-[#ecf6fd] text-xs rounded-[4px] transition duration-300"
               >
                 <IoSettingsOutline className="text-base" />
-              </button>
+              </button>}
             </div>
             <RightModalOpenSetting
               ordersettingLang={tredingPage?.mainHeader?.ordersetting}
@@ -565,113 +565,113 @@ const AllPageHeader = ({
               tredingPage={tredingPage}
             />
 
-            <div className=" inline-block">
-              {/* Wallet Button */}
-              <div
-                ref={buttonRef}
-                onClick={() => setOpen(!open)}
-                className="flex items-center mr-2 space-x-2 px-5 py-2 bg-[#1a1a1a] rounded-full text-[#ecf6fd] text-sm font-medium cursor-pointer"
-              >
-                {/* Wallet Icon */}
-                <LuWalletMinimal size={20} />
-                <span>{totalWallets}</span>
-
-                {/* Solana Icon */}
-                <Image src={solana} width={20} height={20} alt="solana" />
-                <span>{primaryWallet?.balance?.toFixed(2) || "0"}</span>
-
-                {/* Dropdown Icon */}
-                <FaAngleDown size={20} />
-              </div>
-
-              {open && (
+            {solWalletAddress && (
+              <div className=" inline-block">
+                {/* Wallet Button */}
                 <div
-                  ref={dropdownRef}
-                  className="absolute right-20 mt-2 w-96 max-h-80 overflow-y-auto bg-[#18181a] border border-gray-700 text-white rounded-md shadow-lg z-50"
+                  ref={buttonRef}
+                  onClick={() => setOpen(!open)}
+                  className="flex items-center mr-2 space-x-2 px-5 py-2 bg-[#1a1a1a] rounded-full text-[#ecf6fd] text-sm font-medium cursor-pointer"
                 >
-                  {/* Wallet List */}
-                  {userDetails?.walletAddressSOL?.map((wallet, idx) => {
-                    const handleCopy = async (e) => {
-                      e.stopPropagation();
-                      try {
-                        await navigator.clipboard.writeText(
-                          wallet.wallet || "BEsA4G"
-                        );
-                        setCopiedWallet(wallet.wallet);
-                        setTimeout(() => setCopiedWallet(null), 2000);
-                      } catch (err) {
-                        console.error("Failed to copy: ", err);
-                      }
-                    };
+                  {/* Wallet Icon */}
+                  <LuWalletMinimal size={20} />
+                  <span>{totalWallets}</span>
 
-                    return (
-                      <div
-                        key={idx}
-                        className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${
-                          wallet.primary ? "bg-[#252525]" : ""
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <input
-                            type="checkbox"
-                            className="w-4 h-4 rounded border border-gray-500 bg-transparent checked:bg-[#ff8f1b] checked:border-[#ff8f1b] focus:ring-2 focus:ring-[#ff8f1b] focus:ring-opacity-50"
-                            checked={wallet.primary}
-                            onChange={() => handlePrimary(wallet?.index, idx)}
-                          />
-                          <div className="flex flex-col">
-                            <div className="flex items-center gap-2 text-sm">
-                              <span
-                                className={`font-medium ${
-                                  wallet.primary
+                  {/* Solana Icon */}
+                  <Image src={solana} width={20} height={20} alt="solana" />
+                  <span>{primaryWallet?.balance?.toFixed(2) || "0"}</span>
+
+                  {/* Dropdown Icon */}
+                  <FaAngleDown size={20} />
+                </div>
+
+                {open && (
+                  <div
+                    ref={dropdownRef}
+                    className="absolute right-20 mt-2 w-96 max-h-80 overflow-y-auto bg-[#18181a] border border-gray-700 text-white rounded-md shadow-lg z-50"
+                  >
+                    {/* Wallet List */}
+                    {userDetails?.walletAddressSOL?.map((wallet, idx) => {
+                      const handleCopy = async (e) => {
+                        e.stopPropagation();
+                        try {
+                          await navigator.clipboard.writeText(
+                            wallet.wallet || "BEsA4G"
+                          );
+                          setCopiedWallet(wallet.wallet);
+                          setTimeout(() => setCopiedWallet(null), 2000);
+                        } catch (err) {
+                          console.error("Failed to copy: ", err);
+                        }
+                      };
+
+                      return (
+                        <div
+                          key={idx}
+                          className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${wallet.primary ? "bg-[#252525]" : ""
+                            }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <input
+                              type="checkbox"
+                              className="w-4 h-4 rounded border border-gray-500 bg-transparent checked:bg-[#ff8f1b] checked:border-[#ff8f1b] focus:ring-2 focus:ring-[#ff8f1b] focus:ring-opacity-50"
+                              checked={wallet.primary}
+                              onChange={() => handlePrimary(wallet?.index, idx)}
+                            />
+                            <div className="flex flex-col">
+                              <div className="flex items-center gap-2 text-sm">
+                                <span
+                                  className={`font-medium ${wallet.primary
                                     ? "text-orange-400"
                                     : "text-white"
-                                }`}
-                              >
-                                {idx === 0
-                                  ? "Moon Pro Main"
-                                  : `Wallet ${idx + 1}`}
+                                    }`}
+                                >
+                                  {idx === 0
+                                    ? "Moon Pro Main"
+                                    : `Wallet ${idx + 1}`}
+                                </span>
+                                <span className="text-gray-400">
+                                  {formatWalletAddress(wallet.wallet)}
+                                </span>
+                                <button
+                                  className="w-4 h-4 flex items-center justify-center text-xs transition-colors duration-200 hover:bg-gray-600 rounded"
+                                  onClick={handleCopy}
+                                  title={
+                                    copiedWallet === wallet.wallet
+                                      ? "Copied!"
+                                      : "Copy wallet address"
+                                  }
+                                >
+                                  {copiedWallet === wallet.wallet ? (
+                                    <IoCheckmarkDone />
+                                  ) : (
+                                    <IoCopyOutline />
+                                  )}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-2">
+                              <Image
+                                src={solana}
+                                width={16}
+                                height={16}
+                                alt="solana"
+                              />
+                              <span className="text-sm font-medium">
+                                {wallet.balance?.toFixed(6) || "0"}
                               </span>
-                              <span className="text-gray-400">
-                                {formatWalletAddress(wallet.wallet)}
-                              </span>
-                              <button
-                                className="w-4 h-4 flex items-center justify-center text-xs transition-colors duration-200 hover:bg-gray-600 rounded"
-                                onClick={handleCopy}
-                                title={
-                                  copiedWallet === wallet.wallet
-                                    ? "Copied!"
-                                    : "Copy wallet address"
-                                }
-                              >
-                                {copiedWallet === wallet.wallet ? (
-                                  <IoCheckmarkDone />
-                                ) : (
-                                  <IoCopyOutline />
-                                )}
-                              </button>
                             </div>
                           </div>
                         </div>
-
-                        <div className="flex items-center gap-4">
-                          <div className="flex items-center gap-2">
-                            <Image
-                              src={solana}
-                              width={16}
-                              height={16}
-                              alt="solana"
-                            />
-                            <span className="text-sm font-medium">
-                              {wallet.balance?.toFixed(6) || "0"}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="flex items-center rounded-full py-1 bg-[#141414] border border-[#26262e] text-white text-xs overflow-hidden w-fit">
               {/* Left section: Quick Buy */}
@@ -693,13 +693,20 @@ const AllPageHeader = ({
               </div>
 
               {/* Right section: Solana + value */}
-              <div
-                className="flex items-center gap-1 px-3 py-1 border-l border-[#26262e] cursor-pointer"
-                onClick={() => dispatch(setOpenOrderSetting(true))}
-              >
-                <Image src={solana} width={16} height={16} alt="solana" />
-                <span className="text-white text-xs">{presist}</span>
-              </div>
+              {solWalletAddress ? (
+                <div
+                  className="flex items-center gap-1 px-3 py-1 border-l border-[#26262e] cursor-pointer"
+                  onClick={() => dispatch(setOpenOrderSetting(true))}
+                >
+                  <Image src={solana} width={16} height={16} alt="solana" />
+                  <span className="text-white text-xs">{presist}</span>
+                </div>
+              ) : (
+                <div className="px-3 py-1 border-l border-[#26262e]">
+                  <Image src={solana} width={16} height={16} alt="solana" />
+                </div>
+              )}
+
             </div>
           </div>
         )}

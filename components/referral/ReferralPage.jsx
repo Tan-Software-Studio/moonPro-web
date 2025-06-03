@@ -16,19 +16,24 @@ import {
   nftImg5,
   NoDataFish,
 } from "@/app/Images";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { token } from "@/utils/tradingViewChartServices/constant";
 import toast from "react-hot-toast";
 import { decimalConvert } from "@/utils/basicFunctions";
 import RefPopup from "./RefPopup";
 import { RiLinkM } from "react-icons/ri";
 import { SlUserFollow } from "react-icons/sl";
+import { openCloseLoginRegPopup } from "@/app/redux/states";
+import { FaAngleDown } from "react-icons/fa6";
+
 
 
 const ReferralPage = () => {
   const nftImages = [nftImg, nftImg2, nftImg3, nftImg4, nftImg5];
 
   const URL_LINK = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
+
+  const dispatch = useDispatch()
 
   const fileInputRef = useRef(null);
   const [imageURL, setImageURL] = useState(null);
@@ -39,6 +44,7 @@ const ReferralPage = () => {
   const [selectedTier, setSelectedTier] = useState(1);
   const [showWithdrawPopup, setShowWithdrawPopup] = useState(false);
   const [hideEmail, setHideEmail] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
   const progress = 100;
   const tierKey =
     selectedTier === 1
@@ -92,7 +98,9 @@ const ReferralPage = () => {
     if (solWalletAddress && tokenInStorage) {
       setShowWithdrawPopup(true);
     } else {
-      toast.error("Please login");
+      // toast.error("Please login");
+      return dispatch(openCloseLoginRegPopup(true));
+
     }
   };
 
@@ -169,19 +177,22 @@ const ReferralPage = () => {
         <div className="flex md:flex-row flex-col items-center md:items-start gap-4 w-full">
           {/* Image */}
           <div
-            className={`w-20 h-20 min-w-[3.5rem] rounded-md bg-yellow-500 overflow-hidden  relative`}
+            className={`w-20 h-20 min-w-[3.5rem] flex justify-center items-center font-bold text-[30px] rounded-md bg-yellow-500 overflow-hidden  relative`}
           // onClick={handleBoxClick}
           // onMouseEnter={() => setHovered(true)}
           // onMouseLeave={() => setHovered(false)}
           >
+
+          {refData?.user?.email[0]?.toUpperCase()}
+
             {/* {imageURL && (
               <img src={nftImg} alt="Uploaded" className="w-full h-full object-cover" />
             )} */}
-            <Image
+            {/* <Image
               src={rendomImg}
               alt="Uploaded"
               className="w-full h-full object-cover"
-            />
+            /> */}
 
             {/* {hovered && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white">
@@ -361,7 +372,7 @@ const ReferralPage = () => {
             {/* Header */}
             <div className="flex justify-between border-b border-[#2c2c34] px-4 py-2 overflow-x-auto whitespace-nowrap">
               <div className="flex gap-2 items-center flex-shrink-0">
-                <FiUserPlus className="text-blue-500" size={18} /> Referrals
+                Referrals
               </div>
 
               <div className="flex gap-3 items-center">
@@ -381,11 +392,11 @@ const ReferralPage = () => {
                     </div>
                   )}
                 </div>
-                <div className="flex items-center gap-3 text-sm text-gray-400 flex-shrink-0 border-none focus:outline-none focus:ring-0">
+                <div className="flex relative items-center gap-3 text-sm text-gray-400 flex-shrink-0 border-none focus:outline-none focus:ring-0">
                   <select
                     value={selectedTier}
                     onChange={(e) => setSelectedTier(Number(e.target.value))}
-                    className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 rounded border-none focus:outline-none focus:ring-0 cursor-pointer"
+                    className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 rounded border-none focus:outline-none focus:ring-0 cursor-pointer appearance-none pr-8 "
                   >
                     <option
                       className="bg-black text-white cursor-pointer"
@@ -406,7 +417,11 @@ const ReferralPage = () => {
                       3 Tier
                     </option>
                   </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-white">
+                    <FaAngleDown />
+                  </div>
                 </div>
+
                 <div className="flex justify-center items-center gap-1"><SlUserFollow className="text-blue-500" /> <span className="text-[#89888e]">{tierData.length}</span></div>
               </div>
             </div>
@@ -457,7 +472,7 @@ const ReferralPage = () => {
                         className="text-white border-b border-[#2c2c34] last:border-b-0 hover:bg-[#08080e]"
                       >
                         <td className="px-4 py-4 whitespace-nowrap tracking-wider font-spaceGrotesk">
-                          {hideEmail ?  "*******" :row.email}
+                          {hideEmail ? "*******" : row.email}
                         </td>
                         {/* <td className="px-4 py-4 whitespace-nowrap">{new Date(row.referralAddedAt).toLocaleDateString()}</td> */}
                         <td className="px-4 py-4 whitespace-nowrap text-gray-400">

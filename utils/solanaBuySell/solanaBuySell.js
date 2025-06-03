@@ -1,7 +1,11 @@
 import { getSoalanaTokenBalance } from "../solanaNativeBalance";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { fetchSolanaNativeBalance, fetchUsdcBalance } from "@/app/redux/states";
+import {
+  fetchSolanaNativeBalance,
+  fetchUsdcBalance,
+  openCloseLoginRegPopup,
+} from "@/app/redux/states";
 import { addMark } from "@/utils/tradingViewChartServices/mark";
 import { getLatestBarTime } from "../tradingViewChartServices/latestBarTime";
 import { updateHoldingsDataWhileBuySell } from "@/app/redux/holdingDataSlice/holdingData.slice";
@@ -34,9 +38,7 @@ const buySolanaTokens = async (
   // return;
   const token = localStorage.getItem("token");
   if (!token) {
-    return toast.error("User not login!", {
-      position: "top-right",
-    });
+    return dispatch(openCloseLoginRegPopup(true));
   }
   if (amt <= 0) {
     return toast.error("Invalid amount !", {
@@ -146,9 +148,7 @@ const buySolanaTokensQuickBuyHandler = async (
   e && e.stopPropagation();
   const token = localStorage.getItem("token");
   if (!token) {
-    return toast.error("Please login!", {
-      position: "top-right",
-    });
+    return dispatch(openCloseLoginRegPopup(true));
   }
   if (amt <= 0) {
     return toast.error("Invalid amount !", {
@@ -252,9 +252,7 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
   e && e.stopPropagation();
   const amt = await localStorage.getItem("copyBuySol");
   if (amt <= 0 || !amt) {
-    return toast.error("Invalid amount !", {
-      position: "top-right",
-    });
+    return dispatch(openCloseLoginRegPopup(true));
   }
   if (nativeTokenbalance < amt) {
     return toast.error("insufficient funds !", {
@@ -380,9 +378,7 @@ const sellSolanaTokens = async (
   // console.log("🚀 ~ fromToken:", fromToken);
   const token = localStorage.getItem("token");
   if (!token) {
-    return toast.error("User not login!", {
-      position: "top-right",
-    });
+    return dispatch(openCloseLoginRegPopup(true));
   }
   setLoaderSwap(true);
   toast(

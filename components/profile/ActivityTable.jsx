@@ -19,6 +19,7 @@ const ActivityTable = ({ activitySearchQuery }) => {
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [tokenImages, setTokenImages] = useState({});
+  const [loadingImage, setLoadingImage] = useState(false)
   const router = useRouter()
   const dispatch = useDispatch()
 
@@ -109,6 +110,7 @@ const ActivityTable = ({ activitySearchQuery }) => {
     const fetchImages = async () => {
       const imageMap = {};
 
+      setLoadingImage(true)
       await Promise.all(
         transactionData.map(async (item, index) => {
           const uri = item?.Trade?.Currency?.Uri;
@@ -121,8 +123,8 @@ const ActivityTable = ({ activitySearchQuery }) => {
           }
         })
       );
-
       setTokenImages(imageMap);
+      setLoadingImage(false)
     };
 
     if (transactionData?.length) fetchImages();
@@ -176,7 +178,7 @@ const ActivityTable = ({ activitySearchQuery }) => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [solWalletAddress]);
 
   return (
     <>
@@ -194,7 +196,7 @@ const ActivityTable = ({ activitySearchQuery }) => {
           <div className="flex flex-col items-center justify-center h-64  mt-10 text-center">
             <div className=" flex items-center justify-center mb-4">
               <Image
-                src="/assets/NoDataImages/qwe.svg"
+                src="/assets/NoDataImages/NoDataImages.svg"
                 alt="No Data Available"
                 width={200}
                 height={100}
@@ -260,18 +262,23 @@ const ActivityTable = ({ activitySearchQuery }) => {
                       </td>
                       <td className="px-4 py-2 whitespace-nowrap">
                         <div className="flex items-center gap-3">
-                          {item?.Trade?.Currency?.Uri ?
-                            <img
-                              src={tokenImages[item?.Trade?.Currency?.Symbol]}
-                              alt="Token Icon"
-                              className="w-10 h-10 rounded-md object-cover"
-                            /> :
+                          {loadingImage ?
+                            // <div className="w-10 h-10 flex items-center justify-center">
+                            //   <div className="loaderPopup"></div>
+                            // </div>  
+                            <div className="w-10 h-10 rounded-md bg-[#2c2c34] animate-pulse"></div>
+                            : tokenImages ?
+                              <img
+                                src={tokenImages[item?.Trade?.Currency?.Symbol]}
+                                alt="Token Icon"
+                                className="w-10 h-10 rounded-md object-cover"
+                              /> :
 
-                            <div className="w-10 h-10 rounded-md  flex items-center justify-center bg-[#3b3b49] border border-[#1F73FC]">
-                              <span className="text-sm text-white uppercase text-center">
-                                {item?.Trade?.Currency?.Name.toString()?.slice(0, 1) || "T"}
-                              </span>
-                            </div>
+                              <div className="w-10 h-10 rounded-md  flex items-center justify-center bg-[#3b3b49] border border-[#1F73FC]">
+                                <span className="text-sm text-white uppercase text-center">
+                                  {item?.Trade?.Currency?.Name.toString()?.slice(0, 1) || "T"}
+                                </span>
+                              </div>
                           }
                           <div className="min-w-0 whitespace-nowrap">
                             <div className='flex items-center gap-1 whitespace-nowrap break-keep'>
@@ -328,7 +335,7 @@ const ActivityTable = ({ activitySearchQuery }) => {
             </table>
           </div>
         )}
-      </div>
+      </div >
       {/* {totalPage > 1 && (
         <Pagination
           currentPage={currentPage}
