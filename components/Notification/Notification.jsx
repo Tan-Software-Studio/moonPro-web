@@ -68,7 +68,7 @@ const Notification = () => {
                     ) : (
                       <div className="text-gray-400 text-center flex items-center flex-col justify-center gap-2 py-10">
                         <Image
-                          src="/assets/NoDataImages/qwe.svg"
+                          src="/assets/NoDataImages/NoDataImages.svg"
                           alt="No Data Available"
                           width={200}
                           height={100}

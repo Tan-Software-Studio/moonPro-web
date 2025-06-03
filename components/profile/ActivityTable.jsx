@@ -194,7 +194,7 @@ const ActivityTable = ({ activitySearchQuery }) => {
           <div className="flex flex-col items-center justify-center h-64  mt-10 text-center">
             <div className=" flex items-center justify-center mb-4">
               <Image
-                src="/assets/NoDataImages/qwe.svg"
+                src="/assets/NoDataImages/NoDataImages.svg"
                 alt="No Data Available"
                 width={200}
                 height={100}

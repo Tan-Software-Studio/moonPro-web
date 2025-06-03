@@ -159,18 +159,22 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
 
             <div className="px-4 py-4 border-b-[1px] border-[#404040]">
               <div className="flex items-start gap-3">
-                <Image
+                {/* <Image
                   src={userDetails?.profileImage || profileImage}
                   alt="profile image"
                   height={40}
                   width={40}
                   className="w-[40px] h-[40px] rounded-md bg-orange-400 object-cover"
-                />
+                /> */}
+                <div className="w-[40px] h-[40px] flex justify-center items-center rounded-md bg-orange-400">
+  {userDetails?.email[0].toUpperCase()}
+</div>
+
                 <div className="flex-1">
                   <p className="text-white text-sm font-medium mb-1">
                     {userDetails?.email || userDetails?.username || "N/A"}
                   </p>
-                  <div className="flex items-center gap-4 text-xs text-[#A8A8A8] mb-1">
+                  {/* <div className="flex items-center gap-4 text-xs text-[#A8A8A8] mb-1">
                     <div className="flex items-center gap-1">
                       <span>User ID:</span>
                       <span>{truncateId(userDetails?._id || userDetails?.userId)}</span>
@@ -184,7 +188,7 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                         />
                       )}
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="flex items-center gap-6 text-xs">
                   <div className="text-center">
