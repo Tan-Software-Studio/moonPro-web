@@ -86,7 +86,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
     const balances = topHoldingData?.map((item) =>
       Number(item?.holdings)
     ).sort((a, b) => b - a);
-    console.log("balances", balances);
+    // console.log("balances", balances);
 
     // Take the top 10, top 49, and top 100 balances
     const top10Balances = balances.slice(0, 9);
@@ -288,10 +288,19 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
     const date = new Date();
     const currentTime = date.toISOString();
 
-    // Clone the date to avoid mutating the original
-    const lastMonthDate = new Date(date);
-    lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
-    const lastMonthTime = lastMonthDate.toISOString();
+    // Try to find the most recent trade time
+    const mostRecentDate = latestTradesData?.latestTrades?.reduce((latest, trade) => {
+      const time = new Date(trade?.Block?.Time);
+      return (!isNaN(time) && (!latest || time > latest)) ? time : latest;
+    }, null) || new Date(currentTime); // fallback to current time if no valid trades
+
+    const mostRecentTime = mostRecentDate.toISOString();
+
+    // Subtract 1 month
+    const oneMonthBefore = new Date(mostRecentDate);
+    oneMonthBefore.setMonth(oneMonthBefore.getMonth() - 1);
+    const lastMonthTime = oneMonthBefore.toISOString();
+
     try {
       setLoader(true);
       const holdingsResponse = await axios.post(
@@ -316,7 +325,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
 `,
           variables: {
             token: tokenCA,
-            time_ago: currentTime,
+            time_ago: mostRecentTime,
           },
         },
         {
@@ -365,7 +374,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
             token: tokenCA,
             topOwners,
             from: lastMonthTime,
-            to: currentTime,
+            to: mostRecentTime,
           },
         },
         {
@@ -414,7 +423,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
         });
       }
 
-      console.log("holdingsData", holdingsData);
+      // console.log("holdingsData", holdingsData);
       setTopHoldingData(holdingsData);
     } catch (error) {
       setLoader(false);
