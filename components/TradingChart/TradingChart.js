@@ -31,8 +31,12 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
   }
 
   const resetLines = () => {
-    buyPositionLineRef.current.remove();
-    sellPositionLineRef.current.remove();
+    if (buyPositionLineRef.current !== null) {
+      buyPositionLineRef.current.remove();
+    }
+    if (sellPositionLineRef.current !== null) {
+      sellPositionLineRef.current.remove();
+    }
     buyPositionLineRef.current = null;
     sellPositionLineRef.current = null;
   }
