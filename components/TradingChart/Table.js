@@ -182,10 +182,10 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
       id: 2,
       title: "Wallet",
     },
-    {
-      id: 3,
-      title: "SOL Balance"
-    },
+    // {
+    //   id: 3,
+    //   title: "SOL Balance"
+    // },
     {
       id: 4,
       title: "Bought"
@@ -200,10 +200,10 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
       title: "PnL"
     },
     { id: 7, title: "Remaining" },
-    {
-      id: 8,
-      title: "Edit",
-    },
+    // {
+    //   id: 8,
+    //   title: "Edit",
+    // },
   ];
 
   const TopTransactionHeader = [
@@ -384,7 +384,6 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
           },
         }
       );
-      setLoader(false);
       let holdingsData = [];
       if (holdingsResponse?.data?.data?.Solana && buySellDataResponse?.data?.data?.Solana) {
         const holdingBalanceData = holdingsResponse?.data?.data?.Solana?.BalanceUpdates || [];
@@ -400,20 +399,23 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
 
           if (!buySellOwnerData) return;
 
-          const boughtAmount = Number(buySellOwnerData?.buy_count) || 0;
           const boughtInUsd = Number(buySellOwnerData?.buy_volume_usd) || 0;
-          const soldAmount = Number(buySellOwnerData?.sell_count) || 0;
+          if (boughtInUsd === 0) {
+            return;
+          }
+          const boughtCount = Number(buySellOwnerData?.buy_count) || 0;
           const soldInUsd = Number(buySellOwnerData?.sell_volume_usd) || 0;
+          const soldCount = Number(buySellOwnerData?.sell_count) || 0;
 
           const realizedPnl = soldInUsd - boughtInUsd;
 
           const holderData = {
               owner: owner,
               holdings: holdingData?.BalanceUpdate?.balance || 0,
-              boughtAmount,
+              boughtCount,
               boughtInSol: buySellOwnerData?.buy_volume || 0,
               boughtInUsd,
-              soldAmount,
+              soldCount,
               soldInSol: buySellOwnerData?.sell_volume || 0,
               soldInUsd,
               realizedPnl
@@ -423,7 +425,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
         });
       }
 
-      // console.log("holdingsData", holdingsData);
+      setLoader(false);
       setTopHoldingData(holdingsData);
     } catch (error) {
       setLoader(false);
@@ -456,10 +458,18 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
           ProtocolName
         }
       }
-      bought: sum(of: Trade_Amount, if: {Trade: {Side: {Type: {is: buy}}}})
-      sold: sum(of: Trade_Amount, if: {Trade: {Side: {Type: {is: sell}}}})
+      boughtAmount: sum(of: Trade_Amount, if: {Trade: {Side: {Type: {is: buy}}}})
+      soldAmount: sum(of: Trade_Amount, if: {Trade: {Side: {Type: {is: sell}}}})
+      
       volume: sum(of: Trade_Amount)
       volumeUsd: sum(of: Trade_Side_AmountInUSD)
+
+      buy_volume_sol: sum(of: Trade_Side_Amount, if: {Trade: {Side: {Type: {is: buy}}}})
+      sell_volume_sol: sum(of: Trade_Side_Amount, if: {Trade: {Side: {Type: {is: sell}}}})
+      buy_volume_usd: sum(of: Trade_Side_AmountInUSD, if: {Trade: {Side: {Type: {is: buy}}}})
+      sell_volume_usd: sum(of: Trade_Side_AmountInUSD, if: {Trade: {Side: {Type: {is: sell}}}})
+      buy_count: count(if: {Trade: {Side: {Type: {is: buy}}}})
+      sell_count: count(if: {Trade: {Side: {Type: {is: sell}}}})
     }
   }
 }`,
@@ -475,10 +485,47 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
           },
         }
       );
+      let topTraders = [];
+
+      if (response?.data?.data?.Solana?.DEXTradeByTokens) {
+        const topTradersDataResponse = response.data.data.Solana.DEXTradeByTokens;
+
+        topTradersDataResponse.forEach(rawTraderData => {
+          const boughtInUsd = Number(rawTraderData?.buy_volume_usd) || 0;
+          if (boughtInUsd === 0) return;
+
+          const boughtCount = Number(rawTraderData?.buy_count) || 0;
+          const boughtAmount = Number(rawTraderData?.boughtAmount) || 0;
+          const soldInUsd = Number(rawTraderData?.sell_volume_usd) || 0;
+          const soldAmount = Number(rawTraderData?.soldAmount) || 0;
+          const soldCount = Number(rawTraderData?.sell_count) || 0;
+          const realizedPnl = soldInUsd - boughtInUsd;
+          const holdings = boughtAmount - soldAmount;
+          if (holdings < 0) {
+            return;
+          }
+          const trader = {
+            owner: rawTraderData?.Trade?.Account?.Owner,
+            holdings,
+            boughtCount,
+            boughtAmount,
+            boughtInSol: Number(rawTraderData?.buy_volume) || 0,
+            boughtInUsd,
+            soldCount,
+            soldAmount,
+            soldInSol: Number(rawTraderData?.sell_volume) || 0,
+            soldInUsd,
+            realizedPnl
+          };
+
+          topTraders.push(trader);
+        });
+
+        topTraders.sort((a, b) => b.realizedPnl - a.realizedPnl);
+      }
+      console.log("topTraders", topTraders);
       setLoader(false);
-      await setTopTraderData(
-        response?.data?.data?.Solana?.DEXTradeByTokens || []
-      );
+      await setTopTraderData(topTraders);
     } catch (error) {
       setLoader(false);
       console.error("Error:", error.response?.data || error.message || error);
@@ -673,7 +720,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                           key={header.id}
                           className="py-3 text-xs font-medium text-[#A8A8A8] whitespace-nowrap leading-4"
                         >
-                          <div className={`flex ${index + 1 === tableHeader.length ? 'justify-end pr-3' : 'justify-start'}`}>
+                          <div className={`flex justify-start'}`}>
                             {header.title}
                           </div>
                         </th>
@@ -681,10 +728,14 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                     </tr>
                   </thead>
                   <tbody className="bg-transparent">
-                    {topTraderData.map((data, index) => (
+                    {topTraderData.map((data, index) => {
+                      const usdHoldings = data?.holdings * currentUsdPrice;
+                      const totalPnL = (data?.realizedPnl ?? 0);
+                      const pnlPercent = data?.boughtInUsd !== 0 ? ((totalPnL / data?.boughtInUsd) * 100) : 0;
+                    return (
                       <tr
                         key={index}
-                        className="bg-[#08080E] text-[#F6F6F6] font-normal text-xs leading-4 onest border-b border-[#404040]"
+                        className="bg-[#08080E] text-[#F6F6F6] font-normal text-xs leading-4 onest border-b px-3 border-[#404040]"
                       >
                         <td className="text-center text-[#707070] px-6 py-4 w-5">
                           {index + 1}
@@ -692,66 +743,64 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                         <td className="py-3 text-center w-fit whitespace-nowrap flex-start">
                           <div className="flex items-center justify-start gap-2">
                             <a
-                              href={`https://solscan.io/account/${data?.Trade?.Account?.Owner}`}
+                              href={`https://solscan.io/account/${data?.owner}`}
                               target="_blank"
                             >
                               <CiShare1 className="text-[18px]" />
                             </a>
-                            {data?.Trade?.Account?.Owner
-                              ? `${data?.Trade?.Account?.Owner?.slice(
+                            {data?.owner
+                              ? `${data?.owner?.slice(
                                   0,
                                   6
-                                )}...${data?.Trade?.Account?.Owner?.slice(
+                                )}...${data?.owner?.slice(
                                   -4
                                 )}`
                               : "N/A"}
                           </div>
                         </td>
-                         <td>
-                            <div className="flex items-center justify-start gap-1">
-                              <Image
-                                src={solana}
-                                width={15}
-                                height={15}
-                                alt="solana"
-                              />
+                        {/* <td>
+                          <div className="flex items-center justify-start gap-1">
+                            <Image
+                              src={solana}
+                              width={15}
+                              height={15}
+                              alt="solana"
+                            />
                             <p>0</p>
-                            </div>
-                        </td>
-                        <td>
-                            <div className="flex flex-col gap-[2px] h-full justify-start">
-                              <p className="text-[#21CB6B] text-sm leading-4">
-                                {data?.bought
-                                  ? humanReadableFormat(data.bought)
-                                  : "N/A"}
-                              </p>
-                              <p className="text-[#9b9999] text-[11px] leading-[14px]">{`- / 0`}</p>
-                            </div>
-                        </td>
+                          </div>
+                        </td> */}
+                        {/* Bought */}
                         <td>
                           <div className="flex flex-col gap-[2px] h-full justify-start">
-                            <p className="text-[#ed1b26] text-sm leading-4">
-                               {data?.sold ? humanReadableFormat(data.sold) : "N/A"}
-                            </p>
-                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`- / 0`}</p>
+                            <p className="text-[#21CB6B] text-sm leading-4">{formatNumber(data?.boughtInUsd || 0, false, true)}</p>
+                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(data?.boughtAmount || 0, false, false)} / ${data?.boughtCount}`}</p>
                           </div>
                         </td>
+                        {/* Sold */}
                         <td>
-                          <span className="text-[#21CB6B] font-thin flex justify-start">
-                            {"$0(0%)"}  
-                          </span>
+                          <div className="flex flex-col gap-[2px] h-full justify-start">
+                            <p className="text-[#ed1b26] text-sm leading-4">{formatNumber(data?.soldInUsd || 0, false, true)}</p>
+                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(data?.soldAmount || 0, false, false)} / ${data?.soldCount}`}</p>
+                          </div>
+                        </td>
+                        {/* PnL */}
+                        <td>
+                          <div className="flex flex-col gap-[2px] h-full justify-start">
+                            <p className={`${totalPnL >= 0 ? 'text-[#21CB6B]' : 'text-[#ed1b26]'} text-sm leading-4`}>{formatNumber(totalPnL, false, true)}</p>
+                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(pnlPercent, true, false) || 0}%`}</p>
+                          </div>
                         </td>
                         <td className="text-center py-3 pr-4">
-                            {data?.volume ? (
+                            {tokenSupply ? (
                               <>
                                 <p className="pb-2">
                                   <div className="flex items-center justify-start gap-2">
-                                    {data?.volume ? (
+                                    {currentUsdPrice ? (
                                       <>
                                         <p className="">
-                                          {data?.volume
-                                            ? humanReadableFormat(data.volumeUsd)
-                                            : "N/A"}
+                                          {humanReadableFormat(
+                                            usdHoldings
+                                          )}
                                         </p>
                                       </>
                                     ) : (
@@ -759,7 +808,8 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                                     )}
                                     <p className="bg-[#9b99996b] rounded-md px-1 py-[2px]">
                                       {calculateHoldersPercentage(
-                                        data?.volume, tokenSupply
+                                        data?.holdings,
+                                          tokenSupply
                                       )}
                                     </p>
                                   </div>
@@ -768,7 +818,8 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                                   completed={Math.floor(
                                     parseFloat(
                                       calculateHoldersPercentage(
-                                       data?.volume, tokenSupply
+                                          data?.holdings,
+                                          tokenSupply
                                       ).replace("%", "") // Remove "%" before converting to number
                                     )
                                   )}
@@ -787,13 +838,13 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                               "N/A"
                             )}
                         </td>
-                        <td className="text-center">
+                        {/* <td className="text-center">
                           <div className="flex justify-end pr-3">
                             <CiFilter className="text-[15px] text-[#cdc8cd] font-bold" />
                           </div>
-                        </td>
+                        </td> */}
                       </tr>
-                    ))}
+                    )})}
                   </tbody>
                 </table>
               </div>
@@ -863,14 +914,14 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                             <td>
                               <div className="flex flex-col gap-[2px] h-full justify-start">
                                 <p className="text-[#21CB6B] text-sm leading-4">{formatNumber(data?.boughtInUsd || 0, false, true)}</p>
-                                <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${data?.boughtAmount}`}</p>
+                                <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${data?.boughtCount}`}</p>
                               </div>
                             </td>
                             {/* Sold */}
                             <td>
                               <div className="flex flex-col gap-[2px] h-full justify-start">
                                 <p className="text-[#ed1b26] text-sm leading-4">{formatNumber(data?.soldInUsd || 0, false, true)}</p>
-                                <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${data?.soldAmount}`}</p>
+                                <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${data?.soldCount}`}</p>
                               </div>
                             </td>
                             {/* PnL */}
