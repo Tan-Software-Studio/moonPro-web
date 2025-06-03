@@ -37,7 +37,12 @@ import { setFilterTime, setLoading } from "@/app/redux/trending/solTrending.slic
 import RecoveryKey from "./login/RecoveryKey";
 import { decodeData } from "@/utils/decryption/decryption";
 import ExchangePopup from "./popup/ExchangePopup";
-import { fetchUserData } from "@/app/redux/userDataSlice/UserData.slice";
+import {
+  fetchUserData,
+  setBalancesError,
+  setBalancesLoading,
+  setWalletBalances,
+} from "@/app/redux/userDataSlice/UserData.slice";
 import WithdrawPopup from "./popup/WithdrawPopup";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
@@ -54,6 +59,8 @@ const Navbar = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [isWithdrawPopup, setIsWithdrawPopup] = useState(false);
+  const [hasCalledBitquery, setHasCalledBitquery] = useState(false);
+
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
   // handle to get phrase of solana
@@ -76,8 +83,61 @@ const Navbar = () => {
         setSolPhrase(decodeKey);
         setOpenRecovery(true);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }
+
+  const fetchWalletBalancesDirectly = async (walletAddresses, dispatch) => {
+
+    dispatch(setBalancesLoading(true));
+
+    try {
+      if (!walletAddresses || walletAddresses.length === 0) {
+        dispatch(setWalletBalances([]));
+        return;
+      }
+
+      const response = await axios.post(
+        "https://streaming.bitquery.io/eap",
+        {
+          query: `query MyQuery {
+            Solana {
+              BalanceUpdates(
+                where: {
+                  BalanceUpdate: {
+                    Account: {Owner: {in: [${walletAddresses.join(",")}]}},
+                    Currency: {Symbol: {is: "SOL"}}
+                  }
+                }
+                orderBy: {descendingByField: "BalanceUpdate_Balance_maximum"}
+              ) {
+                BalanceUpdate {
+                  Balance: PostBalance(maximum: Block_Slot)
+                  Currency {
+                    Name
+                    Symbol
+                  }
+                  Account {
+                    Owner
+                  }
+                }
+              }
+            }
+          }`,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_STREAM_BITQUERY_API}`,
+          },
+        }
+      );
+
+      dispatch(setWalletBalances(response?.data?.data?.Solana?.BalanceUpdates || []));
+    } catch (error) {
+      console.error("Error fetching wallet balances:", error);
+      dispatch(setBalancesError(error.message));
+    }
+  };
 
   // login signup
   const isLoginPopup = useSelector((state) => state?.AllStatesData?.isRegLoginPopup);
@@ -87,6 +147,7 @@ const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const userDetails = useSelector((state) => state?.userData?.userDetails);
+  const isLoadingBalances = useSelector((state) => state?.userData?.isLoadingBalances);
 
   // X===================X Use selectors X===================X //
   const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
@@ -147,7 +208,7 @@ const Navbar = () => {
         const price = res?.data?.data[res?.data?.data?.length - 1]?.price;
         dispatch(setSolanaLivePrice(price));
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }
 
   useEffect(() => {
@@ -160,11 +221,29 @@ const Navbar = () => {
     if (solWalletAddress) {
       dispatch(fetchSolanaNativeBalance(solWalletAddress));
       dispatch(fetchUsdcBalance(solWalletAddress));
+
       if (!userDetails?.email) {
         dispatch(fetchUserData());
       }
     }
-  }, [solWalletAddress]);
+  }, [solWalletAddress, hasCalledBitquery]);
+
+  useEffect(() => {
+    if (userDetails && userDetails.walletAddressSOL && !hasCalledBitquery) {
+      const walletAddresses = userDetails.walletAddressSOL.map((walletObj) => `"${walletObj?.wallet}"`);
+
+      if (walletAddresses.length > 0) {
+        fetchWalletBalancesDirectly(walletAddresses, dispatch);
+        setHasCalledBitquery(true);
+      }
+    }
+  }, [userDetails, dispatch, hasCalledBitquery]);
+
+  useEffect(() => {
+    if (!solWalletAddress || !userDetails?.email) {
+      setHasCalledBitquery(false);
+    }
+  }, [solWalletAddress, userDetails?.email]);
 
   useEffect(() => {
     setMounted(true);
@@ -223,16 +302,14 @@ const Navbar = () => {
                 </div> */}
                 {/* Search bar */}
                 <div
-                  className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${
-                    isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                  className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                    } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                   onClick={() => dispatch(setIsSearchPopup(true))}
                 >
                   <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                   <input
-                    className={` ${
-                      isSidebarOpen ? "w-0" : "w-12"
-                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                    className={` ${isSidebarOpen ? "w-0" : "w-12"
+                      } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                     placeholder={navbar?.profile?.search}
                   />
                 </div>
@@ -323,14 +400,14 @@ const Navbar = () => {
                               </span>
                             </div>
 
-                            <div className="text-[#666666] text-lg">⇄</div>
+                            {/* <div className="text-[#666666] text-lg">⇄</div>
 
                             <div className="flex items-center gap-2">
                               <Image src={usdc} alt="usdc" width={20} height={20} className="rounded-full" />
                               <span className="text-lg font-semibold text-white">
                                 {Number(usdcBalance || 0).toFixed(2)}
                               </span>
-                            </div>
+                            </div> */}
                           </div>
 
                           {/* Action Buttons */}

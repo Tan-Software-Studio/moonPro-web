@@ -400,7 +400,11 @@ const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
                         </div>
                       </Tooltip>
 
-                      <Tooltip body={"Shows if token has 10 holders."}>
+                      <Tooltip
+                        body={
+                          "% owned by top 10 holders. Green check if top 10 holders hold less than 15%"
+                        }
+                      >
                         <div className="grid  text-start">
                           <div
                             className={`flex flex-col text-start opacity-75 ${

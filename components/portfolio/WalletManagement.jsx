@@ -13,17 +13,14 @@ import { useTranslation } from "react-i18next";
 import { BiCheckDouble } from "react-icons/bi";
 import { FaCopy, FaStar } from "react-icons/fa";
 import { RiShareBoxLine } from "react-icons/ri";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BsKey } from "react-icons/bs";
 import { CiStar } from "react-icons/ci";
-
-
-
+import { updateWalletToPrimary } from "@/app/redux/userDataSlice/UserData.slice";
 
 export default function WalletManagement() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [allWallets, setAllWallets] = useState([]);
   const [copiedWallet, setCopiedWallet] = useState(null);
   const [walletAddresses, setWalletAddresses] = useState([]);
   const [pkParticulerWallet, setPkParticulerWallet] = useState("");
@@ -31,30 +28,20 @@ export default function WalletManagement() {
   const { t } = useTranslation();
   const portfolio = t("portfolio");
 
+  const userDetails = useSelector((state) => state?.userData?.userDetails);
+  const allWallets = userDetails?.walletAddressSOL || [];
+
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
-  const getAllWallets = async (e) => {
-    const jwtToken = localStorage.getItem("token");
-    if (!jwtToken) return 0;
-    try {
-      setIsLoading(true);
-      const response = await axios.get(`${baseUrl}user/getAllWallets`, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      });
-      const wallets = response?.data?.data?.wallets?.walletAddressSOL;
-      setAllWallets(wallets);
-
-      setWalletAddresses(response?.data?.data?.wallets?.walletAddressSOL);
-      setIsLoading(false);
-    } catch (error) {
-      console.error(error);
-      setIsLoading(false);
+  useEffect(() => {
+    if (allWallets.length > 0) {
+      setWalletAddresses(allWallets);
     }
-  };
+  }, [allWallets]);
 
+  // old primary
   async function handlePrimary(walletIndex, loopIndex) {
+    console.log("===<><>wallet manage", walletIndex, loopIndex);
     const jwtToken = localStorage.getItem("token");
     if (!jwtToken) return 0;
     try {
@@ -72,29 +59,30 @@ export default function WalletManagement() {
           }
         )
         .then(async (res) => {
+          // const updatedAllWallets = allWallets.map((wallet) => ({
+          //   ...wallet,
+          //   primary: wallet.index === walletIndex,
+          // }));
 
-          const updatedAllWallets = allWallets.map((wallet) => ({
-            ...wallet,
-            primary: wallet.index === walletIndex,
-          }));
-
-          setAllWallets(updatedAllWallets);
-          setWalletAddresses((prevVisibleWallets) =>
-            // Update only if the wallet is visible in the filtered list
-            prevVisibleWallets.map((wallet) => ({
-              ...wallet,
-              primary: wallet.index === walletIndex,
-            }))
-          );
+          // setAllWallets(updatedAllWallets);
+          // setWalletAddresses((prevVisibleWallets) =>
+          //   // Update only if the wallet is visible in the filtered list
+          //   prevVisibleWallets.map((wallet) => ({
+          //     ...wallet,
+          //     primary: wallet.index === walletIndex,
+          //   }))
+          // );
 
           localStorage.setItem(
             "walletAddress",
             res?.data?.data?.wallet?.wallet
           );
+
           toast.success("Primary wallet switched", {
             id: "switch-toast",
             duration: 2000,
           });
+          dispatch(updateWalletToPrimary(res?.data?.data?.wallet?.wallet));
           dispatch(setSolWalletAddress());
         })
         .catch((err) => {
@@ -108,6 +96,64 @@ export default function WalletManagement() {
       });
     }
   }
+
+  // old primary
+
+  // const handlePrimary = async (walletIndex, loopIndex) => {
+  //   console.log("🚀 ~wallet handlePrimary ~ walletIndex:", walletIndex);
+  //   const jwtToken = localStorage.getItem("token");
+  //   if (!jwtToken) {
+  //     toast.error("Authentication required", { duration: 2000 });
+  //     return;
+  //   }
+
+  //   try {
+  //     showToastLoader("Switching wallet", "switch-toast");
+
+  //     const response = await axios.put(
+  //       `${baseUrl}user/makeSolWalletPrimary`,
+  //       { index: walletIndex },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${jwtToken}`,
+  //         },
+  //       }
+  //     );
+
+  //     // Store wallet address in localStorage
+  //     localStorage.setItem("walletAddress", response?.data?.data?.wallet?.wallet);
+
+  //     // Dispatch Redux action to update wallet primary status
+  //     dispatch(
+  //       updateWalletPrimary({
+  //         walletIndex: loopIndex,
+  //         newWalletData: response?.data?.data,
+  //       })
+  //     );
+
+  //     // Update Solana wallet address in Redux
+  //     dispatch(setSolWalletAddress());
+
+  //     // Update local state for immediate UI feedback
+  //     setWalletAddresses((prevWallets) =>
+  //       prevWallets.map((wallet) => ({
+  //         ...wallet,
+  //         primary: wallet.index === walletIndex,
+  //       }))
+  //     );
+
+  //     toast.success("Primary wallet switched", {
+  //       id: "switch-toast",
+  //       duration: 2000,
+  //     });
+  //   } catch (error) {
+  //     console.error("🚀 ~ handlePrimary ~ error:", error?.message);
+  //     toast.error("Failed to switch primary wallet", {
+  //       id: "switch-toast",
+  //       duration: 2000,
+  //     });
+  //   }
+  // };
 
   async function handleCreateMultiWallet() {
     const jwtToken = localStorage.getItem("token");
@@ -152,7 +198,7 @@ export default function WalletManagement() {
         setCopiedWallet(null);
       }, 2000);
     } catch (err) {
-      console.error('Failed to copy: ', err);
+      console.error("Failed to copy: ", err);
     }
   };
 
@@ -179,8 +225,6 @@ export default function WalletManagement() {
       },
     })
       .then(async (res) => {
-        // const decryptPK = await decrypt(res?.data?.data?.solanaPk, FE_SEC);
-        // console.log("🚀 ~ .then ~ decryptPK:", decryptPK);
         const decodeKey = await decodeData(res?.data?.data?.solanaPk);
         setPkParticulerWallet(decodeKey);
         setOpenRecovery(true);
@@ -190,14 +234,9 @@ export default function WalletManagement() {
       });
   }
 
-  useEffect(() => {
-    getAllWallets();
-  }, []);
-
   return (
     <>
       <div className="bg-[#08080E] text-white p-3 md:p-6">
-
         <div className="border-[#404040] border-[1px] rounded-lg">
           <div className="flex flex-col  ">
             {/* Header & Search Bar */}
@@ -215,7 +254,6 @@ export default function WalletManagement() {
               </div>
 
               <div className="flex gap-3 w-full md:w-auto">
-
                 {/* <button className="flex items-center space-x-2 px-3 py-1.5 bg-gray-800 rounded-lg text-sm">
                   <span>{portfolio?.Import}</span>
                 </button> */}
@@ -243,9 +281,7 @@ export default function WalletManagement() {
                     <th className="py-4 px-5 font-medium w-2/12 text-center md:text-left">
                       {portfolio?.Balance}
                     </th>
-                    <th className="py-4 px-5 font-medium w-2/12 text-center md:text-left">
-                      {portfolio?.Holdings}
-                    </th>
+                    {/* <th className="py-4 px-5 font-medium w-2/12 text-center md:text-left">{portfolio?.Holdings}</th> */}
                     <th className="py-4 px-5 font-medium w-3/12 text-right">
                       {portfolio?.Actions}
                     </th>
@@ -260,16 +296,25 @@ export default function WalletManagement() {
                         </div>
                       </td>
                     </tr>
+                  ) : walletAddresses.length === 0 ? (
+                    <tr>
+                      <td colSpan="5">
+                        <div className="flex justify-center items-center min-h-[40vh] text-gray-400">
+                          No wallets found
+                        </div>
+                      </td>
+                    </tr>
                   ) : (
                     walletAddresses.map((wallet, index) => (
                       <tr
-                        key={index + 1}
-                        className={`transition-colors hover:bg-gray-800/50 ${wallet.primary
-                          ? "bg-gradient-to-r from-amber-900/30 to-transparent border-l-4 border-amber-500"
-                          : index % 2 === 0
+                        key={wallet._id || index}
+                        className={`transition-colors hover:bg-gray-800/50 ${
+                          wallet.primary
+                            ? "bg-gradient-to-r from-amber-900/30 to-transparent border-l-4 border-amber-500"
+                            : index % 2 === 0
                             ? "bg-gray-800/20"
                             : ""
-                          }`}
+                        }`}
                       >
                         {/* Wallet number */}
                         <td className="py-2 px-4">{index + 1}</td>
@@ -282,8 +327,9 @@ export default function WalletManagement() {
                                 <FaStar className="text-amber-500 " size={16} />
                               )}
                               <div
-                                className={`font-medium ${wallet.primary ? "text-amber-500" : ""
-                                  }`}
+                                className={`font-medium ${
+                                  wallet.primary ? "text-amber-500" : ""
+                                }`}
                               >
                                 {wallet.primary ? "Primary Wallet" : "Wallet"}
                               </div>
@@ -292,8 +338,11 @@ export default function WalletManagement() {
                               onClick={() => copyToClipboard(wallet.wallet)}
                               className="text-xs text-gray-400 flex gap-1 items-center hover:text-gray-200 transition-colors bg-gray-800/50 py-1 px-2 rounded-md"
                             >
-                              {`${wallet?.wallet.slice(0, 4)}...${wallet?.wallet.slice(-4)}`}
-                              {copiedWallet === wallet.wallet ? ( // Check if THIS specific wallet was copied
+                              {`${wallet?.wallet.slice(
+                                0,
+                                4
+                              )}...${wallet?.wallet.slice(-4)}`}
+                              {copiedWallet === wallet.wallet ? (
                                 <BiCheckDouble className="text-[20px]" />
                               ) : (
                                 <FaCopy className="cursor-pointer flex-shrink-0" />
@@ -317,22 +366,17 @@ export default function WalletManagement() {
                         </td>
 
                         {/* Holdings */}
-                        <td className="py-2 px-4">
+                        {/* <td className="py-2 px-4">
                           <div className="relative flex flex-row items-center gap-2">
-                            {/* Icon stack container */}
                             <div className="relative w-[26px] h-[13px]">
                               <div className="absolute left-[0px] bg-[#6f6f8b] h-[13px] w-[13px] rounded-[4px] z-[3]" />
                               <div className="absolute left-[6px] bg-[#6f6f8b9c] h-[13px] w-[13px] rounded-[4px] z-[2]" />
                               <div className="absolute left-[12px] bg-[#6f6f8b36] h-[13px] w-[13px] rounded-[4px] z-[1]" />
                             </div>
 
-                            {/* Holdings text */}
-                            <div className=" ">
-                              {wallet?.holdings || 0}
-                            </div>
+                            <div className=" ">{wallet?.holdings || 0}</div>
                           </div>
-                        </td>
-
+                        </td> */}
 
                         {/* Actions */}
                         <td className="py-2 px-4">
