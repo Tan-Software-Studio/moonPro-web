@@ -169,6 +169,7 @@ const AiSignal = () => {
       sortable: true,
       key: "dbCreatedAt",
       sortingKey: "dbCreatedAt",
+      notificationIcon : true,
       infoTipString: tredingPage?.tableheaders?.aicalltooltip,
     },
     {
@@ -467,6 +468,7 @@ const AiSignal = () => {
                       setSortColumn(key);
                       setSortOrder(order);
                     }}
+                    data={sortedData}
                     sortColumn={sortColumn}
                     sortOrder={sortOrder}
                   />
