@@ -94,7 +94,6 @@ const Tradingview = () => {
 
   useEffect(() => {
     const currentPnlData = currentTabData.find(pnls => pnls?.token === tokenaddress);
-    console.log(currentPnlData);
     if (currentPnlData?.chainBalance > 0) {
       setCurrentTokenPnLData(currentPnlData);
     }
