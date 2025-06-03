@@ -77,6 +77,7 @@ const buySolanaTokens = async (
       programAddress: programAddress
         ? programAddress
         : "nasdiuasdnasdudhsdjasbhid",
+      metaData: metaData || null,
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -203,6 +204,7 @@ const buySolanaTokensQuickBuyHandler = async (
       price: Number(solanaLivePrice),
       programAddress: program,
       tokenPrice: tokenPrice,
+      metaData: metaData || null,
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -313,6 +315,7 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
       programAddress: programAddress
         ? programAddress
         : "nasdiuasdnasdudhsdjasbhid",
+      metaData: metaData || null,
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -414,6 +417,7 @@ const sellSolanaTokens = async (
         : "nasdiuasdnasdudhsdjasbhid",
       amountRecInsol: Number(recQty),
       isSellFullAmount,
+      metaData: metaData || null,
     },
     headers: {
       Authorization: `Bearer ${token}`,
