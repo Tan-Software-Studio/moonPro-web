@@ -267,10 +267,10 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
     },
     { id: 4, title: "Remaining" },
     { id: 5, title: "PnL" },
-    {
-      id: 6,
-      title: "Actions",
-    },
+    // {
+    //   id: 6,
+    //   title: "Actions",
+    // },
   ];
 
   //  Holders api call
@@ -976,13 +976,13 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                           </span>
                         </td>
                         {/* Actions */}
-                        <td className="whitespace-nowrap px-6 py-4 text-xs font-medium">
+                        {/* <td className="whitespace-nowrap px-6 py-4 text-xs font-medium">
                           <div className="flex justify-end items-center h-full w-full">
                             <button className="text-[#ed1b26] hover:text-[#bd3c42] font-bold transition-all duration-200 ease-in-out">
                               {"Sell"}
                             </button>
                           </div>
-                        </td>
+                        </td> */}
                       </tr>
                     )})}
                   </tbody>

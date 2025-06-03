@@ -227,7 +227,6 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
             : 
             '<span style="color: #808080">USD</span>/<span style="color: #1E90FF">SOL</span>';
           localStorage.setItem("chartUsdSolToggleActive", newState);
-          tvWidget.activeChart().removeEntity();
           return newState;
         });
       });
