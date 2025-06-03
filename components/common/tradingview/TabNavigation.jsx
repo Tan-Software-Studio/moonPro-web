@@ -12,7 +12,6 @@ const TabNavigation = ({
   setActiveTab,
   topHoldersApiCall,
   toptradersApiCall,
-  myHoldingData,
   tvChartRef,
 }) => {
   const tabsRef = useRef([]);
@@ -32,8 +31,6 @@ const TabNavigation = ({
       typeof toptradersApiCall == "function"
     ) {
       toptradersApiCall();
-    } else if (tabName == "Positions" && typeof myHoldingData == "function") {
-      myHoldingData();
     }
 
     // Small delay to ensure state updates

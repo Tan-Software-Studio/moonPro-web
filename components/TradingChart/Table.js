@@ -27,7 +27,7 @@ import { FaArrowUpLong } from "react-icons/fa6";
 import { FaArrowDownLong } from "react-icons/fa6";
 import { CiFilter } from "react-icons/ci";
 
-const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSupply }) => {
+const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSupply, currentTabData }) => {
   const { t } = useTranslation();
   const tragindViewPagePage = t("tragindViewPage");
   const dispatch = useDispatch();
@@ -116,6 +116,12 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
 
   const pathname = usePathname();
   const chainName = pathname.split("/")[2];
+
+  const formatNumber = (amount) => {
+    return amount > 1 || amount < -1
+      ? humanReadableFormatWithNoDollar(amount, 2)
+      : formatDecimal(amount, 1)
+  };
 
   const tabList = [
     { name: "Trades" },
@@ -390,32 +396,10 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
     }
   };
 
-  // My Holding api Call
-  const myHoldingData = async () => {
-    setLoader(true);
-    if (!Moralis.Core.isStarted) {
-      const apiKey = process.env.NEXT_PUBLIC_MORALIS_API_KEY;
-      if (!apiKey) throw new Error("API key is missing!");
-      await Moralis.start({ apiKey });
-    }
-    if (chainName == "solana") {
-      try {
-        const response = await Moralis.SolApi.account.getPortfolio({
-          network: "mainnet",
-          address: solWalletAddress,
-        });
-        const res = response.toJSON();
-        // console.log("holdings", res);
-        setHoldingsData(res.tokens);
-      } catch (error) {
-        console.error("Error fetching token balances and prices:", error);
-      } finally {
-        setLoader(false);
-      }
-    }
-  };
+  useEffect(() => {
+    setHoldingsData(currentTabData);
+  }, [currentTabData])
 
-  // useeffect
   useEffect(() => {
     dispatch(fetchTradesData(tokenCA));
     if (tokenSupply === undefined) {
@@ -431,14 +415,6 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
     }
   }, [tokenSupply]);
 
-  useEffect(() => {
-    if (solWalletAddress) {
-      myHoldingData();
-    } else {
-      setHoldingsData([]);
-    }
-  }, [solWalletAddress]);
-
   return (
     <>
       <div
@@ -453,7 +429,6 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
           setActiveTab={setActiveTab}
           topHoldersApiCall={topHoldersApiCall}
           toptradersApiCall={toptradersApiCall}
-          myHoldingData={myHoldingData}
           tvChartRef={tvChartRef}
         />
 
@@ -934,7 +909,13 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                     </tr>
                   </thead>
                   <tbody className="bg-transparent">
-                    {holdingsData.map((data, index) => (
+                    {holdingsData.map((data, index) => {
+                        const usdBought = data?.totalBoughtQty * data?.averageBuyPrice;
+                        const usdSold = data?.quantitySold * data?.averageHistoricalSellPrice;
+                        const usdHoldings = data?.activeQtyHeld * data?.current_price;
+                        const totalPnL = (data?.realizedProfit ?? 0) + usdHoldings - usdBought;
+                        const pnlPercent = usdBought !== 0 ? ((totalPnL / usdBought) * 100) : 0;
+                      return (
                       <tr
                         key={index}
                         className={`capitalize bg-[#08080E] text-[#F6F6F6] border-[#404040] font-medium text-xs whitespace-nowrap leading-4 border-b onest`}
@@ -942,14 +923,14 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                         {/* Token */}
                         <td className="px-6 py-4 flex">
                           <a 
-                            href={`/tradingview/solana?tokenaddress=${data?.associatedTokenAddress}&symbol=${data?.symbol}`}
+                            href={`/tradingview/solana?tokenaddress=${data?.token}&symbol=${data?.symbol}`}
                             className="group/name hover:opacity-80 flex flex-col sm:flex-row items-start text-xs leading-4 font-semibold h-full justify-start"
                           >
                             <div className="flex items-center">
                               <div className="w-7 h-7 flex-shrink-0 group-hover/image:opacity-80 relative rounded-[4px]">
-                              {data?.logo ? 
+                              {data?.img ? 
                                 <Image 
-                                  src={data?.logo}
+                                  src={data?.img}
                                   alt={data?.symbol}
                                   width={28}
                                   height={28}
@@ -968,28 +949,30 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                         {/* Bought */}
                         <td className="px-6 py-4 items-start">
                           <div className="flex flex-col gap-[2px] h-full justify-center">
-                            <p className="text-[#21CB6B] text-sm leading-4">$0</p>
-                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`0 ${data?.symbol}`}</p>
+                            <p className="text-[#21CB6B] text-sm leading-4">{`$${formatNumber(usdBought)}`}</p>
+                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(data?.totalBoughtQty)} ${data?.symbol}`}</p>
                           </div>
                         </td>
                         {/* Sold */}
                         <td className="px-6 py-4 items-start">
                           <div className="flex flex-col gap-[2px] h-full justify-center">
-                            <p className="text-[#ed1b26] text-sm leading-4">$0</p>
-                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`0 ${data?.symbol}`}</p>
+                            <p className="text-[#ed1b26] text-sm leading-4">{`$${formatNumber(usdSold)}`}</p>
+                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(data?.quantitySold)} ${data?.symbol}`}</p>
                           </div>
                         </td>
                         {/* Remaining */}
                         <td className="px-6 py-4 items-start">
                           <div className="flex flex-col gap-[2px] h-full justify-center">
-                            <p className="text-sm leading-4">$0</p>
-                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${data?.amount ? Number(data?.amount)?.toFixed(2) : `0`} ${data?.symbol}`}</p>
+                            <p className="text-sm leading-4">{`$${formatNumber(usdHoldings)}`}</p>
+                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(data?.activeQtyHeld)} ${data?.symbol}`}</p>
                           </div>
                         </td>
                         {/* PnL */}
                         <td className="px-6 py-4 items-center">
-                          <span className="text-[#21CB6B] font-thin">
-                            {"$0(0%)"}  
+                          <span className={`${totalPnL >= 0 ? "text-[#21CB6B]" : "text-[#ed1b26]"} 
+                            font-thin`}
+                          >
+                            {`$${formatNumber(totalPnL)}(${pnlPercent.toFixed(2)}%)`}  
                           </span>
                         </td>
                         {/* Actions */}
@@ -1001,7 +984,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                           </div>
                         </td>
                       </tr>
-                    ))}
+                    )})}
                   </tbody>
                 </table>
               </div>
