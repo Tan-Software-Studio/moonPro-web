@@ -195,7 +195,7 @@ const AiSignal = () => {
       title: tredingPage?.tableheaders?.swaps,
       sortable: true,
       key: "swaps",
-      sortingKey: "trades",
+      sortingKey: "buys",
       infoTipString: tredingPage?.tableheaders?.swapstooltip,
     },
     {
