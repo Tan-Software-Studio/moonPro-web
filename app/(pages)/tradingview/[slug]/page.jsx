@@ -433,7 +433,7 @@ const Tradingview = () => {
                   tokenaddress={tokenaddress}
                   currentTokenPnLData={currentTokenPnLData}
                   solanaLivePrice={solanaLivePrice}
-                  supply={chartTokenData?.currentSupply}z
+                  supply={chartTokenData?.currentSupply}
                 />
               </div>
             </>
