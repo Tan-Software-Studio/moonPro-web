@@ -428,13 +428,13 @@ const Tradingview = () => {
               </div>
 
               <div ref={tvChartRef} className={`${isSmallScreen ? 'h-[253px]' : 'h-[10000px]'} w-full`}>
-                {/* <TVChartContainer
+                <TVChartContainer
                   tokenSymbol={tokenSymbol}
                   tokenaddress={tokenaddress}
                   currentTokenPnLData={currentTokenPnLData}
                   solanaLivePrice={solanaLivePrice}
                   supply={chartTokenData?.currentSupply}z
-                /> */}
+                />
               </div>
             </>
           )}
