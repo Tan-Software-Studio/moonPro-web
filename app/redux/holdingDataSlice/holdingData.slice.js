@@ -206,12 +206,15 @@ const holdingData = createSlice({
             state.PnlData[findTokenIndex].averageBuyPrice =
               totalQty > 0
                 ? Number(
-                    (
-                      state?.PnlData[findTokenIndex]?.totalBuyAmount / totalQty
-                    ).toFixed(10)
-                  )
+                  (
+                    state?.PnlData[findTokenIndex]?.totalBuyAmount / totalQty
+                  ).toFixed(10)
+                )
                 : 0;
-            if (state.PnlData[findTokenIndex]?.lots?.length == 0) {
+            if (
+              state.PnlData[findTokenIndex]?.lots?.length == 0 ||
+              payload?.isSellFullAmount
+            ) {
               state?.PnlData?.splice(findTokenIndex, 1);
             }
           }
