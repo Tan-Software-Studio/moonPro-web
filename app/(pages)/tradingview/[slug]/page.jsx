@@ -447,6 +447,7 @@ const Tradingview = () => {
                 tvChartRef={tvChartRef}
                 solWalletAddress={solWalletAddress}
                 tokenSupply={chartTokenData?.currentSupply}
+                currentUsdPrice={latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD}
                 currentTabData={currentTabData}
               />
             </div>
