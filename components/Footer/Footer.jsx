@@ -27,6 +27,11 @@ const Footer = () => {
     (state) => state?.AllStatesData?.presetActive
   );
 
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
+
+
   const isLargeScreen = useSelector(
     (state) => state?.AllthemeColorData?.isLargeScreen
   );
@@ -175,156 +180,155 @@ const Footer = () => {
         className={`fixed hidden md:block bottom-0 left-0 right-0 z-40 bg-[#0A0A0F] px-3 border-t ${borderColor}  py-1 ${getFooterPadding()}`}
       >
         <div className="flex items-center justify-between md:gap-0 gap-10 text-xs">
-          <div className="flex items-center space-x-2 overflow-x-auto pl-3">
-            <button
-              onClick={handlePresetClick}
-              className="flex items-center space-x-1.5 text-nowrap bg-[#151c3c] hover:bg-[#26357a] px-2 py-1.5 ml-1 rounded-md text-[#4c6eff] text-xs font-medium transition-colors duration-200 border border-[#6366F1]/20"
-            >
-              <span className="text-[11px] font-bold text-nowrap">⚡</span>
-              <span className="font-semibold tracking-wide text-nowrap">
-                {getPresetDisplayName(presetActive)}
-              </span>
-            </button>
-
-            <div className="relative flex items-center space-x-1 overflow-visible">
-              <div className="">
-                <div
-                  ref={buttonRef}
-                  onClick={() => {
-                    if (!open && buttonRef.current) {
-                      const rect = buttonRef.current.getBoundingClientRect();
-                      setDropdownPosition({ left: rect.left });
-                    }
-                    setOpen(!open);
-                  }}
-                  className="flex items-center space-x-2 px-3 py-1.5 bg-[#1a1a1a] rounded-full text-[#ecf6fd] text-sm font-medium cursor-pointer hover:bg-[#2a2a2a] transition-colors"
-                >
-                  <LuWalletMinimal size={16} />
-                  <span>{reduxWallets?.length}</span>
-
-                  <Image src={solana} width={16} height={16} alt="solana" />
-                  <span>{getPrimaryWalletBalance()}</span>
-
-                  <FaAngleDown size={14} />
-                </div>
-
-                {open && (
-                  <div
-                    ref={dropdownRef}
-                    className="fixed bottom-10 w-96 max-h-80 overflow-y-auto bg-[#18181a] border border-gray-700 text-white rounded-md shadow-lg z-50"
-                    style={{
-                      left: `${dropdownPosition.left}px`,
-                    }}
-                  >
-                    {reduxWallets?.map((wallet, idx) => {
-                      const handleCopy = async (e) => {
-                        e.stopPropagation();
-                        try {
-                          await navigator.clipboard.writeText(
-                            wallet.wallet || "BEsA4G"
-                          );
-                          setCopiedWallet(wallet.wallet);
-                          setTimeout(() => setCopiedWallet(null), 2000);
-                        } catch (err) {
-                          console.error("Failed to copy: ", err);
-                        }
-                      };
-
-                      return (
-                        <div
-                          key={wallet._id || wallet.id || idx}
-                          className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${
-                            wallet.active ? "bg-[#18181a]" : ""
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <input
-                              type="checkbox"
-                              className="w-4 h-4 rounded border border-gray-500 bg-transparent checked:bg-[#ff8f1b] checked:border-[#ff8f1b] focus:ring-2 focus:ring-[#ff8f1b] focus:ring-opacity-50"
-                              checked={wallet.primary}
-                              onChange={() => handlePrimary(wallet?.index, idx)}
-                            />
-                            <div className="flex flex-col">
-                              <div className="flex items-center gap-2 text-sm">
-                                <span
-                                  className={`font-medium ${
-                                    wallet.primary
-                                      ? "text-orange-400"
-                                      : "text-white"
-                                  }`}
-                                >
-                                  {idx === 0
-                                    ? "Moon Pro Main"
-                                    : `Wallet ${idx + 1}`}
-                                </span>
-                                <span className="text-gray-400">
-                                  {formatWalletAddress(wallet.wallet)}
-                                </span>
-                                <button
-                                  className="w-4 h-4 flex items-center justify-center text-xs transition-colors duration-200 hover:bg-gray-600 rounded"
-                                  onClick={handleCopy}
-                                  title={
-                                    copiedWallet === wallet.wallet
-                                      ? "Copied!"
-                                      : "Copy wallet address"
-                                  }
-                                >
-                                  {copiedWallet === wallet.wallet ? (
-                                    <IoCheckmarkDone />
-                                  ) : (
-                                    <IoCopyOutline />
-                                  )}
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-4">
-                            <div className="flex items-center gap-2">
-                              <Image
-                                src={solana}
-                                width={16}
-                                height={16}
-                                alt="solana"
-                              />
-                              <span className="text-sm font-medium">
-                                {getWalletBalance(wallet.wallet)}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-
-                    {reduxWallets?.length === 0 && (
-                      <div className="p-4 text-center text-gray-400">
-                        No wallets found
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-
+          {solWalletAddress && (
+            <div className="flex items-center space-x-2 overflow-x-auto pl-3">
               <button
-                className="flex items-center space-x-2 bg-[#1F2937] hover:bg-[#374151] px-2 py-1.5 rounded-md text-gray-300 hover:text-white text-xs font-medium transition-all duration-200  border-gray-600/30"
-                onClick={handlePnLTrackerClick}
+                onClick={handlePresetClick}
+                className="flex items-center space-x-1.5 text-nowrap bg-[#151c3c] hover:bg-[#26357a] px-2 py-1.5 ml-1 rounded-md text-[#4c6eff] text-xs font-medium transition-colors duration-200 border border-[#6366F1]/20"
               >
-                <Image
-                  src={barchart}
-                  alt="barchart"
-                  height={16}
-                  width={16}
-                  className="rounded-sm opacity-80"
-                />
-                <span className="font-medium text-sm truncate max-w-[100px] overflow-hidden text-ellipsis">
-                  PnL Tracker
+                <span className="text-[11px] font-bold text-nowrap">⚡</span>
+                <span className="font-semibold tracking-wide text-nowrap">
+                  {getPresetDisplayName(presetActive)}
                 </span>
               </button>
 
-              <div className="h-6 w-px bg-gray-600/50"></div>
+              <div className="relative flex items-center space-x-1 overflow-visible">
+                <div className="">
+                  <div
+                    ref={buttonRef}
+                    onClick={() => {
+                      if (!open && buttonRef.current) {
+                        const rect = buttonRef.current.getBoundingClientRect();
+                        setDropdownPosition({ left: rect.left });
+                      }
+                      setOpen(!open);
+                    }}
+                    className="flex items-center space-x-2 px-3 py-1.5 bg-[#1a1a1a] rounded-full text-[#ecf6fd] text-sm font-medium cursor-pointer hover:bg-[#2a2a2a] transition-colors"
+                  >
+                    <LuWalletMinimal size={16} />
+                    <span>{reduxWallets?.length}</span>
 
-              {/* Commented out crypto prices as requested */}
-              {/* 
+                    <Image src={solana} width={16} height={16} alt="solana" />
+                    <span>{getPrimaryWalletBalance()}</span>
+
+                    <FaAngleDown size={14} />
+                  </div>
+
+                  {open && (
+                    <div
+                      ref={dropdownRef}
+                      className="fixed bottom-10 w-96 max-h-80 overflow-y-auto bg-[#18181a] border border-gray-700 text-white rounded-md shadow-lg z-50"
+                      style={{
+                        left: `${dropdownPosition.left}px`,
+                      }}
+                    >
+                      {reduxWallets?.map((wallet, idx) => {
+                        const handleCopy = async (e) => {
+                          e.stopPropagation();
+                          try {
+                            await navigator.clipboard.writeText(
+                              wallet.wallet || "BEsA4G"
+                            );
+                            setCopiedWallet(wallet.wallet);
+                            setTimeout(() => setCopiedWallet(null), 2000);
+                          } catch (err) {
+                            console.error("Failed to copy: ", err);
+                          }
+                        };
+
+                        return (
+                          <div
+                            key={wallet._id || wallet.id || idx}
+                            className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${wallet.active ? "bg-[#18181a]" : ""
+                              }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <input
+                                type="checkbox"
+                                className="w-4 h-4 rounded border border-gray-500 bg-transparent checked:bg-[#ff8f1b] checked:border-[#ff8f1b] focus:ring-2 focus:ring-[#ff8f1b] focus:ring-opacity-50"
+                                checked={wallet.primary}
+                                onChange={() => handlePrimary(wallet?.index, idx)}
+                              />
+                              <div className="flex flex-col">
+                                <div className="flex items-center gap-2 text-sm">
+                                  <span
+                                    className={`font-medium ${wallet.primary
+                                      ? "text-orange-400"
+                                      : "text-white"
+                                      }`}
+                                  >
+                                    {idx === 0
+                                      ? "Moon Pro Main"
+                                      : `Wallet ${idx + 1}`}
+                                  </span>
+                                  <span className="text-gray-400">
+                                    {formatWalletAddress(wallet.wallet)}
+                                  </span>
+                                  <button
+                                    className="w-4 h-4 flex items-center justify-center text-xs transition-colors duration-200 hover:bg-gray-600 rounded"
+                                    onClick={handleCopy}
+                                    title={
+                                      copiedWallet === wallet.wallet
+                                        ? "Copied!"
+                                        : "Copy wallet address"
+                                    }
+                                  >
+                                    {copiedWallet === wallet.wallet ? (
+                                      <IoCheckmarkDone />
+                                    ) : (
+                                      <IoCopyOutline />
+                                    )}
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-4">
+                              <div className="flex items-center gap-2">
+                                <Image
+                                  src={solana}
+                                  width={16}
+                                  height={16}
+                                  alt="solana"
+                                />
+                                <span className="text-sm font-medium">
+                                  {getWalletBalance(wallet.wallet)}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                      {reduxWallets?.length === 0 && (
+                        <div className="p-4 text-center text-gray-400">
+                          No wallets found
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  className="flex items-center space-x-2 bg-[#1F2937] hover:bg-[#374151] px-2 py-1.5 rounded-md text-gray-300 hover:text-white text-xs font-medium transition-all duration-200  border-gray-600/30"
+                  onClick={handlePnLTrackerClick}
+                >
+                  <Image
+                    src={barchart}
+                    alt="barchart"
+                    height={16}
+                    width={16}
+                    className="rounded-sm opacity-80"
+                  />
+                  <span className="font-medium text-sm truncate max-w-[100px] overflow-hidden text-ellipsis">
+                    PnL Tracker
+                  </span>
+                </button>
+
+                <div className="h-6 w-px bg-gray-600/50"></div>
+
+                {/* Commented out crypto prices as requested */}
+                {/* 
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-1 text-orange-400 font-medium">
                   <Image src={bitcoinIcon} alt="bitcoinIcon" height={16} width={16} className="rounded-full" />
@@ -340,8 +344,10 @@ const Footer = () => {
                 </div>
               </div>
               */}
+              </div>
             </div>
-          </div>
+          )}
+
 
           <div className="flex items-center space-x-4"></div>
 

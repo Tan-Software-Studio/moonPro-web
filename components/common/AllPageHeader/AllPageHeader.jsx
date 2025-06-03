@@ -342,7 +342,7 @@ const AllPageHeader = ({
 
   return (
     <div
-      className={`text-white relative bg-[#08080E] md:flex justify-between items-start lg:items-center pt-[18px] py-[6.3px] px-3 md:px-4 border-b-[1px] ${borderColor} pb-5 transition-all duration-500 ease-in-out 
+      className={`text-white relative bg-[#08080E] items-center md:flex justify-between  lg:items-center pt-[18px] py-[6.3px] px-3 md:px-4 border-b-[1px] ${borderColor} pb-5 transition-all duration-500 ease-in-out 
         ${isScrolled && pathData === false && "-translate-y-full opacity-0 "}`}
     >
       {/* pagename + description */}
@@ -355,7 +355,7 @@ const AllPageHeader = ({
       </div>
 
       {/* filter + buy etc button */}
-      <div className="flex flex-wrap lg:items-center md:justify-end gap-2 overflow-x-auto md:mt-0">
+      <div className="flex items-center flex-wrap lg:items-center md:justify-end gap-2 overflow-x-auto md:mt-0">
         {duration && (
           <div className={`flex `}>
             {HeaderData?.timeDuration?.map((option, index) => (
@@ -675,7 +675,7 @@ const AllPageHeader = ({
 
             <div className="flex items-center rounded-full py-1 bg-[#141414] border border-[#26262e] text-white text-xs overflow-hidden w-fit">
               {/* Left section: Quick Buy */}
-              <div className="px-2 py-1 font-semibold text-[#f4fcff">
+              <div className="px-2 py-1 font-semibold text-[#f4fcff text-nowrap">
                 Quick Buy
               </div>
 
