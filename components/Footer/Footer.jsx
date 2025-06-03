@@ -154,6 +154,10 @@ const Footer = () => {
     }
   };
 
+    const solWalletAddress = useSelector(
+      (state) => state?.AllStatesData?.solWalletAddress
+    );
+
   const getFooterPadding = () => {
     if (
       (isSidebarOpen && isLargeScreen) ||
@@ -183,19 +187,20 @@ const Footer = () => {
         className={`fixed hidden md:block bottom-0 left-0 right-0 z-40 bg-[#0A0A0F] px-3 border-t ${borderColor}  py-1 ${getFooterPadding()}`}
       >
         <div className="flex items-center justify-between md:gap-0 gap-10 text-xs">
-          <div className="flex items-center space-x-2 overflow-x-auto pl-3">
-            <button
-              onClick={handlePresetClick}
-              className="flex items-center space-x-1.5 text-nowrap bg-[#151c3c] hover:bg-[#26357a] px-2 py-1.5 ml-1 rounded-md text-[#4c6eff] text-xs font-medium transition-colors duration-200 border border-[#6366F1]/20"
-            >
-              <span className="text-[11px] font-bold text-nowrap">⚡</span>
-              <span className="font-semibold tracking-wide text-nowrap">
-                {getPresetDisplayName(presetActive)}
-              </span>
-            </button>
+          {solWalletAddress && (
+            <div className="flex items-center space-x-2 overflow-x-auto pl-3">
+              <button
+                onClick={handlePresetClick}
+                className="flex items-center space-x-1.5 text-nowrap bg-[#151c3c] hover:bg-[#26357a] px-2 py-1.5 ml-1 rounded-md text-[#4c6eff] text-xs font-medium transition-colors duration-200 border border-[#6366F1]/20"
+              >
+                <span className="text-[11px] font-bold text-nowrap">⚡</span>
+                <span className="font-semibold tracking-wide text-nowrap">
+                  {getPresetDisplayName(presetActive)}
+                </span>
+              </button>
 
-            <div className="relative flex items-center space-x-1 overflow-visible">
-              {/* <div className="">
+              <div className="relative flex items-center space-x-1 overflow-visible">
+                {/* <div className="">
                 <div
                   ref={buttonRef}
                   onClick={() => setOpen(!open)}
@@ -308,26 +313,26 @@ const Footer = () => {
                 )}
               </div> */}
 
-              <button
-                className="flex items-center space-x-2 bg-[#1F2937] hover:bg-[#374151] px-2 py-1.5 rounded-md text-gray-300 hover:text-white text-xs font-medium transition-all duration-200  border-gray-600/30"
-                onClick={handlePnLTrackerClick}
-              >
-                <Image
-                  src={barchart}
-                  alt="barchart"
-                  height={16}
-                  width={16}
-                  className="rounded-sm opacity-80"
-                />
-                <span className="font-medium text-sm truncate max-w-[100px] overflow-hidden text-ellipsis">
-                  PnL Tracker
-                </span>
-              </button>
+                <button
+                  className="flex items-center space-x-2 bg-[#1F2937] hover:bg-[#374151] px-2 py-1.5 rounded-md text-gray-300 hover:text-white text-xs font-medium transition-all duration-200  border-gray-600/30"
+                  onClick={handlePnLTrackerClick}
+                >
+                  <Image
+                    src={barchart}
+                    alt="barchart"
+                    height={16}
+                    width={16}
+                    className="rounded-sm opacity-80"
+                  />
+                  <span className="font-medium text-sm truncate max-w-[100px] overflow-hidden text-ellipsis">
+                    PnL Tracker
+                  </span>
+                </button>
 
-              <div className="h-6 w-px bg-gray-600/50"></div>
+                <div className="h-6 w-px bg-gray-600/50"></div>
 
-              {/* Commented out crypto prices as requested */}
-              {/* 
+                {/* Commented out crypto prices as requested */}
+                {/* 
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-1 text-orange-400 font-medium">
                   <Image src={bitcoinIcon} alt="bitcoinIcon" height={16} width={16} className="rounded-full" />
@@ -343,8 +348,10 @@ const Footer = () => {
                 </div>
               </div>
               */}
+              </div>
             </div>
-          </div>
+          )}
+
 
           <div className="flex items-center space-x-4"></div>
 

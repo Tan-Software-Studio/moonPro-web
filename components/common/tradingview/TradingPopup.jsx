@@ -14,6 +14,7 @@ import Image from "next/image";
 import { solana, solanaBlackLogo } from "@/app/Images";
 import RightModalOpenSetting from "@/components/Settings/RightModalOpenSetting";
 import {
+  openCloseLoginRegPopup,
   setOpenOrderSetting,
   setPresetActive,
   setPreSetOrderSetting,
@@ -203,7 +204,7 @@ const TradingPopup = ({
         toast.error("Insufficient funds.");
       }
     } else {
-      toast.error("Please login.");
+      return dispatch(openCloseLoginRegPopup(true));
     }
   }
   // sell handler
@@ -239,7 +240,7 @@ const TradingPopup = ({
         toast.error("Insufficient funds.");
       }
     } else {
-      toast.error("Please login.");
+      return dispatch(openCloseLoginRegPopup(true));
     }
   }
   useEffect(() => {
