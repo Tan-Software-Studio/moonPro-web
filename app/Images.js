@@ -85,7 +85,8 @@ import walletTrackerWhiteImg from "../public/assets/Sidebar/walletTrackerWhiteIm
 import WalletTrackerColorImg from "../public/assets/Sidebar/WalletTrackerColorImg.svg";
 import proWallet from "../public/assets/Sidebar/proWallet.svg";
 import proWalletColor from "../public/assets/Sidebar/proWalletColor.svg";
-import NoDataFish from "../public/assets/NoDataImages/qwe.svg";
+// import NoDataFish from "../public/assets/NoDataImages/qwe.svg";
+import NoDataFish from "../public/assets/NoDataImages/NoDataImages.svg";
 import CryptoWithoutColor from "../public/assets/crypto-Stack/CryptoWithoutColor.svg";
 import CryptoColor from "../public/assets/crypto-Stack/CryptoColor.svg";
 

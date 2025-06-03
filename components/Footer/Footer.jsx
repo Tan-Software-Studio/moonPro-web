@@ -15,15 +15,27 @@ import { updateWalletToPrimary } from "@/app/redux/userDataSlice/UserData.slice"
 
 const Footer = () => {
   const dispatch = useDispatch();
-  const borderColor = useSelector((state) => state?.AllthemeColorData?.borderColor);
-  const isRightModalOpenSetting = useSelector((state) => state?.yourSliceName?.isRightModalOpenSetting);
+  const borderColor = useSelector(
+    (state) => state?.AllthemeColorData?.borderColor
+  );
+  const isRightModalOpenSetting = useSelector(
+    (state) => state?.yourSliceName?.isRightModalOpenSetting
+  );
   const tredingPage = useSelector((state) => state?.yourSliceName?.tredingPage);
 
-  const presetActive = useSelector((state) => state?.AllStatesData?.presetActive);
+  const presetActive = useSelector(
+    (state) => state?.AllStatesData?.presetActive
+  );
 
-  const isLargeScreen = useSelector((state) => state?.AllthemeColorData?.isLargeScreen);
-  const isSmallScreenData = useSelector((state) => state?.AllthemeColorData?.isSmallScreen);
-  const isSidebarOpen = useSelector((state) => state?.AllthemeColorData?.isSidebarOpen);
+  const isLargeScreen = useSelector(
+    (state) => state?.AllthemeColorData?.isLargeScreen
+  );
+  const isSmallScreenData = useSelector(
+    (state) => state?.AllthemeColorData?.isSmallScreen
+  );
+  const isSidebarOpen = useSelector(
+    (state) => state?.AllthemeColorData?.isSidebarOpen
+  );
 
   // Updated to use the new Redux state structure
   const userDetails = useSelector((state) => state?.userData?.userDetails);
@@ -61,13 +73,17 @@ const Footer = () => {
     if (!walletAddress || !reduxWallets?.length) return "0";
 
     const wallet = reduxWallets?.find((w) => w.wallet === walletAddress);
-    return wallet?.balance !== undefined ? parseFloat(wallet.balance).toFixed(4) : "0";
+    return wallet?.balance !== undefined
+      ? parseFloat(wallet.balance).toFixed(4)
+      : "0";
   };
 
   // Updated: Get primary wallet balance
   const getPrimaryWalletBalance = () => {
     const primaryWallet = reduxWallets?.find((w) => w.primary);
-    return primaryWallet?.balance !== undefined ? parseFloat(primaryWallet?.balance).toFixed(4) : "0";
+    return primaryWallet?.balance !== undefined
+      ? parseFloat(primaryWallet?.balance).toFixed(4)
+      : "0";
   };
 
   useEffect(() => {
@@ -107,7 +123,10 @@ const Footer = () => {
           }
         )
         .then(async (res) => {
-          localStorage.setItem("walletAddress", res?.data?.data?.wallet?.wallet);
+          localStorage.setItem(
+            "walletAddress",
+            res?.data?.data?.wallet?.wallet
+          );
           toast.success("Primary wallet switched", {
             id: "switch-toast",
             duration: 2000,
@@ -128,7 +147,10 @@ const Footer = () => {
   };
 
   const getFooterPadding = () => {
-    if ((isSidebarOpen && isLargeScreen) || (isSidebarOpen && isSmallScreenData)) {
+    if (
+      (isSidebarOpen && isLargeScreen) ||
+      (isSidebarOpen && isSmallScreenData)
+    ) {
       return "md:pl-48";
     }
     return "md:pl-[64px]";
@@ -159,7 +181,9 @@ const Footer = () => {
               className="flex items-center space-x-1.5 text-nowrap bg-[#151c3c] hover:bg-[#26357a] px-2 py-1.5 ml-1 rounded-md text-[#4c6eff] text-xs font-medium transition-colors duration-200 border border-[#6366F1]/20"
             >
               <span className="text-[11px] font-bold text-nowrap">⚡</span>
-              <span className="font-semibold tracking-wide text-nowrap">{getPresetDisplayName(presetActive)}</span>
+              <span className="font-semibold tracking-wide text-nowrap">
+                {getPresetDisplayName(presetActive)}
+              </span>
             </button>
 
             <div className="relative flex items-center space-x-1 overflow-visible">
@@ -196,7 +220,9 @@ const Footer = () => {
                       const handleCopy = async (e) => {
                         e.stopPropagation();
                         try {
-                          await navigator.clipboard.writeText(wallet.wallet || "BEsA4G");
+                          await navigator.clipboard.writeText(
+                            wallet.wallet || "BEsA4G"
+                          );
                           setCopiedWallet(wallet.wallet);
                           setTimeout(() => setCopiedWallet(null), 2000);
                         } catch (err) {
@@ -220,21 +246,40 @@ const Footer = () => {
                             />
                             <div className="flex flex-col">
                               <div className="flex items-center gap-2 text-sm">
-                                <span className={`font-medium ${wallet.primary ? "text-orange-400" : "text-white"}`}>
-                                  {idx === 0 ? "Moon Pro Main" : `Wallet ${idx + 1}`}
+                                <span
+                                  className={`font-medium ${
+                                    wallet.primary
+                                      ? "text-orange-400"
+                                      : "text-white"
+                                  }`}
+                                >
+                                  {idx === 0
+                                    ? "Moon Pro Main"
+                                    : `Wallet ${idx + 1}`}
                                 </span>
-                                <span className="text-gray-400">{formatWalletAddress(wallet.wallet)}</span>
+                                <span className="text-gray-400">
+                                  {formatWalletAddress(wallet.wallet)}
+                                </span>
                                 <button
                                   className="w-4 h-4 flex items-center justify-center text-xs transition-colors duration-200 hover:bg-gray-600 rounded"
                                   onClick={handleCopy}
-                                  title={copiedWallet === wallet.wallet ? "Copied!" : "Copy wallet address"}
+                                  title={
+                                    copiedWallet === wallet.wallet
+                                      ? "Copied!"
+                                      : "Copy wallet address"
+                                  }
                                 >
-                                  {copiedWallet === wallet.wallet ? <IoCheckmarkDone /> : <IoCopyOutline />}
+                                  {copiedWallet === wallet.wallet ? (
+                                    <IoCheckmarkDone />
+                                  ) : (
+                                    <IoCopyOutline />
+                                  )}
                                 </button>
                               </div>
                               {wallet.currency && (
                                 <div className="text-xs text-gray-500 mt-1">
-                                  {wallet.currency.Name} ({wallet.currency.Symbol})
+                                  {wallet.currency.Name} (
+                                  {wallet.currency.Symbol})
                                 </div>
                               )}
                             </div>
@@ -242,8 +287,15 @@ const Footer = () => {
 
                           <div className="flex items-center gap-4">
                             <div className="flex items-center gap-2">
-                              <Image src={solana} width={16} height={16} alt="solana" />
-                              <span className="text-sm font-medium">{getWalletBalance(wallet.wallet)}</span>
+                              <Image
+                                src={solana}
+                                width={16}
+                                height={16}
+                                alt="solana"
+                              />
+                              <span className="text-sm font-medium">
+                                {getWalletBalance(wallet.wallet)}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -251,7 +303,9 @@ const Footer = () => {
                     })}
 
                     {reduxWallets?.length === 0 && (
-                      <div className="p-4 text-center text-gray-400">No wallets found</div>
+                      <div className="p-4 text-center text-gray-400">
+                        No wallets found
+                      </div>
                     )}
                   </div>
                 )}
@@ -261,7 +315,13 @@ const Footer = () => {
                 className="flex items-center space-x-2 bg-[#1F2937] hover:bg-[#374151] px-2 py-1.5 rounded-md text-gray-300 hover:text-white text-xs font-medium transition-all duration-200  border-gray-600/30"
                 onClick={handlePnLTrackerClick}
               >
-                <Image src={barchart} alt="barchart" height={16} width={16} className="rounded-sm opacity-80" />
+                <Image
+                  src={barchart}
+                  alt="barchart"
+                  height={16}
+                  width={16}
+                  className="rounded-sm opacity-80"
+                />
                 <span className="font-medium text-sm truncate max-w-[100px] overflow-hidden text-ellipsis">
                   PnL Tracker
                 </span>
@@ -294,7 +354,9 @@ const Footer = () => {
           <div className="flex items-center space-x-3 text-xs overflow-x-auto">
             <div className="flex items-center space-x-1">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-green-400 font-medium text-nowrap">Connection is stable</span>
+              <span className="text-green-400 font-medium text-nowrap">
+                Connection is stable
+              </span>
             </div>
 
             <div className="h-6 w-px bg-gray-600/50"></div>
@@ -304,13 +366,25 @@ const Footer = () => {
                 className="text-gray-400 hover:text-white transition-colors flex-shrink-0"
                 onClick={handleDiscordClick}
               >
-                <Image src={discord} alt="discord" height={20} width={20} className="rounded-full w-[20px] h-[20px]" />
+                <Image
+                  src={discord}
+                  alt="discord"
+                  height={20}
+                  width={20}
+                  className="rounded-full w-[20px] h-[20px]"
+                />
               </button>
               <button
                 className="text-gray-400 hover:text-white transition-colors flex-shrink-0"
                 onClick={handleTwitterClick}
               >
-                <Image src={twitter} alt="twitter" height={20} width={20} className="rounded-full w-[20px] h-[20px]" />
+                <Image
+                  src={twitter}
+                  alt="twitter"
+                  height={20}
+                  width={20}
+                  className="rounded-full w-[20px] h-[20px]"
+                />
               </button>
               <button
                 className="flex text-gray-400 hover:text-white transition-colors text-sm whitespace-nowrap"
@@ -330,7 +404,10 @@ const Footer = () => {
         tredingPage={tredingPage}
       />
 
-      <PnLTrackerPopup isOpen={isPnLPopupOpen} onClose={() => setIsPnLPopupOpen(false)} />
+      <PnLTrackerPopup
+        isOpen={isPnLPopupOpen}
+        onClose={() => setIsPnLPopupOpen(false)}
+      />
     </>
   );
 };

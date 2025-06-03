@@ -20,17 +20,15 @@ const PortfolioMainPage = () => {
           <div className="overflow-y-scroll h-[95vh]">
             <div className="flex items-center gap-5 p-5">
               <div
-                className={`text-xl font-bold cursor-pointer ${
-                  activeTab == "profile" ? "text-white" : "text-gray-400"
-                }`}
+                className={`text-xl font-bold cursor-pointer ${activeTab == "profile" ? "text-white" : "text-gray-400"
+                  }`}
                 onClick={() => dispatch(updatePnlTableData("profile"))}
               >
                 Spots
               </div>
               <div
-                className={`text-xl font-bold cursor-pointer ${
-                  activeTab == "portfolio" ? "text-white" : "text-gray-400"
-                }`}
+                className={`text-xl font-bold cursor-pointer ${activeTab == "portfolio" ? "text-white" : "text-gray-400"
+                  }`}
                 onClick={() => dispatch(updatePnlTableData("portfolio"))}
               >
                 Wallets
@@ -45,7 +43,7 @@ const PortfolioMainPage = () => {
         <div className="flex flex-col items-center justify-center min-h-[400px] p-8">
           <div className="mb-6 flex flex-col justify-center text-center items-center">
             <Image
-              src="/assets/NoDataImages/qwe.svg"
+              src="/assets/NoDataImages/NoDataImages.svg"
               alt="No Data Available"
               width={24}
               height={24}
@@ -54,8 +52,8 @@ const PortfolioMainPage = () => {
             <h3 className="text-xl font-bold text-white mb-2">
               Login Required
             </h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
-              Please connect your login to view your portfolio and profile.
+            <p className="text-gray-400 text-sm leading-relaxed tracking-wider">
+              Please login to view your portfolio and profile.
             </p>
           </div>
         </div>

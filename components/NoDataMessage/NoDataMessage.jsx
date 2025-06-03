@@ -11,7 +11,7 @@ const NoDataMessage = ({ loading, noDataMessage, isConnected }) => {
         <div className="flex flex-col items-center justify-center">
             <div className={`text-4xl mb-2 ${loading ? 'animate-bounce' : ''}`}>
                 <Image
-                    src="/assets/NoDataImages/qwe.svg"
+                    src="/assets/NoDataImages/NoDataImages.svg"
                     alt="No Data Available"
                     width={200}
                     height={100}
