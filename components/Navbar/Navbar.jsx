@@ -44,11 +44,15 @@ import {
   setWalletBalances,
 } from "@/app/redux/userDataSlice/UserData.slice";
 import WithdrawPopup from "./popup/WithdrawPopup";
+import NewAiSignalTokens from "./popup/NewAiSignalTokens";
+import { fetchAiSignalData } from "@/app/redux/AiSignalDataSlice/AiSignal.slice";
+import { Flame } from "lucide-react";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
 
   // dropdown popup
+  const [isAiSignalPopupOpen, setIsAiSignalPopupOpen] = useState(false)
   const [isSettingPopup, setIsSettingPopup] = useState(false);
   const [isAccountPopup, setIsAccountPopup] = useState(false);
   const [isWatchlistPopup, setIsWatchlistPopup] = useState(false);
@@ -213,6 +217,7 @@ const Navbar = () => {
 
   useEffect(() => {
     fetchData();
+    dispatch(fetchAiSignalData());
     dispatch(fetchMemescopeData());
     fetchSolPrice();
   }, []);
@@ -297,9 +302,13 @@ const Navbar = () => {
                 <Image src={logo} alt="logo" className="w-full h-full" />
               </div>
               <div className=" flex items-center gap-2 ">
-                {/* <div className="md:hidden block">
-                   <AISignalsButton />  
-                </div> */}
+                {/* <button
+                  onClick={() => setIsAiSignalPopupOpen(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg flex items-center gap-2 transition-colors duration-200 font-medium text-sm shadow-md hover:shadow-lg"
+                >
+                  <Flame className="w-4 h-4" />
+                  New Tokens
+                </button> */}
                 {/* Search bar */}
                 <div
                   className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
@@ -508,6 +517,7 @@ const Navbar = () => {
       </div>
 
       <AnimatePresence>
+        {isAiSignalPopupOpen && <NewAiSignalTokens setIsOpen={setIsAiSignalPopupOpen} />}
         {isLoginPopup && <LoginPopup isLoginPopup={isLoginPopup} authName={authName} />}
 
         {isSettingPopup && <Setting setIsSettingPopup={setIsSettingPopup} />}

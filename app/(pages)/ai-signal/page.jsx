@@ -14,8 +14,7 @@ import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
 import TableHeaderData from "@/components/common/TableHeader/TableHeaderData";
 import TableBody from "@/components/common/TableBody/TableBody";
 import { useTranslation } from "react-i18next";
-import handleSort from "@/utils/sortTokenData";
-import { fetchAiSignalData } from "@/app/redux/AiSignalDataSlice/AiSignal.slice";
+import handleSort from "@/utils/sortTokenData"; 
 import {
   subscribeToAiSignalTokens,
   subscribeToAiSignalTokensNewAddedToken,
@@ -407,7 +406,7 @@ const AiSignal = () => {
     if (savedFilters) {
       setFilterValues(savedFilters);
     }
-    dispatch(fetchAiSignalData());
+    
     subscribeToAiSignalTokens();
     subscribeToAiSignalTokensNewAddedToken();
   }, []);

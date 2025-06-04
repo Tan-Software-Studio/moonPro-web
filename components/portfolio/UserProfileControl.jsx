@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ActivityTable from "@/components/profile/ActivityTable";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
@@ -7,6 +7,7 @@ import ActivePosition from "@/components/profile/ActivePosition";
 import { CiSearch } from "react-icons/ci";
 import History from "../profile/History";
 import TopHundred from "../profile/TopHundred";
+import axios from "axios";
 
 const UserProfileControl = () => {
   const [leftTableTab, setLeftTableTab] = useState("Active Position");
@@ -14,8 +15,12 @@ const UserProfileControl = () => {
   const [activePositionSearchQuery, setActivePositionSearchQuery] =
     useState("");
   const [activitySearchQuery, setActivitySearchQuery] = useState("");
+  const [performance, setPerformance] = useState([])
   const [mobileActiveTab, setMobileActiveTab] = useState("Active Position");
 
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
   const currentTabData = useSelector(
     (state) => state?.setPnlData?.PnlData || []
   );
@@ -36,6 +41,7 @@ const UserProfileControl = () => {
     return acc + pnl;
   }, 0);
 
+
   // search active position
   const hasSearch = activePositionSearchQuery.trim() !== "";
   const filteredData = currentTabData.filter(
@@ -51,6 +57,28 @@ const UserProfileControl = () => {
         ?.includes(activePositionSearchQuery.toLowerCase())
   );
   const filteredActivePosition = hasSearch ? filteredData : currentTabData;
+  const backendUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
+
+  async function getPerformanceData() {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    await axios
+      .get(`${backendUrl}transactions/PNLPerformance/${solWalletAddress}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((response) => {
+        console.log("🚀 ~ getPerformanceData ~ response:", response?.data?.data?.performance)
+        setPerformance(response?.data?.data?.performance)
+      }).catch((error) => {
+        console.error(error)
+      })
+  }
+
+  useEffect(() => {
+    setPerformance([])
+    getPerformanceData()
+  }, [solWalletAddress])
 
   return (
     <>
@@ -117,16 +145,13 @@ const UserProfileControl = () => {
                 {"Performance"}
               </h3>
             </div>
-            <div className="flex mt-24 items-center justify-center">
-              <div className="text-base text-gray-400">Coming soon..</div>
-            </div>
 
-            {/* <div className="">
+            <div className="">
               <div className="flex justify-between items-center pt-2 border-gray-800 rounded-lg">
                 <div className="flex items-center gap-2">
                   <p className="text-xs text-slate-400">Total PnL</p>
                 </div>
-                <p className="text-red-400 text-sm font-semibold">---</p>
+                <p className={`${performance?.totalPNL >= 0 ? "text-emerald-400" : "text-red-400"}  text-sm font-semibold`}>{Number(performance?.totalPNL).toFixed(5) || 0}</p>
               </div>
 
               <div className="flex justify-between items-center py-3 border-gray-800 rounded-lg">
@@ -134,32 +159,36 @@ const UserProfileControl = () => {
                   <p className="text-xs text-slate-400">Total Transactions</p>
                 </div>
                 <div className="text-xs font-mono">
-                  <span className="text-slate-300">---</span>
-                  <span className="text-emerald-400 mx-1">---</span>
-                  <span className="text-red-400">---</span>
+                  <span className="text-slate-300">{Number(performance?.totalPNL).toFixed(5) || 0} </span>
+                  <span className="text-emerald-400 mx-1">{performance?.buys || 0} </span> 
+                  <span className="text-red-400">{performance?.sells || 0}</span>
                 </div>
               </div>
- 
+
               <div className=" ">
                 {[
-                  { color: "bg-emerald-500", label: ">500%", value: "---", textColor: "text-emerald-400" },
-                  { color: "bg-emerald-400", label: "100% - 500%", value: "---", textColor: "text-emerald-300" },
-                  { color: "bg-emerald-300", label: "0% - 200%", value: "---", textColor: "text-emerald-200" },
-                  { color: "bg-red-400", label: "0 - -50%", value: "---", textColor: "text-red-400" },
-                  { color: "bg-red-500", label: "<-50%", value: "---", textColor: "text-red-500" },
-                ].map((item, index) => (
-                  <div key={index} className="flex justify-between items-center py-1">
-                    <div className="flex items-center gap-2">
-                      <span className={`w-2 h-2 ${item.color} rounded-full`}></span>
-                      <p className="text-xs text-slate-400">{item.label}</p>
+                  { color: "bg-emerald-500", label: ">500%", value: "---", textColor: "text-emerald-400", rangeId: 500 },
+                  { color: "bg-emerald-400", label: "100% - 500%", value: "---", textColor: "text-emerald-300", rangeId: 200 },
+                  { color: "bg-emerald-300", label: "0% - 200%", value: "---", textColor: "text-emerald-200", rangeId: 0 },
+                  { color: "bg-red-400", label: "0 - -50%", value: "---", textColor: "text-red-400", rangeId: -50 },
+                  { color: "bg-red-500", label: "<-50%", value: "---", textColor: "text-red-500", rangeId: null },
+                ].map((item, index) => {
+                  const performanceMatch = performance?.performance?.find(p => p._id === item.rangeId);
+                  const value = performanceMatch ? performanceMatch.count : 0;
+                  return (
+                    <div key={index} className="flex justify-between items-center py-1">
+                      <div className="flex items-center gap-2">
+                        <span className={`w-2 h-2 ${item.color} rounded-full`}></span>
+                        <p className="text-xs text-slate-400">{item.label}</p>
+                      </div>
+                      <p className={`text-sm font-medium ${item.textColor}`}>{value}</p>
                     </div>
-                    <p className={`text-sm font-medium ${item.textColor}`}>{item.value}</p>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
 
-               
-              <div className="w-full h-2 bg-slate-700 rounded-full mt-3 overflow-hidden">
+
+              {/* <div className="w-full h-2 bg-slate-700 rounded-full mt-3 overflow-hidden">
                 <div className="flex h-full">
                   <div className="bg-emerald-500" style={{ width: "4%" }}></div>
                   <div className="bg-emerald-400" style={{ width: "12%" }}></div>
@@ -167,8 +196,8 @@ const UserProfileControl = () => {
                   <div className="bg-red-400" style={{ width: "8%" }}></div>
                   <div className="bg-red-500" style={{ width: "48%" }}></div>
                 </div>
-              </div>
-            </div> */}
+              </div> */}
+            </div>
           </div>
         </div>
 
@@ -274,7 +303,7 @@ const UserProfileControl = () => {
             {/* Tab Navigation */}
             <div className="flex items-center border-b border-gray-800 justify-between overflow-x-auto sm:px-4 px-2">
               <div className="flex gap-1">
-                {["Active Position", "Activity"].map((tab) => (
+                {["Active Position", "Activity", "History", "Top 100"].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setMobileActiveTab(tab)}
@@ -287,7 +316,7 @@ const UserProfileControl = () => {
                   </button>
                 ))}
               </div>
-              <div>
+              {/* <div>
                 <div className="w-full md:w-72">
                   <input
                     type="search"
@@ -300,7 +329,7 @@ const UserProfileControl = () => {
                     className="w-full bg-gray-900 border border-gray-800 rounded-lg  sm:px-2 sm:py-2 px-1 py-1 text-sm focus:outline-none"
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* Tab Content */}
@@ -315,6 +344,18 @@ const UserProfileControl = () => {
             {mobileActiveTab == "Activity" && (
               <div>
                 <ActivityTable activitySearchQuery={activitySearchQuery} />
+              </div>
+            )}
+            {mobileActiveTab === "History" && (
+              <div>
+                <History
+                />
+              </div>
+            )}
+            {mobileActiveTab === "Top 100" && (
+              <div>
+                <TopHundred
+                />
               </div>
             )}
           </div>

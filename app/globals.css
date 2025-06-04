@@ -444,46 +444,31 @@ input[type="search"]::-webkit-search-cancel-button {
     transform: rotate(360deg);
   }
 }
-
-/* From Uiverse.io by MuhammadHasann */
+ 
 .button {
   --black-700: hsla(0 0% 12% / 1);
   --border_radius: 9px;
   --transtion: 0.3s ease-in-out;
   --offset: 2px;
-
   cursor: pointer;
   position: relative;
-
   display: flex;
   align-items: center;
   gap: 0.5rem;
-
   transform-origin: center;
-
-  background-color: transparent;
-
-  border: none;
-  border-radius: 8px;
-
+  background-color: black; 
+  border-radius: 8px; 
   transition: transform var(--transtion);
-}
-
-.button:is(:hover, :focus-visible) {
-  --active: 1;
-}
+} 
 
 .button::before {
-  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-
+  transform: translate(-50%, -50%); 
   width: 100%;
   height: 100%;
-  background-color: black;
-
+  background-color: black; 
   border-radius: var(--border_radius);
   box-shadow:
     inset 0 0.5px hsl(0, 0%, 100%),
@@ -496,7 +481,6 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 .button::after {
-  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -518,10 +502,8 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 .button .dots_border {
-  --size_border: calc(100% + 2px);
-
-  overflow: hidden;
-
+  --size_border: calc(100% + 2px); 
+  overflow: hidden; 
   position: absolute;
   top: 50%;
   left: 50%;
@@ -535,6 +517,7 @@ input[type="search"]::-webkit-search-cancel-button {
   z-index: -10;
 }
 
+/* 
 .button .dots_border::before {
   content: "";
   position: absolute;
@@ -546,11 +529,11 @@ input[type="search"]::-webkit-search-cancel-button {
 
   width: 100%;
   height: 2rem;
-  background-color: white;
+  background-color: #3b82f6;
 
-  mask: linear-gradient(transparent 0%, white 120%);
-  animation: rotate 2s linear infinite;
-}
+  mask: linear-gradient(transparent 0%, #3b82f6 120%);
+  animation: rotate 3s linear infinite;
+} */
 
 @keyframes rotate {
   to {
@@ -570,7 +553,7 @@ input[type="search"]::-webkit-search-cancel-button {
   stroke: currentColor;
 
   transform-origin: center;
-  color: hsl(0, 0%, 100%);
+  color: #3b82f6;
   animation: path 1.5s linear 0.5s infinite;
 }
 
@@ -606,17 +589,4 @@ input[type="search"]::-webkit-search-cancel-button {
   83% {
     transform: scale(var(--scale_path_3, 1));
   }
-}
-
-.button .text_button {
-  position: relative;
-  z-index: 10;
-
-  background-image: linear-gradient(90deg,
-      hsla(0 0% 100% / 1) 0%,
-      hsla(0 0% 100% / var(--active, 0)) 120%);
-  background-clip: text;
-
-  font-size: 1rem;
-  color: transparent;
 }
