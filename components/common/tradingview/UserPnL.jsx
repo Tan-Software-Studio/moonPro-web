@@ -1,6 +1,7 @@
 import React from 'react';
 import { RiExchangeDollarLine } from 'react-icons/ri';
 import { formatDecimal, humanReadableFormatWithNoDollar } from '@/utils/basicFunctions';
+import { useTranslation } from 'react-i18next';
 
 const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
   const buyAmount = currentTokenPnLData?.totalBuyAmount || 0;
@@ -12,21 +13,24 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
   const pnlPercent = buyAmount !== 0 ? (absolutePnL / buyAmount) * 100 : 0;
   const safePnLPercent = isNaN(pnlPercent) ? 0 : pnlPercent;
 
+    const { t } = useTranslation();
+    const wallettracker = t("wallettracker");
+
   const sections = [
     {
-      title: 'Bought',
+      title: wallettracker?.pnlpopup?.bottom?.activeposition?.bought,
       value: buyAmount,
       color: 'text-[#21CB6B]',
       hasDollar: true,
     },
     {
-      title: 'Sold',
+      title: wallettracker?.pnlpopup?.bottom?.activeposition?.sold,
       value: soldAmount,
       color: 'text-[#ED1B24]',
       hasDollar: true,
     },
     {
-      title: 'Holding',
+      title: wallettracker?.pnlpopup?.bottom?.activeposition?.remaining,
       value: holdingAmount,
       color: 'text-white',
       hoverValue: (
@@ -40,7 +44,7 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
       hasDollar: true,
     },
     {
-      title: 'PnL',
+      title: wallettracker?.pnlpopup?.bottom?.pnl,
       value: absolutePnL,
       color: isPositivePnL ? 'text-[#21CB6B]' : 'text-[#ED1B24]',
       icon: (
