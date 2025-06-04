@@ -3,13 +3,24 @@ import { RiExchangeDollarLine } from 'react-icons/ri';
 import { formatDecimal, humanReadableFormatWithNoDollar } from '@/utils/basicFunctions';
 
 const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
-  const buyAmount = currentTokenPnLData?.totalBuyAmount || 0;
+  const buyAmount = currentTokenPnLData?.activeQtyHeld * currentTokenPnLData?.averageBuyPrice || 0;
   const soldAmount = currentTokenPnLData?.quantitySold * currentTokenPnLData?.averageHistoricalSellPrice || 0;
-  const holdingAmount = currentTokenPnLData?.activeQtyHeld * currentPrice || 0;
-  const pnlAmount = ((holdingAmount) + (currentTokenPnLData?.realizedProfit || 0)) - buyAmount;
+  const activeQtyHeld = currentTokenPnLData?.activeQtyHeld || 0;
+  const quantitySold = currentTokenPnLData?.quantitySold || 0;
+  const averageBuyPrice = currentTokenPnLData?.averageBuyPrice || 0;
+
+  const availableQty = activeQtyHeld - quantitySold;
+  const availableQtyInUSDWhenBought = availableQty * averageBuyPrice;
+  const availableQtyInUSDInCurrentPrice = availableQty * (currentPrice || 0);
+
+  const pnlAmount = availableQtyInUSDInCurrentPrice - availableQtyInUSDWhenBought;
   const isPositivePnL = pnlAmount >= 0;
   const absolutePnL = Math.abs(pnlAmount);
-  const pnlPercent = buyAmount !== 0 ? (absolutePnL / buyAmount) * 100 : 0;
+
+  const pnlPercent = availableQtyInUSDWhenBought !== 0
+    ? (pnlAmount / availableQtyInUSDWhenBought) * 100
+    : 0;
+
   const safePnLPercent = isNaN(pnlPercent) ? 0 : pnlPercent;
 
   const sections = [
@@ -27,13 +38,13 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
     },
     {
       title: 'Holding',
-      value: holdingAmount,
+      value: availableQtyInUSDInCurrentPrice,
       color: 'text-white',
       hoverValue: (
         <span>
-          {currentTokenPnLData?.activeQtyHeld > 1 || currentTokenPnLData?.activeQtyHeld < -1
-            ? humanReadableFormatWithNoDollar(currentTokenPnLData?.activeQtyHeld, 2)
-            : formatDecimal(currentTokenPnLData?.activeQtyHeld, 1)}{' '}
+          {availableQty > 1 || availableQty < -1
+            ? humanReadableFormatWithNoDollar(availableQty, 2)
+            : formatDecimal(availableQty, 1)}{' '}
           {tokenSymbol ? tokenSymbol.slice(0, 3) : ''}
         </span>
       ),
@@ -42,13 +53,14 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
     {
       title: 'PnL',
       value: absolutePnL,
+      addSign: `${isPositivePnL ? '+' : '-'}`,
       color: isPositivePnL ? 'text-[#21CB6B]' : 'text-[#ED1B24]',
       icon: (
               <RiExchangeDollarLine
                 className="text-[#21CB6B] w-[18px] h-[18px] lg:w-2 lg:h-2 xl:w-3 xl:h-3"
               />
             ),      
-      extra: `(${isPositivePnL ? '+' : '-'}${safePnLPercent.toFixed(safePnLPercent < 1 ? 2 : 0)}%)`,
+      extra: `(${isPositivePnL ? '+' : ''}${safePnLPercent.toFixed(safePnLPercent < 1 ? 2 : 0)}%)`,
       hasDollar: true,
     },
   ];
@@ -94,6 +106,7 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
                 {section.title === 'PnL' ? (
                   <div className="flex items-center">
                     <span>
+                      {section?.addSign && section.addSign}
                       {section.hasDollar && '$'}
                       {section.value > 1 || section.value < -1
                         ? humanReadableFormatWithNoDollar(section.value)
