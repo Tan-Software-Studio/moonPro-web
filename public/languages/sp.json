@@ -69,8 +69,30 @@
       "volume": "Volumen",
       "auditres": "Resultados de auditoría",
       "auditrestooltip": "Comprobaciones rápidas de seguridad: muestra si el token puede ser creado de nuevo, congelado, o si el token tiene 10 titulares.",
-      "quickbuy": "COMPRA RÁPIDA"
-    }
+      "quickbuy": "COMPRA RÁPIDA",
+      "search": "Buscar por ticker o nombre",
+"display": "Mostrar"
+
+    },
+    "display" :{
+  "MC_77K": "MC 77K",
+  "Small": "Pequeño",
+  "Large": "Grande",
+  "HideSearchBar": "Ocultar barra de búsqueda",
+  "CircleImage": "Imagen circular",
+  "ProgressBarRing": "Anillo de progreso",
+  "CustomizeRows": "Personalizar filas",
+  "MarketCap": "Capitalización de mercado",
+  "Volume": "Volumen",
+  "Socials": "Redes sociales",
+  "Holders": "Titulares",
+  "Top10Holders": "Top 10 Titulares",
+      "progressBarLine": "Línea de barra de progreso",
+    "squareImage": "Imagen cuadrada",
+    "showSearchBar": "Mostrar barra de búsqueda",
+    "metrics": "Métricas"
+}
+
   },
   "recentcalls": {
     "mainHeader": {
@@ -615,6 +637,13 @@
           "quicksell": "Venta Rápida"
         }
       }
+    },
+        "table2": {
+      "trades": "Operaciones",
+      "positions": "Posiciones",
+      "holders": "Titulares",
+      "topTraders": "Principales operadores",
+       "noData": "No se encontraron datos"
     }
   },
   "navbar": {
@@ -681,7 +710,26 @@
       "revealMyKey": "Revelar mi clave",
       "warning": "ADVERTENCIA: Esta clave de recuperación es la única forma de acceder a tu billetera si pierdes tus credenciales. Guárdala en un lugar seguro y no la compartas con nadie.",
       "warningPrivate": "ADVERTENCIA: Esta clave de recuperación es la única forma de acceder a tu billetera si pierdes tus credenciales. Guárdala en un lugar seguro y no la compartas con nadie."
-    }
+    },
+    "acountandsecurity": {
+  "acountandsecurity": "Cuenta y Seguridad",
+  "level1": "Nivel de Recompensas",
+  "level2": "Último Inicio de Sesión",
+  "level3": "Código de Referencia",
+  "recoveryKey": "Clave de Recuperación",
+  "language": "Idioma",
+  "wallets": "Billeteras",
+  "rewards": "Recompensas",
+  "manageWallets": "Administrar Billeteras",
+  "earnRewards": "Ganar Recompensas",
+  "logOut": "Cerrar Sesión",
+  "msg1": "Cerrar sesión de tu cuenta",
+  "msg2": "Accede a tu frase semilla para exportar tus cuentas. ¡NO LA COMPARTAS!",
+  "msg3": "Cambiar el idioma de la aplicación",
+  "msg4": "Agregar o administrar tus billeteras externas",
+  "msg5": "Gana SOL gratis. Visita la página de recompensas para comenzar"
+}
+
   },
   "accountPopup": {
     "security": {
@@ -724,7 +772,12 @@
     "watchlist": {
       "watchlist": "Lista de deseos",
       "Cancel": "Cancelar",
-      "Save": "Guardar"
+      "Save": "Guardar",
+          "token": "Token",
+    "marketCap": "Capitalización de mercado",
+    "volume1h": "Volumen 1H",
+    "liquidity": "Liquidez",
+    "actions": "Acciones"
     }
   },
   "newProfile": {

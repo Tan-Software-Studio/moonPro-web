@@ -69,8 +69,30 @@
       "volume": "Volumen",
       "auditres": "Audit-Ergebnisse",
       "auditrestooltip": "Schnelle Sicherheitsprüfungen: Zeigt, ob das Token wieder gemintet, eingefroren werden kann oder ob das Token 10 Inhaber hat.",
-      "quickbuy": "SCHNELL KAUFEN"
-    }
+      "quickbuy": "SCHNELL KAUFEN",
+      "search": "Suche nach Ticker oder Name",
+"display": "Anzeige"
+
+    },
+    "display" : {
+  "MC_77K": "MK 77K",
+  "Small": "Klein",
+  "Large": "Groß",
+  "HideSearchBar": "Suchleiste ausblenden",
+  "CircleImage": "Kreisbild",
+  "ProgressBarRing": "Fortschrittsring",
+  "CustomizeRows": "Zeilen anpassen",
+  "MarketCap": "Marktkapitalisierung",
+  "Volume": "Volumen",
+  "Socials": "Soziale Medien",
+  "Holders": "Inhaber",
+  "Top10Holders": "Top 10 Inhaber",
+      "progressBarLine": "Fortschrittsbalken Linie",
+    "squareImage": "Quadratisches Bild",
+    "showSearchBar": "Suchleiste anzeigen",
+     "metrics": "Metriken"
+}
+
   },
   "recentcalls": {
     "mainHeader": {
@@ -615,6 +637,13 @@
           "quicksell": "SCHNELLVERKAUF"
         }
       }
+    },
+    "table2": {
+      "trades": "Handel",
+      "positions": "Positionen",
+      "holders": "Inhaber",
+      "topTraders": "Top-Händler",
+       "noData": "Keine Daten gefunden"   
     }
   },
   "navbar": {
@@ -681,7 +710,26 @@
       "revealMyKey": "Meinen Schlüssel anzeigen",
       "warning": "WARNUNG: Dieser Wiederherstellungsschlüssel ist der einzige Weg, auf Ihre Wallet zuzugreifen, wenn Sie Ihre Zugangsdaten verlieren. Bewahren Sie ihn sicher auf und teilen Sie ihn niemandem mit.",
       "warningPrivate": "WARNUNG: Dieser Wiederherstellungsschlüssel ist der einzige Weg, auf Ihre Wallet zuzugreifen, wenn Sie Ihre Zugangsdaten verlieren. Bewahren Sie ihn sicher auf und teilen Sie ihn niemandem mit."
-    }
+    },
+    "acountandsecurity": {
+  "acountandsecurity": "Konto und Sicherheit",
+  "level1": "Belohnungsstufe",
+  "level2": "Letzter Login",
+  "level3": "Empfehlungscode",
+  "recoveryKey": "Wiederherstellungsschlüssel",
+  "language": "Sprache",
+  "wallets": "Wallets",
+  "rewards": "Belohnungen",
+  "manageWallets": "Wallets verwalten",
+  "earnRewards": "Belohnungen verdienen",
+  "logOut": "Abmelden",
+  "msg1": "Melden Sie sich von Ihrem Konto ab",
+  "msg2": "Greifen Sie auf Ihre Seed-Phrase zu, um Ihre Konten zu exportieren. NICHT TEILEN!",
+  "msg3": "Sprache der Anwendung ändern",
+  "msg4": "Externe Wallet-Konten hinzufügen oder verwalten",
+  "msg5": "Verdienen Sie kostenloses SOL. Besuchen Sie die Belohnungsseite, um zu starten"
+}
+
   },
   "accountPopup": {
     "security": {
@@ -724,7 +772,12 @@
     "watchlist": {
       "watchlist": "Beobachtungsliste",
       "Cancel": "Abbrechen",
-      "Save": "Speichern"
+      "Save": "Speichern",
+      "token": "Token",
+    "marketCap": "Marktkapitalisierung",
+    "volume1h": "1H Volumen",
+    "liquidity": "Liquidität",
+    "actions": "Aktionen"
     }
   },
   "newProfile": {
