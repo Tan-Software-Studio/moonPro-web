@@ -8,8 +8,9 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { PiWallet } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
+import { pnlPercentage } from "./calculation";
 
-const TopHundred = ({}) => {
+const TopHundred = ({ }) => {
   const router = useRouter();
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -49,6 +50,14 @@ const TopHundred = ({}) => {
     dispatch(setChartSymbolImage(item?.img));
   };
 
+  const handleCopy = (address, index, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigator.clipboard.writeText(address);
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
   useEffect(() => {
     setTopHundredHistoryData([]);
     getTopHundredHistoryData();
@@ -86,9 +95,8 @@ const TopHundred = ({}) => {
                   <tr
                     onClick={() => navigateToChartSreen(item)}
                     key={index}
-                    className={`${
-                      index % 2 === 0 ? "bg-gray-800/20" : ""
-                    } border- b -slate-700/20 hover:bg-slate-800/30 cursor-pointer transition - colors duration - 200`}
+                    className={`${index % 2 === 0 ? "bg-gray-800/20" : ""
+                      } border- b -slate-700/20 hover:bg-slate-800/30 cursor-pointer transition - colors duration - 200`}
                   >
                     <td className="px-4 py-2">
                       <div className="flex items-center gap-3">
@@ -124,28 +132,41 @@ const TopHundred = ({}) => {
                         </div>
                       </div>
                     </td>
+
                     <td className="px-4 py-2">
                       <p className="font-semibold  text-white">
-                        {Number(item.qty).toFixed(5)}
+                        ${(item?.qty * item?.buyPrice).toFixed(5)}
+                      </p>
+                      <p className="text-slate-400 text-sm font-medium">
+                        {Number(item?.qty).toFixed(5)}  {item?.symbol?.length > 5 ? item.symbol.slice(0, 5) + '...' : item.symbol}
                       </p>
                     </td>
+
                     <td className="px-4 py-2">
                       <p className="font-semibold text-white ">
-                        {Number(item.qty).toFixed(5)}
+                        ${(item.qty * item.sellPrice).toFixed(5)}
+                      </p>
+                      <p className="text-slate-400 text-sm font-medium">
+                        {Number(item.qty).toFixed(5)} {item?.symbol?.length > 5 ? item.symbol.slice(0, 5) + '...' : item.symbol}
                       </p>
                     </td>
-                    <td className="px-4 py-2">
-                      <p
-                        className={`${
-                          item?.realizedProfit >= 0
-                            ? "text-emerald-400 bg-emerald-900/20"
-                            : "text-red-400 bg-red-900/20"
-                        } font-semibold px-2 py-1 rounded-full text-sm flex items-center justify-center text-center `}
-                      >
-                        {(item?.realizedProfit).toFixed(5)}
-                      </p>
-                      {/* <p className="font-semibold  text-gray-400">${((item.totalBoughtQty - item.quantitySold) * item.current_price).toFixed(2)}</p> */}
+
+                    <td className="px-4 py-2 " >
+                      <div className={`flex items-center gap-0.5 text-base font-semibold whitespace-nowrap break-keep ${pnlPercentage(item?.sellPrice, item?.buyPrice) >= 0 ? "text-emerald-500" : "text-red-500"}`}>
+
+                        <p className="">
+                          {
+                            `${(item?.buyPrice - item.sellPrice) * item.qty >= 0 ? "$" : "-$"}${Math.abs((item?.buyPrice - item.sellPrice) * item.qty).toFixed(2)}`
+                          }
+                        </p>
+                        <p className={``}>
+                          ({`${pnlPercentage(item?.sellPrice, item?.buyPrice)}%`})
+                        </p>
+
+                      </div>
                     </td>
+
+
                   </tr>
                 ))}
               </tbody>
