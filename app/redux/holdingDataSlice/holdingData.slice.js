@@ -217,7 +217,6 @@ const holdingData = createSlice({
           }
         }
       }
-      console.log("PNL Data", JSON.parse(JSON.stringify(state.PnlData)));
     },
     resetPnlDataState: (state) => {
       state.initialLoading = false;
