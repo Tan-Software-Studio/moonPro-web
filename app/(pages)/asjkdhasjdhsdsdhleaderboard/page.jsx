@@ -16,6 +16,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { showToaster } from "@/utils/toaster/toaster.style";
 
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
@@ -28,12 +29,12 @@ const LeaderBoard = () => {
     (state) => state?.AllStatesData?.solanaLivePrice
   );
   const tableHeader = [
-    { id: 1, title: "#"},
-    { id: 2, title: "Email"},
-    { id: 3, title: "Total Trades"},
-    { id: 4, title: "Amount"},
-    { id: 5, title: "Value"},
-    { id: 6, title: "ReferralId"},
+    { id: 1, title: "#" },
+    { id: 2, title: "Email" },
+    { id: 3, title: "Total Trades" },
+    { id: 4, title: "Amount" },
+    { id: 5, title: "Value" },
+    { id: 6, title: "ReferralId" },
   ];
 
   const YourStats = [
@@ -73,9 +74,7 @@ const LeaderBoard = () => {
       .catch((err) => {
         setFlag(false);
         console.log(err?.message);
-        toast.error("Something has been wrong!", {
-          position: "top-center",
-        });
+        return showToaster("Something has been wrong.");
       });
   }
   useEffect(() => {
@@ -86,7 +85,9 @@ const LeaderBoard = () => {
     <>
       {/* container mx-auto px-4 */}
       <div className="font-poppins">
-        <div className={`container mx-auto sm:px-4 px-2 mb-4 h-[93vh] overflow-auto`}>
+        <div
+          className={`container mx-auto sm:px-4 px-2 mb-4 h-[93vh] overflow-auto`}
+        >
           <div className={`mx-[-1px] md:mx-0`}>
             <div
               className={`flex justify-start items-start xl:items-center pt-4 w-full`}
@@ -239,13 +240,14 @@ const LeaderBoard = () => {
                                 {i + 4}
                               </td>
                               <td className=" text-base font-medium py-4 px-4">
-                                {`${flag
-                                  ? "----"
-                                  : `${item?.email?.slice(
-                                    0,
-                                    3
-                                  )}...${item?.email?.slice(-4)}`
-                                  }`}
+                                {`${
+                                  flag
+                                    ? "----"
+                                    : `${item?.email?.slice(
+                                        0,
+                                        3
+                                      )}...${item?.email?.slice(-4)}`
+                                }`}
                               </td>
                               <td className=" text-base font-medium py-4 px-4">
                                 {flag ? "----" : item?.totalTrades}
@@ -254,16 +256,16 @@ const LeaderBoard = () => {
                                 {flag
                                   ? "----"
                                   : `${Number(item?.totalTradeAmount).toFixed(
-                                    5
-                                  )}`}
+                                      5
+                                    )}`}
                               </td>
                               <td className=" text-base font-medium py-4 px-4">
                                 {flag
                                   ? "----"
                                   : `$${(
-                                    Number(item?.totalTradeAmount) *
-                                    solanaLivePrice
-                                  ).toFixed(2)}`}
+                                      Number(item?.totalTradeAmount) *
+                                      solanaLivePrice
+                                    ).toFixed(2)}`}
                               </td>
                               <td className=" text-base font-medium py-4 px-4">
                                 {flag ? "----" : item?.referralId}

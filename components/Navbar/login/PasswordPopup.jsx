@@ -7,6 +7,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { openCloseLoginRegPopup } from "@/app/redux/states";
 import { useDispatch } from "react-redux";
+import { showToaster, showToasterSuccess } from "@/utils/toaster/toaster.style";
 
 const PasswordPopup = ({
   setIsPassword,
@@ -34,7 +35,7 @@ const PasswordPopup = ({
     confirmPasswordInput.trim();
     const password = passwordInput.trim();
     if (password.length < 4) {
-      toast.error("Password must be at least 4 characters long");
+      showToaster("Password must be at least 4 characters long");
       return;
     }
 
@@ -49,18 +50,18 @@ const PasswordPopup = ({
 
       if (response?.data?.statusCode === 200) {
         setOtpPopup(true);
-        toast.success(response?.data?.message);
+        showToasterSuccess(response?.data?.message);
       }
     } catch (err) {
       console.error(err);
       if (err?.response?.data?.statusCode === 405) {
-        toast.error("User already exists please try to login");
+        showToaster("User already exists please try to login");
         setTimeout(() => {
           setAuthName("login");
           setIsPassword(false);
         }, 1500);
       } else {
-        toast.error(err?.response?.data?.message);
+        showToaster(err?.response?.data?.message);
       }
     }
   };

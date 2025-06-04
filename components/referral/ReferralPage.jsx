@@ -25,6 +25,7 @@ import { RiLinkM } from "react-icons/ri";
 import { SlUserFollow } from "react-icons/sl";
 import { openCloseLoginRegPopup } from "@/app/redux/states";
 import { FaAngleDown } from "react-icons/fa6";
+import { showToasterSuccess } from "@/utils/toaster/toaster.style";
 
 
 
@@ -130,7 +131,7 @@ const ReferralPage = () => {
       `https://moonpro.wavebot.app/referral/${ref}`
     );
     setCopiedRef1(true);
-    toast.success("Referral link copied!");
+    showToasterSuccess("Referral link copied!");
     setTimeout(() => setCopiedRef1(false), 2000);
   };
 
@@ -139,14 +140,14 @@ const ReferralPage = () => {
       `https://moonpro.wavebot.app/referral/${ref}`
     );
     setCopiedRef2(true);
-    toast.success("Referral link copied!");
+    showToasterSuccess("Referral link copied!");
     setTimeout(() => setCopiedRef2(false), 2000);
   };
 
   const handleCopy3 = () => {
     navigator.clipboard.writeText(solWalletAddress);
     setCopied3(true);
-    toast.success("Wallet address copied!");
+    showToasterSuccess("Wallet address copied!");
     // setTimeout(() => setCopied3(false), 2000);
   };
 

@@ -6,6 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { showToastLoader } from '../common/toastLoader/ToastLoder';
 import toast from 'react-hot-toast';
+import { showToaster } from '@/utils/toaster/toaster.style';
 
 function RefPopup({ Available, address, onClose, setAddClaimed }) {
 
@@ -28,7 +29,7 @@ function RefPopup({ Available, address, onClose, setAddClaimed }) {
     const claimSolanaHandler = async () => {
         if (cooldown) return;
         if (claimAmount < 0.01) {
-            return toast.error("Amount must be more than 0.01")
+            return showToaster("Amount must be more than 0.01")
         }
 
         setLoading(true);
@@ -39,7 +40,7 @@ function RefPopup({ Available, address, onClose, setAddClaimed }) {
             if (!token) {
 
 
-                return toast.error('Please Login')
+                return showToaster('Please Login')
             }
             const paylodData = {
                 address: walletAddress,
@@ -62,9 +63,9 @@ function RefPopup({ Available, address, onClose, setAddClaimed }) {
             onClose()
         } catch (e) {
 
-            toast.error("All fields are required.", {
-                id: "switch-toast",
-                duration: 2000,
+            showToaster("All fields are required.", {
+              id: "switch-toast",
+              duration: 2000,
             });
         } finally {
             setLoading(false);

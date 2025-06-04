@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { setreferralPopupAfterLogin, setSignupReferral } from "@/app/redux/states";
+import { showToaster, showToasterSuccess } from "@/utils/toaster/toaster.style";
 
 export default function ReferralCodePopup() {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ export default function ReferralCodePopup() {
     e.preventDefault();
     const token = localStorage.getItem("token");
     if (!token) {
-      toast.error("Unauthorized request.");
+      showToaster("Unauthorized request.");
       return;
     }
     if (!referralCode.trim()) {
@@ -45,7 +46,7 @@ export default function ReferralCodePopup() {
         }
       );
       setIsLoading(false);
-      toast.success(response?.data?.message);
+      showToasterSuccess(response?.data?.message);
        dispatch(setSignupReferral(null));
       dispatch(setreferralPopupAfterLogin(false));
     } catch (error) {
@@ -53,7 +54,7 @@ export default function ReferralCodePopup() {
       dispatch(setSignupReferral(null));
       setIsLoading(false);
       // console.error(error);
-      toast.error(error?.response?.data?.message);
+      showToaster(error?.response?.data?.message);
     }
   };
   const referralIfFromLink = useSelector(
