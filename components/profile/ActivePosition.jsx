@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { pnlPercentage } from "./calculation";
+import { useTranslation } from "react-i18next";
 
 const ActivePosition = ({
   filteredActivePosition,
@@ -24,6 +25,9 @@ const ActivePosition = ({
   const hasAttemptedLoad = useSelector(
     (state) => state?.setPnlData?.hasAttemptedLoad
   );
+
+      const { t } = useTranslation();
+        const referral = t('referral')
 
   const handleCopy = (address, index, e) => {
     e.preventDefault();
@@ -180,23 +184,23 @@ const ActivePosition = ({
             <div className="flex items-center justify-center mb-4">
               <Image
                 src={NoDataFish}
-                alt="No Data Available"
+                alt={referral?.refMata?.noData}
                 width={200}
                 height={100}
                 className="text-slate-400"
               />
             </div>
             <p className="text-slate-400 text-lg mb-2 break-words break-all">{`${shouldShowNoData
-              ? "No data available"
+              ? referral?.refMata?.noData
               : shouldNoSearchData
                 ? `No results found for "${activePositionSearchQuery}"`
                 : "No data"
               }`}</p>
             <p className="text-slate-500 text-sm">
               {`${shouldShowNoData
-                ? "Information will appear here when available"
+                ? referral?.refMata?.infoWillAppear 
                 : shouldNoSearchData
-                  ? "Try adjusting your search terms."
+                  ? referral?.refMata?.adjustSearch
                   : null
                 }`}
             </p>

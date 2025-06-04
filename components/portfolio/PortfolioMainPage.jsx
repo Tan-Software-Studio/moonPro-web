@@ -5,6 +5,7 @@ import Image from "next/image";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import WalletManagement from "./WalletManagement";
+import { useTranslation } from "react-i18next";
 
 const PortfolioMainPage = () => {
   const dispatch = useDispatch();
@@ -12,6 +13,9 @@ const PortfolioMainPage = () => {
     (state) => state?.AllStatesData?.solWalletAddress
   );
   const activeTab = useSelector((state) => state?.setPnlData?.pnlTableData);
+
+  const { t } = useTranslation();
+  const portfolio = t('portfolio')
 
   return (
     <>
@@ -24,14 +28,14 @@ const PortfolioMainPage = () => {
                   }`}
                 onClick={() => dispatch(updatePnlTableData("profile"))}
               >
-                Spots
+                {portfolio?.spots}
               </div>
               <div
                 className={`text-xl font-bold cursor-pointer ${activeTab == "portfolio" ? "text-white" : "text-gray-400"
                   }`}
                 onClick={() => dispatch(updatePnlTableData("portfolio"))}
               >
-                Wallets
+                {portfolio?.wallets}
               </div>
             </div>
 
@@ -50,10 +54,10 @@ const PortfolioMainPage = () => {
               className="text-slate-400 w-28 h-28"
             />
             <h3 className="text-xl font-bold text-white mb-2">
-              Login Required
+              {portfolio?.loginRequired}
             </h3>
             <p className="text-gray-400 text-sm leading-relaxed tracking-wider">
-              Please login to view your portfolio and profile.
+              {portfolio?.pleaseLogin}
             </p>
           </div>
         </div>

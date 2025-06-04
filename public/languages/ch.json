@@ -219,6 +219,25 @@
       "earningtool": "您可以从该用户的推荐中领取的金额。",
       "status": "状态",
       "statustool": "表示您是否有资格领取推荐奖励。"
+    },
+     "refMata": {
+      "nextLevel": "下一等级：",
+      "rewardsRate": "积分和SOL的2.5倍奖励率",
+      "silver": "银牌",
+      "comingSoon": "即将推出..",
+      "solEarned": "获得的SOL",
+      "claim": "领取",
+      "claimed": "已领取",
+      "availableToClaim": "可领取",
+      "referrals": "推荐人",
+      "emailWallet": "电子邮件/钱包",
+      "dateJoined": "加入日期",
+      "noReferralsFound": "未找到推荐人。",
+       "tradeMessage": "你快到了！交易 20 个 SOL 即可达成",
+        "noHistory": "您还没有任何交易记录。",
+    "infoWillAppear": "交易信息将在可用时显示在此处",
+    "noData": "暂无数据",
+    "adjustSearch": "尝试调整您的搜索词。"
     }
   },
   "alphapicks": {
@@ -803,12 +822,29 @@
     "SellAll": "全部卖出"
   },
   "portfolio": {
-    "Show": "显示已归档",
+ "Show": "显示已归档",
     "Import": "导入",
     "CreateWallet": "创建钱包",
     "Balance": "余额",
-    "Holdings": "持仓",
+    "Holdings": "持有",
     "Actions": "操作",
-    "Wallet": "钱包"
+    "Wallet": "钱包",
+    "activity": "活动",
+    "history": "历史",
+    "top100": "前100名",
+    "activePosition": "活跃仓位",
+    "comingSoon": "即将推出..",
+    "availableBalance": "可用余额",
+    "unrealizedPNL": "未实现盈亏",
+    "totalValue": "总价值",
+    "pnlAnalysis": "盈亏分析",
+    "balance": "余额",
+    "wallets": "钱包",
+    "spots": "现货",
+    "perfomance": "性能",
+    "search": "按地址、名称或符号搜索",
+     "pleaseLogin": "请登录以查看您的投资组合和个人资料。",
+    "loginRequired": "需要登录",
+    "noWalletsFound": "未找到钱包"
   }
 }

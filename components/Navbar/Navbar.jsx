@@ -39,6 +39,7 @@ import { decodeData } from "@/utils/decryption/decryption";
 import ExchangePopup from "./popup/ExchangePopup";
 import {
   fetchUserData,
+  makeUserEmptyOnLogout,
   setBalancesError,
   setBalancesLoading,
   setWalletBalances,
@@ -47,6 +48,7 @@ import WithdrawPopup from "./popup/WithdrawPopup";
 import NewAiSignalTokens from "./popup/NewAiSignalTokens";
 import { fetchAiSignalData } from "@/app/redux/AiSignalDataSlice/AiSignal.slice";
 import { Flame } from "lucide-react";
+import { showToaster } from "@/utils/toaster/toaster.style";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
@@ -71,7 +73,7 @@ const Navbar = () => {
   async function handleToGetSolanaPhrase() {
     const token = localStorage.getItem("token");
     if (!token) {
-      return toast.error("Please login.");
+      return showToaster("Please login.");
     }
     await axios({
       url: `${baseUrl}user/getSolanaPhrase`,
@@ -175,9 +177,11 @@ const Navbar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("walletAddress");
     dispatch(setSolWalletAddress());
+    dispatch(makeUserEmptyOnLogout());
     router.replace("/trending");
     setIsProfileOpen(false);
     googleLogout();
+
   };
 
   async function fetchData() {
