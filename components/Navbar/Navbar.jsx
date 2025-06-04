@@ -39,6 +39,7 @@ import { decodeData } from "@/utils/decryption/decryption";
 import ExchangePopup from "./popup/ExchangePopup";
 import {
   fetchUserData,
+  makeUserEmptyOnLogout,
   setBalancesError,
   setBalancesLoading,
   setWalletBalances,
@@ -171,9 +172,11 @@ const Navbar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("walletAddress");
     dispatch(setSolWalletAddress());
+    dispatch(makeUserEmptyOnLogout());
     router.replace("/trending");
     setIsProfileOpen(false);
     googleLogout();
+
   };
 
   async function fetchData() {

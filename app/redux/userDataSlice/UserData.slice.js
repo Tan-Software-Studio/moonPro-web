@@ -29,6 +29,9 @@ const userDataSlice = createSlice({
     balancesError: null,
   },
   reducers: {
+    makeUserEmptyOnLogout: (state) => {
+      state.userDetails = {};
+    },
     clearWalletBalances: (state) => {
       if (state.userDetails && state.userDetails.walletAddressSOL) {
         state.userDetails.walletAddressSOL =
@@ -102,6 +105,7 @@ const userDataSlice = createSlice({
 });
 
 export const {
+  makeUserEmptyOnLogout,
   clearWalletBalances,
   setWalletBalances,
   setBalancesLoading,

@@ -160,16 +160,16 @@ const LoginPopup = ({ authName }) => {
       try {
         const signResult = await signMessage(message);
 
-        const response = await axios.post(`${baseUrl}user/phantomAuth`, {
+        const response = await axios.post(`${baseUrl}user/phantomLogin`, {
           walletAddress: connectResult.publicKey,
           signature: signResult.signature,
           message: message,
           inviteCode: refferalCode || null,
         });
 
-        if (response?.data?.statusCode === 200 || response?.data?.statusCode === 201) {
+        if (response?.data?.message === "Login successfull") {
           localStorage.setItem("token", response?.data?.data?.token);
-          localStorage.setItem("walletAddress", connectResult.publicKey);
+          localStorage.setItem("walletAddress", response?.data?.data?.user?.walletAddressSOL);
 
           dispatch(openCloseLoginRegPopup(false));
           dispatch(setSolWalletAddress());
