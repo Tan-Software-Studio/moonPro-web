@@ -14,6 +14,7 @@
     "@reduxjs/toolkit": "^2.2.7",
     "@solana/spl-token": "^0.4.9",
     "@solana/web3.js": "^1.95.5",
+    "@tanstack/react-query": "^5.79.2",
     "axios": "^1.7.7",
     "clsx": "^2.1.1",
     "crypto-js": "^4.2.0",
@@ -41,7 +42,9 @@
     "react-responsive": "^10.0.0",
     "react-spinners": "^0.17.0",
     "socket.io-client": "^4.8.1",
-    "tailwind-merge": "^3.0.2"
+    "tailwind-merge": "^3.0.2",
+    "viem": "^2.30.6",
+    "wagmi": "^2.15.4"
   },
   "devDependencies": {
     "autoprefixer": "^10.0.1",

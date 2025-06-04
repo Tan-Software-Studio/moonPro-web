@@ -16,7 +16,7 @@ import { RiShareBoxLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { BsKey } from "react-icons/bs";
 import { CiStar } from "react-icons/ci";
-import { updateWalletToPrimary } from "@/app/redux/userDataSlice/UserData.slice";
+import { addNewGeneratedWallet, updateWalletToPrimary } from "@/app/redux/userDataSlice/UserData.slice";
 import { showToaster } from "@/utils/toaster/toaster.style";
 
 export default function WalletManagement() {
@@ -35,7 +35,7 @@ export default function WalletManagement() {
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
   useEffect(() => {
-    if (allWallets.length > 0) {
+    if (allWallets?.length > 0) {
       setWalletAddresses(allWallets);
     }
   }, [allWallets]);
@@ -74,10 +74,7 @@ export default function WalletManagement() {
           //   }))
           // );
 
-          localStorage.setItem(
-            "walletAddress",
-            res?.data?.data?.wallet?.wallet
-          );
+          localStorage.setItem("walletAddress", res?.data?.data?.wallet?.wallet);
 
           toast.success("Primary wallet switched", {
             id: "switch-toast",
@@ -95,68 +92,12 @@ export default function WalletManagement() {
     }
   }
 
-  // old primary
-
-  // const handlePrimary = async (walletIndex, loopIndex) => {
-  //   console.log("🚀 ~wallet handlePrimary ~ walletIndex:", walletIndex);
-  //   const jwtToken = localStorage.getItem("token");
-  //   if (!jwtToken) {
-  //     toast.error("Authentication required", { duration: 2000 });
-  //     return;
-  //   }
-
-  //   try {
-  //     showToastLoader("Switching wallet", "switch-toast");
-
-  //     const response = await axios.put(
-  //       `${baseUrl}user/makeSolWalletPrimary`,
-  //       { index: walletIndex },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${jwtToken}`,
-  //         },
-  //       }
-  //     );
-
-  //     // Store wallet address in localStorage
-  //     localStorage.setItem("walletAddress", response?.data?.data?.wallet?.wallet);
-
-  //     // Dispatch Redux action to update wallet primary status
-  //     dispatch(
-  //       updateWalletPrimary({
-  //         walletIndex: loopIndex,
-  //         newWalletData: response?.data?.data,
-  //       })
-  //     );
-
-  //     // Update Solana wallet address in Redux
-  //     dispatch(setSolWalletAddress());
-
-  //     // Update local state for immediate UI feedback
-  //     setWalletAddresses((prevWallets) =>
-  //       prevWallets.map((wallet) => ({
-  //         ...wallet,
-  //         primary: wallet.index === walletIndex,
-  //       }))
-  //     );
-
-  //     toast.success("Primary wallet switched", {
-  //       id: "switch-toast",
-  //       duration: 2000,
-  //     });
-  //   } catch (error) {
-  //     console.error("🚀 ~ handlePrimary ~ error:", error?.message);
-  //     toast.error("Failed to switch primary wallet", {
-  //       id: "switch-toast",
-  //       duration: 2000,
-  //     });
-  //   }
-  // };
-
   async function handleCreateMultiWallet() {
     const jwtToken = localStorage.getItem("token");
     if (!jwtToken) return 0;
-
+    if (walletAddresses?.length >= 50) {
+      showToaster("You can only create 50 wallets.");
+    }
     showToastLoader("Creating wallet...", "wallet-toast");
     await axios
       .put(
@@ -174,9 +115,7 @@ export default function WalletManagement() {
           id: "wallet-toast",
           duration: 2000,
         });
-        setWalletAddresses((pre) => {
-          return [...pre, generatedWallet];
-        });
+        dispatch(addNewGeneratedWallet(generatedWallet));
       })
       .catch((error) => {
         console.error(error);
@@ -206,9 +145,7 @@ export default function WalletManagement() {
       setWalletAddresses(allWallets);
       return;
     }
-    const searchItems = allWallets.filter((wallet) =>
-      wallet?.wallet?.toLowerCase()?.includes(value)
-    );
+    const searchItems = allWallets.filter((wallet) => wallet?.wallet?.toLowerCase()?.includes(value));
     setWalletAddresses(searchItems);
   }
 
@@ -273,16 +210,10 @@ export default function WalletManagement() {
                 <thead className="overflow-x-auto">
                   <tr className="bg-gray-800 text-left text-gray-400 text-sm">
                     <th className="py-4 px-5 font-medium w-1/12">#</th>
-                    <th className="py-4 px-5 font-medium w-5/12">
-                      {portfolio?.Wallet}
-                    </th>
-                    <th className="py-4 px-5 font-medium w-2/12 text-center md:text-left">
-                      {portfolio?.Balance}
-                    </th>
+                    <th className="py-4 px-5 font-medium w-5/12">{portfolio?.Wallet}</th>
+                    <th className="py-4 px-5 font-medium w-2/12 text-center md:text-left">{portfolio?.Balance}</th>
                     {/* <th className="py-4 px-5 font-medium w-2/12 text-center md:text-left">{portfolio?.Holdings}</th> */}
-                    <th className="py-4 px-5 font-medium w-3/12 text-right">
-                      {portfolio?.Actions}
-                    </th>
+                    <th className="py-4 px-5 font-medium w-3/12 text-right">{portfolio?.Actions}</th>
                   </tr>
                 </thead>
                 <tbody className="overflow-x-auto">
@@ -321,14 +252,8 @@ export default function WalletManagement() {
                         <td className="py-2 px-4">
                           <div className="flex items-center gap-3">
                             <div className="flex items-center gap-2">
-                              {wallet.primary && (
-                                <FaStar className="text-amber-500 " size={16} />
-                              )}
-                              <div
-                                className={`font-medium ${
-                                  wallet.primary ? "text-amber-500" : ""
-                                }`}
-                              >
+                              {wallet.primary && <FaStar className="text-amber-500 " size={16} />}
+                              <div className={`font-medium ${wallet.primary ? "text-amber-500" : ""}`}>
                                 {wallet.primary ? "Primary Wallet" : "Wallet"}
                               </div>
                             </div>
@@ -336,10 +261,7 @@ export default function WalletManagement() {
                               onClick={() => copyToClipboard(wallet.wallet)}
                               className="text-xs text-gray-400 flex gap-1 items-center hover:text-gray-200 transition-colors bg-gray-800/50 py-1 px-2 rounded-md"
                             >
-                              {`${wallet?.wallet.slice(
-                                0,
-                                4
-                              )}...${wallet?.wallet.slice(-4)}`}
+                              {`${wallet?.wallet.slice(0, 4)}...${wallet?.wallet.slice(-4)}`}
                               {copiedWallet === wallet.wallet ? (
                                 <BiCheckDouble className="text-[20px]" />
                               ) : (
@@ -352,13 +274,7 @@ export default function WalletManagement() {
                         {/* Balance */}
                         <td className="py-2 px-4">
                           <div className="flex items-center gap-2 ">
-                            <Image
-                              src={solana}
-                              width={20}
-                              height={20}
-                              alt="solana"
-                              className="rounded-full"
-                            />
+                            <Image src={solana} width={20} height={20} alt="solana" className="rounded-full" />
                             <span>{wallet?.balance || 0}</span>
                           </div>
                         </td>
@@ -400,9 +316,7 @@ export default function WalletManagement() {
                             </button>
                             {!wallet?.primary && (
                               <button
-                                onClick={() =>
-                                  handlePrimary(wallet?.index, index)
-                                }
+                                onClick={() => handlePrimary(wallet?.index, index)}
                                 className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-amber-500"
                                 title="Set as primary"
                               >
