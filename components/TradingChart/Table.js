@@ -134,10 +134,10 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
   };
 
   const tabList = [
-    { name: "Trades" },
-    { name: "Positions" },
-    { name: "Holders" },
-    { name: "Top Traders" },
+    { name: tragindViewPagePage?.table2?.trades },
+    { name: tragindViewPagePage?.table2?.positions },
+    { name: tragindViewPagePage?.table2?.holders},
+    { name: tragindViewPagePage?.table2?.topTraders },
   ];
 
   const tableHeader = [
@@ -1166,7 +1166,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                           </p>
                         ) : null // If wallet is connected and holdings exist, no message
                       ) : (
-                        <p>{"No data found"}</p>
+                        <p>{tragindViewPagePage?.table2?.noData }</p>
                       )}
                     </p>
                   </div>

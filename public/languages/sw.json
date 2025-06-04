@@ -69,8 +69,30 @@
       "volume": "Volym",
       "auditres": "Granskning Resultat",
       "auditrestooltip": "Snabba säkerhetskontroller: visar om token kan mintas igen, frysas eller om token har 10 innehavare.",
-      "quickbuy": "SNABBT KÖP"
-    }
+      "quickbuy": "SNABBT KÖP",
+      "search": "Sök med ticker eller namn",
+"display": "Visa"
+
+    },
+    "display" : {
+  "MC_77K": "MK 77K",
+  "Small": "Liten",
+  "Large": "Stor",
+  "HideSearchBar": "Dölj sökfält",
+  "CircleImage": "Cirkulär bild",
+  "ProgressBarRing": "Framstegsringsindikator",
+  "CustomizeRows": "Anpassa rader",
+  "MarketCap": "Marknadsvärde",
+  "Volume": "Volym",
+  "Socials": "Sociala medier",
+  "Holders": "Innehavare",
+  "Top10Holders": "Topp 10 Innehavare",
+      "progressBarLine": "Framstegslinje",
+    "squareImage": "Fyrkantig bild",
+    "showSearchBar": "Visa sökfält",
+    "metrics": "Mått"
+}
+
   },
   "recentcalls": {
     "mainHeader": {
@@ -615,6 +637,13 @@
           "quicksell": "Snabbsälj"
         }
       }
+    },
+        "table2": {
+      "trades": "Affärer",
+      "positions": "Positioner",
+      "holders": "Innehavare",
+      "topTraders": "Topptraders",
+      "noData": "Inga data hittades"
     }
   },
   "navbar": {
@@ -681,7 +710,26 @@
       "revealMyKey": "Visa min nyckel",
       "warning": "VARNING: Denna återställningsnyckel är det enda sättet att komma åt din plånbok om du förlorar dina autentiseringsuppgifter. Förvara den på en säker plats och dela den inte med någon.",
       "warningPrivate": "VARNING: Denna återställningsnyckel är det enda sättet att komma åt din plånbok om du förlorar dina autentiseringsuppgifter. Förvara den på en säker plats och dela den inte med någon."
-    }
+    },
+    "acountandsecurity": {
+  "acountandsecurity": "Konto och Säkerhet",
+  "level1": "Belöningsnivå",
+  "level2": "Senaste Inloggning",
+  "level3": "Rekommendationskod",
+  "recoveryKey": "Återställningsnyckel",
+  "language": "Språk",
+  "wallets": "Plånböcker",
+  "rewards": "Belöningar",
+  "manageWallets": "Hantera Plånböcker",
+  "earnRewards": "Tjäna Belöningar",
+  "logOut": "Logga Ut",
+  "msg1": "Logga ut från ditt konto",
+  "msg2": "Få åtkomst till din seed phrase för att exportera dina konton. DELA INTE!",
+  "msg3": "Byt applikationsspråk",
+  "msg4": "Lägg till eller hantera dina externa plånbokskonton",
+  "msg5": "Tjäna gratis SOL. Besök belöningssidan för att börja"
+}
+
   },
   "accountPopup": {
     "security": {
@@ -724,7 +772,12 @@
     "watchlist": {
       "watchlist": "Bevakningslista",
       "Cancel": "Avbryt",
-      "Save": "Spara"
+      "Save": "Spara",
+    "token": "Token",
+    "marketCap": "Marknadsvärde",
+    "volume1h": "1H Volym",
+    "liquidity": "Likviditet",
+    "actions": "Åtgärder"
     }
   },
   "newProfile": {

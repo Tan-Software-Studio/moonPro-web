@@ -69,8 +69,30 @@
       "volume": "取引量",
       "auditres": "監査結果",
       "auditrestooltip": "トークンが再度ミント可能か、フリーズ可能か、または10人以上の保有者がいるかどうかの簡単な安全チェックを表示します。",
-      "quickbuy": "クイック購入"
-    }
+      "quickbuy": "クイック購入",
+      "search": "ティッカーまたは名前で検索",
+"display": "表示"
+
+    },
+    "display" : {
+  "MC_77K": "時価総額 77K",
+  "Small": "小",
+  "Large": "大",
+  "HideSearchBar": "検索バーを非表示",
+  "CircleImage": "円形画像",
+  "ProgressBarRing": "進捗バーリング",
+  "CustomizeRows": "行をカスタマイズ",
+  "MarketCap": "時価総額",
+  "Volume": "取引量",
+  "Socials": "SNS",
+  "Holders": "保有者",
+  "Top10Holders": "上位10人の保有者",
+      "progressBarLine": "プログレスバーライン",
+    "squareImage": "四角い画像",
+    "showSearchBar": "検索バーを表示",
+     "metrics": "メトリクス"
+}
+
   },
   "recentcalls": {
     "mainHeader": {
@@ -615,6 +637,13 @@
           "quicksell": "即売"
         }
       }
+    },
+    "table2": {
+      "trades": "取引",
+      "positions": "ポジション",
+      "holders": "保有者",
+      "topTraders": "トップトレーダー",
+      "noData": "データが見つかりません" 
     }
   },
   "navbar": {
@@ -681,7 +710,26 @@
       "revealMyKey": "私のキーを表示",
       "warning": "警告：この回復キーは、資格情報を失った場合にウォレットにアクセスする唯一の方法です。安全な場所に保管し、他の人と共有しないでください。",
       "warningPrivate": "警告：この回復キーは、資格情報を失った場合にウォレットにアクセスする唯一の方法です。安全な場所に保管し、他の人と共有しないでください。"
-    }
+    },
+    "acountandsecurity": {
+  "acountandsecurity": "アカウントとセキュリティ",
+  "level1": "報酬レベル",
+  "level2": "最終ログイン",
+  "level3": "紹介コード",
+  "recoveryKey": "リカバリーキー",
+  "language": "言語",
+  "wallets": "ウォレット",
+  "rewards": "報酬",
+  "manageWallets": "ウォレットを管理",
+  "earnRewards": "報酬を獲得",
+  "logOut": "ログアウト",
+  "msg1": "アカウントからログアウトする",
+  "msg2": "シードフレーズにアクセスしてアカウントをエクスポートします。絶対に共有しないでください！",
+  "msg3": "アプリの言語を変更する",
+  "msg4": "外部ウォレットアカウントを追加または管理する",
+  "msg5": "無料のSOLを獲得。報酬ページにアクセスして始めましょう"
+}
+
   },
   "accountPopup": {
     "security": {
@@ -724,7 +772,12 @@
     "watchlist": {
       "watchlist": "ウォッチリスト",
       "Cancel": "キャンセル",
-      "Save": "保存"
+      "Save": "保存",
+    "token": "トークン",
+    "marketCap": "時価総額",
+    "volume1h": "1時間の取引量",
+    "liquidity": "流動性",
+    "actions": "アクション"
     }
   },
   "newProfile": {

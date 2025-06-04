@@ -69,8 +69,30 @@
       "volume": "Volume",
       "auditres": "Audit Results",
       "auditrestooltip": "Quick safety checks: shows if token can be minted again, frozen, or if token has 10 Holders.",
-      "quickbuy": "QUICK BUY"
-    }
+      "quickbuy": "QUICK BUY",
+      "search" : "Search by ticker or name",
+      "display" : "Display"
+
+    },
+    "display" : {
+  "MC_77K": "MC 77K",
+  "Small": "Small",
+  "Large": "Large",
+  "HideSearchBar": "Hide Search Bar",
+  "CircleImage": "Circle Image",
+  "ProgressBarRing": "Progress Bar Ring",
+  "CustomizeRows": "Customize rows",
+  "MarketCap": "Market Cap",
+  "Volume": "Volume",
+  "Socials": "Socials",
+  "Holders": "Holders",
+  "Top10Holders": "Top 10 Holders",
+      "progressBarLine": "Progress Bar Line",
+    "squareImage": "Square Image",
+    "showSearchBar": "Show Search Bar",
+    "metrics": "Metrics"
+}
+
   },
   "recentcalls": {
     "mainHeader": {
@@ -615,6 +637,13 @@
           "quicksell": "QUICK SELL"
         }
       }
+    },
+    "table2" : {
+    "trades": "Trades",
+    "positions": "Positions",
+    "holders": "Holders",
+    "topTraders": "Top Traders",
+    "noData": "No data found"
     }
   },
   "navbar": {
@@ -681,7 +710,25 @@
       "revealMyKey": "Reveal my key",
       "warning": " WARNING: This recovery key is the only way to access your wallet if you lose your credentials. Store it in a safe place and do not share it with anyone.",
       "warningPrivate": " WARNING: This private key is the only way to access your wallet if you lose your credentials. Store it in a safe place and do not share it with anyone."
-    }
+    },
+      "acountandsecurity" : {
+        "acountandsecurity" : "Account and Security",
+        "level1" : "Rewards Level",
+        "level2" : "Last Login",
+        "level3" : "Referral Code",
+        "recoveryKey" : "Recovery Key",
+        "language" : "Language",
+        "wallets" : "Wallets",
+        "rewards" : "Rewards",
+        "manageWallets" : "Manage Wallets",
+        "earnRewards" : "Earn Rewards",
+        "logOut" : "Log Out",
+        "msg1" : "Log out of your account",
+        "msg2" : "Access your seed phrase to export your accounts. DO NOT SHARE!",
+        "msg3" : "Change the application language",
+        "msg4" : "Add or manage your external wallet accounts",
+        "msg5" : "Earn free SOL. Visit the rewards page to get started"
+      }
   },
   "accountPopup": {
     "security": {
@@ -724,7 +771,12 @@
     "watchlist": {
       "watchlist": "Watchlist",
       "Cancel": "Cancel",
-      "Save": "Save"
+      "Save": "Save",
+    "token": "Token",
+    "marketCap": "Market Cap",
+    "volume1h": "1H Volume",
+    "liquidity": "Liquidity",
+    "actions": "Actions"
     }
   },
   "newProfile": {

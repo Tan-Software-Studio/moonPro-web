@@ -422,7 +422,7 @@ const AllPageHeader = ({
                   ref={displayButtonRef}
                 >
                   <List size={16} className="mr-2" />
-                  Display
+                  {tredingPage?.tableheaders?.display}
                   <ChevronDown size={16} className="ml-2" />
                 </button>
               )}
@@ -437,7 +437,7 @@ const AllPageHeader = ({
                     {/* Metrics */}
                     <div>
                       <p className="text-xs text-gray-400 font-semibold mb-2">
-                        Metrics
+                        {tredingPage?.display?.metrics}
                       </p>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <button
@@ -448,7 +448,7 @@ const AllPageHeader = ({
                           }`}
                           onClick={() => handleMetricChange("12")}
                         >
-                          MC 77K <br /> Small
+                          {tredingPage?.display?.MC_77K} <br /> {tredingPage?.display?.Small}
                         </button>
                         <button
                           className={`py-2 px-3 rounded border border-[#323642] ${
@@ -458,7 +458,7 @@ const AllPageHeader = ({
                           }`}
                           onClick={() => handleMetricChange("20")}
                         >
-                          MC 77K <br /> Large
+                          {tredingPage?.display?.MC_77K}  <br /> {tredingPage?.display?.Large}
                         </button>
                       </div>
                     </div>
@@ -474,7 +474,7 @@ const AllPageHeader = ({
                         ) : (
                           <BsFillSearchHeartFill />
                         )}
-                        {searchbar ? "Hide Search Bar" : "Show Search Bar"}
+                        {searchbar ? tredingPage?.display?.HideSearchBar : tredingPage?.display?.showSearchBar}
                       </div>
 
                       <div
@@ -486,7 +486,7 @@ const AllPageHeader = ({
                         ) : (
                           <FaRegCircle />
                         )}
-                        {showCircle ? "Square Image" : "Circle Imange"}
+                        {showCircle ? tredingPage?.display?.squareImage : tredingPage?.display?.CircleImage}
                       </div>
                       <div
                         className="flex items-center gap-2 cursor-pointer font-semibold"
@@ -494,30 +494,30 @@ const AllPageHeader = ({
                       >
                         <div className="w-4 h-1 bg-gray-400 rounded-full" />
                         {progerssBar
-                          ? "Progress Bar Ring"
-                          : "Progress Bar Line"}
+                          ? tredingPage?.display?.ProgressBarRing
+                          : tredingPage?.display?.progressBarLine}
                       </div>
                     </div>
 
                     {/* Customize Rows */}
                     <div className="border-t border-gray-700 pt-4">
                       <p className="text-xs text-gray-400 font-semibold mb-2">
-                        Customize rows
+                        {tredingPage?.display?.CustomizeRows}
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {[
-                          "Market Cap",
-                          "Volume",
-                          "Socials",
-                          "Holders",
-                          "Top 10 Holders",
+                          tredingPage?.display?.MarketCap,
+                          tredingPage?.display?.Volume,
+                          tredingPage?.display?.Socials,
+                          tredingPage?.display?.Holders,
+                          tredingPage?.display?.Top10Holders,
                         ].map((item) => {
                           const isActive =
-                            (item === "Market Cap" && showMarketCap) ||
-                            (item === "Volume" && showVolume) ||
-                            (item === "Socials" && showSocials) ||
-                            (item === "Holders" && showHolders) ||
-                            (item === "Top 10 Holders" && showHolders10);
+                            (item === tredingPage?.display?.MarketCap && showMarketCap) ||
+                            (item === tredingPage?.display?.Volume && showVolume) ||
+                            (item === tredingPage?.display?.Socials && showSocials) ||
+                            (item === tredingPage?.display?.Holders && showHolders) ||
+                            (item === tredingPage?.display?.Top10Holders && showHolders10);
 
                           return (
                             <button
@@ -528,15 +528,15 @@ const AllPageHeader = ({
                                   : "border border-[#282b32] text-gray-500"
                               } text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]`}
                               onClick={() => {
-                                if (item === "Market Cap") {
+                                if (item === tredingPage?.display?.MarketCap) {
                                   mktShowHide();
-                                } else if (item === "Volume") {
+                                } else if (item === tredingPage?.display?.Volume) {
                                   volumeShowHide();
-                                } else if (item === "Socials") {
+                                } else if (item === tredingPage?.display?.Socials) {
                                   socialsShowHide();
-                                } else if (item === "Holders") {
+                                } else if (item === tredingPage?.display?.Holders) {
                                   holderShowHide();
-                                } else if (item === "Top 10 Holders") {
+                                } else if (item === tredingPage?.display?.Top10Holders) {
                                   holderShowHide10();
                                 }
                               }}
@@ -682,7 +682,7 @@ const AllPageHeader = ({
             <div className="flex items-center rounded-full py-1 bg-[#141414] border border-[#26262e] text-white text-xs overflow-hidden w-fit">
               {/* Left section: Quick Buy */}
               <div className="px-2 py-1 font-semibold text-[#f4fcff">
-                Quick Buy
+                {tredingPage?.tableheaders?.quickbuy}
               </div>
 
               {/* Middle section: Amount input */}
