@@ -168,7 +168,7 @@ const LoginPopup = ({ authName }) => {
           inviteCode: refferalCode || null,
         });
 
-        if (response?.data?.message === "Login successfull") {
+        if (response?.data?.message === "Login successfull" || response?.data?.message === "User registered successfully.") {
           localStorage.setItem("token", response?.data?.data?.token);
           localStorage.setItem("walletAddress", response?.data?.data?.user?.walletAddressSOL);
 
