@@ -8,14 +8,7 @@ import { IoPieChartOutline } from "react-icons/io5";
 import { HiOutlineCurrencyDollar } from "react-icons/hi2";
 import axios from "axios";
 import Image from "next/image";
-import {
-  nftImg,
-  nftImg2,
-  nftImg3,
-  nftImg4,
-  nftImg5,
-  NoDataFish,
-} from "@/app/Images";
+import { nftImg, nftImg2, nftImg3, nftImg4, nftImg5, NoDataFish } from "@/app/Images";
 import { useDispatch, useSelector } from "react-redux";
 import { token } from "@/utils/tradingViewChartServices/constant";
 import toast from "react-hot-toast";
@@ -27,14 +20,12 @@ import { openCloseLoginRegPopup } from "@/app/redux/states";
 import { FaAngleDown } from "react-icons/fa6";
 import { showToasterSuccess } from "@/utils/toaster/toaster.style";
 
-
-
 const ReferralPage = () => {
   const nftImages = [nftImg, nftImg2, nftImg3, nftImg4, nftImg5];
 
   const URL_LINK = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const fileInputRef = useRef(null);
   const [imageURL, setImageURL] = useState(null);
@@ -44,42 +35,66 @@ const ReferralPage = () => {
   const [refData, setRefData] = useState([]);
   const [selectedTier, setSelectedTier] = useState(1);
   const [showWithdrawPopup, setShowWithdrawPopup] = useState(false);
-  const [hideEmail, setHideEmail] = useState(false)
+  const [hideEmail, setHideEmail] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const progress = 100;
-  const tierKey =
-    selectedTier === 1
-      ? "firstTier"
-      : selectedTier === 2
-        ? "secondTier"
-        : "thirdTier";
+  const tierKey = selectedTier === 1 ? "firstTier" : selectedTier === 2 ? "secondTier" : "thirdTier";
 
-  const rewardPercentage = selectedTier === 1
-    ? refData?.user?.referealRewardsFirstTierPer
-    : selectedTier === 2
+  const rewardPercentage =
+    selectedTier === 1
+      ? refData?.user?.referealRewardsFirstTierPer
+      : selectedTier === 2
       ? refData?.user?.referealRewardsSecondTierPer
       : refData?.user?.referealRewardsThirdTierPer;
-  // console.log("🚀 ~ ReferralPage ~ rewardPercentage:<<>>", rewardPercentage)
 
   const tierData = refData?.referrals?.[tierKey] || [];
 
   const [addClaimed, setAddClaimed] = useState(0);
   const [rendomImg, setRendomImg] = useState(nftImg);
 
-  const solWalletAddress = useSelector(
-    (state) => state?.AllStatesData?.solWalletAddress
-  );
+  const solWalletAddress = useSelector((state) => state?.AllStatesData?.solWalletAddress);
 
   const shortenAddress = (address) => {
     if (!address || address.length < 8) return address || "...";
     return `${address.slice(0, 4)}...${address.slice(-4)}`;
   };
 
+  const getUserDisplayInfo = (user) => {
+    if (user?.email === "phantom@phantom.com" && user?.phantomAddress) {
+      return {
+        displayText: shortenAddress(user.phantomAddress),
+        isPhantomAddress: true,
+      };
+    }
+    else if (user?.phantomAddress) {
+      return {
+        displayText: shortenAddress(user.phantomAddress),
+        isPhantomAddress: true,
+      };
+    }
+    else {
+      return {
+        displayText: user?.email || "N/A",
+        isPhantomAddress: false,
+      };
+    }
+  };
+
+  const getReferralDisplayInfo = (referral) => {
+    if (referral?.email === "phantom@phantom.com" && referral?.phantomAddress) {
+      return shortenAddress(referral.phantomAddress);
+    } else if (referral?.phantomAddress) {
+      return shortenAddress(referral.phantomAddress);
+    } else {
+      return referral?.email || "N/A";
+    }
+  };
+
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        return toast.error("Please Login");
+        return showToaster("Please Login");
       }
       const res = await axios.get(`${URL_LINK}user/get3TierRefferals`, {
         headers: {
@@ -99,9 +114,7 @@ const ReferralPage = () => {
     if (solWalletAddress && tokenInStorage) {
       setShowWithdrawPopup(true);
     } else {
-      // toast.error("Please login");
       return dispatch(openCloseLoginRegPopup(true));
-
     }
   };
 
@@ -127,18 +140,14 @@ const ReferralPage = () => {
   }
 
   const handleCopy1 = (ref) => {
-    navigator.clipboard.writeText(
-      `https://moonpro.wavebot.app/referral/${ref}`
-    );
+    navigator.clipboard.writeText(`https://moonpro.wavebot.app/referral/${ref}`);
     setCopiedRef1(true);
     showToasterSuccess("Referral link copied!");
     setTimeout(() => setCopiedRef1(false), 2000);
   };
 
   const handleCopy2 = (ref) => {
-    navigator.clipboard.writeText(
-      `https://moonpro.wavebot.app/referral/${ref}`
-    );
+    navigator.clipboard.writeText(`https://moonpro.wavebot.app/referral/${ref}`);
     setCopiedRef2(true);
     showToasterSuccess("Referral link copied!");
     setTimeout(() => setCopiedRef2(false), 2000);
@@ -171,6 +180,8 @@ const ReferralPage = () => {
     }
   }, [solWalletAddress]);
 
+  const userDisplayInfo = getUserDisplayInfo(refData?.user);
+
   return (
     <>
       <div className=" text-white py-6 md:px-6 px-3  rounded-2xl space-y-6 overflow-y-auto h-[90vh]">
@@ -179,34 +190,8 @@ const ReferralPage = () => {
           {/* Image */}
           <div
             className={`w-20 h-20 min-w-[3.5rem] flex justify-center items-center font-bold text-[30px] rounded-md bg-yellow-500 overflow-hidden  relative`}
-          // onClick={handleBoxClick}
-          // onMouseEnter={() => setHovered(true)}
-          // onMouseLeave={() => setHovered(false)}
           >
-
-          {refData?.user?.email[0]?.toUpperCase()}
-
-            {/* {imageURL && (
-              <img src={nftImg} alt="Uploaded" className="w-full h-full object-cover" />
-            )} */}
-            {/* <Image
-              src={rendomImg}
-              alt="Uploaded"
-              className="w-full h-full object-cover"
-            /> */}
-
-            {/* {hovered && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white">
-                <LuUpload size={20} />
-              </div>
-            )} */}
-            {/* <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleImageUpload}
-              className="hidden"
-              accept="image/*"
-            /> */}
+            {userDisplayInfo.displayText?.[0]?.toUpperCase() || "U"}
           </div>
 
           {/* Right Content */}
@@ -214,10 +199,7 @@ const ReferralPage = () => {
             {/* Top row: username, points, icons */}
             <div className="flex flex-col md:flex-row items-center md:items-center justify-center md:justify-between w-full gap-2 md:gap-0 mt-2">
               <div className="flex gap-2 items-center">
-                <div
-                  onClick={handleCopy3}
-                  className="font-semibold hover:text-blue-400 cursor-pointer"
-                >
+                <div onClick={handleCopy3} className="font-semibold hover:text-blue-400 cursor-pointer">
                   {shortenAddress(token ? solWalletAddress : "")}
                 </div>
               </div>
@@ -232,9 +214,7 @@ const ReferralPage = () => {
                       size={18}
                       className="text-[#a0a4b8] group-hover:text-white transition-colors duration-200"
                     />
-                    <span className="text-[#a0a4b8]">
-                      {refData?.user?.referralId}
-                    </span>
+                    <span className="text-[#a0a4b8]">{refData?.user?.referralId}</span>
                   </div>
                 )}
               </div>
@@ -242,22 +222,14 @@ const ReferralPage = () => {
 
             {/* Progress Bar */}
             <div className="mt-2 w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-blue-500 transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              ></div>
+              <div className="h-full bg-blue-500 transition-all duration-300" style={{ width: `${progress}%` }}></div>
             </div>
 
             <div className="mt-2 flex items-center gap-2">
-              <p className="tracking-wider text-sm">{hideEmail ? "******" : refData?.user?.email}</p>
+              <p className="tracking-wider text-sm">{hideEmail ? "******" : userDisplayInfo.displayText}</p>
               <div className="cursor-pointer" onClick={() => setHideEmail(!hideEmail)}>
-                {hideEmail ?
-                  <FaRegEye />
-                  :
-                  <FaRegEyeSlash />
-                }
+                {hideEmail ? <FaRegEye /> : <FaRegEyeSlash />}
               </div>
-
             </div>
           </div>
         </div>
@@ -265,22 +237,15 @@ const ReferralPage = () => {
         <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:items-center text-xs text-gray-400">
           {/* Left side: Level Info */}
           <div className="flex items-start gap-1 sm:items-center flex-wrap tracking-wider">
-            <MdOutlineKeyboardDoubleArrowUp
-              className="text-blue-500 mt-[2px]"
-              size={16}
-            />
+            <MdOutlineKeyboardDoubleArrowUp className="text-blue-500 mt-[2px]" size={16} />
             <span className="text-[#cdced4]">Next Level:</span>
-            <span className="font-medium text-blue-500">
-              2.5X Rewards rate for Points and SOL
-            </span>
+            <span className="font-medium text-blue-500">2.5X Rewards rate for Points and SOL</span>
           </div>
 
           {/* Right side: Progress Info */}
           <div className="flex items-start gap-1 sm:items-center flex-wrap tracking-wider">
             <FaGem className="text-blue-500 mt-[2px]" size={16} />
-            <span className="text-[#a0a4b8]">
-              {"You're almost there! Trade 20 SOL to reach"}
-            </span>
+            <span className="text-[#a0a4b8]">{"You're almost there! Trade 20 SOL to reach"}</span>
             <span className="text-white font-medium">Silver</span>
           </div>
         </div>
@@ -318,19 +283,11 @@ const ReferralPage = () => {
               </button>
             </div>
             <div className="text-2xl font-thin pt-2 tracking-wider">
-              {refData?.totalEarningInSol > 0
-                ? decimalConvert(refData?.totalEarningInSol)
-                : 0}{" "}
-              SOL
+              {refData?.totalEarningInSol > 0 ? decimalConvert(refData?.totalEarningInSol) : 0} SOL
             </div>
 
             <div className="text-sm text-[#a0a4b8] tracking-wider">
-              Claimed{" "}
-              {(
-                (Number(refData?.user?.totalClaimed) || 0) +
-                (Number(addClaimed) || 0)
-              ).toFixed(5)}{" "}
-              SOL
+              Claimed {((Number(refData?.user?.totalClaimed) || 0) + (Number(addClaimed) || 0)).toFixed(5)} SOL
             </div>
             <div className="text-sm text-[#a0a4b8] tracking-wider">
               Available to claim{" "}
@@ -361,8 +318,7 @@ const ReferralPage = () => {
               </div>
             </div> */}
             <div className="flex items-center justify-center">
-              <div className="text-base mt-12 text-gray-400">Coming soon..
-              </div>
+              <div className="text-base mt-12 text-gray-400">Coming soon..</div>
             </div>
           </div>
         </div>
@@ -372,9 +328,7 @@ const ReferralPage = () => {
           <div className="text-white text-sm">
             {/* Header */}
             <div className="flex justify-between border-b border-[#2c2c34] px-4 py-2 overflow-x-auto whitespace-nowrap">
-              <div className="flex gap-2 items-center flex-shrink-0">
-                Referrals
-              </div>
+              <div className="flex gap-2 items-center flex-shrink-0">Referrals</div>
 
               <div className="flex gap-3 items-center">
                 <div>
@@ -387,9 +341,7 @@ const ReferralPage = () => {
                         size={18}
                         className="text-[#a0a4b8] group-hover:text-white transition-colors duration-200"
                       />
-                      <span className="text-[#a0a4b8]">
-                        {refData?.user?.referralId}
-                      </span>
+                      <span className="text-[#a0a4b8]">{refData?.user?.referralId}</span>
                     </div>
                   )}
                 </div>
@@ -399,22 +351,13 @@ const ReferralPage = () => {
                     onChange={(e) => setSelectedTier(Number(e.target.value))}
                     className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 rounded border-none focus:outline-none focus:ring-0 cursor-pointer appearance-none pr-8 "
                   >
-                    <option
-                      className="bg-black text-white cursor-pointer"
-                      value={1}
-                    >
+                    <option className="bg-black text-white cursor-pointer" value={1}>
                       1 Tier
                     </option>
-                    <option
-                      className="bg-black text-white cursor-pointer"
-                      value={2}
-                    >
+                    <option className="bg-black text-white cursor-pointer" value={2}>
                       2 Tier
                     </option>
-                    <option
-                      className="bg-black text-white cursor-pointer"
-                      value={3}
-                    >
+                    <option className="bg-black text-white cursor-pointer" value={3}>
                       3 Tier
                     </option>
                   </select>
@@ -423,7 +366,9 @@ const ReferralPage = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-center items-center gap-1"><SlUserFollow className="text-blue-500" /> <span className="text-[#89888e]">{tierData.length}</span></div>
+                <div className="flex justify-center items-center gap-1">
+                  <SlUserFollow className="text-blue-500" /> <span className="text-[#89888e]">{tierData.length}</span>
+                </div>
               </div>
             </div>
 
@@ -432,24 +377,15 @@ const ReferralPage = () => {
               <table className="w-full border border-[#2c2c34] rounded-b-lg text-left text-sm  border-collapse">
                 <thead className="text-gray-500 border-b border-[#2c2c34]">
                   <tr>
-                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">
-                      Email/Wallet
-                    </th>
-                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">
-                      Date Joined
-                    </th>
-                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">
-                      SOL Earned
-                    </th>
+                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">Email/Wallet</th>
+                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">Date Joined</th>
+                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">SOL Earned</th>
                   </tr>
                 </thead>
                 <tbody>
                   {tierData.length === 0 ? (
                     <tr>
-                      <td
-                        colSpan={3}
-                        className="text-center text-gray-400 py-4"
-                      >
+                      <td colSpan={3} className="text-center text-gray-400 py-4">
                         <div className="flex flex-col w-full items-center justify-center mt-5">
                           <div className="text-4xl mb-2">
                             <Image
@@ -460,9 +396,7 @@ const ReferralPage = () => {
                               className="rounded-lg"
                             />
                           </div>
-                          <h1 className="text-[#89888e] text-lg">
-                            No Referrals found.
-                          </h1>
+                          <h1 className="text-[#89888e] text-lg">No Referrals found.</h1>
                         </div>
                       </td>
                     </tr>
@@ -473,12 +407,11 @@ const ReferralPage = () => {
                         className="text-white border-b border-[#2c2c34] last:border-b-0 hover:bg-[#08080e]"
                       >
                         <td className="px-4 py-4 whitespace-nowrap tracking-wider font-spaceGrotesk">
-                          {hideEmail ? "*******" : row.email}
+                          {hideEmail ? "*******" : getReferralDisplayInfo(row)}
                         </td>
                         {/* <td className="px-4 py-4 whitespace-nowrap">{new Date(row.referralAddedAt).toLocaleDateString()}</td> */}
                         <td className="px-4 py-4 whitespace-nowrap text-gray-400">
-                          {" "}
-                          {formatTimeAgo(row.referralAddedAt)}{" "}
+                          {formatTimeAgo(row.referralAddedAt)}
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap">
                           {(row.feeCollected * (rewardPercentage / 100)).toFixed(5)}
