@@ -42,6 +42,7 @@ import optimism from "../public/assets/Navbar/optimism.png";
 import polygon from "../public/assets/Navbar/polygon.png";
 import baseIcon from "../public/assets/Navbar/base.png";
 import phantom from "../public/assets/Navbar/phantom.png";
+import phantompurple from "../public/assets/Navbar/phantompurple.svg";
 import solana from "../public/assets/Navbar/solana.png";
 import solanaBlackLogo from "../public/assets/common/solanaBlackLogo.png";
 import BUYICON from "../public/assets/Trading/BUY.png";
@@ -215,6 +216,7 @@ export {
   arbitrum,
   baseIcon,
   phantom,
+  phantompurple,
   solana,
   solanaBlackLogo,
   moon,
