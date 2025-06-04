@@ -45,6 +45,7 @@ import {
   setWalletBalances,
 } from "@/app/redux/userDataSlice/UserData.slice";
 import WithdrawPopup from "./popup/WithdrawPopup";
+import { showToaster } from "@/utils/toaster/toaster.style";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
@@ -68,7 +69,7 @@ const Navbar = () => {
   async function handleToGetSolanaPhrase() {
     const token = localStorage.getItem("token");
     if (!token) {
-      return toast.error("Please login.");
+      return showToaster("Please login.");
     }
     await axios({
       url: `${baseUrl}user/getSolanaPhrase`,

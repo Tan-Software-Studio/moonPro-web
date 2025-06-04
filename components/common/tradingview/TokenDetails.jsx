@@ -6,6 +6,7 @@ import { IoMdDoneAll } from "react-icons/io";
 import { formatDecimal } from "@/utils/basicFunctions";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  openCloseLoginRegPopup,
   removeFavouriteToken,
   setChartSymbolImage,
   setFavouriteTokens,
@@ -33,12 +34,8 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { IoSearchSharp } from "react-icons/io5";
 import SquareProgressBar from "../../common/SquareProgressBarcom/SquareProgressBar";
-import {
-  pumpfun,
-  telegrams,
-  twitter,
-  website,
-} from "@/app/Images";
+import { pumpfun, telegrams, twitter, website } from "@/app/Images";
+import { showToaster, showToasterSuccess } from "@/utils/toaster/toaster.style";
 
 const TokenDetails = ({
   tokenSymbol,
@@ -50,7 +47,7 @@ const TokenDetails = ({
   chartTokenData,
   walletAddress,
   pairAddress,
-  tokenImage
+  tokenImage,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCopyUrl, setIsCopyUrl] = useState(false);
@@ -80,13 +77,13 @@ const TokenDetails = ({
       } else {
         dispatch(setChartSymbolImage(getImageFromLocalStorage));
       }
-    } catch (error) { }
+    } catch (error) {}
   }
   const token = localStorage.getItem("token");
 
   async function addToFavouriteHandler() {
     if (!token) {
-      return toast.error("Please login");
+      return dispatch(openCloseLoginRegPopup(true));
     }
     await axios({
       method: "post",
@@ -99,7 +96,7 @@ const TokenDetails = ({
         marketCap: tokenDetailsMarketCap,
         // volume: '0',
         Liqudity: TokenDetailsNumberData[1].price,
-        pairaddress: pairAddress
+        pairaddress: pairAddress,
       },
       headers: {
         "Content-Type": "application/json",
@@ -107,7 +104,7 @@ const TokenDetails = ({
       },
     })
       .then(async (res) => {
-        toast.success(res?.data?.message);
+        showToasterSuccess(res?.data?.message);
         dispatch(setIsFaviouriteToken());
         // await dispatch(
         //   setFavouriteTokens([, res?.data?.data])
@@ -115,7 +112,7 @@ const TokenDetails = ({
         // dispatch(setFavouriteTokens([...tokenFavList, res?.data?.data?.tokenFavorites]))
       })
       .catch((err) => {
-        toast.error(err?.res?.data?.message || "Something went wrong");
+        showToaster(err?.res?.data?.message || "Something went wrong");
       });
   }
 
@@ -148,26 +145,27 @@ const TokenDetails = ({
     setIsFavouriteLoading(true); // show loader while fetching
 
     await axios
-      .get(`${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}user/checkTokenFavorite/${tokenaddress}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(
+        `${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}user/checkTokenFavorite/${tokenaddress}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((res) => {
         dispatch(setIsFaviouriteToken(res?.data?.data?.exists));
       })
-      .catch((err) => {
-      })
+      .catch((err) => {})
       .finally(() => {
         setIsFavouriteLoading(false);
       });
   }
 
-
   async function removeFromFavouriteHandler() {
     if (!token) {
-      return toast.error("Please login");
+      return dispatch(openCloseLoginRegPopup(true));
     }
     await axios
       .delete(
@@ -182,11 +180,11 @@ const TokenDetails = ({
         }
       )
       .then(async (res) => {
-        toast.success(res?.data?.message);
+        showToasterSuccess(res?.data?.message);
         dispatch(setIsFaviouriteToken());
       })
       .catch((err) => {
-        toast.error(err?.res?.data?.message || "Something went wrong");
+        showToaster(err?.res?.data?.message || "Something went wrong");
       });
   }
 
@@ -244,14 +242,18 @@ const TokenDetails = ({
               <div className="flex flex-col md:mr-5">
                 <div className="flex items-center gap-2">
                   <div className="text-white text-base sm:text-lg font-spaceGrotesk">
-                    {tokenSymbol?.length > 7 ? `${tokenSymbol.slice(0, 5)}...` : tokenSymbol}
+                    {tokenSymbol?.length > 7
+                      ? `${tokenSymbol.slice(0, 5)}...`
+                      : tokenSymbol}
                   </div>
                   <div className="text-[#A8A8A8] text-xs md:text-[14px]">
                     {tokenaddress && tokenaddress.length >= 10
-                      ? `${tokenaddress.slice(0, 5)}...${tokenaddress.slice(-3)}`
+                      ? `${tokenaddress.slice(0, 5)}...${tokenaddress.slice(
+                          -3
+                        )}`
                       : tokenaddress}
                   </div>
-                  <div 
+                  <div
                     className="flex flex-shrink-0"
                     onClick={() => handleCopy(tokenaddress)}
                   >
@@ -268,7 +270,6 @@ const TokenDetails = ({
                       />
                     )}
                   </div>
-
                 </div>
                 <div className="flex gap-2 items-center">
                   {chartTokenData?.socialIconsLink
@@ -318,7 +319,7 @@ const TokenDetails = ({
             </div>
             {/* Share and Fav Mobile */}
             <div className="flex gap-2 md:hidden">
-               <div
+              <div
                 className="h-[36px] w-[36px] bg-[#1F1F1F] rounded-full flex items-center justify-center"
                 onClick={() => setIsModalOpen(true)}
               >
@@ -339,21 +340,24 @@ const TokenDetails = ({
                   />
                 )}
               </div>
-
-             
             </div>
           </div>
           {/* Numbers */}
           <div className="flex items-center">
             <div className="text-[#52C5FF] flex flex-row items-end justify-end md:items-center gap-1 md:gap-0 md:flex-col md:text-white text-sm md:text-base font-medium mr-4 md:mx-4">
-              <p className="text-[#A8A8A8] inline md:hidden text-[10px] font-normal">MC</p>
+              <p className="text-[#A8A8A8] inline md:hidden text-[10px] font-normal">
+                MC
+              </p>
               <p className="inline">{tokenDetailsMarketCap}</p>
             </div>
             <div className="p-0 md:p-3 flex items-center">
               <div className="grid grid-cols-4 lg:gap-5 md:gap-4 gap-2">
                 {TokenDetailsNumberData?.map((num, index) => {
                   return (
-                    <div key={index} className="flex flex-row items-end gap-1 md:gap-0 md:flex-col md:items-start">
+                    <div
+                      key={index}
+                      className="flex flex-row items-end gap-1 md:gap-0 md:flex-col md:items-start"
+                    >
                       {/* <span className="text-[#A8A8A8] text-xs capitalize">
                         {num.label}
                       </span> */}
@@ -369,7 +373,11 @@ const TokenDetails = ({
                           {/* Add more if you have more labels */}
                         </span>
                       </span>
-                      <span className={`${index === 3 ? "text-[#4CAF50]" : "text-white"} text-sm`}>
+                      <span
+                        className={`${
+                          index === 3 ? "text-[#4CAF50]" : "text-white"
+                        } text-sm`}
+                      >
                         {num?.label == "Price USD"
                           ? formatDecimal(num?.price)
                           : num?.price}

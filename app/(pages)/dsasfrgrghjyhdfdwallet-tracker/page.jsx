@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { showToaster } from "@/utils/toaster/toaster.style";
 
 function WalletTracker() {
   const { t } = useTranslation();
@@ -103,10 +104,7 @@ function WalletTracker() {
               <div
                 onClick={() => {
                   if (!solWalletAddress) {
-                    toast.error("Please Login", {
-                      position: "top-center",
-                      style: { fontSize: "12px" },
-                    });
+                    showToaster("Please Login");
                     return;
                   }
                   setModalOpen(true);

@@ -23,6 +23,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
 import { usePhantomWallet } from "@/app/providers/PhantomWalletProvider";
+import { showToaster, showToasterSuccess } from "@/utils/toaster/toaster.style";
 
 const LoginPopup = ({ authName }) => {
   const dispatch = useDispatch();
@@ -66,7 +67,7 @@ const LoginPopup = ({ authName }) => {
     const referralId = refferalCode.trim();
     if (authName == "login") {
       if (!password) {
-        toast.error(navbar?.loginPopup?.enterPassword);
+        showToaster(navbar?.loginPopup?.enterPassword);
         return;
       }
     }
@@ -83,17 +84,17 @@ const LoginPopup = ({ authName }) => {
         setIsPassword(true);
         setIsDisable(false);
       }
-      toast.success(response?.data?.message);
+      showToasterSuccess(response?.data?.message);
     } catch (err) {
       console.error(err);
       setIsDisable(false);
       if (err?.response?.data?.message === "User already register.") {
-        toast.error("User already exists please try to login");
+        showToaster("User already exists please try to login");
         setTimeout(() => {
           dispatch(setLoginRegPopupAuth("login"));
         }, 1500);
       } else {
-        toast.error(err?.response?.data?.message);
+        showToaster(err?.response?.data?.message);
       }
     }
   };
@@ -124,17 +125,17 @@ const LoginPopup = ({ authName }) => {
             }
             dispatch(openCloseLoginRegPopup(false));
             dispatch(setSolWalletAddress());
-            toast.success(res?.data?.message);
+            showToasterSuccess(res?.data?.message);
             router.push("/trending");
           })
           .catch((err) => {
             console.error(err);
-            toast.error(err?.message);
+            showToaster(err?.message);
             setIsGoogleSignIn(false);
           });
       } catch (error) {
         console.error(error);
-        toast.error(error?.message);
+        showToaster(error?.message);
         dispatch(setreferralPopupAfterLogin(false));
         setIsGoogleSignIn(false);
       }
@@ -151,7 +152,7 @@ const LoginPopup = ({ authName }) => {
       const connectResult = await connectWallet();
 
       if (!connectResult.success) {
-        toast.error(connectResult.error || "Failed to connect wallet");
+        showToaster(connectResult.error || "Failed to connect wallet");
         return;
       }
 
@@ -173,16 +174,16 @@ const LoginPopup = ({ authName }) => {
 
           dispatch(openCloseLoginRegPopup(false));
           dispatch(setSolWalletAddress());
-          toast.success(response?.data?.message || "Wallet connected successfully!");
+          showToasterSuccess(response?.data?.message || "Wallet connected successfully!");
           router.push("/trending");
         }
       } catch (signError) {
         console.error("Signature error:", signError);
-        toast.error("Failed to sign message. Please try again.");
+        showToaster("Failed to sign message. Please try again.");
       }
     } catch (error) {
       console.error("Phantom connection error:", error);
-      toast.error("Failed to connect wallet. Please try again.");
+      showToaster("Failed to connect wallet. Please try again.");
     }
   };
 

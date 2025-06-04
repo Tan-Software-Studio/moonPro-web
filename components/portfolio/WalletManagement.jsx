@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { BsKey } from "react-icons/bs";
 import { CiStar } from "react-icons/ci";
 import { updateWalletToPrimary } from "@/app/redux/userDataSlice/UserData.slice";
+import { showToaster } from "@/utils/toaster/toaster.style";
 
 export default function WalletManagement() {
   const dispatch = useDispatch();
@@ -90,10 +91,7 @@ export default function WalletManagement() {
         });
     } catch (error) {
       console.error(error);
-      toast.error("Primary not wallet switched", {
-        id: "switch-toast",
-        duration: 2000,
-      });
+      showToaster("Primary not wallet switched.");
     }
   }
 

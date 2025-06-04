@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { setChartSymbolImage, setIsFaviouriteToken } from '@/app/redux/states';
+import { showToaster, showToasterSuccess } from '@/utils/toaster/toaster.style';
 
 const Watchlist = ({ setIsWatchlistPopup }) => {
     const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
@@ -46,7 +47,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
     const token = localStorage.getItem("token");
     async function getWatchlist() {
         if (!token) {
-            return toast.error("Please login");
+            return showToaster("Please login");
         }
         setLoading(true)
         await axios.get(`${baseUrl}user/getUserTokenFavorites`, {
@@ -61,7 +62,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
             })
             .catch((err) => {
                 setLoading(false)
-                toast.error(err?.res?.data?.message || "Something went wrong");
+                showToaster(err?.res?.data?.message || "Something went wrong");
             });
     }
 
@@ -71,7 +72,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
 
     const handleDeleteItem = async (tokenAddress) => {
         if (!token) {
-            return toast.error("Please login");
+            return showToaster("Please login");
         }
 
         try {
@@ -84,9 +85,9 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
 
             setGetWatchlistData((prev) => prev.filter(item => item.tokenAddress !== tokenAddress));
             dispatch(setIsFaviouriteToken());
-            toast.success(response?.data?.message);
+            showToasterSuccess(response?.data?.message);
         } catch (error) {
-            toast.error(error?.response?.data?.message || "Delete failed");
+            showToaster(error?.response?.data?.message || "Delete failed");
         } finally {
             setDeletingItem(null);
         }
