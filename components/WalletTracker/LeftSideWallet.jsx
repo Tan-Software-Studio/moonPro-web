@@ -16,6 +16,7 @@ import {
   unsubscribeFromWalletTracker,
 } from "@/websocket/walletTracker";
 import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
+import { showToaster, showToasterSuccess } from "@/utils/toaster/toaster.style";
 
 function LeftSideWallet({
   onChartOpen,
@@ -69,19 +70,16 @@ function LeftSideWallet({
             )
           );
 
-          toast.success("Wallet name updated successfully!", {
-            position: "top-center",
-            style: { fontSize: "12px" },
-          });
+          showToasterSuccess("Wallet name updated successfully.");
         } else {
-          toast.error(
+          showToaster(
             response.data?.message || "Failed to update wallet name."
           );
         }
       })
       .catch((err) => {
         console.error("Error updating wallet name:", err?.message);
-        toast.error("Failed to update wallet name.");
+        showToaster("Failed to update wallet name.");
       });
 
     setEditIndex(null);
@@ -127,16 +125,13 @@ function LeftSideWallet({
           )
         );
 
-        toast.success("Tags updated successfully!", {
-          position: "top-center",
-          style: { fontSize: "12px" },
-        });
+        showToasterSuccess("Tags updated successfully.");
       } else {
-        toast.error(response.data?.message || "Failed to update tags.");
+        showToaster(response.data?.message || "Failed to update tags.");
       }
     } catch (error) {
       console.error("Error updating tags:", error);
-      toast.error("Failed to update tags.");
+      showToaster("Failed to update tags.");
     }
 
     setEditTagIndex(null);
@@ -162,16 +157,13 @@ function LeftSideWallet({
         prevData.filter((item) => item.walletAddress !== walletAddress)
       );
 
-      toast.success("Wallet deleted successfully!", {
-        position: "top-center",
-        style: { fontSize: "12px" },
-      });
+      showToasterSuccess("Wallet deleted successfully.");
     } catch (error) {
       console.error(
         "❌ Error deleting wallet:",
         error.response ? error.response.data : error
       );
-      toast.error("Failed to delete wallet. Please try again.", {
+      showToaster("Failed to delete wallet. Please try again.", {
         position: "top-center",
         style: { fontSize: "12px" },
       });
@@ -206,11 +198,11 @@ function LeftSideWallet({
         await unsubscribeFromWalletTracker();
         await subscribeToWalletTracker(solAddress);
       } else {
-        toast.error(response.data?.message || "Failed to update alert status.");
+        showToaster(response.data?.message || "Failed to update alert status.");
       }
     } catch (error) {
       console.error("Error updating alert status:", error);
-      toast.error("Failed to update alert status.");
+      showToaster("Failed to update alert status.");
     }
   };
 

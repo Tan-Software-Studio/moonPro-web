@@ -197,7 +197,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
     },
     {
       id: 6,
-      title: "PnL"
+      title: "Realized PnL"
     },
     { id: 7, title: "Remaining" },
     // {
@@ -1049,11 +1049,21 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                   </thead>
                   <tbody className="bg-transparent">
                     {holdingsData.map((data, index) => {
-                        const usdBought = data?.totalBuyAmount;
-                        const usdSold = data?.quantitySold * data?.averageHistoricalSellPrice;
-                        const usdHoldings = data?.activeQtyHeld * data?.current_price;
-                        const totalPnL = (data?.realizedProfit ?? 0) + usdHoldings - usdBought;
-                        const pnlPercent = usdBought !== 0 ? ((totalPnL / usdBought) * 100) : 0;
+                        const usdBought = data?.activeQtyHeld * data?.averageBuyPrice || 0;
+                        const usdSold = data?.quantitySold * data?.averageHistoricalSellPrice || 0;
+                        const activeQtyHeld = data?.activeQtyHeld || 0;
+                        const quantitySold = data?.quantitySold || 0;
+                        const averageBuyPrice = data?.averageBuyPrice || 0;
+
+                        const availableQty = activeQtyHeld - quantitySold;
+                        const availableQtyInUSDWhenBought = availableQty * averageBuyPrice;
+                        const currentPrice = data?.token === tokenCA ? currentUsdPrice : data?.current_price;
+                        const usdHoldings = availableQty * (currentPrice || 0);
+                        const pnlAmount = usdHoldings - availableQtyInUSDWhenBought;
+                        const pnlPercent = availableQtyInUSDWhenBought !== 0
+                          ? (pnlAmount / availableQtyInUSDWhenBought) * 100
+                          : 0;
+
                       return (
                       <tr
                         key={index}
@@ -1089,7 +1099,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                         <td className="px-6 py-4 items-start">
                           <div className="flex flex-col gap-[2px] h-full justify-center">
                             <p className="text-[#21CB6B] text-sm leading-4">{`${formatNumber(usdBought)}`}</p>
-                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(data?.totalBoughtQty, false, false)} ${data?.symbol}`}</p>
+                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(data?.activeQtyHeld, false, false)} ${data?.symbol}`}</p>
                           </div>
                         </td>
                         {/* Sold */}
@@ -1108,10 +1118,10 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                         </td>
                         {/* PnL */}
                         <td className="px-6 py-4 items-center">
-                          <span className={`${totalPnL >= 0 ? "text-[#21CB6B]" : "text-[#ed1b26]"} 
+                          <span className={`${pnlAmount >= 0 ? "text-[#21CB6B]" : "text-[#ed1b26]"} 
                             font-thin`}
                           >
-                            {`${formatNumber(totalPnL)}(${formatNumber(pnlPercent, true, false)}%)`}  
+                            {`${formatNumber(pnlAmount)}(${formatNumber(pnlPercent, true, false)}%)`}  
                           </span>
                         </td>
                         {/* Actions */}

@@ -22,6 +22,7 @@ import { FaUserFriends } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
+import { showToaster, showToasterSuccess } from "@/utils/toaster/toaster.style";
 
 const LoginPopup = ({ authName }) => {
   const dispatch = useDispatch();
@@ -66,7 +67,7 @@ const LoginPopup = ({ authName }) => {
     const referralId = refferalCode.trim();
     if (authName == "login") {
       if (!password) {
-        toast.error(navbar?.loginPopup?.enterPassword);
+        showToaster(navbar?.loginPopup?.enterPassword);
         return;
       }
     }
@@ -83,18 +84,18 @@ const LoginPopup = ({ authName }) => {
         setIsPassword(true);
         setIsDisable(false);
       }
-      toast.success(response?.data?.message);
+      showToasterSuccess(response?.data?.message);
     } catch (err) {
       console.error(err);
       setIsDisable(false);
       if (err?.response?.data?.message === "User already register.") {
-        toast.error("User already exists please try to login");
+        showToaster("User already exists please try to login");
         setTimeout(() => {
           dispatch(setLoginRegPopupAuth("login"));
           // setIsPassword(false)
         }, 1500);
       } else {
-        toast.error(err?.response?.data?.message);
+        showToaster(err?.response?.data?.message);
       }
     }
   };
@@ -122,23 +123,23 @@ const LoginPopup = ({ authName }) => {
             if (res?.data?.message === "Login successfull") {
               if (res?.data?.data?.user?.referredBy === null) {
                 dispatch(setreferralPopupAfterLogin(true));
-              } 
+              }
             } else {
               setIsGoogleSignIn(true);
             }
             dispatch(openCloseLoginRegPopup(false));
             dispatch(setSolWalletAddress());
-            toast.success(res?.data?.message);
+            showToasterSuccess(res?.data?.message);
             router.push("/trending");
           })
           .catch((err) => {
             console.error(err);
-            toast.error(err?.message);
+            showToaster(err?.message);
             setIsGoogleSignIn(false);
           });
       } catch (error) {
         console.error(error);
-        toast.error(error?.message);
+        showToaster(error?.message);
         dispatch(setreferralPopupAfterLogin(false));
         setIsGoogleSignIn(false);
       }

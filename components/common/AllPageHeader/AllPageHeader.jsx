@@ -24,6 +24,7 @@ import { BsFillSearchHeartFill } from "react-icons/bs";
 import { FaRegCircle } from "react-icons/fa";
 import { showToastLoader } from "../toastLoader/ToastLoder";
 import { updateWalletToPrimary } from "@/app/redux/userDataSlice/UserData.slice";
+import { showToaster } from "@/utils/toaster/toaster.style";
 
 const AllPageHeader = ({
   HeaderData,
@@ -274,10 +275,7 @@ const AllPageHeader = ({
         });
     } catch (error) {
       console.error(error);
-      toast.error("Primary not wallet switched", {
-        id: "switch-toast",
-        duration: 2000,
-      });
+      showToaster("Primary not wallet switched.");
     }
   };
 
@@ -362,8 +360,9 @@ const AllPageHeader = ({
               <button
                 key={index}
                 onClick={() => handleButtonClick(option)}
-                className={`py-2 px-3 text-sm  font-semibold hover:bg-[#1F73FC]/[30%] rounded-md ${option === localFilterTime && " !text-[#1F73FC]"
-                  } transition duration-300 text-[#edebe5]`}
+                className={`py-2 px-3 text-sm  font-semibold hover:bg-[#1F73FC]/[30%] rounded-md ${
+                  option === localFilterTime && " !text-[#1F73FC]"
+                } transition duration-300 text-[#edebe5]`}
               >
                 {option}
               </button>
@@ -442,19 +441,21 @@ const AllPageHeader = ({
                       </p>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <button
-                          className={`py-2 px-3 rounded border border-[#323642] ${selectedMetric === "12"
-                            ? "bg-[#323642] text-white font-bold"
-                            : " text-gray-300"
-                            }`}
+                          className={`py-2 px-3 rounded border border-[#323642] ${
+                            selectedMetric === "12"
+                              ? "bg-[#323642] text-white font-bold"
+                              : " text-gray-300"
+                          }`}
                           onClick={() => handleMetricChange("12")}
                         >
                           MC 77K <br /> Small
                         </button>
                         <button
-                          className={`py-2 px-3 rounded border border-[#323642] ${selectedMetric === "20"
-                            ? "bg-[#323642] text-white font-bold"
-                            : " text-gray-300"
-                            }`}
+                          className={`py-2 px-3 rounded border border-[#323642] ${
+                            selectedMetric === "20"
+                              ? "bg-[#323642] text-white font-bold"
+                              : " text-gray-300"
+                          }`}
                           onClick={() => handleMetricChange("20")}
                         >
                           MC 77K <br /> Large
@@ -521,10 +522,11 @@ const AllPageHeader = ({
                           return (
                             <button
                               key={item}
-                              className={`${isActive
-                                ? "bg-[#282b32]"
-                                : "border border-[#282b32] text-gray-500"
-                                } text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]`}
+                              className={`${
+                                isActive
+                                  ? "bg-[#282b32]"
+                                  : "border border-[#282b32] text-gray-500"
+                              } text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]`}
                               onClick={() => {
                                 if (item === "Market Cap") {
                                   mktShowHide();
@@ -551,12 +553,14 @@ const AllPageHeader = ({
             </div>
 
             <div>
-              {solWalletAddress && <button
-                onClick={() => dispatch(setOpenOrderSetting(true))}
-                className="flex items-center justify-center gap-2 px-3 text-[#ecf6fd] text-xs rounded-[4px] transition duration-300"
-              >
-                <IoSettingsOutline className="text-base" />
-              </button>}
+              {solWalletAddress && (
+                <button
+                  onClick={() => dispatch(setOpenOrderSetting(true))}
+                  className="flex items-center justify-center gap-2 px-3 text-[#ecf6fd] text-xs rounded-[4px] transition duration-300"
+                >
+                  <IoSettingsOutline className="text-base" />
+                </button>
+              )}
             </div>
             <RightModalOpenSetting
               ordersettingLang={tredingPage?.mainHeader?.ordersetting}
@@ -608,8 +612,9 @@ const AllPageHeader = ({
                       return (
                         <div
                           key={idx}
-                          className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${wallet.primary ? "bg-[#252525]" : ""
-                            }`}
+                          className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${
+                            wallet.primary ? "bg-[#252525]" : ""
+                          }`}
                         >
                           <div className="flex items-center gap-3">
                             <input
@@ -621,10 +626,11 @@ const AllPageHeader = ({
                             <div className="flex flex-col">
                               <div className="flex items-center gap-2 text-sm">
                                 <span
-                                  className={`font-medium ${wallet.primary
-                                    ? "text-orange-400"
-                                    : "text-white"
-                                    }`}
+                                  className={`font-medium ${
+                                    wallet.primary
+                                      ? "text-orange-400"
+                                      : "text-white"
+                                  }`}
                                 >
                                   {idx === 0
                                     ? "Moon Pro Main"
@@ -706,7 +712,6 @@ const AllPageHeader = ({
                   <Image src={solana} width={16} height={16} alt="solana" />
                 </div>
               )}
-
             </div>
           </div>
         )}

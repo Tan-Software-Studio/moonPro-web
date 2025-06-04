@@ -175,7 +175,7 @@ const holdingData = createSlice({
               Number(state.PnlData[findTokenIndex].quantitySold) *
               Number(state.PnlData[findTokenIndex].averageHistoricalSellPrice);
             const newQtyCal =
-              Number(state?.PnlData[findTokenIndex]?.qty) *
+              Number(payload?.qty) *
               Number(payload?.price);
             const qtyTotal =
               Number(state?.PnlData[findTokenIndex]?.quantitySold) +
@@ -217,7 +217,9 @@ const holdingData = createSlice({
           }
         }
       }
-      console.log("PNL Data", JSON.parse(JSON.stringify(state.PnlData)));
+      // console.log(
+      //   console.log("🚀 ~ state:", JSON.parse(JSON.stringify(state.PnlData)))
+      // );
     },
     resetPnlDataState: (state) => {
       state.initialLoading = false;

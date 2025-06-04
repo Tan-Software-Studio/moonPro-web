@@ -6,6 +6,7 @@ import {
   setSignupReferral,
 } from "@/app/redux/states";
 import ReferralPage from "@/components/referral/ReferralPage";
+import { showToaster } from "@/utils/toaster/toaster.style";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -38,7 +39,7 @@ export default function ReferralLogin({ params }) {
         if (!res?.data?.data?.referredBy) {
           dispatch(setreferralPopupAfterLogin(true));
         } else {
-          toast.error("Already referred.");
+          showToaster("Already referred.");
           dispatch(setSignupReferral(null));
         }
       })

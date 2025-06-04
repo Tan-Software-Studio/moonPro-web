@@ -16,6 +16,7 @@ import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
+import { showToaster, showToasterSuccess } from "@/utils/toaster/toaster.style";
 
 const OtpPopup = ({ setIsPassword, authName, jwtToken, email }) => {
   const dispatch = useDispatch();
@@ -123,13 +124,13 @@ const OtpPopup = ({ setIsPassword, authName, jwtToken, email }) => {
       } 
       dispatch(openCloseLoginRegPopup(false));
       dispatch(setSolWalletAddress());
-      toast.success(response?.data?.message);
+      showToasterSuccess(response?.data?.message);
       setIsDisable(false);
       setIsInvalidOtp(false);
       setIsPassword(false);
     } catch (err) {
       console.error(err);
-      toast.error(err?.response?.data?.message);
+      showToaster(err?.response?.data?.message);
       if (err?.response?.data?.message == "Invalid OTP.") {
         setIsInvalidOtp(true);
       }
