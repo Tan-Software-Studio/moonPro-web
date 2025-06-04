@@ -25,14 +25,14 @@ const UserProfileControl = () => {
 
   // total value calculation
   const totalValue = currentTabData.reduce((acc, item) => {
-    const value = item?.activeQtyHeld * item?.current_price;
+    const value = (item?.activeQtyHeld - item?.quantitySold) * item?.current_price;
     return acc + value;
   }, 0);
 
   // unrealized pnl calculation
   const UnrealizedPNL = currentTabData.reduce((acc, item) => {
     const pnl =
-      item?.activeQtyHeld * (item.current_price - item.averageBuyPrice);
+      (item?.activeQtyHeld - item?.quantitySold) * (item.current_price - item.averageBuyPrice);
     return acc + pnl;
   }, 0);
 
@@ -78,9 +78,8 @@ const UserProfileControl = () => {
                   <p className="text-sm text-gray-400">Unrealized PNL</p>
                 </div>
                 <p
-                  className={`text-base font-semibold tracking-wider ${
-                    UnrealizedPNL >= 0 ? "text-emerald-500" : "text-red-500"
-                  }`}
+                  className={`text-base font-semibold tracking-wider ${UnrealizedPNL >= 0 ? "text-emerald-500" : "text-red-500"
+                    }`}
                 >
                   {`${UnrealizedPNL < 0 ? "-$" : "$"}${Math.abs(
                     UnrealizedPNL
@@ -186,11 +185,10 @@ const UserProfileControl = () => {
                     <button
                       key={tab}
                       onClick={() => setLeftTableTab(tab)}
-                      className={`px-2 py-3 text-sm font-medium tracking-wider transition-all duration-200 flex-shrink-0 ${
-                        leftTableTab === tab
-                          ? "border-b-[1px] border-white text-white"
-                          : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
-                      }`}
+                      className={`px-2 py-3 text-sm font-medium tracking-wider transition-all duration-200 flex-shrink-0 ${leftTableTab === tab
+                        ? "border-b-[1px] border-white text-white"
+                        : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
+                        }`}
                     >
                       {tab}
                     </button>
@@ -225,16 +223,12 @@ const UserProfileControl = () => {
               {leftTableTab === "History" && (
                 <div>
                   <History
-                    filteredActivePosition={filteredActivePosition}
-                    activePositionSearchQuery={activePositionSearchQuery}
                   />
                 </div>
               )}
               {leftTableTab === "Top 100" && (
                 <div>
                   <TopHundred
-                    filteredActivePosition={filteredActivePosition}
-                    activePositionSearchQuery={activePositionSearchQuery}
                   />
                 </div>
               )}
@@ -248,11 +242,10 @@ const UserProfileControl = () => {
                     <button
                       key={tab}
                       onClick={() => setRightTableTab(tab)}
-                      className={`px-2 py-3 text-sm font-medium tracking-wider transition-all duration-200 flex-shrink-0 ${
-                        rightTableTab === tab
-                          ? "border-b-[1px] border-white text-white"
-                          : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
-                      }`}
+                      className={`px-2 py-3 text-sm font-medium tracking-wider transition-all duration-200 flex-shrink-0 ${rightTableTab === tab
+                        ? "border-b-[1px] border-white text-white"
+                        : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
+                        }`}
                     >
                       {tab}
                     </button>
@@ -285,11 +278,10 @@ const UserProfileControl = () => {
                   <button
                     key={tab}
                     onClick={() => setMobileActiveTab(tab)}
-                    className={`px-2 sm:py-3 py-2 sm:text-sm text-xs font-medium sm:tracking-wider transition-all duration-200 flex-shrink-0 ${
-                      mobileActiveTab === tab
-                        ? "border-b-[1px] border-white text-white"
-                        : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
-                    }`}
+                    className={`px-2 sm:py-3 py-2 sm:text-sm text-xs font-medium sm:tracking-wider transition-all duration-200 flex-shrink-0 ${mobileActiveTab === tab
+                      ? "border-b-[1px] border-white text-white"
+                      : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
+                      }`}
                   >
                     {tab}
                   </button>
