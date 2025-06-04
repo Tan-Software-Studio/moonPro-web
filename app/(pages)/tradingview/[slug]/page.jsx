@@ -96,6 +96,8 @@ const Tradingview = () => {
     const currentPnlData = currentTabData.find(pnls => pnls?.token === tokenaddress);
     if (currentPnlData?.chainBalance > 0) {
       setCurrentTokenPnLData(currentPnlData);
+    } else {
+      setCurrentTokenPnLData({});
     }
   }, [currentTabData])
 
