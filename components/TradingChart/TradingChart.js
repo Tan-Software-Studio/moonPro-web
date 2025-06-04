@@ -31,6 +31,12 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
   }
 
   const resetLines = () => {
+    if (buyPositionLineRef.current !== null) {
+      buyPositionLineRef.current.remove();
+    }
+    if (sellPositionLineRef.current !== null) {
+      sellPositionLineRef.current.remove();
+    }
     buyPositionLineRef.current = null;
     sellPositionLineRef.current = null;
   }
@@ -48,11 +54,23 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
       }
     };
 
-    const getChartResolution = async () => {
-      let chartResolution = await localStorage.getItem("chartResolution");
-      chartResolution = chartResolution === null ? "15S" : chartResolution;
-      setChartResolution(chartResolution);
-    }
+    const getChartResolution = () => {
+      try {
+        const storedResolution = localStorage.getItem("chartResolution");
+        const defaultResolution = "15S";
+        
+        // Validate stored resolution against allowed intervals
+        if (storedResolution && intervalTV.includes(storedResolution)) {
+          setChartResolution(storedResolution);
+        } else {
+          localStorage.setItem("chartResolution", defaultResolution);
+          setChartResolution(defaultResolution);
+        }
+      } catch (e) {
+        console.error("Failed to access localStorage for chartResolution:", e);
+        setChartResolution("15S"); // Fallback to default
+      }
+    };
 
     getChartResolution();
 
@@ -221,7 +239,6 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
             : 
             '<span style="color: #808080">USD</span>/<span style="color: #1E90FF">SOL</span>';
           localStorage.setItem("chartUsdSolToggleActive", newState);
-          tvWidget.activeChart().removeEntity();
           return newState;
         });
       });

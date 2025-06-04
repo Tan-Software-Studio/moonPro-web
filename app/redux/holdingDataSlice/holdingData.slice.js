@@ -60,7 +60,9 @@ const holdingData = createSlice({
     },
     updateHoldingsDataWhileBuySell: (state, { payload }) => {
       if (payload?.type == "buy") {
-        const tokenQty = payload?.amountInDollar / payload?.price;
+        const tokenQty = +(payload?.amountInDollar / payload?.price).toFixed(
+          10
+        );
         if (state?.PnlData?.length > 0) {
           const findTokenIndex = state?.PnlData?.findIndex(
             (item) => item?.token == payload?.token
@@ -113,22 +115,22 @@ const holdingData = createSlice({
             token: payload?.token,
             lots: [
               {
-                qty: payload?.qty,
+                qty: tokenQty,
                 price: payload?.price,
               },
             ],
             realizedProfit: 0,
-            activeQtyHeld: payload?.qty,
-            totalBoughtQty: payload?.qty,
+            activeQtyHeld: tokenQty,
+            totalBoughtQty: tokenQty,
             quantitySold: 0,
-            totalBuyAmount: payload?.qty,
+            totalBuyAmount: tokenQty,
             averageBuyPrice: payload?.price,
             averageHistoricalSellPrice: 0,
             current_price: payload?.price,
             name: payload?.name,
             symbol: payload?.symbol,
             img: payload?.img,
-            chainBalance: payload.qty,
+            chainBalance: tokenQty,
           });
         }
       } else {
@@ -164,11 +166,6 @@ const holdingData = createSlice({
                 state?.PnlData?.[findTokenIndex]?.lots?.shift();
               }
             }
-            // update activeQtyHeld
-            state.PnlData[findTokenIndex].activeQtyHeld = Math.max(
-              0,
-              state.PnlData[findTokenIndex].activeQtyHeld - Number(payload?.qty)
-            );
             // update realizedProfit
             state.PnlData[findTokenIndex].realizedProfit += Number(
               Number(realizedProfit).toFixed(10)
@@ -206,10 +203,10 @@ const holdingData = createSlice({
             state.PnlData[findTokenIndex].averageBuyPrice =
               totalQty > 0
                 ? Number(
-                  (
-                    state?.PnlData[findTokenIndex]?.totalBuyAmount / totalQty
-                  ).toFixed(10)
-                )
+                    (
+                      state?.PnlData[findTokenIndex]?.totalBuyAmount / totalQty
+                    ).toFixed(10)
+                  )
                 : 0;
             if (
               state.PnlData[findTokenIndex]?.lots?.length == 0 ||
