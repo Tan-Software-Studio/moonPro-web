@@ -148,10 +148,6 @@ const UserProfileControl = () => {
                 {portfolio?.perfomance}
               </h3>
             </div>
-            <div className="flex mt-24 items-center justify-center">
-              <div className="text-base text-gray-400">{portfolio?.comingSoon}</div>
-            </div>
-
             <div className="">
               <div className="flex justify-between items-center pt-2 border-gray-800 rounded-lg">
                 <div className="flex items-center gap-2">
