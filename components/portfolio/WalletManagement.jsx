@@ -246,7 +246,7 @@ export default function WalletManagement() {
                 <input
                   type="search"
                   onChange={handleSearchWallet}
-                  placeholder="Search by address"
+                  placeholder={portfolio?.search}
                   className="w-full bg-gray-900 border border-gray-800 rounded-lg p-2  text-sm focus:outline-none cursor-pointer "
                 />
               </div>
@@ -298,7 +298,7 @@ export default function WalletManagement() {
                     <tr>
                       <td colSpan="5">
                         <div className="flex justify-center items-center min-h-[40vh] text-gray-400">
-                          No wallets found
+                          {portfolio?.noWalletsFound}
                         </div>
                       </td>
                     </tr>

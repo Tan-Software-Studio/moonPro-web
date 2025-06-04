@@ -219,6 +219,25 @@
       "earningtool": "Der Betrag, den Sie aus der Empfehlung dieses Benutzers beanspruchen können.",
       "status": "Status",
       "statustool": "Gibt an, ob Sie berechtigt sind, Ihren Empfehlungsbonus zu erhalten."
+    },
+     "refMata": {
+      "nextLevel": "Nächstes Level:",
+      "rewardsRate": "2,5-fache Belohnungsrate für Punkte und SOL",
+      "silver": "Silber",
+      "comingSoon": "Demnächst verfügbar..",
+      "solEarned": "Verdientes SOL",
+      "claim": "Einfordern",
+      "claimed": "Eingefordert",
+      "availableToClaim": "Verfügbar zum Einfordern",
+      "referrals": "Empfehlungen",
+      "emailWallet": "E-Mail/Wallet",
+      "dateJoined": "Beitrittsdatum",
+      "noReferralsFound": "Keine Empfehlungen gefunden.",
+      "tradeMessage": "Du bist fast am Ziel! Handle 20 SOL, um es zu erreichen",
+       "noHistory": "Du hast noch keine Transaktionshistorie.",
+    "infoWillAppear": "Transaktionsinformationen werden hier angezeigt, sobald sie verfügbar sind",
+    "noData": "Keine Daten verfügbar",
+    "adjustSearch": "Versuchen Sie, Ihre Suchbegriffe anzupassen."
     }
   },
   "alphapicks": {
@@ -803,12 +822,29 @@
     "SellAll": "Alles verkaufen"
   },
   "portfolio": {
-    "Show": "Archivierte anzeigen",
+ "Show": "Archivierte anzeigen",
     "Import": "Importieren",
     "CreateWallet": "Wallet erstellen",
     "Balance": "Kontostand",
     "Holdings": "Bestände",
     "Actions": "Aktionen",
-    "Wallet": "Wallet"
+    "Wallet": "Wallet",
+    "activity": "Aktivität",
+    "history": "Verlauf",
+    "top100": "Top 100",
+    "activePosition": "Aktive Position",
+    "comingSoon": "Kommt bald..",
+    "availableBalance": "Verfügbares Guthaben",
+    "unrealizedPNL": "Nicht realisierter Gewinn/Verlust",
+    "totalValue": "Gesamtwert",
+    "pnlAnalysis": "Gewinn/Verlust Analyse",
+    "balance": "Kontostand",
+    "wallets": "Brieftaschen",
+    "spots": "Spots",
+    "perfomance": "Leistung",
+    "search": "Suche nach Adresse, Name oder Symbol",
+      "pleaseLogin": "Bitte melden Sie sich an, um Ihr Portfolio und Profil zu sehen.",
+  "loginRequired": "Anmeldung erforderlich",
+  "noWalletsFound": "Keine Wallets gefunden"
   }
 }

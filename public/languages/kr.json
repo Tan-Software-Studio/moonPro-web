@@ -219,6 +219,25 @@
       "earningtool": "이 사용자의 추천에서 청구할 수 있는 금액.",
       "status": "상태",
       "statustool": "추천 보너스를 받을 자격이 있는지 여부를 나타냅니다."
+    },
+      "refMata": {
+      "nextLevel": "다음 단계:",
+      "rewardsRate": "포인트 및 SOL에 대한 2.5배 보상률",
+      "silver": "실버",
+      "comingSoon": "곧 출시 예정..",
+      "solEarned": "획득한 SOL",
+      "claim": "청구",
+      "claimed": "청구 완료",
+      "availableToClaim": "청구 가능",
+      "referrals": "추천인",
+      "emailWallet": "이메일/지갑",
+      "dateJoined": "가입일",
+      "noReferralsFound": "추천인이 없습니다.",
+    "tradeMessage": "거의 다 왔어요! 목표 달성을 위해 20 SOL을 거래하세요",
+     "noHistory": "아직 거래 내역이 없습니다.",
+    "infoWillAppear": "거래 정보는 이용 가능할 때 여기에 표시됩니다",
+    "noData": "데이터가 없습니다",
+    "adjustSearch": "검색어를 조정해 보세요."
     }
   },
   "alphapicks": {
@@ -803,12 +822,29 @@
     "SellAll": "모두 판매"
   },
   "portfolio": {
-    "Show": "보관함 보기",
-    "Import": "수입",
+   "Show": "보관된 항목 표시",
+    "Import": "가져오기",
     "CreateWallet": "지갑 만들기",
     "Balance": "잔액",
     "Holdings": "보유",
     "Actions": "작업",
-    "Wallet": "지갑"
+    "Wallet": "지갑",
+    "activity": "활동",
+    "history": "기록",
+    "top100": "상위 100",
+    "activePosition": "활성 포지션",
+    "comingSoon": "곧 출시..",
+    "availableBalance": "사용 가능 잔액",
+    "unrealizedPNL": "미실현 손익",
+    "totalValue": "총 가치",
+    "pnlAnalysis": "손익 분석",
+    "balance": "잔액",
+    "wallets": "지갑",
+    "spots": "스팟",
+    "perfomance": "성능",
+    "search": "주소, 이름 또는 심볼로 검색",
+      "pleaseLogin": "포트폴리오와 프로필을 보려면 로그인하세요.",
+  "loginRequired": "로그인이 필요합니다",
+  "noWalletsFound": "지갑을 찾을 수 없습니다"
   }
 }

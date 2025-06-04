@@ -219,6 +219,25 @@
       "earningtool": "L'importo che puoi richiedere dalla referenza di questo utente.",
       "status": "Stato",
       "statustool": "Indica se sei idoneo a richiedere il tuo bonus di referenza."
+    },
+     "refMata": {
+      "nextLevel": "Prossimo livello:",
+      "rewardsRate": "Tasso di ricompensa 2,5X per Punti e SOL",
+      "silver": "Argento",
+      "comingSoon": "In arrivo..",
+      "solEarned": "SOL guadagnati",
+      "claim": "Richiedi",
+      "claimed": "Richiesto",
+      "availableToClaim": "Disponibile per il reclamo",
+      "referrals": "Referenze",
+      "emailWallet": "Email/Portafoglio",
+      "dateJoined": "Data di iscrizione",
+      "noReferralsFound": "Nessuna referenza trovata.",
+      "tradeMessage": "Ci sei quasi! Scambia 20 SOL per raggiungere",
+       "noHistory": "Non hai ancora una cronologia delle transazioni.",
+    "infoWillAppear": "Le informazioni sulle transazioni appariranno qui quando disponibili",
+    "noData": "Nessun dato disponibile",
+    "adjustSearch": "Prova a modificare i termini di ricerca."
     }
   },
   "alphapicks": {
@@ -803,12 +822,29 @@
     "SellAll": "Vendi tutto"
   },
   "portfolio": {
-    "Show": "Mostra archiviato",
+   "Show": "Mostra archiviati",
     "Import": "Importa",
     "CreateWallet": "Crea Wallet",
     "Balance": "Saldo",
-    "Holdings": "Partecipazioni",
+    "Holdings": "Detenzioni",
     "Actions": "Azioni",
-    "Wallet": "Wallet"
+    "Wallet": "Portafoglio",
+    "activity": "Attività",
+    "history": "Cronologia",
+    "top100": "Top 100",
+    "activePosition": "Posizione Attiva",
+    "comingSoon": "In arrivo..",
+    "availableBalance": "Saldo Disponibile",
+    "unrealizedPNL": "PNL Non Realizzato",
+    "totalValue": "Valore Totale",
+    "pnlAnalysis": "Analisi PnL",
+    "balance": "Saldo",
+    "wallets": "Portafogli",
+    "spots": "Spot",
+    "perfomance": "Prestazione",
+    "search": "Cerca per Indirizzo, Nome o Simbolo",
+      "pleaseLogin": "Effettua il login per visualizzare il tuo portfolio e il tuo profilo.",
+  "loginRequired": "Accesso richiesto",
+  "noWalletsFound": "Nessun portafoglio trovato"
   }
 }

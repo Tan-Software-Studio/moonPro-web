@@ -219,6 +219,25 @@
       "earningtool": "このユーザーの紹介からあなたが請求できる金額。",
       "status": "ステータス",
       "statustool": "あなたが紹介ボーナスを受け取る資格があるかどうかを示します。"
+    },
+      "refMata": {
+      "nextLevel": "次のレベル：",
+      "rewardsRate": "ポイントとSOLの2.5倍の報酬率",
+      "silver": "シルバー",
+      "comingSoon": "近日公開予定..",
+      "solEarned": "獲得したSOL",
+      "claim": "請求する",
+      "claimed": "請求済み",
+      "availableToClaim": "請求可能",
+      "referrals": "紹介",
+      "emailWallet": "メール/ウォレット",
+      "dateJoined": "参加日",
+      "noReferralsFound": "紹介が見つかりません。",
+       "tradeMessage": "あと少しです！20 SOL を取引して達成しましょう",
+       "noHistory": "まだ取引履歴がありません。",
+    "infoWillAppear": "取引情報は利用可能になるとここに表示されます",
+    "noData": "データがありません",
+    "adjustSearch": "検索語句を調整してみてください。"
     }
   },
   "alphapicks": {
@@ -809,6 +828,23 @@
     "Balance": "残高",
     "Holdings": "保有",
     "Actions": "アクション",
-    "Wallet": "ウォレット"
+    "Wallet": "ウォレット",
+    "activity": "アクティビティ",
+    "history": "履歴",
+    "top100": "トップ100",
+    "activePosition": "アクティブポジション",
+    "comingSoon": "近日公開..",
+    "availableBalance": "利用可能残高",
+    "unrealizedPNL": "未実現損益",
+    "totalValue": "総価値",
+    "pnlAnalysis": "損益分析",
+    "balance": "残高",
+    "wallets": "ウォレット",
+    "spots": "スポット",
+    "perfomance": "パフォーマンス",
+    "search": "アドレス、名前、またはシンボルで検索",
+     "pleaseLogin": "ポートフォリオとプロフィールを表示するにはログインしてください。",
+  "loginRequired": "ログインが必要です",
+  "noWalletsFound": "ウォレットが見つかりません"
   }
 }
