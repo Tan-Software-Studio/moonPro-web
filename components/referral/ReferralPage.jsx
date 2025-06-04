@@ -19,9 +19,12 @@ import { SlUserFollow } from "react-icons/sl";
 import { openCloseLoginRegPopup } from "@/app/redux/states";
 import { FaAngleDown } from "react-icons/fa6";
 import { showToasterSuccess } from "@/utils/toaster/toaster.style";
+import { useTranslation } from "react-i18next";
 
 const ReferralPage = () => {
   const nftImages = [nftImg, nftImg2, nftImg3, nftImg4, nftImg5];
+    const { t } = useTranslation();
+    const referral = t('referral')
 
   const URL_LINK = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
@@ -237,16 +240,23 @@ const ReferralPage = () => {
         <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:items-center text-xs text-gray-400">
           {/* Left side: Level Info */}
           <div className="flex items-start gap-1 sm:items-center flex-wrap tracking-wider">
-            <MdOutlineKeyboardDoubleArrowUp className="text-blue-500 mt-[2px]" size={16} />
-            <span className="text-[#cdced4]">Next Level:</span>
-            <span className="font-medium text-blue-500">2.5X Rewards rate for Points and SOL</span>
+            <MdOutlineKeyboardDoubleArrowUp
+              className="text-blue-500 mt-[2px]"
+              size={16}
+            />
+            <span className="text-[#cdced4]">{referral?.refMata?.nextLevel}</span>
+            <span className="font-medium text-blue-500">
+              {referral?.refMata?.rewardsRate}
+            </span>
           </div>
 
           {/* Right side: Progress Info */}
           <div className="flex items-start gap-1 sm:items-center flex-wrap tracking-wider">
             <FaGem className="text-blue-500 mt-[2px]" size={16} />
-            <span className="text-[#a0a4b8]">{"You're almost there! Trade 20 SOL to reach"}</span>
-            <span className="text-white font-medium">Silver</span>
+            <span className="text-[#a0a4b8]">
+              {referral?.refMata?.tradeMessage}
+            </span>
+            <span className="text-white font-medium">{referral?.refMata?.silver}</span>
           </div>
         </div>
 
@@ -264,7 +274,7 @@ const ReferralPage = () => {
               </span>
             </div> */}
             <div className="flex items-center justify-center">
-              <div className="text-base mt-12 text-gray-400">Coming soon..</div>
+              <div className="text-base mt-12 text-gray-400">{referral?.refMata?.m}</div>
             </div>
           </div>
 
@@ -273,13 +283,13 @@ const ReferralPage = () => {
             <div className="text-sm text-[rgb(200,201,209)] flex justify-between items-center gap-2">
               <div className="flex items-center gap-2 tracking-wider">
                 <HiOutlineCurrencyDollar className="text-blue-500" size={22} />
-                SOL Earned
+                {referral?.refMata?.solEarned}
               </div>
               <button
                 onClick={handleWithdrawClick}
                 className="lg:py-2 md:py-2 py-2 lg:px-3 md:px-2 px-3 bg-blue-500 rounded-md hover:bg-blue-700 tracking-wider"
               >
-                Claim
+                {referral?.refMata?.claim}
               </button>
             </div>
             <div className="text-2xl font-thin pt-2 tracking-wider">
@@ -287,10 +297,15 @@ const ReferralPage = () => {
             </div>
 
             <div className="text-sm text-[#a0a4b8] tracking-wider">
-              Claimed {((Number(refData?.user?.totalClaimed) || 0) + (Number(addClaimed) || 0)).toFixed(5)} SOL
+              {referral?.refMata?.claimed}{" "}
+              {(
+                (Number(refData?.user?.totalClaimed) || 0) +
+                (Number(addClaimed) || 0)
+              ).toFixed(5)}{" "}
+              SOL
             </div>
             <div className="text-sm text-[#a0a4b8] tracking-wider">
-              Available to claim{" "}
+              {referral?.refMata?.availableToClaim}{" "}
               {(
                 (Number(refData?.totalEarningInSol) || 0) -
                 (Number(refData?.user?.totalClaimed) || 0) -
@@ -318,7 +333,8 @@ const ReferralPage = () => {
               </div>
             </div> */}
             <div className="flex items-center justify-center">
-              <div className="text-base mt-12 text-gray-400">Coming soon..</div>
+              <div className="text-base mt-12 text-gray-400">{referral?.refMata?.comingSoon}
+              </div>
             </div>
           </div>
         </div>
@@ -328,7 +344,9 @@ const ReferralPage = () => {
           <div className="text-white text-sm">
             {/* Header */}
             <div className="flex justify-between border-b border-[#2c2c34] px-4 py-2 overflow-x-auto whitespace-nowrap">
-              <div className="flex gap-2 items-center flex-shrink-0">Referrals</div>
+              <div className="flex gap-2 items-center flex-shrink-0">
+                {referral?.refMata?.referrals}
+              </div>
 
               <div className="flex gap-3 items-center">
                 <div>
@@ -377,9 +395,15 @@ const ReferralPage = () => {
               <table className="w-full border border-[#2c2c34] rounded-b-lg text-left text-sm  border-collapse">
                 <thead className="text-gray-500 border-b border-[#2c2c34]">
                   <tr>
-                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">Email/Wallet</th>
-                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">Date Joined</th>
-                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">SOL Earned</th>
+                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">
+                      {referral?.refMata?.emailWallet}
+                    </th>
+                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">
+                     {referral?.refMata?.dateJoined}
+                    </th>
+                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">
+                      {referral?.refMata?.solEarned}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -396,7 +420,9 @@ const ReferralPage = () => {
                               className="rounded-lg"
                             />
                           </div>
-                          <h1 className="text-[#89888e] text-lg">No Referrals found.</h1>
+                          <h1 className="text-[#89888e] text-lg">
+                           {referral?.refMata?.noReferralsFound}
+                          </h1>
                         </div>
                       </td>
                     </tr>

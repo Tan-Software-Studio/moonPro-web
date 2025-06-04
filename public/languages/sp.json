@@ -219,6 +219,25 @@
       "earningtool": "La cantidad que puedes reclamar de la referencia de este usuario.",
       "status": "Estado",
       "statustool": "Indica si eres elegible para reclamar tu bonificación de referido."
+    },
+    "refMata": {
+      "nextLevel": "Siguiente nivel:",
+      "rewardsRate": "Tasa de recompensas 2.5X para Puntos y SOL",
+      "silver": "Plata",
+      "comingSoon": "Próximamente..",
+      "solEarned": "SOL ganado",
+      "claim": "Reclamar",
+      "claimed": "Reclamado",
+      "availableToClaim": "Disponible para reclamar",
+      "referrals": "Referidos",
+      "emailWallet": "Correo electrónico/Billetera",
+      "dateJoined": "Fecha de ingreso",
+      "noReferralsFound": "No se encontraron referidos.",
+      "tradeMessage": "¡Casi llegas! Intercambia 20 SOL para alcanzar",
+        "noHistory": "Aún no tienes historial de transacciones.",
+    "infoWillAppear": "La información de la transacción aparecerá aquí cuando esté disponible",
+    "noData": "No hay datos disponibles",
+    "adjustSearch": "Intenta ajustar tus términos de búsqueda."
     }
   },
   "alphapicks": {
@@ -803,12 +822,29 @@
     "SellAll": "Vender todo"
   },
   "portfolio": {
-    "Show": "Mostrar archivados",
+     "Show": "Mostrar archivados",
     "Import": "Importar",
-    "CreateWallet": "Crear billetera",
-    "Balance": "Balance",
-    "Holdings": "Posiciones",
+    "CreateWallet": "Crear Cartera",
+    "Balance": "Saldo",
+    "Holdings": "Participaciones",
     "Actions": "Acciones",
-    "Wallet": "Billetera"
+    "Wallet": "Cartera",
+    "activity": "Actividad",
+    "history": "Historial",
+    "top100": "Top 100",
+    "activePosition": "Posición Activa",
+    "comingSoon": "Próximamente..",
+    "availableBalance": "Saldo Disponible",
+    "unrealizedPNL": "PNL No Realizado",
+    "totalValue": "Valor Total",
+    "pnlAnalysis": "Análisis de PnL",
+    "balance": "Saldo",
+    "wallets": "Carteras",
+    "spots": "Spots",
+    "perfomance": "Rendimiento",
+    "search": "Buscar por Dirección, Nombre o Símbolo",
+      "pleaseLogin": "Por favor, inicie sesión para ver su cartera y perfil.",
+  "loginRequired": "Inicio de sesión requerido",
+  "noWalletsFound": "No se encontraron billeteras"
   }
 }

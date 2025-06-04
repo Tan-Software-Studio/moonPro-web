@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { setChartSymbolImage } from "@/app/redux/states";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 // Truncate long strings
 const truncateString = (str, start = 4, end = 4) => {
@@ -22,6 +23,9 @@ const ActivityTable = ({ activitySearchQuery }) => {
   const [loadingImage, setLoadingImage] = useState(false)
   const router = useRouter()
   const dispatch = useDispatch()
+
+      const { t } = useTranslation();
+      const referral = t('referral')
 
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
@@ -197,18 +201,18 @@ const ActivityTable = ({ activitySearchQuery }) => {
             <div className=" flex items-center justify-center mb-4">
               <Image
                 src="/assets/NoDataImages/NoDataImages.svg"
-                alt="No Data Available"
+                alt={referral?.refMata?.noData}
                 width={200}
                 height={100}
                 className="text-slate-400"
               />
             </div>
-            <p className="text-slate-400 text-lg mb-2 break-all break-words">{!transactionData?.length > 0 ? "You don't have any transaction history yet."
+            <p className="text-slate-400 text-lg mb-2 break-all break-words">{!transactionData?.length > 0 ? referral?.refMata?.noHistory
               : !filteredActivityData?.length > 0 ? `No results found for "${activitySearchQuery}"`
                 : "No data"}</p>
             <p className="text-slate-500 text-sm">
-              {!transactionData?.length > 0 ? "Transaction information will appear here when available" :
-                !filteredActivityData?.length > 0 ? "Try adjusting your search terms."
+              {!transactionData?.length > 0 ? referral?.refMata?.infoWillAppear :
+                !filteredActivityData?.length > 0 ? referral?.refMata?.adjustSearch
                   : null}
             </p>
           </div>

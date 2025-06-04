@@ -219,6 +219,26 @@
       "earningtool": "The amount you can claim from this user's referral.",
       "status": "STATUS",
       "statustool": "Indicates whether you're eligible to claim your referral bonus."
+    },
+    "refMata": {
+      "nextLevel": "Next Level:",
+      "rewardsRate": "2.5X Rewards rate for Points and SOL",
+      "silver": "Silver",
+      "comingSoon": "Coming soon..",
+      "solEarned": "SOL Earned",
+      "claim": "Claim",
+      "claimed": "Claimed",
+      "availableToClaim": "Available to claim",
+      "referrals": "Referrals",
+      "emailWallet": "Email/Wallet",
+      "dateJoined": "Date Joined",
+      "noReferralsFound": "No Referrals found.",
+      "tradeMessage": "You're almost there! Trade 20 SOL to reach",
+          "noHistory": "You don't have any transaction history yet.",
+    "infoWillAppear": "Transaction information will appear here when available",
+    "noData": "No data available",
+        "adjustSearch": "Try adjusting your search terms."
+
     }
   },
   "alphapicks": {
@@ -808,6 +828,23 @@
     "Balance": "Balance",
     "Holdings": "Holdings",
     "Actions": "Actions",
-    "Wallet": "Wallet"
+    "Wallet": "Wallet",
+    "activity": "Activity",
+    "history": "History",
+    "top100": "Top 100",
+    "activePosition": "Active Position",
+    "comingSoon": "Coming soon..",
+    "availableBalance": "Available Balance",
+    "unrealizedPNL": "Unrealized PNL",
+    "totalValue": "Total Value",
+    "pnlAnalysis": "PnL Analysis",
+    "balance": "Balance",
+    "wallets": "Wallets",
+    "spots": "Spots",
+    "perfomance" : "Performance",
+    "search" : "Search by Address, Name or Symbol",
+        "pleaseLogin": "Please login to view your portfolio and profile.",
+    "loginRequired": "Login Required",
+    "noWalletsFound": "No wallets found"
   }
 }

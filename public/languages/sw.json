@@ -219,6 +219,25 @@
       "earningtool": "Det belopp du kan kräva från denna användares referral.",
       "status": "Status",
       "statustool": "Anger om du är berättigad att begära din referral bonus."
+    },
+     "refMata": {
+      "nextLevel": "Nästa nivå:",
+      "rewardsRate": "2,5x belöningsgrad för poäng och SOL",
+      "silver": "Silver",
+      "comingSoon": "Kommer snart..",
+      "solEarned": "Intjänad SOL",
+      "claim": "Kräv",
+      "claimed": "Krävd",
+      "availableToClaim": "Tillgänglig att kräva",
+      "referrals": "Rekommendationer",
+      "emailWallet": "E-post/Plånbok",
+      "dateJoined": "Datum ansluten",
+      "noReferralsFound": "Inga rekommendationer hittades.",
+      "tradeMessage": "Du är nästan där! Handla 20 SOL för att nå målet",
+       "noHistory": "Du har ännu ingen transaktionshistorik.",
+    "infoWillAppear": "Transaktionsinformation kommer att visas här när den är tillgänglig",
+    "noData": "Ingen data tillgänglig",
+    "adjustSearch": "Försök att justera dina sökord."
     }
   },
   "alphapicks": {
@@ -803,12 +822,29 @@
     "SellAll": "Sälj allt"
   },
   "portfolio": {
-    "Show": "Visa arkiverade",
+     "Show": "Visa arkiverade",
     "Import": "Importera",
     "CreateWallet": "Skapa plånbok",
-    "Balance": "Balans",
-    "Holdings": "Hållningar",
+    "Balance": "Saldo",
+    "Holdings": "Innehav",
     "Actions": "Åtgärder",
-    "Wallet": "Plånbok"
+    "Wallet": "Plånbok",
+    "activity": "Aktivitet",
+    "history": "Historik",
+    "top100": "Topp 100",
+    "activePosition": "Aktiv Position",
+    "comingSoon": "Kommer snart..",
+    "availableBalance": "Tillgängligt Saldo",
+    "unrealizedPNL": "Orealiserad Vinst/Förlust",
+    "totalValue": "Totalt Värde",
+    "pnlAnalysis": "PnL-analys",
+    "balance": "Saldo",
+    "wallets": "Plånböcker",
+    "spots": "Spots",
+    "perfomance": "Prestanda",
+    "search": "Sök efter Adress, Namn eller Symbol",
+      "pleaseLogin": "Vänligen logga in för att se din portfölj och profil.",
+  "loginRequired": "Inloggning krävs",
+  "noWalletsFound": "Inga plånböcker hittades"
   }
 }
