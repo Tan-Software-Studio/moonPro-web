@@ -32,6 +32,17 @@ export const PhantomWalletProvider = ({ children }) => {
     setPhantom(provider);
 
     if (provider) {
+
+      provider.on("connect", (publicKey) => {
+        setConnected(true);
+        setPublicKey(publicKey.toString());
+      });
+
+      provider.on("disconnect", () => {
+        setConnected(false);
+        setPublicKey(null);
+      });
+
       // check if already connected
       provider
         .connect({ onlyIfTrusted: true })
@@ -46,6 +57,7 @@ export const PhantomWalletProvider = ({ children }) => {
   }, []);
 
   const connectWallet = async () => {
+
     if (!phantom) {
       window.open("https://phantom.app/", "_blank");
       return { success: false, error: "Phantom wallet not installed" };
@@ -53,10 +65,21 @@ export const PhantomWalletProvider = ({ children }) => {
 
     try {
       setConnecting(true);
+
       const response = await phantom.connect();
-      setConnected(true);
-      setPublicKey(response.publicKey.toString());
-      return { success: true, publicKey: response.publicKey.toString() };
+
+      if (response && response.publicKey) {
+        setConnected(true);
+        setPublicKey(response.publicKey.toString());
+
+        return {
+          success: true,
+          publicKey: response.publicKey.toString(),
+          phantomInstance: phantom,
+        };
+      } else {
+        throw new Error("No response from wallet");
+      }
     } catch (error) {
       console.error("Failed to connect to Phantom:", error);
       return { success: false, error: error.message };
@@ -79,14 +102,20 @@ export const PhantomWalletProvider = ({ children }) => {
     }
   };
 
-  const signMessage = async (message) => {
-    if (!phantom || !connected) {
+  const signMessage = async (message, phantomInstance = null) => {
+    const walletToUse = phantomInstance || phantom;
+
+    if (!walletToUse) {
+      throw new Error("Wallet not available");
+    }
+
+    if (!walletToUse.isConnected && !connected) {
       throw new Error("Wallet not connected");
     }
 
     try {
       const encodedMessage = new TextEncoder().encode(message);
-      const signedMessage = await phantom.signMessage(encodedMessage, "utf8");
+      const signedMessage = await walletToUse.signMessage(encodedMessage, "utf8");
       return {
         signature: Array.from(signedMessage.signature),
         publicKey: signedMessage.publicKey.toString(),
