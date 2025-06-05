@@ -43,7 +43,6 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
     }
     return userDetails?.email
   };
-  console.log("🚀 ~ getDisplayName ~ getDisplayName:", getDisplayName())
 
   const getAvatarInitial = () => {
     const displayName = getDisplayName();
