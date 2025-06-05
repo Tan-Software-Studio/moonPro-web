@@ -134,20 +134,20 @@ const History = ({ }) => {
                     {/* bought */}
                     <td className="px-4 py-2">
                       <p className="font-semibold  text-white">
-                        ${(item.qty * item.buyPrice).toFixed(5)}
+                        ${(item.qty * item.buyPrice).toFixed(2)}
                       </p>
                       <p className="text-slate-400 text-sm font-medium">
-                        {Number(item.qty).toFixed(5)} {item?.symbol?.length > 5 ? item.symbol.slice(0, 5) + '...' : item.symbol}
+                        {Number(item.qty).toFixed(2)} {item?.symbol?.length > 5 ? item.symbol.slice(0, 5) + '...' : item.symbol}
                       </p>
                     </td>
 
                     {/* sold */}
                     <td className="px-4 py-2">
                       <p className="font-semibold text-white ">
-                        ${(item.qty * item.sellPrice).toFixed(5)}
+                        ${(item.qty * item.sellPrice).toFixed(2)}
                       </p>
                       <p className="text-slate-400 text-sm font-medium">
-                        {Number(item.qty).toFixed(5)} {item?.symbol?.length > 5 ? item.symbol.slice(0, 5) + '...' : item.symbol}
+                        {Number(item.qty).toFixed(2)} {item?.symbol?.length > 5 ? item.symbol.slice(0, 5) + '...' : item.symbol}
                       </p>
                     </td>
 
