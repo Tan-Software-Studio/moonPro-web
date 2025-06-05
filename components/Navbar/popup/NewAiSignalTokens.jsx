@@ -1,272 +1,219 @@
-import React, { useEffect, useState } from 'react';
-import { X, TrendingUp, Flame } from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
+import React, { useEffect, useState, useRef } from 'react';
+import { Check, Copy, TrendingUp } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { humanReadableFormat } from '@/utils/basicFunctions';
-import { IoMdDoneAll } from 'react-icons/io';
-import { BiSolidCopy } from 'react-icons/bi';
 import { UpdateTimeViaUTCWithCustomTime } from '@/utils/calculation';
 import { setChartSymbolImage } from '@/app/redux/states';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { NoDataFish } from '@/app/Images';
 
-const NewAiSignalTokens = ({ setIsOpen }) => {
+const NewAiSignalTokens = () => {
+    const [isOpen, setIsOpen] = useState(false);
     const [currentTime, setCurrentTime] = useState(new Date());
     const [copiedIndex, setCopiedIndex] = useState(null);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const aiSignalData = useSelector((state) => state?.aiSignal?.aiSignalData);
     const isLoading = useSelector((state) => state?.aiSignal?.initialLoading);
     const router = useRouter();
+    const dropdownRef = useRef(null);
 
     const handleCopy = (address, index, e) => {
-        e.preventDefault()
+        e.preventDefault();
         e.stopPropagation();
         navigator.clipboard.writeText(address);
         setCopiedIndex(index);
         setTimeout(() => setCopiedIndex(null), 2000);
     };
 
-    const navigateToChartSreen = (item) => {
-        router.push(
-            `/tradingview/solana?tokenaddress=${row?.address}&symbol=${row?.symbol}`
-        );
+    const navigateToChartScreen = (item, index) => {
+        router.push(`/tradingview/solana?tokenaddress=${item?.address}&symbol=${item?.symbol}`);
         localStorage.setItem("chartTokenImg", item?.img);
         dispatch(setChartSymbolImage(item?.img));
+        setIsOpen(false)
     };
 
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentTime(new Date());
         }, 1000);
-
         return () => clearInterval(interval);
     }, []);
 
+    // Close dropdown on outside click
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
-
-        <motion.div
-            key="backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed min-w-full h-screen inset-0 bg-[#1E1E1ECC] flex items-center justify-center z-[999999999999999]"
-            onClick={() => setIsOpen(false)}
-        >
-            <motion.div
-                key="backdrop"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="w-full max-w-6xl mx-4 p-6 bg-[#08080E] rounded-lg border border-[#333333] max-h-[90vh] overflow-y-auto"
-                onClick={(e) => e.stopPropagation()}
+        <div className="inline-block text-left" ref={dropdownRef}>
+            <button
+                onClick={() => setIsOpen((prev) => !prev)}
+                className="px-3 flex items-center gap-1.5 border-[1px] border-[#333333] py-1.5  bg-[#1a1a1a] text-[#ffffff] rounded-md text-sm font-bold transition-colors cursor-pointer"
             >
-                {/* Header */}
-                <div className="flex items-center justify-between ">
-                    <div className="flex items-center gap-4">
-                        <div className="bg-blue-600 p-3 rounded-lg">
-                            <TrendingUp className="w-5 h-5 text-white" />
-                        </div>
-                        <div>
-                            <h2 className="text-xl font-bold text-white mb-1">Top 5 New Tokens</h2>
-                            <p className="text-gray-400 text-sm">Recently added Ai Signal tokens</p>
-                        </div>
+                <div className="text-[10px] h-[17px] w-[17px] border border-[#4CAF50] text-[#ffffff] rounded-md flex items-center justify-center cursor-pointer bg-gradient-to-br from-[#409143] to-[#093d0c] shadow-[0_0_4px_rgba(76,255,80,0.4)]">
+                    AI
+                </div>
+                <span className="capitalize">{aiSignalData[0]?.symbol || 'Tokens'}</span>
+                <div className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+            </button>
+
+            {/* Enhanced Dropdown Menu */}
+            {isOpen && (
+                <div className="absolute z-50 mt-3 left-0 w-[30rem] max-w-full bg-[#18181a] border border-gray-700 rounded-lg  max-h-[75vh] animate-in slide-in-from-top-2 duration-300 overflow-hidden backdrop-blur-sm">
+                    {/* Enhanced Header */}
+                    <div className="p-2 border-b border-gray-700">
+                        <h2 className="text-white font-semibold text-base flex items-center gap-3">
+                            Recent 5 AI Signals
+                        </h2>
                     </div>
-                    <button
-                        onClick={() => setIsOpen(false)}
-                        className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-[#333333] rounded-lg"
-                    >
-                        <X className="w-6 h-6" />
-                    </button>
-                </div>
 
-                {/* Table Header */}
-                <div className="hidden lg:grid lg:grid-cols-12 gap-4 px-4 py-3 border-b border-[#333333] mb-2">
-                    <div className="col-span-5 text-[#B2B2B7] text-sm font-semibold">Token</div>
-                    <div className="col-span-2 text-[#B2B2B7] text-sm font-semibold text-center">AI Call</div>
-                    <div className="col-span-2 text-[#B2B2B7] text-sm font-semibold text-center">Mkt Cap</div>
-                    <div className="col-span-3 text-[#B2B2B7] text-sm font-semibold text-center">Volume</div>
-                </div>
 
-                {/* Token Rows */}
-                <div className="space-y-2">
-                    {isLoading ?
-                        <div
-                            className="snippet flex justify-center items-center mt-24   "
-                            data-title=".dot-spin"
-                        >
-                            <div className="stage">
-                                <div className="dot-spin"></div>
+                    <div className='grid grid-cols-5 py-1 gap-4 items-center border-b border-gray-700 '>
+                        <div className='col-span-2 text-gray-400 text-xs font-medium px-2'>Token</div>
+                        <div className="col-span-1 text-gray-400 text-xs font-medium">AI Call</div>
+                        <div className="col-span-1 text-gray-400 text-xs font-medium">Market Cap</div>
+                        <div className="col-span-1 text-gray-400 text-xs font-medium">Volume</div>
+                    </div>
+                    {/* Enhanced Content */}
+                    <div className="overflow-y-auto max-h-[55vh] custom-scrollbar">
+                        {isLoading ? (
+                            <div className="text-center text-gray-400 py-12">
+                                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#1d73fc]"></div>
+                                <p className="mt-4">Loading tokens...</p>
                             </div>
-                        </div> :
-                        aiSignalData.length > 0 ?
+                        ) : aiSignalData?.length > 0 ? (
+                            aiSignalData.slice(0, 5).map((item, ind) => {
+                                const { time, isRecent } = UpdateTimeViaUTCWithCustomTime(item?.dbCreatedAt, currentTime);
+                                return (
+                                    <div
+                                        key={ind}
+                                        onClick={() => navigateToChartScreen(item, ind)}
+                                        className={`group cursor-pointer relative bg-[#18181a]  hover:bg-[#2a2a2a] ${ind != 4 && "border-b border-gray-700"}  px-2 py-1   transition-all duration-300 `}
+                                    >
 
-                            aiSignalData?.slice(0, 5)?.map((item, ind) => (
-                                <div
-                                    key={ind}
-                                    className="hover:bg-[#3333339c] bg-[#08080E] cursor-pointer rounded-lg border border-[#333333] p-4 transition-colors duration-200"
-                                    onClick={() => navigateToChartSreen(item)}
-                                >
-                                    {/* Desktop Layout */}
-                                    <div className="hidden lg:grid lg:grid-cols-12 gap-4 items-center">
-                                        {/* Token Info - 5 columns */}
-                                        <div className="col-span-5 flex items-center gap-3">
-                                            <div className="shrink-0">
-                                                <div className="flex w-12 h-12 items-center justify-center border border-dashed rounded-lg border-gray-700">
+                                        <div className="grid grid-cols-5  gap-4 items-center">
+                                            {/* Token Info */}
+                                            <div className="col-span-2 flex items-center gap-4">
+                                                <div className="relative">
                                                     {item?.img ? (
                                                         <img
-                                                            src={item?.img}
-                                                            alt={`${item.symbol}`}
-                                                            className="w-12 h-12 rounded-lg border border-dashed border-gray-700"
+                                                            src={item.img}
+                                                            alt={item.symbol}
+                                                            className="w-10 h-10 object-cover rounded-md border-2 border-[#333]/50 shadow-lg"
                                                         />
                                                     ) : (
-                                                        <span className="text-sm font-semibold text-gray-400 uppercase">
+                                                        <div className="w-12 h-12 bg-gradient-to-br from-[#1d73fc] to-[#2563eb] rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
                                                             {item?.symbol?.charAt(0) || "?"}
-                                                        </span>
+                                                        </div>
                                                     )}
                                                 </div>
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <span className="text-sm font-semibold text-white">
-                                                        {item?.symbol}
-                                                    </span>
-                                                    <span className="text-[#9b9999] text-xs">/</span>
-                                                    <span className="text-sm text-white truncate">
-                                                        {item?.name}
-                                                    </span>
-                                                </div>
-                                                <div className="flex items-center gap-1">
-                                                    <div className="text-xs text-[#B2B2B7] font-mono px-2 truncate">
-                                                        {item?.address}
-                                                    </div>
-                                                    <button
-                                                        onClick={(event) => handleCopy(item?.address, ind, event)}
-                                                        className="p-1 hover:bg-[#333333] rounded transition-colors"
-                                                    >
-                                                        {copiedIndex === ind ? (
-                                                            <IoMdDoneAll className="text-[#48BB78] w-3 h-3" />
-                                                        ) : (
-                                                            <BiSolidCopy className="text-[#9b9999] hover:text-white w-3 h-3" />
+                                                <div className="flex-1 mt-0.5 min-w-0">
+                                                    <div className="flex items-center gap-2 text-white font-medium text-sm">
+                                                        <span className="truncate ">{item.symbol}</span>
+                                                        {isRecent && (
+                                                            <div className="bg-[#1d73fc] text-white text-[10px] font-normal px-1 py-[1px] rounded-md">
+                                                                New
+                                                            </div>
                                                         )}
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* AI Call - 2 columns */}
-                                        <div className="col-span-2 text-center">
-                                            <div className="text-sm font-semibold text-emerald-500">
-                                                {UpdateTimeViaUTCWithCustomTime(item?.dbCreatedAt, currentTime)}
-                                            </div>
-                                        </div>
-
-                                        {/* Market Cap - 2 columns */}
-                                        <div className="col-span-2 text-center">
-                                            <div className="text-sm font-semibold text-[#FFFFFF]">
-                                                {humanReadableFormat(item?.marketCap)}
-                                            </div>
-                                        </div>
-
-                                        {/* Volume - 3 columns */}
-                                        <div className="col-span-3 text-center">
-                                            <div className="text-sm font-semibold text-[#FFFFFF]">
-                                                {humanReadableFormat(item?.traded_volume)}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Mobile Layout */}
-                                    <div className="lg:hidden">
-                                        <div className="flex items-center gap-3 mb-3">
-                                            <div className="shrink-0">
-                                                <div className="flex w-12 h-12 items-center justify-center border border-dashed rounded-lg border-gray-700">
-                                                    {item?.img ? (
-                                                        <img
-                                                            src={item?.img}
-                                                            alt={`${item.symbol}`}
-                                                            className="w-12 h-12 rounded-lg border border-dashed border-gray-700"
-                                                        />
-                                                    ) : (
-                                                        <span className="text-sm font-semibold text-gray-400 uppercase">
-                                                            {item?.symbol?.charAt(0) || "?"}
+                                                    </div>
+                                                    <div className="flex items-center gap-2 text-xs mt-0.5 text-[#aaa] font-mono">
+                                                        <span className="max-w-[150px] truncate">
+                                                            {item.address?.slice(0, 4) + "..." + item.address?.slice(-4)}
                                                         </span>
-                                                    )}
+                                                        <button
+                                                            onClick={(e) => handleCopy(item.address, ind, e)}
+                                                            className=" "
+                                                        >
+                                                            {copiedIndex === ind ? (
+                                                                <Check className="text-green-500 w-2.5 h-2.5" />
+                                                            ) : (
+                                                                <Copy className="text-[#aaa] hover:text-white w-2.5 h-2.5" />
+                                                            )}
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="flex-1 min-w-0">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <span className="text-sm font-semibold text-white">
-                                                        {item?.symbol}
-                                                    </span>
-                                                    <span className="text-[#9b9999] text-xs">/</span>
-                                                    <span className="text-sm text-white truncate">
-                                                        {item?.name}
-                                                    </span>
+
+                                            {/* Time */}
+                                            <div className="col-span-1 text-start">
+                                                <div className="text-emerald-500 text-xs font-medium">
+                                                    {time}
                                                 </div>
-                                                <div className="flex items-center gap-2">
-                                                    <div className="text-xs text-[#B2B2B7] font-mono bg-[#1a1a1a] px-2 py-1 rounded border border-[#333333] truncate max-w-[180px]">
-                                                        {item?.address}
-                                                    </div>
-                                                    <button
-                                                        onClick={(event) => handleCopy(item?.address, ind, event)}
-                                                        className="p-1 hover:bg-[#333333] rounded transition-colors"
-                                                    >
-                                                        {copiedIndex === ind ? (
-                                                            <IoMdDoneAll className="text-[#48BB78] w-3 h-3" />
-                                                        ) : (
-                                                            <BiSolidCopy className="text-[#9b9999] hover:text-white w-3 h-3" />
-                                                        )}
-                                                    </button>
-                                                </div>
+                                            </div>
+
+                                            {/* Market Cap */}
+                                            <div className="col-span-1 text-start">
+                                                <div className='text-xs font-medium'>{humanReadableFormat(item.marketCap)}</div>
+                                            </div>
+
+                                            {/* Volume */}
+                                            <div className="col-span-1 text-start">
+                                                <div className='text-xs font-medium'>{humanReadableFormat(item.traded_volume)}</div>
                                             </div>
                                         </div>
 
-                                        <div className="grid grid-cols-3 gap-4 pt-3 border-t border-[#333333]">
-                                            <div className="text-center">
-                                                <div className="text-[#B2B2B7] text-xs mb-1">AI Call</div>
-                                                <div className="text-sm font-semibold text-[#FFFFFF]">
-                                                    {UpdateTimeViaUTCWithCustomTime(item?.dbCreatedAt, currentTime)}
-                                                </div>
-                                            </div>
-                                            <div className="text-center">
-                                                <div className="text-[#B2B2B7] text-xs mb-1">Mkt Cap</div>
-                                                <div className="text-sm font-semibold text-[#FFFFFF]">
-                                                    {humanReadableFormat(item?.marketCap)}
-                                                </div>
-                                            </div>
-                                            <div className="text-center">
-                                                <div className="text-[#B2B2B7] text-xs mb-1">Volume</div>
-                                                <div className="text-sm font-semibold text-[#FFFFFF]">
-                                                    {humanReadableFormat(item?.traded_volume)}
-                                                </div>
-                                            </div>
-                                        </div>
+                                        {/* Hover Effect Overlay */}
+                                        <div className="absolute inset-0 bg-gradient-to-r from-[#1d73fc]/5 to-[#2563eb]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                                     </div>
+                                )
+                            })
+                        ) : (
+                            <div className="flex flex-col items-center justify-center text-center text-gray-400 py-16">
+                                <div className="p-4 bg-gradient-to-r from-[#1a1a24] to-[#0f0f14] rounded-2xl mb-4">
+                                    <TrendingUp className="w-16 h-16 text-gray-600" />
                                 </div>
-                            )) :
-                            <div className="flex flex-col items-center justify-center h-64 mt-10 text-center">
-                                <div className="flex items-center justify-center mb-4">
-                                    <Image
-                                        src={NoDataFish}
-                                        alt="No Data Available"
-                                        width={200}
-                                        height={100}
-                                        className="text-slate-400"
-                                    />
-                                </div>
-                                <p className="text-slate-400 text-lg mb-2 break-words break-all">
-                                    No data available
-                                </p>
+                                <p className="text-lg font-medium">No AI signals available</p>
+                                <p className="text-sm text-gray-500 mt-1">Check back soon for new token signals</p>
                             </div>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            <style jsx>{`
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 6px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: rgba(51, 51, 51, 0.2);
+                    border-radius: 3px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: linear-gradient(to bottom, #1d73fc, #2563eb);
+                    border-radius: 3px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: linear-gradient(to bottom, #438bff, #3b82f6);
+                }
+                    
+                @keyframes slide-in-from-top-2 {
+                    from {
+                        opacity: 0;
+                        transform: translateY(-12px) scale(0.95);
                     }
-                </div>
-            </motion.div>
-        </motion.div>
+                    to {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                    }
+                }
+                
+                .animate-in {
+                    animation: slide-in-from-top-2 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                }
+            `}</style>
+        </div>
     );
 };
 
-export default NewAiSignalTokens; 
+export default NewAiSignalTokens;
