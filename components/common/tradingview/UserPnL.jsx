@@ -64,7 +64,7 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
       hasDollar: true,
     },
     {
-      title: wallettracker?.pnlpopup?.bottom?.pnl,
+      title: wallettracker?.pnlpopup?.bottom?.activeposition?.pnl,
       value: absolutePnL,
       addSign: `${isPositivePnL ? "+" : "-"}`,
       color: isPositivePnL ? "text-[#21CB6B]" : "text-[#ED1B24]",
