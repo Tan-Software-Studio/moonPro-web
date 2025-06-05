@@ -177,9 +177,13 @@ const Sidebar = () => {
         </div>
         <div className="mt-[38px]">
           <ul className={`flex flex-col gap-6 mt-6`}>
-            
-            <div className="flex items-center justify-center">
-              <AISignalsButton />
+
+            <div className="flex items-center md:px-0 px-4 md:ml-3" >
+              <div className="w-fit rounded-md" onClick={() => {
+                isMobileScreenData && dispatch(setIsSidebarOpen(false));
+              }} >
+                <AISignalsButton />
+              </div>
             </div>
             {sidebardata?.map((data) => (
               <Link key={data.id} href={data?.pathname}>
