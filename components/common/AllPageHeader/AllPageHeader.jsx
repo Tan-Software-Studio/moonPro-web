@@ -340,7 +340,7 @@ const AllPageHeader = ({
 
   return (
     <div
-      className={`text-white relative bg-[#08080E] items-center md:flex justify-between  lg:items-center pt-[18px] py-[6.3px] px-3 md:px-4 border-b-[1px] ${borderColor} pb-5 transition-all duration-500 ease-in-out 
+      className={`text-white relative bg-[#08080E] items-center  md:flex justify-between  lg:items-center pt-[18px] py-[6.3px] px-3 md:px-4 border-b-[1px] ${borderColor} pb-5 transition-all duration-500 ease-in-out 
         ${isScrolled && pathData === false && "-translate-y-full opacity-0 "}`}
     >
       {/* pagename + description */}

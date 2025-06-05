@@ -54,7 +54,7 @@ const Navbar = () => {
   const [mounted, setMounted] = useState(false);
 
   // dropdown popup
- 
+
   const [isSettingPopup, setIsSettingPopup] = useState(false);
   const [isAccountPopup, setIsAccountPopup] = useState(false);
   const [isWatchlistPopup, setIsWatchlistPopup] = useState(false);
@@ -309,7 +309,7 @@ const Navbar = () => {
                 <NewAiSignalTokens />
                 {/* Search bar */}
                 <div
-                  className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                  className={`md:flex items-center lg:w-full w-20  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
                     } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                   onClick={() => dispatch(setIsSearchPopup(true))}
                 >
