@@ -388,7 +388,7 @@ const AllPageHeader = ({
         {HeaderData?.Filter && !pathname.includes("/holdings") && (
           <div className="">
             <button
-              className="flex items-center justify-center gap-2 px-[10px] md:px-[17.5px] py-[9px] font-semibold border text-white border-[#1F73FC] hover:bg-[#11265B] bg-transparent text-xs rounded-[10px] transition duration-300"
+              className="flex items-center justify-center gap-2 px-5 md:px-[17.5px] py-[9px] font-semibold border text-white border-[#1F73FC] hover:bg-[#11265B] bg-transparent text-xs rounded-[10px] transition duration-300"
               onClick={() => handleSidebarToggle(0)}
             >
               <Image
