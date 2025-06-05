@@ -441,8 +441,8 @@ const AllPageHeader = ({
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <button
                           className={`py-2 px-3 rounded border border-[#323642] ${selectedMetric === "12"
-                              ? "bg-[#323642] text-white font-bold"
-                              : " text-gray-300"
+                            ? "bg-[#323642] text-white font-bold"
+                            : " text-gray-300"
                             }`}
                           onClick={() => handleMetricChange("12")}
                         >
@@ -450,8 +450,8 @@ const AllPageHeader = ({
                         </button>
                         <button
                           className={`py-2 px-3 rounded border border-[#323642] ${selectedMetric === "20"
-                              ? "bg-[#323642] text-white font-bold"
-                              : " text-gray-300"
+                            ? "bg-[#323642] text-white font-bold"
+                            : " text-gray-300"
                             }`}
                           onClick={() => handleMetricChange("20")}
                         >
@@ -520,8 +520,8 @@ const AllPageHeader = ({
                             <button
                               key={item}
                               className={`${isActive
-                                  ? "bg-[#282b32]"
-                                  : "border border-[#282b32] text-gray-500"
+                                ? "bg-[#282b32]"
+                                : "border border-[#282b32] text-gray-500"
                                 } text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]`}
                               onClick={() => {
                                 if (item === tredingPage?.display?.MarketCap) {
@@ -588,7 +588,7 @@ const AllPageHeader = ({
                 {open && (
                   <div
                     ref={dropdownRef}
-                    className="absolute right-20 mt-2 w-96 max-h-80 overflow-y-auto bg-[#18181a] border border-gray-700 text-white rounded-md shadow-lg z-50"
+                    className="absolute md:right-20 right-0 mt-2 w-80 max-h-96 overflow-y-auto bg-[#18181a] border border-gray-700 text-white rounded-md shadow-lg z-50"
                   >
                     {/* Wallet List */}
                     {userDetails?.walletAddressSOL?.map((wallet, idx) => {
@@ -622,8 +622,8 @@ const AllPageHeader = ({
                               <div className="flex items-center gap-2 text-sm">
                                 <span
                                   className={`font-medium ${wallet.primary
-                                      ? "text-orange-400"
-                                      : "text-white"
+                                    ? "text-orange-400"
+                                    : "text-white"
                                     }`}
                                 >
                                   {idx === 0

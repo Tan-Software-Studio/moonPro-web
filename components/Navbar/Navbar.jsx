@@ -377,7 +377,7 @@ const Navbar = () => {
                     </div>
 
                     {isWalletDropdownOpen && (
-                      <div className="absolute right-0 mt-2 border-[1px] border-[#404040] w-64 bg-[#1A1A1A] shadow-xl rounded-lg z-50">
+                      <div className="absolute md:right-0 right-[-20px] mt-2 border-[1px] border-[#404040] w-64 bg-[#1A1A1A] shadow-xl rounded-lg z-50">
                         <div className="p-4">
                           <div className="mb-4">
                             <div className="flex items-center justify-between mb-1">
