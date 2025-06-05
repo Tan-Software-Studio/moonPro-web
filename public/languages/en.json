@@ -341,8 +341,8 @@
           "token": "Token",
           "bought": "Bought",
           "sold": "Sold",
-          "remaining": "Remaining",
-          "pnl": "pnl"
+          "remaining": "Holdings",
+          "pnl": "PnL"
         },
         "history": {
           "history": "History",
