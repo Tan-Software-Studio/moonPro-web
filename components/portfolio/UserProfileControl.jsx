@@ -123,9 +123,8 @@ const UserProfileControl = () => {
                   </p>
                 </div>
                 <p
-                  className={`text-base font-semibold tracking-wider ${
-                    UnrealizedPNL >= 0 ? "text-emerald-500" : "text-red-500"
-                  }`}
+                  className={`text-base font-semibold tracking-wider ${UnrealizedPNL >= 0 ? "text-emerald-500" : "text-red-500"
+                    }`}
                 >
                   {`${UnrealizedPNL < 0 ? "-$" : "$"}${Math.abs(
                     UnrealizedPNL
@@ -173,11 +172,10 @@ const UserProfileControl = () => {
                   <p className="text-xs text-slate-400">Total PnL</p>
                 </div>
                 <p
-                  className={`${
-                    performance?.totalPNL >= 0
-                      ? "text-emerald-400"
-                      : "text-red-400"
-                  }  text-sm font-semibold`}
+                  className={`${performance?.totalPNL >= 0
+                    ? "text-emerald-400"
+                    : "text-red-400"
+                    }  text-sm font-semibold`}
                 >
                   ${Number(performance?.totalPNL).toFixed(5) || 0}
                 </p>
@@ -189,7 +187,7 @@ const UserProfileControl = () => {
                 </div>
                 <div className="text-xs font-mono">
                   <span className="text-slate-300">
-                    {Number(performance?.totalPNL).toFixed(5) || 0}{" "}
+                    {Number((performance?.buys || 0) + (performance?.sells || 0))}
                   </span>
                   <span className="text-emerald-400 mx-1">
                     {performance?.buys || 0}{" "}
@@ -291,11 +289,10 @@ const UserProfileControl = () => {
                     <button
                       key={tab}
                       onClick={() => setLeftTableTab(tab)}
-                      className={`px-2 py-3 text-sm font-medium tracking-wider transition-all duration-200 flex-shrink-0 ${
-                        leftTableTab === tab
-                          ? "border-b-[1px] border-white text-white"
-                          : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
-                      }`}
+                      className={`px-2 py-3 text-sm font-medium tracking-wider transition-all duration-200 flex-shrink-0 ${leftTableTab === tab
+                        ? "border-b-[1px] border-white text-white"
+                        : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
+                        }`}
                     >
                       {tab}
                     </button>
@@ -347,11 +344,10 @@ const UserProfileControl = () => {
                     <button
                       key={tab}
                       onClick={() => setRightTableTab(tab)}
-                      className={`px-2 py-3 text-sm font-medium tracking-wider transition-all duration-200 flex-shrink-0 ${
-                        rightTableTab === tab
-                          ? "border-b-[1px] border-white text-white"
-                          : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
-                      }`}
+                      className={`px-2 py-3 text-sm font-medium tracking-wider transition-all duration-200 flex-shrink-0 ${rightTableTab === tab
+                        ? "border-b-[1px] border-white text-white"
+                        : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
+                        }`}
                     >
                       {tab}
                     </button>
@@ -380,16 +376,15 @@ const UserProfileControl = () => {
             {/* Tab Navigation */}
             <div className="flex items-center border-b border-gray-800 justify-between overflow-x-auto sm:px-4 px-2">
               <div className="flex gap-1">
-                {["Active Position", "Activity", "History", "Top 100"].map(
+                {[portfolio?.activePosition, portfolio?.activity, portfolio?.history, portfolio?.top100].map(
                   (tab) => (
                     <button
                       key={tab}
                       onClick={() => setMobileActiveTab(tab)}
-                      className={`px-2 sm:py-3 py-2 sm:text-sm text-xs font-medium sm:tracking-wider transition-all duration-200 flex-shrink-0 ${
-                        mobileActiveTab === tab
-                          ? "border-b-[1px] border-white text-white"
-                          : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
-                      }`}
+                      className={`px-2 sm:py-3 py-2 sm:text-sm text-xs font-medium sm:tracking-wider transition-all duration-200 flex-shrink-0 ${mobileActiveTab === tab
+                        ? "border-b-[1px] border-white text-white"
+                        : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
+                        }`}
                     >
                       {tab}
                     </button>
