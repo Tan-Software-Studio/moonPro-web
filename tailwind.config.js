@@ -22,8 +22,9 @@ module.exports = {
                 ],
             },
             screens: {
-                '3xl' : '1440px',
-                '4xl' : '1920px'
+                '2sm': { 'max': '375px' },
+                '3xl': '1440px',
+                '4xl': '1920px'
             }
         },
     },

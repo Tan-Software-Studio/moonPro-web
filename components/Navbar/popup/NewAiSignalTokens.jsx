@@ -60,7 +60,7 @@ const NewAiSignalTokens = () => {
                 <div className="text-[10px] h-[17px] w-[17px] border border-[#4CAF50] text-[#ffffff] rounded-md flex items-center justify-center cursor-pointer bg-gradient-to-br from-[#409143] to-[#093d0c] shadow-[0_0_4px_rgba(76,255,80,0.4)]">
                     AI
                 </div>
-                <span className="capitalize">{aiSignalData[0]?.symbol || 'Tokens'}</span>
+                <span className="capitalize 2sm:hidden">{aiSignalData[0]?.symbol || 'Tokens'}</span>
                 <div className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
