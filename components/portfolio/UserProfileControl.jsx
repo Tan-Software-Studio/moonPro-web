@@ -11,9 +11,10 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 
 const UserProfileControl = () => {
-  const { t } = useTranslation();
-  const portfolio = t("portfolio");
+ const { t, i18n } = useTranslation();
+  const portfolio = t("portfolio", { returnObjects: true });
   const [leftTableTab, setLeftTableTab] = useState(portfolio?.activePosition);
+  console.log("🚀 ~ UserProfileControl ~ leftTableTab:", leftTableTab)
   const [rightTableTab, setRightTableTab] = useState(portfolio?.activity);
   const [activePositionSearchQuery, setActivePositionSearchQuery] =
     useState("");
@@ -105,6 +106,13 @@ const UserProfileControl = () => {
     setPerformance([]);
     getPerformanceData();
   }, [solWalletAddress]);
+
+    useEffect(() => {
+    const updatedPortfolio = t("portfolio", { returnObjects: true });
+    setLeftTableTab(updatedPortfolio?.activePosition);
+    setRightTableTab(updatedPortfolio?.activity);
+    setMobileActiveTab(updatedPortfolio?.activePosition);
+  }, [i18n.language]);
 
   return (
     <>
@@ -402,12 +410,12 @@ const UserProfileControl = () => {
                 <ActivityTable activitySearchQuery={activitySearchQuery} />
               </div>
             )}
-            {mobileActiveTab === "History" && (
+            {mobileActiveTab === portfolio?.history  && (
               <div>
                 <History />
               </div>
             )}
-            {mobileActiveTab === "Top 100" && (
+            {mobileActiveTab === portfolio?.top100 && (
               <div>
                 <TopHundred />
               </div>
