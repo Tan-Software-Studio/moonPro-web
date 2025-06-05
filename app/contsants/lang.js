@@ -31,7 +31,7 @@ const lang = [
   },
   {
     code: "gr",
-    lang: "Germen",
+    lang: "German",
     img: germen,
   },
   {
@@ -41,7 +41,7 @@ const lang = [
   },
   {
     code: "ja",
-    lang: "Japanies",
+    lang: "japanese",
     img: japan,
   },
   {

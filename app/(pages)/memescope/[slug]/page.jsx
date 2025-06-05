@@ -19,7 +19,7 @@ const Memescope = () => {
   const [selectedScope, setSelectedScope] = useState(1);
   const [openDropdown, setOpenDropdown] = useState(null);
   const pathname = usePathname();
-    const tredingPage = t('tredingPage')
+  const tredingPage = t('tredingPage')
 
 
   // == about graduate states == \\
@@ -296,87 +296,83 @@ const Memescope = () => {
               }`}
           >
             <div
-              className={`md:flex border-r ${borderColor} justify-between items-center  w-full sticky px-1 sm:px-3 md:px-[24px] md:py-[12px] py-3 border-b`}
+              className={`md:flex border-r ${borderColor} justify-between items-center w-full sticky px-3 sm:px-3 md:px-[24px] md:py-[12px] py-3 border-b`}
             >
+              {/* Desktop header */}
               <div className="xl:flex xl:items-center xl:gap-1 hidden">
-                <div className={`text-[18px] font-[400] w-auto text-[#FFFFFF]`}>
+                <div className="text-[18px] font-[400] w-auto text-[#FFFFFF]">
                   {memescopePage?.tableheaders?.newcreations}
                 </div>
-
                 <Infotip
                   iconSize={20}
                   body={memescopePage?.tableheaders?.newcreationstooltip}
                 />
               </div>
 
-
-              {/* Mobile screen header */}
-              <div className="flex justify-between items-center xl:hidden w-full ease-in-out duration-200 !my-[15px]">
-                {/* --creation Graduate Graduated--- */}
-                <div
-                  className={`md:static sm:block flex  sticky top-0  rounded-md bg-[#16171D] border ${borderColor}`}
-                >
-                  <button
-                    // key={index}
-                    onClick={() => setSelectedScope(1)}
-                    className={`${selectedScope === 1 &&
-                      "bg-[#1F73FC] first-of-type:rounded-l-md"
-                      }  py-2 px-3 text-xs  text-[#ffffff] hover:bg-[#1F73FC] border-r ${borderColor}`}
-                  >
-                    {memescopePage?.tableheaders?.newcreations}
-                  </button>
-                  <button
-                    // key={index}
-                    onClick={() => setSelectedScope(2)}
-                    className={`${selectedScope === 2 && "bg-[#1F73FC]"
-                      }  py-2 px-3 text-xs  text-[#ffffff] hover:bg-[#1F73FC] border-r ${borderColor}`}
-                  >
-                    {memescopePage?.tableheaders?.abouttogra}
-                  </button>
-                  <button
-                    // key={index}
-                    onClick={() => setSelectedScope(3)}
-                    className={`${selectedScope === 3 &&
-                      "bg-[#1F73FC] last-of-type:rounded-r-md"
-                      }  py-2 px-3 text-xs  text-[#ffffff] hover:bg-[#1F73FC]`}
-                  >
-                    {memescopePage?.tableheaders?.graduated}
-                  </button>
-                </div>
-                {selectedScope === 1 && (
-                  <FilterButton onClick={() => handleSidebarToggle(0)} />
-                )}
-                {selectedScope === 2 && (
-                  <FilterButton onClick={() => handleSidebarToggle(1)} />
-                )}
-                {selectedScope === 3 && (
-                  <FilterButton onClick={() => handleSidebarToggle(2)} />
-                )}
-              </div>
-              <div className="flex">
-                {searchbar ? <input
-                  type="text"
-                  placeholder={tredingPage?.tableheaders?.search}
-                  className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
-                  value={newSearchData}
-                  onChange={(e) => setNewSearchData(e.target.value)}
-                /> : null}
-                <div className="relative hidden xl:block group">
-                  <FilterButton onClick={() => handleSidebarToggle(0)} />
-
-                  {/* Tooltip shown on top with delay */}
+              {/* Mobile scope toggle buttons */}
+              <div className="xl:hidden w-full my-[15px]">
+                <div className="flex justify-between items-center gap-2">
                   <div
-                    className="absolute bottom-full left-1/2 -translate-x-1/2 px-2 py-1 z-50 text-sm text-[#c6c5cb] bg-[#101115] rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap border border-[#1a1b22]"
+                    className={`md:static sm:block flex sticky top-0 rounded-md bg-[#16171D] border ${borderColor}`}
+                  >
+                    <button
+                      onClick={() => setSelectedScope(1)}
+                      className={`${selectedScope === 1 && "bg-[#1F73FC] first-of-type:rounded-l-md"
+                        } py-2 px-3 text-xs text-[#ffffff] hover:bg-[#1F73FC] border-r ${borderColor}`}
+                    >
+                      {memescopePage?.tableheaders?.newcreations}
+                    </button>
+                    <button
+                      onClick={() => setSelectedScope(2)}
+                      className={`${selectedScope === 2 && "bg-[#1F73FC]"
+                        } py-2 px-3 text-xs text-[#ffffff] hover:bg-[#1F73FC] border-r ${borderColor}`}
+                    >
+                      {memescopePage?.tableheaders?.abouttogra}
+                    </button>
+                    <button
+                      onClick={() => setSelectedScope(3)}
+                      className={`${selectedScope === 3 && "bg-[#1F73FC] last-of-type:rounded-r-md"
+                        } py-2 px-3 text-xs text-[#ffffff] hover:bg-[#1F73FC]`}
+                    >
+                      {memescopePage?.tableheaders?.graduated}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Unified search + filter section for all screen sizes */}
+              <div className="flex items-center gap-1 w-full xl:w-auto justify-end">
+                {searchbar && (
+                  <input
+                    type="text"
+                    placeholder={tredingPage?.tableheaders?.search}
+                    className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-2 outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto"
+                    value={newSearchData}
+                    onChange={(e) => setNewSearchData(e.target.value)}
+                  />
+                )}
+
+                {/* Filter button for all screens */}
+                <div className="relative group">
+                  <FilterButton
+                    onClick={() => {
+                      if (selectedScope === 1) handleSidebarToggle(0);
+                      if (selectedScope === 2) handleSidebarToggle(1);
+                      if (selectedScope === 3) handleSidebarToggle(2);
+                    }}
+                  />
+                  {/* Tooltip only on XL screens */}
+                  <div className="hidden xl:block absolute bottom-full left-1/2 -translate-x-1/2 px-2 py-1 z-[9999] text-sm text-[#c6c5cb] bg-[#101115] rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap border border-[#1a1b22]"
                     style={{ transitionDelay: '300ms' }}
                   >
                     Filter
                   </div>
                 </div>
-
-
-
               </div>
             </div>
+
+
+
             {/* Box body */}
             <div
               className={`${selectedScope === 1 ? "block " : "hidden xl:block"
@@ -411,7 +407,7 @@ const Memescope = () => {
                 {searchbar ? <input
                   type="text"
                   placeholder={tredingPage?.tableheaders?.search}
-                  className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
+                  className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto"
                   value={newAboutToSearchData}
                   onChange={(e) => setAboutToSearchData(e.target.value)}
                 /> : null}
@@ -469,7 +465,7 @@ const Memescope = () => {
                 {searchbar ? <input
                   type="text"
                   placeholder={tredingPage?.tableheaders?.search}
-                  className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
+                  className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto"
                   value={graduateSearchData}
                   onChange={(e) => setGraduateSearchData(e.target.value)}
                 /> : null}
