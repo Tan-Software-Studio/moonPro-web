@@ -9,6 +9,7 @@ import {
 import { addMark } from "@/utils/tradingViewChartServices/mark";
 import { getLatestBarTime } from "../tradingViewChartServices/latestBarTime";
 import { updateHoldingsDataWhileBuySell } from "@/app/redux/holdingDataSlice/holdingData.slice";
+import { showToaster } from "../toaster/toaster.style";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 // handler to buy solana tokens
 const buySolanaTokens = async (
@@ -41,9 +42,10 @@ const buySolanaTokens = async (
     return dispatch(openCloseLoginRegPopup(true));
   }
   if (amt <= 0) {
-    return toast.error("Invalid amount !", {
-      position: "top-right",
-    });
+    return showToaster("Invalid amount.");
+  }
+  if (amt < 0.0001) {
+    return showToaster("Minimum buy amount is 0.0001 SOL");
   }
   setLoaderSwap(true);
   toast(
@@ -77,6 +79,7 @@ const buySolanaTokens = async (
       programAddress: programAddress
         ? programAddress
         : "nasdiuasdnasdudhsdjasbhid",
+      metaData: metaData || null,
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -151,14 +154,13 @@ const buySolanaTokensQuickBuyHandler = async (
     return dispatch(openCloseLoginRegPopup(true));
   }
   if (amt <= 0) {
-    return toast.error("Invalid amount !", {
-      position: "top-right",
-    });
+    return showToaster("Invalid amount");
   }
   if (nativeTokenbalance < amt) {
-    return toast.error("insufficient funds !", {
-      position: "top-right",
-    });
+    return showToaster("Insufficient funds.");
+  }
+  if (amt < 0.0001) {
+    return showToaster("Minimum buy amount is 0.0001 SOL");
   }
   let slippage = 50;
   let priorityFee = 0.0001;
@@ -203,6 +205,7 @@ const buySolanaTokensQuickBuyHandler = async (
       price: Number(solanaLivePrice),
       programAddress: program,
       tokenPrice: tokenPrice,
+      metaData: metaData || null,
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -251,24 +254,18 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
 ) => {
   e && e.stopPropagation();
   const amt = await localStorage.getItem("copyBuySol");
-  if (amt <= 0 || !amt) {
-    return dispatch(openCloseLoginRegPopup(true));
-  }
-  if (nativeTokenbalance < amt) {
-    return toast.error("insufficient funds !", {
-      position: "top-right",
-    });
-  }
   const token = localStorage.getItem("token");
   if (!token) {
-    return toast.error("Please login!", {
-      position: "top-right",
-    });
+    return dispatch(openCloseLoginRegPopup(true));
   }
   if (amt <= 0) {
-    return toast.error("Invalid amount !", {
-      position: "top-right",
-    });
+    return showToaster("Invalid amount.");
+  }
+  if (nativeTokenbalance < amt) {
+    return showToaster("Insufficient funds");
+  }
+  if (amt < 0.0001) {
+    return showToaster("Minimum buy amount is 0.0001 SOL");
   }
   let slippage = 50;
   let priorityFee = 0.0001;
@@ -313,6 +310,7 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
       programAddress: programAddress
         ? programAddress
         : "nasdiuasdnasdudhsdjasbhid",
+      metaData: metaData || null,
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -376,6 +374,9 @@ const sellSolanaTokens = async (
   // console.log("🚀 ~ slipTolerance:", slipTolerance);
   // console.log("🚀 ~ amt:", amt);
   // console.log("🚀 ~ fromToken:", fromToken);
+  if (amt <= 0) {
+    return showToaster("Invalid amount.");
+  }
   const token = localStorage.getItem("token");
   if (!token) {
     return dispatch(openCloseLoginRegPopup(true));
@@ -414,6 +415,7 @@ const sellSolanaTokens = async (
         : "nasdiuasdnasdudhsdjasbhid",
       amountRecInsol: Number(recQty),
       isSellFullAmount,
+      metaData: metaData || null,
     },
     headers: {
       Authorization: `Bearer ${token}`,

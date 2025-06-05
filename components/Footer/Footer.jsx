@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { showToastLoader } from "../common/toastLoader/ToastLoder";
 import PnLTrackerPopup from "./PnLTrackerPopup";
 import { updateWalletToPrimary } from "@/app/redux/userDataSlice/UserData.slice";
+import { showToaster } from "@/utils/toaster/toaster.style";
 
 const Footer = () => {
   const dispatch = useDispatch();
@@ -144,10 +145,7 @@ const Footer = () => {
         });
     } catch (error) {
       console.error(error);
-      toast.error("Primary not wallet switched", {
-        id: "switch-toast",
-        duration: 2000,
-      });
+      showToaster("Primary not wallet switched.");
     }
   };
 

@@ -69,8 +69,30 @@
       "volume": "交易量",
       "auditres": "审计结果",
       "auditrestooltip": "快速安全检查：显示代币是否可以再次铸造、冻结，或代币是否有10个持有者。",
-      "quickbuy": "快速购买"
-    }
+      "quickbuy": "快速购买",
+      "search": "按代号或名称搜索",
+"display": "显示"
+
+    },
+    "display" : {
+  "MC_77K": "市值 77K",
+  "Small": "小",
+  "Large": "大",
+  "HideSearchBar": "隐藏搜索栏",
+  "CircleImage": "圆形图片",
+  "ProgressBarRing": "进度环",
+  "CustomizeRows": "自定义行",
+  "MarketCap": "市值",
+  "Volume": "交易量",
+  "Socials": "社交",
+  "Holders": "持有者",
+  "Top10Holders": "前10持有者",
+      "progressBarLine": "进度条线",
+    "squareImage": "方形图片",
+    "showSearchBar": "显示搜索栏",
+     "metrics": "指标"
+}
+
   },
   "recentcalls": {
     "mainHeader": {
@@ -197,6 +219,25 @@
       "earningtool": "您可以从该用户的推荐中领取的金额。",
       "status": "状态",
       "statustool": "表示您是否有资格领取推荐奖励。"
+    },
+     "refMata": {
+      "nextLevel": "下一等级：",
+      "rewardsRate": "积分和SOL的2.5倍奖励率",
+      "silver": "银牌",
+      "comingSoon": "即将推出..",
+      "solEarned": "获得的SOL",
+      "claim": "领取",
+      "claimed": "已领取",
+      "availableToClaim": "可领取",
+      "referrals": "推荐人",
+      "emailWallet": "电子邮件/钱包",
+      "dateJoined": "加入日期",
+      "noReferralsFound": "未找到推荐人。",
+       "tradeMessage": "你快到了！交易 20 个 SOL 即可达成",
+        "noHistory": "您还没有任何交易记录。",
+    "infoWillAppear": "交易信息将在可用时显示在此处",
+    "noData": "暂无数据",
+    "adjustSearch": "尝试调整您的搜索词。"
     }
   },
   "alphapicks": {
@@ -615,6 +656,13 @@
           "quicksell": "快速卖出"
         }
       }
+    },
+        "table2": {
+      "trades": "交易",
+      "positions": "持仓",
+      "holders": "持有者",
+      "topTraders": "顶级交易者",
+      "noData": "未找到数据"    
     }
   },
   "navbar": {
@@ -681,7 +729,26 @@
       "revealMyKey": "显示我的密钥",
       "warning": "警告：此恢复密钥是您在丢失凭据时访问钱包的唯一方式，请妥善保管，不要与任何人分享。",
       "warningPrivate": "警告：此恢复密钥是您在丢失凭据时访问钱包的唯一方式，请妥善保管，不要与任何人分享。"
-    }
+    },
+   "acountandsecurity": {
+  "acountandsecurity": "账户与安全",
+  "level1": "奖励等级",
+  "level2": "上次登录",
+  "level3": "推荐码",
+  "recoveryKey": "恢复密钥",
+  "language": "语言",
+  "wallets": "钱包",
+  "rewards": "奖励",
+  "manageWallets": "管理钱包",
+  "earnRewards": "赚取奖励",
+  "logOut": "退出登录",
+  "msg1": "退出您的账户",
+  "msg2": "访问您的助记词以导出账户。切勿分享！",
+  "msg3": "更改应用语言",
+  "msg4": "添加或管理您的外部钱包账户",
+  "msg5": "赚取免费的 SOL。访问奖励页面开始使用"
+}
+
   },
   "accountPopup": {
     "security": {
@@ -724,7 +791,12 @@
     "watchlist": {
       "watchlist": "关注列表",
       "Cancel": "取消",
-      "Save": "保存"
+      "Save": "保存",
+       "token": "代币",
+    "marketCap": "市值",
+    "volume1h": "1小时成交量",
+    "liquidity": "流动性",
+    "actions": "操作"
     }
   },
   "newProfile": {
@@ -750,12 +822,29 @@
     "SellAll": "全部卖出"
   },
   "portfolio": {
-    "Show": "显示已归档",
+ "Show": "显示已归档",
     "Import": "导入",
     "CreateWallet": "创建钱包",
     "Balance": "余额",
-    "Holdings": "持仓",
+    "Holdings": "持有",
     "Actions": "操作",
-    "Wallet": "钱包"
+    "Wallet": "钱包",
+    "activity": "活动",
+    "history": "历史",
+    "top100": "前100名",
+    "activePosition": "活跃仓位",
+    "comingSoon": "即将推出..",
+    "availableBalance": "可用余额",
+    "unrealizedPNL": "未实现盈亏",
+    "totalValue": "总价值",
+    "pnlAnalysis": "盈亏分析",
+    "balance": "余额",
+    "wallets": "钱包",
+    "spots": "现货",
+    "perfomance": "性能",
+    "search": "按地址、名称或符号搜索",
+     "pleaseLogin": "请登录以查看您的投资组合和个人资料。",
+    "loginRequired": "需要登录",
+    "noWalletsFound": "未找到钱包"
   }
 }

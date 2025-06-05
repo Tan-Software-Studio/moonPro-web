@@ -4,6 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import { MdContentCopy } from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { showToasterSuccess } from "@/utils/toaster/toaster.style";
 
 const RecoveryKey = ({ PK, setPK, setOpenRecovery, flag }) => {
   const [isRevealed, setIsRevealed] = useState(false);
@@ -16,7 +17,7 @@ const RecoveryKey = ({ PK, setPK, setOpenRecovery, flag }) => {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(PK);
-    toast.success("Recovery key copied to clipboard");
+    showToasterSuccess("Recovery key copied to clipboard");
   };
 
   return (

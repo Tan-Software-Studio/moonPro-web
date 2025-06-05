@@ -19,6 +19,7 @@ import {
   setPresetActive,
   setPreSetOrderSetting,
 } from "@/app/redux/states";
+import { showToaster } from "@/utils/toaster/toaster.style";
 const TradingPopup = ({
   tragindViewPage,
   activeTab,
@@ -207,7 +208,7 @@ const TradingPopup = ({
           }
         );
       } else {
-        toast.error("Insufficient funds.");
+        return showToaster("Insufficient funds.");
       }
     } else {
       return dispatch(openCloseLoginRegPopup(true));
@@ -248,7 +249,7 @@ const TradingPopup = ({
           quantity == tokenBalance
         );
       } else {
-        toast.error("Insufficient funds.");
+        return showToaster("Insufficient funds.");
       }
     } else {
       return dispatch(openCloseLoginRegPopup(true));

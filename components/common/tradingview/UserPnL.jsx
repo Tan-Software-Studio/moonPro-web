@@ -1,54 +1,79 @@
-import React from 'react';
-import { RiExchangeDollarLine } from 'react-icons/ri';
-import { formatDecimal, humanReadableFormatWithNoDollar } from '@/utils/basicFunctions';
+import React from "react";
+import { RiExchangeDollarLine } from "react-icons/ri";
+import {
+  formatDecimal,
+  humanReadableFormatWithNoDollar,
+} from "@/utils/basicFunctions";
+import { useTranslation } from "react-i18next";
 
 const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
-  const buyAmount = currentTokenPnLData?.totalBoughtQty * currentTokenPnLData?.averageBuyPrice || 0;
-  const soldAmount = currentTokenPnLData?.quantitySold * currentTokenPnLData?.averageHistoricalSellPrice || 0;
-  const holdingAmount = currentTokenPnLData?.activeQtyHeld * currentPrice || 0;
-  const pnlAmount = ((holdingAmount) + (currentTokenPnLData?.realizedProfit || 0)) - buyAmount;
+  const buyAmount =
+    currentTokenPnLData?.activeQtyHeld * currentTokenPnLData?.averageBuyPrice ||
+    0;
+  const soldAmount =
+    currentTokenPnLData?.quantitySold *
+      currentTokenPnLData?.averageHistoricalSellPrice || 0;
+  const activeQtyHeld = currentTokenPnLData?.activeQtyHeld || 0;
+  const quantitySold = currentTokenPnLData?.quantitySold || 0;
+  const averageBuyPrice = currentTokenPnLData?.averageBuyPrice || 0;
+
+  const availableQty = activeQtyHeld - quantitySold;
+  const availableQtyInUSDWhenBought = availableQty * averageBuyPrice;
+  const availableQtyInUSDInCurrentPrice = availableQty * (currentPrice || 0);
+
+  const pnlAmount =
+    availableQtyInUSDInCurrentPrice - availableQtyInUSDWhenBought;
   const isPositivePnL = pnlAmount >= 0;
   const absolutePnL = Math.abs(pnlAmount);
-  const pnlPercent = buyAmount !== 0 ? (absolutePnL / buyAmount) * 100 : 0;
+
+  const pnlPercent =
+    availableQtyInUSDWhenBought !== 0
+      ? (pnlAmount / availableQtyInUSDWhenBought) * 100
+      : 0;
+
   const safePnLPercent = isNaN(pnlPercent) ? 0 : pnlPercent;
+
+  const { t } = useTranslation();
+  const wallettracker = t("wallettracker");
 
   const sections = [
     {
-      title: 'Bought',
+      title: wallettracker?.pnlpopup?.bottom?.activeposition?.bought,
       value: buyAmount,
-      color: 'text-[#21CB6B]',
+      color: "text-[#21CB6B]",
       hasDollar: true,
     },
     {
-      title: 'Sold',
+      title: wallettracker?.pnlpopup?.bottom?.activeposition?.sold,
       value: soldAmount,
-      color: 'text-[#ED1B24]',
+      color: "text-[#ED1B24]",
       hasDollar: true,
     },
     {
-      title: 'Holding',
-      value: holdingAmount,
-      color: 'text-white',
+      title: wallettracker?.pnlpopup?.bottom?.activeposition?.remaining,
+      value: availableQtyInUSDInCurrentPrice,
+      color: "text-white",
       hoverValue: (
         <span>
-          {currentTokenPnLData?.activeQtyHeld > 1 || currentTokenPnLData?.activeQtyHeld < -1
-            ? humanReadableFormatWithNoDollar(currentTokenPnLData?.activeQtyHeld, 2)
-            : formatDecimal(currentTokenPnLData?.activeQtyHeld, 1)}{' '}
-          {tokenSymbol ? tokenSymbol.slice(0, 3) : ''}
+          {availableQty > 1 || availableQty < -1
+            ? humanReadableFormatWithNoDollar(availableQty, 2)
+            : formatDecimal(availableQty, 1)}{" "}
+          {tokenSymbol ? tokenSymbol.slice(0, 3) : ""}
         </span>
       ),
       hasDollar: true,
     },
     {
-      title: 'PnL',
+      title: wallettracker?.pnlpopup?.bottom?.pnl,
       value: absolutePnL,
-      color: isPositivePnL ? 'text-[#21CB6B]' : 'text-[#ED1B24]',
+      addSign: `${isPositivePnL ? "+" : "-"}`,
+      color: isPositivePnL ? "text-[#21CB6B]" : "text-[#ED1B24]",
       icon: (
-              <RiExchangeDollarLine
-                className="text-[#21CB6B] w-[18px] h-[18px] lg:w-2 lg:h-2 xl:w-3 xl:h-3"
-              />
-            ),      
-      extra: `(${isPositivePnL ? '+' : '-'}${safePnLPercent.toFixed(safePnLPercent < 1 ? 2 : 0)}%)`,
+        <RiExchangeDollarLine className="text-[#21CB6B] w-[18px] h-[18px] lg:w-2 lg:h-2 xl:w-3 xl:h-3" />
+      ),
+      extra: `(${isPositivePnL ? "+" : ""}${safePnLPercent.toFixed(
+        safePnLPercent < 1 ? 2 : 0
+      )}%)`,
       hasDollar: true,
     },
   ];
@@ -56,17 +81,17 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
   return (
     <div
       className="bg-[#08080E] border-t w-full py-1 border-[#4D4D4D] flex flex-wrap justify-between items-center"
-      style={{ boxSizing: 'border-box' }}
+      style={{ boxSizing: "border-box" }}
     >
       {sections.map((section, index) => (
         <React.Fragment key={section.title}>
           <div
             className="select-none outline-none flex items-center justify-center flex-1 h-[54px] rounded-[4px] ease-linear duration-200 group"
             style={{
-              minWidth: section.title === 'PnL' ? '30%' : '20%',
-              maxWidth: section.title === 'PnL' ? '35%' : '25%',
-              boxSizing: 'border-box',
-              padding: section.title === 'PnL' ? '0 6px' : '0 2px',
+              minWidth: section.title === "PnL" ? "30%" : "20%",
+              maxWidth: section.title === "PnL" ? "35%" : "25%",
+              boxSizing: "border-box",
+              padding: section.title === "PnL" ? "0 6px" : "0 2px",
             }}
           >
             <div className="flex flex-col items-center justify-center h-full">
@@ -75,26 +100,25 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
                   {section.title}
                 </span>
                 {section.icon && (
-                  <div className="flex items-center">
-                    {section.icon}
-                  </div>
+                  <div className="flex items-center">{section.icon}</div>
                 )}
               </div>
               <div
                 className={`flex items-center justify-center text-center font-[500] ${section.color} text-base sm:text-sm lg:text-[8px] xl:text-[12px] 2xl:text-[14px]`}
                 style={{
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  lineHeight: '1.2',
-                  marginTop: '2px',
-                  maxWidth: '100%',
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  lineHeight: "1.2",
+                  marginTop: "2px",
+                  maxWidth: "100%",
                 }}
               >
-                {section.title === 'PnL' ? (
+                {section.title === "PnL" ? (
                   <div className="flex items-center">
                     <span>
-                      {section.hasDollar && '$'}
+                      {section?.addSign && section.addSign}
+                      {section.hasDollar && "$"}
                       {section.value > 1 || section.value < -1
                         ? humanReadableFormatWithNoDollar(section.value)
                         : formatDecimal(section.value, 1)}
@@ -103,13 +127,20 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
                   </div>
                 ) : (
                   <>
-                    <span className={section.title === 'Holding' ? 'group-hover:hidden' : ''}>
-                      {section.hasDollar && '$'}
+                    <span
+                      className={
+                        section.title === "Holding" ? "group-hover:hidden" : ""
+                      }
+                    >
+                      {section.hasDollar && "$"}
                       {section.value > 1 || section.value < -1
                         ? humanReadableFormatWithNoDollar(section.value, 2)
-                        : formatDecimal(section.value, section.title === 'Holding' ? 1 : undefined)}
+                        : formatDecimal(
+                            section.value,
+                            section.title === "Holding" ? 1 : undefined
+                          )}
                     </span>
-                    {section.title === 'Holding' && (
+                    {section.title === "Holding" && (
                       <span className="hidden group-hover:inline font-medium ml-1">
                         {section.hoverValue}
                       </span>
@@ -120,7 +151,10 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
             </div>
           </div>
           {index < sections.length - 1 && (
-            <div className="w-[1px] h-12 bg-[#4D4D4D]" style={{ flexShrink: 0 }} />
+            <div
+              className="w-[1px] h-12 bg-[#4D4D4D]"
+              style={{ flexShrink: 0 }}
+            />
           )}
         </React.Fragment>
       ))}

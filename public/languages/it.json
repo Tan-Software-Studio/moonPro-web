@@ -69,8 +69,30 @@
       "volume": "Volume",
       "auditres": "Risultati Audit",
       "auditrestooltip": "Controlli di sicurezza rapidi: mostra se il token può essere coniato di nuovo, congelato o se ha 10 holder.",
-      "quickbuy": "ACQUISTO RAPIDO"
-    }
+      "quickbuy": "ACQUISTO RAPIDO",
+      "search": "Cerca per ticker o nome",
+"display": "Visualizza"
+
+    },
+    "display" : {
+  "MC_77K": "Cap. di mercato 77K",
+  "Small": "Piccolo",
+  "Large": "Grande",
+  "HideSearchBar": "Nascondi barra di ricerca",
+  "CircleImage": "Immagine circolare",
+  "ProgressBarRing": "Anello di avanzamento",
+  "CustomizeRows": "Personalizza righe",
+  "MarketCap": "Capitalizzazione",
+  "Volume": "Volume",
+  "Socials": "Social",
+  "Holders": "Titolari",
+  "Top10Holders": "Top 10 Titolari",
+      "progressBarLine": "Linea barra di progresso",
+    "squareImage": "Immagine quadrata",
+    "showSearchBar": "Mostra barra di ricerca",
+     "metrics": "Metriche"
+}
+
   },
   "recentcalls": {
     "mainHeader": {
@@ -197,6 +219,25 @@
       "earningtool": "L'importo che puoi richiedere dalla referenza di questo utente.",
       "status": "Stato",
       "statustool": "Indica se sei idoneo a richiedere il tuo bonus di referenza."
+    },
+     "refMata": {
+      "nextLevel": "Prossimo livello:",
+      "rewardsRate": "Tasso di ricompensa 2,5X per Punti e SOL",
+      "silver": "Argento",
+      "comingSoon": "In arrivo..",
+      "solEarned": "SOL guadagnati",
+      "claim": "Richiedi",
+      "claimed": "Richiesto",
+      "availableToClaim": "Disponibile per il reclamo",
+      "referrals": "Referenze",
+      "emailWallet": "Email/Portafoglio",
+      "dateJoined": "Data di iscrizione",
+      "noReferralsFound": "Nessuna referenza trovata.",
+      "tradeMessage": "Ci sei quasi! Scambia 20 SOL per raggiungere",
+       "noHistory": "Non hai ancora una cronologia delle transazioni.",
+    "infoWillAppear": "Le informazioni sulle transazioni appariranno qui quando disponibili",
+    "noData": "Nessun dato disponibile",
+    "adjustSearch": "Prova a modificare i termini di ricerca."
     }
   },
   "alphapicks": {
@@ -615,6 +656,13 @@
           "quicksell": "VENDITA RAPIDA"
         }
       }
+    },
+     "table2": {
+      "trades": "Operazioni",
+      "positions": "Posizioni",
+      "holders": "Detentori",
+      "topTraders": "Migliori trader",
+      "noData": "Nessun dato trovato"
     }
   },
   "navbar": {
@@ -681,7 +729,26 @@
       "revealMyKey": "Mostra la mia chiave",
       "warning": "ATTENZIONE: Questa chiave di recupero è l'unico modo per accedere al tuo wallet se perdi le tue credenziali. Conservala in un posto sicuro e non condividerla con nessuno.",
       "warningPrivate": "ATTENZIONE: Questa chiave di recupero è l'unico modo per accedere al tuo wallet se perdi le tue credenziali. Conservala in un posto sicuro e non condividerla con nessuno."
-    }
+    },
+    "acountandsecurity": {
+  "acountandsecurity": "Account e Sicurezza",
+  "level1": "Livello Ricompense",
+  "level2": "Ultimo Accesso",
+  "level3": "Codice di Riferimento",
+  "recoveryKey": "Chiave di Recupero",
+  "language": "Lingua",
+  "wallets": "Portafogli",
+  "rewards": "Ricompense",
+  "manageWallets": "Gestisci Portafogli",
+  "earnRewards": "Guadagna Ricompense",
+  "logOut": "Esci",
+  "msg1": "Esci dal tuo account",
+  "msg2": "Accedi alla frase di recupero per esportare i tuoi account. NON CONDIVIDERE!",
+  "msg3": "Cambia la lingua dell'applicazione",
+  "msg4": "Aggiungi o gestisci i tuoi account wallet esterni",
+  "msg5": "Guadagna SOL gratuito. Visita la pagina delle ricompense per iniziare"
+}
+
   },
   "accountPopup": {
     "security": {
@@ -724,7 +791,12 @@
     "watchlist": {
       "watchlist": "Lista di osservazione",
       "Cancel": "Annulla",
-      "Save": "Salva"
+      "Save": "Salva",
+       "token": "Token",
+    "marketCap": "Capitalizzazione di mercato",
+    "volume1h": "Volume 1H",
+    "liquidity": "Liquidità",
+    "actions": "Azioni"
     }
   },
   "newProfile": {
@@ -750,12 +822,29 @@
     "SellAll": "Vendi tutto"
   },
   "portfolio": {
-    "Show": "Mostra archiviato",
+   "Show": "Mostra archiviati",
     "Import": "Importa",
     "CreateWallet": "Crea Wallet",
     "Balance": "Saldo",
-    "Holdings": "Partecipazioni",
+    "Holdings": "Detenzioni",
     "Actions": "Azioni",
-    "Wallet": "Wallet"
+    "Wallet": "Portafoglio",
+    "activity": "Attività",
+    "history": "Cronologia",
+    "top100": "Top 100",
+    "activePosition": "Posizione Attiva",
+    "comingSoon": "In arrivo..",
+    "availableBalance": "Saldo Disponibile",
+    "unrealizedPNL": "PNL Non Realizzato",
+    "totalValue": "Valore Totale",
+    "pnlAnalysis": "Analisi PnL",
+    "balance": "Saldo",
+    "wallets": "Portafogli",
+    "spots": "Spot",
+    "perfomance": "Prestazione",
+    "search": "Cerca per Indirizzo, Nome o Simbolo",
+      "pleaseLogin": "Effettua il login per visualizzare il tuo portfolio e il tuo profilo.",
+  "loginRequired": "Accesso richiesto",
+  "noWalletsFound": "Nessun portafoglio trovato"
   }
 }

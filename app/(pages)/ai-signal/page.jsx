@@ -14,8 +14,7 @@ import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
 import TableHeaderData from "@/components/common/TableHeader/TableHeaderData";
 import TableBody from "@/components/common/TableBody/TableBody";
 import { useTranslation } from "react-i18next";
-import handleSort from "@/utils/sortTokenData";
-import { fetchAiSignalData } from "@/app/redux/AiSignalDataSlice/AiSignal.slice";
+import handleSort from "@/utils/sortTokenData"; 
 import {
   subscribeToAiSignalTokens,
   subscribeToAiSignalTokensNewAddedToken,
@@ -169,6 +168,7 @@ const AiSignal = () => {
       sortable: true,
       key: "dbCreatedAt",
       sortingKey: "dbCreatedAt",
+      notificationIcon : true,
       infoTipString: tredingPage?.tableheaders?.aicalltooltip,
     },
     {
@@ -195,7 +195,7 @@ const AiSignal = () => {
       title: tredingPage?.tableheaders?.swaps,
       sortable: true,
       key: "swaps",
-      sortingKey: "trades",
+      sortingKey: "buys",
       infoTipString: tredingPage?.tableheaders?.swapstooltip,
     },
     {
@@ -406,7 +406,7 @@ const AiSignal = () => {
     if (savedFilters) {
       setFilterValues(savedFilters);
     }
-    dispatch(fetchAiSignalData());
+    
     subscribeToAiSignalTokens();
     subscribeToAiSignalTokensNewAddedToken();
   }, []);
@@ -467,6 +467,7 @@ const AiSignal = () => {
                       setSortColumn(key);
                       setSortOrder(order);
                     }}
+                    data={sortedData}
                     sortColumn={sortColumn}
                     sortOrder={sortOrder}
                   />

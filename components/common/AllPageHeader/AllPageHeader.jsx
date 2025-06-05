@@ -24,6 +24,7 @@ import { BsFillSearchHeartFill } from "react-icons/bs";
 import { FaRegCircle } from "react-icons/fa";
 import { showToastLoader } from "../toastLoader/ToastLoder";
 import { updateWalletToPrimary } from "@/app/redux/userDataSlice/UserData.slice";
+import { showToaster } from "@/utils/toaster/toaster.style";
 
 const AllPageHeader = ({
   HeaderData,
@@ -274,10 +275,7 @@ const AllPageHeader = ({
         });
     } catch (error) {
       console.error(error);
-      toast.error("Primary not wallet switched", {
-        id: "switch-toast",
-        duration: 2000,
-      });
+      showToaster("Primary not wallet switched.");
     }
   };
 
@@ -362,8 +360,9 @@ const AllPageHeader = ({
               <button
                 key={index}
                 onClick={() => handleButtonClick(option)}
-                className={`py-2 px-3 text-sm  font-semibold hover:bg-[#1F73FC]/[30%] rounded-md ${option === localFilterTime && " !text-[#1F73FC]"
-                  } transition duration-300 text-[#edebe5]`}
+                className={`py-2 px-3 text-sm  font-semibold hover:bg-[#1F73FC]/[30%] rounded-md ${
+                  option === localFilterTime && " !text-[#1F73FC]"
+                } transition duration-300 text-[#edebe5]`}
               >
                 {option}
               </button>
@@ -423,7 +422,7 @@ const AllPageHeader = ({
                   ref={displayButtonRef}
                 >
                   <List size={16} className="mr-2" />
-                  Display
+                  {tredingPage?.tableheaders?.display}
                   <ChevronDown size={16} className="ml-2" />
                 </button>
               )}
@@ -438,26 +437,28 @@ const AllPageHeader = ({
                     {/* Metrics */}
                     <div>
                       <p className="text-xs text-gray-400 font-semibold mb-2">
-                        Metrics
+                        {tredingPage?.display?.metrics}
                       </p>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <button
-                          className={`py-2 px-3 rounded border border-[#323642] ${selectedMetric === "12"
-                            ? "bg-[#323642] text-white font-bold"
-                            : " text-gray-300"
-                            }`}
+                          className={`py-2 px-3 rounded border border-[#323642] ${
+                            selectedMetric === "12"
+                              ? "bg-[#323642] text-white font-bold"
+                              : " text-gray-300"
+                          }`}
                           onClick={() => handleMetricChange("12")}
                         >
-                          MC 77K <br /> Small
+                          {tredingPage?.display?.MC_77K} <br /> {tredingPage?.display?.Small}
                         </button>
                         <button
-                          className={`py-2 px-3 rounded border border-[#323642] ${selectedMetric === "20"
-                            ? "bg-[#323642] text-white font-bold"
-                            : " text-gray-300"
-                            }`}
+                          className={`py-2 px-3 rounded border border-[#323642] ${
+                            selectedMetric === "20"
+                              ? "bg-[#323642] text-white font-bold"
+                              : " text-gray-300"
+                          }`}
                           onClick={() => handleMetricChange("20")}
                         >
-                          MC 77K <br /> Large
+                          {tredingPage?.display?.MC_77K}  <br /> {tredingPage?.display?.Large}
                         </button>
                       </div>
                     </div>
@@ -473,7 +474,7 @@ const AllPageHeader = ({
                         ) : (
                           <BsFillSearchHeartFill />
                         )}
-                        {searchbar ? "Hide Search Bar" : "Show Search Bar"}
+                        {searchbar ? tredingPage?.display?.HideSearchBar : tredingPage?.display?.showSearchBar}
                       </div>
 
                       <div
@@ -485,7 +486,7 @@ const AllPageHeader = ({
                         ) : (
                           <FaRegCircle />
                         )}
-                        {showCircle ? "Square Image" : "Circle Imange"}
+                        {showCircle ? tredingPage?.display?.squareImage : tredingPage?.display?.CircleImage}
                       </div>
                       <div
                         className="flex items-center gap-2 cursor-pointer font-semibold"
@@ -493,48 +494,49 @@ const AllPageHeader = ({
                       >
                         <div className="w-4 h-1 bg-gray-400 rounded-full" />
                         {progerssBar
-                          ? "Progress Bar Ring"
-                          : "Progress Bar Line"}
+                          ? tredingPage?.display?.ProgressBarRing
+                          : tredingPage?.display?.progressBarLine}
                       </div>
                     </div>
 
                     {/* Customize Rows */}
                     <div className="border-t border-gray-700 pt-4">
                       <p className="text-xs text-gray-400 font-semibold mb-2">
-                        Customize rows
+                        {tredingPage?.display?.CustomizeRows}
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {[
-                          "Market Cap",
-                          "Volume",
-                          "Socials",
-                          "Holders",
-                          "Top 10 Holders",
+                          tredingPage?.display?.MarketCap,
+                          tredingPage?.display?.Volume,
+                          tredingPage?.display?.Socials,
+                          tredingPage?.display?.Holders,
+                          tredingPage?.display?.Top10Holders,
                         ].map((item) => {
                           const isActive =
-                            (item === "Market Cap" && showMarketCap) ||
-                            (item === "Volume" && showVolume) ||
-                            (item === "Socials" && showSocials) ||
-                            (item === "Holders" && showHolders) ||
-                            (item === "Top 10 Holders" && showHolders10);
+                            (item === tredingPage?.display?.MarketCap && showMarketCap) ||
+                            (item === tredingPage?.display?.Volume && showVolume) ||
+                            (item === tredingPage?.display?.Socials && showSocials) ||
+                            (item === tredingPage?.display?.Holders && showHolders) ||
+                            (item === tredingPage?.display?.Top10Holders && showHolders10);
 
                           return (
                             <button
                               key={item}
-                              className={`${isActive
-                                ? "bg-[#282b32]"
-                                : "border border-[#282b32] text-gray-500"
-                                } text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]`}
+                              className={`${
+                                isActive
+                                  ? "bg-[#282b32]"
+                                  : "border border-[#282b32] text-gray-500"
+                              } text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]`}
                               onClick={() => {
-                                if (item === "Market Cap") {
+                                if (item === tredingPage?.display?.MarketCap) {
                                   mktShowHide();
-                                } else if (item === "Volume") {
+                                } else if (item === tredingPage?.display?.Volume) {
                                   volumeShowHide();
-                                } else if (item === "Socials") {
+                                } else if (item === tredingPage?.display?.Socials) {
                                   socialsShowHide();
-                                } else if (item === "Holders") {
+                                } else if (item === tredingPage?.display?.Holders) {
                                   holderShowHide();
-                                } else if (item === "Top 10 Holders") {
+                                } else if (item === tredingPage?.display?.Top10Holders) {
                                   holderShowHide10();
                                 }
                               }}
@@ -551,12 +553,14 @@ const AllPageHeader = ({
             </div>
 
             <div>
-              {solWalletAddress && <button
-                onClick={() => dispatch(setOpenOrderSetting(true))}
-                className="flex items-center justify-center gap-2 px-3 text-[#ecf6fd] text-xs rounded-[4px] transition duration-300"
-              >
-                <IoSettingsOutline className="text-base" />
-              </button>}
+              {solWalletAddress && (
+                <button
+                  onClick={() => dispatch(setOpenOrderSetting(true))}
+                  className="flex items-center justify-center gap-2 px-3 text-[#ecf6fd] text-xs rounded-[4px] transition duration-300"
+                >
+                  <IoSettingsOutline className="text-base" />
+                </button>
+              )}
             </div>
             <RightModalOpenSetting
               ordersettingLang={tredingPage?.mainHeader?.ordersetting}
@@ -608,8 +612,9 @@ const AllPageHeader = ({
                       return (
                         <div
                           key={idx}
-                          className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${wallet.primary ? "bg-[#252525]" : ""
-                            }`}
+                          className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${
+                            wallet.primary ? "bg-[#252525]" : ""
+                          }`}
                         >
                           <div className="flex items-center gap-3">
                             <input
@@ -621,10 +626,11 @@ const AllPageHeader = ({
                             <div className="flex flex-col">
                               <div className="flex items-center gap-2 text-sm">
                                 <span
-                                  className={`font-medium ${wallet.primary
-                                    ? "text-orange-400"
-                                    : "text-white"
-                                    }`}
+                                  className={`font-medium ${
+                                    wallet.primary
+                                      ? "text-orange-400"
+                                      : "text-white"
+                                  }`}
                                 >
                                   {idx === 0
                                     ? "Moon Pro Main"
@@ -675,8 +681,8 @@ const AllPageHeader = ({
 
             <div className="flex items-center rounded-full py-1 bg-[#141414] border border-[#26262e] text-white text-xs overflow-hidden w-fit">
               {/* Left section: Quick Buy */}
-              <div className="px-2 py-1 font-semibold text-[#f4fcff text-nowrap">
-                Quick Buy
+              <div className="px-2 py-1 font-semibold text-[#f4fcff">
+                {tredingPage?.tableheaders?.quickbuy}
               </div>
 
               {/* Middle section: Amount input */}
@@ -706,7 +712,6 @@ const AllPageHeader = ({
                   <Image src={solana} width={16} height={16} alt="solana" />
                 </div>
               )}
-
             </div>
           </div>
         )}

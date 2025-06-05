@@ -69,8 +69,29 @@
       "volume": "Khối lượng",
       "auditres": "Kết quả kiểm tra",
       "auditrestooltip": "Kiểm tra nhanh tính an toàn: token có thể được mint lại, bị đóng băng hoặc có 10 holder hay không.",
-      "quickbuy": "MUA NHANH"
-    }
+      "quickbuy": "MUA NHANH",
+      "search": "Tìm kiếm theo mã hoặc tên",
+"display": "Hiển thị"
+
+    },
+    "display" : {
+  "MC_77K": "Vốn hóa 77K",
+  "Small": "Nhỏ",
+  "Large": "Lớn",
+  "HideSearchBar": "Ẩn thanh tìm kiếm",
+  "CircleImage": "Hình tròn",
+  "ProgressBarRing": "Vòng tiến trình",
+  "CustomizeRows": "Tùy chỉnh hàng",
+  "MarketCap": "Vốn hóa thị trường",
+  "Volume": "Khối lượng",
+  "Socials": "Mạng xã hội",
+  "Holders": "Người nắm giữ",
+  "Top10Holders": "Top 10 người nắm giữ",
+      "progressBarLine": "Dòng thanh tiến trình",
+    "squareImage": "Hình vuông",
+    "showSearchBar": "Hiển thị thanh tìm kiếm"
+}
+
   },
   "recentcalls": {
     "mainHeader": {
@@ -197,6 +218,25 @@
       "earningtool": "Số tiền bạn có thể yêu cầu từ giới thiệu của người dùng này.",
       "status": "Trạng thái",
       "statustool": "Chỉ ra liệu bạn có đủ điều kiện nhận thưởng giới thiệu hay không."
+    },
+      "refMata": {
+      "nextLevel": "Cấp độ tiếp theo:",
+      "rewardsRate": "Tỷ lệ thưởng 2,5 lần cho Điểm và SOL",
+      "silver": "Bạc",
+      "comingSoon": "Sắp ra mắt..",
+      "solEarned": "SOL đã kiếm được",
+      "claim": "Yêu cầu",
+      "claimed": "Đã yêu cầu",
+      "availableToClaim": "Có sẵn để yêu cầu",
+      "referrals": "Giới thiệu",
+      "emailWallet": "Email/Ví",
+      "dateJoined": "Ngày tham gia",
+      "noReferralsFound": "Không tìm thấy giới thiệu nào.",
+       "tradeMessage": "Bạn gần đạt được rồi! Giao dịch 20 SOL để hoàn thành",
+        "noHistory": "Bạn chưa có lịch sử giao dịch nào.",
+    "infoWillAppear": "Thông tin giao dịch sẽ hiển thị tại đây khi có sẵn",
+    "noData": "Không có dữ liệu",
+    "adjustSearch": "Hãy thử điều chỉnh từ khóa tìm kiếm của bạn."
     }
   },
   "alphapicks": {
@@ -615,6 +655,13 @@
           "quicksell": "Bán nhanh"
         }
       }
+    },
+        "table2": {
+      "trades": "Giao dịch",
+      "positions": "Vị thế",
+      "holders": "Người nắm giữ",
+      "topTraders": "Nhà giao dịch hàng đầu",
+       "noData": "Không tìm thấy dữ liệu"
     }
   },
   "navbar": {
@@ -681,7 +728,26 @@
       "revealMyKey": "Tiết lộ mã của tôi",
       "warning": "CẢNH BÁO: Mã phục hồi này là cách duy nhất để truy cập vào ví của bạn nếu bạn mất quyền truy cập vào tài khoản của mình. Lưu nó ở nơi an toàn và đừng chia sẻ với ai.",
       "warningPrivate": "CẢNH BÁO: Mã phục hồi này là cách duy nhất để truy cập vào ví của bạn nếu bạn mất quyền truy cập vào tài khoản của mình. Lưu nó ở nơi an toàn và đừng chia sẻ với ai."
+    },
+    "acountandsecurity": {
+      "acountandsecurity": "Tài khoản và Bảo mật",
+      "level1": "Cấp độ phần thưởng",
+      "level2": "Đăng nhập lần cuối",
+      "level3": "Mã giới thiệu",
+      "recoveryKey": "Khóa khôi phục",
+      "language": "Ngôn ngữ",
+      "wallets": "Ví",
+      "rewards": "Phần thưởng",
+      "manageWallets": "Quản lý ví",
+      "earnRewards": "Kiếm phần thưởng",
+      "logOut": "Đăng xuất",
+      "msg1": "Đăng xuất khỏi tài khoản của bạn",
+      "msg2": "Truy cập cụm từ khôi phục để xuất tài khoản của bạn. KHÔNG CHIA SẺ!",
+      "msg3": "Thay đổi ngôn ngữ ứng dụng",
+      "msg4": "Thêm hoặc quản lý các ví bên ngoài của bạn",
+      "msg5": "Kiếm SOL miễn phí. Truy cập trang phần thưởng để bắt đầu"
     }
+
   },
   "accountPopup": {
     "security": {
@@ -724,7 +790,12 @@
     "watchlist": {
       "watchlist": "Danh sách theo dõi",
       "Cancel": "Hủy",
-      "Save": "Lưu"
+      "Save": "Lưu",
+        "token": "Token",
+    "marketCap": "Vốn hóa thị trường",
+    "volume1h": "Khối lượng 1H",
+    "liquidity": "Thanh khoản",
+    "actions": "Hành động"
     }
   },
   "newProfile": {
@@ -750,12 +821,29 @@
     "SellAll": "Bán tất cả"
   },
   "portfolio": {
-    "Show": "Hiển thị lưu trữ",
-    "Import": "Nhập khẩu",
-    "CreateWallet": "Tạo ví",
-    "Balance": "Cân bằng",
-    "Holdings": "Cổ phần",
-    "Actions": "Hành động",
-    "Wallet": "Ví"
+   "Show": "Hiển thị đã lưu trữ",
+  "Import": "Nhập khẩu",
+  "CreateWallet": "Tạo ví",
+  "Balance": "Số dư",
+  "Holdings": "Khoản nắm giữ",
+  "Actions": "Hành động",
+  "Wallet": "Ví",
+  "activity": "Hoạt động",
+  "history": "Lịch sử",
+  "top100": "Top 100",
+  "activePosition": "Vị trí đang hoạt động",
+  "comingSoon": "Sắp ra mắt..",
+  "availableBalance": "Số dư khả dụng",
+  "unrealizedPNL": "Lãi/lỗ chưa thực hiện",
+  "totalValue": "Tổng giá trị",
+  "pnlAnalysis": "Phân tích PnL",
+  "balance": "Số dư",
+  "wallets": "Các ví",
+  "spots": "Giao ngay",
+  "perfomance": "Hiệu suất",
+  "search": "Tìm theo địa chỉ, tên hoặc ký hiệu",
+    "pleaseLogin": "Vui lòng đăng nhập để xem danh mục đầu tư và hồ sơ của bạn.",
+    "loginRequired": "Yêu cầu đăng nhập",
+    "noWalletsFound": "Không tìm thấy ví nào"
   }
 }

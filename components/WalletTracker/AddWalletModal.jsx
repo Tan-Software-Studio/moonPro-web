@@ -7,6 +7,7 @@ import {
   subscribeToWalletTracker,
   unsubscribeFromWalletTracker,
 } from "@/websocket/walletTracker";
+import { showToaster, showToasterSuccess } from "@/utils/toaster/toaster.style";
 
 function AddWalletModal({
   wallettrackerPage,
@@ -38,7 +39,7 @@ function AddWalletModal({
 
   const handleSubmit = async () => {
     if (!wallet.name || !wallet.address) {
-      return toast.error("Please fill all fields.", {
+      return showToaster("Please fill all fields.", {
         position: "top-center",
         style: { fontSize: "12px" },
       });
@@ -50,7 +51,7 @@ function AddWalletModal({
     );
 
     if (isAddressExists) {
-      return toast.error("This Wallet Address is already added.", {
+      return showToaster("This Wallet Address is already added.", {
         position: "top-center",
         style: { fontSize: "12px" },
       });
@@ -58,7 +59,7 @@ function AddWalletModal({
 
     // ✅ Validate Solana Address
     if (!isValidSolanaAddress(wallet.address)) {
-      return toast.error("Please enter a valid Solana Wallet Address.", {
+      return showToaster("Please enter a valid Solana Wallet Address.", {
         position: "top-center",
         style: { fontSize: "12px" },
       });
@@ -68,7 +69,7 @@ function AddWalletModal({
 
     // ✅ Ensure user and wallet addresses are different
     if (userId === wallet.address.trim()) {
-      return toast.error("User and Wallet address must be different.", {
+      return showToaster("User and Wallet address must be different.", {
         position: "top-center",
         style: { fontSize: "12px" },
       });
@@ -103,24 +104,21 @@ function AddWalletModal({
         const newWallet = response.data.data?.addWallet;
         onAddWallet(newWallet);
 
-        toast.success("Wallet added successfully!", {
-          position: "top-center",
-          style: { fontSize: "12px" },
-        });
+        showToasterSuccess("Wallet added successfully.");
 
         setWallet({ name: "", address: "", chain: "Solana", tags: [] });
         onClose();
         await unsubscribeFromWalletTracker();
         await subscribeToWalletTracker(solAddress);
       } else {
-        toast.error(response.data?.message || "Failed to add wallet.", {
+        showToaster(response.data?.message || "Failed to add wallet.", {
           position: "top-center",
           style: { fontSize: "12px" },
         });
       }
     } catch (err) {
       console.error("🚀 ~ axios.post ~ err:", err?.message);
-      toast.error("Failed to add wallet.", {
+      showToaster("Failed to add wallet.", {
         position: "top-center",
         style: { fontSize: "12px" },
       });

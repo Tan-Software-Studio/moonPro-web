@@ -7,6 +7,7 @@ import { IoMdDoneAll } from "react-icons/io";
 import { useSelector } from "react-redux";
 import LoaderPopup from "../LoaderPopup/LoaderPopup";
 import { useRouter } from "next/navigation";
+import { showToaster } from "@/utils/toaster/toaster.style";
 
 const HolderDataTable = ({ data, img, loading }) => {
   const router = useRouter();
@@ -28,7 +29,7 @@ const HolderDataTable = ({ data, img, loading }) => {
       })
       .catch((err) => {
         console.error("Failed to copy: ", err);
-        toast.error("Failed to copy token.");
+        showToaster("Failed to copy token.");
       });
   };
   async function redirectHandler(address, symbol) {

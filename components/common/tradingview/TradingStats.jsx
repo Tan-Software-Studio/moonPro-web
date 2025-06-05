@@ -2,6 +2,7 @@
 import { humanReadableFormatWithNoDollar } from "@/utils/basicFunctions";
 import React, { useEffect, useState } from "react";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
+import { ClipLoader } from "react-spinners";
 
 // Utility function to calculate percentage
 const calculatePercentage = (value1, value2) => {
@@ -159,7 +160,10 @@ const TradingStats = ({ tragindViewPage, data, timeframes }) => {
                     : "text-[#ED1B24]"
                   }`}
               >
-                {value}%
+                {isNaN(value) ? <ClipLoader
+                  color="white"
+                  size={15}
+                /> : `${value} %`}
               </div>
             </div>
           </div>

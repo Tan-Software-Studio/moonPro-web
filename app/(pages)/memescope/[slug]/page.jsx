@@ -19,6 +19,7 @@ const Memescope = () => {
   const [selectedScope, setSelectedScope] = useState(1);
   const [openDropdown, setOpenDropdown] = useState(null);
   const pathname = usePathname();
+    const tredingPage = t('tredingPage')
 
 
   // == about graduate states == \\
@@ -355,7 +356,7 @@ const Memescope = () => {
               <div className="flex">
                 {searchbar ? <input
                   type="text"
-                  placeholder="Search by ticker or name"
+                  placeholder={tredingPage?.tableheaders?.search}
                   className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
                   value={newSearchData}
                   onChange={(e) => setNewSearchData(e.target.value)}
@@ -409,7 +410,7 @@ const Memescope = () => {
               <div className="flex">
                 {searchbar ? <input
                   type="text"
-                  placeholder="Search by ticker or name"
+                  placeholder={tredingPage?.tableheaders?.search}
                   className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
                   value={newAboutToSearchData}
                   onChange={(e) => setAboutToSearchData(e.target.value)}
@@ -467,7 +468,7 @@ const Memescope = () => {
                 {/* Filter button */}
                 {searchbar ? <input
                   type="text"
-                  placeholder="Search by ticker or name"
+                  placeholder={tredingPage?.tableheaders?.search}
                   className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition"
                   value={graduateSearchData}
                   onChange={(e) => setGraduateSearchData(e.target.value)}

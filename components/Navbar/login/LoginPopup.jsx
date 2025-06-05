@@ -6,7 +6,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useGoogleLogin } from "@react-oauth/google";
 import Image from "next/image";
-import { googleLogo } from "@/app/Images";
+import { googleLogo, phantom, phantompurple } from "@/app/Images";
 import RecoveryKey from "./RecoveryKey";
 import {
   openCloseLoginRegPopup,
@@ -22,6 +22,8 @@ import { FaUserFriends } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
+import { usePhantomWallet } from "@/app/providers/PhantomWalletProvider";
+import { showToaster, showToasterSuccess } from "@/utils/toaster/toaster.style";
 
 const LoginPopup = ({ authName }) => {
   const dispatch = useDispatch();
@@ -40,13 +42,12 @@ const LoginPopup = ({ authName }) => {
   const { t } = useTranslation();
   const navbar = t("navbar");
 
+  const { connectWallet, signMessage, connected, publicKey, connecting, isInstalled } = usePhantomWallet();
+
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
-  const referralIdFromLink = useSelector(
-    (state) => state?.AllStatesData?.referralForSignup
-  );
-  const isRegLoginPopup = useSelector(
-    (state) => state?.AllStatesData?.isRegLoginPopup
-  );
+  const referralIdFromLink = useSelector((state) => state?.AllStatesData?.referralForSignup);
+  const isRegLoginPopup = useSelector((state) => state?.AllStatesData?.isRegLoginPopup);
+
   const handleOtpPopup = async () => {
     const trimmedEmail = email.trim();
     const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
@@ -66,7 +67,7 @@ const LoginPopup = ({ authName }) => {
     const referralId = refferalCode.trim();
     if (authName == "login") {
       if (!password) {
-        toast.error(navbar?.loginPopup?.enterPassword);
+        showToaster(navbar?.loginPopup?.enterPassword);
         return;
       }
     }
@@ -83,18 +84,17 @@ const LoginPopup = ({ authName }) => {
         setIsPassword(true);
         setIsDisable(false);
       }
-      toast.success(response?.data?.message);
+      showToasterSuccess(response?.data?.message);
     } catch (err) {
       console.error(err);
       setIsDisable(false);
       if (err?.response?.data?.message === "User already register.") {
-        toast.error("User already exists please try to login");
+        showToaster("User already exists please try to login");
         setTimeout(() => {
           dispatch(setLoginRegPopupAuth("login"));
-          // setIsPassword(false)
         }, 1500);
       } else {
-        toast.error(err?.response?.data?.message);
+        showToaster(err?.response?.data?.message);
       }
     }
   };
@@ -113,37 +113,80 @@ const LoginPopup = ({ authName }) => {
         })
           .then((res) => {
             localStorage.setItem("token", res?.data?.data?.token);
-            localStorage.setItem(
-              "walletAddress",
-              res?.data?.data?.user?.walletAddressSOL
-            );
+            localStorage.setItem("walletAddress", res?.data?.data?.user?.walletAddressSOL);
             setVerifyData(res?.data);
 
             if (res?.data?.message === "Login successfull") {
               if (res?.data?.data?.user?.referredBy === null) {
                 dispatch(setreferralPopupAfterLogin(true));
-              } 
+              }
             } else {
               setIsGoogleSignIn(true);
             }
             dispatch(openCloseLoginRegPopup(false));
             dispatch(setSolWalletAddress());
-            toast.success(res?.data?.message);
+            showToasterSuccess(res?.data?.message);
             router.push("/trending");
           })
           .catch((err) => {
             console.error(err);
-            toast.error(err?.message);
+            showToaster(err?.message);
             setIsGoogleSignIn(false);
           });
       } catch (error) {
         console.error(error);
-        toast.error(error?.message);
+        showToaster(error?.message);
         dispatch(setreferralPopupAfterLogin(false));
         setIsGoogleSignIn(false);
       }
     },
   });
+
+  const handlePhantomConnect = async () => {
+    if (!isInstalled) {
+      window.open("https://phantom.app/", "_blank");
+      return;
+    }
+
+    try {
+      const connectResult = await connectWallet();
+
+      if (!connectResult.success) {
+        showToaster(connectResult.error || "Failed to connect wallet");
+        return;
+      }
+
+      const message = `By signing, you agree to Moonpro's Terms of Use & Privacy Policy.\n\nNonce: ${Date.now()}`;
+
+      try {
+        const signResult = await signMessage(message);
+
+        const response = await axios.post(`${baseUrl}user/phantomLogin`, {
+          walletAddress: connectResult.publicKey,
+          signature: signResult.signature,
+          message: message,
+          inviteCode: refferalCode || null,
+        });
+
+        if (response?.data?.message === "Login successfull" || response?.data?.message === "User registered successfully.") {
+          localStorage.setItem("token", response?.data?.data?.token);
+          localStorage.setItem("walletAddress", response?.data?.data?.user?.walletAddressSOL);
+
+          dispatch(openCloseLoginRegPopup(false));
+          dispatch(setSolWalletAddress());
+          showToasterSuccess(response?.data?.message || "Wallet connected successfully!");
+          router.push("/trending");
+        }
+      } catch (signError) {
+        console.error("Signature error:", signError);
+        showToaster("Failed to sign message. Please try again.");
+      }
+    } catch (error) {
+      console.error("Phantom connection error:", error);
+      showToaster("Failed to connect wallet. Please try again.");
+    }
+  };
+
   useEffect(() => {
     if (referralIdFromLink) {
       setRefferalCode(referralIdFromLink);
@@ -153,12 +196,7 @@ const LoginPopup = ({ authName }) => {
   return (
     <>
       {isPassword ? (
-        <OtpPopup
-          email={email}
-          setIsPassword={setIsPassword}
-          authName={authName}
-          jwtToken={jwtToken}
-        />
+        <OtpPopup email={email} setIsPassword={setIsPassword} authName={authName} jwtToken={jwtToken} />
       ) : (
         isRegLoginPopup && (
           <motion.div
@@ -188,29 +226,19 @@ const LoginPopup = ({ authName }) => {
               <div className="mt-2 p-8">
                 {authName !== "login" ? (
                   <>
-                    <h1 className="text-3xl font-bold text-center text-white">
-                      {navbar?.loginPopup?.creatAccount}
-                    </h1>
-                    <p className="text-sm text-[#6E6E6E] text-center mt-1">
-                      {navbar?.loginPopup?.creatAccountDesc}
-                    </p>
+                    <h1 className="text-3xl font-bold text-center text-white">{navbar?.loginPopup?.creatAccount}</h1>
+                    <p className="text-sm text-[#6E6E6E] text-center mt-1">{navbar?.loginPopup?.creatAccountDesc}</p>
                   </>
                 ) : (
                   <>
-                    <h1 className="text-3xl font-bold text-center text-white">
-                      {navbar?.loginPopup?.welcomeBack}
-                    </h1>
-                    <p className="text-sm text-[#6E6E6E] text-center mt-1">
-                      {navbar?.loginPopup?.loginInAccouont}
-                    </p>
+                    <h1 className="text-3xl font-bold text-center text-white">{navbar?.loginPopup?.welcomeBack}</h1>
+                    <p className="text-sm text-[#6E6E6E] text-center mt-1">{navbar?.loginPopup?.loginInAccouont}</p>
                   </>
                 )}
 
                 {/* Email */}
                 <div className="mt-6">
-                  <label className="text-sm text-[#6E6E6E] mb-1 block">
-                    {navbar?.loginPopup?.email}
-                  </label>
+                  <label className="text-sm text-[#6E6E6E] mb-1 block">{navbar?.loginPopup?.email}</label>
                   <div className="flex items-center gap-3 bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
                     <MdOutlineEmail size={20} className="text-[#6E6E6E]" />
                     <input
@@ -226,9 +254,7 @@ const LoginPopup = ({ authName }) => {
                 {/* Password or Invite Code */}
                 {authName === "login" ? (
                   <div className="mt-4">
-                    <label className="text-sm text-[#6E6E6E] mb-1 block">
-                      {navbar?.loginPopup?.password}
-                    </label>
+                    <label className="text-sm text-[#6E6E6E] mb-1 block">{navbar?.loginPopup?.password}</label>
                     <div className="flex items-center justify-between bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
                       <div className="flex items-center gap-3 w-full">
                         <FiLock size={20} className="text-[#6E6E6E]" />
@@ -256,9 +282,7 @@ const LoginPopup = ({ authName }) => {
                   </div>
                 ) : (
                   <div className="mt-4">
-                    <label className="text-sm text-[#6E6E6E] mb-1 block">
-                      {navbar?.loginPopup?.inviteCode}
-                    </label>
+                    <label className="text-sm text-[#6E6E6E] mb-1 block">{navbar?.loginPopup?.inviteCode}</label>
                     <div className="flex items-center gap-3 bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
                       <FaUserFriends size={20} className="text-[#6E6E6E]" />
                       <input
@@ -277,9 +301,7 @@ const LoginPopup = ({ authName }) => {
                   onClick={handleOtpPopup}
                   disabled={isDisable}
                   className={`mt-6 w-full rounded-lg text-sm py-3 font-semibold transition ${
-                    isDisable
-                      ? "bg-[#11265B] cursor-not-allowed"
-                      : "bg-[#11265B] hover:bg-[#133D94]"
+                    isDisable ? "bg-[#11265B] cursor-not-allowed" : "bg-[#11265B] hover:bg-[#133D94]"
                   } border border-[#0E43BD] text-white shadow-md`}
                 >
                   {!isDisable ? (
@@ -298,27 +320,30 @@ const LoginPopup = ({ authName }) => {
                 {/* Divider */}
                 <div className="flex items-center justify-center my-5 text-sm text-[#6E6E6E]">
                   <div className="flex-grow border-t border-[#333]"></div>
-                  <span className="px-3">
-                    {" "}
-                    {navbar?.loginPopup?.continueWith}
-                  </span>
+                  <span className="px-3"> {navbar?.loginPopup?.continueWith}</span>
                   <div className="flex-grow border-t border-[#333]"></div>
                 </div>
 
                 {/* Google Auth */}
                 <div
-                  className="bg-white hover:opacity-90 text-sm py-3 px-4 flex items-center justify-center w-full rounded-lg cursor-pointer transition"
+                  className="bg-white hover:opacity-90 text-sm py-3 px-4 flex items-center justify-center w-full rounded-lg cursor-pointer transition mb-3"
                   onClick={() => handleGoogleAuth()}
                 >
-                  <Image
-                    src={googleLogo}
-                    alt="Google Logo"
-                    width={20}
-                    height={20}
-                    className="w-5 h-5 object-contain"
-                  />
+                  <Image src={googleLogo} alt="Google Logo" width={20} height={20} className="w-5 h-5 object-contain" />
+                  <span className="text-[#1F1F1F] font-semibold ml-3">{navbar?.loginPopup?.continueGoogle}</span>
+                </div>
+
+                {/* Phantom Auth */}
+                <div
+                  className={`bg-white hover:opacity-90 text-sm py-3 px-4 flex items-center justify-center w-full rounded-lg cursor-pointer transition ${
+                    connecting || !isInstalled ? "cursor-not-allowed" : ""
+                  }`}
+                  onClick={handlePhantomConnect}
+                  disabled={connecting || !isInstalled}
+                >
+                  <Image src={phantompurple} alt="Phantom Logo" width={20} height={20} className="w-5 h-5 object-contain" />
                   <span className="text-[#1F1F1F] font-semibold ml-3">
-                    {navbar?.loginPopup?.continueGoogle}
+                    {connecting ? "Connecting..." : !isInstalled ? "Install Phantom" : "Connect with Phantom"}
                   </span>
                 </div>
 

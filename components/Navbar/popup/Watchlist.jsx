@@ -10,6 +10,8 @@ import { useDispatch } from 'react-redux';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { setChartSymbolImage, setIsFaviouriteToken } from '@/app/redux/states';
+import { showToaster, showToasterSuccess } from '@/utils/toaster/toaster.style';
+import { useTranslation } from 'react-i18next';
 
 const Watchlist = ({ setIsWatchlistPopup }) => {
     const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
@@ -20,7 +22,8 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
 
     const dispatch = useDispatch()
     const router = useRouter();
-
+    const { t } = useTranslation();
+    const accountPopup = t("accountPopup");
     // Format Number Compact
     const formatNumberCompact = (number) => {
         if (number === null || number === undefined || isNaN(number)) return '0';
@@ -46,7 +49,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
     const token = localStorage.getItem("token");
     async function getWatchlist() {
         if (!token) {
-            return toast.error("Please login");
+            return showToaster("Please login");
         }
         setLoading(true)
         await axios.get(`${baseUrl}user/getUserTokenFavorites`, {
@@ -61,7 +64,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
             })
             .catch((err) => {
                 setLoading(false)
-                toast.error(err?.res?.data?.message || "Something went wrong");
+                showToaster(err?.res?.data?.message || "Something went wrong");
             });
     }
 
@@ -71,7 +74,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
 
     const handleDeleteItem = async (tokenAddress) => {
         if (!token) {
-            return toast.error("Please login");
+            return showToaster("Please login");
         }
 
         try {
@@ -84,9 +87,9 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
 
             setGetWatchlistData((prev) => prev.filter(item => item.tokenAddress !== tokenAddress));
             dispatch(setIsFaviouriteToken());
-            toast.success(response?.data?.message);
+            showToasterSuccess(response?.data?.message);
         } catch (error) {
-            toast.error(error?.response?.data?.message || "Delete failed");
+            showToaster(error?.response?.data?.message || "Delete failed");
         } finally {
             setDeletingItem(null);
         }
@@ -122,7 +125,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
-                    <h2 className="text-2xl font-bold text-white">Watchlist</h2>
+                    <h2 className="text-2xl font-bold text-white">{accountPopup?.watchlist?.watchlist}</h2>
                     <button
                         onClick={() => setIsWatchlistPopup(false)}
                         className="text-gray-400 hover:text-white transition-colors"
@@ -138,19 +141,19 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
                         <thead>
                             <tr className="border-b border-gray-800">
                                 <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
-                                    TOKEN
+                                    {accountPopup?.watchlist?.token}
                                 </th>
                                 <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
-                                    MARKET CAP
+                                    {accountPopup?.watchlist?.marketCap}
                                 </th>
                                 <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
-                                    1H VOLUME
+                                    {accountPopup?.watchlist?.volume1h}
                                 </th>
                                 <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
-                                    LIQUIDITY
+                                    {accountPopup?.watchlist?.liquidity}
                                 </th>
                                 <th className="text-center px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
-                                    ACTIONS
+                                    {accountPopup?.watchlist?.actions}
                                 </th>
                             </tr>
                         </thead>

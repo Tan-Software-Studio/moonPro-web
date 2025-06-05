@@ -31,6 +31,7 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
 
   const copyAddress = (address, uniqueId, event) => {
     event.stopPropagation();
+    event.preventDefault()
 
     // Copy the address to clipboard
     navigator?.clipboard?.writeText(address);

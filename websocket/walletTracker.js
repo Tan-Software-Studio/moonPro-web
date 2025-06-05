@@ -10,12 +10,15 @@ import {
   setNewLaunchData,
   updateAllDataByNode,
 } from "@/app/redux/memescopeData/Memescope";
-import { setSolanaLivePrice, setUsdcLivePrice } from "@/app/redux/states";
+import { setChartSymbolImage, setSolanaLivePrice, setUsdcLivePrice } from "@/app/redux/states";
 import store from "@/app/redux/store";
 import {
   updateTrendingData,
   updateTrendingLiveData,
 } from "@/app/redux/trending/solTrending.slice";
+import { playNotificationSound } from "@/components/Notification/playNotificationSound";
+import Link from "next/link";
+import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const BASE_URL_MOON = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL_SOCKET;
@@ -51,7 +54,7 @@ export async function subscribeToWalletTracker() {
       //     },
       //   });
       // }
-    } catch (error) {}
+    } catch (error) { }
     // let walletsToTrack = [];
     // if (wallets?.data?.data?.wallets?.length > 0) {
     //   await wallets?.data?.data?.wallets?.map((item) => {
@@ -267,6 +270,42 @@ export async function subscribeToAiSignalTokensNewAddedToken() {
       ];
     }
     store.dispatch(setAiSignalData(newDataArr));
+    
+    const storedValue = localStorage.getItem('ai-signal-notification');
+    if (storedValue) {
+      playNotificationSound();
+      toast.custom((t) => (
+        <div
+          className={`${t.visible ? 'animate-enter' : 'animate-leave'} 
+            max-w-sm w-full bg-[#18181a] backdrop-blur-lg 
+            border border-gray-700 shadow-2xl rounded-xl 
+            pointer-events-auto overflow-hidden`}
+        >
+          <div className="flex items-center justify-between p-3 border-b border-[#2A2A2A]">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-xs font-medium text-green-500 uppercase tracking-wide">
+                AI Signal
+              </span>
+            </div>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="text-gray-500 hover:text-white transition-colors p-1 rounded-md hover:bg-[#2A2A2A]"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div className="p-4">
+            <p className="text-sm text-white">
+              New token added in AI Signal
+            </p>
+          </div>
+        </div>
+      ))
+    }
+
   });
 }
 

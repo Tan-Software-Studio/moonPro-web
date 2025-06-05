@@ -1,6 +1,6 @@
 
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { HiMenuAlt2 } from "react-icons/hi";
 import { MdClose } from "react-icons/md";
 import { VscDebugRestart } from "react-icons/vsc";
@@ -10,6 +10,8 @@ import { useTranslation } from 'react-i18next';
 function FilterMemescope({ isOpen, setIsOpen, data, onApply, onReset, filterValues, setFilterValues }) {
   const { t } = useTranslation();
   const tredingPage = t("tredingPage");
+  const panelRef = useRef();
+
 
   const handleClose = () => {
     setIsOpen(false);
@@ -55,6 +57,24 @@ function FilterMemescope({ isOpen, setIsOpen, data, onApply, onReset, filterValu
     setIsOpen(false);
   }
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (panelRef.current && !panelRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
   const chcekBoxStyle =
     "appearance-none w-4 h-4 border border-gray-400 rounded-sm bg-transparent flex items-center justify-center checked:bg-[#3e9fd6] checked:border-[#3e9fd6] checked:after:content-['✔'] checked:after:text-xs";
 
@@ -63,10 +83,11 @@ function FilterMemescope({ isOpen, setIsOpen, data, onApply, onReset, filterValu
       {isOpen && (
         <div
           className="absolute inset-0 bg-black bg-opacity-50 z-[9999998]"
-          onClick={handleClose}
+
         />
       )}
       <div
+        ref={panelRef}
         className={`absolute transition-all duration-500 ease-in-out top-0 ${isOpen ? "right-0" : "-right-full"
           } md:w-[366px] w-full h-screen bg-[#16171c] z-[9999999]`}
       >

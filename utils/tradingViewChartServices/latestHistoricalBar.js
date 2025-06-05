@@ -1,6 +1,11 @@
 let latestHistoricalBar = null;
+let currentResolution = null;
 
-function setNewLatestHistoricalBar(bar) {
+function setNewLatestHistoricalBar(bar, newResolution) {
+    if (currentResolution !== newResolution) {
+        latestHistoricalBar = null;
+        currentResolution = newResolution;
+    }
     const convertedTime = bar?.time;
     if (!latestHistoricalBar) {
         latestHistoricalBar = bar;
@@ -17,6 +22,7 @@ function getLatestHistoricalBar() {
 
 function clearLatestHistoricalBar() {
     latestHistoricalBar = null;
+    currentResolution = null;
 };
 
 module.exports = { setNewLatestHistoricalBar, getLatestHistoricalBar, clearLatestHistoricalBar }

@@ -7,6 +7,7 @@ import AutoBuy from "@/components/Settings/AutoBuy";
 import AutoSell from "@/components/Settings/AutoSell";
 import toast from "react-hot-toast";
 import QuickBuy from "@/components/Settings/QuickBuy";
+import { showToaster } from "@/utils/toaster/toaster.style";
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState(`Quick Buy`);
@@ -26,7 +27,7 @@ const Settings = () => {
   const copyAddress = (address) => {
     navigator?.clipboard?.writeText(address);
     setCopied(address);
-    toast.success("address copied successfully");
+    showToaster("Address copied successfully.");
     setTimeout(() => {
       setCopied(null); // Reset after 2 seconds
     }, 600);

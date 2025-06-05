@@ -39,16 +39,22 @@ import { decodeData } from "@/utils/decryption/decryption";
 import ExchangePopup from "./popup/ExchangePopup";
 import {
   fetchUserData,
+  makeUserEmptyOnLogout,
   setBalancesError,
   setBalancesLoading,
   setWalletBalances,
 } from "@/app/redux/userDataSlice/UserData.slice";
 import WithdrawPopup from "./popup/WithdrawPopup";
+import NewAiSignalTokens from "./popup/NewAiSignalTokens";
+import { fetchAiSignalData } from "@/app/redux/AiSignalDataSlice/AiSignal.slice";
+import { Flame } from "lucide-react";
+import { showToaster } from "@/utils/toaster/toaster.style";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
 
   // dropdown popup
+  const [isAiSignalPopupOpen, setIsAiSignalPopupOpen] = useState(false)
   const [isSettingPopup, setIsSettingPopup] = useState(false);
   const [isAccountPopup, setIsAccountPopup] = useState(false);
   const [isWatchlistPopup, setIsWatchlistPopup] = useState(false);
@@ -67,7 +73,7 @@ const Navbar = () => {
   async function handleToGetSolanaPhrase() {
     const token = localStorage.getItem("token");
     if (!token) {
-      return toast.error("Please login.");
+      return showToaster("Please login.");
     }
     await axios({
       url: `${baseUrl}user/getSolanaPhrase`,
@@ -171,9 +177,11 @@ const Navbar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("walletAddress");
     dispatch(setSolWalletAddress());
+    dispatch(makeUserEmptyOnLogout());
     router.replace("/trending");
     setIsProfileOpen(false);
     googleLogout();
+
   };
 
   async function fetchData() {
@@ -183,10 +191,10 @@ const Navbar = () => {
       .then((response) => {
         const rawData = response?.data?.data;
         const formattedData = {
-          "1m": rawData?.["1+min"]?.tokens || [],
-          "5m": rawData?.["5+min"]?.tokens || [],
-          "30m": rawData?.["30+min"]?.tokens || [],
-          "1h": rawData?.["1+hr"]?.tokens || [],
+          "1m": (rawData?.["1+min"]?.tokens || []).sort((a, b) => b.traded_volume - a.traded_volume),
+          "5m": (rawData?.["5+min"]?.tokens || []).sort((a, b) => b.traded_volume - a.traded_volume),
+          "30m": (rawData?.["30+min"]?.tokens || []).sort((a, b) => b.traded_volume - a.traded_volume),
+          "1h": (rawData?.["1+hr"]?.tokens || []).sort((a, b) => b.traded_volume - a.traded_volume),
         };
         dispatch(setFilterTime(formattedData));
         dispatch(setLoading(false));
@@ -213,6 +221,7 @@ const Navbar = () => {
 
   useEffect(() => {
     fetchData();
+    dispatch(fetchAiSignalData());
     dispatch(fetchMemescopeData());
     fetchSolPrice();
   }, []);
@@ -297,9 +306,13 @@ const Navbar = () => {
                 <Image src={logo} alt="logo" className="w-full h-full" />
               </div>
               <div className=" flex items-center gap-2 ">
-                {/* <div className="md:hidden block">
-                   <AISignalsButton />  
-                </div> */}
+                {/* <button
+                  onClick={() => setIsAiSignalPopupOpen(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg flex items-center gap-2 transition-colors duration-200 font-medium text-sm shadow-md hover:shadow-lg"
+                >
+                  <Flame className="w-4 h-4" />
+                  New Tokens
+                </button> */}
                 {/* Search bar */}
                 <div
                   className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
@@ -508,6 +521,7 @@ const Navbar = () => {
       </div>
 
       <AnimatePresence>
+        {isAiSignalPopupOpen && <NewAiSignalTokens setIsOpen={setIsAiSignalPopupOpen} />}
         {isLoginPopup && <LoginPopup isLoginPopup={isLoginPopup} authName={authName} />}
 
         {isSettingPopup && <Setting setIsSettingPopup={setIsSettingPopup} />}

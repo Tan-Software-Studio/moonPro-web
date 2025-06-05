@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { IoClose, IoCopyOutline, IoWalletOutline } from "react-icons/io5";
@@ -11,6 +12,9 @@ import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import { setSolWalletAddress } from "@/app/redux/states";
 import { updatePnlTableData } from "@/app/redux/holdingDataSlice/holdingData.slice";
+import { googleLogout } from "@react-oauth/google";
+import { useRouter } from "next/navigation";
+import { makeUserEmptyOnLogout } from "@/app/redux/userDataSlice/UserData.slice";
 
 const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
   const [language, setLanguage] = useState({});
@@ -19,14 +23,33 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
   const [copiedUserId, setCopiedUserId] = useState(false);
   const [copiedReferral, setCopiedReferral] = useState(false);
   const { t } = useTranslation();
+
+  const navbar = t("navbar");
   const dispatch = useDispatch();
+  const router = useRouter();
   const accountPopupLng = t("accountPopup");
 
   const solWalletAddress = useSelector((state) => state?.AllStatesData?.solWalletAddress);
 
   const { i18n } = useTranslation();
 
+  
+
   const referralLink = `https://moonpro.wavebot.app/referral/${userDetails?.referralId || ""}`;
+
+  const getDisplayName = () => {
+    if (userDetails?.phantomAddress) {
+      return userDetails.phantomAddress;
+    }
+    return userDetails?.email
+  };
+  console.log("🚀 ~ getDisplayName ~ getDisplayName:", getDisplayName())
+
+  const getAvatarInitial = () => {
+    const displayName = getDisplayName();
+    if (displayName === "N/A") return "N";
+    return displayName[0]?.toUpperCase() || "N";
+  };
 
   async function handleLanguageSelector(item) {
     await i18n.changeLanguage(item?.code);
@@ -38,8 +61,10 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("walletAddress");
     dispatch(setSolWalletAddress());
+    dispatch(makeUserEmptyOnLogout());
+    setIsAccountPopup(false);
+
     router.replace("/trending");
-    setIsProfileOpen(false);
     googleLogout();
   };
 
@@ -151,7 +176,7 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
         >
           <div className="">
             <div className="flex items-center justify-between lg:px-4 px-3 py-3">
-              <div className="text-lg font-medium text-white">Account and Security</div>
+              <div className="text-lg font-medium text-white">{navbar?.acountandsecurity?.acountandsecurity}</div>
               <div onClick={() => setIsAccountPopup(false)} className="cursor-pointer">
                 <IoClose size={18} />
               </div>
@@ -159,48 +184,24 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
 
             <div className="px-4 py-4 border-b-[1px] border-[#404040]">
               <div className="flex items-start gap-3">
-                {/* <Image
-                  src={userDetails?.profileImage || profileImage}
-                  alt="profile image"
-                  height={40}
-                  width={40}
-                  className="w-[40px] h-[40px] rounded-md bg-orange-400 object-cover"
-                /> */}
-                <div className="w-[40px] h-[40px] flex justify-center items-center rounded-md bg-orange-400">
-  {userDetails?.email[0].toUpperCase()}
-</div>
+                <div className="w-[40px] h-[40px] flex justify-center items-center font-bold rounded-md bg-orange-400">
+                  {getAvatarInitial()}
+                </div>
 
                 <div className="flex-1">
-                  <p className="text-white text-sm font-medium mb-1">
-                    {userDetails?.email || userDetails?.username || "N/A"}
-                  </p>
-                  {/* <div className="flex items-center gap-4 text-xs text-[#A8A8A8] mb-1">
-                    <div className="flex items-center gap-1">
-                      <span>User ID:</span>
-                      <span>{truncateId(userDetails?._id || userDetails?.userId)}</span>
-                      {copiedUserId ? (
-                        <FaCheck className="text-green-400 text-xs" />
-                      ) : (
-                        <IoCopyOutline
-                          className="cursor-pointer text-xs hover:text-white transition-colors"
-                          onClick={() => copyToClipboard(userDetails?._id || userDetails?.userId || "", "userId")}
-                          title="Copy User ID"
-                        />
-                      )}
-                    </div>
-                  </div> */}
+                  <p className="text-white text-sm font-medium mb-1">{getDisplayName()}</p>
                 </div>
                 <div className="flex items-center gap-6 text-xs">
                   <div className="text-center">
-                    <div className="text-[#A8A8A8] mb-1">Rewards Level</div>
+                    <div className="text-[#A8A8A8] mb-1">{navbar?.acountandsecurity?.level1}</div>
                     <div className="text-white font-medium">{userDetails?.rewardsLevel || "Wood"} 🏆</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-[#A8A8A8] mb-1">Last Login</div>
+                    <div className="text-[#A8A8A8] mb-1">{navbar?.acountandsecurity?.level2}</div>
                     <div className="text-white font-medium">{formatTimeAgo(userDetails?.lastLogin)}</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-[#A8A8A8] mb-1">Referral Code</div>
+                    <div className="text-[#A8A8A8] mb-1">{navbar?.acountandsecurity?.level3}</div>
                     <div className="text-white font-medium cursor-pointer flex items-center gap-1">
                       <span>{userDetails?.referralId || "N/A"}</span>
                       {userDetails?.referralId && (
@@ -311,23 +312,23 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
             <div className="px-4 py-4">
               <div className="flex items-center justify-between py-3">
                 <div className="flex-1">
-                  <div className="text-white text-sm font-medium mb-1">Recovery Key</div>
+                  <div className="text-white text-sm font-medium mb-1">{navbar?.acountandsecurity?.recoveryKey}</div>
                   <div className="text-[#6E6E6E] text-xs">
-                    Access your seed phrase to export your accounts. DO NOT SHARE!
+                   {navbar?.acountandsecurity?.msg2}
                   </div>
                 </div>
                 <button
                   onClick={() => handlePhrase()}
                   className="px-4 py-2 text-xs border border-[#ED1B24] text-[#ED1B24] hover:bg-[#ED1B24] hover:text-white rounded transition-all duration-300 w-[140px]"
                 >
-                  View Recovery Key
+                 {navbar?.acountandsecurity?.recoveryKey}
                 </button>
               </div>
 
               <div className="flex items-center justify-between py-3 border-t border-[#1A1A1A]">
                 <div className="flex-1">
-                  <div className="text-white text-sm font-medium mb-1">Language</div>
-                  <div className="text-[#6E6E6E] text-xs">Change the application language</div>
+                  <div className="text-white text-sm font-medium mb-1">{navbar?.acountandsecurity?.language}</div>
+                  <div className="text-[#6E6E6E] text-xs">{navbar?.acountandsecurity?.msg3}</div>
                 </div>
 
                 <div className="relative">
@@ -371,8 +372,8 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
 
               <div className="flex items-center justify-between py-3 border-t border-[#1A1A1A]">
                 <div className="flex-1">
-                  <div className="text-white text-sm font-medium mb-1">Wallets</div>
-                  <div className="text-[#6E6E6E] text-xs">Add or manage your external wallet accounts</div>
+                  <div className="text-white text-sm font-medium mb-1">{navbar?.acountandsecurity?.wallets}</div>
+                  <div className="text-[#6E6E6E] text-xs">{navbar?.acountandsecurity?.msg4}</div>
                 </div>
 
                 <Link
@@ -384,14 +385,14 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                   className="px-3 py-2 flex items-center gap-2 text-xs border border-[#404040] rounded cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all text-[#A8A8A8] w-[140px] justify-center"
                 >
                   <IoWalletOutline size={14} />
-                  <span>Manage Wallets</span>
+                  <span>{navbar?.acountandsecurity?.manageWallets}</span>
                 </Link>
               </div>
 
               <div className="flex items-center justify-between py-3 border-t border-[#1A1A1A]">
                 <div className="flex-1">
-                  <div className="text-white text-sm font-medium mb-1">Rewards</div>
-                  <div className="text-[#6E6E6E] text-xs">Earn free SOL. Visit the rewards page to get started</div>
+                  <div className="text-white text-sm font-medium mb-1">{navbar?.acountandsecurity?.rewards}</div>
+                  <div className="text-[#6E6E6E] text-xs">{navbar?.acountandsecurity?.msg5}</div>
                 </div>
 
                 <Link
@@ -400,35 +401,21 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                   className="px-4 py-2 flex items-center gap-2 text-xs border border-[#404040] rounded cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all text-[#A8A8A8] w-[140px] justify-center"
                 >
                   <span>📈</span>
-                  <span>Earn Rewards</span>
+                  <span>{navbar?.acountandsecurity?.earnRewards}</span>
                 </Link>
               </div>
 
-              {/* <div className="flex items-center justify-between py-3 border-t border-[#1A1A1A]">
-                <div className="flex-1">
-                  <div className="text-white text-sm font-medium mb-1">Yields</div>
-                  <div className="text-[#6E6E6E] text-xs">
-                    Earn passive income through Yields. Visit the Yields page to start earning
-                  </div>
-                </div>
-
-                <button className="px-4 py-2 flex items-center gap-2 text-xs border border-[#404040] rounded cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all text-[#A8A8A8] w-[140px] justify-center">
-                  <span>🔗</span>
-                  <span>Enable Yield</span>
-                </button>
-              </div> */}
-
               <div className="flex items-center justify-between py-3 border-t border-[#1A1A1A]">
                 <div className="flex-1">
-                  <div className="text-[#ED1B24] text-sm font-medium mb-1">Log Out</div>
-                  <div className="text-[#ED1B24] text-xs">Log out of your account</div>
+                  <div className="text-[#ED1B24] text-sm font-medium mb-1">{navbar?.acountandsecurity?.logOut}</div>
+                  <div className="text-[#ED1B24] text-xs">{navbar?.acountandsecurity?.msg1}</div>
                 </div>
 
                 <button
                   onClick={handleLogout}
                   className="px-4 py-2 text-xs border border-[#ED1B24] text-[#ED1B24] hover:bg-[#ED1B24] hover:text-white rounded transition-all duration-300 w-[140px]"
                 >
-                  Log Out
+                  {navbar?.acountandsecurity?.logOut}
                 </button>
               </div>
             </div>
