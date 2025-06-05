@@ -143,6 +143,7 @@ const LoginPopup = ({ authName }) => {
   });
 
   const handlePhantomConnect = async () => {
+
     if (!isInstalled) {
       window.open("https://phantom.app/", "_blank");
       return;
@@ -159,7 +160,7 @@ const LoginPopup = ({ authName }) => {
       const message = `By signing, you agree to Moonpro's Terms of Use & Privacy Policy.\n\nNonce: ${Date.now()}`;
 
       try {
-        const signResult = await signMessage(message);
+        const signResult = await signMessage(message, connectResult.phantomInstance);
 
         const response = await axios.post(`${baseUrl}user/phantomLogin`, {
           walletAddress: connectResult.publicKey,
@@ -168,7 +169,11 @@ const LoginPopup = ({ authName }) => {
           inviteCode: refferalCode || null,
         });
 
-        if (response?.data?.message === "Login successfull" || response?.data?.message === "User registered successfully.") {
+
+        if (
+          response?.data?.message === "Login successfull" ||
+          response?.data?.message === "User registered successfully."
+        ) {
           localStorage.setItem("token", response?.data?.data?.token);
           localStorage.setItem("walletAddress", response?.data?.data?.user?.walletAddressSOL);
 
@@ -186,7 +191,6 @@ const LoginPopup = ({ authName }) => {
       showToaster("Failed to connect wallet. Please try again.");
     }
   };
-
   useEffect(() => {
     if (referralIdFromLink) {
       setRefferalCode(referralIdFromLink);
