@@ -172,10 +172,17 @@ function UpdateTimeViaUTCWithCustomTime(utcString, currentTime) {
   const hours = Math.floor((diff / 3600000) % 24);
   const days = Math.floor(diff / 86400000);
 
-  if (days > 0) return `${days}d`;
-  if (hours > 0) return `${hours}h`;
-  if (minutes > 0) return `${minutes}m`;
-  return `${seconds}s`;
+  let timeString = "";
+  if (days > 0) timeString = `${days}d`;
+  else if (hours > 0) timeString = `${hours}h`;
+  else if (minutes > 0) timeString = `${minutes}m`;
+  else timeString = `${seconds}s`;
+  const isRecent = minutes < 10 && hours === 0 && days === 0;
+
+  return {
+    time: timeString,
+    isRecent
+  }
 }
 
 

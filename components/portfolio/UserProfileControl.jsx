@@ -86,6 +86,21 @@ const UserProfileControl = () => {
       });
   }
 
+  const performanceData = [
+    { color: "bg-emerald-500", label: ">500%", value: "---", textColor: "text-emerald-400", rangeId: 500, },
+    { color: "bg-emerald-400", label: "100% - 500%", value: "---", textColor: "text-emerald-300", rangeId: 200, },
+    { color: "bg-emerald-300", label: "0% - 200%", textColor: "text-emerald-200", rangeId: 0, },
+    { color: "bg-red-400", label: "0 - -50%", value: "---", textColor: "text-red-400", rangeId: -50, },
+    { color: "bg-red-500", label: "<-50%", value: "---", textColor: "text-red-500", rangeId: null, },
+  ]
+  const counts = performanceData.map(item => {
+    const match = performance?.performance?.find(p => p._id === item.rangeId);
+    return match ? match.count : 0;
+  });
+
+  const totalCount = counts.reduce((sum, c) => sum + c, 0) || 1;
+  const percentages = counts.map(count => (count / totalCount) * 100);
+
   useEffect(() => {
     setPerformance([]);
     getPerformanceData();
@@ -199,43 +214,7 @@ const UserProfileControl = () => {
               </div>
 
               <div className=" ">
-                {[
-                  {
-                    color: "bg-emerald-500",
-                    label: ">500%",
-                    value: "---",
-                    textColor: "text-emerald-400",
-                    rangeId: 500,
-                  },
-                  {
-                    color: "bg-emerald-400",
-                    label: "100% - 500%",
-                    value: "---",
-                    textColor: "text-emerald-300",
-                    rangeId: 200,
-                  },
-                  {
-                    color: "bg-emerald-300",
-                    label: "0% - 200%",
-                    value: "---",
-                    textColor: "text-emerald-200",
-                    rangeId: 0,
-                  },
-                  {
-                    color: "bg-red-400",
-                    label: "0 - -50%",
-                    value: "---",
-                    textColor: "text-red-400",
-                    rangeId: -50,
-                  },
-                  {
-                    color: "bg-red-500",
-                    label: "<-50%",
-                    value: "---",
-                    textColor: "text-red-500",
-                    rangeId: null,
-                  },
-                ].map((item, index) => {
+                {performanceData.map((item, index) => {
                   const performanceMatch = performance?.performance?.find(
                     (p) => p._id === item.rangeId
                   );
@@ -259,15 +238,17 @@ const UserProfileControl = () => {
                 })}
               </div>
 
-              {/* <div className="w-full h-2 bg-slate-700 rounded-full mt-3 overflow-hidden">
+              <div className="w-full h-2 bg-slate-700 rounded-full mt-3 overflow-hidden">
                 <div className="flex h-full">
-                  <div className="bg-emerald-500" style={{ width: "4%" }}></div>
-                  <div className="bg-emerald-400" style={{ width: "12%" }}></div>
-                  <div className="bg-emerald-300" style={{ width: "28%" }}></div>
-                  <div className="bg-red-400" style={{ width: "8%" }}></div>
-                  <div className="bg-red-500" style={{ width: "48%" }}></div>
+                  {performanceData.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className={item.color}
+                      style={{ width: `${percentages[idx]}%` }}
+                    />
+                  ))}
                 </div>
-              </div> */}
+              </div>
             </div>
           </div>
         </div>
