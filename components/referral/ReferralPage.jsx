@@ -2,16 +2,14 @@
 import { useEffect, useRef, useState } from "react";
 import { MdOutlineKeyboardDoubleArrowUp } from "react-icons/md";
 import { FaGem } from "react-icons/fa6";
-import { FiUserPlus } from "react-icons/fi";
 import { FaRegEye, FaRegEyeSlash, FaRegStar } from "react-icons/fa";
 import { IoPieChartOutline } from "react-icons/io5";
 import { HiOutlineCurrencyDollar } from "react-icons/hi2";
 import axios from "axios";
 import Image from "next/image";
-import { nftImg, nftImg2, nftImg3, nftImg4, nftImg5, NoDataFish } from "@/app/Images";
+import { nftImg, NoDataFish } from "@/app/Images";
 import { useDispatch, useSelector } from "react-redux";
 import { token } from "@/utils/tradingViewChartServices/constant";
-import toast from "react-hot-toast";
 import { decimalConvert } from "@/utils/basicFunctions";
 import RefPopup from "./RefPopup";
 import { RiLinkM } from "react-icons/ri";
@@ -20,40 +18,33 @@ import { openCloseLoginRegPopup } from "@/app/redux/states";
 import { FaAngleDown } from "react-icons/fa6";
 import { showToasterSuccess } from "@/utils/toaster/toaster.style";
 import { useTranslation } from "react-i18next";
+import { VscDebugBreakpointLogUnverified } from "react-icons/vsc";
 
 const ReferralPage = () => {
-  const nftImages = [nftImg, nftImg2, nftImg3, nftImg4, nftImg5];
-    const { t } = useTranslation();
-    const referral = t('referral')
+  const { t } = useTranslation();
+  const referral = t('referral')
 
   const URL_LINK = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
   const dispatch = useDispatch();
 
-  const fileInputRef = useRef(null);
-  const [imageURL, setImageURL] = useState(null);
-  const [copied3, setCopied3] = useState(false);
-  const [copiedRef1, setCopiedRef1] = useState(false);
-  const [copiedRef2, setCopiedRef2] = useState(false);
   const [refData, setRefData] = useState([]);
   const [selectedTier, setSelectedTier] = useState(1);
   const [showWithdrawPopup, setShowWithdrawPopup] = useState(false);
   const [hideEmail, setHideEmail] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const progress = 100;
+  const [progress, setProgress] = useState(0)
   const tierKey = selectedTier === 1 ? "firstTier" : selectedTier === 2 ? "secondTier" : "thirdTier";
 
   const rewardPercentage =
     selectedTier === 1
       ? refData?.user?.referealRewardsFirstTierPer
       : selectedTier === 2
-      ? refData?.user?.referealRewardsSecondTierPer
-      : refData?.user?.referealRewardsThirdTierPer;
+        ? refData?.user?.referealRewardsSecondTierPer
+        : refData?.user?.referealRewardsThirdTierPer;
 
   const tierData = refData?.referrals?.[tierKey] || [];
 
   const [addClaimed, setAddClaimed] = useState(0);
-  const [rendomImg, setRendomImg] = useState(nftImg);
 
   const solWalletAddress = useSelector((state) => state?.AllStatesData?.solWalletAddress);
 
@@ -107,8 +98,8 @@ const ReferralPage = () => {
 
       const responce = res.data.data;
       setRefData(responce);
+      setProgress(((responce?.user?.dailyPoints + responce?.user?.tradePoints + responce?.user?.weeklyPoints + responce?.user?.referralPoints) / 50000) * 100)
     } catch (e) {
-      console.log("🚀 ~ fetchData ~ error:", e);
     }
   };
 
@@ -144,40 +135,20 @@ const ReferralPage = () => {
 
   const handleCopy1 = (ref) => {
     navigator.clipboard.writeText(`https://moonpro.wavebot.app/referral/${ref}`);
-    setCopiedRef1(true);
     showToasterSuccess("Referral link copied!");
-    setTimeout(() => setCopiedRef1(false), 2000);
   };
 
   const handleCopy2 = (ref) => {
     navigator.clipboard.writeText(`https://moonpro.wavebot.app/referral/${ref}`);
-    setCopiedRef2(true);
     showToasterSuccess("Referral link copied!");
-    setTimeout(() => setCopiedRef2(false), 2000);
   };
 
   const handleCopy3 = () => {
     navigator.clipboard.writeText(solWalletAddress);
-    setCopied3(true);
     showToasterSuccess("Wallet address copied!");
-    // setTimeout(() => setCopied3(false), 2000);
-  };
-
-  const handleBoxClick = () => {
-    fileInputRef.current.click();
-  };
-
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImageURL(imageUrl);
-    }
   };
 
   useEffect(() => {
-    const randomImage = nftImages[Math.floor(Math.random() * nftImages.length)];
-    setRendomImg(randomImage);
     if (solWalletAddress) {
       fetchData();
     }
@@ -201,9 +172,13 @@ const ReferralPage = () => {
           <div className="flex-1 flex flex-col items-center md:items-start w-full">
             {/* Top row: username, points, icons */}
             <div className="flex flex-col md:flex-row items-center md:items-center justify-center md:justify-between w-full gap-2 md:gap-0 mt-2">
-              <div className="flex gap-2 items-center">
+              <div className="flex gap-4 items-center">
                 <div onClick={handleCopy3} className="font-semibold hover:text-blue-400 cursor-pointer">
                   {shortenAddress(token ? solWalletAddress : "")}
+                </div>
+                <div className="flex items-center gap-1">
+                  <VscDebugBreakpointLogUnverified size={18} />
+                  <div>{(refData?.user?.dailyPoints + refData?.user?.tradePoints + refData?.user?.weeklyPoints + refData?.user?.referralPoints) || 0} Points</div>
                 </div>
               </div>
 
@@ -274,7 +249,7 @@ const ReferralPage = () => {
               </span>
             </div> */}
             <div className="flex items-center justify-center">
-              <div className="text-base mt-12 text-gray-400">{referral?.refMata?.m}</div>
+              <div className="text-base mt-12 text-gray-400">comming soon...</div>
             </div>
           </div>
 
@@ -317,24 +292,22 @@ const ReferralPage = () => {
 
           {/* Points Breakdown */}
           <div className=" bg-[#191919]  rounded-xl p-4">
-            {/* <div className="text-sm text-[rgb(200,201,209)] flex items-center gap-2 tracking-wider">
+            <div className="text-sm text-[rgb(200,201,209)] flex items-center gap-2 tracking-wider">
               <IoPieChartOutline className="text-blue-500" size={22} />
               Points Breakdown
             </div>
             <div className="flex flex-col gap-1 text-sm mt-2 pt-1.5">
               <div className="text-[#a0a4b8] tracking-wider">
-                Trading <span className="float-right text-[#a0a4b8]">0</span>
+                Trading <span className="float-right text-[#a0a4b8]">
+                  {(refData?.user?.dailyPoints + refData?.user?.tradePoints + refData?.user?.weeklyPoints) || 0}
+                </span>
               </div>
               <div className="text-[#a0a4b8] tracking-wider">
-                Referrals <span className="float-right text-[#a0a4b8]">0</span>
+                Referrals <span className="float-right text-[#a0a4b8]">{refData?.user?.referralPoints || 0}</span>
               </div>
-              <div className="text-[#a0a4b8] tracking-wider">
+              {/* <div className="text-[#a0a4b8] tracking-wider">
                 Quests <span className="float-right text-[#a0a4b8]">0</span>
-              </div>
-            </div> */}
-            <div className="flex items-center justify-center">
-              <div className="text-base mt-12 text-gray-400">{referral?.refMata?.comingSoon}
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -399,7 +372,7 @@ const ReferralPage = () => {
                       {referral?.refMata?.emailWallet}
                     </th>
                     <th className="px-4 py-2 whitespace-nowrap text-blue-500">
-                     {referral?.refMata?.dateJoined}
+                      {referral?.refMata?.dateJoined}
                     </th>
                     <th className="px-4 py-2 whitespace-nowrap text-blue-500">
                       {referral?.refMata?.solEarned}
@@ -421,7 +394,7 @@ const ReferralPage = () => {
                             />
                           </div>
                           <h1 className="text-[#89888e] text-lg">
-                           {referral?.refMata?.noReferralsFound}
+                            {referral?.refMata?.noReferralsFound}
                           </h1>
                         </div>
                       </td>
