@@ -70,7 +70,7 @@ const RealizedPnLChart = ({ data }) => {
             lineColor: "#ff007f",
           }),
       lineWidth: 2,
-      lineType: 2,
+      lineType: 0,
       priceLineVisible: false,
     });
 
