@@ -16,8 +16,30 @@ export const PhantomWalletProvider = ({ children }) => {
   const [connected, setConnected] = useState(false);
   const [publicKey, setPublicKey] = useState(null);
   const [connecting, setConnecting] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isInPhantomBrowser, setIsInPhantomBrowser] = useState(false);
 
   useEffect(() => {
+    const detectMobile = () => {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    };
+
+    const detectPhantomBrowser = () => {
+      if (typeof window === "undefined") return false;
+
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isPhantomUserAgent = userAgent.includes("phantom") || userAgent.includes("phantombrowser");
+
+      const hasPhantomWallet = window.phantom && window.phantom.isPhantom;
+
+      const hasPhantomProps = window.phantom && window.phantom.solana;
+
+      return isPhantomUserAgent || (hasPhantomWallet && hasPhantomProps);
+    };
+
+    setIsMobile(detectMobile());
+    setIsInPhantomBrowser(detectPhantomBrowser());
+
     const getProvider = () => {
       if (typeof window !== "undefined" && "solana" in window) {
         const provider = window.solana;
@@ -32,7 +54,6 @@ export const PhantomWalletProvider = ({ children }) => {
     setPhantom(provider);
 
     if (provider) {
-
       provider.on("connect", (publicKey) => {
         setConnected(true);
         setPublicKey(publicKey.toString());
@@ -43,7 +64,7 @@ export const PhantomWalletProvider = ({ children }) => {
         setPublicKey(null);
       });
 
-      // check if already connected
+      // Check if already connected
       provider
         .connect({ onlyIfTrusted: true })
         .then((response) => {
@@ -51,16 +72,34 @@ export const PhantomWalletProvider = ({ children }) => {
           setPublicKey(response.publicKey.toString());
         })
         .catch(() => {
-          // user not previously connected
+          // User not previously connected
         });
     }
   }, []);
 
+  const isPhantomAvailable = () => {
+    if (isMobile) {
+      return isInPhantomBrowser;
+    }
+    return !!phantom;
+  };
+
   const connectWallet = async () => {
+    if (isMobile && !isInPhantomBrowser) {
+      return {
+        success: false,
+        error: "You must use the Phantom browser to sign in on mobile with Phantom",
+        needsPhantomBrowser: true,
+        redirectUrl: generatePhantomDeepLink(),
+      };
+    }
 
     if (!phantom) {
-      window.open("https://phantom.app/", "_blank");
-      return { success: false, error: "Phantom wallet not installed" };
+      return {
+        success: false,
+        error: "Phantom wallet not available. Please install Phantom wallet.",
+        needsInstall: true,
+      };
     }
 
     try {
@@ -86,6 +125,11 @@ export const PhantomWalletProvider = ({ children }) => {
     } finally {
       setConnecting(false);
     }
+  };
+
+  const generatePhantomDeepLink = () => {
+    const currentUrl = window.location.href;
+    return `https://phantom.app/ul/browse/${encodeURIComponent(currentUrl)}?ref=https://phantom.app`;
   };
 
   const disconnectWallet = async () => {
@@ -134,7 +178,10 @@ export const PhantomWalletProvider = ({ children }) => {
     connectWallet,
     disconnectWallet,
     signMessage,
-    isInstalled: !!phantom,
+    isInstalled: isPhantomAvailable(),
+    isMobile,
+    isInPhantomBrowser,
+    generatePhantomDeepLink,
   };
 
   return <PhantomWalletContext.Provider value={value}>{children}</PhantomWalletContext.Provider>;
