@@ -256,7 +256,7 @@ const ReferralPage = () => {
           {/* SOL Earned */}
           <div className=" bg-[#191919]  rounded-xl p-4">
             <div className="text-sm text-[rgb(200,201,209)] flex justify-between items-center gap-2">
-              <div className="flex items-center gap-2 tracking-wider">
+              <div className="flex items-center gap-2 tracking-wider text-nowrap">
                 <HiOutlineCurrencyDollar className="text-blue-500" size={22} />
                 {referral?.refMata?.solEarned}
               </div>
