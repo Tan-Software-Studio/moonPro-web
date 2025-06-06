@@ -25,7 +25,6 @@ import { useTranslation } from "react-i18next";
 import { fetchSolanaNativeBalance } from "@/app/redux/states";
 import { humanReadableFormat } from "@/utils/calculation";
 import { fetchChartAllData } from "@/app/redux/chartDataSlice/chartData.slice";
-import axios from "axios";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
 const Tradingview = () => {
@@ -33,6 +32,7 @@ const Tradingview = () => {
   const tragindViewPage = t("tragindViewPage");
   const tredingPage = t("tredingPage");
   const [activeTab, setActiveTab] = useState("buy");
+  const [isInstantTradeActive, setIsInstantTradeActive] = useState(false);
   const [dataLoaderForChart, setDataLoaderForChart] = useState(false);
   const latestTradesData = useSelector((state) => state?.allCharTokenData);
   const decimalFindInArray = latestTradesData?.latestTrades?.find(
@@ -50,6 +50,10 @@ const Tradingview = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const scrollableDivRef4 = useRef(null);
   const [currentTokenPnLData, setCurrentTokenPnLData] = useState({});
+
+  const handleInstantTradeClick = () => {
+    setIsInstantTradeActive(prev => !prev);
+  };
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
@@ -451,6 +455,8 @@ const Tradingview = () => {
                 tokenSupply={chartTokenData?.currentSupply}
                 currentUsdPrice={latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD}
                 currentTabData={currentTabData}
+                isInstantTradeActive={isInstantTradeActive}
+                handleInstantTradeClick={handleInstantTradeClick}
               />
             </div>
           )}
@@ -493,6 +499,8 @@ const Tradingview = () => {
                 solanaLivePrice={solanaLivePrice}
                 tredingPage={tredingPage}
                 currentSupply={chartTokenData?.currentSupply}
+                isInstantTradeActive={isInstantTradeActive}
+                handleInstantTradeClick={handleInstantTradeClick}
               />
             </div>
           </div>

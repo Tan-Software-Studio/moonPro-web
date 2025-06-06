@@ -27,7 +27,7 @@ import { FaArrowUpLong } from "react-icons/fa6";
 import { FaArrowDownLong } from "react-icons/fa6";
 import { CiFilter } from "react-icons/ci";
 
-const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSupply, currentUsdPrice, currentTabData }) => {
+const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSupply, currentUsdPrice, currentTabData, isInstantTradeActive, handleInstantTradeClick }) => {
   const { t } = useTranslation();
   const tragindViewPagePage = t("tragindViewPage");
   const dispatch = useDispatch();
@@ -566,6 +566,8 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
           topHoldersApiCall={topHoldersApiCall}
           toptradersApiCall={toptradersApiCall}
           tvChartRef={tvChartRef}
+          isInstantTradeActive={isInstantTradeActive}
+          handleInstantTradeClick={handleInstantTradeClick}
         />
 
         {/* table body */}
