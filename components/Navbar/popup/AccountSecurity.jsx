@@ -33,15 +33,13 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
 
   const { i18n } = useTranslation();
 
-  
-
   const referralLink = `https://moonpro.wavebot.app/referral/${userDetails?.referralId || ""}`;
 
   const getDisplayName = () => {
     if (userDetails?.phantomAddress) {
       return userDetails.phantomAddress;
     }
-    return userDetails?.email
+    return userDetails?.email;
   };
 
   const getAvatarInitial = () => {
@@ -162,7 +160,7 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
         onClick={() => setIsAccountPopup(false)}
-        className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center !z-[999999999999999]"
+        className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center !z-[999999999999999] p-2 sm:p-4"
       >
         <motion.div
           key="modal"
@@ -170,174 +168,181 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.8, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="LanguagePopup-lg xl:w-[700px] lg:w-[650px] md:w-[90%] w-[95%] bg-[#08080E] rounded-md !z-[999999999999999] max-h-[90vh] overflow-y-auto"
+          className="w-full max-w-[700px] bg-[#08080E] rounded-md !z-[999999999999999] max-h-[95vh] overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="">
-            <div className="flex items-center justify-between lg:px-4 px-3 py-3">
-              <div className="text-lg font-medium text-white">{navbar?.acountandsecurity?.acountandsecurity}</div>
-              <div onClick={() => setIsAccountPopup(false)} className="cursor-pointer">
+            <div className="flex items-center justify-between px-3 sm:px-4 py-3 border-b border-[#404040]">
+              <div className="text-base sm:text-lg font-medium text-white truncate">
+                {navbar?.acountandsecurity?.acountandsecurity}
+              </div>
+              <div onClick={() => setIsAccountPopup(false)} className="cursor-pointer p-1">
                 <IoClose size={18} />
               </div>
             </div>
 
-            <div className="px-4 py-4 border-b-[1px] border-[#404040]">
-              <div className="flex items-start gap-3">
-                <div className="w-[40px] h-[40px] flex justify-center items-center font-bold rounded-md bg-orange-400">
+            <div className="px-3 sm:px-4 py-4 border-b-[1px] border-[#404040]">
+              <div className="flex flex-col sm:flex-row items-start gap-3">
+                <div className="w-[40px] h-[40px] flex justify-center items-center font-bold rounded-md bg-orange-400 flex-shrink-0">
                   {getAvatarInitial()}
                 </div>
 
-                <div className="flex-1">
-                  <p className="text-white text-sm font-medium mb-1">{getDisplayName()}</p>
-                </div>
-                <div className="flex items-center gap-6 text-xs">
-                  <div className="text-center">
-                    <div className="text-[#A8A8A8] mb-1">{navbar?.acountandsecurity?.level1}</div>
-                    <div className="text-white font-medium">{userDetails?.rewardsLevel || "Wood"} 🏆</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-[#A8A8A8] mb-1">{navbar?.acountandsecurity?.level2}</div>
-                    <div className="text-white font-medium">{formatTimeAgo(userDetails?.lastLogin)}</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-[#A8A8A8] mb-1">{navbar?.acountandsecurity?.level3}</div>
-                    <div className="text-white font-medium cursor-pointer flex items-center gap-1">
-                      <span>{userDetails?.referralId || "N/A"}</span>
-                      {userDetails?.referralId && (
-                        <>
-                          {copiedReferral ? (
-                            <FaCheck className="text-green-400 text-xs" />
-                          ) : (
-                            <IoCopyOutline
-                              className="cursor-pointer text-xs hover:text-white transition-colors"
-                              onClick={() => copyToClipboard(userDetails.referralId, "referral")}
-                              title="Copy Referral Code"
-                            />
-                          )}
-                          <div className="relative">
-                            <PiShare
-                              className="cursor-pointer text-xs hover:text-white transition-colors ml-1"
-                              onClick={() => setIsShareModalOpen(!isShareModalOpen)}
-                              title="Share Referral Link"
-                            />
+                <div className="flex-1 min-w-0">
+                  <p className="text-white text-sm font-medium mb-2 truncate">{getDisplayName()}</p>
 
-                            {isShareModalOpen && (
-                              <div className="absolute top-full right-0 mt-2 w-48 bg-[#08080E] border border-[#404040] rounded-lg shadow-lg shadow-black/50 z-50">
-                                <div className="p-2">
-                                  <div className="text-white text-xs font-medium mb-2 px-2">Share on:</div>
+                  <div className="grid grid-cols-3 gap-2 sm:flex sm:items-center sm:gap-6 text-xs">
+                    <div className="text-center sm:text-left">
+                      <div className="text-[#A8A8A8] mb-1 text-[10px] sm:text-xs">
+                        {navbar?.acountandsecurity?.level1}
+                      </div>
+                      <div className="text-white font-medium text-xs">{userDetails?.rewardsLevel || "Wood"} 🏆</div>
+                    </div>
+                    <div className="text-center sm:text-left">
+                      <div className="text-[#A8A8A8] mb-1 text-[10px] sm:text-xs">
+                        {navbar?.acountandsecurity?.level2}
+                      </div>
+                      <div className="text-white font-medium text-xs">{formatTimeAgo(userDetails?.lastLogin)}</div>
+                    </div>
+                    <div className="text-center sm:text-left">
+                      <div className="text-[#A8A8A8] mb-1 text-[10px] sm:text-xs">
+                        {navbar?.acountandsecurity?.level3}
+                      </div>
+                      <div className="text-white font-medium cursor-pointer flex items-center justify-center sm:justify-start gap-1 text-xs">
+                        <span className="truncate max-w-[60px] sm:max-w-none">{userDetails?.referralId || "N/A"}</span>
+                        {userDetails?.referralId && (
+                          <>
+                            {copiedReferral ? (
+                              <FaCheck className="text-green-400 text-xs flex-shrink-0" />
+                            ) : (
+                              <IoCopyOutline
+                                className="cursor-pointer text-xs hover:text-white transition-colors flex-shrink-0"
+                                onClick={() => copyToClipboard(userDetails.referralId, "referral")}
+                                title="Copy Referral Code"
+                              />
+                            )}
+                            <div className="relative">
+                              <PiShare
+                                className="cursor-pointer text-xs hover:text-white transition-colors ml-1 flex-shrink-0"
+                                onClick={() => setIsShareModalOpen(!isShareModalOpen)}
+                                title="Share Referral Link"
+                              />
 
-                                  {navigator.share && (
+                              {isShareModalOpen && (
+                                <div className="absolute top-full right-0 mt-2 w-48 bg-[#08080E] border border-[#404040] rounded-lg shadow-lg shadow-black/50 z-50">
+                                  <div className="p-2">
+                                    <div className="text-white text-xs font-medium mb-2 px-2">Share on:</div>
+
+                                    {navigator.share && (
+                                      <button
+                                        onClick={handleNativeShare}
+                                        className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
+                                      >
+                                        <PiShare size={14} />
+                                        <span>Share...</span>
+                                      </button>
+                                    )}
+
                                     <button
-                                      onClick={handleNativeShare}
+                                      onClick={() => shareOnPlatform("twitter")}
                                       className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
                                     >
-                                      <PiShare size={14} />
-                                      <span>Share...</span>
+                                      <span>🐦</span>
+                                      <span>Twitter</span>
                                     </button>
-                                  )}
 
-                                  <button
-                                    onClick={() => shareOnPlatform("twitter")}
-                                    className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
-                                  >
-                                    <span>🐦</span>
-                                    <span>Twitter</span>
-                                  </button>
-
-                                  <button
-                                    onClick={() => shareOnPlatform("facebook")}
-                                    className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
-                                  >
-                                    <span>📘</span>
-                                    <span>Facebook</span>
-                                  </button>
-
-                                  <button
-                                    onClick={() => shareOnPlatform("linkedin")}
-                                    className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
-                                  >
-                                    <span>💼</span>
-                                    <span>LinkedIn</span>
-                                  </button>
-
-                                  <button
-                                    onClick={() => shareOnPlatform("whatsapp")}
-                                    className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
-                                  >
-                                    <span>💬</span>
-                                    <span>WhatsApp</span>
-                                  </button>
-
-                                  <button
-                                    onClick={() => shareOnPlatform("telegram")}
-                                    className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
-                                  >
-                                    <span>✈️</span>
-                                    <span>Telegram</span>
-                                  </button>
-
-                                  <button
-                                    onClick={() => shareOnPlatform("reddit")}
-                                    className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
-                                  >
-                                    <span>🔗</span>
-                                    <span>Reddit</span>
-                                  </button>
-
-                                  <div className="border-t border-[#404040] mt-2 pt-2">
                                     <button
-                                      onClick={() => {
-                                        copyToClipboard(referralLink, "referral");
-                                        setIsShareModalOpen(false);
-                                      }}
+                                      onClick={() => shareOnPlatform("facebook")}
                                       className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
                                     >
-                                      <IoCopyOutline size={14} />
-                                      <span>Copy Link</span>
+                                      <span>📘</span>
+                                      <span>Facebook</span>
                                     </button>
+
+                                    <button
+                                      onClick={() => shareOnPlatform("linkedin")}
+                                      className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
+                                    >
+                                      <span>💼</span>
+                                      <span>LinkedIn</span>
+                                    </button>
+
+                                    <button
+                                      onClick={() => shareOnPlatform("whatsapp")}
+                                      className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
+                                    >
+                                      <span>💬</span>
+                                      <span>WhatsApp</span>
+                                    </button>
+
+                                    <button
+                                      onClick={() => shareOnPlatform("telegram")}
+                                      className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
+                                    >
+                                      <span>✈️</span>
+                                      <span>Telegram</span>
+                                    </button>
+
+                                    <button
+                                      onClick={() => shareOnPlatform("reddit")}
+                                      className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
+                                    >
+                                      <span>🔗</span>
+                                      <span>Reddit</span>
+                                    </button>
+
+                                    <div className="border-t border-[#404040] mt-2 pt-2">
+                                      <button
+                                        onClick={() => {
+                                          copyToClipboard(referralLink, "referral");
+                                          setIsShareModalOpen(false);
+                                        }}
+                                        className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
+                                      >
+                                        <IoCopyOutline size={14} />
+                                        <span>Copy Link</span>
+                                      </button>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            )}
-                          </div>
-                        </>
-                      )}
+                              )}
+                            </div>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="px-4 py-4">
-              <div className="flex items-center justify-between py-3">
-                <div className="flex-1">
+            <div className="px-3 sm:px-4 py-4 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3">
+                <div className="flex-1 min-w-0">
                   <div className="text-white text-sm font-medium mb-1">{navbar?.acountandsecurity?.recoveryKey}</div>
-                  <div className="text-[#6E6E6E] text-xs">
-                   {navbar?.acountandsecurity?.msg2}
-                  </div>
+                  <div className="text-[#6E6E6E] text-xs">{navbar?.acountandsecurity?.msg2}</div>
                 </div>
                 <button
                   onClick={() => handlePhrase()}
-                  className="px-4 py-2 text-xs border border-[#ED1B24] text-[#ED1B24] hover:bg-[#ED1B24] hover:text-white rounded transition-all duration-300 w-[140px]"
+                  className="px-3 py-2 text-xs border border-[#ED1B24] text-[#ED1B24] hover:bg-[#ED1B24] hover:text-white rounded transition-all duration-300 w-full sm:w-[140px] text-center"
                 >
-                 {navbar?.acountandsecurity?.recoveryKey}
+                  {navbar?.acountandsecurity?.recoveryKey}
                 </button>
               </div>
 
-              <div className="flex items-center justify-between py-3 border-t border-[#1A1A1A]">
-                <div className="flex-1">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3 border-t border-[#1A1A1A]">
+                <div className="flex-1 min-w-0">
                   <div className="text-white text-sm font-medium mb-1">{navbar?.acountandsecurity?.language}</div>
                   <div className="text-[#6E6E6E] text-xs">{navbar?.acountandsecurity?.msg3}</div>
                 </div>
 
-                <div className="relative">
+                <div className="relative w-full sm:w-[140px]">
                   <div
-                    className="flex items-center gap-2 px-4 py-2 text-xs text-[#A8A8A8] border border-[#404040] rounded cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition w-[140px]"
+                    className="flex items-center gap-2 px-3 py-2 text-xs text-[#A8A8A8] border border-[#404040] rounded cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition w-full"
                     onClick={() => setIsModalOpen(!isModalOpen)}
                   >
-                    <Image alt="lang" src={language.img} className="w-[16px] h-[16px] rounded-full" />
-                    <span className="uppercase">{language?.lang || "English"}</span>
-                    <FaCaretDown className="text-[#A8A8A8] ml-auto" />
+                    <Image alt="lang" src={language.img} className="w-[16px] h-[16px] rounded-full flex-shrink-0" />
+                    <span className="uppercase flex-1 truncate">{language?.lang || "English"}</span>
+                    <FaCaretDown className="text-[#A8A8A8] flex-shrink-0" />
                   </div>
 
                   {isModalOpen && (
@@ -350,14 +355,14 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                             onClick={() => handleLanguageSelector(item)}
                             className={`flex items-center justify-between px-3 py-2 cursor-pointer transition-all hover:bg-[#2a2a2a]`}
                           >
-                            <div className="flex items-center gap-2">
-                              <div className="w-[16px] h-[16px] overflow-hidden rounded-full">
+                            <div className="flex items-center gap-2 min-w-0 flex-1">
+                              <div className="w-[16px] h-[16px] overflow-hidden rounded-full flex-shrink-0">
                                 <Image alt="lang" src={item.img} className="w-full h-full object-cover" />
                               </div>
-                              <span className="text-xs text-[#A8A8A8]">{item.lang}</span>
+                              <span className="text-xs text-[#A8A8A8] truncate">{item.lang}</span>
                             </div>
                             {isSelected && (
-                              <div className="flex items-center justify-center text-[#3b37fe]">
+                              <div className="flex items-center justify-center text-[#3b37fe] flex-shrink-0">
                                 <FaCheck size={10} />
                               </div>
                             )}
@@ -369,8 +374,8 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between py-3 border-t border-[#1A1A1A]">
-                <div className="flex-1">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3 border-t border-[#1A1A1A]">
+                <div className="flex-1 min-w-0">
                   <div className="text-white text-sm font-medium mb-1">{navbar?.acountandsecurity?.wallets}</div>
                   <div className="text-[#6E6E6E] text-xs">{navbar?.acountandsecurity?.msg4}</div>
                 </div>
@@ -381,15 +386,15 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                     dispatch(updatePnlTableData("portfolio"));
                   }}
                   href="/portfolio"
-                  className="px-3 py-2 flex items-center gap-2 text-xs border border-[#404040] rounded cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all text-[#A8A8A8] w-[140px] justify-center"
+                  className="px-3 py-2 flex items-center gap-2 text-xs border border-[#404040] rounded cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all text-[#A8A8A8] w-full sm:w-[140px] justify-center"
                 >
                   <IoWalletOutline size={14} />
-                  <span>{navbar?.acountandsecurity?.manageWallets}</span>
+                  <span className="truncate">{navbar?.acountandsecurity?.manageWallets}</span>
                 </Link>
               </div>
 
-              <div className="flex items-center justify-between py-3 border-t border-[#1A1A1A]">
-                <div className="flex-1">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3 border-t border-[#1A1A1A]">
+                <div className="flex-1 min-w-0">
                   <div className="text-white text-sm font-medium mb-1">{navbar?.acountandsecurity?.rewards}</div>
                   <div className="text-[#6E6E6E] text-xs">{navbar?.acountandsecurity?.msg5}</div>
                 </div>
@@ -397,22 +402,22 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                 <Link
                   onClick={() => setIsAccountPopup(false)}
                   href="/referral"
-                  className="px-4 py-2 flex items-center gap-2 text-xs border border-[#404040] rounded cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all text-[#A8A8A8] w-[140px] justify-center"
+                  className="px-3 py-2 flex items-center gap-2 text-xs border border-[#404040] rounded cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all text-[#A8A8A8] w-full sm:w-[140px] justify-center"
                 >
                   <span>📈</span>
-                  <span>{navbar?.acountandsecurity?.earnRewards}</span>
+                  <span className="truncate">{navbar?.acountandsecurity?.earnRewards}</span>
                 </Link>
               </div>
 
-              <div className="flex items-center justify-between py-3 border-t border-[#1A1A1A]">
-                <div className="flex-1">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3 border-t border-[#1A1A1A]">
+                <div className="flex-1 min-w-0">
                   <div className="text-[#ED1B24] text-sm font-medium mb-1">{navbar?.acountandsecurity?.logOut}</div>
                   <div className="text-[#ED1B24] text-xs">{navbar?.acountandsecurity?.msg1}</div>
                 </div>
 
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-2 text-xs border border-[#ED1B24] text-[#ED1B24] hover:bg-[#ED1B24] hover:text-white rounded transition-all duration-300 w-[140px]"
+                  className="px-3 py-2 text-xs border border-[#ED1B24] text-[#ED1B24] hover:bg-[#ED1B24] hover:text-white rounded transition-all duration-300 w-full sm:w-[140px] text-center"
                 >
                   {navbar?.acountandsecurity?.logOut}
                 </button>
