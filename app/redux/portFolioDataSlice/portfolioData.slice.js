@@ -25,6 +25,7 @@ const performanceData = createSlice({
   name: "performanceData",
   initialState: {
     performance: {},
+    loading: true
   },
   reducers: {
     setPerformanceState: (state, action) => {
@@ -41,6 +42,7 @@ const performanceData = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchPerformanceHistory.fulfilled, (state, { payload }) => {
       state.performance = payload;
+      state.loading = false
     });
   },
 });
