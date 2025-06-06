@@ -2,30 +2,27 @@
 import React, { useEffect, useRef, useState } from "react";
 import { LuSearch } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
-import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
-import { IoMenu, IoSettingsOutline } from "react-icons/io5";
+import { IoMenu } from "react-icons/io5";
 import { setIsSidebarOpen } from "@/app/redux/CommonUiData";
-import { logo, walletBalance, Solana, usdc } from "@/app/Images";
+import { logo, Solana } from "@/app/Images";
 import {
   fetchSolanaNativeBalance,
   fetchUsdcBalance,
   openCloseLoginRegPopup,
-  setIsEnabled,
   setIsSearchPopup,
   setLoginRegPopupAuth,
   setSolanaLivePrice,
   setSolWalletAddress,
-  setUsdcBalance,
 } from "@/app/redux/states";
-import { PiUserBold, PiUserLight } from "react-icons/pi";
+import { PiUserBold } from "react-icons/pi";
 import LoginPopup from "./login/LoginPopup";
-import { RiLogoutBoxLine, RiNotification4Line } from "react-icons/ri";
+import { RiLogoutBoxLine } from "react-icons/ri";
 import { googleLogout } from "@react-oauth/google";
-import { MdLockOutline, MdOutlineNewReleases } from "react-icons/md";
-import { FaAngleDown, FaCopy, FaRegStar, FaWallet } from "react-icons/fa";
+import { MdLockOutline } from "react-icons/md";
+import { FaCopy, FaRegStar, FaWallet } from "react-icons/fa";
 import Setting from "./popup/Setting";
 import AccountSecurity from "./popup/AccountSecurity";
 import Watchlist from "./popup/Watchlist";
@@ -33,7 +30,10 @@ import { useTranslation } from "react-i18next";
 import ReferralCodePopup from "./login/RefferalPopup";
 import axios from "axios";
 import { fetchMemescopeData } from "@/app/redux/memescopeData/Memescope";
-import { setFilterTime, setLoading } from "@/app/redux/trending/solTrending.slice";
+import {
+  setFilterTime,
+  setLoading,
+} from "@/app/redux/trending/solTrending.slice";
 import RecoveryKey from "./login/RecoveryKey";
 import { decodeData } from "@/utils/decryption/decryption";
 import ExchangePopup from "./popup/ExchangePopup";
@@ -47,7 +47,6 @@ import {
 import WithdrawPopup from "./popup/WithdrawPopup";
 import NewAiSignalTokens from "./popup/NewAiSignalTokens";
 import { fetchAiSignalData } from "@/app/redux/AiSignalDataSlice/AiSignal.slice";
-import { Flame } from "lucide-react";
 import { showToaster } from "@/utils/toaster/toaster.style";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
@@ -85,15 +84,16 @@ const Navbar = () => {
       .then(async (res) => {
         // const decryptPK = await decrypt(res?.data?.data?.solanaPk, FE_SEC);
         setIsAccountPopup(false);
-        const decodeKey = await decodeData(res?.data?.data?.seedPhrases?.solana);
+        const decodeKey = await decodeData(
+          res?.data?.data?.seedPhrases?.solana
+        );
         setSolPhrase(decodeKey);
         setOpenRecovery(true);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }
 
   const fetchWalletBalancesDirectly = async (walletAddresses, dispatch) => {
-
     dispatch(setBalancesLoading(true));
 
     try {
@@ -138,7 +138,9 @@ const Navbar = () => {
         }
       );
 
-      dispatch(setWalletBalances(response?.data?.data?.Solana?.BalanceUpdates || []));
+      dispatch(
+        setWalletBalances(response?.data?.data?.Solana?.BalanceUpdates || [])
+      );
     } catch (error) {
       console.error("Error fetching wallet balances:", error);
       dispatch(setBalancesError(error.message));
@@ -146,22 +148,34 @@ const Navbar = () => {
   };
 
   // login signup
-  const isLoginPopup = useSelector((state) => state?.AllStatesData?.isRegLoginPopup);
+  const isLoginPopup = useSelector(
+    (state) => state?.AllStatesData?.isRegLoginPopup
+  );
   // referral add popup
-  const isReffaralCode = useSelector((state) => state?.AllStatesData?.referralPopupAfterLogin);
-  const authName = useSelector((state) => state?.AllStatesData?.isRegisterOrLogin);
+  const isReffaralCode = useSelector(
+    (state) => state?.AllStatesData?.referralPopupAfterLogin
+  );
+  const authName = useSelector(
+    (state) => state?.AllStatesData?.isRegisterOrLogin
+  );
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const userDetails = useSelector((state) => state?.userData?.userDetails);
-  const isLoadingBalances = useSelector((state) => state?.userData?.isLoadingBalances);
 
   // X===================X Use selectors X===================X //
-  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
+  const nativeTokenbalance = useSelector(
+    (state) => state?.AllStatesData?.solNativeBalance
+  );
   const usdcBalance = useSelector((state) => state?.AllStatesData?.usdcBalance);
-  const solWalletAddress = useSelector((state) => state?.AllStatesData?.solWalletAddress);
-  const isSidebarOpen = useSelector((state) => state?.AllthemeColorData?.isSidebarOpen);
-  const isEnabled = useSelector((state) => state?.AllStatesData?.isEnabled);
-  const solanaLivePrice = useSelector((state) => state?.AllStatesData?.solanaLivePrice);
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
+  const isSidebarOpen = useSelector(
+    (state) => state?.AllthemeColorData?.isSidebarOpen
+  );
+  const solanaLivePrice = useSelector(
+    (state) => state?.AllStatesData?.solanaLivePrice
+  );
 
   const dropdownRef = useRef(null);
   const walletDropdownRef = useRef(null);
@@ -170,8 +184,10 @@ const Navbar = () => {
   const navbar = t("navbar");
   const dispatch = useDispatch();
   const pathname = usePathname();
-  const aiSignalData = useSelector((state) => state?.aiSignal?.aiSignalData);
-  const path = pathname === "/settings" || pathname === "/copytrade" || pathname === "/transfer-funds";
+  const path =
+    pathname === "/settings" ||
+    pathname === "/copytrade" ||
+    pathname === "/transfer-funds";
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -181,7 +197,6 @@ const Navbar = () => {
     router.replace("/trending");
     setIsProfileOpen(false);
     googleLogout();
-
   };
 
   async function fetchData() {
@@ -191,10 +206,18 @@ const Navbar = () => {
       .then((response) => {
         const rawData = response?.data?.data;
         const formattedData = {
-          "1m": (rawData?.["1+min"]?.tokens || []).sort((a, b) => b.traded_volume - a.traded_volume),
-          "5m": (rawData?.["5+min"]?.tokens || []).sort((a, b) => b.traded_volume - a.traded_volume),
-          "30m": (rawData?.["30+min"]?.tokens || []).sort((a, b) => b.traded_volume - a.traded_volume),
-          "1h": (rawData?.["1+hr"]?.tokens || []).sort((a, b) => b.traded_volume - a.traded_volume),
+          "1m": (rawData?.["1+min"]?.tokens || []).sort(
+            (a, b) => b.traded_volume - a.traded_volume
+          ),
+          "5m": (rawData?.["5+min"]?.tokens || []).sort(
+            (a, b) => b.traded_volume - a.traded_volume
+          ),
+          "30m": (rawData?.["30+min"]?.tokens || []).sort(
+            (a, b) => b.traded_volume - a.traded_volume
+          ),
+          "1h": (rawData?.["1+hr"]?.tokens || []).sort(
+            (a, b) => b.traded_volume - a.traded_volume
+          ),
         };
         dispatch(setFilterTime(formattedData));
         dispatch(setLoading(false));
@@ -216,7 +239,7 @@ const Navbar = () => {
         const price = res?.data?.data[res?.data?.data?.length - 1]?.price;
         dispatch(setSolanaLivePrice(price));
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }
 
   useEffect(() => {
@@ -239,7 +262,9 @@ const Navbar = () => {
 
   useEffect(() => {
     if (userDetails && userDetails.walletAddressSOL && !hasCalledBitquery) {
-      const walletAddresses = userDetails.walletAddressSOL.map((walletObj) => `"${walletObj?.wallet}"`);
+      const walletAddresses = userDetails.walletAddressSOL.map(
+        (walletObj) => `"${walletObj?.wallet}"`
+      );
 
       if (walletAddresses.length > 0) {
         fetchWalletBalancesDirectly(walletAddresses, dispatch);
@@ -263,7 +288,10 @@ const Navbar = () => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsProfileOpen(false);
       }
-      if (walletDropdownRef.current && !walletDropdownRef.current.contains(event.target)) {
+      if (
+        walletDropdownRef.current &&
+        !walletDropdownRef.current.contains(event.target)
+      ) {
         setIsWalletDropdownOpen(false);
       }
     }
@@ -309,20 +337,27 @@ const Navbar = () => {
                 <NewAiSignalTokens />
                 {/* Search bar */}
                 <div
-                  className={`md:flex items-center   border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                    } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                  className={`md:flex items-center   border ${
+                    isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
+                  } border-[#333333] ${
+                    isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                   onClick={() => dispatch(setIsSearchPopup(true))}
                 >
                   <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                   <input
-                    className={` ${isSidebarOpen ? "w-0" : "lg:w-12 w-9"
-                      } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                    className={` ${
+                      isSidebarOpen ? "w-0" : "lg:w-12 w-9"
+                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                     placeholder={navbar?.profile?.search}
                   />
                 </div>
 
                 {/* Only sm search bar */}
-                <div onClick={() => dispatch(setIsSearchPopup(true))} className="cursor-pointer md:hidden block">
+                <div
+                  onClick={() => dispatch(setIsSearchPopup(true))}
+                  className="cursor-pointer md:hidden block"
+                >
                   <LuSearch size={24} />
                 </div>
 
@@ -337,8 +372,14 @@ const Navbar = () => {
 
                 {/* Watchlist */}
                 {mounted && solWalletAddress && (
-                  <div onClick={() => setIsWatchlistPopup(true)} className="cursor-pointer">
-                    <FaRegStar size={24} className="text-white transition-colors" />
+                  <div
+                    onClick={() => setIsWatchlistPopup(true)}
+                    className="cursor-pointer"
+                  >
+                    <FaRegStar
+                      size={24}
+                      className="text-white transition-colors"
+                    />
                   </div>
                 )}
 
@@ -353,12 +394,22 @@ const Navbar = () => {
                 {solWalletAddress && (
                   <div className={`relative`} ref={walletDropdownRef}>
                     <div
-                      onClick={() => setIsWalletDropdownOpen(!isWalletDropdownOpen)}
+                      onClick={() =>
+                        setIsWalletDropdownOpen(!isWalletDropdownOpen)
+                      }
                       className={`flex items-center cursor-pointer gap-3 rounded-lg h-8 px-2 bg-[#1A1A1A] hover:bg-[#252525] transition-colors`}
                     >
                       <div className="flex items-center gap-2">
-                        <Image src={Solana} alt="solana" height={30} width={30} className="rounded-full" />
-                        <div className="sm:flex hidden">{Number(nativeTokenbalance).toFixed(5) || 0}</div>
+                        <Image
+                          src={Solana}
+                          alt="solana"
+                          height={30}
+                          width={30}
+                          className="rounded-full"
+                        />
+                        <div className="sm:flex hidden">
+                          {Number(nativeTokenbalance).toFixed(5) || 0}
+                        </div>
                       </div>
 
                       <div className="sm:flex  hidden items-center gap-3">
@@ -375,7 +426,9 @@ const Navbar = () => {
                         <div className="p-4">
                           <div className="mb-4">
                             <div className="flex items-center justify-between mb-1">
-                              <div className="text-xs text-[#898989]">Total Value</div>
+                              <div className="text-xs text-[#898989]">
+                                Total Value
+                              </div>
                               <div className="flex items-center gap-2 cursor-pointer ">
                                 <div
                                   className="flex items-center gap-1 text-xs text-[#898989] hover:bg-[#404040] p-1 rounded-md"
@@ -389,19 +442,33 @@ const Navbar = () => {
                               </div>
                             </div>
                             <div className="text-2xl font-bold text-white mb-2">
-                              {/* ${(Number(nativeTokenbalance) * (solanaLivePrice || 0)).toFixed(2)}$ */}$
-                              {(Number(nativeTokenbalance) * (solanaLivePrice || 0) + Number(usdcBalance) * 1).toFixed(
-                                2
-                              )}
+                              {/* ${(Number(nativeTokenbalance) * (solanaLivePrice || 0)).toFixed(2)}$ */}
+                              $
+                              {(
+                                Number(nativeTokenbalance) *
+                                  (solanaLivePrice || 0) +
+                                Number(usdcBalance) * 1
+                              ).toFixed(2)}
                             </div>
                           </div>
 
                           <div
                             className="flex items-center justify-between mb-3 cursor-pointer hover:bg-[#252525] p-1.5 rounded-lg transition-colors"
-                            onClick={() => handleOpenDeposit("balance", Number(nativeTokenbalance))}
+                            onClick={() =>
+                              handleOpenDeposit(
+                                "balance",
+                                Number(nativeTokenbalance)
+                              )
+                            }
                           >
                             <div className="flex items-center gap-2">
-                              <Image src={Solana} alt="solana" width={20} height={20} className="rounded-full" />
+                              <Image
+                                src={Solana}
+                                alt="solana"
+                                width={20}
+                                height={20}
+                                className="rounded-full"
+                              />
                               <span className="text-lg font-semibold text-white">
                                 {Number(nativeTokenbalance).toFixed(5)}
                               </span>
@@ -515,7 +582,9 @@ const Navbar = () => {
       </div>
 
       <AnimatePresence>
-        {isLoginPopup && <LoginPopup isLoginPopup={isLoginPopup} authName={authName} />}
+        {isLoginPopup && (
+          <LoginPopup isLoginPopup={isLoginPopup} authName={authName} />
+        )}
 
         {isSettingPopup && <Setting setIsSettingPopup={setIsSettingPopup} />}
 
@@ -527,9 +596,16 @@ const Navbar = () => {
           />
         )}
 
-        {isWatchlistPopup && <Watchlist setIsWatchlistPopup={setIsWatchlistPopup} />}
+        {isWatchlistPopup && (
+          <Watchlist setIsWatchlistPopup={setIsWatchlistPopup} />
+        )}
 
-        {isSolDepositPopup && <ExchangePopup isOpen={isSolDepositPopup} onClose={setIsSolDepositPopup} />}
+        {isSolDepositPopup && (
+          <ExchangePopup
+            isOpen={isSolDepositPopup}
+            onClose={setIsSolDepositPopup}
+          />
+        )}
         {isWithdrawPopup && (
           <WithdrawPopup
             isOpen={isWithdrawPopup}
@@ -539,7 +615,12 @@ const Navbar = () => {
           />
         )}
         {openRecovery && solPhrase && (
-          <RecoveryKey PK={solPhrase} setPK={setSolPhrase} setOpenRecovery={setOpenRecovery} flag={true} />
+          <RecoveryKey
+            PK={solPhrase}
+            setPK={setSolPhrase}
+            setOpenRecovery={setOpenRecovery}
+            flag={true}
+          />
         )}
       </AnimatePresence>
       {isReffaralCode && <ReferralCodePopup />}
@@ -547,7 +628,11 @@ const Navbar = () => {
       {showToast && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-[#2A2A2A] border border-[#404040] text-white px-4 py-2 rounded-lg shadow-lg z-[70] flex items-center gap-2">
           <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-            <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <svg
+              className="w-2 h-2 text-white"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
               <path
                 fillRule="evenodd"
                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -556,7 +641,10 @@ const Navbar = () => {
             </svg>
           </div>
           <span className="text-sm">{toastMessage}</span>
-          <button onClick={() => setShowToast(false)} className="ml-2 text-[#666666] hover:text-white">
+          <button
+            onClick={() => setShowToast(false)}
+            className="ml-2 text-[#666666] hover:text-white"
+          >
             ×
           </button>
         </div>

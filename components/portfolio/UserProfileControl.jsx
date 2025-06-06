@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import ActivityTable from "@/components/profile/ActivityTable";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import ActivePosition from "@/components/profile/ActivePosition";
@@ -9,14 +9,9 @@ import History from "../profile/History";
 import TopHundred from "../profile/TopHundred";
 import { useTranslation } from "react-i18next";
 import RealizedPnLChart from "./PNLChart";
-import {
-  fetchPerformanceHistory,
-  setPerformanceState,
-} from "@/app/redux/portFolioDataSlice/portfolioData.slice";
 
 const UserProfileControl = () => {
   const { t, i18n } = useTranslation();
-  const dispatch = useDispatch();
   const portfolio = t("portfolio", { returnObjects: true });
   const [leftTableTab, setLeftTableTab] = useState(portfolio?.activePosition);
   const [rightTableTab, setRightTableTab] = useState(portfolio?.activity);
@@ -111,13 +106,6 @@ const UserProfileControl = () => {
 
   const totalCount = counts.reduce((sum, c) => sum + c, 0) || 1;
   const percentages = counts.map((count) => (count / totalCount) * 100);
-
-  useEffect(() => {
-    if (solWalletAddress) {
-      dispatch(setPerformanceState());
-      dispatch(fetchPerformanceHistory(solWalletAddress));
-    }
-  }, [solWalletAddress]);
 
   useEffect(() => {
     const updatedPortfolio = t("portfolio", { returnObjects: true });

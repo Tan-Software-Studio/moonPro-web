@@ -10,6 +10,7 @@ import { addMark } from "@/utils/tradingViewChartServices/mark";
 import { getLatestBarTime } from "../tradingViewChartServices/latestBarTime";
 import { updateHoldingsDataWhileBuySell } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import { showToaster } from "../toaster/toaster.style";
+import { setBuyAndSellCountInPerformance } from "@/app/redux/portFolioDataSlice/portfolioData.slice";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 // handler to buy solana tokens
 const buySolanaTokens = async (
@@ -101,6 +102,7 @@ const buySolanaTokens = async (
           img: metaData?.img,
         })
       );
+      dispatch(setBuyAndSellCountInPerformance("buy"));
       try {
         addMark(
           getLatestBarTime(),
@@ -227,6 +229,7 @@ const buySolanaTokensQuickBuyHandler = async (
           img: metaData?.img,
         })
       );
+      dispatch(setBuyAndSellCountInPerformance("buy"));
       setTimeout(() => {
         dispatch(fetchSolanaNativeBalance(address));
       }, 2000);
@@ -332,6 +335,7 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
           img: metaData?.img,
         })
       );
+      dispatch(setBuyAndSellCountInPerformance("buy"));
       setTimeout(() => {
         dispatch(fetchSolanaNativeBalance(address));
       }, 2000);
@@ -440,6 +444,7 @@ const sellSolanaTokens = async (
           isSellFullAmount,
         })
       );
+      dispatch(setBuyAndSellCountInPerformance("sell"));
       try {
         addMark(
           getLatestBarTime(),
