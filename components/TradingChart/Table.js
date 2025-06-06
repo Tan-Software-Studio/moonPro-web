@@ -287,7 +287,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
   const topHoldersApiCall = async () => {
     const date = new Date();
     const currentTime = date.toISOString();
-
+    const pairAddress = localStorage?.getItem("currentPairAddress");
     // Try to find the most recent trade time
     const mostRecentDate = latestTradesData?.latestTrades?.reduce((latest, trade) => {
       const time = new Date(trade?.Block?.Time);
@@ -410,7 +410,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
           const realizedPnl = soldInUsd - boughtInUsd;
 
           const holderData = {
-              owner: owner,
+              owner: owner === pairAddress ? "LIQUIDITY POOL" : owner,
               holdings: holdingData?.BalanceUpdate?.balance || 0,
               boughtCount,
               boughtInSol: buySellOwnerData?.buy_volume || 0,
