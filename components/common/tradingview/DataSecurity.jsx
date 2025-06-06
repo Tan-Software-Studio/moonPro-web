@@ -6,6 +6,7 @@ import axios from "axios";
 
 function DataSecurity({
   tokenCA,
+  pairAddress,
   tokenSymbol,
   tragindViewPage,
   activeTab,
@@ -26,7 +27,7 @@ function DataSecurity({
 
   useEffect(() => {
     if (tokenSupply !== undefined && totalBalance !== -1) {
-      const top10percentage = ((totalBalance / tokenSupply) * 100).toFixed(0);
+      const top10percentage = ((totalBalance / tokenSupply) * 100).toFixed(2);
       setTop10holdersPercetnage(top10percentage);
     }
   }, [tokenSupply, totalBalance]);
@@ -43,7 +44,7 @@ function DataSecurity({
       BalanceUpdates(
         orderBy: {descendingByField: "BalanceUpdate_balance_maximum"}
         where: {BalanceUpdate: {Currency: {MintAddress: {is: $token}}}, Block: {Time: {before: $time_ago}}}
-        limit:{count:10}
+        limit:{count:11}
       ) {
         BalanceUpdate {
           Account {
@@ -67,11 +68,15 @@ function DataSecurity({
             },
           }
         );
-        const balances = response?.data?.data?.Solana?.BalanceUpdates.map((item) =>
-          Number(item?.BalanceUpdate?.balance)
-        ).sort((a, b) => b - a);
-        const sumBalance = balances.reduce((sum, balance) => sum + balance, 0);
-        setTotalBalance(sumBalance);
+      const pairAddresss = localStorage?.getItem("currentPairAddress");
+      const balances = response?.data?.data?.Solana?.BalanceUpdates
+        .filter((item) => item?.BalanceUpdate?.Account?.Owner !== pairAddresss)
+        .map((item) => Number(item?.BalanceUpdate?.balance))
+        .sort((a, b) => b - a)
+        .slice(0, 10); // Limit to top 10 balances
+      console.log("balances", balances);
+      const sumBalance = balances.reduce((sum, balance) => sum + balance, 0);
+      setTotalBalance(sumBalance);
       } catch (error) {
         console.error("Error:", error.response?.data || error.message || error);
       }
@@ -190,7 +195,7 @@ function DataSecurity({
             <div className="flex items-center gap-2">
               <div
                 className={`w-4 h-4 border-[1px] ease-in-out duration-200 rounded-full flex items-center justify-center
-                  ${top10holdersPercetnage >= 10 ? 
+                  ${top10holdersPercetnage >= 15 ? 
                   "bg-[#ed1b2642] border-[#ED1B247A]" : 
                   "bg-[#21cb6b38] border-[#21CB6B]"
                   }`}
@@ -200,7 +205,7 @@ function DataSecurity({
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke-width="2"
-                  stroke={`${top10holdersPercetnage >= 10 ? "#ED1B247A" : "#21CB6B"}`}
+                  stroke={`${top10holdersPercetnage >= 15 ? "#ED1B247A" : "#21CB6B"}`}
                   class="w-3 h-3"
                 >
                   <path
