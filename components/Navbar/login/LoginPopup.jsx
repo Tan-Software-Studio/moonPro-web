@@ -25,6 +25,73 @@ import { useRouter } from "next/navigation";
 import { usePhantomWallet } from "@/app/providers/PhantomWalletProvider";
 import { showToaster, showToasterSuccess } from "@/utils/toaster/toaster.style";
 
+const MobilePhantomNotification = ({ onClose, onOpenPhantom }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -50 }}
+      className="fixed top-4 left-4 right-4 z-[80] bg-[#1e1e1efb] text-white p-4 rounded-lg shadow-lg"
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex items-start space-x-3">
+          <div className="bg-[#1e1e1e] rounded-full p-1 mt-0.5">
+            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold text-sm">You must use the Phantom browser to sign in on mobile with Phantom</p>
+            <button
+              onClick={onOpenPhantom}
+              className="mt-2 bg-black text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-800 transition-colors"
+            >
+              Open in Phantom
+            </button>
+          </div>
+        </div>
+        <button onClick={onClose} className="text-white hover:text-gray-700 transition-colors">
+          <IoMdClose size={20} />
+        </button>
+      </div>
+    </motion.div>
+  );
+};
+
+const ConnectionFailureNotification = ({ message, onClose }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -50 }}
+      className="fixed top-20 left-4 right-4 z-50 bg-red-500 text-white p-4 rounded-lg shadow-lg"
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex items-start space-x-3">
+          <div className="bg-red-600 rounded-full p-1 mt-0.5">
+            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold text-sm">{message}</p>
+          </div>
+        </div>
+        <button
+          onClick={onClose}
+          className="text-white hover:text-gray-200 transition-colors"
+        >
+          <IoMdClose size={20} />
+        </button>
+      </div>
+    </motion.div>
+  );
+};
+
 const LoginPopup = ({ authName }) => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -39,10 +106,24 @@ const LoginPopup = ({ authName }) => {
   const [email, setEmail] = useState("");
   const [isDisable, setIsDisable] = useState(false);
 
+  const [showMobileNotification, setShowMobileNotification] = useState(false);
+  const [showFailureNotification, setShowFailureNotification] = useState(false);
+  const [failureMessage, setFailureMessage] = useState("");
+
   const { t } = useTranslation();
   const navbar = t("navbar");
 
-  const { connectWallet, signMessage, connected, publicKey, connecting, isInstalled } = usePhantomWallet();
+  const {
+    connectWallet,
+    signMessage,
+    connected,
+    publicKey,
+    connecting,
+    isInstalled,
+    isMobile,
+    isInPhantomBrowser,
+    generatePhantomDeepLink,
+  } = usePhantomWallet();
 
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
   const referralIdFromLink = useSelector((state) => state?.AllStatesData?.referralForSignup);
@@ -143,8 +224,15 @@ const LoginPopup = ({ authName }) => {
   });
 
   const handlePhantomConnect = async () => {
+    setShowMobileNotification(false);
+    setShowFailureNotification(false);
 
-    if (!isInstalled) {
+    if (isMobile && !isInPhantomBrowser) {
+      setShowMobileNotification(true);
+      return;
+    }
+
+    if (!isMobile && !isInstalled) {
       window.open("https://phantom.app/", "_blank");
       return;
     }
@@ -152,8 +240,14 @@ const LoginPopup = ({ authName }) => {
     try {
       const connectResult = await connectWallet();
 
+      if (connectResult.needsPhantomBrowser) {
+        setShowMobileNotification(true);
+        return;
+      }
+
       if (!connectResult.success) {
-        showToaster(connectResult.error || "Failed to connect wallet");
+        setFailureMessage(connectResult.error || "Failed to connect to Phantom");
+        setShowFailureNotification(true);
         return;
       }
 
@@ -169,7 +263,6 @@ const LoginPopup = ({ authName }) => {
           inviteCode: refferalCode || null,
         });
 
-
         if (
           response?.data?.message === "Login successfull" ||
           response?.data?.message === "User registered successfully."
@@ -184,21 +277,64 @@ const LoginPopup = ({ authName }) => {
         }
       } catch (signError) {
         console.error("Signature error:", signError);
-        showToaster("Failed to sign message. Please try again.");
+        setFailureMessage("Failed to sign message. Please try again.");
+        setShowFailureNotification(true);
       }
     } catch (error) {
       console.error("Phantom connection error:", error);
-      showToaster("Failed to connect wallet. Please try again.");
+      setFailureMessage("Failed to connect wallet. Please try again.");
+      setShowFailureNotification(true);
     }
   };
+
+  const handleOpenPhantom = () => {
+    const phantomUrl = generatePhantomDeepLink();
+    setTimeout(() => {
+      window.location.href = phantomUrl;
+    }, 500);
+  };
+
+  const getPhantomButtonText = () => {
+    if (connecting) return "Connecting...";
+    if (isMobile && !isInPhantomBrowser) return "Connect with Phantom";
+    if (!isMobile && !isInstalled) return "Install Phantom";
+    return "Connect with Phantom";
+  };
+
   useEffect(() => {
     if (referralIdFromLink) {
       setRefferalCode(referralIdFromLink);
     }
   }, [referralIdFromLink]);
 
+  useEffect(() => {
+    if (showMobileNotification) {
+      const timer = setTimeout(() => {
+        setShowMobileNotification(false);
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [showMobileNotification]);
+
+  useEffect(() => {
+    if (showFailureNotification) {
+      const timer = setTimeout(() => {
+        setShowFailureNotification(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showFailureNotification]);
+
   return (
     <>
+      {showMobileNotification && (
+        <MobilePhantomNotification onClose={() => setShowMobileNotification(false)} onOpenPhantom={handleOpenPhantom} />
+      )}
+
+      {showFailureNotification && (
+        <ConnectionFailureNotification message={failureMessage} onClose={() => setShowFailureNotification(false)} />
+      )}
+
       {isPassword ? (
         <OtpPopup email={email} setIsPassword={setIsPassword} authName={authName} jwtToken={jwtToken} />
       ) : (
@@ -209,7 +345,7 @@ const LoginPopup = ({ authName }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-[#1E1E1ECC] flex items-center justify-center z-50"
+            className="fixed inset-0 bg-[#1E1E1ECC] flex items-center justify-center"
             onClick={() => dispatch(openCloseLoginRegPopup(false))}
           >
             <motion.div
@@ -219,7 +355,7 @@ const LoginPopup = ({ authName }) => {
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-[#141414]/90 backdrop-blur-lg border border-[#2A2A2A]  rounded-2xl w-[400px] relative"
+              className="bg-[#141414]/90 backdrop-blur-lg border border-[#2A2A2A] rounded-2xl w-[400px] relative"
             >
               <IoMdClose
                 size={22}
@@ -340,15 +476,19 @@ const LoginPopup = ({ authName }) => {
                 {/* Phantom Auth */}
                 <div
                   className={`bg-white hover:opacity-90 text-sm py-3 px-4 flex items-center justify-center w-full rounded-lg cursor-pointer transition ${
-                    connecting || !isInstalled ? "cursor-not-allowed" : ""
+                    connecting ? "cursor-not-allowed opacity-70" : ""
                   }`}
                   onClick={handlePhantomConnect}
-                  disabled={connecting || !isInstalled}
+                  disabled={connecting}
                 >
-                  <Image src={phantompurple} alt="Phantom Logo" width={20} height={20} className="w-5 h-5 object-contain" />
-                  <span className="text-[#1F1F1F] font-semibold ml-3">
-                    {connecting ? "Connecting..." : !isInstalled ? "Install Phantom" : "Connect with Phantom"}
-                  </span>
+                  <Image
+                    src={phantompurple}
+                    alt="Phantom Logo"
+                    width={20}
+                    height={20}
+                    className="w-5 h-5 object-contain"
+                  />
+                  <span className="text-[#1F1F1F] font-semibold ml-3">{getPhantomButtonText()}</span>
                 </div>
 
                 {/* Switch Auth */}
