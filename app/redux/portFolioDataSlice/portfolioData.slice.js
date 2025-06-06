@@ -4,7 +4,6 @@ const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 export const fetchPerformanceHistory = createAsyncThunk(
   "fetchPerformanceHistory",
   async (action) => {
-    console.log("🚀 ~ action:", action);
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
@@ -31,6 +30,13 @@ const performanceData = createSlice({
     setPerformanceState: (state, action) => {
       state.performance = {};
     },
+    setBuyAndSellCountInPerformance: (state, { payload }) => {
+      if (payload == "buy") {
+        state.performance.buys += 1;
+      } else if (payload == "sell") {
+        state.performance.sells += 1;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchPerformanceHistory.fulfilled, (state, { payload }) => {
@@ -39,6 +45,6 @@ const performanceData = createSlice({
   },
 });
 
-export const { setPerformanceState } = performanceData.actions;
+export const { setPerformanceState, setBuyAndSellCountInPerformance } = performanceData.actions;
 
 export default performanceData.reducer;
