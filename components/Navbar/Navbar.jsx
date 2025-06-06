@@ -90,7 +90,7 @@ const Navbar = () => {
         setSolPhrase(decodeKey);
         setOpenRecovery(true);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }
 
   const fetchWalletBalancesDirectly = async (walletAddresses, dispatch) => {
@@ -239,7 +239,7 @@ const Navbar = () => {
         const price = res?.data?.data[res?.data?.data?.length - 1]?.price;
         dispatch(setSolanaLivePrice(price));
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }
 
   useEffect(() => {
@@ -337,18 +337,15 @@ const Navbar = () => {
                 <NewAiSignalTokens />
                 {/* Search bar */}
                 <div
-                  className={`md:flex items-center   border ${
-                    isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
-                  } border-[#333333] ${
-                    isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                  className={`md:flex items-center lg:w-48   border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
+                    } border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                    } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                   onClick={() => dispatch(setIsSearchPopup(true))}
                 >
                   <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                   <input
-                    className={` ${
-                      isSidebarOpen ? "w-0" : "lg:w-12 w-9"
-                    } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                    className={` ${isSidebarOpen ? "w-0" : " w-9"
+                      } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                     placeholder={navbar?.profile?.search}
                   />
                 </div>
@@ -446,7 +443,7 @@ const Navbar = () => {
                               $
                               {(
                                 Number(nativeTokenbalance) *
-                                  (solanaLivePrice || 0) +
+                                (solanaLivePrice || 0) +
                                 Number(usdcBalance) * 1
                               ).toFixed(2)}
                             </div>
