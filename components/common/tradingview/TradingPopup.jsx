@@ -19,6 +19,8 @@ import {
 import { showToaster } from "@/utils/toaster/toaster.style";
 import DraggableModal from "./DraggableModal";
 import { formatNumber } from "@/utils/basicFunctions";
+import UserPnL from "./UserPnL";
+import WalletSwapButton from "./WalletSwapButton";
 
 const TradingPopup = ({
   tragindViewPage,
@@ -41,7 +43,8 @@ const TradingPopup = ({
   tredingPage,
   currentSupply,
   isInstantTradeActive,
-  handleInstantTradeClick
+  handleInstantTradeClick,
+  currentTokenPnLData
 }) => {
   const [loaderSwap, setLoaderSwap] = useState(false);
   const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
@@ -737,151 +740,167 @@ const TradingPopup = ({
         isOpen={isInstantTradeActive}
         onClose={() => handleInstantTradeClick()}
         headerSection={
-          <div className="w-full px-3 flex text-[#F6F6F6] items-center">
-            <div className="flex items-center border-[#404040] rounded-[4px]">
-              {["P1", "P2", "P3", "P4", "P5"].map((item, index) => (
+          <div className="flex w-full justify-between pr-4">
+            <div className="w-full px-3 flex text-[#F6F6F6] items-center">
+              <div className="flex items-center border-[#404040] rounded-[4px]">
+                {["P1", "P2", "P3", "P4", "P5"].map((item, index) => (
+                  <button
+                    key={index + 1}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      dispatch(setPresetActive(item));
+                      localStorage.setItem("preSetSettingActiveChart", item);
+                    }}
+                    className={`w-full ml-3 py-[7px] font-[700] text-[12px] border-r-[#404040] duration-300 ease-in-out ${
+                      presist == item
+                        ? "text-[#1F73FC]"
+                        : "text-[#F6F6F6]"
+                    }`}
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+              {!isEditingModal ? (
                 <button
-                  key={index + 1}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    dispatch(setPresetActive(item));
-                    localStorage.setItem("preSetSettingActiveChart", item);
+                  className="p-2 rounded-md"
+                  onClick={() => {
+                    setIsEditingModal(true);
+                    setEditIndexModalBuy(null);
+                    setEditIndexModalSell(null);
                   }}
-                  className={`w-full ml-3 py-[7px] font-[700] text-[12px] border-r-[#404040] duration-300 ease-in-out ${
-                    presist == item
-                      ? "text-[#1F73FC]"
-                      : "text-[#F6F6F6]"
-                  }`}
                 >
-                  {item}
+                  <PiPencilLineBold size={12} />
                 </button>
-              ))}
+              ) : (
+                <button
+                  onClick={() => saveEditedValue(true)}
+                  className="px-2"
+                >
+                  <FaCheck size={12} />
+                </button>
+              )}
             </div>
-            {!isEditingModal ? (
-              <button
-                className="p-2 rounded-md"
-                onClick={() => {
-                  setIsEditingModal(true);
-                  setEditIndexModalBuy(null);
-                  setEditIndexModalSell(null);
-                }}
-              >
-                <PiPencilLineBold size={12} />
-              </button>
-            ) : (
-              <button
-                onClick={() => saveEditedValue(true)}
-                className="px-2"
-              >
-                <FaCheck size={12} />
-              </button>
-            )}
+
+            <WalletSwapButton />
           </div>
         }
       >
         <div className="space-y-4">
-          <div className="flex justify-between text-[#9b9999] text-sm font-[550] items-center">
-            <p>Buy</p>
-            <div className="flex items-center justify-center gap-1">
-              <Image
-                src={solana}
-                width={15}
-                height={15}
-                alt="solana"
-              />
-              <p>{Number(nativeTokenbalance).toFixed(5) || 0}</p>
-            </div>
-          </div>
-          <div className="flex w-full gap-2">
-            {tempBuyValues.map((val, index) =>
-              editIndexModalBuy === index ? (
-                <input
-                  key={index}
-                  type="number"
-                  value={customInputModal}
-                  onChange={(e) => setCustomInputModal(e.target.value)}
-                  className="w-[80px] h-[34px] flex items-center justify-center text-center text-[14px] text-[#F6F6F6] bg-[#526fff30] border border-[#526fff50] rounded-2xl bg-[#1F1F1F] outline-none border-t-[1px]"
-                  autoFocus
+          <div className="p-4 space-y-4">
+            <div className="flex justify-between text-[#9b9999] text-sm font-[550] items-center">
+              <p>Buy</p>
+              <div className="flex items-center justify-center gap-1">
+                <Image
+                  src={solana}
+                  width={15}
+                  height={15}
+                  alt="solana"
                 />
-              ) : (
-                <button
-                  key={index}
-                  className={`w-[80px] h-[34px] flex text-[14px] items-center justify-center rounded-2xl ease-in-out duration-300 ${
-                    !isEditingModal
-                      ? "text-[#2fe3ac] bg-[#2fe3ac30] border border-[#2fe3ac50]"
-                      : "text-[#F6F6F6] bg-[#526fff30] border border-[#526fff50]"
-                  }`}
-                  onClick={() => {
-                    if (isEditingModal) {
-                      setEditIndexModalBuy(index);
-                      setEditIndexModalSell(null);
-                      setCustomInputModal(val.toString());
-                    } else {
-                      buyHandler(val);
-                    }
-                  }}
-                >
-                  {val}
-                </button>
-              )
-            )}
-          </div>
-          <div className="flex justify-between text-[#9b9999] text-sm font-[550] items-center">
-            <p>Sell</p>
-            <div className="flex gap-1 text-[#707070] text-xs items-center">
-              <p>{formatNumber(tokenBalance || 0, false, false)}</p>
-              <p>{tokenSymbol}</p>
-              <p>•</p>
-              <p>{formatNumber(tokenBalance * price)}</p>
-              <p>•</p>
-               <Image
-                src={solana}
-                width={15}
-                height={15}
-                alt="solana"
-              />
-              <p className="text-[#9b9999] text-sm font-semibold">{Number((tokenBalance * price)/solanaLivePrice).toFixed(5) || 0}</p>
+                <p>{Number(nativeTokenbalance).toFixed(5) || 0}</p>
+              </div>
             </div>
-          </div>
-          <div className="flex w-full gap-2">
-            {tempSellValues.map((val, index) =>
-              editIndexModalSell === index ? (
-                <input
-                  key={index}
-                  type="number"
-                  value={customInputModal}
-                  onChange={(e) => setCustomInputModal(e.target.value)}
-                  className="w-[80px] h-[34px] flex items-center justify-center text-center text-[14px] rounded-2xl text-[#F6F6F6] bg-[#526fff30] border border-[#526fff50] bg-[#1F1F1F] outline-none border-t-[1px]"
-                  autoFocus
-                />
-              ) : (
-                <button
-                  key={index}
-                  className={`w-[80px] h-[34px] flex text-[14px] items-center justify-center rounded-2xl ease-in-out duration-300 ${
-                    !isEditingModal
-                      ? "text-[#ec397a] bg-[#ec397a30] border border-[#ec397a50]"
-                      : "text-[#F6F6F6] bg-[#526fff30] border border-[#526fff50]"
-                  }`}
-                  onClick={() => {
-                    if (isEditingModal) {
-                      setEditIndexModalSell(index);
-                      setEditIndexModalBuy(null);
-                      setCustomInputModal(val.toString());
-                    } 
-                    else {
-                      if (val == 100) {
-                        sellHandler(tokenBalance);
+            <div className="flex w-full gap-2">
+              {tempBuyValues.map((val, index) =>
+                editIndexModalBuy === index ? (
+                  <input
+                    key={index}
+                    type="number"
+                    value={customInputModal}
+                    onChange={(e) => setCustomInputModal(e.target.value)}
+                    className="w-[80px] h-[34px] flex items-center justify-center text-center text-[14px] text-[#F6F6F6] bg-[#526fff30] border border-[#526fff50] rounded-2xl bg-[#1F1F1F] outline-none border-t-[1px]"
+                    autoFocus
+                  />
+                ) : (
+                  <button
+                    key={index}
+                    className={`w-[80px] h-[34px] flex text-[14px] items-center justify-center rounded-2xl ease-in-out duration-300 ${
+                      !isEditingModal
+                        ? "text-[#2fe3ac] bg-[#2fe3ac30] border border-[#2fe3ac50]"
+                        : "text-[#F6F6F6] bg-[#526fff30] border border-[#526fff50]"
+                    }`}
+                    onClick={() => {
+                      if (isEditingModal) {
+                        setEditIndexModalBuy(index);
+                        setEditIndexModalSell(null);
+                        setCustomInputModal(val.toString());
                       } else {
-                        sellHandler(Number((tokenBalance * val) / 100).toFixed(5));
+                        buyHandler(val);
                       }
-                    }
-                  }}
-                >
-                  {val}%
-                </button>
-              )
-            )}
+                    }}
+                  >
+                    {val}
+                  </button>
+                )
+              )}
+            </div>
+            <div className="flex justify-between text-[#9b9999] text-sm font-[550] items-center">
+              <p>Sell</p>
+              <div className="flex gap-1 text-[#707070] text-xs items-center">
+                <p>{formatNumber(tokenBalance || 0, false, false)}</p>
+                <p>{tokenSymbol}</p>
+                <p>•</p>
+                <p>{formatNumber(tokenBalance * price, false, true)}</p>
+                <p>•</p>
+                <Image
+                  src={solana}
+                  width={15}
+                  height={15}
+                  alt="solana"
+                />
+                <p className="text-[#9b9999] text-sm font-semibold">{Number((tokenBalance * price)/solanaLivePrice).toFixed(5) || 0}</p>
+              </div>
+            </div>
+            <div className="flex w-full gap-2">
+              {tempSellValues.map((val, index) =>
+                editIndexModalSell === index ? (
+                  <input
+                    key={index}
+                    type="number"
+                    value={customInputModal}
+                    onChange={(e) => setCustomInputModal(e.target.value)}
+                    className="w-[80px] h-[34px] flex items-center justify-center text-center text-[14px] rounded-2xl text-[#F6F6F6] bg-[#526fff30] border border-[#526fff50] bg-[#1F1F1F] outline-none border-t-[1px]"
+                    autoFocus
+                  />
+                ) : (
+                  <button
+                    key={index}
+                    className={`w-[80px] h-[34px] flex text-[14px] items-center justify-center rounded-2xl ease-in-out duration-300 ${
+                      !isEditingModal
+                        ? "text-[#ec397a] bg-[#ec397a30] border border-[#ec397a50]"
+                        : "text-[#F6F6F6] bg-[#526fff30] border border-[#526fff50]"
+                    }`}
+                    onClick={() => {
+                      if (isEditingModal) {
+                        setEditIndexModalSell(index);
+                        setEditIndexModalBuy(null);
+                        setCustomInputModal(val.toString());
+                      } 
+                      else {
+                        if (val == 100) {
+                          sellHandler(tokenBalance);
+                        } else {
+                          sellHandler(Number((tokenBalance * val) / 100).toFixed(5));
+                        }
+                      }
+                    }}
+                  >
+                    {val}%
+                  </button>
+                )
+              )}
+            </div>
           </div>
+          <UserPnL 
+            currentTokenPnLData={currentTokenPnLData}
+            tokenSymbol={tokenSymbol}
+            useTitle={false}
+            customBgColor={`bg-transparent`}
+            customBorderColor={`border-[#323542]`}
+            customHeight={`h-[32px]`}
+            customLineSeparatorHeight={`h-[16px]`}
+            customLineSeparatorColor={`bg-[#323542]`}
+          />
         </div>
       </DraggableModal>
     </div>

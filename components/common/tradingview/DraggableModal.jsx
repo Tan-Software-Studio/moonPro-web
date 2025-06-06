@@ -62,7 +62,7 @@ const DraggableModal = ({ isOpen, onClose, children, headerSection }) => {
           </button>
         </div>
         <div
-          className={`p-4 transition-opacity duration-500`}
+          className={`transition-opacity duration-500`}
         >
           <div className={`transition-opacity duration-250`}>
             {children}

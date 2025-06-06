@@ -99,10 +99,48 @@ const Tradingview = () => {
   useEffect(() => {
     const currentPnlData = currentTabData.find(pnls => pnls?.token === tokenaddress);
     if (currentPnlData?.chainBalance > 0) {
-      setCurrentTokenPnLData(currentPnlData);
+      const buyAmount =
+        currentPnlData?.activeQtyHeld * currentPnlData?.averageBuyPrice ||
+        0;
+      const soldAmount =
+        currentPnlData?.quantitySold *
+          currentPnlData?.averageHistoricalSellPrice || 0;
+      const activeQtyHeld = currentPnlData?.activeQtyHeld || 0;
+      const quantitySold = currentPnlData?.quantitySold || 0;
+      const averageBuyPrice = currentPnlData?.averageBuyPrice || 0;
+
+      const holdingRawAmount = activeQtyHeld - quantitySold;
+      const availableQtyInUSDWhenBought = holdingRawAmount * averageBuyPrice;
+      const holdingsUsdInCurrentPrice = holdingRawAmount * (latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD || 0);
+
+      const pnlAmount =
+        holdingsUsdInCurrentPrice - availableQtyInUSDWhenBought;
+      const isPositivePnL = pnlAmount >= 0;
+      const absolutePnL = Math.abs(pnlAmount);
+
+      const pnlPercent =
+        availableQtyInUSDWhenBought !== 0
+          ? (pnlAmount / availableQtyInUSDWhenBought) * 100
+          : 0;
+
+      const safePnLPercent = isNaN(pnlPercent) ? 0 : pnlPercent;
+
+      const currentPnlProperties = {
+        buyAmount,
+        soldAmount,
+        holdingRawAmount,
+        holdingsUsdInCurrentPrice,
+        isPositivePnL,
+        absolutePnL,
+        safePnLPercent
+      }
+
+      setCurrentTokenPnLData(currentPnlProperties);
     } else {
       setCurrentTokenPnLData({});
     }
+
+     
   }, [currentTabData])
 
   useEffect(() => {
@@ -501,6 +539,7 @@ const Tradingview = () => {
                 currentSupply={chartTokenData?.currentSupply}
                 isInstantTradeActive={isInstantTradeActive}
                 handleInstantTradeClick={handleInstantTradeClick}
+                currentTokenPnLData={currentTokenPnLData}
               />
             </div>
           </div>
@@ -508,9 +547,6 @@ const Tradingview = () => {
           <div className="w-full border-[#4D4D4D] md:border-t-0 md:border-l-0 md:border-r-0 md:border-b-0">
             <UserPnL
               currentTokenPnLData={currentTokenPnLData}
-              currentPrice={
-                latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
-              }
               tokenSymbol={tokenSymbol}
             />
           </div>
