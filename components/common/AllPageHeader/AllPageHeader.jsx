@@ -340,12 +340,12 @@ const AllPageHeader = ({
 
   return (
     <div
-      className={`text-white relative bg-[#08080E] md:flex justify-between items-start lg:items-center pt-[18px] py-[6.3px] px-3 md:px-4 border-b-[1px] ${borderColor} pb-5 transition-all duration-500 ease-in-out 
+      className={`text-white relative bg-[#08080E] items-center  md:flex justify-between  lg:items-center pt-[18px] py-[6.3px] px-3 md:px-4 border-b-[1px] ${borderColor} pb-5 transition-all duration-500 ease-in-out 
         ${isScrolled && pathData === false && "-translate-y-full opacity-0 "}`}
     >
       {/* pagename + description */}
       <div className={`text-white xl:flex items-center gap-[8px]`}>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center md:mb-0 mb-2">
           <h2 className=" text-[#FFFFFF] font-[700] text-[20px] md:text-[20px] tracking-wider">
             {HeaderData?.newPairsIcon?.headTitle}
           </h2>
@@ -353,16 +353,15 @@ const AllPageHeader = ({
       </div>
 
       {/* filter + buy etc button */}
-      <div className="flex flex-wrap lg:items-center md:justify-end gap-2 overflow-x-auto md:mt-0">
+      <div className="flex items-center flex- lg:items-center md:justify-end gap-2 overflow-x-auto md:mt-0">
         {duration && (
           <div className={`flex `}>
             {HeaderData?.timeDuration?.map((option, index) => (
               <button
                 key={index}
                 onClick={() => handleButtonClick(option)}
-                className={`py-2 px-3 text-sm  font-semibold hover:bg-[#1F73FC]/[30%] rounded-md ${
-                  option === localFilterTime && " !text-[#1F73FC]"
-                } transition duration-300 text-[#edebe5]`}
+                className={`py-2 px-3 text-sm  font-semibold hover:bg-[#1F73FC]/[30%] rounded-md ${option === localFilterTime && " !text-[#1F73FC]"
+                  } transition duration-300 text-[#edebe5]`}
               >
                 {option}
               </button>
@@ -389,7 +388,7 @@ const AllPageHeader = ({
         {HeaderData?.Filter && !pathname.includes("/holdings") && (
           <div className="">
             <button
-              className="flex items-center justify-center gap-2 px-[10px] md:px-[17.5px] py-[9px] font-semibold border text-white border-[#1F73FC] hover:bg-[#11265B] bg-transparent text-xs rounded-[10px] transition duration-300"
+              className="flex items-center justify-center gap-2 px-5 md:px-[17.5px] py-[9px] font-semibold border text-white border-[#1F73FC] hover:bg-[#11265B] bg-transparent text-xs rounded-[10px] transition duration-300"
               onClick={() => handleSidebarToggle(0)}
             >
               <Image
@@ -441,21 +440,19 @@ const AllPageHeader = ({
                       </p>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <button
-                          className={`py-2 px-3 rounded border border-[#323642] ${
-                            selectedMetric === "12"
-                              ? "bg-[#323642] text-white font-bold"
-                              : " text-gray-300"
-                          }`}
+                          className={`py-2 px-3 rounded border border-[#323642] ${selectedMetric === "12"
+                            ? "bg-[#323642] text-white font-bold"
+                            : " text-gray-300"
+                            }`}
                           onClick={() => handleMetricChange("12")}
                         >
                           {tredingPage?.display?.MC_77K} <br /> {tredingPage?.display?.Small}
                         </button>
                         <button
-                          className={`py-2 px-3 rounded border border-[#323642] ${
-                            selectedMetric === "20"
-                              ? "bg-[#323642] text-white font-bold"
-                              : " text-gray-300"
-                          }`}
+                          className={`py-2 px-3 rounded border border-[#323642] ${selectedMetric === "20"
+                            ? "bg-[#323642] text-white font-bold"
+                            : " text-gray-300"
+                            }`}
                           onClick={() => handleMetricChange("20")}
                         >
                           {tredingPage?.display?.MC_77K}  <br /> {tredingPage?.display?.Large}
@@ -522,11 +519,10 @@ const AllPageHeader = ({
                           return (
                             <button
                               key={item}
-                              className={`${
-                                isActive
-                                  ? "bg-[#282b32]"
-                                  : "border border-[#282b32] text-gray-500"
-                              } text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]`}
+                              className={`${isActive
+                                ? "bg-[#282b32]"
+                                : "border border-[#282b32] text-gray-500"
+                                } text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]`}
                               onClick={() => {
                                 if (item === tredingPage?.display?.MarketCap) {
                                   mktShowHide();
@@ -592,7 +588,7 @@ const AllPageHeader = ({
                 {open && (
                   <div
                     ref={dropdownRef}
-                    className="absolute right-20 mt-2 w-96 max-h-80 overflow-y-auto bg-[#18181a] border border-gray-700 text-white rounded-md shadow-lg z-50"
+                    className="absolute md:right-20 right-0 mt-2 w-80 max-h-96 overflow-y-auto bg-[#18181a] border border-gray-700 text-white rounded-md shadow-lg z-50"
                   >
                     {/* Wallet List */}
                     {userDetails?.walletAddressSOL?.map((wallet, idx) => {
@@ -612,9 +608,8 @@ const AllPageHeader = ({
                       return (
                         <div
                           key={idx}
-                          className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${
-                            wallet.primary ? "bg-[#252525]" : ""
-                          }`}
+                          className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${wallet.primary ? "bg-[#252525]" : ""
+                            }`}
                         >
                           <div className="flex items-center gap-3">
                             <input
@@ -626,11 +621,10 @@ const AllPageHeader = ({
                             <div className="flex flex-col">
                               <div className="flex items-center gap-2 text-sm">
                                 <span
-                                  className={`font-medium ${
-                                    wallet.primary
-                                      ? "text-orange-400"
-                                      : "text-white"
-                                  }`}
+                                  className={`font-medium ${wallet.primary
+                                    ? "text-orange-400"
+                                    : "text-white"
+                                    }`}
                                 >
                                   {idx === 0
                                     ? "Moon Pro Main"
@@ -681,7 +675,7 @@ const AllPageHeader = ({
 
             <div className="flex items-center rounded-full py-1 bg-[#141414] border border-[#26262e] text-white text-xs overflow-hidden w-fit">
               {/* Left section: Quick Buy */}
-              <div className="px-2 py-1 font-semibold text-[#f4fcff">
+              <div className="px-2 py-1 font-semibold text-nowrap text-[#f4fcff">
                 {tredingPage?.tableheaders?.quickbuy}
               </div>
 
@@ -701,7 +695,7 @@ const AllPageHeader = ({
               {/* Right section: Solana + value */}
               {solWalletAddress ? (
                 <div
-                  className="flex items-center gap-1 px-3 py-1 border-l border-[#26262e] cursor-pointer"
+                  className="flex items-center gap-1 pl-3 pr-8  py-1 border-l border-[#26262e] cursor-pointer"
                   onClick={() => dispatch(setOpenOrderSetting(true))}
                 >
                   <Image src={solana} width={16} height={16} alt="solana" />

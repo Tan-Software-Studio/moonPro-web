@@ -26,6 +26,7 @@ export default function WalletManagement() {
   const [walletAddresses, setWalletAddresses] = useState([]);
   const [pkParticulerWallet, setPkParticulerWallet] = useState("");
   const [openRecovery, setOpenRecovery] = useState(false);
+  const [isCreatingWallet, setIsCreatingWallet] = useState(false);
   const { t } = useTranslation();
   const portfolio = t("portfolio");
 
@@ -97,10 +98,14 @@ export default function WalletManagement() {
     if (!jwtToken) return 0;
     if (walletAddresses?.length >= 50) {
       showToaster("You can only create 50 wallets.");
+      return;
     }
+
+    setIsCreatingWallet(true);
     showToastLoader("Creating wallet...", "wallet-toast");
-    await axios
-      .put(
+
+    try {
+      const response = await axios.put(
         `${baseUrl}user/generateSolWallet`,
         {},
         {
@@ -108,22 +113,23 @@ export default function WalletManagement() {
             Authorization: `Bearer ${jwtToken}`,
           },
         }
-      )
-      .then(async (response) => {
-        const generatedWallet = response?.data?.data?.wallet;
-        toast.success("Wallet created successfully", {
-          id: "wallet-toast",
-          duration: 2000,
-        });
-        dispatch(addNewGeneratedWallet(generatedWallet));
-      })
-      .catch((error) => {
-        console.error(error);
-        toast.error("Wallet is not created", {
-          id: "wallet-toast",
-          duration: 2000,
-        });
+      );
+
+      const generatedWallet = response?.data?.data?.wallet;
+      toast.success("Wallet created successfully", {
+        id: "wallet-toast",
+        duration: 2000,
       });
+      dispatch(addNewGeneratedWallet(generatedWallet));
+    } catch (error) {
+      console.error(error);
+      toast.error("Wallet is not created", {
+        id: "wallet-toast",
+        duration: 2000,
+      });
+    } finally {
+      setIsCreatingWallet(false);
+    }
   }
 
   const copyToClipboard = async (walletAddress) => {
@@ -195,7 +201,12 @@ export default function WalletManagement() {
 
                 <button
                   onClick={handleCreateMultiWallet}
-                  className="flex items-center space-x-2 px-3 py-1.5 bg-[#11265B] hover:bg-[rgb(88_86_235/_var(--tw-bg-opacity))] rounded-lg text-sm"
+                  disabled={isCreatingWallet}
+                  className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                    isCreatingWallet
+                      ? "bg-gray-600 cursor-not-allowed opacity-50"
+                      : "bg-[#11265B] hover:bg-[rgb(88_86_235/_var(--tw-bg-opacity))]"
+                  }`}
                 >
                   <span>{portfolio?.CreateWallet}</span>
                 </button>

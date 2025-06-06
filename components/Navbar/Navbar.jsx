@@ -24,8 +24,8 @@ import { PiUserBold, PiUserLight } from "react-icons/pi";
 import LoginPopup from "./login/LoginPopup";
 import { RiLogoutBoxLine, RiNotification4Line } from "react-icons/ri";
 import { googleLogout } from "@react-oauth/google";
-import { MdLockOutline } from "react-icons/md";
-import { FaCopy, FaRegStar, FaWallet } from "react-icons/fa";
+import { MdLockOutline, MdOutlineNewReleases } from "react-icons/md";
+import { FaAngleDown, FaCopy, FaRegStar, FaWallet } from "react-icons/fa";
 import Setting from "./popup/Setting";
 import AccountSecurity from "./popup/AccountSecurity";
 import Watchlist from "./popup/Watchlist";
@@ -54,7 +54,7 @@ const Navbar = () => {
   const [mounted, setMounted] = useState(false);
 
   // dropdown popup
-  const [isAiSignalPopupOpen, setIsAiSignalPopupOpen] = useState(false)
+
   const [isSettingPopup, setIsSettingPopup] = useState(false);
   const [isAccountPopup, setIsAccountPopup] = useState(false);
   const [isWatchlistPopup, setIsWatchlistPopup] = useState(false);
@@ -170,7 +170,7 @@ const Navbar = () => {
   const navbar = t("navbar");
   const dispatch = useDispatch();
   const pathname = usePathname();
-
+  const aiSignalData = useSelector((state) => state?.aiSignal?.aiSignalData);
   const path = pathname === "/settings" || pathname === "/copytrade" || pathname === "/transfer-funds";
 
   const handleLogout = () => {
@@ -305,23 +305,17 @@ const Navbar = () => {
               <div className={`md:hidden flex w-10 h-auto`}>
                 <Image src={logo} alt="logo" className="w-full h-full" />
               </div>
-              <div className=" flex items-center gap-2 ">
-                {/* <button
-                  onClick={() => setIsAiSignalPopupOpen(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg flex items-center gap-2 transition-colors duration-200 font-medium text-sm shadow-md hover:shadow-lg"
-                >
-                  <Flame className="w-4 h-4" />
-                  New Tokens
-                </button> */}
+              <div className="relative flex items-center gap-2 ">
+                <NewAiSignalTokens />
                 {/* Search bar */}
                 <div
-                  className={`md:flex items-center  border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                  className={`md:flex items-center   border ${isSidebarOpen ? "ml-1 " : "ml-5 gap-2"} border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
                     } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                   onClick={() => dispatch(setIsSearchPopup(true))}
                 >
                   <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                   <input
-                    className={` ${isSidebarOpen ? "w-0" : "w-12"
+                    className={` ${isSidebarOpen ? "w-0" : "lg:w-12 w-9"
                       } w-56 bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                     placeholder={navbar?.profile?.search}
                   />
@@ -377,7 +371,7 @@ const Navbar = () => {
                     </div>
 
                     {isWalletDropdownOpen && (
-                      <div className="absolute right-0 mt-2 border-[1px] border-[#404040] w-64 bg-[#1A1A1A] shadow-xl rounded-lg z-50">
+                      <div className="absolute md:right-0 right-[-20px] mt-2 border-[1px] border-[#404040] w-64 bg-[#1A1A1A] shadow-xl rounded-lg z-50">
                         <div className="p-4">
                           <div className="mb-4">
                             <div className="flex items-center justify-between mb-1">
@@ -499,7 +493,7 @@ const Navbar = () => {
                           dispatch(openCloseLoginRegPopup(true));
                           dispatch(setLoginRegPopupAuth("signup"));
                         }}
-                        className="border-[1px] border-[#0E43BD] rounded-md cursor-pointer bg-[#11265B] px-5 py-1 "
+                        className="border-[1px] text-nowrap border-[#0E43BD] rounded-md cursor-pointer bg-[#11265B] px-5 py-1 "
                       >
                         {navbar?.profile?.signup}
                       </div>
@@ -521,7 +515,6 @@ const Navbar = () => {
       </div>
 
       <AnimatePresence>
-        {isAiSignalPopupOpen && <NewAiSignalTokens setIsOpen={setIsAiSignalPopupOpen} />}
         {isLoginPopup && <LoginPopup isLoginPopup={isLoginPopup} authName={authName} />}
 
         {isSettingPopup && <Setting setIsSettingPopup={setIsSettingPopup} />}

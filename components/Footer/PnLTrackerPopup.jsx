@@ -15,15 +15,9 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
   const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
   const currentTabData = useSelector((state) => state?.setPnlData?.PnlData || []);
 
-  const totalValue = currentTabData.reduce((acc, item) => {
-    const remainingQty = item?.totalBoughtQty - item?.quantitySold;
-    const value = remainingQty * item?.current_price;
-    return acc + value;
-  }, 0);
-
+  // unrealized pnl calculation
   const UnrealizedPNL = currentTabData.reduce((acc, item) => {
-    const remainingQty = item?.totalBoughtQty - item?.quantitySold;
-    const pnl = (item.current_price - item.averageBuyPrice) * remainingQty;
+    const pnl = (item?.activeQtyHeld - item?.quantitySold) * (item.current_price - item.averageBuyPrice);
     return acc + pnl;
   }, 0);
 
@@ -102,7 +96,7 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
-        width: "406px",
+        width: "440px",
         height: "106px",
         cursor: isDragging ? "grabbing" : "default",
       }}
@@ -188,7 +182,7 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-3 mb-2">
               <Image src={solanasollogo} width={32} height={32} alt="solanasollogo" />
-              <div className="text-white text-3xl font-bold">${Number(totalValue).toFixed(5)}</div>
+              <div className="text-white text-3xl font-bold">${Number(nativeTokenbalance).toFixed(5) || 0}</div>
             </div>
             <div className="text-base text-gray-300">Balance</div>
           </div>
