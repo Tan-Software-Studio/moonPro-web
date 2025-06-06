@@ -299,14 +299,13 @@ const ReferralPage = () => {
               {getUserTitle()}
             </div>
             <div className="text-2xl font-bold  flex items-center gap-2">
-              2X Rewards{" "}
-              <span className="text-blue-500">
-                <FaRegStar className="text-blue-500" size={25} />
-              </span>
-            </div>
-            <div className="flex items-center justify-center">
-              <div className="text-base mt-12 text-gray-400">
-                comming soon...
+              <VscDebugBreakpointLogUnverified size={18} />
+              <div>
+                {refData?.user?.dailyPoints +
+                  refData?.user?.tradePoints +
+                  refData?.user?.weeklyPoints +
+                  refData?.user?.referralPoints || 0}{" "}
+                Points
               </div>
             </div>
           </div>
