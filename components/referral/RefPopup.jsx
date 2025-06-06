@@ -17,15 +17,6 @@ function RefPopup({ Available, address, onClose, setAddClaimed }) {
     const [cooldown, setCooldown] = useState(false);
 
 
-
-    const handleAddressChange = (e) => {
-        setWalletAddress(e.target.value);
-    };
-    const handleAmountChange = (e) => {
-        setClaimAmount(e.target.value);
-
-    };
-
     const claimSolanaHandler = async () => {
         if (cooldown) return;
         if (claimAmount < 0.01) {
@@ -64,8 +55,8 @@ function RefPopup({ Available, address, onClose, setAddClaimed }) {
         } catch (e) {
 
             showToaster("All fields are required.", {
-              id: "switch-toast",
-              duration: 2000,
+                id: "switch-toast",
+                duration: 2000,
             });
         } finally {
             setLoading(false);
@@ -102,37 +93,27 @@ function RefPopup({ Available, address, onClose, setAddClaimed }) {
                 </div>
 
                 {/* Wallet Address */}
-                <input
-                    value={walletAddress}
-                    onChange={handleAddressChange}
-                    type="text"
-                    placeholder="Address of destination wallet"
-                    className="w-full bg-[#191919] p-3 mt-2 rounded-md text-white font-thin tracking-wider placeholder-gray-500 outline-none"
-                />
+                <div className="bg-[#191919] p-3 rounded-md space-y-1">
+                    <div className="flex justify-between text-sm text-gray-400 tracking-wider">
+                        <label>Wallet</label>
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <div className=" overflow-x-auto whitespace-nowrap font-poppins max-w-full text-sm">
+                            {walletAddress}
+                        </div>
+                    </div>
+                </div>
 
                 {/* Claim Amount */}
                 <div className="bg-[#191919] p-3 rounded-md space-y-1">
                     <div className="flex justify-between text-sm text-gray-400 tracking-wider">
                         <label>Claim Amount</label>
-                        <button
-                            className="text-blue-500"
-                            type="button"
-                            // onClick={() => setClaimAmount(Available?.toString())}
-                            onClick={() => setClaimAmount(Number(Available) || 0)}
-
-                        >
-                            Max
-                        </button>
-
                     </div>
                     <div className="flex items-center justify-between">
-                        <input
-                            type="number"
-                            value={claimAmount}
-                            onChange={handleAmountChange}
-                            placeholder={Available?.toString() || "0.0"}
-                            className="bg-transparent w-full text-white placeholder-gray-500 outline-none"
-                        />
+
+                        <div>
+                            {(Number(Available) || 0).toFixed(5)}
+                        </div>
 
                         <div className="flex items-center gap-1 text-sm text-gray-300">
                             <Image src={solana} className='w-5 h-5' alt="solana" />
