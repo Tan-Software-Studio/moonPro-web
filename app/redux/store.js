@@ -12,6 +12,7 @@ import AllStatesData from "./states";
 import userData from "./userDataSlice/UserData.slice";
 import setPnlData from "./holdingDataSlice/holdingData.slice";
 import aiSignal from "./AiSignalDataSlice/AiSignal.slice";
+import portfolioData from "./portFolioDataSlice/portfolioData.slice";
 
 export default configureStore({
   reducer: {
@@ -25,6 +26,7 @@ export default configureStore({
     allCharTokenData,
     userData,
     setPnlData,
-    aiSignal
+    aiSignal,
+    portfolioData,
   },
 });
