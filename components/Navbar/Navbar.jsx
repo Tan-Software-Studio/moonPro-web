@@ -344,7 +344,7 @@ const Navbar = () => {
                 >
                   <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                   <input
-                    className={` ${isSidebarOpen ? "w-0" : "lg:w-56 w-9"
+                    className={` ${isSidebarOpen ? "w-0 lg:w-56" : "lg:w-56 w-9"
                       } bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                     placeholder={navbar?.profile?.search}
                   />
