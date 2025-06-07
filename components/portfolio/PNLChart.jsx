@@ -54,27 +54,87 @@ const RealizedPnLChart = ({ data }) => {
       value: parseFloat(item.value.toFixed(5)),
     }));
 
-    const isUp =
-      formattedData[formattedData?.length - 1].value >= formattedData[0].value;
+    // Create segments based on up/down movement
+    const segments = [];
+    let currentSegment = [];
+    let isCurrentSegmentUp = null;
 
-    const areaSeries = chart.addAreaSeries({
-      ...(isUp
-        ? {
-            topColor: "rgba(0, 255, 127, 0.3)",
-            bottomColor: "rgba(0, 255, 127, 0)",
-            lineColor: "#00ff7f",
-          }
-        : {
-            topColor: "rgba(255, 0, 127, 0.3)",
-            bottomColor: "rgba(255, 0, 127, 0)",
-            lineColor: "#ff007f",
-          }),
-      lineWidth: 2,
-      lineType: 0,
+    for (let i = 0; i < formattedData.length; i++) {
+      const point = formattedData[i];
+      
+      if (i === 0) {
+        currentSegment.push(point);
+        continue;
+      }
+
+      const isUp = point.value >= formattedData[i - 1].value;
+      
+      if (isCurrentSegmentUp === null) {
+        isCurrentSegmentUp = isUp;
+      }
+      
+      if (isUp === isCurrentSegmentUp) {
+        currentSegment.push(point);
+      } else {
+        // Finish current segment and start new one
+        if (currentSegment.length > 0) {
+          segments.push({
+            data: [...currentSegment],
+            isUp: isCurrentSegmentUp
+          });
+        }
+        
+        // Start new segment with the transition point
+        currentSegment = [currentSegment[currentSegment.length - 1], point];
+        isCurrentSegmentUp = isUp;
+      }
+    }
+    
+    // Add the last segment
+    if (currentSegment.length > 0) {
+      segments.push({
+        data: currentSegment,
+        isUp: isCurrentSegmentUp
+      });
+    }
+
+    // Create an invisible area series for the tooltip functionality
+    const invisibleAreaSeries = chart.addAreaSeries({
+      topColor: "rgba(0, 0, 0, 0)",
+      bottomColor: "rgba(0, 0, 0, 0)",
+      lineColor: "rgba(0, 0, 0, 0)",
+      lineWidth: 0,
       priceLineVisible: false,
     });
 
-    areaSeries.setData(formattedData);
+    invisibleAreaSeries.setData(formattedData);
+
+    // Store reference to the first area series for tooltip positioning
+    let firstAreaSeries = null;
+    segments.forEach((segment, index) => {
+      const areaSeries = chart.addAreaSeries({
+        ...(segment.isUp
+          ? {
+              topColor: "rgba(0, 255, 127, 0.3)",
+              bottomColor: "rgba(0, 255, 127, 0)",
+              lineColor: "#00ff7f",
+            }
+          : {
+              topColor: "rgba(255, 0, 127, 0.3)",
+              bottomColor: "rgba(255, 0, 127, 0)",
+              lineColor: "#ff007f",
+            }),
+        lineWidth: 2,
+        lineType: 0,
+        priceLineVisible: false,
+      });
+      
+      areaSeries.setData(segment.data);
+      
+      if (index === 0) {
+        firstAreaSeries = areaSeries;
+      }
+    });
     chart.timeScale().fitContent();
 
     // Tooltip element
@@ -100,13 +160,13 @@ const RealizedPnLChart = ({ data }) => {
         return;
       }
 
-      const value = param.seriesData.get(areaSeries)?.value;
+      const value = param.seriesData.get(invisibleAreaSeries)?.value;
       if (value === undefined) {
         tooltip.style.display = "none";
         return;
       }
 
-      const coordinate = areaSeries.priceToCoordinate(value);
+      const coordinate = firstAreaSeries ? firstAreaSeries.priceToCoordinate(value) : invisibleAreaSeries.priceToCoordinate(value);
       const timestamp =
         typeof param.time === "object"
           ? param.time.timestamp
