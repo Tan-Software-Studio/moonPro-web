@@ -96,8 +96,8 @@ export default function WalletManagement() {
   async function handleCreateMultiWallet() {
     const jwtToken = localStorage.getItem("token");
     if (!jwtToken) return 0;
-    if (walletAddresses?.length >= 50) {
-      showToaster("You can only create 50 wallets.");
+    if (walletAddresses?.length >= 25) {
+      showToaster("You can only create 25 wallets.");
       return;
     }
 
