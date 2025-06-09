@@ -5,14 +5,12 @@ import {
   logotext,
   memescope,
   trending,
-  leaderboard,
   referral,
-  walletTrackerWhiteImg,
 } from "@/app/Images";
 import Image from "next/image";
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import {
@@ -27,14 +25,11 @@ import {
 import { useTranslation } from "react-i18next";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import {
+  fetchPerformanceHistory,
   fetchPNLData,
   fetchPNLDataHistory,
 } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import AISignalsButton from "../Navbar/ai-signalBtn/AiSignalBtn";
-import {
-  fetchPerformanceHistory,
-  setPerformanceState,
-} from "@/app/redux/portFolioDataSlice/portfolioData.slice";
 
 const Sidebar = () => {
   const { t } = useTranslation();
@@ -115,7 +110,6 @@ const Sidebar = () => {
     if (solWalletAddress) {
       dispatch(fetchPNLData(solWalletAddress));
       dispatch(fetchPNLDataHistory(solWalletAddress));
-      dispatch(setPerformanceState());
       dispatch(fetchPerformanceHistory(solWalletAddress));
     }
   }, [solWalletAddress]);

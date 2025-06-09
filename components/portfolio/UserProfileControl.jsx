@@ -23,8 +23,8 @@ const UserProfileControl = () => {
   const [mobileActiveTab, setMobileActiveTab] = useState(
     portfolio?.activePosition
   );
-  const performance = useSelector((state) => state?.portfolioData?.performance);
-  const loading = useSelector((state) => state?.portfolioData?.loading);
+  const performance = useSelector((state) => state?.setPnlData?.performance);
+  const loading = useSelector((state) => state?.setPnlData?.loading);
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
