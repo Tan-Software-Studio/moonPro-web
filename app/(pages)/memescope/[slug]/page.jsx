@@ -86,8 +86,8 @@ const Memescope = () => {
   const [graduateSearchData, setGraduateSearchData] = useState("");
 
   // =======*=*= All about graduate data filter ==========//
-  const Graduatedata = useSelector(
-    (state) => state?.allMemescopeData?.MscopeGraduateData
+  const Graduatedata = Object.values(
+    useSelector((state) => state?.allMemescopeData?.MscopeGraduateData)
   );
   const isChartHide = useSelector((state) => state?.allMemescopeData?.isChart);
   // input of about graduate data
@@ -153,8 +153,8 @@ const Memescope = () => {
     : Graduatedata;
 
   // =======*=*= All graduated data filter ==========//
-  const Graduateddata = useSelector(
-    (state) => state?.allMemescopeData?.MscopeGraduatedData
+  const Graduateddata = Object.values(
+    useSelector((state) => state?.allMemescopeData?.MscopeGraduatedData)
   );
   const GraduateddataSortedData = [...Graduateddata].sort(
     (a, b) => b.created_time - a.created_time
@@ -218,7 +218,9 @@ const Memescope = () => {
     : GraduateddataSortedData;
 
   // == new creation data filter == \\
-  const NewData = useSelector((state) => state?.allMemescopeData?.newLaunch);
+  const NewData = Object.values(
+    useSelector((state) => state?.allMemescopeData?.newLaunch)
+  );
 
   const NewCreationFilterDataJson = newCreationFilterData(memescopePage);
 
