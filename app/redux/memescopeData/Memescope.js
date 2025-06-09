@@ -82,62 +82,38 @@ const allMemescopeData = createSlice({
       state.MscopeGraduatedData = action.payload;
     },
     setNewLaunchData: (state, action) => {
-      const temp = state.newLaunch.slice(0, 30);
-      state.newLaunch = [action.payload, ...temp];
+      state.newLaunch = Object.fromEntries(
+        Object.entries({ ...action.payload, ...state.newLaunch }).slice(0, 30)
+      );
     },
     updateAllDataByNode: (state, { payload }) => {
       if (payload?.length > 0) {
         for (const element of payload) {
           if (element?.Trade?.PriceInUSD) {
+            const mint = element?.Trade?.Currency?.MintAddress;
+            const priceUSD = element?.Trade?.PriceInUSD;
+            const amount = element?.Trade?.Amount;
+            const volumeDelta = priceUSD * amount;
             // new launch
-            if (state.newLaunch.length > 0) {
-              const findTokenFromNewLaunch = state?.newLaunch?.findIndex(
-                (item) => item?.address == element?.Trade?.Currency?.MintAddress
-              );
-              if (findTokenFromNewLaunch >= 0) {
-                state.newLaunch[findTokenFromNewLaunch].current_price =
-                  element?.Trade?.PriceInUSD;
-                state.newLaunch[findTokenFromNewLaunch].volume +=
-                  element?.Trade?.PriceInUSD * element?.Trade?.Amount;
-                state.newLaunch[findTokenFromNewLaunch].MKC =
-                  (state?.newLaunch?.[findTokenFromNewLaunch]?.supply || 0) *
-                  element?.Trade?.PriceInUSD;
-              }
+            const newLaunchFind = state?.newLaunch?.[mint];
+            if (newLaunchFind) {
+              newLaunchFind.current_price = priceUSD;
+              newLaunchFind.volume += volumeDelta;
+              newLaunchFind.MKC = (newLaunchFind?.totalsupply || 0) * priceUSD;
             }
             // about to graduated
-            if (state.MscopeGraduateData.length > 0) {
-              const findTokenFromGraduate =
-                state?.MscopeGraduateData?.findIndex(
-                  (item) =>
-                    item?.address == element?.Trade?.Currency?.MintAddress
-                );
-              if (findTokenFromGraduate >= 0) {
-                state.MscopeGraduateData[findTokenFromGraduate].current_price =
-                  element?.Trade?.PriceInUSD;
-                state.MscopeGraduateData[findTokenFromGraduate].volume +=
-                  element?.Trade?.PriceInUSD * element?.Trade?.Amount;
-                state.MscopeGraduateData[findTokenFromGraduate].MKC =
-                  (state?.newLaunch?.[findTokenFromGraduate]?.supply || 0) *
-                  element?.Trade?.PriceInUSD;
-              }
+            const GraduateData = state?.MscopeGraduateData?.[mint];
+            if (GraduateData) {
+              GraduateData.current_price = priceUSD;
+              GraduateData.volume += volumeDelta;
+              GraduateData.MKC = (GraduateData?.totalsupply || 0) * priceUSD;
             }
             // graduated
-            if (state.MscopeGraduatedData.length >= 0) {
-              const findTokenFromGraduated =
-                state?.MscopeGraduatedData?.findIndex(
-                  (item) =>
-                    item?.address == element?.Trade?.Currency?.MintAddress
-                );
-              if (findTokenFromGraduated >= 0) {
-                state.MscopeGraduatedData[
-                  findTokenFromGraduated
-                ].current_price = element?.Trade?.PriceInUSD;
-                state.MscopeGraduatedData[findTokenFromGraduated].volume +=
-                  element?.Trade?.PriceInUSD * element?.Trade?.Amount;
-                state.MscopeGraduatedData[findTokenFromGraduated].MKC =
-                  (state?.newLaunch?.[findTokenFromGraduated]?.supply || 0) *
-                  element?.Trade?.PriceInUSD;
-              }
+            const GraduatedData = state?.MscopeGraduatedData?.[mint];
+            if (GraduatedData) {
+              GraduatedData.current_price = priceUSD;
+              GraduatedData.volume += volumeDelta;
+              GraduatedData.MKC = (GraduatedData?.totalsupply || 0) * priceUSD;
             }
           }
         }
