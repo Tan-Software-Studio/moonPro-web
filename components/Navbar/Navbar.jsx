@@ -51,9 +51,18 @@ import { showToaster } from "@/utils/toaster/toaster.style";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
-
+  const dropdownRef = useRef(null);
+  const walletDropdownRef = useRef(null);
+  const router = useRouter();
+  const { t } = useTranslation();
+  const navbar = t("navbar");
+  const dispatch = useDispatch();
+  const pathname = usePathname();
+  const path =
+    pathname === "/settings" ||
+    pathname === "/copytrade" ||
+    pathname === "/transfer-funds";
   // dropdown popup
-
   const [isSettingPopup, setIsSettingPopup] = useState(false);
   const [isAccountPopup, setIsAccountPopup] = useState(false);
   const [isWatchlistPopup, setIsWatchlistPopup] = useState(false);
@@ -93,7 +102,7 @@ const Navbar = () => {
       .catch((err) => {});
   }
 
-  const fetchWalletBalancesDirectly = async (walletAddresses, dispatch) => {
+  const fetchWalletBalancesDirectly = async (walletAddresses) => {
     dispatch(setBalancesLoading(true));
 
     try {
@@ -177,18 +186,6 @@ const Navbar = () => {
     (state) => state?.AllStatesData?.solanaLivePrice
   );
 
-  const dropdownRef = useRef(null);
-  const walletDropdownRef = useRef(null);
-  const router = useRouter();
-  const { t } = useTranslation();
-  const navbar = t("navbar");
-  const dispatch = useDispatch();
-  const pathname = usePathname();
-  const path =
-    pathname === "/settings" ||
-    pathname === "/copytrade" ||
-    pathname === "/transfer-funds";
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("walletAddress");
@@ -241,18 +238,35 @@ const Navbar = () => {
       })
       .catch((err) => {});
   }
+  function handleClickOutside(event) {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsProfileOpen(false);
+    }
+    if (
+      walletDropdownRef.current &&
+      !walletDropdownRef.current.contains(event.target)
+    ) {
+      setIsWalletDropdownOpen(false);
+    }
+  }
 
   useEffect(() => {
+    setMounted(true);
     fetchData();
     dispatch(fetchAiSignalData());
     dispatch(fetchMemescopeData());
     fetchSolPrice();
+    dispatch(setSolWalletAddress());
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   useEffect(() => {
     if (solWalletAddress) {
       dispatch(fetchSolanaNativeBalance(solWalletAddress));
-      dispatch(fetchUsdcBalance(solWalletAddress));
+      // dispatch(fetchUsdcBalance(solWalletAddress));
 
       if (!userDetails?.email) {
         dispatch(fetchUserData());
@@ -267,39 +281,17 @@ const Navbar = () => {
       );
 
       if (walletAddresses.length > 0) {
-        fetchWalletBalancesDirectly(walletAddresses, dispatch);
+        fetchWalletBalancesDirectly(walletAddresses);
         setHasCalledBitquery(true);
       }
     }
-  }, [userDetails, dispatch, hasCalledBitquery]);
+  }, [userDetails, hasCalledBitquery]);
 
   useEffect(() => {
     if (!solWalletAddress || !userDetails?.email) {
       setHasCalledBitquery(false);
     }
   }, [solWalletAddress, userDetails?.email]);
-
-  useEffect(() => {
-    setMounted(true);
-
-    dispatch(setSolWalletAddress());
-
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsProfileOpen(false);
-      }
-      if (
-        walletDropdownRef.current &&
-        !walletDropdownRef.current.contains(event.target)
-      ) {
-        setIsWalletDropdownOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   const handleCopyAddress = async (e) => {
     e.stopPropagation();
