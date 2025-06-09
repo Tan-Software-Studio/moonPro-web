@@ -80,7 +80,7 @@ const UserPnL = ({ currentTokenPnLData, tokenSymbol, useTitle = true, customBgCo
             <div className="flex flex-col items-center justify-center h-full">
               {useTitle &&
                 <div className="flex items-center justify-center gap-1 h-[14px]">
-                  <span className="text-center text-[#A8A8A8] font-[400] text-base sm:text-sm lg:text-[8px] xl:text-[12px] 2xl:text-[14px]">
+                  <span className="text-center text-[#A8A8A8] font-[400] sm:text-base text-sm  xl:text-[12px] 2xl:text-[14px]">
                     {section.title}
                   </span>
                   {section.icon && (
@@ -89,7 +89,7 @@ const UserPnL = ({ currentTokenPnLData, tokenSymbol, useTitle = true, customBgCo
                 </div>
               }
               <div
-                className={`flex items-center justify-center text-center font-[500] ${section.color} text-base sm:text-sm lg:text-[8px] xl:text-[12px] 2xl:text-[14px]`}
+                className={`flex items-center justify-center text-center font-[500] ${section.color} sm:text-base text-sm lg:text-[8px] xl:text-[12px] 2xl:text-[14px]`}
                 style={{
                   whiteSpace: "nowrap",
                   overflow: "hidden",

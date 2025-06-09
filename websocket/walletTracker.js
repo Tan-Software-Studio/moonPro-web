@@ -272,7 +272,7 @@ export async function subscribeToAiSignalTokensNewAddedToken() {
     store.dispatch(setAiSignalData(newDataArr));
     
     const storedValue = localStorage.getItem('ai-signal-notification');
-    if (storedValue) {
+    if (storedValue == "true") {
       playNotificationSound();
       toast.custom((t) => (
         <div

@@ -356,35 +356,51 @@ const TradingPopup = ({
   return (
     <div className="bg-[#08080E] flex flex-col h-fit w-full text-white xl:p-4 md:p-3">
       {/* Buy/Sell Toggle */}
-      <div className="flex h-[42px] items-center bg-[#1f1f1f] md:rounded-[8px] mb-[16px] ">
-        <button
-          className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-500 outline-none ${
-            activeTab === "buy"
+      <div className="flex items-center w-full justify-between mb-2">
+        {/* order setting for small screen */}
+        <div className={`md:hidden flex items-center justify-between`}>
+          <div className="flex items-center gap-[8px]">
+            <FaCog className="text-[16px]" />
+            <h1 className="text-[#F6F6F6] text-[12px] font-[400]">
+              {tragindViewPage?.right?.buysell?.orderSettings}
+            </h1>
+          </div>
+          <button
+            className="p-2 rounded-md"
+            onClick={() => dispatch(setOpenOrderSetting(true))}
+          >
+            <PiPencilLineBold />
+          </button>
+        </div>
+
+        <div className="flex md:w-full w-fit md:h-[42px] items-center bg-[#1f1f1f] rounded-[8px] md:mb-[16px]">
+          <button
+            className={`flex-1 py-1 rounded-[8px] text-[14px] md:h-full md:w-full w-fit px-5 font-[400] ease-in-out duration-500 outline-none ${activeTab === "buy"
               ? "bg-[#1F73FC] text-[#F6F6F6]"
               : "bg-transparent text-[#6E6E6E]"
-          }`}
-          onClick={() => {
-            setActiveTab("buy");
-            setQuantity(0.1);
-          }}
-        >
-          {tragindViewPage?.right?.buysell?.buy}
-        </button>
-        <button
-          className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-300 ${
-            activeTab === "sell"
+              }`}
+            onClick={() => {
+              setActiveTab("buy");
+              setQuantity(0.1);
+            }}
+          >
+            {tragindViewPage?.right?.buysell?.buy}
+          </button>
+          <button
+            className={`flex-1 py-1 rounded-[8px] text-[14px] md:h-full md:w-full w-fit px-5 font-[400] ease-in-out duration-500 outline-none ${activeTab === "sell"
               ? "bg-[#ED1B24] text-[#F6F6F6]"
               : "bg-transparent text-[#6E6E6E]"
-          }`}
-          onClick={() => {
-            setActiveTab("sell");
-          }}
-        >
-          {tragindViewPage?.right?.buysell?.sell}
-        </button>
+              }`}
+            onClick={() => {
+              setActiveTab("sell");
+            }}
+          >
+            {tragindViewPage?.right?.buysell?.sell}
+          </button>
+        </div>
       </div>
-      {/* preset settings  */}
-      <div className={`flex items-center justify-between mb-[16px]`}>
+      {/* preset settings big screen  */}
+      <div className={`md:flex hidden items-center justify-between mb-[16px]`}>
         <div className="flex items-center gap-[8px]">
           <FaCog className="text-[16px]" />
           <h1 className="text-[#F6F6F6] text-[12px] font-[400]">
@@ -398,7 +414,8 @@ const TradingPopup = ({
           <PiPencilLineBold />
         </button>
       </div>
-      <div className="mb-[16px] flex items-center border-[0.5px] border-[#404040] rounded-[4px]">
+
+      <div className="mb-[16px] md:flex hidden items-center border-[0.5px] border-[#404040] rounded-[4px]">
         {["P1", "P2", "P3", "P4", "P5"].map((item, index) => (
           <button
             key={index + 1}
@@ -406,26 +423,26 @@ const TradingPopup = ({
               dispatch(setPresetActive(item));
               localStorage.setItem("preSetSettingActiveChart", item);
             }}
-            className={`w-full py-[7px] text-[#F6F6F6] font-[700] text-[12px] border-r-[0.5px] border-r-[#404040] duration-300 ease-in-out ${
-              presist == item
-                ? activeTab == "buy"
-                  ? "bg-[#1F73FC]"
-                  : "bg-[#ED1B24]"
-                : "bg-transparent"
-            }`}
+            className={`w-full py-[7px] text-[#F6F6F6] font-[700] text-[12px] border-r-[0.5px] border-r-[#404040] duration-300 ease-in-out ${presist == item
+              ? activeTab == "buy"
+                ? "bg-[#1F73FC]"
+                : "bg-[#ED1B24]"
+              : "bg-transparent"
+              }`}
           >
             {item}
           </button>
         ))}
       </div>
-      {/* Quantity Input */}
-      <div className="bg-transparent rounded-[8px] flex items-center justify-between border-t-[0.5px] border-t-[#4D4D4D] mb-[8px]">
-        <h1 className="text-[#A8A8A8] rounded-l-[8px] bg-[#1F1F1F] h-[40px] px-4 flex items-center justify-center whitespace-nowrap">
+
+      <div className="bg-transparent  rounded-[8px] flex items-center justify-between border-t-[0.5px] border-t-[#4D4D4D] mb-[8px]">
+        <h1 className="text-[#A8A8A8] rounded-l-[8px] bg-[#1F1F1F] h-[35px] md:h-[40px] px-4 flex items-center justify-center whitespace-nowrap">
           {tragindViewPage?.right?.buysell?.qty}
         </h1>
+        
         <input
           type="number"
-          className="bg-transparent w-full text-white text-right outline-none text-[14px] h-[40px] [&::-webkit-inner-spin-button]:appearance-none 
+          className="bg-transparent  w-full text-white text-right outline-none text-[14px] h-[35px] md:h-[40px] [&::-webkit-inner-spin-button]:appearance-none 
              [&::-webkit-outer-spin-button]:appearance-none 
              [&::-moz-appearance]:textfield"
           value={quantity}
@@ -450,7 +467,7 @@ const TradingPopup = ({
         </div>
       </div>
       {/* Preset Quantity Buttons */}
-      <div className="flex gap-2 mb-[16px]">
+      <div className="flex  gap-2 md:mb-[16px] mb-2.5">
         {activeTab === "buy" ? (
           tempBuyValues.map((val, index) =>
             editIndex === index ? (
@@ -459,17 +476,16 @@ const TradingPopup = ({
                 type="number"
                 value={customInput}
                 onChange={(e) => setCustomInput(e.target.value)}
-                className="w-[62px] h-[34px] flex items-center justify-center text-center text-[14px] rounded bg-[#1F1F1F] outline-none text-[#278BFE] border-t-[1px] border-t-[#278BFE]"
+                className="md:w-[62px] w-[55px] md:h-[34px] h-[30px] flex items-center justify-center text-center text-[14px] rounded bg-[#1F1F1F] outline-none text-[#278BFE] border-t-[1px] border-t-[#278BFE]"
                 autoFocus
               />
             ) : (
               <button
                 key={index}
-                className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${
-                  quantity === val
-                    ? "text-[#278BFE] border-t-[1px] border-t-[#278BFE]"
-                    : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
-                }`}
+                className={`md:w-[62px] w-[55px] md:h-[34px] h-[30px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${quantity === val
+                  ? "text-[#278BFE] border-t-[1px] border-t-[#278BFE]"
+                  : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
+                  }`}
                 onClick={() => {
                   if (isEditing) {
                     setEditIndex(index);
@@ -491,19 +507,18 @@ const TradingPopup = ({
                 type="number"
                 value={customInput}
                 onChange={(e) => setCustomInput(e.target.value)}
-                className="w-[62px] h-[34px] flex items-center justify-center text-center text-[14px] rounded bg-[#1F1F1F] outline-none text-[#ed1819] border-t-[1px] border-t-[#ed1819]"
+                className="md:w-[62px] w-[55px] md:h-[34px] h-[30px] flex items-center justify-center text-center text-[14px] rounded bg-[#1F1F1F] outline-none text-[#ed1819] border-t-[1px] border-t-[#ed1819]"
                 autoFocus
               />
             ) : (
               <button
                 key={index}
-                className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 
-                  ${
-                    Number(quantity).toFixed(5) ===
-                      Number((tokenBalance * val) / 100).toFixed(5) &&
+                className={`md:w-[62px] w-[55px] md:h-[34px] h-[30px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 
+                  ${Number(quantity).toFixed(5) ===
+                    Number((tokenBalance * val) / 100).toFixed(5) &&
                     quantity > 0
-                      ? "text-[#ed1819] border-t-[1px] border-t-[#ed1819]"
-                      : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
+                    ? "text-[#ed1819] border-t-[1px] border-t-[#ed1819]"
+                    : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
                   }`}
                 onClick={() => {
                   if (isEditing) {
@@ -542,13 +557,15 @@ const TradingPopup = ({
           </button>
         )}
       </div>
+
+
+
       {/* Advanced Settings */}
       <div className="mb-[16px]">
         <div
           onClick={() => setIsAdvancedSetting(!isAdvancedSetting)}
-          className={`flex cursor-pointer items-center justify-between ${
-            isAdvancedSetting && "mb-[16px]"
-          }`}
+          className={`flex cursor-pointer items-center justify-between ${isAdvancedSetting && "mb-[16px]"
+            }`}
         >
           <div className={`flex items-center gap-[8px] $`}>
             <FaCog className="text-[16px]" />
@@ -561,18 +578,16 @@ const TradingPopup = ({
           </div>
           <h1 className="ease-in-out duration-300">
             <MdOutlineKeyboardArrowRight
-              className={`ease-in-out duration-300 text-[19px] ${
-                isAdvancedSetting && "rotate-90"
-              }`}
+              className={`ease-in-out duration-300 text-[19px] ${isAdvancedSetting && "rotate-90"
+                }`}
             />
           </h1>
         </div>
         <div
-          className={`transform transition-all duration-300 ease-in-out origin-top overflow-hidden ${
-            isAdvancedSetting
-              ? "max-h-[1000px] opacity-100 scale-y-100"
-              : "max-h-0 opacity-0 scale-y-0"
-          }`}
+          className={`transform transition-all duration-300 ease-in-out origin-top overflow-hidden ${isAdvancedSetting
+            ? "max-h-[1000px] opacity-100 scale-y-100"
+            : "max-h-0 opacity-0 scale-y-0"
+            }`}
         >
           <div className="bg-transparent rounded-[8px] flex items-center justify-between border-t-[0.5px] border-t-[#4D4D4D] mb-[16px]">
             <h1 className="text-[#A8A8A8] select-none rounded-l-[8px] bg-[#1F1F1F] h-[40px] px-4 flex items-center justify-center">
@@ -667,15 +682,13 @@ const TradingPopup = ({
             ].map((val) => (
               <button
                 key={val?.type}
-                className={`w-[96px] h-[34px] text-[14px] flex items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${
-                  priorityFee == val?.value
-                    ? `border-t-[1px] border-t-[#278BFE] ${
-                        activeTab == "buy"
-                          ? "text-[#278BFE] border-t-[#278BFE]"
-                          : "text-[#ed1819] border-t-[#ed1819]"
-                      }`
-                    : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
-                }`}
+                className={`w-[96px] h-[34px] text-[14px] flex items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${priorityFee == val?.value
+                  ? `border-t-[1px] border-t-[#278BFE] ${activeTab == "buy"
+                    ? "text-[#278BFE] border-t-[#278BFE]"
+                    : "text-[#ed1819] border-t-[#ed1819]"
+                  }`
+                  : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
+                  }`}
                 onClick={() => setPriorityFee(val?.value)}
               >
                 {val?.type}
@@ -685,20 +698,43 @@ const TradingPopup = ({
         </div>
       </div>
       {/* Quick Buy/Sell Button */}
-      {activeTab === "buy" ? (
-        loaderSwap ? (
+      {
+        activeTab === "buy" ? (
+          loaderSwap ? (
+            <button
+              className={`bg-[#2A7FF0] hover:bg-[#3f8cf1] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[40px] ease-in-out duration-200  rounded-md`}
+            >
+              {`Buying ${tokenName}...`}
+            </button>
+          ) : (
+            <button
+              onClick={() => buyHandler()}
+              className={`flex items-center justify-center gap-[2px] bg-[#2A7FF0] hover:bg-[#3f8cf1] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[35px] md:h-[40px] ease-in-out duration-200  rounded-md`}
+            >
+              <h1>
+                {`${tragindViewPage?.right?.buysell?.btnbuy} ${tokenName} ${quantity}`}
+              </h1>
+              <Image
+                src={solanaBlackLogo}
+                alt="solana"
+                className="w-[20px] !h-[13px] rounded-full bg-cover"
+              />
+            </button>
+          )
+        ) : loaderSwap ? (
           <button
-            className={`bg-[#2A7FF0] hover:bg-[#3f8cf1] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[40px] ease-in-out duration-200  rounded-md`}
+            className={`bg-[#ED1B24] hover:bg-[#ff323d] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[40px] ease-in-out duration-200  rounded-md`}
           >
-            {`Buying ${tokenName}...`}
+            {`Selling ${tokenName}...`}
           </button>
         ) : (
           <button
-            onClick={() => buyHandler()}
-            className={`flex items-center justify-center gap-[2px] bg-[#2A7FF0] hover:bg-[#3f8cf1] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[40px] ease-in-out duration-200  rounded-md`}
+            onClick={() => sellHandler()}
+            className={`flex items-center justify-center gap-[2px] bg-[#ED1B24] hover:bg-[#ff323d] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[35px] md:h-[40px]  ease-in-out duration-200  rounded-md`}
           >
             <h1>
-              {`${tragindViewPage?.right?.buysell?.btnbuy} ${tokenName} ${quantity}`}
+              {`${tragindViewPage?.right?.buysell?.btnsell} ${tokenName} ${recQty > 0 ? recQty : 0
+                }`}
             </h1>
             <Image
               src={solanaBlackLogo}
@@ -707,29 +743,7 @@ const TradingPopup = ({
             />
           </button>
         )
-      ) : loaderSwap ? (
-        <button
-          className={`bg-[#ED1B24] hover:bg-[#ff323d] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[40px] ease-in-out duration-200  rounded-md`}
-        >
-          {`Selling ${tokenName}...`}
-        </button>
-      ) : (
-        <button
-          onClick={() => sellHandler()}
-          className={`flex items-center justify-center gap-[2px] bg-[#ED1B24] hover:bg-[#ff323d] select-none text-[#F6F6F6] text-[14px] font-[500] w-full h-[40px] ease-in-out duration-200  rounded-md`}
-        >
-          <h1>
-            {`${tragindViewPage?.right?.buysell?.btnsell} ${tokenName} ${
-              recQty > 0 ? recQty : 0
-            }`}
-          </h1>
-          <Image
-            src={solanaBlackLogo}
-            alt="solana"
-            className="w-[20px] !h-[13px] rounded-full bg-cover"
-          />
-        </button>
-      )}
+      }
       <RightModalOpenSetting
         ordersettingLang={tredingPage?.mainHeader?.ordersetting}
         isOpen={orderSettingFlag}
@@ -751,11 +765,10 @@ const TradingPopup = ({
                       dispatch(setPresetActive(item));
                       localStorage.setItem("preSetSettingActiveChart", item);
                     }}
-                    className={`w-full ml-3 py-[7px] font-[700] text-[12px] border-r-[#404040] duration-300 ease-in-out ${
-                      presist == item
-                        ? "text-[#1F73FC]"
-                        : "text-[#F6F6F6]"
-                    }`}
+                    className={`w-full ml-3 py-[7px] font-[700] text-[12px] border-r-[#404040] duration-300 ease-in-out ${presist == item
+                      ? "text-[#1F73FC]"
+                      : "text-[#F6F6F6]"
+                      }`}
                   >
                     {item}
                   </button>
@@ -814,11 +827,10 @@ const TradingPopup = ({
                 ) : (
                   <button
                     key={index}
-                    className={`w-[80px] h-[34px] flex text-[14px] items-center justify-center rounded-2xl ease-in-out duration-300 ${
-                      !isEditingModal
-                        ? "text-[#2fe3ac] bg-[#2fe3ac30] border border-[#2fe3ac50]"
-                        : "text-[#F6F6F6] bg-[#526fff30] border border-[#526fff50]"
-                    }`}
+                    className={`w-[80px] h-[34px] flex text-[14px] items-center justify-center rounded-2xl ease-in-out duration-300 ${!isEditingModal
+                      ? "text-[#2fe3ac] bg-[#2fe3ac30] border border-[#2fe3ac50]"
+                      : "text-[#F6F6F6] bg-[#526fff30] border border-[#526fff50]"
+                      }`}
                     onClick={() => {
                       if (isEditingModal) {
                         setEditIndexModalBuy(index);
@@ -848,7 +860,7 @@ const TradingPopup = ({
                   height={15}
                   alt="solana"
                 />
-                <p className="text-[#9b9999] text-sm font-semibold">{Number((tokenBalance * price)/solanaLivePrice).toFixed(5) || 0}</p>
+                <p className="text-[#9b9999] text-sm font-semibold">{Number((tokenBalance * price) / solanaLivePrice).toFixed(5) || 0}</p>
               </div>
             </div>
             <div className="flex w-full gap-2">
@@ -865,17 +877,16 @@ const TradingPopup = ({
                 ) : (
                   <button
                     key={index}
-                    className={`w-[80px] h-[34px] flex text-[14px] items-center justify-center rounded-2xl ease-in-out duration-300 ${
-                      !isEditingModal
-                        ? "text-[#ec397a] bg-[#ec397a30] border border-[#ec397a50]"
-                        : "text-[#F6F6F6] bg-[#526fff30] border border-[#526fff50]"
-                    }`}
+                    className={`w-[80px] h-[34px] flex text-[14px] items-center justify-center rounded-2xl ease-in-out duration-300 ${!isEditingModal
+                      ? "text-[#ec397a] bg-[#ec397a30] border border-[#ec397a50]"
+                      : "text-[#F6F6F6] bg-[#526fff30] border border-[#526fff50]"
+                      }`}
                     onClick={() => {
                       if (isEditingModal) {
                         setEditIndexModalSell(index);
                         setEditIndexModalBuy(null);
                         setCustomInputModal(val.toString());
-                      } 
+                      }
                       else {
                         if (val == 100) {
                           sellHandler(tokenBalance);
@@ -891,7 +902,7 @@ const TradingPopup = ({
               )}
             </div>
           </div>
-          <UserPnL 
+          <UserPnL
             currentTokenPnLData={currentTokenPnLData}
             tokenSymbol={tokenSymbol}
             useTitle={false}
@@ -903,7 +914,7 @@ const TradingPopup = ({
           />
         </div>
       </DraggableModal>
-    </div>
+    </div >
   );
 };
 export default TradingPopup;
