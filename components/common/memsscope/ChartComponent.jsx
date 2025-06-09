@@ -1,10 +1,9 @@
 "use client";
-import React, { memo } from 'react'
+import React, { memo } from "react";
 import Chart from "react-apexcharts";
-import { useSelector } from 'react-redux';
-import useInViewport from './useInViewport';
+import useInViewport from "./useInViewport";
 
-const ChartComponent = ({ block }) => {
+const ChartComponent = ({ candlesticks }) => {
   const [isInViewport, chartRef] = useInViewport({
     rootMargin: "100px", // Load the chart when it's within 100px of the viewport
   });
@@ -56,7 +55,7 @@ const ChartComponent = ({ block }) => {
         series={[
           {
             data:
-              block?.candlesticks?.map((item) => ({
+              candlesticks?.map((item) => ({
                 x: new Date(item?.timestamp * 1000),
                 y: [item?.open, item?.high, item?.low, item?.close],
               })) || [],
@@ -67,7 +66,7 @@ const ChartComponent = ({ block }) => {
         width={60}
       />
     </div>
-  )
-}
+  );
+};
 
 export default memo(ChartComponent);
