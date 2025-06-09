@@ -19,7 +19,7 @@ import { FaAngleDown } from "react-icons/fa6";
 import { showToasterSuccess } from "@/utils/toaster/toaster.style";
 import { useTranslation } from "react-i18next";
 import { VscDebugBreakpointLogUnverified } from "react-icons/vsc";
-
+import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 const ReferralPage = () => {
   const { t } = useTranslation();
   const referral = t("referral");
@@ -314,9 +314,15 @@ const ReferralPage = () => {
         {/* Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Level Card */}
-          <div className=" bg-[#191919]  rounded-xl p-4 space-y-2">
-            <div className="text-sm text-orange-400 tracking-wider">
-              {currentTitle}
+          <div className=" bg-[#191919]  rounded-xl p-4 space-y-2 ">
+            <div className="flex items-center gap-1">
+              <div className="text-sm text-orange-400 tracking-wider ">
+                {currentTitle}
+              </div>
+              <Infotip
+                iconSize={20}
+                body={`Your current level is ${currentTitle}, Earn ${pointsToNext} points to reach ${nextTitle}`}
+              />
             </div>
             <div className="text-2xl font-bold  flex items-center gap-2">
               <VscDebugBreakpointLogUnverified size={18} />
@@ -333,9 +339,15 @@ const ReferralPage = () => {
           {/* SOL Earned */}
           <div className=" bg-[#191919]  rounded-xl p-4">
             <div className="text-sm text-[rgb(200,201,209)] flex justify-between items-center gap-2">
-              <div className="flex items-center gap-2 tracking-wider text-nowrap">
-                <HiOutlineCurrencyDollar className="text-blue-500" size={22} />
-                {referral?.refMata?.solEarned}
+              <div className="flex items-center gap-1">
+                <div className="flex items-center gap-2 tracking-wider text-nowrap">
+                  <HiOutlineCurrencyDollar className="text-blue-500" size={22} />
+                  {referral?.refMata?.solEarned}
+                </div>
+                {/* <Infotip
+                  iconSize={20}
+                  body="SOL Earned"
+                /> */}
               </div>
               <button
                 onClick={handleWithdrawClick}
@@ -351,30 +363,49 @@ const ReferralPage = () => {
               SOL
             </div>
 
-            <div className="text-sm text-[#a0a4b8] tracking-wider">
-              {referral?.refMata?.claimed}{" "}
-              {(
-                (Number(refData?.user?.totalClaimed) || 0) +
-                (Number(addClaimed) || 0)
-              ).toFixed(5)}{" "}
-              SOL
+            <div className="flex items-center gap-1">
+              <div className="text-sm text-[#a0a4b8] tracking-wider">
+                {referral?.refMata?.claimed}{" "}
+                {(
+                  (Number(refData?.user?.totalClaimed) || 0) +
+                  (Number(addClaimed) || 0)
+                ).toFixed(5)}{" "}
+                SOL
+              </div>
+              <Infotip
+                iconSize={20}
+                body="This is the total SOL you've already withdrawn from your rewards."
+              />
             </div>
-            <div className="text-sm text-[#a0a4b8] tracking-wider">
-              {referral?.refMata?.availableToClaim}{" "}
-              {(
-                (Number(refData?.totalEarningInSol) || 0) -
-                (Number(refData?.user?.totalClaimed) || 0) -
-                (Number(addClaimed) || 0)
-              ).toFixed(5)}{" "}
-              SOL
+            <div className="flex items-center gap-1">
+
+              <div className="text-sm text-[#a0a4b8] tracking-wider">
+                {referral?.refMata?.availableToClaim}{" "}
+                {(
+                  (Number(refData?.totalEarningInSol) || 0) -
+                  (Number(refData?.user?.totalClaimed) || 0) -
+                  (Number(addClaimed) || 0)
+                ).toFixed(5)}{" "}
+                SOL
+              </div>
+              <Infotip
+                iconSize={20}
+                body="This is the SOL you've earned but haven't claimed yet."
+              />
             </div>
           </div>
 
           {/* Points Breakdown */}
           <div className=" bg-[#191919]  rounded-xl p-4">
-            <div className="text-sm text-[rgb(200,201,209)] flex items-center gap-2 tracking-wider">
-              <IoPieChartOutline className="text-blue-500" size={22} />
-              Points Breakdown
+            <div className="flex items-center gap-1">
+              <div className="text-sm text-[rgb(200,201,209)] flex items-center gap-2 tracking-wider">
+                <IoPieChartOutline className="text-blue-500" size={22} />
+                <div> Points Breakdown </div>
+                <Infotip
+                  iconSize={20}
+                  body={`Shows how your total points are distributed`}
+                />
+              </div>
             </div>
             <div className="flex flex-col gap-1 text-sm mt-2 pt-1.5">
               <div className="text-[#a0a4b8] tracking-wider">
@@ -473,7 +504,15 @@ const ReferralPage = () => {
                       {referral?.refMata?.dateJoined}
                     </th>
                     <th className="px-4 py-2 whitespace-nowrap text-blue-500">
-                      {referral?.refMata?.solEarned}
+                      <div className="flex items-center gap-1">
+                        <div>
+                          {referral?.refMata?.solEarned}
+                        </div>
+                        <Infotip
+                          iconSize={20}
+                          body={`This is the amount of SOL you've earned from referral’s activity`}
+                        />
+                      </div>
                     </th>
                   </tr>
                 </thead>

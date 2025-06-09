@@ -173,7 +173,7 @@ const Tradingview = () => {
           const el = tvChartRef.current;
 
           if (isSmallScreen) {
-            el.style.height = "253px";
+            el.style.height = "380px";
           } else {
             el.style.height = "600px";
           }
@@ -471,7 +471,7 @@ const Tradingview = () => {
                 />
               </div>
 
-              <div ref={tvChartRef} className={`${isSmallScreen ? 'h-[253px]' : 'h-[10000px]'} w-full`}>
+              <div ref={tvChartRef} className={`${isSmallScreen ? 'h-[380px]' : 'h-[10000px]'} w-full`}>
                 <TVChartContainer
                   tokenSymbol={tokenSymbol}
                   tokenaddress={tokenaddress}
