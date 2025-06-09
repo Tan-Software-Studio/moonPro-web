@@ -23,12 +23,17 @@ const allMemescopeData = createSlice({
     MscopeGraduateData: [],
     MscopeGraduatedData: [],
     newLaunch: [],
+    isChart: true,
     initialLoading: true,
     refreshLoading: false, // For refreshing data every 6 seconds
     error: null,
   },
 
   reducers: {
+    // set is chart hide or not
+    setMemescopeChart: (state, { payload }) => {
+      state.isChart = !state.isChart;
+    },
     //add new token on mscopedata and use in gratuate in memescope page
     addMScopeGraduateSocketData: (state, action) => {
       // Check if the data already exists based on a unique identifier
@@ -95,7 +100,7 @@ const allMemescopeData = createSlice({
                 state.newLaunch[findTokenFromNewLaunch].volume +=
                   element?.Trade?.PriceInUSD * element?.Trade?.Amount;
                 state.newLaunch[findTokenFromNewLaunch].MKC =
-                  state.newLaunch[findTokenFromNewLaunch].supply *
+                  (state?.newLaunch?.[findTokenFromNewLaunch]?.supply || 0) *
                   element?.Trade?.PriceInUSD;
               }
             }
@@ -112,7 +117,7 @@ const allMemescopeData = createSlice({
                 state.MscopeGraduateData[findTokenFromGraduate].volume +=
                   element?.Trade?.PriceInUSD * element?.Trade?.Amount;
                 state.MscopeGraduateData[findTokenFromGraduate].MKC =
-                  state.newLaunch[findTokenFromGraduate].supply *
+                  (state?.newLaunch?.[findTokenFromGraduate]?.supply || 0) *
                   element?.Trade?.PriceInUSD;
               }
             }
@@ -130,7 +135,7 @@ const allMemescopeData = createSlice({
                 state.MscopeGraduatedData[findTokenFromGraduated].volume +=
                   element?.Trade?.PriceInUSD * element?.Trade?.Amount;
                 state.MscopeGraduatedData[findTokenFromGraduated].MKC =
-                  state.newLaunch[findTokenFromGraduated].supply *
+                  (state?.newLaunch?.[findTokenFromGraduated]?.supply || 0) *
                   element?.Trade?.PriceInUSD;
               }
             }
@@ -166,6 +171,7 @@ export const {
   setMemeScopeGraduatedData,
   setNewLaunchData,
   updateAllDataByNode,
+  setMemescopeChart,
 } = allMemescopeData.actions;
 
 export default allMemescopeData.reducer;

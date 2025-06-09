@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { IoMdDoneAll } from "react-icons/io";
 import { PiCopyThin } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,6 +53,7 @@ const MscopePumpTable = ({
   progerssBar,
   barColor,
   capsuleImg,
+  isChartHide,
 }) => {
   // console.log("🚀 ~ MscopePumpTable ~ searchbar:-->", showCircle);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -365,17 +366,19 @@ const MscopePumpTable = ({
                         </div>
                         <div>
                           <div className="w-[90px] h-[60px] relative flex items-center justify-center">
-                            {/* <div
-                              className={`${
-                                hoverRow === index
-                                  ? "opacity-40 absolute inset-0 flex items-center justify-center"
-                                  : "opacity-100"
-                              } `}
-                            >
-                              <ChartComponent
-                                candlesticks={block?.candlesticks}
-                              />
-                            </div> */}
+                            {isChartHide && (
+                              <div
+                                className={`${
+                                  hoverRow === index
+                                    ? "opacity-40 absolute inset-0 flex items-center justify-center"
+                                    : "opacity-100"
+                                } `}
+                              >
+                                <ChartComponent
+                                  candlesticks={block?.candlesticks}
+                                />
+                              </div>
+                            )}
                             {hoverRow === index && (
                               <>
                                 <div
@@ -554,4 +557,4 @@ const MscopePumpTable = ({
   );
 };
 
-export default MscopePumpTable;
+export default memo(MscopePumpTable);
