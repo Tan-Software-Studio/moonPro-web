@@ -50,6 +50,7 @@ const Tradingview = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const scrollableDivRef4 = useRef(null);
   const [currentTokenPnLData, setCurrentTokenPnLData] = useState({});
+  const [currentTokenAverageBuyPrice, setCurrentTokenAverageBuyPrice] = useState(null);
 
   const handleInstantTradeClick = () => {
     setIsInstantTradeActive(prev => !prev);
@@ -136,8 +137,10 @@ const Tradingview = () => {
       }
 
       setCurrentTokenPnLData(currentPnlProperties);
+      setCurrentTokenAverageBuyPrice(averageBuyPrice)
     } else {
       setCurrentTokenPnLData({});
+      setCurrentTokenAverageBuyPrice(null);
     }
 
      
@@ -475,7 +478,7 @@ const Tradingview = () => {
                 <TVChartContainer
                   tokenSymbol={tokenSymbol}
                   tokenaddress={tokenaddress}
-                  currentTokenPnLData={currentTokenPnLData}
+                  currentTokenAverageBuyPrice={currentTokenAverageBuyPrice}
                   solanaLivePrice={solanaLivePrice}
                   supply={chartTokenData?.currentSupply}
                 />

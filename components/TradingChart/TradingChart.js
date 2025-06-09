@@ -11,7 +11,7 @@ import { clearLatestHistoricalBar } from "@/utils/tradingViewChartServices/lates
 import { clearSellItems, subscribeSellItems } from "@/utils/tradingViewChartServices/sellItems";
 import { clearChunk } from "@/utils/tradingViewChartServices/historicalChunk";
 
-const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, solanaLivePrice, supply }) => {
+const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenAverageBuyPrice, solanaLivePrice, supply }) => {
   const chartContainerRef = useRef(null);
   const [isUsdSolToggled, setIsUsdSolToggled] = useState(true); // Track USD/SOL toggle state
   const [isMcPriceToggled, setIsMcPriceToggled] = useState(true); // Track MarketCap/Price toggle state
@@ -93,17 +93,20 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
   useEffect(() => {
     if (!chart) return;
     if (!chartReady) return;
-    if (!currentTokenPnLData) return;
+    if (!currentTokenAverageBuyPrice) {
+      resetLines();
+      return;
+    }
     const createChartLines = async () => {
       // Average Buy Sell
-      if (currentTokenPnLData?.averageBuyPrice && buyPositionLineRef.current === null) {
+      if (currentTokenAverageBuyPrice && buyPositionLineRef.current === null) {
         buyPositionLineRef.current = await chart.activeChart().createPositionLine();
       }
       if (buyPositionLineRef.current) {
         buyPositionLineRef.current
                   .setText("Current Average Cost Basis")
                   .setQuantity("")
-                  .setPrice(convertPrice(Number(currentTokenPnLData?.averageBuyPrice)))
+                  .setPrice(convertPrice(Number(currentTokenAverageBuyPrice)))
                   .setQuantityBackgroundColor("#427A2C")
                   .setQuantityBorderColor("#427A2C")
                   .setBodyBorderColor("#FFFFFF00")
@@ -134,7 +137,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
       }
     };
     createChartLines();
-  }, [currentTokenPnLData, chartReady, currentTokenPnLData?.averageBuyPrice, isUsdSolToggled, isMcPriceToggled, averageSell])
+  }, [currentTokenAverageBuyPrice, chartReady, isUsdSolToggled, isMcPriceToggled, averageSell])
 
   // console.log("TVChartContainer called.");
   useEffect(() => {
