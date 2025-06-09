@@ -74,7 +74,7 @@ function DataSecurity({
         .map((item) => Number(item?.BalanceUpdate?.balance))
         .sort((a, b) => b - a)
         .slice(0, 10); // Limit to top 10 balances
-      console.log("balances", balances);
+      // console.log("balances", balances);
       const sumBalance = balances.reduce((sum, balance) => sum + balance, 0);
       setTotalBalance(sumBalance);
       } catch (error) {
