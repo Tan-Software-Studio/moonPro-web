@@ -84,6 +84,7 @@ export const fetchChartAllData = createAsyncThunk(
       });
       setDataLoaderForChart(false);
       const tokenData = response?.data?.data;
+      localStorage.setItem("currentPairAddress", tokenData?.pairaddress);
       localStorage.setItem("chartSupply", tokenData?.rawsupply || 0);
       localStorage.setItem("solPrice", tokenData?.solPrice || 0);
       localStorage.setItem("chartTokenCreator", tokenData?.tokenCreator || 0);

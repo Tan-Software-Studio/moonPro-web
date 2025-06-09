@@ -24,10 +24,31 @@ export const fetchPNLData = createAsyncThunk(
   }
 );
 
+export const fetchPNLDataHistory = createAsyncThunk(
+  "fetchPNLDataHistory",
+  async (solWalletAddress) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `${baseUrl}transactions/PNLHistory/${solWalletAddress}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return res?.data?.data?.pnlHistory;
+    } catch (err) {
+      throw err;
+    }
+  }
+);
+
 const holdingData = createSlice({
   name: "PnlData",
   initialState: {
     PnlData: [],
+    PnlDataHistory: [],
     initialLoading: false,
     isDataLoaded: false,
     hasAttemptedLoad: false,
@@ -174,9 +195,7 @@ const holdingData = createSlice({
             const oldQtyCal =
               Number(state.PnlData[findTokenIndex].quantitySold) *
               Number(state.PnlData[findTokenIndex].averageHistoricalSellPrice);
-            const newQtyCal =
-              Number(payload?.qty) *
-              Number(payload?.price);
+            const newQtyCal = Number(payload?.qty) * Number(payload?.price);
             const qtyTotal =
               Number(state?.PnlData[findTokenIndex]?.quantitySold) +
               Number(payload?.qty);
@@ -250,6 +269,12 @@ const holdingData = createSlice({
         state.hasAttemptedLoad = true;
         state.PnlData = [];
         state.error = payload;
+      })
+      .addCase(fetchPNLDataHistory.fulfilled, (state, { payload }) => {
+        state.PnlDataHistory = payload || [];
+      })
+      .addCase(fetchPNLDataHistory.rejected, (state, { payload }) => {
+        state.PnlDataHistory = [];
       });
   },
 });

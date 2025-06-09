@@ -26,7 +26,10 @@ import {
 } from "@/websocket/walletTracker";
 import { useTranslation } from "react-i18next";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { fetchPNLData } from "@/app/redux/holdingDataSlice/holdingData.slice";
+import {
+  fetchPNLData,
+  fetchPNLDataHistory,
+} from "@/app/redux/holdingDataSlice/holdingData.slice";
 import AISignalsButton from "../Navbar/ai-signalBtn/AiSignalBtn";
 import {
   fetchPerformanceHistory,
@@ -111,6 +114,7 @@ const Sidebar = () => {
   useEffect(() => {
     if (solWalletAddress) {
       dispatch(fetchPNLData(solWalletAddress));
+      dispatch(fetchPNLDataHistory(solWalletAddress));
       dispatch(setPerformanceState());
       dispatch(fetchPerformanceHistory(solWalletAddress));
     }

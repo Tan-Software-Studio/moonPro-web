@@ -6,36 +6,19 @@ import {
 } from "@/utils/basicFunctions";
 import { useTranslation } from "react-i18next";
 
-const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
-  const buyAmount =
-    currentTokenPnLData?.activeQtyHeld * currentTokenPnLData?.averageBuyPrice ||
-    0;
-  const soldAmount =
-    currentTokenPnLData?.quantitySold *
-      currentTokenPnLData?.averageHistoricalSellPrice || 0;
-  const activeQtyHeld = currentTokenPnLData?.activeQtyHeld || 0;
-  const quantitySold = currentTokenPnLData?.quantitySold || 0;
-  const averageBuyPrice = currentTokenPnLData?.averageBuyPrice || 0;
-
-  const availableQty = activeQtyHeld - quantitySold;
-  const availableQtyInUSDWhenBought = availableQty * averageBuyPrice;
-  const availableQtyInUSDInCurrentPrice = availableQty * (currentPrice || 0);
-
-  const pnlAmount =
-    availableQtyInUSDInCurrentPrice - availableQtyInUSDWhenBought;
-  const isPositivePnL = pnlAmount >= 0;
-  const absolutePnL = Math.abs(pnlAmount);
-
-  const pnlPercent =
-    availableQtyInUSDWhenBought !== 0
-      ? (pnlAmount / availableQtyInUSDWhenBought) * 100
-      : 0;
-
-  const safePnLPercent = isNaN(pnlPercent) ? 0 : pnlPercent;
-
+const UserPnL = ({ currentTokenPnLData, tokenSymbol, useTitle = true, customBgColor = null, customBorderColor = null, customHeight = null, customLineSeparatorHeight = null, customLineSeparatorColor = null }) => {
+  const {
+        buyAmount,
+        soldAmount,
+        holdingRawAmount,
+        holdingsUsdInCurrentPrice,
+        isPositivePnL,
+        absolutePnL,
+        safePnLPercent
+      } = currentTokenPnLData
   const { t } = useTranslation();
   const wallettracker = t("wallettracker");
-
+  
   const sections = [
     {
       title: wallettracker?.pnlpopup?.bottom?.activeposition?.bought,
@@ -51,13 +34,13 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
     },
     {
       title: wallettracker?.pnlpopup?.bottom?.activeposition?.remaining,
-      value: availableQtyInUSDInCurrentPrice,
+      value: holdingsUsdInCurrentPrice,
       color: "text-white",
       hoverValue: (
         <span>
-          {availableQty > 1 || availableQty < -1
-            ? humanReadableFormatWithNoDollar(availableQty, 2)
-            : formatDecimal(availableQty, 1)}{" "}
+          {holdingRawAmount > 1 || holdingRawAmount < -1
+            ? humanReadableFormatWithNoDollar(holdingRawAmount, 2)
+            : formatDecimal(holdingRawAmount, 1)}{" "}
           {tokenSymbol ? tokenSymbol.slice(0, 3) : ""}
         </span>
       ),
@@ -66,43 +49,45 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
     {
       title: wallettracker?.pnlpopup?.bottom?.activeposition?.pnl,
       value: absolutePnL,
-      addSign: `${isPositivePnL ? "+" : "-"}`,
-      color: isPositivePnL ? "text-[#21CB6B]" : "text-[#ED1B24]",
+      addSign: isPositivePnL !== undefined ? `${isPositivePnL === true ? "+" : "-"}` : "+",
+      color: isPositivePnL !== undefined ? `${isPositivePnL === true ? "text-[#21CB6B]" : "text-[#ED1B24]"}` : `text-[#21CB6B]`,
       icon: (
         <RiExchangeDollarLine className="text-[#21CB6B] w-[18px] h-[18px] lg:w-2 lg:h-2 xl:w-3 xl:h-3" />
       ),
-      extra: `(${isPositivePnL ? "+" : ""}${safePnLPercent.toFixed(
+      extra: safePnLPercent ? `(${isPositivePnL ? "+" : ""}${safePnLPercent?.toFixed(
         safePnLPercent < 1 ? 2 : 0
-      )}%)`,
+      )}%)` : `(0%)`,
       hasDollar: true,
     },
   ];
 
   return (
     <div
-      className="bg-[#08080E] border-t w-full py-1 border-[#4D4D4D] flex flex-wrap justify-between items-center"
+      className={`${customBgColor ? customBgColor : `bg-[#08080E]`} border-t w-full py-1 ${customBorderColor ? customBorderColor : "border-[#4D4D4D]"} flex flex-wrap justify-between items-center`}
       style={{ boxSizing: "border-box" }}
     >
       {sections.map((section, index) => (
         <React.Fragment key={section.title}>
           <div
-            className="select-none outline-none flex items-center justify-center flex-1 h-[54px] rounded-[4px] ease-linear duration-200 group"
+            className={`select-none outline-none flex items-center justify-center flex-1 ${customHeight ? customHeight : `h-[64px]`} rounded-[4px] ease-linear duration-200 group`}
             style={{
-              minWidth: section.title === "PnL" ? "30%" : "20%",
-              maxWidth: section.title === "PnL" ? "35%" : "25%",
+              minWidth: section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.pnl ? "30%" : "20%",
+              maxWidth: section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.pnl ? "35%" : "25%",
               boxSizing: "border-box",
-              padding: section.title === "PnL" ? "0 6px" : "0 2px",
+              padding: section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.pnl ? "0 6px" : "0 2px",
             }}
           >
             <div className="flex flex-col items-center justify-center h-full">
-              <div className="flex items-center justify-center gap-1 h-[14px]">
-                <span className="text-center text-[#A8A8A8] font-[400] text-base sm:text-sm lg:text-[8px] xl:text-[12px] 2xl:text-[14px]">
-                  {section.title}
-                </span>
-                {section.icon && (
-                  <div className="flex items-center">{section.icon}</div>
-                )}
-              </div>
+              {useTitle &&
+                <div className="flex items-center justify-center gap-1 h-[14px]">
+                  <span className="text-center text-[#A8A8A8] font-[400] text-base sm:text-sm lg:text-[8px] xl:text-[12px] 2xl:text-[14px]">
+                    {section.title}
+                  </span>
+                  {section.icon && (
+                    <div className="flex items-center">{section.icon}</div>
+                  )}
+                </div>
+              }
               <div
                 className={`flex items-center justify-center text-center font-[500] ${section.color} text-base sm:text-sm lg:text-[8px] xl:text-[12px] 2xl:text-[14px]`}
                 style={{
@@ -114,7 +99,7 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
                   maxWidth: "100%",
                 }}
               >
-                {section.title === "PnL" ? (
+                {section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.pnl ? (
                   <div className="flex items-center">
                     <span>
                       {section?.addSign && section.addSign}
@@ -129,7 +114,7 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
                   <>
                     <span
                       className={
-                        section.title === "Holding" ? "group-hover:hidden" : ""
+                        section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.remaining ? "group-hover:hidden" : ""
                       }
                     >
                       {section.hasDollar && "$"}
@@ -137,10 +122,10 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
                         ? humanReadableFormatWithNoDollar(section.value, 2)
                         : formatDecimal(
                             section.value,
-                            section.title === "Holding" ? 1 : undefined
+                            section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.remaining ? 1 : undefined
                           )}
                     </span>
-                    {section.title === "Holding" && (
+                    {section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.remaining && (
                       <span className="hidden group-hover:inline font-medium ml-1">
                         {section.hoverValue}
                       </span>
@@ -152,7 +137,7 @@ const UserPnL = ({ currentTokenPnLData, currentPrice, tokenSymbol }) => {
           </div>
           {index < sections.length - 1 && (
             <div
-              className="w-[1px] h-12 bg-[#4D4D4D]"
+              className={`w-[1px] ${customLineSeparatorHeight ? customLineSeparatorHeight : 'h-12'} ${customLineSeparatorColor ? customLineSeparatorColor : 'bg-[#4D4D4D]'} `}
               style={{ flexShrink: 0 }}
             />
           )}

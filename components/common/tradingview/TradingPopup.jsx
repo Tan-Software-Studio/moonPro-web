@@ -4,10 +4,7 @@ import { FaCheck, FaCog } from "react-icons/fa";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { GrCaretUp, GrCaretDown } from "react-icons/gr";
 import { PiPencilLineBold } from "react-icons/pi";
-import {
-  buySolanaTokens,
-  sellSolanaTokens,
-} from "@/utils/solanaBuySell/solanaBuySell";
+import { buySolanaTokens, sellSolanaTokens } from "@/utils/solanaBuySell/solanaBuySell";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import Image from "next/image";
@@ -20,6 +17,11 @@ import {
   setPreSetOrderSetting,
 } from "@/app/redux/states";
 import { showToaster } from "@/utils/toaster/toaster.style";
+import DraggableModal from "./DraggableModal";
+import { formatNumber } from "@/utils/basicFunctions";
+import UserPnL from "./UserPnL";
+import WalletSwapButton from "./WalletSwapButton";
+
 const TradingPopup = ({
   tragindViewPage,
   activeTab,
@@ -40,6 +42,9 @@ const TradingPopup = ({
   solanaLivePrice,
   tredingPage,
   currentSupply,
+  isInstantTradeActive,
+  handleInstantTradeClick,
+  currentTokenPnLData
 }) => {
   const [loaderSwap, setLoaderSwap] = useState(false);
   const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
@@ -51,7 +56,10 @@ const TradingPopup = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [customInput, setCustomInput] = useState("");
-  // const [presist, setPresist] = useState("P1");
+  const [isEditingModal, setIsEditingModal] = useState(false);
+  const [editIndexModalBuy, setEditIndexModalBuy] = useState(null);
+  const [editIndexModalSell, setEditIndexModalSell] = useState(null);
+  const [customInputModal, setCustomInputModal] = useState("");
   const [buyValues, setBuyValues] = useState(() => {
     const saved = localStorage.getItem("buyValues");
     return saved ? JSON.parse(saved) : [0.1, 0.2, 1, 2];
@@ -60,34 +68,87 @@ const TradingPopup = ({
     const saved = localStorage.getItem("sellValues");
     return saved ? JSON.parse(saved) : [20, 50, 80, 100];
   });
-  // preset value
+  const [tempBuyValues, setTempBuyValues] = useState(buyValues);
+  const [tempSellValues, setTempSellValues] = useState(sellValues);
+
   const presist = useSelector((state) => state?.AllStatesData?.presetActive);
-  // order settings flag
   const orderSettingFlag = useSelector(
     (state) => state?.AllStatesData?.openOrderSetting
   );
   const preSetData = useSelector(
     (state) => state?.AllStatesData?.preSetOrderSettings
   );
-  const saveEditedValue = () => {
-    const value = parseFloat(customInput);
-    // if (value > 0) {
-    if (activeTab === "buy") {
-      const newValues = [...buyValues];
-      newValues[editIndex] = value;
-      setBuyValues(newValues);
-      localStorage.setItem("buyValues", JSON.stringify(newValues));
+
+  const saveEditedValue = (isModal = false) => {
+    const value = parseFloat(isModal ? customInputModal : customInput);
+    if (isModal) {
+      if (editIndexModalBuy !== null) {
+        const newBuyValues = [...tempBuyValues];
+        newBuyValues[editIndexModalBuy] = value;
+        setBuyValues(newBuyValues);
+        localStorage.setItem("buyValues", JSON.stringify(newBuyValues));
+        setTempBuyValues(newBuyValues);
+      }
+      if (editIndexModalSell !== null) {
+        const newSellValues = [...tempSellValues];
+        newSellValues[editIndexModalSell] = value;
+        setSellValues(newSellValues);
+        localStorage.setItem("sellValues", JSON.stringify(newSellValues));
+        setTempSellValues(newSellValues);
+      }
+      setIsEditingModal(false);
+      setEditIndexModalBuy(null);
+      setEditIndexModalSell(null);
+      setCustomInputModal("");
     } else {
-      const newValues = [...sellValues];
-      newValues[editIndex] = value;
-      setSellValues(newValues);
-      localStorage.setItem("sellValues", JSON.stringify(newValues));
+      if (activeTab === "buy") {
+        const newValues = [...buyValues];
+        newValues[editIndex] = value;
+        setBuyValues(newValues);
+        localStorage.setItem("buyValues", JSON.stringify(newValues));
+        setTempBuyValues(newValues);
+      } else {
+        const newValues = [...sellValues];
+        newValues[editIndex] = value;
+        setSellValues(newValues);
+        localStorage.setItem("sellValues", JSON.stringify(newValues));
+        setTempSellValues(newValues);
+      }
+      setIsEditing(false);
+      setEditIndex(null);
+      setCustomInput("");
     }
-    setIsEditing(false);
-    setEditIndex(null);
-    setCustomInput("");
-    // }
   };
+
+  useEffect(() => {
+    if (isEditing && editIndex !== null) {
+      const value = parseFloat(customInput);
+      if (activeTab === "buy") {
+        const newTempValues = [...buyValues];
+        newTempValues[editIndex] = isNaN(value) ? buyValues[editIndex] : value;
+        setTempBuyValues(newTempValues);
+      } else {
+        const newTempValues = [...sellValues];
+        newTempValues[editIndex] = isNaN(value) ? sellValues[editIndex] : value;
+        setTempSellValues(newTempValues);
+      }
+    }
+  }, [customInput, isEditing, editIndex, activeTab, buyValues, sellValues]);
+
+  useEffect(() => {
+    if (isEditingModal && (editIndexModalBuy !== null || editIndexModalSell !== null)) {
+      const value = parseFloat(customInputModal);
+      if (activeTab === "buy") {
+        const newTempValues = [...buyValues];
+        newTempValues[editIndexModalBuy] = isNaN(value) ? buyValues[editIndexModalBuy] : value;
+        setTempBuyValues(newTempValues);
+      } else {
+        const newTempValues = [...sellValues];
+        newTempValues[editIndexModalSell] = isNaN(value) ? sellValues[editIndexModalSell] : value;
+        setTempSellValues(newTempValues);
+      }
+    }
+  }, [customInputModal, isEditingModal, editIndexModalBuy, editIndexModalSell, activeTab, buyValues, sellValues]);
   // function to calculate rec. amount
   function calculateRecAmountSolToAnytoken(
     amountToken1,
@@ -176,9 +237,10 @@ const TradingPopup = ({
     return finalAtPrice;
   }
   // buy handler
-  async function buyHandler() {
+  async function buyHandler(instantTradePrice = null) {
     if (walletAddress) {
-      if (quantity < nativeTokenbalance) {
+      let buyPrice = instantTradePrice !== null ? instantTradePrice : quantity;
+      if (buyPrice < nativeTokenbalance) {
         const usdActive = await getChartUsdSolToggleActive();
         const marketCapActive = await getChartMarketCapPriceToggleActive();
         const convertedPrice = await convertToUsdtoSolAndMC(
@@ -188,7 +250,7 @@ const TradingPopup = ({
         );
         buySolanaTokens(
           token,
-          quantity,
+          buyPrice,
           slippage,
           priorityFee,
           walletAddress,
@@ -215,9 +277,10 @@ const TradingPopup = ({
     }
   }
   // sell handler
-  async function sellHandler() {
+  async function sellHandler(instantTradePrice = null) {
     if (walletAddress) {
-      if (quantity <= tokenBalance) {
+      let sellPrice = instantTradePrice !== null ? instantTradePrice : quantity;
+      if (sellPrice <= tokenBalance) {
         const usdActive = await getChartUsdSolToggleActive();
         const marketCapActive = await getChartMarketCapPriceToggleActive();
         const convertedPrice = await convertToUsdtoSolAndMC(
@@ -227,7 +290,7 @@ const TradingPopup = ({
         );
         sellSolanaTokens(
           token,
-          quantity,
+          sellPrice,
           slippage,
           priorityFee,
           walletAddress,
@@ -246,7 +309,7 @@ const TradingPopup = ({
             symbol: tokenName,
             img: tokenImage || null,
           },
-          quantity == tokenBalance
+          sellPrice == tokenBalance
         );
       } else {
         return showToaster("Insufficient funds.");
@@ -388,52 +451,53 @@ const TradingPopup = ({
       </div>
       {/* Preset Quantity Buttons */}
       <div className="flex gap-2 mb-[16px]">
-        {activeTab == "buy"
-          ? buyValues.map((val, index) =>
-              editIndex === index ? (
-                <input
-                  key={index}
-                  type="number"
-                  value={customInput}
-                  onChange={(e) => setCustomInput(e.target.value)}
-                  className="w-[62px] h-[34px] flex items-center justify-center text-center   text-[14px] rounded bg-[#1F1F1F] outline-none   text-[#278BFE] border-t-[1px] border-t-[#278BFE] "
-                  autoFocus
-                />
-              ) : (
-                <button
-                  key={index}
-                  className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${
-                    quantity === val
-                      ? "text-[#278BFE] border-t-[1px] border-t-[#278BFE]"
-                      : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
-                  }`}
-                  onClick={() => {
-                    if (isEditing) {
-                      setEditIndex(index);
-                      setCustomInput(val.toString());
-                    } else {
-                      setQuantity(val);
-                    }
-                  }}
-                >
-                  {val}
-                </button>
-              )
+        {activeTab === "buy" ? (
+          tempBuyValues.map((val, index) =>
+            editIndex === index ? (
+              <input
+                key={index}
+                type="number"
+                value={customInput}
+                onChange={(e) => setCustomInput(e.target.value)}
+                className="w-[62px] h-[34px] flex items-center justify-center text-center text-[14px] rounded bg-[#1F1F1F] outline-none text-[#278BFE] border-t-[1px] border-t-[#278BFE]"
+                autoFocus
+              />
+            ) : (
+              <button
+                key={index}
+                className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 ${
+                  quantity === val
+                    ? "text-[#278BFE] border-t-[1px] border-t-[#278BFE]"
+                    : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
+                }`}
+                onClick={() => {
+                  if (isEditing) {
+                    setEditIndex(index);
+                    setCustomInput(val.toString());
+                  } else {
+                    setQuantity(val);
+                  }
+                }}
+              >
+                {val}
+              </button>
             )
-          : sellValues.map((val, index) =>
-              editIndex === index ? (
-                <input
-                  key={index}
-                  type="number"
-                  value={customInput}
-                  onChange={(e) => setCustomInput(e.target.value)}
-                  className="w-[62px] h-[34px] flex items-center justify-center text-center text-[14px] rounded bg-[#1F1F1F] outline-none text-[#ed1819] border-t-[1px] border-t-[#ed1819]"
-                  autoFocus
-                />
-              ) : (
-                <button
-                  key={index}
-                  className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 
+          )
+        ) : (
+          tempSellValues.map((val, index) =>
+            editIndex === index ? (
+              <input
+                key={index}
+                type="number"
+                value={customInput}
+                onChange={(e) => setCustomInput(e.target.value)}
+                className="w-[62px] h-[34px] flex items-center justify-center text-center text-[14px] rounded bg-[#1F1F1F] outline-none text-[#ed1819] border-t-[1px] border-t-[#ed1819]"
+                autoFocus
+              />
+            ) : (
+              <button
+                key={index}
+                className={`w-[62px] h-[34px] flex text-[14px] items-center justify-center rounded-md bg-[#1F1F1F] ease-in-out duration-300 
                   ${
                     Number(quantity).toFixed(5) ===
                       Number((tokenBalance * val) / 100).toFixed(5) &&
@@ -441,25 +505,24 @@ const TradingPopup = ({
                       ? "text-[#ed1819] border-t-[1px] border-t-[#ed1819]"
                       : "text-[#FFFFFF] border-t-[0.5px] border-t-[#4D4D4D]"
                   }`}
-                  onClick={() => {
-                    if (isEditing) {
-                      setEditIndex(index);
-                      setCustomInput(val.toString());
+                onClick={() => {
+                  if (isEditing) {
+                    setEditIndex(index);
+                    setCustomInput(val.toString());
+                  } else {
+                    if (val == 100) {
+                      setQuantity(tokenBalance);
                     } else {
-                      if (val == 100) {
-                        setQuantity(tokenBalance);
-                      } else {
-                        setQuantity(
-                          Number((tokenBalance * val) / 100).toFixed(5)
-                        );
-                      }
+                      setQuantity(Number((tokenBalance * val) / 100).toFixed(5));
                     }
-                  }}
-                >
-                  {val}%
-                </button>
-              )
-            )}
+                  }
+                }}
+              >
+                {val}%
+              </button>
+            )
+          )
+        )}
         {!isEditing ? (
           <button
             className="p-2 rounded-md"
@@ -472,9 +535,8 @@ const TradingPopup = ({
           </button>
         ) : (
           <button
-            onClick={saveEditedValue}
+            onClick={() => saveEditedValue(false)}
             className="px-2"
-            // disabled={editIndex === null}
           >
             <FaCheck />
           </button>
@@ -674,6 +736,173 @@ const TradingPopup = ({
         onClose={() => dispatch(setOpenOrderSetting(false))}
         tredingPage={tredingPage}
       />
+      <DraggableModal
+        isOpen={isInstantTradeActive}
+        onClose={() => handleInstantTradeClick()}
+        headerSection={
+          <div className="flex w-full justify-between pr-4">
+            <div className="w-full px-3 flex text-[#F6F6F6] items-center">
+              <div className="flex items-center border-[#404040] rounded-[4px]">
+                {["P1", "P2", "P3", "P4", "P5"].map((item, index) => (
+                  <button
+                    key={index + 1}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      dispatch(setPresetActive(item));
+                      localStorage.setItem("preSetSettingActiveChart", item);
+                    }}
+                    className={`w-full ml-3 py-[7px] font-[700] text-[12px] border-r-[#404040] duration-300 ease-in-out ${
+                      presist == item
+                        ? "text-[#1F73FC]"
+                        : "text-[#F6F6F6]"
+                    }`}
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+              {!isEditingModal ? (
+                <button
+                  className="p-2 rounded-md"
+                  onClick={() => {
+                    setIsEditingModal(true);
+                    setEditIndexModalBuy(null);
+                    setEditIndexModalSell(null);
+                  }}
+                >
+                  <PiPencilLineBold size={12} />
+                </button>
+              ) : (
+                <button
+                  onClick={() => saveEditedValue(true)}
+                  className="px-2"
+                >
+                  <FaCheck size={12} />
+                </button>
+              )}
+            </div>
+
+            <WalletSwapButton />
+          </div>
+        }
+      >
+        <div className="space-y-4">
+          <div className="p-4 space-y-4">
+            <div className="flex justify-between text-[#9b9999] text-sm font-[550] items-center">
+              <p>Buy</p>
+              <div className="flex items-center justify-center gap-1">
+                <Image
+                  src={solana}
+                  width={15}
+                  height={15}
+                  alt="solana"
+                />
+                <p>{Number(nativeTokenbalance).toFixed(5) || 0}</p>
+              </div>
+            </div>
+            <div className="flex w-full gap-2">
+              {tempBuyValues.map((val, index) =>
+                editIndexModalBuy === index ? (
+                  <input
+                    key={index}
+                    type="number"
+                    value={customInputModal}
+                    onChange={(e) => setCustomInputModal(e.target.value)}
+                    className="w-[80px] h-[34px] flex items-center justify-center text-center text-[14px] text-[#F6F6F6] bg-[#526fff30] border border-[#526fff50] rounded-2xl bg-[#1F1F1F] outline-none border-t-[1px]"
+                    autoFocus
+                  />
+                ) : (
+                  <button
+                    key={index}
+                    className={`w-[80px] h-[34px] flex text-[14px] items-center justify-center rounded-2xl ease-in-out duration-300 ${
+                      !isEditingModal
+                        ? "text-[#2fe3ac] bg-[#2fe3ac30] border border-[#2fe3ac50]"
+                        : "text-[#F6F6F6] bg-[#526fff30] border border-[#526fff50]"
+                    }`}
+                    onClick={() => {
+                      if (isEditingModal) {
+                        setEditIndexModalBuy(index);
+                        setEditIndexModalSell(null);
+                        setCustomInputModal(val.toString());
+                      } else {
+                        buyHandler(val);
+                      }
+                    }}
+                  >
+                    {val}
+                  </button>
+                )
+              )}
+            </div>
+            <div className="flex justify-between text-[#9b9999] text-sm font-[550] items-center">
+              <p>Sell</p>
+              <div className="flex gap-1 text-[#707070] text-xs items-center">
+                <p>{formatNumber(tokenBalance || 0, false, false)}</p>
+                <p>{tokenSymbol}</p>
+                <p>•</p>
+                <p>{formatNumber(tokenBalance * price, false, true)}</p>
+                <p>•</p>
+                <Image
+                  src={solana}
+                  width={15}
+                  height={15}
+                  alt="solana"
+                />
+                <p className="text-[#9b9999] text-sm font-semibold">{Number((tokenBalance * price)/solanaLivePrice).toFixed(5) || 0}</p>
+              </div>
+            </div>
+            <div className="flex w-full gap-2">
+              {tempSellValues.map((val, index) =>
+                editIndexModalSell === index ? (
+                  <input
+                    key={index}
+                    type="number"
+                    value={customInputModal}
+                    onChange={(e) => setCustomInputModal(e.target.value)}
+                    className="w-[80px] h-[34px] flex items-center justify-center text-center text-[14px] rounded-2xl text-[#F6F6F6] bg-[#526fff30] border border-[#526fff50] bg-[#1F1F1F] outline-none border-t-[1px]"
+                    autoFocus
+                  />
+                ) : (
+                  <button
+                    key={index}
+                    className={`w-[80px] h-[34px] flex text-[14px] items-center justify-center rounded-2xl ease-in-out duration-300 ${
+                      !isEditingModal
+                        ? "text-[#ec397a] bg-[#ec397a30] border border-[#ec397a50]"
+                        : "text-[#F6F6F6] bg-[#526fff30] border border-[#526fff50]"
+                    }`}
+                    onClick={() => {
+                      if (isEditingModal) {
+                        setEditIndexModalSell(index);
+                        setEditIndexModalBuy(null);
+                        setCustomInputModal(val.toString());
+                      } 
+                      else {
+                        if (val == 100) {
+                          sellHandler(tokenBalance);
+                        } else {
+                          sellHandler(Number((tokenBalance * val) / 100).toFixed(5));
+                        }
+                      }
+                    }}
+                  >
+                    {val}%
+                  </button>
+                )
+              )}
+            </div>
+          </div>
+          <UserPnL 
+            currentTokenPnLData={currentTokenPnLData}
+            tokenSymbol={tokenSymbol}
+            useTitle={false}
+            customBgColor={`bg-transparent`}
+            customBorderColor={`border-[#323542]`}
+            customHeight={`h-[32px]`}
+            customLineSeparatorHeight={`h-[16px]`}
+            customLineSeparatorColor={`bg-[#323542]`}
+          />
+        </div>
+      </DraggableModal>
     </div>
   );
 };
