@@ -82,8 +82,9 @@ const allMemescopeData = createSlice({
       state.MscopeGraduatedData = action.payload;
     },
     setNewLaunchData: (state, action) => {
-      const temp = state.newLaunch.slice(0, 30);
-      state.newLaunch = [action.payload, ...temp];
+      state.newLaunch = Object.fromEntries(
+        Object.entries({ ...action.payload, ...state.newLaunch }).slice(0, 30)
+      );
     },
     updateAllDataByNode: (state, { payload }) => {
       if (payload?.length > 0) {
