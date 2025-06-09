@@ -139,6 +139,21 @@ function capitalizeFirstLetter(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+const formatNumber = (amount, addSign = true, addDollar = true) => {
+    const absoluteAmount = Math.abs(amount);
+    const formattedAmount = absoluteAmount > 1 || absoluteAmount < -1
+      ? humanReadableFormatWithNoDollar(absoluteAmount, 2)
+      : formatDecimal(absoluteAmount, 1);
+    let sign = "";
+    if (amount < 0) {
+      sign = "-";
+    } else if (addSign) {
+      sign = "+";
+    }
+
+    return `${sign}${addDollar ? "$" : ""}${formattedAmount}`
+  };
+
 export {
   humanReadableFormat,
   humanReadableFormatNoDollar,
@@ -148,5 +163,6 @@ export {
   calculatePercentageDifference,
   convertAnyPriceToSol,
   numberFormated,
-  capitalizeFirstLetter
+  capitalizeFirstLetter,
+  formatNumber
 };
