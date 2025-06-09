@@ -365,7 +365,7 @@ const MscopePumpTable = ({
                         </div>
                         <div>
                           <div className="w-[90px] h-[60px] relative flex items-center justify-center">
-                            <div
+                            {/* <div
                               className={`${
                                 hoverRow === index
                                   ? "opacity-40 absolute inset-0 flex items-center justify-center"
@@ -375,7 +375,7 @@ const MscopePumpTable = ({
                               <ChartComponent
                                 candlesticks={block?.candlesticks}
                               />
-                            </div>
+                            </div> */}
                             {hoverRow === index && (
                               <>
                                 <div
