@@ -32,7 +32,17 @@ const allMemescopeData = createSlice({
   reducers: {
     // set is chart hide or not
     setMemescopeChart: (state, { payload }) => {
+      localStorage.setItem("isChart", !state.isChart);
       state.isChart = !state.isChart;
+    },
+    setIsChartByDefault: (state, { payload }) => {
+      const isChartLocal = localStorage.getItem("isChart");
+      if (isChartLocal === null) {
+        state.isChart = true;
+        localStorage.setItem("isChart", "true");
+      } else {
+        state.isChart = isChartLocal === "true";
+      }
     },
     //add new token on mscopedata and use in gratuate in memescope page
     addMScopeGraduateSocketData: (state, action) => {
@@ -148,6 +158,7 @@ export const {
   setNewLaunchData,
   updateAllDataByNode,
   setMemescopeChart,
+  setIsChartByDefault,
 } = allMemescopeData.actions;
 
 export default allMemescopeData.reducer;
