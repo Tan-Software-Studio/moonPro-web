@@ -9,6 +9,8 @@ import History from "../profile/History";
 import TopHundred from "../profile/TopHundred";
 import { useTranslation } from "react-i18next";
 import RealizedPnLChart from "./PNLChart";
+import Image from "next/image";
+import { NoDataFish } from "@/app/Images";
 
 const UserProfileControl = () => {
   const { t, i18n } = useTranslation();
@@ -22,6 +24,7 @@ const UserProfileControl = () => {
     portfolio?.activePosition
   );
   const performance = useSelector((state) => state?.portfolioData?.performance);
+  const loading = useSelector((state) => state?.portfolioData?.loading);
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
@@ -146,9 +149,8 @@ const UserProfileControl = () => {
                   </p>
                 </div>
                 <p
-                  className={`text-base font-semibold tracking-wider ${
-                    UnrealizedPNL >= 0 ? "text-emerald-500" : "text-red-500"
-                  }`}
+                  className={`text-base font-semibold tracking-wider ${UnrealizedPNL >= 0 ? "text-emerald-500" : "text-red-500"
+                    }`}
                 >
                   {`${UnrealizedPNL < 0 ? "-$" : "$"}${Math.abs(
                     UnrealizedPNL
@@ -176,15 +178,36 @@ const UserProfileControl = () => {
                 {portfolio?.pnlAnalysis}
               </h3>
             </div>
-            {performance?.chartPnlHistory?.length > 0 ? (
-              <div className="flex items-center justify-center mt-[50px] h-[200px]">
-                <RealizedPnLChart data={performance?.chartPnlHistory} />
+            {loading ?
+              <div
+                className="snippet flex justify-center items-center mt-24   "
+                data-title=".dot-spin"
+              >
+                <div className="stage">
+                  <div className="dot-spin"></div>
+                </div>
               </div>
-            ) : (
-              <div className="flex mt-24 items-center justify-center">
-                <div className="text-base text-gray-400">No data</div>
-              </div>
-            )}
+              : 
+              performance?.chartPnlHistory?.length > 0 ? (
+                <div className="flex items-center justify-center mt-[50px] h-[200px]">
+                  <RealizedPnLChart data={performance?.chartPnlHistory} />
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center mt-10 text-center">
+                  <div className="flex items-center justify-center mb-4">
+                    <Image
+                      src={NoDataFish}
+                      alt="No Data Available"
+                      width={200}
+                      height={100}
+                      className="text-slate-400"
+                    />
+                  </div>
+                  <p className="text-slate-400 text-lg mb-2 break-words break-all">
+                    No data available
+                  </p>
+                </div>
+              )}
           </div>
 
           {/* Performance Section */}
@@ -200,11 +223,10 @@ const UserProfileControl = () => {
                   <p className="text-xs text-slate-400">Total PnL</p>
                 </div>
                 <p
-                  className={`${
-                    performance?.totalPNL >= 0
-                      ? "text-emerald-400"
-                      : "text-red-400"
-                  }  text-sm font-semibold`}
+                  className={`${performance?.totalPNL >= 0
+                    ? "text-emerald-400"
+                    : "text-red-400"
+                    }  text-sm font-semibold`}
                 >
                   ${Number(performance?.totalPNL).toFixed(5) || 0}
                 </p>
@@ -286,11 +308,10 @@ const UserProfileControl = () => {
                     <button
                       key={tab}
                       onClick={() => setLeftTableTab(tab)}
-                      className={`px-2 py-3 text-sm font-medium tracking-wider transition-all duration-200 flex-shrink-0 ${
-                        leftTableTab === tab
-                          ? "border-b-[1px] border-white text-white"
-                          : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
-                      }`}
+                      className={`px-2 py-3 text-sm font-medium tracking-wider transition-all duration-200 flex-shrink-0 ${leftTableTab === tab
+                        ? "border-b-[1px] border-white text-white"
+                        : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
+                        }`}
                     >
                       {tab}
                     </button>
@@ -342,11 +363,10 @@ const UserProfileControl = () => {
                     <button
                       key={tab}
                       onClick={() => setRightTableTab(tab)}
-                      className={`px-2 py-3 text-sm font-medium tracking-wider transition-all duration-200 flex-shrink-0 ${
-                        rightTableTab === tab
-                          ? "border-b-[1px] border-white text-white"
-                          : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
-                      }`}
+                      className={`px-2 py-3 text-sm font-medium tracking-wider transition-all duration-200 flex-shrink-0 ${rightTableTab === tab
+                        ? "border-b-[1px] border-white text-white"
+                        : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
+                        }`}
                     >
                       {tab}
                     </button>
@@ -384,11 +404,10 @@ const UserProfileControl = () => {
                   <button
                     key={tab}
                     onClick={() => setMobileActiveTab(tab)}
-                    className={`px-2 sm:py-3 py-2 sm:text-sm text-xs font-medium sm:tracking-wider transition-all duration-200 flex-shrink-0 ${
-                      mobileActiveTab === tab
-                        ? "border-b-[1px] border-white text-white"
-                        : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
-                    }`}
+                    className={`px-2 sm:py-3 py-2 sm:text-sm text-xs font-medium sm:tracking-wider transition-all duration-200 flex-shrink-0 ${mobileActiveTab === tab
+                      ? "border-b-[1px] border-white text-white"
+                      : "text-slate-400 hover:text-slate-200 border-b-[1px] border-transparent"
+                      }`}
                   >
                     {tab}
                   </button>

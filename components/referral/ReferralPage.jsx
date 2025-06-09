@@ -37,15 +37,15 @@ const ReferralPage = () => {
     selectedTier === 1
       ? "firstTier"
       : selectedTier === 2
-      ? "secondTier"
-      : "thirdTier";
+        ? "secondTier"
+        : "thirdTier";
 
   const rewardPercentage =
     selectedTier === 1
       ? refData?.user?.referealRewardsFirstTierPer
       : selectedTier === 2
-      ? refData?.user?.referealRewardsSecondTierPer
-      : refData?.user?.referealRewardsThirdTierPer;
+        ? refData?.user?.referealRewardsSecondTierPer
+        : refData?.user?.referealRewardsThirdTierPer;
 
   const tierData = refData?.referrals?.[tierKey] || [];
 
@@ -109,9 +109,9 @@ const ReferralPage = () => {
           responce?.user?.weeklyPoints +
           responce?.user?.referralPoints) /
           50000) *
-          100
+        100
       );
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const handleWithdrawClick = () => {
@@ -171,24 +171,47 @@ const ReferralPage = () => {
 
   const userDisplayInfo = getUserDisplayInfo(refData?.user);
 
-  function getUserTitle() {
+  function getPointsToNextTitle() {
     const points =
       (refData?.user?.dailyPoints || 0) +
       (refData?.user?.tradePoints || 0) +
       (refData?.user?.weeklyPoints || 0) +
       (refData?.user?.referralPoints || 0);
+ 
+    const levels = [
+      { min: 0, max: 500, title: "Explorer" },
+      { min: 500, max: 2000, title: "Trader" },
+      { min: 2000, max: 5000, title: "Voyager" },
+      { min: 5000, max: 12000, title: "Prodigy" },
+      { min: 12000, max: 25000, title: "Elite" },
+      { min: 25000, max: 50000, title: "Master" },
+      { min: 50000, max: Infinity, title: "Legend" },
+    ];
 
-    if (points >= 0 && points < 500) return "Explorer";
-    if (points >= 500 && points < 2000) return "Trader";
-    if (points >= 2000 && points < 5000) return "Voyager";
-    if (points >= 5000 && points < 12000) return "Prodigy";
-    if (points >= 12000 && points < 25000) return "Elite";
-    if (points >= 25000 && points < 50000) return "Master";
-    if (points >= 50000) return "Legend";
 
-    return "Unknown";
+
+    for (let i = 0; i < levels.length; i++) {
+      const level = levels[i];
+      if (points < level.max) {
+        return {
+          currentTitle: level.title,
+          pointsToNext:
+            level.max === Infinity ? 0 : Math.max(level.max - points, 0),
+          nextTitle: levels[i + 1]?.title || "Legend",
+          maxLevelComplete : points < 50000 ? true : false
+        };
+      }
+    }
+
+
+    return {
+      currentTitle: "Unknown",
+      pointsToNext: 0,
+      nextTitle: null,
+      maxLevelComplete: true
+    };
   }
-
+  const { currentTitle, pointsToNext, nextTitle, maxLevelComplete } = getPointsToNextTitle(); 
   return (
     <>
       <div className=" text-white py-6 md:px-6 px-3  rounded-2xl space-y-6 overflow-y-auto h-[90vh]">
@@ -263,40 +286,32 @@ const ReferralPage = () => {
             </div>
           </div>
         </div>
-
-        <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:items-center text-xs text-gray-400">
-          {/* Left side: Level Info */}
-          <div className="flex items-start gap-1 sm:items-center flex-wrap tracking-wider">
-            <MdOutlineKeyboardDoubleArrowUp
-              className="text-blue-500 mt-[2px]"
-              size={16}
-            />
-            <span className="text-[#cdced4]">
-              {referral?.refMata?.nextLevel}
-            </span>
-            <span className="font-medium text-blue-500">
-              {referral?.refMata?.rewardsRate}
-            </span>
+        {maxLevelComplete && (
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:items-center text-xs text-gray-400">
+            <div className="flex items-start gap-1 sm:items-center flex-wrap tracking-wider">
+              <MdOutlineKeyboardDoubleArrowUp
+                className="text-blue-500 mt-[2px]"
+                size={16}
+              />
+              <span className="text-[#cdced4]">
+                {referral?.refMata?.nextLevel}
+              </span>
+              <span className="font-medium text-blue-500">
+                Earn {pointsToNext} points to reach
+                <span className="text-sm text-orange-400 ml-1 tracking-wider">
+                  {nextTitle}
+                </span>
+              </span>
+            </div>
           </div>
-
-          {/* Right side: Progress Info */}
-          <div className="flex items-start gap-1 sm:items-center flex-wrap tracking-wider">
-            <FaGem className="text-blue-500 mt-[2px]" size={16} />
-            <span className="text-[#a0a4b8]">
-              {referral?.refMata?.tradeMessage}
-            </span>
-            <span className="text-white font-medium">
-              {referral?.refMata?.silver}
-            </span>
-          </div>
-        </div>
+        )}
 
         {/* Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Level Card */}
           <div className=" bg-[#191919]  rounded-xl p-4 space-y-2">
             <div className="text-sm text-orange-400 tracking-wider">
-              {getUserTitle()}
+              {currentTitle}
             </div>
             <div className="text-2xl font-bold  flex items-center gap-2">
               <VscDebugBreakpointLogUnverified size={18} />
