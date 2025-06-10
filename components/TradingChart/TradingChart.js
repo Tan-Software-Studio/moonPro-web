@@ -218,7 +218,6 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenAverageBuyPri
         localStorage.setItem("chartResolution", interval);
         clearMarks();
         clearSellItems();
-        resetLines();
         clearChunk();
       });
     });
