@@ -404,8 +404,9 @@ const MscopePumpTable = ({
                                       solWalletAddress,
                                       nativeTokenbalance,
                                       e,
-                                      "6ef8rrecthr5dkzon8nwu78hrvfckubj14m5ubewf6p",
-                                      block?.bonding_curv,
+                                      block?.programAddress
+                                        ? block?.programAddress
+                                        : "dmasudonjfsdg",
                                       dispatch,
                                       block?.current_price,
                                       {

@@ -8,7 +8,10 @@ import {
 } from "@/app/redux/states";
 import { addMark } from "@/utils/tradingViewChartServices/mark";
 import { getLatestBarTime } from "../tradingViewChartServices/latestBarTime";
-import { setBuyAndSellCountInPerformance, updateHoldingsDataWhileBuySell } from "@/app/redux/holdingDataSlice/holdingData.slice";
+import {
+  setBuyAndSellCountInPerformance,
+  updateHoldingsDataWhileBuySell,
+} from "@/app/redux/holdingDataSlice/holdingData.slice";
 import { showToaster } from "../toaster/toaster.style";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 // handler to buy solana tokens
@@ -142,7 +145,6 @@ const buySolanaTokensQuickBuyHandler = async (
   nativeTokenbalance,
   e,
   programAddress,
-  bondingCurv = 0,
   dispatch,
   tokenPrice,
   metaData
@@ -191,8 +193,6 @@ const buySolanaTokensQuickBuyHandler = async (
       },
     }
   );
-  const program =
-    bondingCurv >= 100 ? toToken : programAddress ? programAddress : toToken;
   await axios({
     url: `${BASE_URL}transactions/solbuy`,
     method: "post",
@@ -202,7 +202,7 @@ const buySolanaTokensQuickBuyHandler = async (
       slippage: slippage,
       priorityFee: priorityFee,
       price: Number(solanaLivePrice),
-      programAddress: program,
+      programAddress: programAddress,
       tokenPrice: tokenPrice,
       metaData: metaData || null,
     },
