@@ -27,6 +27,7 @@ const NewAiSignalTokens = () => {
     const navigateToChartScreen = (item, index) => {
         router.push(`/tradingview/solana?tokenaddress=${item?.address}&symbol=${item?.symbol}`);
         localStorage.setItem("chartTokenImg", item?.img);
+        localStorage.setItem("chartTokenAddress", item?.address);
         dispatch(setChartSymbolImage(item?.img));
         setIsOpen(false)
     };

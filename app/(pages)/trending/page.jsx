@@ -45,9 +45,9 @@ const Trending = () => {
   const isLoading = useSelector((state) => state?.solTrendingData?.loading);
 
   // Get data from Redux store
-  const getTimeFilterData = useSelector(
+  const getTimeFilterData = Object.values(useSelector(
     (state) => state?.solTrendingData.filterTime[`${localFilterTime}`]
-  );
+  ));
 
   // Convert data to array (safety check)
   let filterDataArray = Array.isArray(getTimeFilterData)
