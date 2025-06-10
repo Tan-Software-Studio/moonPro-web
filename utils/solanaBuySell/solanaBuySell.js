@@ -76,9 +76,7 @@ const buySolanaTokens = async (
       priorityFee: priorityFee,
       price: Number(solanaLivePrice),
       tokenPrice: Number(tokenPrice),
-      programAddress: programAddress
-        ? programAddress
-        : "nasdiuasdnasdudhsdjasbhid",
+      programAddress: progranAddress,
       metaData: metaData || null,
     },
     headers: {
