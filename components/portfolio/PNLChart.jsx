@@ -61,18 +61,18 @@ const RealizedPnLChart = ({ data }) => {
 
     for (let i = 0; i < formattedData.length; i++) {
       const point = formattedData[i];
-      
+
       if (i === 0) {
         currentSegment.push(point);
         continue;
       }
 
       const isUp = point.value >= formattedData[i - 1].value;
-      
+
       if (isCurrentSegmentUp === null) {
         isCurrentSegmentUp = isUp;
       }
-      
+
       if (isUp === isCurrentSegmentUp) {
         currentSegment.push(point);
       } else {
@@ -83,13 +83,13 @@ const RealizedPnLChart = ({ data }) => {
             isUp: isCurrentSegmentUp
           });
         }
-        
+
         // Start new segment with the transition point
         currentSegment = [currentSegment[currentSegment.length - 1], point];
         isCurrentSegmentUp = isUp;
       }
     }
-    
+
     // Add the last segment
     if (currentSegment.length > 0) {
       segments.push({
@@ -115,22 +115,22 @@ const RealizedPnLChart = ({ data }) => {
       const areaSeries = chart.addAreaSeries({
         ...(segment.isUp
           ? {
-              topColor: "rgba(0, 255, 127, 0.3)",
-              bottomColor: "rgba(0, 255, 127, 0)",
-              lineColor: "#00ff7f",
-            }
+            topColor: "rgba(16, 185, 129, 0.3)",
+            bottomColor: "rgba(16, 185, 129, 0)",
+            lineColor: "#10b981",
+          }
           : {
-              topColor: "rgba(255, 0, 127, 0.3)",
-              bottomColor: "rgba(255, 0, 127, 0)",
-              lineColor: "#ff007f",
-            }),
+            topColor: "rgba(239, 68, 68, 0.3)",
+            bottomColor: "rgba(239, 68, 68, 0)",
+            lineColor: "#ef4444",
+          }),
         lineWidth: 2,
         lineType: 0,
         priceLineVisible: false,
       });
-      
+
       areaSeries.setData(segment.data);
-      
+
       if (index === 0) {
         firstAreaSeries = areaSeries;
       }

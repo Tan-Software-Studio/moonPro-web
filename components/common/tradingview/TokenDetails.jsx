@@ -77,7 +77,7 @@ const TokenDetails = ({
       } else {
         dispatch(setChartSymbolImage(getImageFromLocalStorage));
       }
-    } catch (error) {}
+    } catch (error) { }
   }
   const token = localStorage.getItem("token");
 
@@ -157,7 +157,7 @@ const TokenDetails = ({
       .then((res) => {
         dispatch(setIsFaviouriteToken(res?.data?.data?.exists));
       })
-      .catch((err) => {})
+      .catch((err) => { })
       .finally(() => {
         setIsFavouriteLoading(false);
       });
@@ -249,8 +249,8 @@ const TokenDetails = ({
                   <div className="text-[#A8A8A8] text-xs md:text-[14px]">
                     {tokenaddress && tokenaddress.length >= 10
                       ? `${tokenaddress.slice(0, 5)}...${tokenaddress.slice(
-                          -3
-                        )}`
+                        -3
+                      )}`
                       : tokenaddress}
                   </div>
                   <div
@@ -374,9 +374,8 @@ const TokenDetails = ({
                         </span>
                       </span>
                       <span
-                        className={`${
-                          index === 3 ? "text-[#4CAF50]" : "text-white"
-                        } text-sm`}
+                        className={`${index === 3 ? "text-[#4CAF50]" : "text-white"
+                          } text-sm`}
                       >
                         {num?.label == "Price USD"
                           ? formatDecimal(num?.price)
@@ -480,47 +479,44 @@ const TokenDetails = ({
                 {/* social icons */}
                 <div className="grid grid-cols-4 place-content-between">
                   <div className="mt-[16px] flex flex-col items-center justify-center gap-[4px]">
-                    <div className="w-[64px] h-[64px] rounded-full bg-[#133D94] flex items-center cursor-pointer justify-center">
-                      <a
-                        href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
-                          window.location.href
-                        )}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <BsTwitterX className="text-[25px] text-[#F6F6F6]" />
-                      </a>
-                    </div>
+                    <a
+                      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                        window.location.href
+                      )}`}
+                      className="w-[64px] h-[64px] rounded-full bg-[#133D94] flex items-center cursor-pointer justify-center"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <BsTwitterX className="text-[25px] text-[#F6F6F6]" />
+                    </a>
                     <h1 className="text-[14px] font-[500] text-[#F6F6F6]">X</h1>
                   </div>
                   <div className="mt-[16px] flex flex-col items-center justify-center gap-[4px] ">
-                    <div className="w-[64px] h-[64px] rounded-full bg-[#133D94] flex items-center cursor-pointer justify-center">
-                      <a
-                        href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                          window.location.href
-                        )}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <RiFacebookCircleLine className="text-[25px] text-[#F6F6F6]" />
-                      </a>
-                    </div>
+                    <a
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                        window.location.href
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-[64px] h-[64px] rounded-full bg-[#133D94] flex items-center cursor-pointer justify-center"
+                    >
+                      <RiFacebookCircleLine className="text-[25px] text-[#F6F6F6]" />
+                    </a>
                     <h1 className="text-[14px] font-[500] text-[#F6F6F6]">
                       Facebook
                     </h1>
                   </div>
                   <div className="mt-[16px] flex flex-col items-center justify-center gap-[4px] ">
-                    <div className="w-[64px] h-[64px] rounded-full bg-[#133D94] flex items-center cursor-pointer justify-center">
-                      <a
-                        href={`https://www.reddit.com/submit?url=${encodeURIComponent(
-                          window.location.href
-                        )}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <PiRedditLogo className="text-[25px] text-[#F6F6F6]" />
-                      </a>
-                    </div>
+                    <a
+                      href={`https://www.reddit.com/submit?url=${encodeURIComponent(
+                        window.location.href
+                      )}`}
+                      className="w-[64px] h-[64px] rounded-full bg-[#133D94] flex items-center cursor-pointer justify-center"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <PiRedditLogo className="text-[25px] text-[#F6F6F6]" />
+                    </a>
                     <h1 className="text-[14px] font-[500] text-[#F6F6F6]">
                       Reddit
                     </h1>
@@ -550,29 +546,29 @@ const TokenDetails = ({
                     </h1>
                   </div>
                   <div className="mt-[16px] flex flex-col items-center justify-center gap-[4px] ">
-                    <div className="w-[64px] h-[64px] rounded-full bg-[#133D94] flex items-center cursor-pointer justify-center">
-                      <a
-                        href={`https://t.me/share/url?url=${encodeURIComponent(
-                          window.location.href
-                        )}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <PiTelegramLogoDuotone className="text-[25px] text-[#F6F6F6]" />
-                      </a>
-                    </div>
+                    <a
+                      href={`https://t.me/share/url?url=${encodeURIComponent(
+                        window.location.href
+                      )}`}
+                      target="_blank"
+                      className="w-[64px] h-[64px] rounded-full bg-[#133D94] flex items-center cursor-pointer justify-center"
+                      rel="noopener noreferrer"
+                    >
+                      <PiTelegramLogoDuotone className="text-[25px] text-[#F6F6F6]" />
+                    </a>
                     <h1 className="text-[14px] font-[500] text-[#F6F6F6]">
                       Telegram
                     </h1>
                   </div>
                   <div className="mt-[16px] flex flex-col items-center justify-center gap-[4px] ">
-                    <div className="w-[64px] h-[64px] rounded-full bg-[#133D94] flex items-center cursor-pointer justify-center">
+                    <div >
                       <a
                         href={`https://www.facebook.com/dialog/send?link=https://wavepro.com&app_id=YOUR_APP_ID&redirect_uri=${encodeURIComponent(
                           window.location.href
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
+                        className="w-[64px] h-[64px] rounded-full bg-[#133D94] flex items-center cursor-pointer justify-center"
                       >
                         <PiMessengerLogoLight className="text-[25px] text-[#F6F6F6]" />
                       </a>

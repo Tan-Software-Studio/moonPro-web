@@ -4,6 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import DownToUp from "../../../public/assets/Trading/DownToUp.svg";
+import { PiLightningLight } from "react-icons/pi";
+import { PiLightningFill } from "react-icons/pi";
 
 // This component can be directly used in your Table component
 const TabNavigation = ({
@@ -13,12 +15,13 @@ const TabNavigation = ({
   topHoldersApiCall,
   toptradersApiCall,
   tvChartRef,
+  isInstantTradeActive,
+  handleInstantTradeClick,
 }) => {
   const tabsRef = useRef([]);
   const scrollContainerRef = useRef(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
   const [isExpanded, setIsExpanded] = useState(true);
-
   // Function to handle tab click with centering behavior
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
@@ -145,7 +148,23 @@ const TabNavigation = ({
           }}
         />
       </div>
-
+      {/* Instant Trade */}
+      <button 
+        onClick={() => handleInstantTradeClick()}
+        className={`hidden md:flex gap-1 border text-[#526fff]  rounded-2xl py-1 pl-3 pr-4 items-center justify-center
+          ${isInstantTradeActive ? 
+          "bg-[#526fff30] border-[#526fff]" :
+          "bg-transparent border-[#526fff50]"
+          }
+        `}
+      >
+        {isInstantTradeActive ? 
+          <PiLightningFill size={16} className="flex flex-shrink-0" />
+          :  
+          <PiLightningLight size={16} className="flex flex-shrink-0" />
+        }
+        <p className="flex flex-shrink-0 text-sm">Instant Trade</p>
+      </button>
       {/* DownToUp Icon */}
       <div
         className="hidden md:flex items-center justify-center cursor-pointer ml-4 md:ml-6 p-1 md:p-2"

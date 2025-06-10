@@ -8,9 +8,8 @@ import {
 } from "@/app/redux/states";
 import { addMark } from "@/utils/tradingViewChartServices/mark";
 import { getLatestBarTime } from "../tradingViewChartServices/latestBarTime";
-import { updateHoldingsDataWhileBuySell } from "@/app/redux/holdingDataSlice/holdingData.slice";
+import { setBuyAndSellCountInPerformance, updateHoldingsDataWhileBuySell } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import { showToaster } from "../toaster/toaster.style";
-import { setBuyAndSellCountInPerformance } from "@/app/redux/portFolioDataSlice/portfolioData.slice";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 // handler to buy solana tokens
 const buySolanaTokens = async (

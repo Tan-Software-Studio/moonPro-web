@@ -13,7 +13,7 @@ import {
   setSolWalletAddress,
 } from "@/app/redux/states";
 import { useTranslation } from "react-i18next";
-import { ChevronDown, List, Eye, LayoutGrid, Search } from "lucide-react";
+import { ChevronDown, List, LayoutGrid, Search } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { IoCheckmarkDone } from "react-icons/io5";
@@ -25,6 +25,8 @@ import { FaRegCircle } from "react-icons/fa";
 import { showToastLoader } from "../toastLoader/ToastLoder";
 import { updateWalletToPrimary } from "@/app/redux/userDataSlice/UserData.slice";
 import { showToaster } from "@/utils/toaster/toaster.style";
+import { FaChartLine } from "react-icons/fa";
+import { setMemescopeChart } from "@/app/redux/memescopeData/Memescope";
 
 const AllPageHeader = ({
   HeaderData,
@@ -74,11 +76,9 @@ const AllPageHeader = ({
   const displayButtonRef = useRef(null);
   const buttonRef = useRef(null);
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
-  const [isLoading, setIsLoading] = useState(false);
-  const [copied, setCopied] = useState(false);
 
   const userDetails = useSelector((state) => state?.userData?.userDetails);
-
+  const isChartHide = useSelector((state) => state?.allMemescopeData?.isChart);
   const primaryWallet = userDetails?.walletAddressSOL?.find(
     (wallet) => wallet.primary
   );
@@ -334,7 +334,6 @@ const AllPageHeader = ({
   };
 
   // ----------Filter Dexes--------
-  const defaultOptions = ["Raydium", "Pump.fun", "Moonshot", "Orca", "Meteora"];
   const chcekBoxStyle =
     "appearance-none w-4 h-4 border border-gray-400 rounded-sm bg-transparent flex items-center justify-center checked:bg-[#3e9fd6] checked:border-[#3e9fd6] checked:after:content-['✔'] checked:after:text-xs";
 
@@ -354,14 +353,25 @@ const AllPageHeader = ({
 
       {/* filter + buy etc button */}
       <div className="flex items-center flex- lg:items-center md:justify-end gap-2 overflow-x-auto md:mt-0">
+        {pathname == "/memescope/solana" && (
+          <div
+            onClick={() => dispatch(setMemescopeChart())}
+            className={`cursor-pointer p-[5px] border-[#1f1f20] border-[2px] rounded-[5px] ${
+              isChartHide && "bg-[#1f1f20]"
+            }`}
+          >
+            <FaChartLine color={`${isChartHide ? "#c2c2c4" : "#505052"}`} />
+          </div>
+        )}
         {duration && (
           <div className={`flex `}>
             {HeaderData?.timeDuration?.map((option, index) => (
               <button
                 key={index}
                 onClick={() => handleButtonClick(option)}
-                className={`py-2 px-3 text-sm  font-semibold hover:bg-[#1F73FC]/[30%] rounded-md ${option === localFilterTime && " !text-[#1F73FC]"
-                  } transition duration-300 text-[#edebe5]`}
+                className={`py-2 px-3 text-sm  font-semibold hover:bg-[#1F73FC]/[30%] rounded-md ${
+                  option === localFilterTime && " !text-[#1F73FC]"
+                } transition duration-300 text-[#edebe5]`}
               >
                 {option}
               </button>
@@ -440,22 +450,26 @@ const AllPageHeader = ({
                       </p>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <button
-                          className={`py-2 px-3 rounded border border-[#323642] ${selectedMetric === "12"
-                            ? "bg-[#323642] text-white font-bold"
-                            : " text-gray-300"
-                            }`}
+                          className={`py-2 px-3 rounded border border-[#323642] ${
+                            selectedMetric === "12"
+                              ? "bg-[#323642] text-white font-bold"
+                              : " text-gray-300"
+                          }`}
                           onClick={() => handleMetricChange("12")}
                         >
-                          {tredingPage?.display?.MC_77K} <br /> {tredingPage?.display?.Small}
+                          {tredingPage?.display?.MC_77K} <br />{" "}
+                          {tredingPage?.display?.Small}
                         </button>
                         <button
-                          className={`py-2 px-3 rounded border border-[#323642] ${selectedMetric === "20"
-                            ? "bg-[#323642] text-white font-bold"
-                            : " text-gray-300"
-                            }`}
+                          className={`py-2 px-3 rounded border border-[#323642] ${
+                            selectedMetric === "20"
+                              ? "bg-[#323642] text-white font-bold"
+                              : " text-gray-300"
+                          }`}
                           onClick={() => handleMetricChange("20")}
                         >
-                          {tredingPage?.display?.MC_77K}  <br /> {tredingPage?.display?.Large}
+                          {tredingPage?.display?.MC_77K} <br />{" "}
+                          {tredingPage?.display?.Large}
                         </button>
                       </div>
                     </div>
@@ -471,7 +485,9 @@ const AllPageHeader = ({
                         ) : (
                           <BsFillSearchHeartFill />
                         )}
-                        {searchbar ? tredingPage?.display?.HideSearchBar : tredingPage?.display?.showSearchBar}
+                        {searchbar
+                          ? tredingPage?.display?.HideSearchBar
+                          : tredingPage?.display?.showSearchBar}
                       </div>
 
                       <div
@@ -483,7 +499,9 @@ const AllPageHeader = ({
                         ) : (
                           <FaRegCircle />
                         )}
-                        {showCircle ? tredingPage?.display?.squareImage : tredingPage?.display?.CircleImage}
+                        {showCircle
+                          ? tredingPage?.display?.squareImage
+                          : tredingPage?.display?.CircleImage}
                       </div>
                       <div
                         className="flex items-center gap-2 cursor-pointer font-semibold"
@@ -510,29 +528,43 @@ const AllPageHeader = ({
                           tredingPage?.display?.Top10Holders,
                         ].map((item) => {
                           const isActive =
-                            (item === tredingPage?.display?.MarketCap && showMarketCap) ||
-                            (item === tredingPage?.display?.Volume && showVolume) ||
-                            (item === tredingPage?.display?.Socials && showSocials) ||
-                            (item === tredingPage?.display?.Holders && showHolders) ||
-                            (item === tredingPage?.display?.Top10Holders && showHolders10);
+                            (item === tredingPage?.display?.MarketCap &&
+                              showMarketCap) ||
+                            (item === tredingPage?.display?.Volume &&
+                              showVolume) ||
+                            (item === tredingPage?.display?.Socials &&
+                              showSocials) ||
+                            (item === tredingPage?.display?.Holders &&
+                              showHolders) ||
+                            (item === tredingPage?.display?.Top10Holders &&
+                              showHolders10);
 
                           return (
                             <button
                               key={item}
-                              className={`${isActive
-                                ? "bg-[#282b32]"
-                                : "border border-[#282b32] text-gray-500"
-                                } text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]`}
+                              className={`${
+                                isActive
+                                  ? "bg-[#282b32]"
+                                  : "border border-[#282b32] text-gray-500"
+                              } text-xs px-2 py-1 rounded cursor-pointer hover:bg-[#2a2a2a]`}
                               onClick={() => {
                                 if (item === tredingPage?.display?.MarketCap) {
                                   mktShowHide();
-                                } else if (item === tredingPage?.display?.Volume) {
+                                } else if (
+                                  item === tredingPage?.display?.Volume
+                                ) {
                                   volumeShowHide();
-                                } else if (item === tredingPage?.display?.Socials) {
+                                } else if (
+                                  item === tredingPage?.display?.Socials
+                                ) {
                                   socialsShowHide();
-                                } else if (item === tredingPage?.display?.Holders) {
+                                } else if (
+                                  item === tredingPage?.display?.Holders
+                                ) {
                                   holderShowHide();
-                                } else if (item === tredingPage?.display?.Top10Holders) {
+                                } else if (
+                                  item === tredingPage?.display?.Top10Holders
+                                ) {
                                   holderShowHide10();
                                 }
                               }}
@@ -608,8 +640,9 @@ const AllPageHeader = ({
                       return (
                         <div
                           key={idx}
-                          className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${wallet.primary ? "bg-[#252525]" : ""
-                            }`}
+                          className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${
+                            wallet.primary ? "bg-[#252525]" : ""
+                          }`}
                         >
                           <div className="flex items-center gap-3">
                             <input
@@ -621,10 +654,11 @@ const AllPageHeader = ({
                             <div className="flex flex-col">
                               <div className="flex items-center gap-2 text-sm">
                                 <span
-                                  className={`font-medium ${wallet.primary
-                                    ? "text-orange-400"
-                                    : "text-white"
-                                    }`}
+                                  className={`font-medium ${
+                                    wallet.primary
+                                      ? "text-orange-400"
+                                      : "text-white"
+                                  }`}
                                 >
                                   {idx === 0
                                     ? "Moon Pro Main"

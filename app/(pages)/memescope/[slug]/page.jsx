@@ -1,5 +1,12 @@
 "use client";
-import { bitcoinIcon, blue_pump, buyIcon, green_pump, memescopeImg, yellow_pump } from "@/app/Images";
+import {
+  bitcoinIcon,
+  blue_pump,
+  buyIcon,
+  green_pump,
+  memescopeImg,
+  yellow_pump,
+} from "@/app/Images";
 import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -9,9 +16,33 @@ import FilterMemescope from "@/components/common/filter/FilterMemescope";
 import FilterButton from "@/components/common/filter/FilterButton";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import { useTranslation } from "react-i18next";
-import { aboutGraduateFilterData, applyAllAboutGraduatDataFilters, checkIfAboutGraduatDataFiltersExist, initialAboutGraduatDataFilterValues, loadAboutGraduatDataFiltersFromStorage, applyAboutGraduatDataFilters, resetAboutGraduatDataFilters } from '../../../../components/memescope/AboutGraduateDataFilter'
-import { graduatedFilterData, applyGraduatedDataFilters, initialGraduatedDataFilterValues, resetGratuatedDataFilters, loadGraduatedDataFiltersFromStorage, checkIfGraduatedDataFiltersExist, applyAllGraduatedDataFilters } from "@/components/memescope/GraduatedDataFilter";
-import { applyAllNewCreationDataFilters, applyNewCreationDataFilters, checkIfNewCreationFiltersExist, initialNewCreationDataFilterValues, loadNewCreationDataFiltersFromStorage, newCreationFilterData, resetNewCreationDataFilters } from "@/components/memescope/NewCreationDataFilter";
+import {
+  aboutGraduateFilterData,
+  applyAllAboutGraduatDataFilters,
+  checkIfAboutGraduatDataFiltersExist,
+  initialAboutGraduatDataFilterValues,
+  loadAboutGraduatDataFiltersFromStorage,
+  applyAboutGraduatDataFilters,
+  resetAboutGraduatDataFilters,
+} from "../../../../components/memescope/AboutGraduateDataFilter";
+import {
+  graduatedFilterData,
+  applyGraduatedDataFilters,
+  initialGraduatedDataFilterValues,
+  resetGratuatedDataFilters,
+  loadGraduatedDataFiltersFromStorage,
+  checkIfGraduatedDataFiltersExist,
+  applyAllGraduatedDataFilters,
+} from "@/components/memescope/GraduatedDataFilter";
+import {
+  applyAllNewCreationDataFilters,
+  applyNewCreationDataFilters,
+  checkIfNewCreationFiltersExist,
+  initialNewCreationDataFilterValues,
+  loadNewCreationDataFiltersFromStorage,
+  newCreationFilterData,
+  resetNewCreationDataFilters,
+} from "@/components/memescope/NewCreationDataFilter";
 
 const Memescope = () => {
   const { t } = useTranslation();
@@ -19,21 +50,27 @@ const Memescope = () => {
   const [selectedScope, setSelectedScope] = useState(1);
   const [openDropdown, setOpenDropdown] = useState(null);
   const pathname = usePathname();
-  const tredingPage = t('tredingPage')
-
+  const tredingPage = t("tredingPage");
 
   // == about graduate states == \\
-  const [aboutGraduateDataFilterValues, setAboutGraduateDataFilterValues] = useState(initialAboutGraduatDataFilterValues);  // input values
-  const [aboutGraduateDataFiltersApplied, setaboutGraduateDataFiltersApplied] = useState(false); // filter applied or not
+  const [aboutGraduateDataFilterValues, setAboutGraduateDataFilterValues] =
+    useState(initialAboutGraduatDataFilterValues); // input values
+  const [aboutGraduateDataFiltersApplied, setaboutGraduateDataFiltersApplied] =
+    useState(false); // filter applied or not
   const [filteredAboutGraduatData, setFilteredAboutGraduatData] = useState([]); // filtered data
 
   // == graduated states == \\
-  const [graduatedDataFilterValues, setGraduatedDataFilterValues] = useState(initialGraduatedDataFilterValues); // input values
-  const [graduatedDataFiltersApplied, setGraduatedDataFiltersApplied] = useState(false); // filter applied or not
+  const [graduatedDataFilterValues, setGraduatedDataFilterValues] = useState(
+    initialGraduatedDataFilterValues
+  ); // input values
+  const [graduatedDataFiltersApplied, setGraduatedDataFiltersApplied] =
+    useState(false); // filter applied or not
   const [filteredGraduatedData, setFilteredGraduatedData] = useState([]); // filtered data
 
-  const [newCreationDataFilterValues, setNewCreationDataFilterValues] = useState(initialNewCreationDataFilterValues);
-  const [newCreationDataFiltersApplied, setNewCreationDataFiltersApplied] = useState(false); // filter applied or not
+  const [newCreationDataFilterValues, setNewCreationDataFilterValues] =
+    useState(initialNewCreationDataFilterValues);
+  const [newCreationDataFiltersApplied, setNewCreationDataFiltersApplied] =
+    useState(false); // filter applied or not
   const [filteredNewCreationData, setFilteredNewCreationData] = useState([]); // filtered data
   const [selectedMetric, setSelectedMetric] = useState(null);
   const [searchbar, setSearchbar] = useState(null);
@@ -44,26 +81,35 @@ const Memescope = () => {
   const [showHolders, setShowHolders] = useState(null);
   const [showHolders10, setshowHolders10] = useState(null);
   const [progerssBar, setProgerssBar] = useState(null);
-  const [newSearchData, setNewSearchData] = useState('');
-  const [newAboutToSearchData, setAboutToSearchData] = useState('');
-  const [graduateSearchData, setGraduateSearchData] = useState('');
+  const [newSearchData, setNewSearchData] = useState("");
+  const [newAboutToSearchData, setAboutToSearchData] = useState("");
+  const [graduateSearchData, setGraduateSearchData] = useState("");
 
   // =======*=*= All about graduate data filter ==========//
-  const Graduatedata = useSelector(
-    (state) => state?.allMemescopeData?.MscopeGraduateData
+  const Graduatedata = Object.values(
+    useSelector((state) => state?.allMemescopeData?.MscopeGraduateData)
   );
+  const isChartHide = useSelector((state) => state?.allMemescopeData?.isChart);
   // input of about graduate data
-  const aboutGraduateFilterDataJson = aboutGraduateFilterData(memescopePage)
+  const aboutGraduateFilterDataJson = aboutGraduateFilterData(memescopePage);
 
-  // onApply function 
+  // onApply function
   function onApplyAboutGraduatData() {
-    applyAboutGraduatDataFilters(aboutGraduateDataFilterValues, Graduatedata, setFilteredAboutGraduatData, setaboutGraduateDataFiltersApplied)
+    applyAboutGraduatDataFilters(
+      aboutGraduateDataFilterValues,
+      Graduatedata,
+      setFilteredAboutGraduatData,
+      setaboutGraduateDataFiltersApplied
+    );
   }
 
-  // onReset function  
+  // onReset function
   function onResetAboutGraduatData() {
-    resetAboutGraduatDataFilters(setAboutGraduateDataFilterValues, setFilteredAboutGraduatData, setaboutGraduateDataFiltersApplied)
-
+    resetAboutGraduatDataFilters(
+      setAboutGraduateDataFilterValues,
+      setFilteredAboutGraduatData,
+      setaboutGraduateDataFiltersApplied
+    );
   }
 
   // about graduate data apply in localstotahr
@@ -74,7 +120,7 @@ const Memescope = () => {
     }
   }, []);
 
-  // Apply saved filters when data avilable 
+  // Apply saved filters when data avilable
   useEffect(() => {
     const savedFilters = loadAboutGraduatDataFiltersFromStorage();
 
@@ -82,7 +128,10 @@ const Memescope = () => {
       const hasFilters = checkIfAboutGraduatDataFiltersExist(savedFilters);
 
       if (hasFilters) {
-        const filteredResult = applyAllAboutGraduatDataFilters(Graduatedata, savedFilters);
+        const filteredResult = applyAllAboutGraduatDataFilters(
+          Graduatedata,
+          savedFilters
+        );
         setFilteredAboutGraduatData(filteredResult);
         setaboutGraduateDataFiltersApplied(true);
       }
@@ -96,15 +145,20 @@ const Memescope = () => {
   const hasAboutSearch = newAboutToSearchData.trim() !== "";
 
   const aboutDataToShow = aboutGraduateDataFiltersApplied
-    ? (hasAboutSearch ? aboutSearchedData : filteredAboutGraduatData)
-    : (hasAboutSearch ? aboutSearchedData : Graduatedata);
-
+    ? hasAboutSearch
+      ? aboutSearchedData
+      : filteredAboutGraduatData
+    : hasAboutSearch
+    ? aboutSearchedData
+    : Graduatedata;
 
   // =======*=*= All graduated data filter ==========//
-  const Graduateddata = useSelector(
-    (state) => state?.allMemescopeData?.MscopeGraduatedData
+  const Graduateddata = Object.values(
+    useSelector((state) => state?.allMemescopeData?.MscopeGraduatedData)
   );
-  const GraduateddataSortedData = [...Graduateddata].sort((a, b) => b.created_time - a.created_time);
+  const GraduateddataSortedData = [...Graduateddata].sort(
+    (a, b) => b.created_time - a.created_time
+  );
 
   const graduatedFilterDataJson = graduatedFilterData(memescopePage);
 
@@ -114,8 +168,7 @@ const Memescope = () => {
       GraduateddataSortedData,
       setFilteredGraduatedData,
       setGraduatedDataFiltersApplied
-
-    )
+    );
   }
 
   function onReserGraduatedData() {
@@ -123,7 +176,7 @@ const Memescope = () => {
       setGraduatedDataFiltersApplied,
       setGraduatedDataFilterValues,
       setFilteredGraduatedData
-    )
+    );
   }
 
   useEffect(() => {
@@ -140,7 +193,10 @@ const Memescope = () => {
       const hasFilters = checkIfGraduatedDataFiltersExist(savedFilters);
 
       if (hasFilters) {
-        const filteredResult = applyAllGraduatedDataFilters(GraduateddataSortedData, savedFilters);
+        const filteredResult = applyAllGraduatedDataFilters(
+          GraduateddataSortedData,
+          savedFilters
+        );
         setFilteredGraduatedData(filteredResult);
         setGraduatedDataFiltersApplied(true);
       }
@@ -154,11 +210,17 @@ const Memescope = () => {
   const hasGraduateSearch = graduateSearchData.trim() !== "";
 
   const graduateDataToShow = graduatedDataFiltersApplied
-    ? (hasGraduateSearch ? graduatedSearchData : filteredGraduatedData)
-    : (hasGraduateSearch ? graduatedSearchData : GraduateddataSortedData);
+    ? hasGraduateSearch
+      ? graduatedSearchData
+      : filteredGraduatedData
+    : hasGraduateSearch
+    ? graduatedSearchData
+    : GraduateddataSortedData;
 
   // == new creation data filter == \\
-  const NewData = useSelector((state) => state?.allMemescopeData?.newLaunch);
+  const NewData = Object.values(
+    useSelector((state) => state?.allMemescopeData?.newLaunch)
+  );
 
   const NewCreationFilterDataJson = newCreationFilterData(memescopePage);
 
@@ -168,7 +230,7 @@ const Memescope = () => {
       NewData,
       setFilteredNewCreationData,
       setNewCreationDataFiltersApplied
-    )
+    );
   }
 
   function onReserNewCreationData() {
@@ -176,8 +238,7 @@ const Memescope = () => {
       setNewCreationDataFiltersApplied,
       setNewCreationDataFilterValues,
       setFilteredNewCreationData
-
-    )
+    );
   }
 
   useEffect(() => {
@@ -194,7 +255,10 @@ const Memescope = () => {
       const hasFilters = checkIfNewCreationFiltersExist(savedFilters);
 
       if (hasFilters) {
-        const filteredResult = applyAllNewCreationDataFilters(NewData, savedFilters);
+        const filteredResult = applyAllNewCreationDataFilters(
+          NewData,
+          savedFilters
+        );
         setFilteredNewCreationData(filteredResult);
         setNewCreationDataFiltersApplied(true);
       }
@@ -208,8 +272,12 @@ const Memescope = () => {
   const hasSearch = newSearchData.trim() !== "";
 
   const newCreationDataToShow = newCreationDataFiltersApplied
-    ? (hasSearch ? searchedData : filteredNewCreationData)
-    : (hasSearch ? searchedData : NewData);
+    ? hasSearch
+      ? searchedData
+      : filteredNewCreationData
+    : hasSearch
+    ? searchedData
+    : NewData;
 
   const handleSidebarToggle = (id) => {
     setOpenDropdown((prev) => (prev === id ? null : id));
@@ -221,7 +289,6 @@ const Memescope = () => {
   function onReset() {
     console.log("remove filters");
   }
-
 
   ///------------------------------------------
   const HeaderData = {
@@ -253,47 +320,66 @@ const Memescope = () => {
   );
 
   useEffect(() => {
-    const storedSettings = localStorage.getItem('DisplaySettings');
+    const storedSettings = localStorage.getItem("DisplaySettings");
     if (storedSettings) {
       try {
         const parsedSettings = JSON.parse(storedSettings);
 
-        if ('searchbar' in parsedSettings) {
+        if ("searchbar" in parsedSettings) {
           setSearchbar(parsedSettings.searchbar === true);
         }
 
-        if ('showCircle' in parsedSettings) {
+        if ("showCircle" in parsedSettings) {
           setShowCircle(parsedSettings.showCircle === true);
         }
-        if ('showProgessBar' in parsedSettings) {
+        if ("showProgessBar" in parsedSettings) {
           setProgerssBar(parsedSettings.showProgessBar === true);
         }
-
       } catch (error) {
         console.error("Failed to parse DisplaySettings:", error);
       }
     }
-
   }, []);
-
-
 
   return (
     <>
       <div className="relative">
         <div
-          className={`${pathname === "/memescope"
-            ? "sticky z-10 top-0"
-            : "sticky z-10 top-[50px]"
-            }  `}
+          className={`${
+            pathname === "/memescope"
+              ? "sticky z-10 top-0"
+              : "sticky z-10 top-[50px]"
+          }  `}
         >
-          <AllPageHeader HeaderData={HeaderData} duration={true} setSelectedMetric={setSelectedMetric} selectedMetric={selectedMetric} setSearchbar={setSearchbar} searchbar={searchbar} setShowCircle={setShowCircle} showCircle={showCircle} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar} />
+          <AllPageHeader
+            HeaderData={HeaderData}
+            duration={true}
+            setSelectedMetric={setSelectedMetric}
+            selectedMetric={selectedMetric}
+            setSearchbar={setSearchbar}
+            searchbar={searchbar}
+            setShowCircle={setShowCircle}
+            showCircle={showCircle}
+            setShowMarketCap={setShowMarketCap}
+            showMarketCap={showMarketCap}
+            setShowVolume={setShowVolume}
+            showVolume={showVolume}
+            setShowSocials={setShowSocials}
+            showSocials={showSocials}
+            showHolders={showHolders}
+            setShowHolders={setShowHolders}
+            setshowHolders10={setshowHolders10}
+            showHolders10={showHolders10}
+            setProgerssBar={setProgerssBar}
+            progerssBar={progerssBar}
+          />
         </div>
         <div className={`grid xl:grid-cols-3 w-full  `}>
           {/* box 1 */}
           <div
-            className={` ${NewData.length === 0 ? `border-r ${borderColor} ` : ""
-              }`}
+            className={` ${
+              NewData.length === 0 ? `border-r ${borderColor} ` : ""
+            }`}
           >
             <div
               className={`md:flex border-r ${borderColor} justify-between items-center w-full sticky px-3 sm:px-3 md:px-[24px] md:py-[12px] py-3 border-b`}
@@ -317,22 +403,27 @@ const Memescope = () => {
                   >
                     <button
                       onClick={() => setSelectedScope(1)}
-                      className={`${selectedScope === 1 && "bg-[#1F73FC] first-of-type:rounded-l-md"
-                        } py-2 px-3 text-xs text-[#ffffff] hover:bg-[#1F73FC] border-r ${borderColor}`}
+                      className={`${
+                        selectedScope === 1 &&
+                        "bg-[#1F73FC] first-of-type:rounded-l-md"
+                      } py-2 px-3 text-xs text-[#ffffff] hover:bg-[#1F73FC] border-r ${borderColor}`}
                     >
                       {memescopePage?.tableheaders?.newcreations}
                     </button>
                     <button
                       onClick={() => setSelectedScope(2)}
-                      className={`${selectedScope === 2 && "bg-[#1F73FC]"
-                        } py-2 px-3 text-xs text-[#ffffff] hover:bg-[#1F73FC] border-r ${borderColor}`}
+                      className={`${
+                        selectedScope === 2 && "bg-[#1F73FC]"
+                      } py-2 px-3 text-xs text-[#ffffff] hover:bg-[#1F73FC] border-r ${borderColor}`}
                     >
                       {memescopePage?.tableheaders?.abouttogra}
                     </button>
                     <button
                       onClick={() => setSelectedScope(3)}
-                      className={`${selectedScope === 3 && "bg-[#1F73FC] last-of-type:rounded-r-md"
-                        } py-2 px-3 text-xs text-[#ffffff] hover:bg-[#1F73FC]`}
+                      className={`${
+                        selectedScope === 3 &&
+                        "bg-[#1F73FC] last-of-type:rounded-r-md"
+                      } py-2 px-3 text-xs text-[#ffffff] hover:bg-[#1F73FC]`}
                     >
                       {memescopePage?.tableheaders?.graduated}
                     </button>
@@ -362,8 +453,9 @@ const Memescope = () => {
                     }}
                   />
                   {/* Tooltip only on XL screens */}
-                  <div className="hidden xl:block absolute bottom-full left-1/2 -translate-x-1/2 px-2 py-1 z-[9999] text-sm text-[#c6c5cb] bg-[#101115] rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap border border-[#1a1b22]"
-                    style={{ transitionDelay: '300ms' }}
+                  <div
+                    className="hidden xl:block absolute bottom-full left-1/2 -translate-x-1/2 px-2 py-1 z-[9999] text-sm text-[#c6c5cb] bg-[#101115] rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap border border-[#1a1b22]"
+                    style={{ transitionDelay: "300ms" }}
                   >
                     Filter
                   </div>
@@ -371,30 +463,48 @@ const Memescope = () => {
               </div>
             </div>
 
-
-
             {/* Box body */}
             <div
-              className={`${selectedScope === 1 ? "block " : "hidden xl:block"
-                }`}
+              className={`${
+                selectedScope === 1 ? "block " : "hidden xl:block"
+              }`}
             >
-              <MscopePumpTable MemscopeData={newCreationDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar} barColor={"#4FAFFE"} capsuleImg={blue_pump} />
+              <MscopePumpTable
+                MemscopeData={newCreationDataToShow}
+                selectedMetric={selectedMetric}
+                showCircle={showCircle}
+                setSelectedMetric={setSelectedMetric}
+                setShowMarketCap={setShowMarketCap}
+                showMarketCap={showMarketCap}
+                setShowVolume={setShowVolume}
+                showVolume={showVolume}
+                setShowSocials={setShowSocials}
+                showSocials={showSocials}
+                showHolders={showHolders}
+                setShowHolders={setShowHolders}
+                setshowHolders10={setshowHolders10}
+                showHolders10={showHolders10}
+                setProgerssBar={setProgerssBar}
+                progerssBar={progerssBar}
+                barColor={"#4FAFFE"}
+                capsuleImg={blue_pump}
+                isChartHide={isChartHide}
+              />
             </div>
           </div>
 
           {/* 2 box */}
           <div
-            className={` ${Graduatedata.length === 0 ? `border-r ${borderColor}` : ""
-              }`}
+            className={` ${
+              Graduatedata.length === 0 ? `border-r ${borderColor}` : ""
+            }`}
           >
             {/* Box header */}
             <div
               className={` border-r ${borderColor} justify-between items-center md:px-[24px] sm:px-3  sticky xl:flex hidden md:py-[12px] py-3 border-b`}
             >
               <div className="flex items-center xl:gap-1">
-                <div
-                  className={`text-[17px] font-[400] text-[#FFFFFF]`}
-                >
+                <div className={`text-[17px] font-[400] text-[#FFFFFF]`}>
                   {memescopePage?.tableheaders?.abouttogra}
                 </div>
                 <Infotip
@@ -404,15 +514,16 @@ const Memescope = () => {
               </div>
 
               <div className="flex">
-                {searchbar ? <input
-                  type="text"
-                  placeholder={tredingPage?.tableheaders?.search}
-                  className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto"
-                  value={newAboutToSearchData}
-                  onChange={(e) => setAboutToSearchData(e.target.value)}
-                /> : null}
+                {searchbar ? (
+                  <input
+                    type="text"
+                    placeholder={tredingPage?.tableheaders?.search}
+                    className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto"
+                    value={newAboutToSearchData}
+                    onChange={(e) => setAboutToSearchData(e.target.value)}
+                  />
+                ) : null}
                 {/* Filter button */}
-
 
                 <div className="relative hidden xl:block group">
                   <FilterButton onClick={() => handleSidebarToggle(1)} />
@@ -420,29 +531,50 @@ const Memescope = () => {
                   {/* Tooltip shown on top with delay */}
                   <div
                     className="absolute bottom-full left-1/2 -translate-x-1/2 px-2 py-1 !z-50 text-sm text-[#c6c5cb] bg-[#101115] rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap border border-[#1a1b22]"
-                    style={{ transitionDelay: '300ms' }}
+                    style={{ transitionDelay: "300ms" }}
                   >
                     Filter
                   </div>
                 </div>
-
               </div>
             </div>
             {/* Box body */}
             <div
-              className={`${selectedScope === 2 ? "block " : "hidden xl:block"
-                }`}
+              className={`${
+                selectedScope === 2 ? "block " : "hidden xl:block"
+              }`}
             >
-              <MscopePumpTable MemscopeData={aboutDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar} barColor={"#41986b"} capsuleImg={green_pump} />
+              <MscopePumpTable
+                MemscopeData={aboutDataToShow}
+                selectedMetric={selectedMetric}
+                showCircle={showCircle}
+                setSelectedMetric={setSelectedMetric}
+                setShowMarketCap={setShowMarketCap}
+                showMarketCap={showMarketCap}
+                setShowVolume={setShowVolume}
+                showVolume={showVolume}
+                setShowSocials={setShowSocials}
+                showSocials={showSocials}
+                showHolders={showHolders}
+                setShowHolders={setShowHolders}
+                setshowHolders10={setshowHolders10}
+                showHolders10={showHolders10}
+                setProgerssBar={setProgerssBar}
+                progerssBar={progerssBar}
+                barColor={"#41986b"}
+                capsuleImg={green_pump}
+                isChartHide={isChartHide}
+              />
             </div>
           </div>
 
           {/* 3 box */}
           <div
-            className={` ${Graduateddata.length === 0
-              ? `border-r ${borderColor} h-screen`
-              : ""
-              }`}
+            className={` ${
+              Graduateddata.length === 0
+                ? `border-r ${borderColor} h-screen`
+                : ""
+            }`}
           >
             {/* Box header */}
             <div
@@ -458,18 +590,18 @@ const Memescope = () => {
                   iconSize={20}
                   body={memescopePage?.tableheaders?.graduatedtooltip}
                 />
-
               </div>
               <div className="flex">
                 {/* Filter button */}
-                {searchbar ? <input
-                  type="text"
-                  placeholder={tredingPage?.tableheaders?.search}
-                  className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto"
-                  value={graduateSearchData}
-                  onChange={(e) => setGraduateSearchData(e.target.value)}
-                /> : null}
-
+                {searchbar ? (
+                  <input
+                    type="text"
+                    placeholder={tredingPage?.tableheaders?.search}
+                    className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto"
+                    value={graduateSearchData}
+                    onChange={(e) => setGraduateSearchData(e.target.value)}
+                  />
+                ) : null}
 
                 <div className="relative hidden xl:block group">
                   <FilterButton onClick={() => handleSidebarToggle(2)} />
@@ -477,23 +609,42 @@ const Memescope = () => {
                   {/* Tooltip shown on top with delay */}
                   <div
                     className="absolute bottom-full left-1/2 -translate-x-1/2 px-2 py-1 z-[9999] text-sm text-[#c6c5cb] bg-[#101115] rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap border border-[#1a1b22]"
-                    style={{ transitionDelay: '300ms' }}
+                    style={{ transitionDelay: "300ms" }}
                   >
                     Filter
                   </div>
                 </div>
-
               </div>
             </div>
             {/* Box body */}
             <div
-              className={`${selectedScope === 3 ? "block " : "hidden xl:block"
-                }`}
+              className={`${
+                selectedScope === 3 ? "block " : "hidden xl:block"
+              }`}
             >
-              <MscopePumpTable MemscopeData={graduateDataToShow} selectedMetric={selectedMetric} showCircle={showCircle} setSelectedMetric={setSelectedMetric} setShowMarketCap={setShowMarketCap} showMarketCap={showMarketCap} setShowVolume={setShowVolume} showVolume={showVolume} setShowSocials={setShowSocials} showSocials={showSocials} showHolders={showHolders} setShowHolders={setShowHolders} setshowHolders10={setshowHolders10} showHolders10={showHolders10} setProgerssBar={setProgerssBar} progerssBar={progerssBar} barColor={"#cfc328"} capsuleImg={yellow_pump} />
+              <MscopePumpTable
+                MemscopeData={graduateDataToShow}
+                selectedMetric={selectedMetric}
+                showCircle={showCircle}
+                setSelectedMetric={setSelectedMetric}
+                setShowMarketCap={setShowMarketCap}
+                showMarketCap={showMarketCap}
+                setShowVolume={setShowVolume}
+                showVolume={showVolume}
+                setShowSocials={setShowSocials}
+                showSocials={showSocials}
+                showHolders={showHolders}
+                setShowHolders={setShowHolders}
+                setshowHolders10={setshowHolders10}
+                showHolders10={showHolders10}
+                setProgerssBar={setProgerssBar}
+                progerssBar={progerssBar}
+                barColor={"#cfc328"}
+                capsuleImg={yellow_pump}
+                isChartHide={isChartHide}
+              />
             </div>
           </div>
-
 
           {/* Filter sidebar */}
           <FilterMemescope
@@ -523,7 +674,6 @@ const Memescope = () => {
             filterValues={graduatedDataFilterValues}
             setFilterValues={setGraduatedDataFilterValues}
           />
-
         </div>
       </div>
     </>

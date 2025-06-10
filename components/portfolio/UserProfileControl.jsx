@@ -23,8 +23,8 @@ const UserProfileControl = () => {
   const [mobileActiveTab, setMobileActiveTab] = useState(
     portfolio?.activePosition
   );
-  const performance = useSelector((state) => state?.portfolioData?.performance);
-  const loading = useSelector((state) => state?.portfolioData?.loading);
+  const performance = useSelector((state) => state?.setPnlData?.performance);
+  const loading = useSelector((state) => state?.setPnlData?.loading);
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
@@ -318,8 +318,8 @@ const UserProfileControl = () => {
                   ))}
                 </div>
                 {leftTableTab === portfolio?.activePosition && (
-                  <div>
-                    <div className="w-full flex items-center gap-2 md:w-72 bg-gray-900 border border-gray-800 rounded-lg p-2">
+                  <div> 
+                    <div className="w-full flex items-center gap-2 md:w-72 border border-gray-800 h-8 px-2 rounded-lg bg-gray-900  ">
                       <div>
                         <CiSearch size={20} />
                       </div>
@@ -329,7 +329,7 @@ const UserProfileControl = () => {
                           setActivePositionSearchQuery(e.target.value)
                         }
                         placeholder={portfolio?.search}
-                        className="w-full text-sm bg-gray-900  focus:outline-none"
+                        className="w-full text-sm bg-transparent  focus:outline-none"
                       />
                     </div>
                   </div>
@@ -373,7 +373,7 @@ const UserProfileControl = () => {
                   ))}
                 </div>
                 <div>
-                  <div className="w-full flex items-center gap-2 md:w-72 bg-gray-900 border border-gray-800 rounded-lg p-2">
+                  <div className="w-full flex items-center gap-2 md:w-72 border border-gray-800 h-8 px-2 rounded-lg bg-gray-900">
                     <div>
                       <CiSearch size={20} />
                     </div>

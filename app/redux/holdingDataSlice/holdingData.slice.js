@@ -1,3 +1,4 @@
+import { pnlPercentage } from "@/components/profile/calculation";
 import axios from "axios";
 
 const { createSlice, createAsyncThunk } = require("@reduxjs/toolkit");
@@ -24,10 +25,53 @@ export const fetchPNLData = createAsyncThunk(
   }
 );
 
+export const fetchPNLDataHistory = createAsyncThunk(
+  "fetchPNLDataHistory",
+  async (solWalletAddress) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `${baseUrl}transactions/PNLHistory/${solWalletAddress}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return res?.data?.data?.pnlHistory;
+    } catch (err) {
+      throw err;
+    }
+  }
+);
+
+export const fetchPerformanceHistory = createAsyncThunk(
+  "fetchPerformanceHistory",
+  async (action) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `${baseUrl}transactions/PNLPerformance/${action}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response?.data?.data?.performance;
+    } catch (err) {
+      throw err;
+    }
+  }
+);
+
 const holdingData = createSlice({
   name: "PnlData",
   initialState: {
     PnlData: [],
+    PnlDataHistory: [],
+    performance: {},
+    loading: true,
     initialLoading: false,
     isDataLoaded: false,
     hasAttemptedLoad: false,
@@ -88,7 +132,7 @@ const holdingData = createSlice({
                 ? Number((weightedBuyAmount / totalQty).toFixed(10))
                 : 0;
           } else {
-            state.PnlData?.push({
+            state.PnlData?.unshift({
               token: payload?.token,
               lots: [
                 {
@@ -111,7 +155,7 @@ const holdingData = createSlice({
             });
           }
         } else {
-          state.PnlData?.push({
+          state.PnlData?.unshift({
             token: payload?.token,
             lots: [
               {
@@ -174,9 +218,7 @@ const holdingData = createSlice({
             const oldQtyCal =
               Number(state.PnlData[findTokenIndex].quantitySold) *
               Number(state.PnlData[findTokenIndex].averageHistoricalSellPrice);
-            const newQtyCal =
-              Number(payload?.qty) *
-              Number(payload?.price);
+            const newQtyCal = Number(payload?.qty) * Number(payload?.price);
             const qtyTotal =
               Number(state?.PnlData[findTokenIndex]?.quantitySold) +
               Number(payload?.qty);
@@ -212,6 +254,102 @@ const holdingData = createSlice({
               state.PnlData[findTokenIndex]?.lots?.length == 0 ||
               payload?.isSellFullAmount
             ) {
+              // add in the history
+              state?.PnlDataHistory?.unshift({
+                token: payload?.token,
+                realizedProfit: state?.PnlData[findTokenIndex]?.realizedProfit,
+                qty: state?.PnlData[findTokenIndex]?.activeQtyHeld,
+                buyPrice: state?.PnlData[findTokenIndex]?.averageBuyPrice,
+                sellPrice:
+                  state?.PnlData[findTokenIndex]?.averageHistoricalSellPrice,
+                name: payload?.name || null,
+                symbol: payload?.symbol || null,
+                img: payload?.img || null,
+                createdAt: new Date(),
+              });
+              // add in the chart of pnl
+              state?.performance?.chartPnlHistory?.push({
+                value: state?.PnlData[findTokenIndex]?.realizedProfit,
+                createdAt: new Date(),
+              });
+
+              // add in the percentage in the performance section
+              const realizedPnlPercentage = Number(
+                pnlPercentage(
+                  state?.PnlData[findTokenIndex]?.averageHistoricalSellPrice,
+                  state?.PnlData[findTokenIndex]?.averageBuyPrice
+                ) || 0
+              );
+              if (realizedPnlPercentage >= 500) {
+                const index = state?.performance?.performance?.findIndex(
+                  (item) => item?._id == 500
+                );
+                if (index >= 0) {
+                  state.performance.performance[index].count += 1;
+                } else {
+                  state?.performance?.performance?.push({
+                    _id: 500,
+                    count: 1,
+                  });
+                }
+              } else if (
+                realizedPnlPercentage >= 200 &&
+                realizedPnlPercentage < 500
+              ) {
+                const index = state?.performance?.performance?.findIndex(
+                  (item) => item?._id == 200
+                );
+                if (index >= 0) {
+                  state.performance.performance[index].count += 1;
+                } else {
+                  state?.performance?.performance?.push({
+                    _id: 200,
+                    count: 1,
+                  });
+                }
+              } else if (
+                realizedPnlPercentage >= 0 &&
+                realizedPnlPercentage < 200
+              ) {
+                const index = state?.performance?.performance?.findIndex(
+                  (item) => item?._id == 0
+                );
+                if (index >= 0) {
+                  state.performance.performance[index].count += 1;
+                } else {
+                  state?.performance?.performance?.push({
+                    _id: 0,
+                    count: 1,
+                  });
+                }
+              } else if (
+                realizedPnlPercentage >= -50 &&
+                realizedPnlPercentage < 0
+              ) {
+                const index = state?.performance?.performance?.findIndex(
+                  (item) => item?._id == -50
+                );
+                if (index >= 0) {
+                  state.performance.performance[index].count += 1;
+                } else {
+                  state?.performance?.performance?.push({
+                    _id: -50,
+                    count: 1,
+                  });
+                }
+              } else {
+                const index = state?.performance?.performance?.findIndex(
+                  (item) => item?._id == "null"
+                );
+                if (index >= 0) {
+                  state.performance.performance[index].count += 1;
+                } else {
+                  state?.performance?.performance?.push({
+                    _id: "null",
+                    count: 1,
+                  });
+                }
+              }
               state?.PnlData?.splice(findTokenIndex, 1);
             }
           }
@@ -227,6 +365,17 @@ const holdingData = createSlice({
       state.hasAttemptedLoad = false; // Reset this too
       state.PnlData = [];
       state.error = null;
+    },
+    setBuyAndSellCountInPerformance: (state, { payload }) => {
+      if (payload == "buy") {
+        state.performance.buys += 1;
+      } else if (payload == "sell") {
+        state.performance.sells += 1;
+      }
+    },
+    updatePercentageCountData: (state, { payload }) => {
+      if (payload >= 500) {
+      }
     },
   },
   extraReducers: (builder) => {
@@ -250,6 +399,20 @@ const holdingData = createSlice({
         state.hasAttemptedLoad = true;
         state.PnlData = [];
         state.error = payload;
+      })
+      .addCase(fetchPNLDataHistory.fulfilled, (state, { payload }) => {
+        state.PnlDataHistory = payload || [];
+      })
+      .addCase(fetchPNLDataHistory.rejected, (state, { payload }) => {
+        state.PnlDataHistory = [];
+      })
+      .addCase(fetchPerformanceHistory.fulfilled, (state, { payload }) => {
+        state.performance = payload;
+        state.loading = false;
+      })
+      .addCase(fetchPerformanceHistory.rejected, (state, { payload }) => {
+        state.performance = [];
+        state.loading = false;
       });
   },
 });
@@ -260,6 +423,8 @@ export const {
   updatePnlTableData,
   resetPnlDataState,
   updateHoldingsDataWhileBuySell,
+  updatePercentageCountData,
+  setBuyAndSellCountInPerformance,
 } = holdingData.actions;
 
 export default holdingData.reducer;

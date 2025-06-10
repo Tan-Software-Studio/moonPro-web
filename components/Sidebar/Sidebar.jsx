@@ -5,14 +5,12 @@ import {
   logotext,
   memescope,
   trending,
-  leaderboard,
   referral,
-  walletTrackerWhiteImg,
 } from "@/app/Images";
 import Image from "next/image";
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import {
@@ -26,12 +24,13 @@ import {
 } from "@/websocket/walletTracker";
 import { useTranslation } from "react-i18next";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { fetchPNLData } from "@/app/redux/holdingDataSlice/holdingData.slice";
-import AISignalsButton from "../Navbar/ai-signalBtn/AiSignalBtn";
 import {
   fetchPerformanceHistory,
-  setPerformanceState,
-} from "@/app/redux/portFolioDataSlice/portfolioData.slice";
+  fetchPNLData,
+  fetchPNLDataHistory,
+} from "@/app/redux/holdingDataSlice/holdingData.slice";
+import AISignalsButton from "../Navbar/ai-signalBtn/AiSignalBtn";
+import { setIsChartByDefault } from "@/app/redux/memescopeData/Memescope";
 
 const Sidebar = () => {
   const { t } = useTranslation();
@@ -105,21 +104,19 @@ const Sidebar = () => {
 
   useEffect(() => {
     subscribeToWalletTracker();
+    subscribeToTrendingTokens();
+    dispatch(setIsChartByDefault());
   }, []);
 
   // start websocket for wallet tracking
   useEffect(() => {
     if (solWalletAddress) {
       dispatch(fetchPNLData(solWalletAddress));
-      dispatch(setPerformanceState());
+      dispatch(fetchPNLDataHistory(solWalletAddress));
       dispatch(fetchPerformanceHistory(solWalletAddress));
     }
   }, [solWalletAddress]);
 
-  // subscribe to trending token
-  useEffect(() => {
-    subscribeToTrendingTokens();
-  }, []);
 
   useEffect(() => {
     setIsLargeScreen(isLargeScreenData);
@@ -134,12 +131,11 @@ const Sidebar = () => {
   return (
     <>
       <div
-        className={`sidebar ${
-          (isSidebarOpen && isLargeScreen) ||
+        className={`sidebar ${(isSidebarOpen && isLargeScreen) ||
           (isSidebarOpen && isSmallScreenData)
-            ? `w-full md:w-[192.4px]`
-            : " hidden md:block md:w-[64px]"
-        } transition-all duration-1000 ease-in-out h-full overflow-x-hidden z-50 fixed top-0 left-0 bg-[#08080E] border-r-[1px] border-r-[#404040]`}
+          ? `w-full md:w-[192.4px]`
+          : " hidden md:block md:w-[64px]"
+          } transition-all duration-1000 ease-in-out h-full overflow-x-hidden z-50 fixed top-0 left-0 bg-[#08080E] border-r-[1px] border-r-[#404040]`}
       >
         {/* logo + text */}
         <div className="flex  py-[17.8px] px-2 md:px-[2.4px]  items-center gap-3 justify-between md:justify-center text-[#B5B7DA] w-full">
@@ -197,17 +193,14 @@ const Sidebar = () => {
             {sidebardata?.map((data) => (
               <Link key={data.id} href={data?.pathname}>
                 <div
-                  className={`font-[400] p-2 transition-all border-[1px] border-transparent duration-300 ease-in-out text-[14px] mx-3 cursor-pointer text-[#ffffff] ${
-                    data.pathname === pathname
-                      ? `${
-                          isSidebarOpen
-                            ? "!rounded-md bg-[#11265B]"
-                            : "rounded-full bg-gradient"
-                        } border-[1px] !border-[#0E43BD]`
-                      : `text-[#ffffff]   hover:bg-[#11265B] ${
-                          isSidebarOpen ? "rounded-md" : "rounded-full"
-                        }`
-                  } 
+                  className={`font-[400] p-2 transition-all border-[1px] border-transparent duration-300 ease-in-out text-[14px] mx-3 cursor-pointer text-[#ffffff] ${data.pathname === pathname
+                    ? `${isSidebarOpen
+                      ? "!rounded-md bg-[#11265B]"
+                      : "rounded-full bg-gradient"
+                    } border-[1px] !border-[#0E43BD]`
+                    : `text-[#ffffff]   hover:bg-[#11265B] ${isSidebarOpen ? "rounded-md" : "rounded-full"
+                    }`
+                    } 
                   `}
                   onClick={() => {
                     isMobileScreenData && dispatch(setIsSidebarOpen(false));
@@ -222,17 +215,15 @@ const Sidebar = () => {
                       />
                     </div>
                     <span
-                      className={`items-center justify-between flex-grow font-[400] text-nowrap ${
-                        (isSidebarOpen && isLargeScreen) ||
+                      className={`items-center justify-between flex-grow font-[400] text-nowrap ${(isSidebarOpen && isLargeScreen) ||
                         (isSidebarOpen && isSmallScreenData)
-                          ? "block"
-                          : "hidden"
-                      }
-                        ${
-                          selectToken == "Solana" &&
+                        ? "block"
+                        : "hidden"
+                        }
+                        ${selectToken == "Solana" &&
                           pathname === "memescope/solana"
-                            ? "hidden"
-                            : "flex"
+                          ? "hidden"
+                          : "flex"
                         }
                        `}
                     >
