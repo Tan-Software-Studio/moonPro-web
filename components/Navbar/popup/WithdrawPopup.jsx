@@ -1,52 +1,90 @@
+"use client";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { solana } from "@/app/Images";
 import axiosInstanceAuth from "@/apiInstance/axiosInstanceAuth";
+import { showToaster } from "@/utils/toaster/toaster.style";
 
-const WithdrawPopup = ({ isOpen, onClose, balance = 0, tokenSymbol = "SOL", solanaLivePrice = 174.21 }) => {
+const WithdrawPopup = ({
+  isOpen,
+  onClose,
+  balance = 0,
+  tokenSymbol = "SOL",
+  solanaLivePrice = 0,
+}) => {
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [destinationAddress, setDestinationAddress] = useState("");
   const [receiveAmount, setReceiveAmount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-
   const handleMaxClick = () => {
-    const maxAmount = balance.toString();
-    setWithdrawAmount(maxAmount);
-    setReceiveAmount(maxAmount);
+    const smallAmtInSol = +(0.2 / Number(solanaLivePrice)).toFixed(9);
+    if (Number(balance) <= smallAmtInSol) {
+      return showToaster(
+        `Minimum sol for withdraw is more then ${smallAmtInSol.toFixed(5)}`
+      );
+    }
+    setWithdrawAmount(Number(balance));
+    setReceiveAmount(+(Number(balance) - smallAmtInSol).toFixed(9));
   };
 
   const handleWithdrawAmountChange = (value) => {
-    const numValue = parseFloat(value) || 0;
+    const numValue = Number(value) || 0;
     if (numValue > balance) {
       return;
     }
-    setWithdrawAmount(value);
-    setReceiveAmount(value);
+    const smallAmtInSol = +(0.2 / Number(solanaLivePrice)).toFixed(9);
+    if (numValue + smallAmtInSol >= balance) {
+      const finalAmtAfterMinusGas = +(numValue - smallAmtInSol).toFixed(9);
+      if (finalAmtAfterMinusGas > 0) {
+        setReceiveAmount(+(numValue - smallAmtInSol).toFixed(9));
+      } else {
+        setReceiveAmount(0);
+      }
+    } else {
+      setReceiveAmount(numValue);
+    }
+    setWithdrawAmount(numValue);
     setError(""); // Clear error when user changes input
     setSuccess(false); // Clear success when user changes input
     setSuccess(false); // Clear success when user changes input
   };
 
   const handleReceiveAmountChange = (value) => {
-    const numValue = parseFloat(value) || 0;
+    const numValue = Number(value) || 0;
     if (numValue > balance) {
       return;
     }
-    setReceiveAmount(value);
-    setWithdrawAmount(value);
+    const smallAmtInSol = +(0.2 / Number(solanaLivePrice)).toFixed(9);
+    if (numValue + smallAmtInSol >= balance) {
+      setReceiveAmount(+(numValue - smallAmtInSol).toFixed(9));
+    } else {
+      setReceiveAmount(numValue);
+    }
+    setWithdrawAmount(numValue);
     setError(""); // Clear error when user changes input
   };
 
   const handleSubmit = async () => {
-    if (!destinationAddress || !withdrawAmount || parseFloat(withdrawAmount) <= 0) {
-      setError("Please enter a valid destination address and withdrawal amount");
+    if (!destinationAddress) {
+      setError("Please enter a valid destination address.");
       return;
     }
-
+    const smallAmtInSol = +(0.2 / Number(solanaLivePrice)).toFixed(9);
+    if (!receiveAmount || parseFloat(receiveAmount) <= 0) {
+      return showToaster(
+        `Minimum sol for withdraw is more then ${smallAmtInSol.toFixed(5)}`
+      );
+    }
+    // const smallAmtInSol = +(0.2 / Number(solanaLivePrice)).toFixed(9);
+    // if (balance <= smallAmtInSol) {
+    //   return showToaster(
+    //     `Minimum sol for withdraw is more then ${smallAmtInSol.toFixed(5)}`
+    //   );
+    // }
     setIsLoading(true);
     setError("");
     setSuccess(false);
@@ -54,10 +92,13 @@ const WithdrawPopup = ({ isOpen, onClose, balance = 0, tokenSymbol = "SOL", sola
     try {
       const payload = {
         toWallet: destinationAddress,
-        amount: parseFloat(withdrawAmount),
+        amount: receiveAmount,
       };
 
-      const response = await axiosInstanceAuth.post("/transactions/withrawSolUser", payload);
+      const response = await axiosInstanceAuth.post(
+        "/transactions/withrawSolUser",
+        payload
+      );
 
       // Handle successful response
       console.log("Withdrawal successful:", response.data);
@@ -82,7 +123,10 @@ const WithdrawPopup = ({ isOpen, onClose, balance = 0, tokenSymbol = "SOL", sola
       // Handle different types of errors
       if (error.response) {
         // Server responded with error status
-        const errorMessage = error.response.data?.message || error.response.data?.error || "Withdrawal failed";
+        const errorMessage =
+          error.response.data?.message ||
+          error.response.data?.error ||
+          "Withdrawal failed";
         setError(errorMessage);
       } else if (error.request) {
         // Network error
@@ -96,8 +140,11 @@ const WithdrawPopup = ({ isOpen, onClose, balance = 0, tokenSymbol = "SOL", sola
     }
   };
 
-  const isButtonDisabled = !destinationAddress || !withdrawAmount || parseFloat(withdrawAmount) <= 0;
-  const usdValue = (parseFloat(withdrawAmount) * solanaLivePrice || 0).toFixed(2);
+  const isButtonDisabled =
+    !destinationAddress || !withdrawAmount || parseFloat(withdrawAmount) <= 0;
+  const usdValue = (parseFloat(withdrawAmount) * solanaLivePrice || 0).toFixed(
+    2
+  );
 
   if (!isOpen) return null;
 
@@ -122,7 +169,10 @@ const WithdrawPopup = ({ isOpen, onClose, balance = 0, tokenSymbol = "SOL", sola
       >
         <div className="flex items-center justify-between sm:p-4 p-3 border-b border-gray-800">
           <h2 className="text-lg font-medium text-white">Withdraw</h2>
-          <button onClick={() => onClose()} className="text-gray-400 hover:text-white">
+          <button
+            onClick={() => onClose()}
+            className="text-gray-400 hover:text-white"
+          >
             <X size={20} />
           </button>
         </div>
@@ -141,13 +191,16 @@ const WithdrawPopup = ({ isOpen, onClose, balance = 0, tokenSymbol = "SOL", sola
               </span>
             </div>
             <div className="text-[#A8A8A8] text-sm mb-4">
-              Only withdraw {tokenSymbol} to Solana network addresses. Double-check the destination address.
+              Only withdraw {tokenSymbol} to Solana network addresses.
+              Double-check the destination address.
             </div>
 
             {/* Success Message */}
             {success && (
               <div className="mb-4 p-3 bg-green-900/20 border border-green-500 rounded-lg">
-                <p className="text-green-400 text-sm">Withdrawal successful! Transaction is being processed.</p>
+                <p className="text-green-400 text-sm">
+                  Withdrawal successful! Transaction is being processed.
+                </p>
               </div>
             )}
 
@@ -182,15 +235,23 @@ const WithdrawPopup = ({ isOpen, onClose, balance = 0, tokenSymbol = "SOL", sola
                   />
                   <div className="flex items-center gap-2">
                     <Image src={solana} width={16} height={16} alt="solana" />
-                    <span className="text-white font-medium">{tokenSymbol}</span>
+                    <span className="text-white font-medium">
+                      {tokenSymbol}
+                    </span>
                   </div>
                 </div>
               </div>
-              <div className="text-right text-[#A8A8A8] text-xs mt-1">≈ ${usdValue} USD</div>
+              <div className="text-right text-[#A8A8A8] text-xs mt-1">
+                ≈ ${usdValue} USD
+              </div>
             </div>
             <div className="flex justify-center my-4">
               <div className="bg-[#2A2A2A] p-2 rounded-full">
-                <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <svg
+                  className="w-4 h-4 text-gray-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
                   <path
                     fillRule="evenodd"
                     d="M10 3a1 1 0 011 1v10.586l2.293-2.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V4a1 1 0 011-1z"
@@ -208,7 +269,9 @@ const WithdrawPopup = ({ isOpen, onClose, balance = 0, tokenSymbol = "SOL", sola
             <div className="mb-4">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-[#A8A8A8] text-sm">Address</span>
-                <span className="text-[#A8A8A8] text-xs">Address of destination wallet</span>
+                <span className="text-[#A8A8A8] text-xs">
+                  Address of destination wallet
+                </span>
               </div>
               <div className="bg-[#1A1A1A] rounded-lg p-4">
                 <input
@@ -223,24 +286,26 @@ const WithdrawPopup = ({ isOpen, onClose, balance = 0, tokenSymbol = "SOL", sola
             </div>
             <div className="mb-6">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-[#A8A8A8] text-sm">To</span>
-                <span className="text-white text-sm">
-                  Network Fee: <span className="text-yellow-500">~0.000005 SOL</span>
-                </span>
+                <span className="text-[#A8A8A8] text-sm">Receive</span>
+                {/* <span className="text-white text-sm">
+                  Network Fee:{" "}
+                  <span className="text-yellow-500">~0.000005 SOL</span>
+                </span> */}
               </div>
               <div className="bg-[#1A1A1A] rounded-lg p-4">
                 <div className="flex items-center justify-between">
                   <input
                     type="number"
                     value={receiveAmount}
-                    onChange={(e) => handleReceiveAmountChange(e.target.value)}
-                    disabled={isLoading}
-                    className="bg-transparent text-white text-xl font-medium outline-none flex-1 disabled:opacity-50"
+                    disabled={true}
+                    className="bg-transparent text-white text-xl font-medium outline-none flex-1 disabled:opacity-100 disabled:text-white"
                     placeholder="0.0"
                   />
                   <div className="flex items-center gap-2">
                     <Image src={solana} width={16} height={16} alt="solana" />
-                    <span className="text-white font-medium">{tokenSymbol}</span>
+                    <span className="text-white font-medium">
+                      {tokenSymbol}
+                    </span>
                   </div>
                 </div>
               </div>
