@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import { fetchSolanaNativeBalance } from "@/app/redux/states";
 import { humanReadableFormat } from "@/utils/calculation";
 import { fetchChartAllData } from "@/app/redux/chartDataSlice/chartData.slice";
+import SharePnLModal from "@/components/common/tradingview/SharePnLModal";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
 const Tradingview = () => {
@@ -33,6 +34,7 @@ const Tradingview = () => {
   const tredingPage = t("tredingPage");
   const [activeTab, setActiveTab] = useState("buy");
   const [isInstantTradeActive, setIsInstantTradeActive] = useState(false);
+  const [isSharePnLModalActive, setIsSharePnLModalActive] = useState(false);
   const [dataLoaderForChart, setDataLoaderForChart] = useState(false);
   const latestTradesData = useSelector((state) => state?.allCharTokenData);
   const decimalFindInArray = latestTradesData?.latestTrades?.find(
@@ -241,7 +243,7 @@ const Tradingview = () => {
   ];
 
   const bondingCurveValue = chartTokenData?.bondingCurveProgress || 0;
-  if (bondingCurveValue < 100) {
+  if (chartTokenData?.bondingCurveProgress && bondingCurveValue < 100) {
     TokenDetailsNumberData.push({
       label: "B.Curve",
       price: `${bondingCurveValue.toFixed(2)}%`,
@@ -471,6 +473,8 @@ const Tradingview = () => {
                   walletAddress={solWalletAddress}
                   pairAddress={latestTradesData?.chartData?.pairaddress}
                   tokenImage={tokenImage}
+                  setIsSharePnLModalActive={setIsSharePnLModalActive}
+                  currentTokenPnLData={currentTokenPnLData}
                 />
               </div>
 
@@ -546,6 +550,14 @@ const Tradingview = () => {
               />
             </div>
           </div>
+
+          <SharePnLModal 
+            isOpen={isSharePnLModalActive} 
+            onClose={() => {setIsSharePnLModalActive(false)}}
+            tokenSymbol={tokenSymbol}
+            currentTokenPnLData={currentTokenPnLData}
+            solanaLivePrice={solanaLivePrice}
+          />
 
           <div className="w-full border-[#4D4D4D] md:border-t-0 md:border-l-0 md:border-r-0 md:border-b-0">
             <UserPnL

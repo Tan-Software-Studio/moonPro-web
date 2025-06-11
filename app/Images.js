@@ -150,6 +150,10 @@ import solanasollogo from "../public/assets/Footer/solana-sol-logo.png";
 import pnlbg from "../public/assets/Footer/pnlbg.png";
 import articlefill from "../public/assets/Footer/article-fill.svg";
 
+// SharePnl
+import nexaLogo from "../public/assets/SharePnL/nexa-logo.png"
+import nexaText from "../public/assets/SharePnL/nexa-text.png"
+import sharePnlBg from "../public/assets/SharePnL/share-pnl-bg.png"
 
 export {
   nftProfileImage,
@@ -294,4 +298,8 @@ export {
   solanasollogo,
   pnlbg,
   articlefill,
+  // Share PnL
+  nexaLogo,
+  nexaText,
+  sharePnlBg
 };
