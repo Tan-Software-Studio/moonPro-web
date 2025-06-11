@@ -97,8 +97,8 @@ console.log(TOKEN_DETAILS(resolutionFinal, Number(offset)))
     // console.log("🚀 ~ fetchHistoricalData ~ response:", response.data.data)
     // console.log("API called");
     const trades = response.data.data.Solana.DEXTradeByTokens;
-  console.log(trades?.length)
-  console.log(trades)
+    console.log(response)
+    console.log(trades)
     const creatorTransactions = response.data.data.Solana.creatorTransactions;
     // console.log('trades', trades);
     // console.log('creatorTransactions', creatorTransactions);
@@ -254,8 +254,10 @@ console.log(TOKEN_DETAILS(resolutionFinal, Number(offset)))
       await bars.sort((a, b) => a.time - b.time);
     }
     
-    console.log("bars", bars);
-    return bars;
+    return {
+      bars,
+      offset: trades?.length
+    }
   } catch (err) {
     console.error("Error fetching historical data:", err?.message);
     throw err;

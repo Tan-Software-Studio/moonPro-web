@@ -69,12 +69,31 @@ export const getBars = async (
     const tokenCreator = await getChartTokenCreator();
     const walletAddress = await getSolWalletAddress();
 
-    // Initialize offset for this resolution if not already set
+    // Initialize resolutionOffsets structure
     if (!(resolution in resolutionOffsets)) {
-      resolutionOffsets[resolution] = 0;
+      resolutionOffsets[resolution] = {
+        offset: 0,
+        oldestBarTimeSec: null
+      };
     }
+    const storedBarTime = resolutionOffsets[resolution].oldestBarTimeSec;
 
-    const bars = await fetchHistoricalData(
+    // Check time logic before fetching
+    if (storedBarTime !== null) {
+      if (storedBarTime > periodParams.to) {
+        console.log("[getBars] Stored bar time is newer than requested range → No data.");
+        onHistoryCallback([], { noData: true });
+        return;
+      }
+
+      if (storedBarTime < periodParams.to) {
+        // Different time window — reset offset
+        console.log("Trading view reseted cache")
+        resolutionOffsets[resolution].offset = 0;
+      }
+    }
+    
+    const barsData = await fetchHistoricalData(
       periodParams,
       resolution,
       tokenAddress,
@@ -84,11 +103,17 @@ export const getBars = async (
       solPrice,
       tokenCreator,
       walletAddress,
-      resolutionOffsets[resolution],
+      resolutionOffsets[resolution].offset,
     );
+    console.log(barsData);
+    const bars = barsData.bars;
     if (bars?.length > 0) {
       // Increment offset for this resolution by 500
-      resolutionOffsets[resolution] += 500;
+      resolutionOffsets[resolution].offset += barsData.offset;
+
+      // Store last bar time in seconds
+      const oldestBarTimeSec = Math.floor(bars[0].time / 1000);
+      resolutionOffsets[resolution].oldestBarTimeSec = oldestBarTimeSec;
       setHistoricalChunkAndConnectBars(bars, resolution);
       setNewLatestBarTime(bars[bars?.length - 1]?.time);
       setNewLatestHistoricalBar(bars[bars?.length - 1], resolution);
