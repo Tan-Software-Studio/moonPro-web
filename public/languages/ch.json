@@ -167,7 +167,7 @@
       "quickselltooltip": "一键即时卖出您在该代币中的全部仓位。"
     },
     "noconnectwallet": "请连接钱包以查看您的持有资产。",
-    "noholdingsmsg": "您目前在您的Wave交易钱包中没有任何代币持有。"
+    "noholdingsmsg": "您目前在您的Nexa交易钱包中没有任何代币持有。"
   },
   "leaderboard": {
     "mainHeader": {
@@ -203,8 +203,8 @@
       "referralpoints": "推荐积分"
     },
     "pageData": {
-      "title": "通过 Wave 推荐计划解锁更多推荐等级！",
-      "desc": "你推荐的朋友可以提前访问 Wave 并享受 10% 的手续费折扣",
+      "title": "通过 Nexa 推荐计划解锁更多推荐等级！",
+      "desc": "你推荐的朋友可以提前访问 Nexa 并享受 10% 的手续费折扣",
       "shareto": "分享给",
       "nodata": "没有推荐数据",
       "copy": "复制",
@@ -300,7 +300,7 @@
       "title": "钱包追踪器",
       "importwallets": {
         "importwallets": "导入钱包",
-        "desc": "请输入钱包地址以进行 Wave Pro 导入",
+        "desc": "请输入钱包地址以进行 Nexa Pro 导入",
         "cancel": "取消",
         "add": "添加"
       },
@@ -391,7 +391,7 @@
     "mainHeader": {
       "title": "设置"
     },
-    "wavetradingwallet": "Wave交易钱包",
+    "wavetradingwallet": "Nexa交易钱包",
     "quickbuy": {
       "quickbuy": "快速购买",
       "slippage": "滑点",

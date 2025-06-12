@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import Image from "next/image";
@@ -20,6 +20,9 @@ const WithdrawPopup = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+
+  const isSubmittingRef = useRef(false);
+
   const handleMaxClick = () => {
     const smallAmtInSol = +(0.2 / Number(solanaLivePrice)).toFixed(9);
     if (Number(balance) <= smallAmtInSol) {
@@ -50,7 +53,6 @@ const WithdrawPopup = ({
     setWithdrawAmount(numValue);
     setError(""); // Clear error when user changes input
     setSuccess(false); // Clear success when user changes input
-    setSuccess(false); // Clear success when user changes input
   };
 
   const handleReceiveAmountChange = (value) => {
@@ -69,22 +71,23 @@ const WithdrawPopup = ({
   };
 
   const handleSubmit = async () => {
+    if (isSubmittingRef.current || isLoading || success) {
+      return;
+    }
+
     if (!destinationAddress) {
       setError("Please enter a valid destination address.");
       return;
     }
+
     const smallAmtInSol = +(0.2 / Number(solanaLivePrice)).toFixed(9);
     if (!receiveAmount || parseFloat(receiveAmount) <= 0) {
       return showToaster(
         `Minimum sol for withdraw is more then ${smallAmtInSol.toFixed(5)}`
       );
     }
-    // const smallAmtInSol = +(0.2 / Number(solanaLivePrice)).toFixed(9);
-    // if (balance <= smallAmtInSol) {
-    //   return showToaster(
-    //     `Minimum sol for withdraw is more then ${smallAmtInSol.toFixed(5)}`
-    //   );
-    // }
+
+    isSubmittingRef.current = true;
     setIsLoading(true);
     setError("");
     setSuccess(false);
@@ -112,11 +115,9 @@ const WithdrawPopup = ({
         setDestinationAddress("");
         setReceiveAmount("");
         setSuccess(false);
+        isSubmittingRef.current = false;
         onClose();
       }, 2000);
-
-      // You might want to show a success message or trigger a balance refresh here
-      // Example: onSuccess?.(response.data);
     } catch (error) {
       console.error("Withdrawal failed:", error);
 
@@ -137,11 +138,15 @@ const WithdrawPopup = ({
       }
     } finally {
       setIsLoading(false);
+      isSubmittingRef.current = false;
     }
   };
 
-  const isButtonDisabled =
-    !destinationAddress || !withdrawAmount || parseFloat(withdrawAmount) <= 0;
+  const hasValidInputs =
+    destinationAddress && withdrawAmount && parseFloat(withdrawAmount) > 0;
+  const canSubmit =
+    hasValidInputs && !isLoading && !success && !isSubmittingRef.current;
+
   const usdValue = (parseFloat(withdrawAmount) * solanaLivePrice || 0).toFixed(
     2
   );
@@ -216,8 +221,8 @@ const WithdrawPopup = ({
                 <span className="text-[#A8A8A8] text-sm">Withdraw Amount</span>
                 <button
                   onClick={handleMaxClick}
-                  className="text-blue-500 text-sm hover:text-blue-400 transition-colors"
-                  disabled={isLoading}
+                  className="text-blue-500 text-sm hover:text-blue-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isLoading || success}
                 >
                   Max
                 </button>
@@ -229,7 +234,7 @@ const WithdrawPopup = ({
                     value={withdrawAmount}
                     onChange={(e) => handleWithdrawAmountChange(e.target.value)}
                     max={balance}
-                    disabled={isLoading}
+                    disabled={isLoading || success}
                     className="bg-transparent text-white text-xl font-medium outline-none flex-1 disabled:opacity-50"
                     placeholder="0.0"
                   />
@@ -278,7 +283,7 @@ const WithdrawPopup = ({
                   type="text"
                   value={destinationAddress}
                   onChange={(e) => setDestinationAddress(e.target.value)}
-                  disabled={isLoading}
+                  disabled={isLoading || success}
                   placeholder="Enter wallet address"
                   className="w-full bg-transparent text-white outline-none text-sm disabled:opacity-50"
                 />
@@ -287,10 +292,6 @@ const WithdrawPopup = ({
             <div className="mb-6">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-[#A8A8A8] text-sm">Receive</span>
-                {/* <span className="text-white text-sm">
-                  Network Fee:{" "}
-                  <span className="text-yellow-500">~0.000005 SOL</span>
-                </span> */}
               </div>
               <div className="bg-[#1A1A1A] rounded-lg p-4">
                 <div className="flex items-center justify-between">
@@ -314,25 +315,35 @@ const WithdrawPopup = ({
               </div>
             </div>
             <div className="mt-auto">
-              <button
-                onClick={handleSubmit}
-                disabled={isButtonDisabled || isLoading}
-                className={`w-full py-3 rounded-lg font-bold text-sm transition-colors ${
-                  success
-                    ? "bg-green-600 text-white"
-                    : isButtonDisabled || isLoading
-                    ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                    : "bg-[#1d73fc] hover:bg-[#438bff] text-black"
-                }`}
-              >
-                {success
-                  ? "Withdrawal Successful!"
-                  : isLoading
-                  ? "Processing..."
-                  : isButtonDisabled
-                  ? "Missing Destination Address"
-                  : "Confirm Withdrawal"}
-              </button>
+              {canSubmit && (
+                <button
+                  onClick={handleSubmit}
+                  className="w-full py-3 rounded-lg font-bold text-sm transition-colors bg-[#1d73fc] hover:bg-[#438bff] text-black cursor-pointer"
+                >
+                  Confirm Withdrawal
+                </button>
+              )}
+
+              {!canSubmit && (
+                <button
+                  disabled
+                  className={`w-full py-3 rounded-lg font-bold text-sm transition-colors cursor-not-allowed ${
+                    success
+                      ? "bg-green-600 text-white"
+                      : isLoading || isSubmittingRef.current
+                      ? "bg-blue-600 text-white cursor-wait"
+                      : "bg-gray-600 text-gray-400"
+                  }`}
+                >
+                  {success
+                    ? "✓ Withdrawal Successful!"
+                    : isLoading || isSubmittingRef.current
+                    ? "Processing..."
+                    : !destinationAddress
+                    ? "Enter Destination Address"
+                    : "Enter Amount"}
+                </button>
+              )}
             </div>
           </div>
         </div>

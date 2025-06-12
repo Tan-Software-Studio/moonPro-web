@@ -165,7 +165,7 @@
       "quickselltooltip": "Instantly sell your entire position in t,his token with one click."
     },
     "noconnectwallet": "Please login to see your holdings.",
-    "noholdingsmsg": "You currently do not have any token holdings in your Wave trading wallet."
+    "noholdingsmsg": "You currently do not have any token holdings in your Nexa trading wallet."
   },
   "leaderboard": {
     "mainHeader": {
@@ -201,8 +201,8 @@
       "referralpoints": "Referral Points"
     },
     "pageData": {
-      "title": "Unlock More Referral Tier with Wave Referral Program!",
-      "desc": "Friends you refer get early access to Wave with a 10% Fee Discount",
+      "title": "Unlock More Referral Tier with Nexa Referral Program!",
+      "desc": "Friends you refer get early access to Nexa with a 10% Fee Discount",
       "shareto": "Share to",
       "nodata": "No Refferal Data",
       "copy": "Copy",
@@ -266,7 +266,7 @@
         "bestcalls": "Best Calls",
         "bestcallstooltip": "Displays the highest-gaining calls during the selected interval and the Alpha group who made them.",
         "recentalphas": "Recent Alphas",
-        "recentalphastooltip": "Shows the most recently joined Alpha groups in Wave Scan.",
+        "recentalphastooltip": "Shows the most recently joined Alpha groups in Nexa Scan.",
         "risingstar": "Rising Star",
         "risingstartooltip": "Alpha groups that are quickly gaining momentum, either through a recent surge in popularity or a sharp increase in their performance score.",
         "boostedalphas": "Boosted Alphas",
@@ -298,7 +298,7 @@
       "title": "Wallet Tracker",
       "importwallets": {
         "importwallets": "Import wallets",
-        "desc": "Please enter the wallet addresses for wave pro import",
+        "desc": "Please enter the wallet addresses for Nexa pro import",
         "cancel": "Cancel",
         "add": "Add"
       },
@@ -389,7 +389,7 @@
     "mainHeader": {
       "title": "SETTINGS"
     },
-    "wavetradingwallet": "Wave Trading Wallet",
+    "wavetradingwallet": "Nexa Trading Wallet",
     "quickbuy": {
       "quickbuy": "Quick Buy",
       "slippage": "slippage",

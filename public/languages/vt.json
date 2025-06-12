@@ -166,7 +166,7 @@
       "quickselltooltip": "Bán toàn bộ token này ngay lập tức với 1 cú nhấp."
     },
     "noconnectwallet": "Vui lòng kết nối ví để xem danh mục.",
-    "noholdingsmsg": "Bạn hiện không có token nào trong ví giao dịch Wave."
+    "noholdingsmsg": "Bạn hiện không có token nào trong ví giao dịch Nexa."
   },
   "leaderboard": {
     "mainHeader": {
@@ -202,8 +202,8 @@
       "referralpoints": "Điểm giới thiệu"
     },
     "pageData": {
-      "title": "Mở khóa nhiều cấp giới thiệu hơn với Chương trình giới thiệu Wave!",
-      "desc": "Bạn bè được giới thiệu sẽ được quyền truy cập sớm vào Wave và giảm 10% phí",
+      "title": "Mở khóa nhiều cấp giới thiệu hơn với Chương trình giới thiệu Nexa!",
+      "desc": "Bạn bè được giới thiệu sẽ được quyền truy cập sớm vào Nexa và giảm 10% phí",
       "shareto": "Chia sẻ tới",
       "nodata": "Không có dữ liệu giới thiệu",
       "copy": "sao chép",
@@ -267,7 +267,7 @@
         "bestcalls": "Lệnh tốt nhất",
         "bestcallstooltip": "Hiển thị các lệnh có lợi nhuận cao nhất trong khoảng thời gian đã chọn và nhóm Alpha đã đưa ra chúng.",
         "recentalphas": "Alpha mới",
-        "recentalphastooltip": "Hiển thị các nhóm Alpha mới gia nhập Wave Scan gần đây.",
+        "recentalphastooltip": "Hiển thị các nhóm Alpha mới gia nhập Nexa Scan gần đây.",
         "risingstar": "Ngôi sao đang lên",
         "risingstartooltip": "Các nhóm Alpha đang nổi lên nhanh chóng, có thể do sự tăng đột biến gần đây về độ phổ biến hoặc điểm hiệu suất.",
         "boostedalphas": "Alpha được đẩy mạnh",
@@ -299,7 +299,7 @@
       "title": "Theo dõi ví",
       "importwallets": {
         "importwallets": "Nhập ví",
-        "desc": "Vui lòng nhập địa chỉ ví để nhập vào Wave Pro",
+        "desc": "Vui lòng nhập địa chỉ ví để nhập vào Nexa Pro",
         "cancel": "Hủy",
         "add": "Thêm"
       },
@@ -390,7 +390,7 @@
     "mainHeader": {
       "title": "CÀI ĐẶT"
     },
-    "wavetradingwallet": "Ví giao dịch Wave",
+    "wavetradingwallet": "Ví giao dịch Nexa",
     "quickbuy": {
       "quickbuy": "Mua nhanh",
       "slippage": "Trượt giá",

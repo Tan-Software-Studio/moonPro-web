@@ -167,7 +167,7 @@
       "quickselltooltip": "Sälj omedelbart hela din position i denna token med ett klick."
     },
     "noconnectwallet": "Vänligen anslut plånbok för att se dina innehav.",
-    "noholdingsmsg": "Du har för närvarande inga tokeninnehav i din Wave-handelsplånbok."
+    "noholdingsmsg": "Du har för närvarande inga tokeninnehav i din Nexa-handelsplånbok."
   },
   "leaderboard": {
     "mainHeader": {
@@ -203,8 +203,8 @@
       "referralpoints": "Referenspoäng"
     },
     "pageData": {
-      "title": "Lås upp fler referensteg med Wave Referensprogram!",
-      "desc": "Vänner du refererar får tidig åtkomst till Wave med 10% rabatt på avgiften",
+      "title": "Lås upp fler referensteg med Nexa Referensprogram!",
+      "desc": "Vänner du refererar får tidig åtkomst till Nexa med 10% rabatt på avgiften",
       "shareto": "Dela till",
       "nodata": "Ingen referensdata",
       "copy": "kopiera",
@@ -268,7 +268,7 @@
         "bestcalls": "Bästa Calls",
         "bestcallstooltip": "Visar de högsta vinstgivande samtalen under den valda tidsintervallet och den Alpha-grupp som gjorde dem.",
         "recentalphas": "Nyaste Alphas",
-        "recentalphastooltip": "Visar de senaste Alpha-grupperna som gick med i Wave Scan.",
+        "recentalphastooltip": "Visar de senaste Alpha-grupperna som gick med i Nexa Scan.",
         "risingstar": "Stigande Stjärna",
         "risingstartooltip": "Alpha-grupper som snabbt vinner i popularitet, antingen genom en nyligen ökning i popularitet eller ett kraftigt ökat prestationsbetyg.",
         "boostedalphas": "Boostade Alphas",
@@ -300,7 +300,7 @@
       "title": "Plånbok Tracker",
       "importwallets": {
         "importwallets": "Importera plånböcker",
-        "desc": "Vänligen ange plånboksadresser för wave pro import",
+        "desc": "Vänligen ange plånboksadresser för Nexa pro import",
         "cancel": "Avbryt",
         "add": "Lägg till"
       },
@@ -391,7 +391,7 @@
     "mainHeader": {
       "title": "INSTÄLLNINGAR"
     },
-    "wavetradingwallet": "Wave Trading Plånbok",
+    "wavetradingwallet": "Nexa Trading Plånbok",
     "quickbuy": {
       "quickbuy": "Snabbköp",
       "slippage": "Slippage",
