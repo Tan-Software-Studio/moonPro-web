@@ -695,7 +695,7 @@
       "login": "Accedi",
       "signup": "Registrati",
       "dontAccount": "Non hai un account?",
-      "byCreating": "Creando un account, accetti l'informativa sulla privacy e i termini di servizio di moon pro"
+      "byCreating": "Creando un account, accetti l'informativa sulla privacy e i termini di servizio di Nexa pro"
     },
     "otpPopup": {
       "required": "L'OTP è richiesto",
@@ -712,7 +712,7 @@
       "password": "Password",
       "confirmPassword": "Conferma password",
       "verify": "Verifica",
-      "byCreating": "Creando un account, accetti l'informativa sulla privacy e i termini di servizio di moon pro"
+      "byCreating": "Creando un account, accetti l'informativa sulla privacy e i termini di servizio di Nexa pro"
     },
     "referralPopup": {
       "referralCode": "Per favore inserisci un codice di referral",
@@ -724,8 +724,8 @@
     "recovery": {
       "recoveryKey": "Chiave di recupero",
       "privateKey": "Chiave di recupero",
-      "thisRecovery": "Questa chiave di recupero ti permetterà di accedere al tuo wallet se perdi le tue credenziali dell'account moon pro",
-      "thisPrivateKey": "Questa chiave di recupero ti permetterà di accedere al tuo wallet se perdi le tue credenziali dell'account moon pro",
+      "thisRecovery": "Questa chiave di recupero ti permetterà di accedere al tuo wallet se perdi le tue credenziali dell'account Nexa pro",
+      "thisPrivateKey": "Questa chiave di recupero ti permetterà di accedere al tuo wallet se perdi le tue credenziali dell'account Nexa pro",
       "revealMyKey": "Mostra la mia chiave",
       "warning": "ATTENZIONE: Questa chiave di recupero è l'unico modo per accedere al tuo wallet se perdi le tue credenziali. Conservala in un posto sicuro e non condividerla con nessuno.",
       "warningPrivate": "ATTENZIONE: Questa chiave di recupero è l'unico modo per accedere al tuo wallet se perdi le tue credenziali. Conservala in un posto sicuro e non condividerla con nessuno."

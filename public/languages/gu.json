@@ -693,7 +693,7 @@
       "login": "લૉગિન",
       "signup": "સાઇન અપ",
       "dontAccount": "એકાઉન્ટ નથી?",
-      "byCreating": "એકાઉન્ટ બનાવીને, તમે moon pro ની Privacy અને Terms of Service ને સહમત છો"
+      "byCreating": "એકાઉન્ટ બનાવીને, તમે Nexa pro ની Privacy અને Terms of Service ને સહમત છો"
     },
     "otpPopup": {
       "required": "OTP જરૂરી છે",
@@ -710,7 +710,7 @@
       "password": "પાસવર્ડ",
       "confirmPassword": "કન્ફર્મ પાસવર્ડ",
       "verify": "ચકાસો",
-      "byCreating": "એકાઉન્ટ બનાવીને, તમે moon pro ની Privacy અને Terms of Service ને સહમત છો"
+      "byCreating": "એકાઉન્ટ બનાવીને, તમે Nexa pro ની Privacy અને Terms of Service ને સહમત છો"
     },
     "referralPopup": {
       "referralCode": "કૃપા કરીને રેફરલ કોડ દાખલ કરો",
@@ -722,8 +722,8 @@
     "recovery": {
       "recoveryKey": "રીકવરી કી",
       "privateKey": "રીકવરી કી",
-      "thisRecovery": "આ રીકવરી કી તમને તમારા moon pro account ની ઓળખ ગુમાવ્યા પછી તમારા વૉલેટને access કરવાની મંજૂરી આપશે",
-      "thisPrivateKey": "આ રીકવરી કી તમને તમારા moon pro account ની ઓળખ ગુમાવ્યા પછી તમારા વૉલેટને access કરવાની મંજૂરી આપશે",
+      "thisRecovery": "આ રીકવરી કી તમને તમારા Nexa pro account ની ઓળખ ગુમાવ્યા પછી તમારા વૉલેટને access કરવાની મંજૂરી આપશે",
+      "thisPrivateKey": "આ રીકવરી કી તમને તમારા Nexa pro account ની ઓળખ ગુમાવ્યા પછી તમારા વૉલેટને access કરવાની મંજૂરી આપશે",
       "revealMyKey": "મારી કી બતાવો",
       "warning": "ચેતવણી: જો તમે તમારી ઓળખ ગુમાવશો તો આ રીકવરી કી તમારા વૉલેટને access કરવાની એકમાત્ર રીત છે. તેને સુરક્ષિત જગ્યાએ રાખો અને કોઈ સાથે શેર ન કરો.",
       "warningPrivate": "ચેતવણી: જો તમે તમારી ઓળખ ગુમાવશો તો આ રીકવરી કી તમારા વૉલેટને access કરવાની એકમાત્ર રીત છે. તેને સુરક્ષિત જગ્યાએ રાખો અને કોઈ સાથે શેર ન કરો."

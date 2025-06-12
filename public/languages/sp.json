@@ -695,7 +695,7 @@
       "login": "Iniciar sesión",
       "signup": "Registrarse",
       "dontAccount": "¿No tienes cuenta?",
-      "byCreating": "Al crear una cuenta, aceptas la política de privacidad y los términos de servicio de moon pro"
+      "byCreating": "Al crear una cuenta, aceptas la política de privacidad y los términos de servicio de Nexa pro"
     },
     "otpPopup": {
       "required": "OTP requerido",
@@ -712,7 +712,7 @@
       "password": "Contraseña",
       "confirmPassword": "Confirmar contraseña",
       "verify": "Verificar",
-      "byCreating": "Al crear una cuenta, aceptas la política de privacidad y los términos de servicio de moon pro"
+      "byCreating": "Al crear una cuenta, aceptas la política de privacidad y los términos de servicio de Nexa pro"
     },
     "referralPopup": {
       "referralCode": "Por favor, ingresa un código de referido",
@@ -724,8 +724,8 @@
     "recovery": {
       "recoveryKey": "Clave de recuperación",
       "privateKey": "Clave de recuperación",
-      "thisRecovery": "Esta clave de recuperación te permitirá acceder a tu billetera si alguna vez pierdes tus credenciales de tu cuenta moon pro",
-      "thisPrivateKey": "Esta clave de recuperación te permitirá acceder a tu billetera si alguna vez pierdes tus credenciales de tu cuenta moon pro",
+      "thisRecovery": "Esta clave de recuperación te permitirá acceder a tu billetera si alguna vez pierdes tus credenciales de tu cuenta Nexa pro",
+      "thisPrivateKey": "Esta clave de recuperación te permitirá acceder a tu billetera si alguna vez pierdes tus credenciales de tu cuenta Nexa pro",
       "revealMyKey": "Revelar mi clave",
       "warning": "ADVERTENCIA: Esta clave de recuperación es la única forma de acceder a tu billetera si pierdes tus credenciales. Guárdala en un lugar seguro y no la compartas con nadie.",
       "warningPrivate": "ADVERTENCIA: Esta clave de recuperación es la única forma de acceder a tu billetera si pierdes tus credenciales. Guárdala en un lugar seguro y no la compartas con nadie."

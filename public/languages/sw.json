@@ -695,7 +695,7 @@
       "login": "Logga in",
       "signup": "Registrera",
       "dontAccount": "Har du inget konto?",
-      "byCreating": "Genom att skapa ett konto godkänner du moon pros Integritetspolicy och användarvillkor"
+      "byCreating": "Genom att skapa ett konto godkänner du Nexa pros Integritetspolicy och användarvillkor"
     },
     "otpPopup": {
       "required": "OTP krävs",
@@ -712,7 +712,7 @@
       "password": "Lösenord",
       "confirmPassword": "Bekräfta lösenord",
       "verify": "Verifiera",
-      "byCreating": "Genom att skapa ett konto godkänner du moon pros Integritetspolicy och användarvillkor"
+      "byCreating": "Genom att skapa ett konto godkänner du Nexa pros Integritetspolicy och användarvillkor"
     },
     "referralPopup": {
       "referralCode": "Vänligen ange en hänvisningskod",
@@ -724,8 +724,8 @@
     "recovery": {
       "recoveryKey": "Återställningsnyckel",
       "privateKey": "Återställningsnyckel",
-      "thisRecovery": "Denna återställningsnyckel gör att du kan komma åt din plånbok om du någonsin förlorar dina autentiseringsuppgifter för ditt moon pro-konto",
-      "thisPrivateKey": "Denna återställningsnyckel gör att du kan komma åt din plånbok om du någonsin förlorar dina autentiseringsuppgifter för ditt moon pro-konto",
+      "thisRecovery": "Denna återställningsnyckel gör att du kan komma åt din plånbok om du någonsin förlorar dina autentiseringsuppgifter för ditt Nexa pro-konto",
+      "thisPrivateKey": "Denna återställningsnyckel gör att du kan komma åt din plånbok om du någonsin förlorar dina autentiseringsuppgifter för ditt Nexa pro-konto",
       "revealMyKey": "Visa min nyckel",
       "warning": "VARNING: Denna återställningsnyckel är det enda sättet att komma åt din plånbok om du förlorar dina autentiseringsuppgifter. Förvara den på en säker plats och dela den inte med någon.",
       "warningPrivate": "VARNING: Denna återställningsnyckel är det enda sättet att komma åt din plånbok om du förlorar dina autentiseringsuppgifter. Förvara den på en säker plats och dela den inte med någon."

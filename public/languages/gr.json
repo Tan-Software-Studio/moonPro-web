@@ -695,7 +695,7 @@
       "login": "Anmelden",
       "signup": "Registrieren",
       "dontAccount": "Sie haben noch kein Konto?",
-      "byCreating": "Durch das Erstellen eines Kontos stimmen Sie den Datenschutzrichtlinien und Nutzungsbedingungen von moon pro zu"
+      "byCreating": "Durch das Erstellen eines Kontos stimmen Sie den Datenschutzrichtlinien und Nutzungsbedingungen von Nexa pro zu"
     },
     "otpPopup": {
       "required": "OTP ist erforderlich",
@@ -712,7 +712,7 @@
       "password": "Passwort",
       "confirmPassword": "Passwort bestätigen",
       "verify": "Bestätigen",
-      "byCreating": "Durch das Erstellen eines Kontos stimmen Sie den Datenschutzrichtlinien und Nutzungsbedingungen von moon pro zu"
+      "byCreating": "Durch das Erstellen eines Kontos stimmen Sie den Datenschutzrichtlinien und Nutzungsbedingungen von Nexa pro zu"
     },
     "referralPopup": {
       "referralCode": "Bitte geben Sie einen Empfehlungscode ein",
@@ -724,8 +724,8 @@
     "recovery": {
       "recoveryKey": "Wiederherstellungsschlüssel",
       "privateKey": "Wiederherstellungsschlüssel",
-      "thisRecovery": "Dieser Wiederherstellungsschlüssel ermöglicht den Zugriff auf Ihre Wallet, falls Sie Ihre moon pro-Zugangsdaten verlieren",
-      "thisPrivateKey": "Dieser Wiederherstellungsschlüssel ermöglicht den Zugriff auf Ihre Wallet, falls Sie Ihre moon pro-Zugangsdaten verlieren",
+      "thisRecovery": "Dieser Wiederherstellungsschlüssel ermöglicht den Zugriff auf Ihre Wallet, falls Sie Ihre Nexa pro-Zugangsdaten verlieren",
+      "thisPrivateKey": "Dieser Wiederherstellungsschlüssel ermöglicht den Zugriff auf Ihre Wallet, falls Sie Ihre Nexa pro-Zugangsdaten verlieren",
       "revealMyKey": "Meinen Schlüssel anzeigen",
       "warning": "WARNUNG: Dieser Wiederherstellungsschlüssel ist der einzige Weg, auf Ihre Wallet zuzugreifen, wenn Sie Ihre Zugangsdaten verlieren. Bewahren Sie ihn sicher auf und teilen Sie ihn niemandem mit.",
       "warningPrivate": "WARNUNG: Dieser Wiederherstellungsschlüssel ist der einzige Weg, auf Ihre Wallet zuzugreifen, wenn Sie Ihre Zugangsdaten verlieren. Bewahren Sie ihn sicher auf und teilen Sie ihn niemandem mit."

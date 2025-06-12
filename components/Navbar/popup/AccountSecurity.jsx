@@ -108,7 +108,7 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
   };
 
   const shareOnPlatform = (platform) => {
-    const shareText = `Join me on MoonPro and start earning rewards! Use my referral link: ${referralLink}`;
+    const shareText = `Join me on NexaPro and start earning rewards! Use my referral link: ${referralLink}`;
     const encodedText = encodeURIComponent(shareText);
     const encodedUrl = encodeURIComponent(referralLink);
 
@@ -118,7 +118,7 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
       linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
       whatsapp: `https://wa.me/?text=${encodedText}`,
       telegram: `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`,
-      reddit: `https://reddit.com/submit?url=${encodedUrl}&title=${encodeURIComponent("Join me on MoonPro!")}`,
+      reddit: `https://reddit.com/submit?url=${encodedUrl}&title=${encodeURIComponent("Join me on NexaPro!")}`,
     };
 
     if (shareUrls[platform]) {
