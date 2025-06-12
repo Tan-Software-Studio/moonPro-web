@@ -250,6 +250,8 @@ const holdingData = createSlice({
                     ).toFixed(10)
                   )
                 : 0;
+
+            // If there is no holdings anymore like user sells everything
             if (
               state.PnlData[findTokenIndex]?.lots?.length == 0 ||
               payload?.isSellFullAmount
