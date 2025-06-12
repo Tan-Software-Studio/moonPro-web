@@ -363,6 +363,7 @@ const sellSolanaTokens = async (
   convertedPrice,
   usdActive,
   marketCapActive,
+  solanaLivePrice,
   metaData,
   isSellFullAmount
 ) => {
@@ -416,6 +417,7 @@ const sellSolanaTokens = async (
         : "nasdiuasdnasdudhsdjasbhid",
       amountRecInsol: Number(recQty),
       isSellFullAmount,
+      solPrice: solanaLivePrice,
       metaData: metaData || null,
     },
     headers: {

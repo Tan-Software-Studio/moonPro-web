@@ -323,6 +323,7 @@ const TradingPopup = ({
           convertedPrice,
           usdActive,
           marketCapActive,
+          solanaLivePrice,
           {
             name: tokenSymbol,
             symbol: tokenName,
