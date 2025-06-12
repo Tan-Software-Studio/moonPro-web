@@ -64,13 +64,33 @@ if (/[a-zA-Z]/.test(lastChar)) {
   if (lastChar === "S") {
     resolutionFinal = "seconds";
   } else if (lastChar === "D") {
-    resolutionFinal = ""; // You can replace this with a meaningful value if needed
+    resolutionFinal = "days"; // You can replace this with a meaningful value if needed
+  } else {
+    resolutionFinal = "unknown"; // Or handle unexpected characters
+  }
+} else {
+  // Check if the last character is a letter
+if (/[a-zA-Z]/.test(lastChar)) {
+  resolutionNumber = Number(resolutionStr.slice(0, -1));
+  
+  if (lastChar === "S") {
+    resolutionFinal = "seconds";
+  } else if (lastChar === "D") {
+    resolutionFinal = "days"; // You can replace this with a meaningful value if needed
   } else {
     resolutionFinal = "unknown"; // Or handle unexpected characters
   }
 } else {
   resolutionNumber = Number(resolutionStr);
-  resolutionFinal = resolutionNumber > 59 ? "hours" : "minutes";
+
+  if (resolutionNumber >= 60) {
+    const hours = resolutionNumber / 60;
+    resolutionNumber = hours;
+    resolutionFinal = "hours";
+  } else {
+    resolutionFinal = "minutes";
+  }
+}
 }
 
 console.log(resolutionFinal);
