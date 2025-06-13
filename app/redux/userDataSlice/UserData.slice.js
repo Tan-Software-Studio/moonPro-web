@@ -32,6 +32,9 @@ const userDataSlice = createSlice({
     makeUserEmptyOnLogout: (state) => {
       state.userDetails = {};
     },
+    updateUserReferralId: (state, { payload }) => {
+      state.userDetails.referralId = payload
+    },
     addNewGeneratedWallet: (state, { payload }) => {
       state?.userDetails?.walletAddressSOL.push(payload);
     },
@@ -103,5 +106,6 @@ export const {
   setBalancesError,
   updateWalletToPrimary,
   addNewGeneratedWallet,
+  updateUserReferralId
 } = userDataSlice.actions;
 export default userDataSlice.reducer;
