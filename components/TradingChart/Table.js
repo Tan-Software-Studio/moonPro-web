@@ -1075,6 +1075,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                         <td className="px-6 py-4 flex">
                           <a 
                             href={`/tradingview/solana?tokenaddress=${data?.token}&symbol=${data?.symbol}`}
+                            onClick={() => {localStorage.setItem("chartTokenImg", data?.img);}}
                             className="group/name hover:opacity-80 flex flex-col sm:flex-row items-start text-xs leading-4 font-semibold h-full justify-start"
                           >
                             <div className="flex items-center">
