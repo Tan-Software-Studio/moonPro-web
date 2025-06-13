@@ -111,7 +111,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
       setCurrentTokenAddress(tokenaddress);
     }
     const buyLineAmount = currentTokenPnLData?.averageBuyPrice ? currentTokenPnLData?.averageBuyPrice : currentTokenPnLData?.pastAverageBuyPrice || 0;
-    const sellLineAmount = currentTokenPnLData?.averageSellPrice ? currentTokenPnLData?.averageSellPrice : currentTokenPnLData?.pastAverageSellPrice || averageSell || 0;
+    const sellLineAmount = currentTokenPnLData?.averageSellPrice ? currentTokenPnLData?.averageSellPrice : currentTokenPnLData?.pastAverageSellPrice || 0;
     if (buyLineAmount <= 0) {
       resetBuyLine();
     }
