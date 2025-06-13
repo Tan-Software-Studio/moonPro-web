@@ -27,8 +27,6 @@ import { humanReadableFormat } from "@/utils/calculation";
 import { fetchChartAllData } from "@/app/redux/chartDataSlice/chartData.slice";
 import SharePnLModal from "@/components/common/tradingview/SharePnLModal";
 import axios from "axios";
-import { resetResolutionOffsets } from "@/utils/tradingViewChartServices/getBars";
-import { clearMarks } from "@/utils/tradingViewChartServices/mark";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
 const Tradingview = () => {
@@ -104,8 +102,6 @@ const Tradingview = () => {
 
   useEffect(() => {
     if (tokenaddress !== currentTokenAddress) {
-      clearMarks()
-      resetResolutionOffsets();
       setCurrentTokenPnLData({});
       setCurrentTokenAddress(tokenaddress)
     }
@@ -127,7 +123,7 @@ const Tradingview = () => {
         });
 
         const pastTokenData = response?.data?.data?.lastAction;
-        // console.log("pastTokenData", pastTokenData);
+        console.log("pastTokenData", pastTokenData);
 
         if (pastTokenData != null) {
           const pastTokenProperties = {
@@ -192,7 +188,7 @@ const Tradingview = () => {
           safePnLPercent
         }
 
-        // console.log("currentPnlProperties", currentPnlProperties)
+        console.log("currentPnlProperties", currentPnlProperties)
         setCurrentTokenPnLData({...currentPnlProperties});
       }
     }
