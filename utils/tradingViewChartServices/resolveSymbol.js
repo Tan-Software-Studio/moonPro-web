@@ -31,6 +31,7 @@ export const resolveSymbol = async (
     minmov: 1,
     pricescale: pricescale,
     has_intraday: true,
+    intraday_multipliers: ["1", "5", "15", "30", "60"],
     has_weekly_and_monthly: true,
     has_seconds: true,
     supported_resolutions: intervalTV,

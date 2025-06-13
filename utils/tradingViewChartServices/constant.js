@@ -16,7 +16,7 @@ const intervalTV = [
   "120",
   "180",
   "240",
-  "1440",
+  "1D",
 ];
 export { token, symbol, bq_apikey, intervalTV };
 
