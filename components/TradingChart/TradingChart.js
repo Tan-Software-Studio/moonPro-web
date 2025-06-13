@@ -5,12 +5,11 @@ import { widget } from "../../public/charting_library";
 import Datafeed from "../../utils/tradingViewChartServices/customDatafeed";
 import { intervalTV } from "../../utils/tradingViewChartServices/constant";
 import { unsubscribeFromWebSocket } from "@/utils/tradingViewChartServices/websocketOHLC";
-import { addMark, clearMarks } from "@/utils/tradingViewChartServices/mark";
+import { clearMarks } from "@/utils/tradingViewChartServices/mark";
 import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFunctions";
 import { clearLatestHistoricalBar } from "@/utils/tradingViewChartServices/latestHistoricalBar";
 import { clearSellItems, subscribeSellItems } from "@/utils/tradingViewChartServices/sellItems";
 import { clearChunk } from "@/utils/tradingViewChartServices/historicalChunk";
-import axios from "axios";
 
 const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, solanaLivePrice, supply }) => {
   const chartContainerRef = useRef(null);
@@ -87,92 +86,6 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
     fetchToggle();
 
   }, []);
-
-  useEffect(() => {
-    const getBuySellMarks = async () => {
-      const walletsToMark = [];
-      const tokenCreator = localStorage.getItem("chartTokenCreator");
-      const userWallet = localStorage.getItem("walletAddress");
-      walletsToMark.push(tokenCreator);
-      walletsToMark.push(userWallet);
-      try {
-        const response = await axios.post(
-          "https://streaming.bitquery.io/eap",
-          {
-            query: `query TradingView($token: String, $walletsToMark: [String!] = []) {
-  Solana {
-    creatorTransactions: DEXTradeByTokens(
-      orderBy: {descending: Block_Time}
-      limit: {count: 1000}
-      where: {
-        Trade: {
-          Currency: {MintAddress: {is: $token}}, 
-        }, 
-        Transaction: {
-          Result: {Success: true}, 
-          Signer: {in: $walletsToMark}
-        }
-      }
-    ) {
-      Block {
-        Time
-      }
-      Transaction {
-        Signer
-      }
-      Trade {
-        Amount
-        PriceInUSD
-        Side {
-          Type
-          AmountInUSD
-        }
-      }
-    }
-
-  }
-}
-`,
-         variables: {
-          token: tokenaddress,
-          walletsToMark
-        },
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_STREAM_BITQUERY_API}`,
-          },
-        }
-      );
-    const creatorTransactions = response?.data?.data?.Solana?.creatorTransactions;
-    if (creatorTransactions?.length > 0) {
-      for (let i = 0; i < creatorTransactions.length; i++) {
-        const creatorTransaction = creatorTransactions[i];
-        const blockTime = new Date(creatorTransaction?.Block?.Time).getTime() / 1000;
-        const isBuy = creatorTransaction?.Trade?.Side?.Type === 'buy';
-        const tokenAmount = Number(creatorTransaction?.Trade?.Amount);
-
-        const usdTraded = Number(creatorTransaction?.Trade?.Side?.AmountInUSD);
-
-        const usdPrice = Number(creatorTransaction?.Trade?.PriceInUSD);
-        const usdSolPrice = isUsdSolToggled ? usdPrice : usdPrice / solPrice;
-        const atPrice = isMcPriceToggled ? usdSolPrice * supply : usdSolPrice;
-
-        if (creatorTransaction?.Transaction?.Signer === tokenCreator) {
-          await addMark(blockTime, isBuy, usdTraded, atPrice, tokenAmount, isUsdSolToggled, isMcPriceToggled, "dev");
-        } else if (creatorTransaction?.Transaction?.Signer === userWallet) {
-          await addMark(blockTime, isBuy,  usdTraded,atPrice, tokenAmount, isUsdSolToggled, isMcPriceToggled, "user");
-        }
-      }
-    }
-    } catch (error) {
-      console.error("Error:", error.response?.data || error.message || error);
-    }
-  };
-  console.log("gettingBuySellMarks",);
-  getBuySellMarks();
-  }, [])
 
   // Subscribe to array changes
   useEffect(() => {
@@ -326,6 +239,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
       tvWidget.activeChart().onIntervalChanged().subscribe(null, async (interval, timeframeObj) => {
         setChartResolution(interval);
         localStorage.setItem("chartResolution", interval);
+        clearMarks();
         clearSellItems();
         clearChunk();
       });

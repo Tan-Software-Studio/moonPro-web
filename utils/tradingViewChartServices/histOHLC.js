@@ -1,12 +1,13 @@
 import axios from "axios";
 import { bq_apikey } from "./constant";
+import { addMark } from "./mark";
 
 const endpoint = "https://streaming.bitquery.io/eap";
-const TOKEN_DETAILS = (resolution, offset) => `query TradingView($token: String, $interval: Int) {
+const TOKEN_DETAILS = (resolution, offset) => `query TradingView($interval: Int) {
   Solana(dataset: combined) {
     DEXTradeByTokens(
       orderBy: {descendingByField: "Block_Timefield"}
-      where: {Trade: {Currency: {MintAddress: {is: $token}}, PriceAsymmetry: {lt: 0.1}}}
+      where: {Trade: {Currency: {MintAddress: {is: "GyEJPVTVVdBURwMWZNKF3ifjJ4Pj4Q4nFV3DTcnHg59d"}}, PriceAsymmetry: {lt: 0.1}}}
       limit: {count: 500, offset: ${offset}}
 
       ) {
@@ -15,10 +16,10 @@ const TOKEN_DETAILS = (resolution, offset) => `query TradingView($token: String,
       }
       volume: sum(of: Trade_Amount)
       Trade {
-        high: PriceInUSD(maximum: Trade_PriceInUSD)
-        low: PriceInUSD(minimum: Trade_PriceInUSD)
-        open: PriceInUSD(minimum: Block_Slot)
-        close: PriceInUSD(maximum: Block_Slot)
+        high: Price(maximum: Trade_Price)
+        low: Price(minimum: Trade_Price)
+        open: Price(minimum: Block_Slot)
+        close: Price(maximum: Block_Slot)
       }
       count
     }
@@ -32,12 +33,19 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
   solPrice = solPrice ? Number(solPrice) === 0 ? 1 : Number(solPrice) : 1; 
   const isSecondsResolution = resolution.endsWith("S");
   const { from, to, countBack } = periodParams;
+  const walletsToMark = [];
+  if (tokenCreator != 0) {
+    walletsToMark.push(tokenCreator);
+  }
+  if (userWallet !== null) {
+    walletsToMark.push(userWallet);
+  } 
 
   // console.log("🚀 ~ fetchHistoricalData ~ countBack:", countBack);
-  // const requiredBars = 20000;
-  // const timeFromTv = new Date(from * 1000).toISOString();
-  // const timeToTv = new Date(to * 1000).toISOString();
-  // const oneDay = 86400;
+  const requiredBars = 20000;
+  const timeFromTv = new Date(from * 1000).toISOString();
+  const timeToTv = new Date(to * 1000).toISOString();
+  const oneDay = 86400;
 
   // console.log("🚀 ~ fetchHistoricalData ~ timeFromTv:", timeFromTv);
   console.log(resolution);
@@ -46,6 +54,8 @@ const resolutionStr = resolution?.toString() ?? "";
 const lastChar = resolutionStr.slice(-1);
 let resolutionNumber;
 let resolutionFinal;
+console.log("timeFromTv", timeFromTv);
+console.log("timeToTv", timeToTv);
 
 // Check if the last character is a letter
 if (/[a-zA-Z]/.test(lastChar)) {
@@ -92,8 +102,9 @@ console.log(TOKEN_DETAILS(resolutionFinal, Number(offset)))
       {
         query: TOKEN_DETAILS(resolutionFinal, offset),
         variables: {
-          token: token,
           interval: resolutionNumber,
+          from: timeFromTv,
+          to: timeToTv
         }
       },
       {
@@ -108,7 +119,9 @@ console.log(TOKEN_DETAILS(resolutionFinal, Number(offset)))
     const trades = response.data.data.Solana.DEXTradeByTokens;
     console.log(response)
     console.log(trades)
+    const creatorTransactions = response.data.data.Solana.creatorTransactions;
     // console.log('trades', trades);
+    // console.log('creatorTransactions', creatorTransactions);
     // Preprocess the bars data
     let bars = trades
       ?.filter(trade => {
@@ -154,6 +167,27 @@ console.log(TOKEN_DETAILS(resolutionFinal, Number(offset)))
         };
       })
       .filter(item => item != null);
+
+    if (creatorTransactions?.length > 0) {
+      for (let i = 0; i < creatorTransactions.length; i++) {
+        const creatorTransaction = creatorTransactions[i];
+        const blockTime = new Date(creatorTransaction?.Block?.Time).getTime() / 1000;
+        const isBuy = creatorTransaction?.Trade?.Side?.Type === 'buy';
+        const tokenAmount = Number(creatorTransaction?.Trade?.Amount);
+
+        const usdTraded = Number(creatorTransaction?.Trade?.Side?.AmountInUSD);
+
+        const usdPrice = Number(creatorTransaction?.Trade?.PriceInUSD);
+        const usdSolPrice = isUsdActive ? usdPrice : usdPrice / solPrice;
+        const atPrice = isMarketCapActive ? usdSolPrice * supply : usdSolPrice;
+
+        if (creatorTransaction?.Transaction?.Signer === tokenCreator) {
+          await addMark(blockTime, isBuy, usdTraded, atPrice, tokenAmount, isUsdActive, isMarketCapActive, "dev");
+        } else if (creatorTransaction?.Transaction?.Signer === userWallet) {
+          await addMark(blockTime, isBuy,  usdTraded,atPrice, tokenAmount, isUsdActive, isMarketCapActive, "user");
+        }
+      }
+    }
 
     if (bars?.length > 0) {
       let lastValidClose = bars[0].close; // Initialize with first bar's close
