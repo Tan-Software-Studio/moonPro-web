@@ -11,7 +11,7 @@ import {
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import Image from "next/image";
-import { solana, solanaBlackLogo } from "@/app/Images";
+import { solana, solanaBlackLogo, solWhiteBg } from "@/app/Images";
 import RightModalOpenSetting from "@/components/Settings/RightModalOpenSetting";
 import {
   openCloseLoginRegPopup,
@@ -53,6 +53,7 @@ const TradingPopup = ({
   const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
   const [quantity, setQuantity] = useState(0.1);
   const [recQty, setRrcQty] = useState(0);
+  const [buyAmtIndex, setBuyAmtIndex] = useState(1);
   const [slippage, setSlippage] = useState(20);
   const [priorityFee, setPriorityFee] = useState(0.0001);
   const [isMev, setIsMev] = useState(true);
@@ -322,6 +323,7 @@ const TradingPopup = ({
           convertedPrice,
           usdActive,
           marketCapActive,
+          solanaLivePrice,
           {
             name: tokenSymbol,
             symbol: tokenName,
@@ -371,6 +373,14 @@ const TradingPopup = ({
   useEffect(() => {
     updateOrderSetting();
   }, [presist, activeTab, preSetData]);
+  useEffect(() => {
+    const buyAmountIndex = localStorage.getItem("buyAmtIndex");
+    if (buyAmountIndex) {
+      if (activeTab == "buy") {
+        setQuantity(buyValues[buyAmountIndex - 1]);
+      }
+    }
+  }, [activeTab, buyValues]);
   return (
     <div className="bg-[#08080E] flex flex-col h-fit w-full text-white xl:p-4 md:p-3">
       {/* Buy/Sell Toggle */}
@@ -441,7 +451,7 @@ const TradingPopup = ({
             key={index + 1}
             onClick={() => {
               dispatch(setPresetActive(item));
-              localStorage.setItem("preSetSettingActiveChart", item);
+              localStorage.setItem("preSetSettingActive", item);
             }}
             className={`w-full py-[7px] text-[#F6F6F6] font-[700] text-[12px] border-r-[0.5px] border-r-[#404040] duration-300 ease-in-out ${
               presist == item
@@ -514,6 +524,8 @@ const TradingPopup = ({
                       setCustomInput(val.toString());
                     } else {
                       setQuantity(val);
+                      setBuyAmtIndex(index + 1);
+                      localStorage.setItem("buyAmtIndex", index + 1);
                     }
                   }}
                 >
@@ -737,9 +749,9 @@ const TradingPopup = ({
               {`${tragindViewPage?.right?.buysell?.btnbuy} ${tokenName} ${quantity}`}
             </h1>
             <Image
-              src={solanaBlackLogo}
+              src={solWhiteBg}
               alt="solana"
-              className="w-[20px] !h-[13px] rounded-full bg-cover"
+              className="w-[24px] !h-[17px] rounded-full bg-cover"
             />
           </button>
         )
@@ -760,9 +772,9 @@ const TradingPopup = ({
             }`}
           </h1>
           <Image
-            src={solanaBlackLogo}
+            src={solWhiteBg}
             alt="solana"
-            className="w-[20px] !h-[13px] rounded-full bg-cover"
+            className="w-[24px] !h-[17px] rounded-full bg-cover"
           />
         </button>
       )}
@@ -785,7 +797,7 @@ const TradingPopup = ({
                     onClick={(event) => {
                       event.stopPropagation();
                       dispatch(setPresetActive(item));
-                      localStorage.setItem("preSetSettingActiveChart", item);
+                      localStorage.setItem("preSetSettingActive", item);
                     }}
                     className={`w-full ml-3 py-[7px] font-[700] text-[12px] border-r-[#404040] duration-300 ease-in-out ${
                       presist == item ? "text-[#1F73FC]" : "text-[#F6F6F6]"

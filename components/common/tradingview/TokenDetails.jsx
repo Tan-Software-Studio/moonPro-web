@@ -36,6 +36,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import SquareProgressBar from "../../common/SquareProgressBarcom/SquareProgressBar";
 import { pumpfun, telegrams, twitter, website } from "@/app/Images";
 import { showToaster, showToasterSuccess } from "@/utils/toaster/toaster.style";
+import { HiOutlineUpload } from "react-icons/hi";
 
 const TokenDetails = ({
   tokenSymbol,
@@ -48,6 +49,8 @@ const TokenDetails = ({
   walletAddress,
   pairAddress,
   tokenImage,
+  setIsSharePnLModalActive,
+  currentTokenPnLData
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCopyUrl, setIsCopyUrl] = useState(false);
@@ -351,7 +354,7 @@ const TokenDetails = ({
               <p className="inline">{tokenDetailsMarketCap}</p>
             </div>
             <div className="p-0 md:p-3 flex items-center">
-              <div className="grid grid-cols-4 lg:gap-5 md:gap-4 gap-2">
+              <div className={`grid grid-cols-${TokenDetailsNumberData?.length} lg:gap-5 md:gap-4 gap-2`}>
                 {TokenDetailsNumberData?.map((num, index) => {
                   return (
                     <div
@@ -398,22 +401,18 @@ const TokenDetails = ({
                 </button> */}
             </div>
           </div>
+        {(Object.keys(currentTokenPnLData).length > 0)  &&
+            <button 
+              onClick={() => {setIsSharePnLModalActive(true)}}
+              className="text-[#4CAF50] flex gap-1"
+            >
+              <HiOutlineUpload size={16}/>
+              <p className="text-xs">Share PnL</p>
+            </button>
+        }
         </div>
         <div className="items-center justify-between mb-[5px] md:mb-[0px] hidden md:flex">
           <div className="flex items-center md:flex-col">
-            {/* <div className="cursor-pointer border-[1px] md:!border-t-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center">
-              {isFavourite ? (
-                <FaHeart
-                  onClick={removeFromFavouriteHandler}
-                  className="text-[#1F73FC] text-[18px]"
-                />
-              ) : (
-                <CiHeart
-                  onClick={addToFavouriteHandler}
-                  className="text-[#F6F6F6] text-[22px]"
-                />
-              )}
-            </div> */}
             <div className="cursor-pointer border-[1px] md:!border-t-0 border-[#404040] h-[40px] w-[40px] flex items-center justify-center">
               {isFavouriteLoading ? (
                 <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>

@@ -1,5 +1,5 @@
 {
-  "name": "moonpro-web",
+  "name": "nexapro-web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -20,6 +20,7 @@
     "crypto-js": "^4.2.0",
     "ethers": "^6.13.4",
     "framer-motion": "^12.4.2",
+    "html-to-image": "^1.11.13",
     "i18next": "^25.0.0",
     "i18next-browser-languagedetector": "^8.0.4",
     "lightweight-charts": "^4.2.3",

@@ -266,7 +266,7 @@ function MemescopeFilter({ isOpen, setIsOpen }) {
                 onClick={() => setIsMoonshot(!isMoonshot)}
               />
               <span>
-                <Image src={moon} alt="moon" className="w-4 h-4 rounded-full" />
+                <Image src={moon} alt="Nexa" className="w-4 h-4 rounded-full" />
               </span>
               <label htmlFor="" className="text-sm">
                 Moonshot

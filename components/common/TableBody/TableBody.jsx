@@ -456,7 +456,6 @@ const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
                           row?.programAddress
                             ? row?.programAddress
                             : "uiendiahasygasds",
-                          100,
                           dispatch,
                           row?.current_price,
                           {
