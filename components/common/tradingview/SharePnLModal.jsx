@@ -7,7 +7,7 @@ import { RiArrowUpDownFill, RiDownloadLine, RiFileCopyLine } from "react-icons/r
 import { IoMdDoneAll } from "react-icons/io";
 
 import Image from "next/image";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import { toPng } from "html-to-image";
 import { formatNumber } from "@/utils/basicFunctions";
 
@@ -39,6 +39,58 @@ const SharePnLModal = ({
     }
   };
 
+  const previousPnLRef = useRef({
+    pnlAmount: 0,
+    isPositivePnL: false,
+    pnlPercent: 0,
+    invested: 0,
+    position: 0
+  });
+
+  const {
+    pnlAmount,
+    isPositivePnL,
+    pnlPercent,
+    invested,
+    position
+  } = useMemo(() => {
+    if (!currentTokenPnLData || Object.keys(currentTokenPnLData).length === 0) {
+      previousPnLRef.current.position = 0;
+      return previousPnLRef.current;
+    }
+
+    const absolutePnL = currentTokenPnLData?.absolutePnL ?? currentTokenPnLData?.pastPnlPrice ?? 0;
+    const isPositive = currentTokenPnLData?.isPositivePnL != null
+      ? currentTokenPnLData.isPositivePnL
+      : (currentTokenPnLData?.pastPnlPrice ?? 0) >= 0;
+
+    let pnlAmt = Math.abs(absolutePnL);
+    pnlAmt = solIsActive ? pnlAmt / solanaLivePrice : pnlAmt;
+
+    let investAmt = currentTokenPnLData?.buyAmount ?? currentTokenPnLData?.pastAverageBuy ?? 0;
+    investAmt = solIsActive ? investAmt / solanaLivePrice : investAmt;
+
+    const pnlPerc = currentTokenPnLData?.safePnLPercent ?? currentTokenPnLData?.pastPnlPercentage ?? 0;
+
+    const pos = solIsActive
+      ? (currentTokenPnLData?.holdingsUsdInCurrentPrice ?? 0) / solanaLivePrice
+      : currentTokenPnLData?.holdingsUsdInCurrentPrice ?? 0;
+
+    const newPnL = {
+      pnlAmount: pnlAmt,
+      isPositivePnL: isPositive,
+      pnlPercent: pnlPerc,
+      invested: investAmt,
+      position: pos
+    };
+
+    // Save for future fallback
+    previousPnLRef.current = newPnL;
+
+    return newPnL;
+  }, [currentTokenPnLData, solIsActive, solanaLivePrice]);
+
+
   const handleCopy = async () => {
     if (!renderedImage) return;
     try {
@@ -55,10 +107,6 @@ const SharePnLModal = ({
       setCopied(false);
     }, 3000); // Reset after 3 seconds
   };
-
-  const pnlAmount = solIsActive ? currentTokenPnLData?.absolutePnL / solanaLivePrice : currentTokenPnLData?.absolutePnL || 0;
-  const invested = solIsActive ? currentTokenPnLData?.buyAmount / solanaLivePrice : currentTokenPnLData?.buyAmount || 0;
-  const position = solIsActive ? currentTokenPnLData?.holdingsUsdInCurrentPrice / solanaLivePrice : currentTokenPnLData?.holdingsUsdInCurrentPrice || 0;
 
   const generateImage = async () => {
     if (!modalRef.current) return;
@@ -116,7 +164,7 @@ const SharePnLModal = ({
             <div className="bg-[#1F73FC] w-[125.67px] h-[45px] my-4 gap-2 flex justify-center items-center py-3 px-4 rounded-[4px]">
               {solIsActive && <SiSolana width={20} height={16} />}
               <p className="font-medium text-xl">
-                {currentTokenPnLData?.isPositivePnL !== undefined ? currentTokenPnLData?.isPositivePnL === true ? "+" : "-" : ""}
+                {isPositivePnL != null ? isPositivePnL === true ? "+" : "-" : ""}
                 {formatNumber(pnlAmount, false, !solIsActive) || 0}
               </p>
             </div>
@@ -124,16 +172,16 @@ const SharePnLModal = ({
             <div className="w-[314px] mt-10 flex gap-[10px] flex-col justify-center font-normal text-2xl">
               <div className="w-full flex justify-between">
                 <p>PnL</p>
-                <div className={`${currentTokenPnLData?.isPositivePnL ? "text-[#21CB6B]" : "text-[#ed1b26]"} flex gap-1 items-center font-bold`}>
-                  {currentTokenPnLData?.isPositivePnL ? <BiSolidUpArrow size={12} /> : <BiSolidDownArrow size={12} />}
-                  <p>{currentTokenPnLData?.safePnLPercent?.toFixed(2) || 0}%</p>
+                <div className={`${isPositivePnL ? "text-[#21CB6B]" : "text-[#ed1b26]"} flex gap-1 items-center font-bold`}>
+                  {isPositivePnL ? <BiSolidUpArrow size={12} /> : <BiSolidDownArrow size={12} />}
+                  <p>{pnlPercent.toFixed(2) || 0}%</p>
                 </div>
               </div>
               <div className="w-full flex justify-between">
                 <p>Invested</p>
                 <div className="flex items-center gap-[9px]">
                   {solIsActive && <SiSolana width={22} height={17} />}
-                  <p className="font-medium">{formatNumber(invested, true, !solIsActive)}</p>
+                  <p className="font-medium">{formatNumber(invested, false, !solIsActive)}</p>
                 </div>
               </div>
               <div className="w-full flex justify-between">

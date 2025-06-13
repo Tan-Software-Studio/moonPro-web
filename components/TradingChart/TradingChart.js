@@ -11,7 +11,7 @@ import { clearLatestHistoricalBar } from "@/utils/tradingViewChartServices/lates
 import { clearSellItems, subscribeSellItems } from "@/utils/tradingViewChartServices/sellItems";
 import { clearChunk } from "@/utils/tradingViewChartServices/historicalChunk";
 
-const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenAverageBuyPrice, solanaLivePrice, supply }) => {
+const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, solanaLivePrice, supply }) => {
   const chartContainerRef = useRef(null);
   const [isUsdSolToggled, setIsUsdSolToggled] = useState(true); // Track USD/SOL toggle state
   const [isMcPriceToggled, setIsMcPriceToggled] = useState(true); // Track MarketCap/Price toggle state
@@ -19,6 +19,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenAverageBuyPri
   const [chart, setChart] = useState(null);
   const [chartReady, setChartReady] = useState(false);
   const [averageSell, setAverageSell] = useState(0);
+  const [currentTokenAddress, setCurrentTokenAddress] = useState(null);
 
   const buyPositionLineRef = useRef(null);
   const sellPositionLineRef = useRef(null);
@@ -31,13 +32,21 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenAverageBuyPri
   }
 
   const resetLines = () => {
+    resetBuyLine();
+    resetSellLine();
+  }
+
+  const resetBuyLine = () => {
     if (buyPositionLineRef.current !== null) {
       buyPositionLineRef.current.remove();
     }
+    buyPositionLineRef.current = null;
+  }
+
+  const resetSellLine = () => {
     if (sellPositionLineRef.current !== null) {
       sellPositionLineRef.current.remove();
     }
-    buyPositionLineRef.current = null;
     sellPositionLineRef.current = null;
   }
 
@@ -93,20 +102,34 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenAverageBuyPri
   useEffect(() => {
     if (!chart) return;
     if (!chartReady) return;
-    if (!currentTokenAverageBuyPrice) {
+    if (!currentTokenPnLData) {
       resetLines();
       return;
     }
+    if (tokenaddress !== currentTokenAddress) {
+      resetLines();
+      setCurrentTokenAddress(tokenaddress);
+    }
+    const buyLineAmount = currentTokenPnLData?.averageBuyPrice ? currentTokenPnLData?.averageBuyPrice : currentTokenPnLData?.pastAverageBuyPrice || 0;
+    const sellLineAmount = currentTokenPnLData?.averageSellPrice ? currentTokenPnLData?.averageSellPrice : currentTokenPnLData?.pastAverageSellPrice || 0;
+    if (buyLineAmount <= 0) {
+      resetBuyLine();
+    }
+    if (sellLineAmount <= 0) {
+      resetSellLine();
+    }
     const createChartLines = async () => {
       // Average Buy Sell
-      if (currentTokenAverageBuyPrice && buyPositionLineRef.current === null) {
+      if (buyLineAmount > 0 && buyPositionLineRef.current === null) {
+        console.log("creating buy line")
         buyPositionLineRef.current = await chart.activeChart().createPositionLine();
       }
       if (buyPositionLineRef.current) {
+        console.log("modyfing buy line")
         buyPositionLineRef.current
                   .setText("Current Average Cost Basis")
                   .setQuantity("")
-                  .setPrice(convertPrice(Number(currentTokenAverageBuyPrice)))
+                  .setPrice(convertPrice(Number(buyLineAmount)))
                   .setQuantityBackgroundColor("#427A2C")
                   .setQuantityBorderColor("#427A2C")
                   .setBodyBorderColor("#FFFFFF00")
@@ -117,14 +140,14 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenAverageBuyPri
                   .setLineLength(0)
                   .setLineColor("#427A2C");
       }
-      if (averageSell > 0 && sellPositionLineRef.current === null) {
+      if (sellLineAmount > 0 && sellPositionLineRef.current === null) {
         sellPositionLineRef.current = await chart.activeChart().createPositionLine();
       }
       if (sellPositionLineRef.current) {
         sellPositionLineRef.current
                 .setText("Current Average Exit Price")
                 .setQuantity("")
-                .setPrice(averageSell)
+                .setPrice(sellLineAmount)
                 .setQuantityBackgroundColor("#AB5039")
                 .setQuantityBorderColor("#AB5039")
                 .setBodyBorderColor("#FFFFFF00")
@@ -137,7 +160,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenAverageBuyPri
       }
     };
     createChartLines();
-  }, [currentTokenAverageBuyPrice, chartReady, isUsdSolToggled, isMcPriceToggled, averageSell])
+  }, [currentTokenPnLData, chartReady, isUsdSolToggled, isMcPriceToggled, averageSell, tokenaddress])
 
   // console.log("TVChartContainer called.");
   useEffect(() => {
