@@ -93,8 +93,17 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
       const walletsToMark = [];
       const tokenCreator = localStorage.getItem("chartTokenCreator");
       const userWallet = localStorage.getItem("walletAddress");
-      walletsToMark.push(tokenCreator);
-      walletsToMark.push(userWallet);
+      if (tokenCreator !== "0") {
+        walletsToMark.push(tokenCreator);
+      }
+      if (userWallet != null) {
+        walletsToMark.push(userWallet);
+      }
+      // console.log("chart address", tokenaddress);
+      // console.log("walletsToMark", walletsToMark);
+      if (walletsToMark.length === 0) {
+        return;
+      }
       try {
         const response = await axios.post(
           "https://streaming.bitquery.io/eap",
@@ -170,9 +179,9 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
       console.error("Error:", error.response?.data || error.message || error);
     }
   };
-  console.log("gettingBuySellMarks",);
+  // console.log("gettingBuySellMarks",);
   getBuySellMarks();
-  }, [])
+  }, [tokenaddress])
 
   // Subscribe to array changes
   useEffect(() => {
@@ -208,11 +217,11 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
     const createChartLines = async () => {
       // Average Buy Sell
       if (buyLineAmount > 0 && buyPositionLineRef.current === null) {
-        console.log("creating buy line")
+        // console.log("creating buy line")
         buyPositionLineRef.current = await chart.activeChart().createPositionLine();
       }
       if (buyPositionLineRef.current) {
-        console.log("modyfing buy line")
+        // console.log("modyfing buy line")
         buyPositionLineRef.current
                   .setText("Current Average Cost Basis")
                   .setQuantity("")
