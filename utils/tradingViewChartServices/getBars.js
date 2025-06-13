@@ -7,9 +7,6 @@ import { setNewLatestBarTime } from "./latestBarTime";
 import { setNewLatestHistoricalBar } from "./latestHistoricalBar";
 import { setHistoricalChunkAndConnectBars } from "./historicalChunk";
 
-// Dictionary to store offsets per resolution
-let resolutionOffsets = {};
-
 async function toGetTokenAddressFromLocalStorage() {
   return await localStorage.getItem("chartTokenAddress");
 }
@@ -38,11 +35,6 @@ async function getSolWalletAddress() {
   return await localStorage.getItem("walletAddress");
 }
 
-// Function to reset the resolutionOffsets dictionary
-export const resetResolutionOffsets = () => {
-  resolutionOffsets = {};
-};
-
 export const getBars = async (
   symbolInfo,
   resolution,
@@ -69,11 +61,6 @@ export const getBars = async (
     const tokenCreator = await getChartTokenCreator();
     const walletAddress = await getSolWalletAddress();
 
-    // Initialize offset for this resolution if not already set
-    if (!(resolution in resolutionOffsets)) {
-      resolutionOffsets[resolution] = 0;
-    }
-
     const bars = await fetchHistoricalData(
       periodParams,
       resolution,
@@ -83,14 +70,11 @@ export const getBars = async (
       supply,
       solPrice,
       tokenCreator,
-      walletAddress,
-      resolutionOffsets[resolution],
+      walletAddress
     );
     if (bars?.length > 0) {
-      // Increment offset for this resolution by 500
-      resolutionOffsets[resolution] += 500;
       setHistoricalChunkAndConnectBars(bars, resolution);
-      setNewLatestBarTime(bars[bars?.length - 1]?.time);
+      setNewLatestBarTime(bars[bars?.length - 1]?.time)
       setNewLatestHistoricalBar(bars[bars?.length - 1], resolution);
       onHistoryCallback(bars, { noData: false });
     } else {
