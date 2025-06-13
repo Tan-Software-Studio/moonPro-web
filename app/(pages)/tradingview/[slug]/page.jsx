@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from 'next/router';
 import { useSearchParams } from "next/navigation";
 import { setselectToken, setselectTokenLogo } from "@/app/redux/CommonUiData";
 import Table from "@/components/TradingChart/Table";
@@ -55,7 +54,6 @@ const Tradingview = () => {
   const scrollableDivRef4 = useRef(null);
   const [currentTokenPnLData, setCurrentTokenPnLData] = useState({});
   const [currentTokenAddress, setCurrentTokenAddress] = useState(null);
-  const [currentTokenAverageBuyPrice, setCurrentTokenAverageBuyPrice] = useState({});
 
   const handleInstantTradeClick = () => {
     setIsInstantTradeActive(prev => !prev);
@@ -125,14 +123,16 @@ const Tradingview = () => {
         });
 
         const pastTokenData = response?.data?.data?.lastAction;
-        // console.log("pastTokenData", pastTokenData);
+        console.log("pastTokenData", pastTokenData);
 
         if (pastTokenData != null) {
           const pastTokenProperties = {
-            pastAverageBuy: pastTokenData.qty * pastTokenData.buyPrice,
-            pastAverageSell: pastTokenData.qty * pastTokenData.sellPrice,
-            pastPnlPrice: pastTokenData.realizedProfit,
-            pastPnlPercentage: pastTokenData.pnlPercentage,
+            pastAverageBuyPrice: pastTokenData?.buyPrice || null,
+            pastAverageBuy: pastTokenData.qty * pastTokenData.buyPrice || null,
+            pastAverageSellPrice: pastTokenData?.sellPrice || null,
+            pastAverageSell: pastTokenData.qty * pastTokenData.sellPrice || null,
+            pastPnlPrice: pastTokenData.realizedProfit || null,
+            pastPnlPercentage: pastTokenData.pnlPercentage || null,
           };
 
           // console.log("pastTokenProperties", pastTokenProperties);
@@ -178,7 +178,9 @@ const Tradingview = () => {
   
         const currentPnlProperties = {
           buyAmount,
+          averageBuyPrice,
           soldAmount,
+          averageSellPrice: currentPnlData?.averageHistoricalSellPrice || 0,
           holdingRawAmount,
           holdingsUsdInCurrentPrice,
           isPositivePnL,
@@ -186,7 +188,7 @@ const Tradingview = () => {
           safePnLPercent
         }
 
-        // console.log("currentPnlProperties", currentPnlProperties)
+        console.log("currentPnlProperties", currentPnlProperties)
         setCurrentTokenPnLData({...currentPnlProperties});
       }
     }
@@ -529,7 +531,7 @@ const Tradingview = () => {
                 <TVChartContainer
                   tokenSymbol={tokenSymbol}
                   tokenaddress={tokenaddress}
-                  currentTokenAverageBuyPrice={currentTokenAverageBuyPrice}
+                  currentTokenPnLData={currentTokenPnLData}
                   solanaLivePrice={solanaLivePrice}
                   supply={chartTokenData?.currentSupply}
                 />
