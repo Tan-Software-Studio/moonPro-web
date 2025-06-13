@@ -1,5 +1,5 @@
-import logo from "../public/assets/Sidebar/nexapro-sm-logo.png";
-import logotext from "../public/assets/Sidebar/nexapro-logo.png";
+import logo from "../public/assets/Sidebar/nexapro.png";
+import logotext from "../public/assets/Sidebar/nexa-colorful-logo.png";
 import copytrade from "../public/assets/Sidebar/copytrade.svg";
 import holdings from "../public/assets/Sidebar/holdings.svg";
 import memescope from "../public/assets/Sidebar/memescope.svg";
@@ -88,6 +88,7 @@ import proWallet from "../public/assets/Sidebar/proWallet.svg";
 import proWalletColor from "../public/assets/Sidebar/proWalletColor.svg";
 // import NoDataFish from "../public/assets/NoDataImages/qwe.svg";
 import NoDataFish from "../public/assets/NoDataImages/NoDataImages.svg";
+import NoDataLogo from "../public/assets/NoDataImages/nexapro-noData1.png"; 
 import CryptoWithoutColor from "../public/assets/crypto-Stack/CryptoWithoutColor.svg";
 import CryptoColor from "../public/assets/crypto-Stack/CryptoColor.svg";
 
@@ -306,5 +307,6 @@ export {
   nexaLogo,
   nexaText,
   sharePnlBg,
-  solWhiteBg
+  solWhiteBg,
+  NoDataLogo
 };

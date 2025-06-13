@@ -1,5 +1,4 @@
-"use client";
-import { NoDataFish } from "@/app/Images";
+"use client"; 
 import { setChartSymbolImage } from "@/app/redux/states";
 import { Check, Copy } from "lucide-react";
 import Image from "next/image";
@@ -7,8 +6,9 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { pnlPercentage } from "./calculation";
+import NoData from "../common/NoData/noData";
 
-const History = ({}) => {
+const History = ({ }) => {
   const router = useRouter();
   const [copiedIndex, setCopiedIndex] = useState(null);
   const dispatch = useDispatch();
@@ -53,9 +53,8 @@ const History = ({}) => {
                   <tr
                     onClick={() => navigateToChartSreen(item)}
                     key={index}
-                    className={`${
-                      index % 2 === 0 ? "bg-gray-800/20" : ""
-                    } border- b -slate-700/20 hover:bg-slate-800/30 cursor-pointer transition - colors duration - 200`}
+                    className={`${index % 2 === 0 ? "bg-gray-800/20" : ""
+                      } border- b -slate-700/20 hover:bg-slate-800/30 cursor-pointer transition - colors duration - 200`}
                   >
                     <td className="px-4 py-2">
                       <div className="flex items-center gap-3">
@@ -119,20 +118,18 @@ const History = ({}) => {
 
                     <td className="px-4 py-2 ">
                       <div
-                        className={`flex items-center gap-0.5 text-base font-semibold whitespace-nowrap break-keep ${
-                          pnlPercentage(item?.sellPrice, item?.buyPrice) >= 0
+                        className={`flex items-center gap-0.5 text-base font-semibold whitespace-nowrap break-keep ${pnlPercentage(item?.sellPrice, item?.buyPrice) >= 0
                             ? "text-emerald-500"
                             : "text-red-500"
-                        }`}
+                          }`}
                       >
                         <p className="">
-                          {`${
-                            (item?.buyPrice - item.sellPrice) * item.qty >= 0
+                          {`${(item?.buyPrice - item.sellPrice) * item.qty >= 0
                               ? "-$"
                               : "$"
-                          }${Math.abs(
-                            (item?.buyPrice - item.sellPrice) * item.qty
-                          ).toFixed(2)}`}
+                            }${Math.abs(
+                              (item?.buyPrice - item.sellPrice) * item.qty
+                            ).toFixed(2)}`}
                         </p>
                         <p className={``}>
                           (
@@ -148,21 +145,7 @@ const History = ({}) => {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center h-64 mt-10 text-center">
-            <div className="flex items-center justify-center mb-4">
-              <Image
-                src={NoDataFish}
-                alt="No Data Available"
-                width={200}
-                height={100}
-                className="text-slate-400"
-              />
-            </div>
-            <p className="text-slate-400 text-lg mb-2 break-words break-all">
-              No data available
-            </p>
-            <p className="text-slate-500 text-sm">
-              Information will appear here when availab
-            </p>
+            <NoData />
           </div>
         )}
       </div>

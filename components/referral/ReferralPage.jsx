@@ -20,6 +20,7 @@ import { showToasterSuccess } from "@/utils/toaster/toaster.style";
 import { useTranslation } from "react-i18next";
 import { VscDebugBreakpointLogUnverified } from "react-icons/vsc";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
+import NoData from "../common/NoData/noData";
 const URL_LINK = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL;
 const ReferralPage = () => {
@@ -38,15 +39,15 @@ const ReferralPage = () => {
     selectedTier === 1
       ? "firstTier"
       : selectedTier === 2
-      ? "secondTier"
-      : "thirdTier";
+        ? "secondTier"
+        : "thirdTier";
 
   const rewardPercentage =
     selectedTier === 1
       ? refData?.user?.referealRewardsFirstTierPer
       : selectedTier === 2
-      ? refData?.user?.referealRewardsSecondTierPer
-      : refData?.user?.referealRewardsThirdTierPer;
+        ? refData?.user?.referealRewardsSecondTierPer
+        : refData?.user?.referealRewardsThirdTierPer;
 
   const tierData = refData?.referrals?.[tierKey] || [];
 
@@ -62,7 +63,7 @@ const ReferralPage = () => {
   };
 
   const getUserDisplayInfo = (user) => {
-    if (user?.email === "phantom@phantom.com" && user?.phantomAddress) {
+    if (user?.phantomAddress) {
       return {
         displayText: shortenAddress(user.phantomAddress),
         isPhantomAddress: true,
@@ -81,7 +82,7 @@ const ReferralPage = () => {
   };
 
   const getReferralDisplayInfo = (referral) => {
-    if (referral?.email === "phantom@phantom.com" && referral?.phantomAddress) {
+    if (referral?.phantomAddress) {
       return shortenAddress(referral.phantomAddress);
     } else if (referral?.phantomAddress) {
       return shortenAddress(referral.phantomAddress);
@@ -104,6 +105,7 @@ const ReferralPage = () => {
       });
       setLoading(false);
       const responce = res.data.data;
+      console.log("🚀 ~ fetchData ~ responce:", responce)
       setRefData(responce);
       setProgress(
         ((responce?.user?.dailyPoints +
@@ -111,7 +113,7 @@ const ReferralPage = () => {
           responce?.user?.weeklyPoints +
           responce?.user?.referralPoints) /
           50000) *
-          100
+        100
       );
     } catch (e) {
       setLoading(false);
@@ -555,19 +557,8 @@ const ReferralPage = () => {
                         colSpan={3}
                         className="text-center text-gray-400 py-4"
                       >
-                        <div className="flex flex-col w-full items-center justify-center mt-5">
-                          <div className="text-4xl mb-2">
-                            <Image
-                              src={NoDataFish}
-                              alt="No Data Available"
-                              width={200}
-                              height={100}
-                              className="rounded-lg"
-                            />
-                          </div>
-                          <h1 className="text-[#89888e] text-lg">
-                            {referral?.refMata?.noReferralsFound}
-                          </h1>
+                        <div className="flex flex-col items-center justify-center h-64 mt-10 text-center">
+                          <NoData />
                         </div>
                       </td>
                     </tr>

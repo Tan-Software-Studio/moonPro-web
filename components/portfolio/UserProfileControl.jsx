@@ -9,8 +9,8 @@ import History from "../profile/History";
 import TopHundred from "../profile/TopHundred";
 import { useTranslation } from "react-i18next";
 import RealizedPnLChart from "./PNLChart";
-import Image from "next/image";
-import { NoDataFish } from "@/app/Images";
+import Image from "next/image"; 
+import NoData from "../common/NoData/noData";
 
 const UserProfileControl = () => {
   const { t, i18n } = useTranslation();
@@ -187,25 +187,14 @@ const UserProfileControl = () => {
                   <div className="dot-spin"></div>
                 </div>
               </div>
-              : 
+              :
               performance?.chartPnlHistory?.length > 0 ? (
                 <div className="flex items-center justify-center mt-[50px] h-[200px]">
                   <RealizedPnLChart data={performance?.chartPnlHistory} />
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center mt-10 text-center">
-                  <div className="flex items-center justify-center mb-4">
-                    <Image
-                      src={NoDataFish}
-                      alt="No Data Available"
-                      width={200}
-                      height={100}
-                      className="text-slate-400"
-                    />
-                  </div>
-                  <p className="text-slate-400 text-lg mb-2 break-words break-all">
-                    No data available
-                  </p>
+                  <NoData />
                 </div>
               )}
           </div>
@@ -318,7 +307,7 @@ const UserProfileControl = () => {
                   ))}
                 </div>
                 {leftTableTab === portfolio?.activePosition && (
-                  <div> 
+                  <div>
                     <div className="w-full flex items-center gap-2 md:w-72 border border-gray-800 h-8 px-2 rounded-lg bg-gray-900  ">
                       <div>
                         <CiSearch size={20} />

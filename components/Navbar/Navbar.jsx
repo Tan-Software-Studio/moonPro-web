@@ -314,7 +314,7 @@ const Navbar = () => {
           <div className="flex items-center sm:gap-2 py-2   justify-between  sm:mx-4 md:mx-0">
             <div className="md:block hidden">{/* <AISignalsButton /> */}</div>
             <div className="flex items-center md:w-auto w-full justify-between">
-              <div className={`md:hidden flex w-10 h-auto`}>
+              <div className={`md:hidden flex w-9 h-auto`}>
                 <Image src={logo} alt="logo" className="w-full h-full" />
               </div>
               <div className="relative flex items-center gap-2 ">

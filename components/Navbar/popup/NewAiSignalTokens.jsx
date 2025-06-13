@@ -5,6 +5,7 @@ import { humanReadableFormat } from '@/utils/basicFunctions';
 import { UpdateTimeViaUTCWithCustomTime } from '@/utils/calculation';
 import { setChartSymbolImage } from '@/app/redux/states';
 import { useRouter } from 'next/navigation';
+import NoData from '@/components/common/NoData/noData';
 
 const NewAiSignalTokens = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -173,11 +174,7 @@ const NewAiSignalTokens = () => {
                             })
                         ) : (
                             <div className="flex flex-col items-center justify-center text-center text-gray-400 py-16">
-                                <div className="p-4 bg-gradient-to-r from-[#1a1a24] to-[#0f0f14] rounded-2xl mb-4">
-                                    <TrendingUp className="w-16 h-16 text-gray-600" />
-                                </div>
-                                <p className="text-lg font-medium">No AI signals available</p>
-                                <p className="text-sm text-gray-500 mt-1">Check back soon for new token signals</p>
+                                <NoData/>
                             </div>
                         )}
                     </div>

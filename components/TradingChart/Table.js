@@ -26,6 +26,7 @@ import { RiArrowLeftRightFill } from "react-icons/ri";
 import { FaArrowUpLong } from "react-icons/fa6";
 import { FaArrowDownLong } from "react-icons/fa6";
 import { CiFilter } from "react-icons/ci";
+import NoData from "../common/NoData/noData.jsx";
 
 const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSupply, currentUsdPrice, currentTabData, isInstantTradeActive, handleInstantTradeClick }) => {
   const { t } = useTranslation();
@@ -43,7 +44,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
   const [totalUsdActive, setTotalUsdActive] = useState(true);
   const [marketCapActive, setMarketCapActive] = useState(true);
   const [ageActive, setAgeActive] = useState(true);
-  const [descTimeActive , setdescTimeActive] = useState(true);
+  const [descTimeActive, setdescTimeActive] = useState(true);
 
   const solanaLivePrice = useSelector(
     (state) => state?.AllStatesData?.solanaLivePrice
@@ -52,14 +53,14 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
   const toggleTotalUsdActive = () => {
     if (solanaLivePrice === 0) {
       return;
-    } 
+    }
     setTotalUsdActive((prev) => !prev);
   };
 
   const toggleMarketCapActive = () => {
     if (tokenSupply === undefined) {
       return;
-    } 
+    }
     setMarketCapActive((prev) => !prev);
   };
 
@@ -136,7 +137,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
   const tabList = [
     { name: tragindViewPagePage?.table2?.trades },
     { name: tragindViewPagePage?.table2?.positions },
-    { name: tragindViewPagePage?.table2?.holders},
+    { name: tragindViewPagePage?.table2?.holders },
     { name: tragindViewPagePage?.table2?.topTraders },
   ];
 
@@ -210,34 +211,34 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
     {
       id: 1,
       title: "Age / Time",
-      customHeader: 
-      <div className="flex gap-1 items-center justify-center text-[#A8A8A8]">
-        <button 
-          onClick={onAgeClick}
-          className={`flex items-center justify-center gap-1 ${ageActive ? "text-white" : ""}`}
-        >
-          <p>Age</p>
-          {ageActive && (
-            descTimeActive ? 
-              <FaArrowDownLong size={10} />
-            :
-              <FaArrowUpLong size={10} />
-          )}
-        </button>
-        <p>/</p>
-        <button 
-          onClick={onTimeClick}
-          className={`flex items-center justify-center gap-1 ${ageActive ? "" : "text-white" }`}
-        >
-          <p>Time</p>
-          {!ageActive && ( 
-            descTimeActive ? 
-              <FaArrowDownLong size={10} />
-            :
-              <FaArrowUpLong size={10} />
-          )}
-        </button>
-      </div>
+      customHeader:
+        <div className="flex gap-1 items-center justify-center text-[#A8A8A8]">
+          <button
+            onClick={onAgeClick}
+            className={`flex items-center justify-center gap-1 ${ageActive ? "text-white" : ""}`}
+          >
+            <p>Age</p>
+            {ageActive && (
+              descTimeActive ?
+                <FaArrowDownLong size={10} />
+                :
+                <FaArrowUpLong size={10} />
+            )}
+          </button>
+          <p>/</p>
+          <button
+            onClick={onTimeClick}
+            className={`flex items-center justify-center gap-1 ${ageActive ? "" : "text-white"}`}
+          >
+            <p>Time</p>
+            {!ageActive && (
+              descTimeActive ?
+                <FaArrowDownLong size={10} />
+                :
+                <FaArrowUpLong size={10} />
+            )}
+          </button>
+        </div>
     },
     {
       id: 2,
@@ -410,15 +411,15 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
           const realizedPnl = soldInUsd - boughtInUsd;
 
           const holderData = {
-              owner: owner === pairAddress ? "LIQUIDITY POOL" : owner,
-              holdings: holdingData?.BalanceUpdate?.balance || 0,
-              boughtCount,
-              boughtInSol: buySellOwnerData?.buy_volume || 0,
-              boughtInUsd,
-              soldCount,
-              soldInSol: buySellOwnerData?.sell_volume || 0,
-              soldInUsd,
-              realizedPnl
+            owner: owner === pairAddress ? "LIQUIDITY POOL" : owner,
+            holdings: holdingData?.BalanceUpdate?.balance || 0,
+            boughtCount,
+            boughtInSol: buySellOwnerData?.buy_volume || 0,
+            boughtInUsd,
+            soldCount,
+            soldInSol: buySellOwnerData?.sell_volume || 0,
+            soldInUsd,
+            realizedPnl
           };
 
           holdingsData.push(holderData);
@@ -544,9 +545,9 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
   }, [tokenCA]);
 
   useEffect(() => {
-      if (tokenSupply === undefined) {
+    if (tokenSupply === undefined) {
       setMarketCapActive(false);
-    } else { 
+    } else {
       setMarketCapActive(true);
     }
   }, [tokenSupply]);
@@ -554,9 +555,8 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
   return (
     <>
       <div
-        className={`${
-          latestTradesData?.latestTrades?.length > 0 ? "" : ""
-        } relative bg-[#141414] md:h-auto h-svh  w-full overflow-hidden`}
+        className={`${latestTradesData?.latestTrades?.length > 0 ? "" : ""
+          } relative bg-[#141414] md:h-auto h-svh  w-full overflow-hidden`}
       >
         {/* table header */}
         <TabNavigation
@@ -572,18 +572,17 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
 
         {/* table body */}
         <div
-          className={`onest ${
-            (activeTab === "Transactions" &&
-              latestTradesData?.latestTrades?.length > 0) ||
+          className={`onest ${(activeTab === "Transactions" &&
+            latestTradesData?.latestTrades?.length > 0) ||
             topTraderData?.length > 0 ||
             topHoldingData?.BalanceUpdates?.length > 0
-              ? "visibleScroll"
-              : ""
-          } `}
+            ? "visibleScroll"
+            : ""
+            } `}
         >
           <div>
             {activeTab === "Trades" &&
-            latestTradesData?.latestTrades?.length > 0 ? (
+              latestTradesData?.latestTrades?.length > 0 ? (
               <div className="lg:h-[85vh] h-svh overflow-y-scroll visibleScroll">
                 <table className="min-w-[100%] table-auto overflow-y-scroll">
                   <thead className="bg-[#08080E] sticky top-0">
@@ -592,123 +591,122 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                         <th
                           key={header.id}
                           className="px-2 py-3 text-center text-xs font-medium text-[#A8A8A8] whitespace-nowrap leading-4"
-                        > 
-                        {!header?.customHeader ? 
-                        <>
-                         <div onClick={header?.onClick} className={`flex items-center gap-1 justify-center ${header?.onClick && "cursor-pointer"}`}>
-                            <p>{header.title}</p>
-                            {header?.infoTipString && (
-                              <Infotip body={header?.infoTipString} />
-                            )}
-                            {header?.icon && header.icon}
-                          </div>
-                        </> 
-                        : 
-                        <>
-                          {header?.customHeader}
-                        </>
-                        }
+                        >
+                          {!header?.customHeader ?
+                            <>
+                              <div onClick={header?.onClick} className={`flex items-center gap-1 justify-center ${header?.onClick && "cursor-pointer"}`}>
+                                <p>{header.title}</p>
+                                {header?.infoTipString && (
+                                  <Infotip body={header?.infoTipString} />
+                                )}
+                                {header?.icon && header.icon}
+                              </div>
+                            </>
+                            :
+                            <>
+                              {header?.customHeader}
+                            </>
+                          }
                         </th>
                       ))}
                     </tr>
                   </thead>
                   <tbody className="bg-transparent">
                     {[...latestTradesData?.latestTrades]
-                    ?.sort((a, b) => {
-                      if (!a?.Block?.Time || !b?.Block?.Time) return 0;
-                      const aTime = new Date(a.Block.Time).getTime();
-                      const bTime = new Date(b.Block.Time).getTime();
-                      return descTimeActive ? bTime - aTime : aTime - bTime;
-                    })
-                    .map((data, index) => {
-                      const isBuy = data?.Trade?.Side?.Type == "buy";
-                      let readableTotalPrice = "N/A"
-                      if (data?.Trade?.Amount) {
-                        const totalUsd = data?.Trade?.Amount * data?.Trade?.PriceInUSD;
-                        const solPrice = solanaLivePrice === 0 ? 1 : solanaLivePrice;
-                        const totalSol = totalUsd / solPrice;
-                        const totalPrice = totalUsdActive ? totalUsd : totalSol;
-                        readableTotalPrice = totalPrice >= 1 || totalPrice <= -1
-                              ? humanReadableFormatWithNoDollar(totalPrice, 2)
-                              : formatDecimal(totalPrice, 1);
-                      }
-                      const price = data?.Trade?.PriceInUSD
-                      const supply = tokenSupply === undefined ? 1 : tokenSupply;
-                      const marketCapPrice = price * supply;
-                      const showPrice = marketCapActive ? marketCapPrice : price;
-                      
-                      let readableTime = "N/A"
-                      if (data?.Block?.Time) {
-                        const utcTime = data.Block.Time;
-                        const localTime = convertUTCToLocalTimeString(utcTime);
-                        const timeAgo = calculateTimeDifference(utcTime);
-                        readableTime = ageActive ? timeAgo : localTime;
-                      }
-                      return (
-                        <tr
-                          key={index}
-                          className={`capitalize bg-[#08080E] text-[#F6F6F6] font-normal text-xs leading-4 onest border-b border-[#404040]`}
-                        >
-                          <td className="text-center px-6 py-4">
-                            {readableTime}
-                          </td>
-                          <td className="flex items-center justify-center">
-                            <div className={`min-w-8 rounded px-3 py-1.5 text-center ${
-                              isBuy? 
+                      ?.sort((a, b) => {
+                        if (!a?.Block?.Time || !b?.Block?.Time) return 0;
+                        const aTime = new Date(a.Block.Time).getTime();
+                        const bTime = new Date(b.Block.Time).getTime();
+                        return descTimeActive ? bTime - aTime : aTime - bTime;
+                      })
+                      .map((data, index) => {
+                        const isBuy = data?.Trade?.Side?.Type == "buy";
+                        let readableTotalPrice = "N/A"
+                        if (data?.Trade?.Amount) {
+                          const totalUsd = data?.Trade?.Amount * data?.Trade?.PriceInUSD;
+                          const solPrice = solanaLivePrice === 0 ? 1 : solanaLivePrice;
+                          const totalSol = totalUsd / solPrice;
+                          const totalPrice = totalUsdActive ? totalUsd : totalSol;
+                          readableTotalPrice = totalPrice >= 1 || totalPrice <= -1
+                            ? humanReadableFormatWithNoDollar(totalPrice, 2)
+                            : formatDecimal(totalPrice, 1);
+                        }
+                        const price = data?.Trade?.PriceInUSD
+                        const supply = tokenSupply === undefined ? 1 : tokenSupply;
+                        const marketCapPrice = price * supply;
+                        const showPrice = marketCapActive ? marketCapPrice : price;
+
+                        let readableTime = "N/A"
+                        if (data?.Block?.Time) {
+                          const utcTime = data.Block.Time;
+                          const localTime = convertUTCToLocalTimeString(utcTime);
+                          const timeAgo = calculateTimeDifference(utcTime);
+                          readableTime = ageActive ? timeAgo : localTime;
+                        }
+                        return (
+                          <tr
+                            key={index}
+                            className={`capitalize bg-[#08080E] text-[#F6F6F6] font-normal text-xs leading-4 onest border-b border-[#404040]`}
+                          >
+                            <td className="text-center px-6 py-4">
+                              {readableTime}
+                            </td>
+                            <td className="flex items-center justify-center">
+                              <div className={`min-w-8 rounded px-3 py-1.5 text-center ${isBuy ?
                                 "text-[#21CB6B]"
-                              : "text-[#ed1b26]"
-                              }`}>
-                              {data?.Trade?.Side?.Type || ""}
-                            </div>
-                          </td>
-                          <td className="text-center px-6 py-4">
-                            {data?.Trade?.PriceInUSD
-                              ?  showPrice >= 1 || showPrice <= -1
+                                : "text-[#ed1b26]"
+                                }`}>
+                                {data?.Trade?.Side?.Type || ""}
+                              </div>
+                            </td>
+                            <td className="text-center px-6 py-4">
+                              {data?.Trade?.PriceInUSD
+                                ? showPrice >= 1 || showPrice <= -1
                                   ? "$" + humanReadableFormatWithNoDollar(showPrice, 2)
                                   : "$" + formatDecimal(showPrice, 1)
-                              : "N/A"}
-                          </td>
-                          <td className="text-center px-6 py-4">
-                            {data?.Trade?.Amount
-                              ? humanReadableFormatWithOutUsd(data.Trade.Amount)
-                              : "N/A"}
-                          </td>
-                          <td className={`text-center px-6 py-4 
-                            ${isBuy? 
-                              "text-[#21CB6B]"
-                            : "text-[#ed1b26]"
-                            }`}>
+                                : "N/A"}
+                            </td>
+                            <td className="text-center px-6 py-4">
+                              {data?.Trade?.Amount
+                                ? humanReadableFormatWithOutUsd(data.Trade.Amount)
+                                : "N/A"}
+                            </td>
+                            <td className={`text-center px-6 py-4 
+                            ${isBuy ?
+                                "text-[#21CB6B]"
+                                : "text-[#ed1b26]"
+                              }`}>
                               <div className="flex items-center justify-center gap-1">
-                              {!totalUsdActive && 
-                                <Image
-                                  src={solana}
-                                  width={15}
-                                  height={15}
-                                  alt="solana"
-                                />
-                              }
-                              <p>{(totalUsdActive ? "$" : "") + readableTotalPrice}</p>
+                                {!totalUsdActive &&
+                                  <Image
+                                    src={solana}
+                                    width={15}
+                                    height={15}
+                                    alt="solana"
+                                  />
+                                }
+                                <p>{(totalUsdActive ? "$" : "") + readableTotalPrice}</p>
                               </div>
-                          </td>
-                          <td className="flex items-center justify-center px-6 py-4 text-white text-center gap-2">
-                            {data?.Transaction?.Signer
-                              ? `${data?.Transaction?.Signer.slice(
+                            </td>
+                            <td className="flex items-center justify-center px-6 py-4 text-white text-center gap-2">
+                              {data?.Transaction?.Signer
+                                ? `${data?.Transaction?.Signer.slice(
                                   0,
                                   3
                                 )}...${data?.Transaction?.Signer.slice(
                                   -3
                                 )}`
-                              : "N/A"}
-                            <a
-                              href={`https://solscan.io/tx/${data?.Transaction?.Signature}`}
-                              target="_blank"
-                            >
-                              <CiShare1 className="text-[18px]" />
-                            </a>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                                : "N/A"}
+                              <a
+                                href={`https://solscan.io/tx/${data?.Transaction?.Signature}`}
+                                target="_blank"
+                              >
+                                <CiShare1 className="text-[18px]" />
+                              </a>
+                            </td>
+                          </tr>
+                        );
+                      })}
                   </tbody>
                 </table>
               </div>
@@ -734,33 +732,33 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                       const usdHoldings = data?.holdings * currentUsdPrice;
                       const totalPnL = (data?.realizedPnl ?? 0);
                       const pnlPercent = data?.boughtInUsd !== 0 ? ((totalPnL / data?.boughtInUsd) * 100) : 0;
-                    return (
-                      <tr
-                        key={index}
-                        className="bg-[#08080E] text-[#F6F6F6] font-normal text-xs leading-4 onest border-b px-3 border-[#404040]"
-                      >
-                        <td className="text-center text-[#707070] px-6 py-4 w-5">
-                          {index + 1}
-                        </td>
-                        <td className="py-3 text-center w-fit whitespace-nowrap flex-start">
-                          <div className="flex items-center justify-start gap-2">
-                            <a
-                              href={`https://solscan.io/account/${data?.owner}`}
-                              target="_blank"
-                            >
-                              <CiShare1 className="text-[18px]" />
-                            </a>
-                            {data?.owner
-                              ? `${data?.owner?.slice(
+                      return (
+                        <tr
+                          key={index}
+                          className="bg-[#08080E] text-[#F6F6F6] font-normal text-xs leading-4 onest border-b px-3 border-[#404040]"
+                        >
+                          <td className="text-center text-[#707070] px-6 py-4 w-5">
+                            {index + 1}
+                          </td>
+                          <td className="py-3 text-center w-fit whitespace-nowrap flex-start">
+                            <div className="flex items-center justify-start gap-2">
+                              <a
+                                href={`https://solscan.io/account/${data?.owner}`}
+                                target="_blank"
+                              >
+                                <CiShare1 className="text-[18px]" />
+                              </a>
+                              {data?.owner
+                                ? `${data?.owner?.slice(
                                   0,
                                   6
                                 )}...${data?.owner?.slice(
                                   -4
                                 )}`
-                              : "N/A"}
-                          </div>
-                        </td>
-                        {/* <td>
+                                : "N/A"}
+                            </div>
+                          </td>
+                          {/* <td>
                           <div className="flex items-center justify-start gap-1">
                             <Image
                               src={solana}
@@ -771,28 +769,28 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                             <p>0</p>
                           </div>
                         </td> */}
-                        {/* Bought */}
-                        <td>
-                          <div className="flex flex-col gap-[2px] h-full justify-start">
-                            <p className="text-[#21CB6B] text-sm leading-4">{formatNumber(data?.boughtInUsd || 0, false, true)}</p>
-                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(data?.boughtAmount || 0, false, false)} / ${data?.boughtCount}`}</p>
-                          </div>
-                        </td>
-                        {/* Sold */}
-                        <td>
-                          <div className="flex flex-col gap-[2px] h-full justify-start">
-                            <p className="text-[#ed1b26] text-sm leading-4">{formatNumber(data?.soldInUsd || 0, false, true)}</p>
-                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(data?.soldAmount || 0, false, false)} / ${data?.soldCount}`}</p>
-                          </div>
-                        </td>
-                        {/* PnL */}
-                        <td>
-                          <div className="flex flex-col gap-[2px] h-full justify-start">
-                            <p className={`${totalPnL >= 0 ? 'text-[#21CB6B]' : 'text-[#ed1b26]'} text-sm leading-4`}>{formatNumber(totalPnL, false, true)}</p>
-                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(pnlPercent, true, false) || 0}%`}</p>
-                          </div>
-                        </td>
-                        <td className="text-center py-3 pr-4">
+                          {/* Bought */}
+                          <td>
+                            <div className="flex flex-col gap-[2px] h-full justify-start">
+                              <p className="text-[#21CB6B] text-sm leading-4">{formatNumber(data?.boughtInUsd || 0, false, true)}</p>
+                              <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(data?.boughtAmount || 0, false, false)} / ${data?.boughtCount}`}</p>
+                            </div>
+                          </td>
+                          {/* Sold */}
+                          <td>
+                            <div className="flex flex-col gap-[2px] h-full justify-start">
+                              <p className="text-[#ed1b26] text-sm leading-4">{formatNumber(data?.soldInUsd || 0, false, true)}</p>
+                              <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(data?.soldAmount || 0, false, false)} / ${data?.soldCount}`}</p>
+                            </div>
+                          </td>
+                          {/* PnL */}
+                          <td>
+                            <div className="flex flex-col gap-[2px] h-full justify-start">
+                              <p className={`${totalPnL >= 0 ? 'text-[#21CB6B]' : 'text-[#ed1b26]'} text-sm leading-4`}>{formatNumber(totalPnL, false, true)}</p>
+                              <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(pnlPercent, true, false) || 0}%`}</p>
+                            </div>
+                          </td>
+                          <td className="text-center py-3 pr-4">
                             {tokenSupply ? (
                               <>
                                 <p className="pb-2">
@@ -811,7 +809,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                                     <p className="bg-[#9b99996b] rounded-md px-1 py-[2px]">
                                       {calculateHoldersPercentage(
                                         data?.holdings,
-                                          tokenSupply
+                                        tokenSupply
                                       )}
                                     </p>
                                   </div>
@@ -820,8 +818,8 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                                   completed={Math.floor(
                                     parseFloat(
                                       calculateHoldersPercentage(
-                                          data?.holdings,
-                                          tokenSupply
+                                        data?.holdings,
+                                        tokenSupply
                                       ).replace("%", "") // Remove "%" before converting to number
                                     )
                                   )}
@@ -839,14 +837,15 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                             ) : (
                               "N/A"
                             )}
-                        </td>
-                        {/* <td className="text-center">
+                          </td>
+                          {/* <td className="text-center">
                           <div className="flex justify-end pr-3">
                             <CiFilter className="text-[15px] text-[#cdc8cd] font-bold" />
                           </div>
                         </td> */}
-                      </tr>
-                    )})}
+                        </tr>
+                      )
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -875,33 +874,33 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                           const usdHoldings = data?.holdings * currentUsdPrice;
                           const totalPnL = (data?.realizedPnl ?? 0);
                           const pnlPercent = data?.boughtInUsd !== 0 ? ((totalPnL / data?.boughtInUsd) * 100) : 0;
-                        return (
-                          <tr
-                            key={index}
-                            className="bg-[#08080E] text-[#F6F6F6] font-normal text-xs leading-4 onest border-b px-3 border-[#404040]"
-                          >
-                            <td className="text-center text-[#707070] px-6 py-4 w-5">
-                              {index + 1}
-                            </td>
-                            <td className="py-3 text-center w-fit whitespace-nowrap flex-start">
-                              <div className="flex items-center justify-start gap-2">
-                                <a
-                                  href={`https://solscan.io/account/${data?.owner}`}
-                                  target="_blank"
-                                >
-                                  <CiShare1 className="text-[18px]" />
-                                </a>
-                                {data?.owner
-                                  ? `${data?.owner?.slice(
+                          return (
+                            <tr
+                              key={index}
+                              className="bg-[#08080E] text-[#F6F6F6] font-normal text-xs leading-4 onest border-b px-3 border-[#404040]"
+                            >
+                              <td className="text-center text-[#707070] px-6 py-4 w-5">
+                                {index + 1}
+                              </td>
+                              <td className="py-3 text-center w-fit whitespace-nowrap flex-start">
+                                <div className="flex items-center justify-start gap-2">
+                                  <a
+                                    href={`https://solscan.io/account/${data?.owner}`}
+                                    target="_blank"
+                                  >
+                                    <CiShare1 className="text-[18px]" />
+                                  </a>
+                                  {data?.owner
+                                    ? `${data?.owner?.slice(
                                       0,
                                       6
                                     )}...${data?.owner?.slice(
                                       -4
                                     )}`
-                                  : "N/A"}
-                              </div>
-                            </td>
-                            {/* <td>
+                                    : "N/A"}
+                                </div>
+                              </td>
+                              {/* <td>
                               <div className="flex items-center justify-start gap-1">
                                 <Image
                                   src={solana}
@@ -912,28 +911,28 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                                 <p>0</p>
                               </div>
                             </td> */}
-                            {/* Bought */}
-                            <td>
-                              <div className="flex flex-col gap-[2px] h-full justify-start">
-                                <p className="text-[#21CB6B] text-sm leading-4">{formatNumber(data?.boughtInUsd || 0, false, true)}</p>
-                                <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${data?.boughtCount}`}</p>
-                              </div>
-                            </td>
-                            {/* Sold */}
-                            <td>
-                              <div className="flex flex-col gap-[2px] h-full justify-start">
-                                <p className="text-[#ed1b26] text-sm leading-4">{formatNumber(data?.soldInUsd || 0, false, true)}</p>
-                                <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${data?.soldCount}`}</p>
-                              </div>
-                            </td>
-                            {/* PnL */}
-                            <td>
-                              <div className="flex flex-col gap-[2px] h-full justify-start">
-                                <p className={`${totalPnL >= 0 ? 'text-[#21CB6B]' : 'text-[#ed1b26]'} text-sm leading-4`}>{formatNumber(totalPnL, false, true)}</p>
-                                <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(pnlPercent, true, false) || 0}%`}</p>
-                              </div>
-                            </td>
-                            <td className="text-center py-3 pr-4">
+                              {/* Bought */}
+                              <td>
+                                <div className="flex flex-col gap-[2px] h-full justify-start">
+                                  <p className="text-[#21CB6B] text-sm leading-4">{formatNumber(data?.boughtInUsd || 0, false, true)}</p>
+                                  <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${data?.boughtCount}`}</p>
+                                </div>
+                              </td>
+                              {/* Sold */}
+                              <td>
+                                <div className="flex flex-col gap-[2px] h-full justify-start">
+                                  <p className="text-[#ed1b26] text-sm leading-4">{formatNumber(data?.soldInUsd || 0, false, true)}</p>
+                                  <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${data?.soldCount}`}</p>
+                                </div>
+                              </td>
+                              {/* PnL */}
+                              <td>
+                                <div className="flex flex-col gap-[2px] h-full justify-start">
+                                  <p className={`${totalPnL >= 0 ? 'text-[#21CB6B]' : 'text-[#ed1b26]'} text-sm leading-4`}>{formatNumber(totalPnL, false, true)}</p>
+                                  <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(pnlPercent, true, false) || 0}%`}</p>
+                                </div>
+                              </td>
+                              <td className="text-center py-3 pr-4">
                                 {tokenSupply ? (
                                   <>
                                     <p className="pb-2">
@@ -952,7 +951,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                                         <p className="bg-[#9b99996b] rounded-md px-1 py-[2px]">
                                           {calculateHoldersPercentage(
                                             data?.holdings,
-                                              tokenSupply
+                                            tokenSupply
                                           )}
                                         </p>
                                       </div>
@@ -961,8 +960,8 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                                       completed={Math.floor(
                                         parseFloat(
                                           calculateHoldersPercentage(
-                                             data?.holdings,
-                                              tokenSupply
+                                            data?.holdings,
+                                            tokenSupply
                                           ).replace("%", "") // Remove "%" before converting to number
                                         )
                                       )}
@@ -980,24 +979,24 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                                 ) : (
                                   "N/A"
                                 )}
-                            </td>
-                            {/* <td className="text-center">
+                              </td>
+                              {/* <td className="text-center">
                               <div className="flex justify-end pr-3">
                                 <CiFilter className="text-[15px] text-[#cdc8cd] font-bold" />
                               </div>
                             </td> */}
-                          </tr>
-                        )})}
+                            </tr>
+                          )
+                        })}
                       </tbody>
                     </table>
                   </div>
                   <div>
                     <div
-                      className={`h-full md:flex hidden justify-center  ${
-                        scrollPosition >= 20
-                          ? "items-center"
-                          : `lg:items-start lg:pt-5 items-center`
-                      } transition-all duration-500 overflow-y-auto`}
+                      className={`h-full md:flex hidden justify-center  ${scrollPosition >= 20
+                        ? "items-center"
+                        : `lg:items-start lg:pt-5 items-center`
+                        } transition-all duration-500 overflow-y-auto`}
                     >
                       <div className="flex-col">
                         <CircularProgressChart
@@ -1051,91 +1050,92 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                   </thead>
                   <tbody className="bg-transparent">
                     {holdingsData.map((data, index) => {
-                        const usdBought = data?.activeQtyHeld * data?.averageBuyPrice || 0;
-                        const usdSold = data?.quantitySold * data?.averageHistoricalSellPrice || 0;
-                        const activeQtyHeld = data?.activeQtyHeld || 0;
-                        const quantitySold = data?.quantitySold || 0;
-                        const averageBuyPrice = data?.averageBuyPrice || 0;
+                      const usdBought = data?.activeQtyHeld * data?.averageBuyPrice || 0;
+                      const usdSold = data?.quantitySold * data?.averageHistoricalSellPrice || 0;
+                      const activeQtyHeld = data?.activeQtyHeld || 0;
+                      const quantitySold = data?.quantitySold || 0;
+                      const averageBuyPrice = data?.averageBuyPrice || 0;
 
-                        const availableQty = activeQtyHeld - quantitySold;
-                        const availableQtyInUSDWhenBought = availableQty * averageBuyPrice;
-                        const currentPrice = data?.token === tokenCA ? currentUsdPrice : data?.current_price;
-                        const usdHoldings = availableQty * (currentPrice || 0);
-                        const pnlAmount = usdHoldings - availableQtyInUSDWhenBought;
-                        const pnlPercent = availableQtyInUSDWhenBought !== 0
-                          ? (pnlAmount / availableQtyInUSDWhenBought) * 100
-                          : 0;
+                      const availableQty = activeQtyHeld - quantitySold;
+                      const availableQtyInUSDWhenBought = availableQty * averageBuyPrice;
+                      const currentPrice = data?.token === tokenCA ? currentUsdPrice : data?.current_price;
+                      const usdHoldings = availableQty * (currentPrice || 0);
+                      const pnlAmount = usdHoldings - availableQtyInUSDWhenBought;
+                      const pnlPercent = availableQtyInUSDWhenBought !== 0
+                        ? (pnlAmount / availableQtyInUSDWhenBought) * 100
+                        : 0;
 
                       return (
-                      <tr
-                        key={index}
-                        className={`capitalize bg-[#08080E] text-[#F6F6F6] border-[#404040] font-medium text-xs whitespace-nowrap leading-4 border-b onest`}
-                      >
-                        {/* Token */}
-                        <td className="px-6 py-4 flex">
-                          <a 
-                            href={`/tradingview/solana?tokenaddress=${data?.token}&symbol=${data?.symbol}`}
-                            className="group/name hover:opacity-80 flex flex-col sm:flex-row items-start text-xs leading-4 font-semibold h-full justify-start"
-                          >
-                            <div className="flex items-center">
-                              <div className="w-7 h-7 flex-shrink-0 group-hover/image:opacity-80 relative rounded-[4px]">
-                              {data?.img ? 
-                                <Image 
-                                  src={data?.img}
-                                  alt={data?.symbol}
-                                  width={28}
-                                  height={28}
-                                  className="w-full h-full object-cover rounded-[4px]"
-                                />
-                              :
-                              <h1 className="absolute inset-0 m-auto w-[28px] h-[28px] rounded-sm text-[12px] border-[1px] border-[#26262e] bg-[#191919] flex items-center justify-center">
-                                {data?.symbol?.toString()?.slice(0, 1)}
-                              </h1>
-                              } 
+                        <tr
+                          key={index}
+                          className={`capitalize bg-[#08080E] text-[#F6F6F6] border-[#404040] font-medium text-xs whitespace-nowrap leading-4 border-b onest`}
+                        >
+                          {/* Token */}
+                          <td className="px-6 py-4 flex">
+                            <a
+                              href={`/tradingview/solana?tokenaddress=${data?.token}&symbol=${data?.symbol}`}
+                              className="group/name hover:opacity-80 flex flex-col sm:flex-row items-start text-xs leading-4 font-semibold h-full justify-start"
+                            >
+                              <div className="flex items-center">
+                                <div className="w-7 h-7 flex-shrink-0 group-hover/image:opacity-80 relative rounded-[4px]">
+                                  {data?.img ?
+                                    <Image
+                                      src={data?.img}
+                                      alt={data?.symbol}
+                                      width={28}
+                                      height={28}
+                                      className="w-full h-full object-cover rounded-[4px]"
+                                    />
+                                    :
+                                    <h1 className="absolute inset-0 m-auto w-[28px] h-[28px] rounded-sm text-[12px] border-[1px] border-[#26262e] bg-[#191919] flex items-center justify-center">
+                                      {data?.symbol?.toString()?.slice(0, 1)}
+                                    </h1>
+                                  }
+                                </div>
+                                <span className="pl-2 group-hover/name:underline">{data?.symbol}</span>
                               </div>
-                              <span className="pl-2 group-hover/name:underline">{data?.symbol}</span>
+                            </a>
+                          </td>
+                          {/* Bought */}
+                          <td className="px-6 py-4 items-start">
+                            <div className="flex flex-col gap-[2px] h-full justify-center">
+                              <p className="text-[#21CB6B] text-sm leading-4">{`${formatNumber(usdBought)}`}</p>
+                              <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(data?.activeQtyHeld, false, false)} ${data?.symbol}`}</p>
                             </div>
-                          </a>
-                        </td>
-                        {/* Bought */}
-                        <td className="px-6 py-4 items-start">
-                          <div className="flex flex-col gap-[2px] h-full justify-center">
-                            <p className="text-[#21CB6B] text-sm leading-4">{`${formatNumber(usdBought)}`}</p>
-                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(data?.activeQtyHeld, false, false)} ${data?.symbol}`}</p>
-                          </div>
-                        </td>
-                        {/* Sold */}
-                        <td className="px-6 py-4 items-start">
-                          <div className="flex flex-col gap-[2px] h-full justify-center">
-                            <p className="text-[#ed1b26] text-sm leading-4">{`${formatNumber(usdSold)}`}</p>
-                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(data?.quantitySold, false, false)} ${data?.symbol}`}</p>
-                          </div>
-                        </td>
-                        {/* Remaining */}
-                        <td className="px-6 py-4 items-start">
-                          <div className="flex flex-col gap-[2px] h-full justify-center">
-                            <p className="text-sm leading-4">{`${formatNumber(usdHoldings)}`}</p>
-                            <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(data?.activeQtyHeld, false, false)} ${data?.symbol}`}</p>
-                          </div>
-                        </td>
-                        {/* PnL */}
-                        <td className="px-6 py-4 items-center">
-                          <span className={`${pnlAmount >= 0 ? "text-[#21CB6B]" : "text-[#ed1b26]"} 
+                          </td>
+                          {/* Sold */}
+                          <td className="px-6 py-4 items-start">
+                            <div className="flex flex-col gap-[2px] h-full justify-center">
+                              <p className="text-[#ed1b26] text-sm leading-4">{`${formatNumber(usdSold)}`}</p>
+                              <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(data?.quantitySold, false, false)} ${data?.symbol}`}</p>
+                            </div>
+                          </td>
+                          {/* Remaining */}
+                          <td className="px-6 py-4 items-start">
+                            <div className="flex flex-col gap-[2px] h-full justify-center">
+                              <p className="text-sm leading-4">{`${formatNumber(usdHoldings)}`}</p>
+                              <p className="text-[#9b9999] text-[11px] leading-[14px]">{`${formatNumber(data?.activeQtyHeld, false, false)} ${data?.symbol}`}</p>
+                            </div>
+                          </td>
+                          {/* PnL */}
+                          <td className="px-6 py-4 items-center">
+                            <span className={`${pnlAmount >= 0 ? "text-[#21CB6B]" : "text-[#ed1b26]"} 
                             font-thin`}
-                          >
-                            {`${formatNumber(pnlAmount)}(${formatNumber(pnlPercent, true, false)}%)`}  
-                          </span>
-                        </td>
-                        {/* Actions */}
-                        {/* <td className="whitespace-nowrap px-6 py-4 text-xs font-medium">
+                            >
+                              {`${formatNumber(pnlAmount)}(${formatNumber(pnlPercent, true, false)}%)`}
+                            </span>
+                          </td>
+                          {/* Actions */}
+                          {/* <td className="whitespace-nowrap px-6 py-4 text-xs font-medium">
                           <div className="flex justify-end items-center h-full w-full">
                             <button className="text-[#ed1b26] hover:text-[#bd3c42] font-bold transition-all duration-200 ease-in-out">
                               {"Sell"}
                             </button>
                           </div>
                         </td> */}
-                      </tr>
-                    )})}
+                        </tr>
+                      )
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -1164,11 +1164,15 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                           </p>
                         ) : holdingsData?.length === 0 ? (
                           <p className="text-[12px] md:text-[15px]">
-                            {"There is no current holdings in your wallet."}
+                            <div className="flex flex-col items-center justify-center h-80  text-center">
+                              <NoData title="There is no current holdings in your wallet." />
+                            </div>
                           </p>
                         ) : null // If wallet is connected and holdings exist, no message
                       ) : (
-                        <p>{tragindViewPagePage?.table2?.noData }</p>
+                        <div className="flex flex-col items-center justify-center h-80  text-center">
+                          <NoData title={tragindViewPagePage?.table2?.noData} />
+                        </div>
                       )}
                     </p>
                   </div>

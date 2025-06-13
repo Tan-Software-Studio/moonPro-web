@@ -751,7 +751,7 @@ const TradingPopup = ({
             <Image
               src={solWhiteBg}
               alt="solana"
-              className="w-[24px] !h-[17px] rounded-full bg-cover"
+              className="w-[22px] !h-[15px] rounded-full bg-cover"
             />
           </button>
         )
@@ -774,7 +774,7 @@ const TradingPopup = ({
           <Image
             src={solWhiteBg}
             alt="solana"
-            className="w-[24px] !h-[17px] rounded-full bg-cover"
+            className="w-[22px] !h-[15px] rounded-full bg-cover"
           />
         </button>
       )}

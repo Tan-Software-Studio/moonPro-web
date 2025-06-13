@@ -1,4 +1,4 @@
-import { NoDataFish } from "@/app/Images";
+import { NoDataLogo } from "@/app/Images";
 import { setChartSymbolImage } from "@/app/redux/states";
 import { Check, Copy } from "lucide-react";
 import Image from "next/image";
@@ -26,8 +26,8 @@ const ActivePosition = ({
     (state) => state?.setPnlData?.hasAttemptedLoad
   );
 
-      const { t } = useTranslation();
-        const referral = t('referral')
+  const { t } = useTranslation();
+  const referral = t('referral')
 
   const handleCopy = (address, index, e) => {
     e.preventDefault();
@@ -181,16 +181,16 @@ const ActivePosition = ({
           </div>
         ) : shouldShowNoData || shouldNoSearchData ? (
           <div className="flex flex-col items-center justify-center h-64 mt-10 text-center">
-            <div className="flex items-center justify-center mb-4">
+            <div className="flex items-center justify-center  " style={{ maxWidth: "200px", maxHeight: "150px" }}>
               <Image
-                src={NoDataFish}
+                src={NoDataLogo}
                 alt={referral?.refMata?.noData}
                 width={200}
                 height={100}
-                className="text-slate-400"
+                className="text-slate-400 object-contain md:w-[200px] sm:w-[180px] w-[120px] h-auto"
               />
             </div>
-            <p className="text-slate-400 text-lg mb-2 break-words break-all">{`${shouldShowNoData
+            <p className="text-slate-400 text-lg  break-words break-all">{`${shouldShowNoData
               ? referral?.refMata?.noData
               : shouldNoSearchData
                 ? `No results found for "${activePositionSearchQuery}"`
@@ -198,7 +198,7 @@ const ActivePosition = ({
               }`}</p>
             <p className="text-slate-500 text-sm">
               {`${shouldShowNoData
-                ? referral?.refMata?.infoWillAppear 
+                ? referral?.refMata?.infoWillAppear
                 : shouldNoSearchData
                   ? referral?.refMata?.adjustSearch
                   : null
