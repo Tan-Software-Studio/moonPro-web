@@ -61,7 +61,7 @@ const Settings = () => {
         className={`md:flex flex-1 space-y-4 md:space-y-0 items-center gap-8 bg-[] rounded-2xl p-8 mb-2 border ${borderColor} `}
       >
         <p className={`font-semibold text-sm text-white flex-shrink-0 `}>
-          Wave Trading Wallet
+          Nexa Trading Wallet
         </p>
         {/* <div className="relative w-full  md:w-auto"> */}
         <input

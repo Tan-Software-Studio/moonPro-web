@@ -11,7 +11,7 @@ import {
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import Image from "next/image";
-import { solana, solanaBlackLogo } from "@/app/Images";
+import { solana, solanaBlackLogo, solWhiteBg } from "@/app/Images";
 import RightModalOpenSetting from "@/components/Settings/RightModalOpenSetting";
 import {
   openCloseLoginRegPopup,
@@ -323,6 +323,7 @@ const TradingPopup = ({
           convertedPrice,
           usdActive,
           marketCapActive,
+          solanaLivePrice,
           {
             name: tokenSymbol,
             symbol: tokenName,
@@ -748,9 +749,9 @@ const TradingPopup = ({
               {`${tragindViewPage?.right?.buysell?.btnbuy} ${tokenName} ${quantity}`}
             </h1>
             <Image
-              src={solanaBlackLogo}
+              src={solWhiteBg}
               alt="solana"
-              className="w-[20px] !h-[13px] rounded-full bg-cover"
+              className="w-[24px] !h-[17px] rounded-full bg-cover"
             />
           </button>
         )
@@ -771,9 +772,9 @@ const TradingPopup = ({
             }`}
           </h1>
           <Image
-            src={solanaBlackLogo}
+            src={solWhiteBg}
             alt="solana"
-            className="w-[20px] !h-[13px] rounded-full bg-cover"
+            className="w-[24px] !h-[17px] rounded-full bg-cover"
           />
         </button>
       )}

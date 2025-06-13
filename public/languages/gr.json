@@ -167,7 +167,7 @@
       "quickselltooltip": "Verkaufe deine gesamte Position in diesem Token mit einem Klick."
     },
     "noconnectwallet": "Bitte verbinde dein Wallet, um deine Bestände zu sehen.",
-    "noholdingsmsg": "Du hast derzeit keine Token-Bestände in deinem Wave Trading-Wallet."
+    "noholdingsmsg": "Du hast derzeit keine Token-Bestände in deinem Nexa Trading-Wallet."
   },
   "leaderboard": {
     "mainHeader": {
@@ -203,8 +203,8 @@
       "referralpoints": "Referral-Punkte"
     },
     "pageData": {
-      "title": "Schalte mehr Referral-Stufen mit dem Wave Referral-Programm frei!",
-      "desc": "Freunde, die du wirbst, erhalten frühen Zugang zu Wave mit einem 10%-Rabatt auf die Gebühr",
+      "title": "Schalte mehr Referral-Stufen mit dem Nexa Referral-Programm frei!",
+      "desc": "Freunde, die du wirbst, erhalten frühen Zugang zu Nexa mit einem 10%-Rabatt auf die Gebühr",
       "shareto": "Teilen an",
       "nodata": "Keine Referral-Daten",
       "copy": "Kopieren",
@@ -268,7 +268,7 @@
         "bestcalls": "Beste Calls",
         "bestcallstooltip": "Zeigt die höchstgewinnenden Calls während des ausgewählten Intervalls und die Alpha-Gruppe, die sie gemacht hat.",
         "recentalphas": "Kürzliche Alphas",
-        "recentalphastooltip": "Zeigt die Alpha-Gruppen, die sich kürzlich in Wave Scan beigetreten sind.",
+        "recentalphastooltip": "Zeigt die Alpha-Gruppen, die sich kürzlich in Nexa Scan beigetreten sind.",
         "risingstar": "Rising Star",
         "risingstartooltip": "Alpha-Gruppen, die schnell an Dynamik gewinnen, entweder durch einen jüngsten Anstieg der Popularität oder eine starke Zunahme ihrer Leistungsbewertung.",
         "boostedalphas": "Gesteigerte Alphas",
@@ -300,7 +300,7 @@
       "title": "Wallet Tracker",
       "importwallets": {
         "importwallets": "Wallets importieren",
-        "desc": "Bitte geben Sie die Wallet-Adressen für den Wave Pro-Import ein",
+        "desc": "Bitte geben Sie die Wallet-Adressen für den Nexa Pro-Import ein",
         "cancel": "Abbrechen",
         "add": "Hinzufügen"
       },
@@ -391,7 +391,7 @@
     "mainHeader": {
       "title": "EINSTELLUNGEN"
     },
-    "wavetradingwallet": "Wave Trading Wallet",
+    "wavetradingwallet": "Nexa Trading Wallet",
     "quickbuy": {
       "quickbuy": "Schnell Kaufen",
       "slippage": "Slippage",
@@ -695,7 +695,7 @@
       "login": "Anmelden",
       "signup": "Registrieren",
       "dontAccount": "Sie haben noch kein Konto?",
-      "byCreating": "Durch das Erstellen eines Kontos stimmen Sie den Datenschutzrichtlinien und Nutzungsbedingungen von moon pro zu"
+      "byCreating": "Durch das Erstellen eines Kontos stimmen Sie den Datenschutzrichtlinien und Nutzungsbedingungen von Nexa pro zu"
     },
     "otpPopup": {
       "required": "OTP ist erforderlich",
@@ -712,7 +712,7 @@
       "password": "Passwort",
       "confirmPassword": "Passwort bestätigen",
       "verify": "Bestätigen",
-      "byCreating": "Durch das Erstellen eines Kontos stimmen Sie den Datenschutzrichtlinien und Nutzungsbedingungen von moon pro zu"
+      "byCreating": "Durch das Erstellen eines Kontos stimmen Sie den Datenschutzrichtlinien und Nutzungsbedingungen von Nexa pro zu"
     },
     "referralPopup": {
       "referralCode": "Bitte geben Sie einen Empfehlungscode ein",
@@ -724,8 +724,8 @@
     "recovery": {
       "recoveryKey": "Wiederherstellungsschlüssel",
       "privateKey": "Wiederherstellungsschlüssel",
-      "thisRecovery": "Dieser Wiederherstellungsschlüssel ermöglicht den Zugriff auf Ihre Wallet, falls Sie Ihre moon pro-Zugangsdaten verlieren",
-      "thisPrivateKey": "Dieser Wiederherstellungsschlüssel ermöglicht den Zugriff auf Ihre Wallet, falls Sie Ihre moon pro-Zugangsdaten verlieren",
+      "thisRecovery": "Dieser Wiederherstellungsschlüssel ermöglicht den Zugriff auf Ihre Wallet, falls Sie Ihre Nexa pro-Zugangsdaten verlieren",
+      "thisPrivateKey": "Dieser Wiederherstellungsschlüssel ermöglicht den Zugriff auf Ihre Wallet, falls Sie Ihre Nexa pro-Zugangsdaten verlieren",
       "revealMyKey": "Meinen Schlüssel anzeigen",
       "warning": "WARNUNG: Dieser Wiederherstellungsschlüssel ist der einzige Weg, auf Ihre Wallet zuzugreifen, wenn Sie Ihre Zugangsdaten verlieren. Bewahren Sie ihn sicher auf und teilen Sie ihn niemandem mit.",
       "warningPrivate": "WARNUNG: Dieser Wiederherstellungsschlüssel ist der einzige Weg, auf Ihre Wallet zuzugreifen, wenn Sie Ihre Zugangsdaten verlieren. Bewahren Sie ihn sicher auf und teilen Sie ihn niemandem mit."

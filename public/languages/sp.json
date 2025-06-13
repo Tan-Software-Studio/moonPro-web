@@ -167,7 +167,7 @@
       "quickselltooltip": "Vende instantáneamente toda tu posición en este token con un solo clic."
     },
     "noconnectwallet": "Por favor, conecta tu billetera para ver tus posiciones.",
-    "noholdingsmsg": "Actualmente no tienes posiciones de tokens en tu billetera de Wave."
+    "noholdingsmsg": "Actualmente no tienes posiciones de tokens en tu billetera de Nexa."
   },
   "leaderboard": {
     "mainHeader": {
@@ -203,8 +203,8 @@
       "referralpoints": "Puntos de Referencia"
     },
     "pageData": {
-      "title": "¡Desbloquea más niveles de referencia con el programa de Referidos de Wave!",
-      "desc": "Los amigos que refieras obtendrán acceso anticipado a Wave con un 10% de descuento en comisiones.",
+      "title": "¡Desbloquea más niveles de referencia con el programa de Referidos de Nexa!",
+      "desc": "Los amigos que refieras obtendrán acceso anticipado a Nexa con un 10% de descuento en comisiones.",
       "shareto": "Compartir en",
       "nodata": "No hay datos de referencia",
       "copy": "copiar",
@@ -268,7 +268,7 @@
         "bestcalls": "Mejores Llamadas",
         "bestcallstooltip": "Muestra las llamadas con mayor ganancia durante el intervalo seleccionado y el grupo Alpha que las hizo.",
         "recentalphas": "Alphas recientes",
-        "recentalphastooltip": "Muestra los grupos Alpha más recientes que se unieron a Wave Scan.",
+        "recentalphastooltip": "Muestra los grupos Alpha más recientes que se unieron a Nexa Scan.",
         "risingstar": "Estrella en ascenso",
         "risingstartooltip": "Grupos Alpha que están ganando rápidamente impulso, ya sea por un reciente aumento en popularidad o un aumento repentino en su puntuación de rendimiento.",
         "boostedalphas": "Alphas impulsados",
@@ -300,7 +300,7 @@
       "title": "Rastreador de Cartera",
       "importwallets": {
         "importwallets": "Importar carteras",
-        "desc": "Por favor ingresa las direcciones de las carteras para importar en Wave Pro",
+        "desc": "Por favor ingresa las direcciones de las carteras para importar en Nexa Pro",
         "cancel": "Cancelar",
         "add": "Agregar"
       },
@@ -391,7 +391,7 @@
     "mainHeader": {
       "title": "AJUSTES"
     },
-    "wavetradingwallet": "Cartera Wave Trading",
+    "wavetradingwallet": "Cartera Nexa Trading",
     "quickbuy": {
       "quickbuy": "Compra Rápida",
       "slippage": "Deslizamiento",
@@ -695,7 +695,7 @@
       "login": "Iniciar sesión",
       "signup": "Registrarse",
       "dontAccount": "¿No tienes cuenta?",
-      "byCreating": "Al crear una cuenta, aceptas la política de privacidad y los términos de servicio de moon pro"
+      "byCreating": "Al crear una cuenta, aceptas la política de privacidad y los términos de servicio de Nexa pro"
     },
     "otpPopup": {
       "required": "OTP requerido",
@@ -712,7 +712,7 @@
       "password": "Contraseña",
       "confirmPassword": "Confirmar contraseña",
       "verify": "Verificar",
-      "byCreating": "Al crear una cuenta, aceptas la política de privacidad y los términos de servicio de moon pro"
+      "byCreating": "Al crear una cuenta, aceptas la política de privacidad y los términos de servicio de Nexa pro"
     },
     "referralPopup": {
       "referralCode": "Por favor, ingresa un código de referido",
@@ -724,8 +724,8 @@
     "recovery": {
       "recoveryKey": "Clave de recuperación",
       "privateKey": "Clave de recuperación",
-      "thisRecovery": "Esta clave de recuperación te permitirá acceder a tu billetera si alguna vez pierdes tus credenciales de tu cuenta moon pro",
-      "thisPrivateKey": "Esta clave de recuperación te permitirá acceder a tu billetera si alguna vez pierdes tus credenciales de tu cuenta moon pro",
+      "thisRecovery": "Esta clave de recuperación te permitirá acceder a tu billetera si alguna vez pierdes tus credenciales de tu cuenta Nexa pro",
+      "thisPrivateKey": "Esta clave de recuperación te permitirá acceder a tu billetera si alguna vez pierdes tus credenciales de tu cuenta Nexa pro",
       "revealMyKey": "Revelar mi clave",
       "warning": "ADVERTENCIA: Esta clave de recuperación es la única forma de acceder a tu billetera si pierdes tus credenciales. Guárdala en un lugar seguro y no la compartas con nadie.",
       "warningPrivate": "ADVERTENCIA: Esta clave de recuperación es la única forma de acceder a tu billetera si pierdes tus credenciales. Guárdala en un lugar seguro y no la compartas con nadie."

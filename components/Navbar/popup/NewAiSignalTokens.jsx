@@ -113,9 +113,11 @@ const NewAiSignalTokens = () => {
                                                             alt={item.symbol}
                                                             className="w-10 h-10 object-cover rounded-md border-2 border-[#333]/50 shadow-lg"
                                                         />
-                                                    ) : (
-                                                        <div className="w-12 h-12 bg-gradient-to-br from-[#1d73fc] to-[#2563eb] rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                                                            {item?.symbol?.charAt(0) || "?"}
+                                                    ) : ( 
+                                                        <div className="w-10 h-10 object-cover rounded-md flex items-center justify-center bg-[#3b3b49] border border-[#1F73FC]">
+                                                            <span className="text-sm text-white uppercase text-center">
+                                                                {item?.symbol?.charAt(0) || "?"}
+                                                            </span>
                                                         </div>
                                                     )}
                                                 </div>

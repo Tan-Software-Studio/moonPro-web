@@ -251,7 +251,7 @@ const LoginPopup = ({ authName }) => {
         return;
       }
 
-      const message = `By signing, you agree to Moonpro's Terms of Use & Privacy Policy.\n\nNonce: ${Date.now()}`;
+      const message = `By signing, you agree to Nexapro's Terms of Use & Privacy Policy.\n\nNonce: ${Date.now()}`;
 
       try {
         const signResult = await signMessage(message, connectResult.phantomInstance);

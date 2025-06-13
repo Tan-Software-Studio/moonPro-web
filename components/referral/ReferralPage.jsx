@@ -20,11 +20,11 @@ import { showToasterSuccess } from "@/utils/toaster/toaster.style";
 import { useTranslation } from "react-i18next";
 import { VscDebugBreakpointLogUnverified } from "react-icons/vsc";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
+const URL_LINK = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
+const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL;
 const ReferralPage = () => {
   const { t } = useTranslation();
   const referral = t("referral");
-
-  const URL_LINK = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
   const dispatch = useDispatch();
 
@@ -33,20 +33,20 @@ const ReferralPage = () => {
   const [showWithdrawPopup, setShowWithdrawPopup] = useState(false);
   const [hideEmail, setHideEmail] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const tierKey =
     selectedTier === 1
       ? "firstTier"
       : selectedTier === 2
-        ? "secondTier"
-        : "thirdTier";
+      ? "secondTier"
+      : "thirdTier";
 
   const rewardPercentage =
     selectedTier === 1
       ? refData?.user?.referealRewardsFirstTierPer
       : selectedTier === 2
-        ? refData?.user?.referealRewardsSecondTierPer
-        : refData?.user?.referealRewardsThirdTierPer;
+      ? refData?.user?.referealRewardsSecondTierPer
+      : refData?.user?.referealRewardsThirdTierPer;
 
   const tierData = refData?.referrals?.[tierKey] || [];
 
@@ -96,13 +96,13 @@ const ReferralPage = () => {
       if (!token) {
         return showToaster("Please Login");
       }
-      setLoading(true)
+      setLoading(true);
       const res = await axios.get(`${URL_LINK}user/get3TierRefferals`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setLoading(false)
+      setLoading(false);
       const responce = res.data.data;
       setRefData(responce);
       setProgress(
@@ -111,10 +111,10 @@ const ReferralPage = () => {
           responce?.user?.weeklyPoints +
           responce?.user?.referralPoints) /
           50000) *
-        100
+          100
       );
     } catch (e) {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -149,16 +149,12 @@ const ReferralPage = () => {
   }
 
   const handleCopy1 = (ref) => {
-    navigator.clipboard.writeText(
-      `https://moonpro.wavebot.app/referral/${ref}`
-    );
+    navigator.clipboard.writeText(`${WEB_URL}/referral/${ref}`);
     showToasterSuccess("Referral link copied!");
   };
 
   const handleCopy2 = (ref) => {
-    navigator.clipboard.writeText(
-      `https://moonpro.wavebot.app/referral/${ref}`
-    );
+    navigator.clipboard.writeText(`${WEB_URL}/referral/${ref}`);
     showToasterSuccess("Referral link copied!");
   };
 
@@ -192,8 +188,6 @@ const ReferralPage = () => {
       { min: 50000, max: Infinity, title: "Legend" },
     ];
 
-
-
     for (let i = 0; i < levels.length; i++) {
       const level = levels[i];
       if (points < level.max) {
@@ -202,20 +196,21 @@ const ReferralPage = () => {
           pointsToNext:
             level.max === Infinity ? 0 : Math.max(level.max - points, 0),
           nextTitle: levels[i + 1]?.title || "Legend",
-          maxLevelComplete: points < 50000 ? true : false
+          maxLevelComplete: points < 50000 ? true : false,
         };
       }
     }
 
-    localStorage.setItem("Rewards-Level", currentTitle)
+    localStorage.setItem("Rewards-Level", currentTitle);
     return {
       currentTitle: "Unknown",
       pointsToNext: 0,
       nextTitle: null,
-      maxLevelComplete: true
+      maxLevelComplete: true,
     };
   }
-  const { currentTitle, pointsToNext, nextTitle, maxLevelComplete } = getPointsToNextTitle();
+  const { currentTitle, pointsToNext, nextTitle, maxLevelComplete } =
+    getPointsToNextTitle();
 
   return (
     <>
@@ -341,7 +336,10 @@ const ReferralPage = () => {
             <div className="text-sm text-[rgb(200,201,209)] flex justify-between items-center gap-2">
               <div className="flex items-center gap-1">
                 <div className="flex items-center gap-2 tracking-wider text-nowrap">
-                  <HiOutlineCurrencyDollar className="text-blue-500" size={22} />
+                  <HiOutlineCurrencyDollar
+                    className="text-blue-500"
+                    size={22}
+                  />
                   {referral?.refMata?.solEarned}
                 </div>
                 {/* <Infotip
@@ -378,7 +376,6 @@ const ReferralPage = () => {
               />
             </div>
             <div className="flex items-center gap-1">
-
               <div className="text-sm text-[#a0a4b8] tracking-wider">
                 {referral?.refMata?.availableToClaim}{" "}
                 {(
@@ -505,9 +502,7 @@ const ReferralPage = () => {
                     </th>
                     <th className="px-4 py-2 whitespace-nowrap text-blue-500">
                       <div className="flex items-center gap-1">
-                        <div>
-                          {referral?.refMata?.solEarned}
-                        </div>
+                        <div>{referral?.refMata?.solEarned}</div>
                         <Infotip
                           iconSize={20}
                           body={`This is the amount of SOL you've earned from referral’s activity`}
@@ -517,67 +512,66 @@ const ReferralPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {loading ? <tr>
-                    <td
-                      colSpan={3}
-                      className="text-center text-gray-400 py-4  "
-                    >
-                      <div
-                        className="snippet   flex justify-center items-center h-[200px]  "
-                        data-title=".dot-spin"
+                  {loading ? (
+                    <tr>
+                      <td
+                        colSpan={3}
+                        className="text-center text-gray-400 py-4  "
                       >
-                        <div className="stage">
-                          <div className="dot-spin"></div>
-                        </div>
-                      </div>
-
-                    </td>
-                  </tr>
-
-                    : tierData.length > 0 ? (
-                      tierData.map((row, idx) => (
-                        <tr
-                          key={row._id || idx}
-                          className="text-white border-b border-[#2c2c34] last:border-b-0 hover:bg-[#08080e]"
+                        <div
+                          className="snippet   flex justify-center items-center h-[200px]  "
+                          data-title=".dot-spin"
                         >
-                          <td className="px-4 py-4 whitespace-nowrap tracking-wider font-spaceGrotesk">
-                            {hideEmail ? "*******" : getReferralDisplayInfo(row)}
-                          </td>
-                          {/* <td className="px-4 py-4 whitespace-nowrap">{new Date(row.referralAddedAt).toLocaleDateString()}</td> */}
-                          <td className="px-4 py-4 whitespace-nowrap text-gray-400">
-                            {formatTimeAgo(row.referralAddedAt)}
-                          </td>
-                          <td className="px-4 py-4 whitespace-nowrap">
-                            {(
-                              row.feeCollected *
-                              (rewardPercentage / 100)
-                            ).toFixed(5)}
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td
-                          colSpan={3}
-                          className="text-center text-gray-400 py-4"
-                        >
-                          <div className="flex flex-col w-full items-center justify-center mt-5">
-                            <div className="text-4xl mb-2">
-                              <Image
-                                src={NoDataFish}
-                                alt="No Data Available"
-                                width={200}
-                                height={100}
-                                className="rounded-lg"
-                              />
-                            </div>
-                            <h1 className="text-[#89888e] text-lg">
-                              {referral?.refMata?.noReferralsFound}
-                            </h1>
+                          <div className="stage">
+                            <div className="dot-spin"></div>
                           </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : tierData.length > 0 ? (
+                    tierData.map((row, idx) => (
+                      <tr
+                        key={row._id || idx}
+                        className="text-white border-b border-[#2c2c34] last:border-b-0 hover:bg-[#08080e]"
+                      >
+                        <td className="px-4 py-4 whitespace-nowrap tracking-wider font-spaceGrotesk">
+                          {hideEmail ? "*******" : getReferralDisplayInfo(row)}
+                        </td>
+                        {/* <td className="px-4 py-4 whitespace-nowrap">{new Date(row.referralAddedAt).toLocaleDateString()}</td> */}
+                        <td className="px-4 py-4 whitespace-nowrap text-gray-400">
+                          {formatTimeAgo(row.referralAddedAt)}
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          {(
+                            row.feeCollected *
+                            (rewardPercentage / 100)
+                          ).toFixed(5)}
                         </td>
                       </tr>
-                    )}
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={3}
+                        className="text-center text-gray-400 py-4"
+                      >
+                        <div className="flex flex-col w-full items-center justify-center mt-5">
+                          <div className="text-4xl mb-2">
+                            <Image
+                              src={NoDataFish}
+                              alt="No Data Available"
+                              width={200}
+                              height={100}
+                              className="rounded-lg"
+                            />
+                          </div>
+                          <h1 className="text-[#89888e] text-lg">
+                            {referral?.refMata?.noReferralsFound}
+                          </h1>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

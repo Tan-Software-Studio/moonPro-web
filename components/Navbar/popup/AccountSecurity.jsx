@@ -15,7 +15,7 @@ import { updatePnlTableData } from "@/app/redux/holdingDataSlice/holdingData.sli
 import { googleLogout } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
 import { makeUserEmptyOnLogout } from "@/app/redux/userDataSlice/UserData.slice";
-
+const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL;
 const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
   const [language, setLanguage] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,11 +29,13 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
   const router = useRouter();
   const accountPopupLng = t("accountPopup");
 
-  const solWalletAddress = useSelector((state) => state?.AllStatesData?.solWalletAddress);
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
 
   const { i18n } = useTranslation();
 
-  const referralLink = `https://moonpro.wavebot.app/referral/${userDetails?.referralId || ""}`;
+  const referralLink = `${WEB_URL}/referral/${userDetails?.referralId || ""}`;
 
   const getDisplayName = () => {
     if (userDetails?.phantomAddress) {
@@ -68,7 +70,9 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
   const truncateId = (id, startChars = 4, endChars = 4) => {
     if (!id) return "N/A";
     if (id.length <= startChars + endChars) return id;
-    return `${id.substring(0, startChars)}...${id.substring(id.length - endChars)}`;
+    return `${id.substring(0, startChars)}...${id.substring(
+      id.length - endChars
+    )}`;
   };
 
   const formatTimeAgo = (date) => {
@@ -108,7 +112,7 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
   };
 
   const shareOnPlatform = (platform) => {
-    const shareText = `Join me on MoonPro and start earning rewards! Use my referral link: ${referralLink}`;
+    const shareText = `Join me on NexaPro and start earning rewards! Use my referral link: ${referralLink}`;
     const encodedText = encodeURIComponent(shareText);
     const encodedUrl = encodeURIComponent(referralLink);
 
@@ -118,7 +122,9 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
       linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
       whatsapp: `https://wa.me/?text=${encodedText}`,
       telegram: `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`,
-      reddit: `https://reddit.com/submit?url=${encodedUrl}&title=${encodeURIComponent("Join me on MoonPro!")}`,
+      reddit: `https://reddit.com/submit?url=${encodedUrl}&title=${encodeURIComponent(
+        "Join me on NexaPro!"
+      )}`,
     };
 
     if (shareUrls[platform]) {
@@ -176,7 +182,10 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
               <div className="text-base sm:text-lg font-medium text-white truncate">
                 {navbar?.acountandsecurity?.acountandsecurity}
               </div>
-              <div onClick={() => setIsAccountPopup(false)} className="cursor-pointer p-1">
+              <div
+                onClick={() => setIsAccountPopup(false)}
+                className="cursor-pointer p-1"
+              >
                 <IoClose size={18} />
               </div>
             </div>
@@ -188,27 +197,35 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <p className="text-white text-sm font-medium mb-2 truncate">{getDisplayName()}</p>
+                  <p className="text-white text-sm font-medium mb-2 truncate">
+                    {getDisplayName()}
+                  </p>
 
                   <div className="grid grid-cols-3 gap-2 sm:flex sm:items-center sm:gap-6 text-xs">
                     <div className="text-center sm:text-left">
                       <div className="text-[#A8A8A8] mb-1 text-[10px] sm:text-xs">
                         {navbar?.acountandsecurity?.level1}
                       </div>
-                      <div className="text-white font-medium text-xs">{userDetails?.rewardsLevel || "Wood"} 🏆</div>
+                      <div className="text-white font-medium text-xs">
+                        {userDetails?.rewardsLevel || "Wood"} 🏆
+                      </div>
                     </div>
                     <div className="text-center sm:text-left">
                       <div className="text-[#A8A8A8] mb-1 text-[10px] sm:text-xs">
                         {navbar?.acountandsecurity?.level2}
                       </div>
-                      <div className="text-white font-medium text-xs">{formatTimeAgo(userDetails?.lastLogin)}</div>
+                      <div className="text-white font-medium text-xs">
+                        {formatTimeAgo(userDetails?.lastLogin)}
+                      </div>
                     </div>
                     <div className="text-center sm:text-left">
                       <div className="text-[#A8A8A8] mb-1 text-[10px] sm:text-xs">
                         {navbar?.acountandsecurity?.level3}
                       </div>
                       <div className="text-white font-medium cursor-pointer flex items-center justify-center sm:justify-start gap-1 text-xs">
-                        <span className="truncate max-w-[60px] sm:max-w-none">{userDetails?.referralId || "N/A"}</span>
+                        <span className="truncate max-w-[60px] sm:max-w-none">
+                          {userDetails?.referralId || "N/A"}
+                        </span>
                         {userDetails?.referralId && (
                           <>
                             {copiedReferral ? (
@@ -216,21 +233,30 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                             ) : (
                               <IoCopyOutline
                                 className="cursor-pointer text-xs hover:text-white transition-colors flex-shrink-0"
-                                onClick={() => copyToClipboard(userDetails.referralId, "referral")}
+                                onClick={() =>
+                                  copyToClipboard(
+                                    userDetails.referralId,
+                                    "referral"
+                                  )
+                                }
                                 title="Copy Referral Code"
                               />
                             )}
                             <div className="relative">
                               <PiShare
                                 className="cursor-pointer text-xs hover:text-white transition-colors ml-1 flex-shrink-0"
-                                onClick={() => setIsShareModalOpen(!isShareModalOpen)}
+                                onClick={() =>
+                                  setIsShareModalOpen(!isShareModalOpen)
+                                }
                                 title="Share Referral Link"
                               />
 
                               {isShareModalOpen && (
                                 <div className="absolute top-full right-0 mt-2 w-48 bg-[#08080E] border border-[#404040] rounded-lg shadow-lg shadow-black/50 z-50">
                                   <div className="p-2">
-                                    <div className="text-white text-xs font-medium mb-2 px-2">Share on:</div>
+                                    <div className="text-white text-xs font-medium mb-2 px-2">
+                                      Share on:
+                                    </div>
 
                                     {navigator.share && (
                                       <button
@@ -251,7 +277,9 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                                     </button>
 
                                     <button
-                                      onClick={() => shareOnPlatform("facebook")}
+                                      onClick={() =>
+                                        shareOnPlatform("facebook")
+                                      }
                                       className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
                                     >
                                       <span>📘</span>
@@ -259,7 +287,9 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                                     </button>
 
                                     <button
-                                      onClick={() => shareOnPlatform("linkedin")}
+                                      onClick={() =>
+                                        shareOnPlatform("linkedin")
+                                      }
                                       className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
                                     >
                                       <span>💼</span>
@@ -267,7 +297,9 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                                     </button>
 
                                     <button
-                                      onClick={() => shareOnPlatform("whatsapp")}
+                                      onClick={() =>
+                                        shareOnPlatform("whatsapp")
+                                      }
                                       className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
                                     >
                                       <span>💬</span>
@@ -275,7 +307,9 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                                     </button>
 
                                     <button
-                                      onClick={() => shareOnPlatform("telegram")}
+                                      onClick={() =>
+                                        shareOnPlatform("telegram")
+                                      }
                                       className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
                                     >
                                       <span>✈️</span>
@@ -293,7 +327,10 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                                     <div className="border-t border-[#404040] mt-2 pt-2">
                                       <button
                                         onClick={() => {
-                                          copyToClipboard(referralLink, "referral");
+                                          copyToClipboard(
+                                            referralLink,
+                                            "referral"
+                                          );
                                           setIsShareModalOpen(false);
                                         }}
                                         className="w-full flex items-center gap-2 px-2 py-2 text-xs text-[#A8A8A8] hover:bg-[#2a2a2a] hover:text-white rounded transition-colors"
@@ -318,8 +355,12 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
             <div className="px-3 sm:px-4 py-4 space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3">
                 <div className="flex-1 min-w-0">
-                  <div className="text-white text-sm font-medium mb-1">{navbar?.acountandsecurity?.recoveryKey}</div>
-                  <div className="text-[#6E6E6E] text-xs">{navbar?.acountandsecurity?.msg2}</div>
+                  <div className="text-white text-sm font-medium mb-1">
+                    {navbar?.acountandsecurity?.recoveryKey}
+                  </div>
+                  <div className="text-[#6E6E6E] text-xs">
+                    {navbar?.acountandsecurity?.msg2}
+                  </div>
                 </div>
                 <button
                   onClick={() => handlePhrase()}
@@ -331,8 +372,12 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3 border-t border-[#1A1A1A]">
                 <div className="flex-1 min-w-0">
-                  <div className="text-white text-sm font-medium mb-1">{navbar?.acountandsecurity?.language}</div>
-                  <div className="text-[#6E6E6E] text-xs">{navbar?.acountandsecurity?.msg3}</div>
+                  <div className="text-white text-sm font-medium mb-1">
+                    {navbar?.acountandsecurity?.language}
+                  </div>
+                  <div className="text-[#6E6E6E] text-xs">
+                    {navbar?.acountandsecurity?.msg3}
+                  </div>
                 </div>
 
                 <div className="relative w-full sm:w-[140px]">
@@ -340,8 +385,14 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                     className="flex items-center gap-2 px-3 py-2 text-xs text-[#A8A8A8] border border-[#404040] rounded cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition w-full"
                     onClick={() => setIsModalOpen(!isModalOpen)}
                   >
-                    <Image alt="lang" src={language.img} className="w-[16px] h-[16px] rounded-full flex-shrink-0" />
-                    <span className="uppercase flex-1 truncate">{language?.lang || "English"}</span>
+                    <Image
+                      alt="lang"
+                      src={language.img}
+                      className="w-[16px] h-[16px] rounded-full flex-shrink-0"
+                    />
+                    <span className="uppercase flex-1 truncate">
+                      {language?.lang || "English"}
+                    </span>
                     <FaCaretDown className="text-[#A8A8A8] flex-shrink-0" />
                   </div>
 
@@ -357,9 +408,15 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                           >
                             <div className="flex items-center gap-2 min-w-0 flex-1">
                               <div className="w-[16px] h-[16px] overflow-hidden rounded-full flex-shrink-0">
-                                <Image alt="lang" src={item.img} className="w-full h-full object-cover" />
+                                <Image
+                                  alt="lang"
+                                  src={item.img}
+                                  className="w-full h-full object-cover"
+                                />
                               </div>
-                              <span className="text-xs text-[#A8A8A8] truncate">{item.lang}</span>
+                              <span className="text-xs text-[#A8A8A8] truncate">
+                                {item.lang}
+                              </span>
                             </div>
                             {isSelected && (
                               <div className="flex items-center justify-center text-[#3b37fe] flex-shrink-0">
@@ -376,8 +433,12 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3 border-t border-[#1A1A1A]">
                 <div className="flex-1 min-w-0">
-                  <div className="text-white text-sm font-medium mb-1">{navbar?.acountandsecurity?.wallets}</div>
-                  <div className="text-[#6E6E6E] text-xs">{navbar?.acountandsecurity?.msg4}</div>
+                  <div className="text-white text-sm font-medium mb-1">
+                    {navbar?.acountandsecurity?.wallets}
+                  </div>
+                  <div className="text-[#6E6E6E] text-xs">
+                    {navbar?.acountandsecurity?.msg4}
+                  </div>
                 </div>
 
                 <Link
@@ -389,14 +450,20 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                   className="px-3 py-2 flex items-center gap-2 text-xs border border-[#404040] rounded cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all text-[#A8A8A8] w-full sm:w-[140px] justify-center"
                 >
                   <IoWalletOutline size={14} />
-                  <span className="truncate">{navbar?.acountandsecurity?.manageWallets}</span>
+                  <span className="truncate">
+                    {navbar?.acountandsecurity?.manageWallets}
+                  </span>
                 </Link>
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3 border-t border-[#1A1A1A]">
                 <div className="flex-1 min-w-0">
-                  <div className="text-white text-sm font-medium mb-1">{navbar?.acountandsecurity?.rewards}</div>
-                  <div className="text-[#6E6E6E] text-xs">{navbar?.acountandsecurity?.msg5}</div>
+                  <div className="text-white text-sm font-medium mb-1">
+                    {navbar?.acountandsecurity?.rewards}
+                  </div>
+                  <div className="text-[#6E6E6E] text-xs">
+                    {navbar?.acountandsecurity?.msg5}
+                  </div>
                 </div>
 
                 <Link
@@ -405,14 +472,20 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                   className="px-3 py-2 flex items-center gap-2 text-xs border border-[#404040] rounded cursor-pointer bg-[#1a1a1a] hover:border-[#5a5a5a] transition-all text-[#A8A8A8] w-full sm:w-[140px] justify-center"
                 >
                   <span>📈</span>
-                  <span className="truncate">{navbar?.acountandsecurity?.earnRewards}</span>
+                  <span className="truncate">
+                    {navbar?.acountandsecurity?.earnRewards}
+                  </span>
                 </Link>
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3 border-t border-[#1A1A1A]">
                 <div className="flex-1 min-w-0">
-                  <div className="text-[#ED1B24] text-sm font-medium mb-1">{navbar?.acountandsecurity?.logOut}</div>
-                  <div className="text-[#ED1B24] text-xs">{navbar?.acountandsecurity?.msg1}</div>
+                  <div className="text-[#ED1B24] text-sm font-medium mb-1">
+                    {navbar?.acountandsecurity?.logOut}
+                  </div>
+                  <div className="text-[#ED1B24] text-xs">
+                    {navbar?.acountandsecurity?.msg1}
+                  </div>
                 </div>
 
                 <button
@@ -427,7 +500,12 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
         </motion.div>
       </motion.div>
 
-      {isShareModalOpen && <div className="fixed inset-0 z-40" onClick={() => setIsShareModalOpen(false)} />}
+      {isShareModalOpen && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setIsShareModalOpen(false)}
+        />
+      )}
     </>
   );
 };

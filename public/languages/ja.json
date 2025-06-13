@@ -167,7 +167,7 @@
       "quickselltooltip": "このトークンのポジションを一度に即座に売却する。"
     },
     "noconnectwallet": "ウォレットを接続してください。あなたのホールディングを見るためには接続が必要です。",
-    "noholdingsmsg": "現在、Wave取引ウォレットにトークン保有がありません。"
+    "noholdingsmsg": "現在、Nexa取引ウォレットにトークン保有がありません。"
   },
   "leaderboard": {
     "mainHeader": {
@@ -203,8 +203,8 @@
       "referralpoints": "紹介ポイント"
     },
     "pageData": {
-      "title": "Wave紹介プログラムでさらに紹介階層を解放！",
-      "desc": "紹介した友達は、Waveに早期アクセスし、10％の手数料割引を受けられます。",
+      "title": "Nexa紹介プログラムでさらに紹介階層を解放！",
+      "desc": "紹介した友達は、Nexaに早期アクセスし、10％の手数料割引を受けられます。",
       "shareto": "共有先",
       "nodata": "紹介データがありません",
       "copy": "コピー",
@@ -268,7 +268,7 @@
         "bestcalls": "ベストコール",
         "bestcallstooltip": "選択したインターバルで最も利益を上げたコールと、それを行ったアルファグループを表示します。",
         "recentalphas": "最近のアルファ",
-        "recentalphastooltip": "Wave Scanに最近参加したアルファグループを表示します。",
+        "recentalphastooltip": "Nexa Scanに最近参加したアルファグループを表示します。",
         "risingstar": "ライジングスター",
         "risingstartooltip": "人気が急上昇している、またはパフォーマンススコアが急激に向上しているアルファグループ。",
         "boostedalphas": "ブーストされたアルファ",
@@ -300,7 +300,7 @@
       "title": "ウォレットトラッカー",
       "importwallets": {
         "importwallets": "ウォレットをインポート",
-        "desc": "Wave Pro用にウォレットアドレスを入力してください",
+        "desc": "Nexa Pro用にウォレットアドレスを入力してください",
         "cancel": "キャンセル",
         "add": "追加"
       },
@@ -695,7 +695,7 @@
       "login": "ログイン",
       "signup": "サインアップ",
       "dontAccount": "アカウントをお持ちでないですか？",
-      "byCreating": "アカウントを作成することにより、moon proのプライバシーと利用規約に同意したことになります"
+      "byCreating": "アカウントを作成することにより、Nexa proのプライバシーと利用規約に同意したことになります"
     },
     "otpPopup": {
       "required": "OTPが必要です",
@@ -712,7 +712,7 @@
       "password": "パスワード",
       "confirmPassword": "確認用パスワード",
       "verify": "確認",
-      "byCreating": "アカウントを作成することにより、moon proのプライバシーと利用規約に同意したことになります"
+      "byCreating": "アカウントを作成することにより、Nexa proのプライバシーと利用規約に同意したことになります"
     },
     "referralPopup": {
       "referralCode": "紹介コードを入力してください",
@@ -724,8 +724,8 @@
     "recovery": {
       "recoveryKey": "回復キー",
       "privateKey": "回復キー",
-      "thisRecovery": "この回復キーは、moon proアカウントの資格情報を失った場合にウォレットにアクセスするためのものです",
-      "thisPrivateKey": "この回復キーは、moon proアカウントの資格情報を失った場合にウォレットにアクセスするためのものです",
+      "thisRecovery": "この回復キーは、Nexa proアカウントの資格情報を失った場合にウォレットにアクセスするためのものです",
+      "thisPrivateKey": "この回復キーは、Nexa proアカウントの資格情報を失った場合にウォレットにアクセスするためのものです",
       "revealMyKey": "私のキーを表示",
       "warning": "警告：この回復キーは、資格情報を失った場合にウォレットにアクセスする唯一の方法です。安全な場所に保管し、他の人と共有しないでください。",
       "warningPrivate": "警告：この回復キーは、資格情報を失った場合にウォレットにアクセスする唯一の方法です。安全な場所に保管し、他の人と共有しないでください。"

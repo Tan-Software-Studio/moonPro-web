@@ -661,7 +661,7 @@ const AllPageHeader = ({
                                   }`}
                                 >
                                   {idx === 0
-                                    ? "Moon Pro Main"
+                                    ? "Nexa Pro Main"
                                     : `Wallet ${idx + 1}`}
                                 </span>
                                 <span className="text-gray-400">

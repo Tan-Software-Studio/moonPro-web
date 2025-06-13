@@ -220,7 +220,7 @@ const WalletSwapButton = () => {
                             wallet.primary ? "text-orange-400" : "text-white"
                           }`}
                         >
-                          {idx === 0 ? "Moon Pro Main" : `Wallet ${idx + 1}`}
+                          {idx === 0 ? "Nexa Pro Main" : `Wallet ${idx + 1}`}
                         </span>
                         <span className="text-gray-400">
                           {formatWalletAddress(wallet.wallet)}
