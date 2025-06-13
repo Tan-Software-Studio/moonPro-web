@@ -1,5 +1,5 @@
-import logo from "../public/assets/Sidebar/newLogo.svg";
-import logotext from "../public/assets/Sidebar/newLogoText.svg";
+import logo from "../public/assets/Sidebar/nexapro-sm-logo.png";
+import logotext from "../public/assets/Sidebar/nexapro-logo.png";
 import copytrade from "../public/assets/Sidebar/copytrade.svg";
 import holdings from "../public/assets/Sidebar/holdings.svg";
 import memescope from "../public/assets/Sidebar/memescope.svg";
@@ -155,6 +155,10 @@ import nexaLogo from "../public/assets/SharePnL/nexa-logo.png"
 import nexaText from "../public/assets/SharePnL/nexa-text.png"
 import sharePnlBg from "../public/assets/SharePnL/share-pnl-bg.png"
 
+// sol logo 
+import solWhiteBg from "../public/assets/Trending/solWhiteBg.png"
+
+
 export {
   nftProfileImage,
   LeaderboardIcon,
@@ -301,5 +305,6 @@ export {
   // Share PnL
   nexaLogo,
   nexaText,
-  sharePnlBg
+  sharePnlBg,
+  solWhiteBg
 };

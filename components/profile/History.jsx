@@ -128,8 +128,8 @@ const History = ({}) => {
                         <p className="">
                           {`${
                             (item?.buyPrice - item.sellPrice) * item.qty >= 0
-                              ? "$"
-                              : "-$"
+                              ? "-$"
+                              : "$"
                           }${Math.abs(
                             (item?.buyPrice - item.sellPrice) * item.qty
                           ).toFixed(2)}`}
