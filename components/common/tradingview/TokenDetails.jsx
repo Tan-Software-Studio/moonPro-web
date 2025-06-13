@@ -401,7 +401,7 @@ const TokenDetails = ({
                 </button> */}
             </div>
           </div>
-          {currentTokenPnLData?.buyAmount && 
+        {(Object.keys(currentTokenPnLData).length > 0)  &&
             <button 
               onClick={() => {setIsSharePnLModalActive(true)}}
               className="text-[#4CAF50] flex gap-1"
@@ -409,7 +409,7 @@ const TokenDetails = ({
               <HiOutlineUpload size={16}/>
               <p className="text-xs">Share PnL</p>
             </button>
-          }
+        }
         </div>
         <div className="items-center justify-between mb-[5px] md:mb-[0px] hidden md:flex">
           <div className="flex items-center md:flex-col">
