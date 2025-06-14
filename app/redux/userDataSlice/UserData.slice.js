@@ -34,6 +34,7 @@ const userDataSlice = createSlice({
     },
     updateUserReferralId: (state, { payload }) => {
       state.userDetails.referralId = payload
+      state.userDetails.referralEdit = true; 
     },
     addNewGeneratedWallet: (state, { payload }) => {
       state?.userDetails?.walletAddressSOL.push(payload);

@@ -12,7 +12,7 @@ import Link from "next/link";
 import {
   DH,
   H10,
-  MC, 
+  MC,
   pumpfun,
   sniper,
   telegrams,
@@ -177,14 +177,14 @@ const MscopePumpTable = ({
         </div>
       ) : MemscopeData.length > 0 ? (
         <>
-          <div className={`h-[78vh] visibleScroll overflow-y-auto`}>
+          <div className={`h-[78vh] visibleScroll md:border-r-[1px]  md:border-r-[#26262e]  overflow-y-scroll`}>
             {MemscopeData.map((block, index) => (
               <Link
                 key={index + 1}
                 href={`/tradingview/solana?tokenaddress=${block?.address}&symbol=${block?.symbol}`}
               >
                 <div
-                  className={`cursor-pointer border-b md:border-b md:border-r md:border-l-0 md:border-t-0 border-[#26262e] bg-[#08080E] hover:bg-[#6e6e6e1a] ease-in-out duration-200`}
+                  className={`cursor-pointer border-b md:border-b md:border-l-0 md:border-t-0 border-[#26262e] bg-[#08080E] hover:bg-[#6e6e6e1a] ease-in-out duration-200`}
                   onClick={() => navigateToChartSreen(block)}
                   onMouseEnter={() => sethoverRow(index)}
                   onMouseLeave={() => sethoverRow(null)}
@@ -199,10 +199,10 @@ const MscopePumpTable = ({
                             maxValue={100}
                             trailColor="#7b8085"
                             progressColor={`${!progerssBar
-                                ? barColor
-                                : barColor === "#cfc328"
-                                  ? "#cfc328 "
-                                  : "#7b8085"
+                              ? barColor
+                              : barColor === "#cfc328"
+                                ? "#cfc328 "
+                                : "#7b8085"
                               }`}
                           />
                         ) : (
@@ -212,10 +212,10 @@ const MscopePumpTable = ({
                             maxValue={100}
                             trailColor="#7b8085"
                             progressColor={`${!progerssBar
-                                ? barColor
-                                : barColor === "#cfc328"
-                                  ? "#cfc328 "
-                                  : "#7b8085"
+                              ? barColor
+                              : barColor === "#cfc328"
+                                ? "#cfc328 "
+                                : "#7b8085"
                               }`}
                           />
                         )}
@@ -366,8 +366,8 @@ const MscopePumpTable = ({
                             {isChartHide && (
                               <div
                                 className={`${hoverRow === index
-                                    ? "opacity-40 absolute inset-0 flex items-center justify-center"
-                                    : "opacity-100"
+                                  ? "opacity-40 absolute inset-0 flex items-center justify-center"
+                                  : "opacity-100"
                                   } `}
                               >
                                 <ChartComponent
@@ -444,10 +444,10 @@ const MscopePumpTable = ({
                           {showVolume ? (
                             <Tooltip
                               body={`Volume: ${block?.volume
-                                  ? humanReadableFormat(
-                                    block?.volume.toFixed(2)
-                                  )
-                                  : 0
+                                ? humanReadableFormat(
+                                  block?.volume.toFixed(2)
+                                )
+                                : 0
                                 }`}
                             >
                               <div className="flex items-center gap-[4px]">
