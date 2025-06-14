@@ -60,9 +60,7 @@ const EditReferralCode = () => {
         console.error(error);
         setError("");
         setIsLoading(false);
-        showToasterSuccess(
-          error?.response?.data?.message || "Something went wrong"
-        );
+        showToaster(error?.response?.data?.message || "Something went wrong");
       });
   }
 

@@ -36,7 +36,11 @@ const MobilePhantomNotification = ({ onClose, onOpenPhantom }) => {
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-3">
           <div className="bg-[#1e1e1e] rounded-full p-1 mt-0.5">
-            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <svg
+              className="w-4 h-4 text-white"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
               <path
                 fillRule="evenodd"
                 d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
@@ -45,7 +49,9 @@ const MobilePhantomNotification = ({ onClose, onOpenPhantom }) => {
             </svg>
           </div>
           <div className="flex-1">
-            <p className="font-semibold text-sm">You must use the Phantom browser to sign in on mobile with Phantom</p>
+            <p className="font-semibold text-sm">
+              You must use the Phantom browser to sign in on mobile with Phantom
+            </p>
             <button
               onClick={onOpenPhantom}
               className="mt-2 bg-black text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-800 transition-colors"
@@ -54,7 +60,10 @@ const MobilePhantomNotification = ({ onClose, onOpenPhantom }) => {
             </button>
           </div>
         </div>
-        <button onClick={onClose} className="text-white hover:text-gray-700 transition-colors">
+        <button
+          onClick={onClose}
+          className="text-white hover:text-gray-700 transition-colors"
+        >
           <IoMdClose size={20} />
         </button>
       </div>
@@ -73,8 +82,16 @@ const ConnectionFailureNotification = ({ message, onClose }) => {
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-3">
           <div className="bg-red-600 rounded-full p-1 mt-0.5">
-            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            <svg
+              className="w-4 h-4 text-white"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clipRule="evenodd"
+              />
             </svg>
           </div>
           <div className="flex-1">
@@ -126,8 +143,12 @@ const LoginPopup = ({ authName }) => {
   } = usePhantomWallet();
 
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
-  const referralIdFromLink = useSelector((state) => state?.AllStatesData?.referralForSignup);
-  const isRegLoginPopup = useSelector((state) => state?.AllStatesData?.isRegLoginPopup);
+  const referralIdFromLink = useSelector(
+    (state) => state?.AllStatesData?.referralForSignup
+  );
+  const isRegLoginPopup = useSelector(
+    (state) => state?.AllStatesData?.isRegLoginPopup
+  );
 
   const handleOtpPopup = async () => {
     const trimmedEmail = email.trim();
@@ -194,7 +215,10 @@ const LoginPopup = ({ authName }) => {
         })
           .then((res) => {
             localStorage.setItem("token", res?.data?.data?.token);
-            localStorage.setItem("walletAddress", res?.data?.data?.user?.walletAddressSOL);
+            localStorage.setItem(
+              "walletAddress",
+              res?.data?.data?.user?.walletAddressSOL
+            );
             setVerifyData(res?.data);
 
             if (res?.data?.message === "Login successfull") {
@@ -236,7 +260,6 @@ const LoginPopup = ({ authName }) => {
       window.open("https://phantom.app/", "_blank");
       return;
     }
-
     try {
       const connectResult = await connectWallet();
 
@@ -246,43 +269,43 @@ const LoginPopup = ({ authName }) => {
       }
 
       if (!connectResult.success) {
-        setFailureMessage(connectResult.error || "Failed to connect to Phantom");
+        setFailureMessage(
+          connectResult.error || "Failed to connect to Phantom"
+        );
         setShowFailureNotification(true);
         return;
       }
 
       const message = `By signing, you agree to Nexapro's Terms of Use & Privacy Policy.\n\nNonce: ${Date.now()}`;
 
-      try {
-        const signResult = await signMessage(message, connectResult.phantomInstance);
+      const signResult = await signMessage(
+        message,
+        connectResult.phantomInstance
+      );
 
-        const response = await axios.post(`${baseUrl}user/phantomLogin`, {
-          walletAddress: connectResult.publicKey,
-          signature: signResult.signature,
-          message: message,
-          inviteCode: refferalCode || null,
-        });
-
-        if (
-          response?.data?.message === "Login successfull" ||
-          response?.data?.message === "User registered successfully."
-        ) {
-          localStorage.setItem("token", response?.data?.data?.token);
-          localStorage.setItem("walletAddress", response?.data?.data?.user?.walletAddressSOL);
-
-          dispatch(openCloseLoginRegPopup(false));
-          dispatch(setSolWalletAddress());
-          showToasterSuccess(response?.data?.message || "Wallet connected successfully!");
-          router.push("/trending");
-        }
-      } catch (signError) {
-        console.error("Signature error:", signError);
-        setFailureMessage("Failed to sign message. Please try again.");
-        setShowFailureNotification(true);
+      const response = await axios.post(`${baseUrl}user/phantomLogin`, {
+        walletAddress: connectResult.publicKey,
+        signature: signResult.signature,
+        message: message,
+        inviteCode: refferalCode || null,
+      });
+      localStorage.setItem("token", response?.data?.data?.token);
+      localStorage.setItem(
+        "walletAddress",
+        response?.data?.data?.user?.walletAddressSOL
+      );
+      dispatch(openCloseLoginRegPopup(false));
+      dispatch(setSolWalletAddress());
+      showToasterSuccess(
+        response?.data?.message || "Wallet connected successfully!"
+      );
+      if (response?.data?.data?.user?.referredBy === null) {
+        dispatch(setreferralPopupAfterLogin(true));
       }
+      router.push("/trending");
     } catch (error) {
-      console.error("Phantom connection error:", error);
-      setFailureMessage("Failed to connect wallet. Please try again.");
+      console.error("Signature error:", error);
+      setFailureMessage("Failed to sign message. Please try again.");
       setShowFailureNotification(true);
     }
   };
@@ -328,15 +351,26 @@ const LoginPopup = ({ authName }) => {
   return (
     <>
       {showMobileNotification && (
-        <MobilePhantomNotification onClose={() => setShowMobileNotification(false)} onOpenPhantom={handleOpenPhantom} />
+        <MobilePhantomNotification
+          onClose={() => setShowMobileNotification(false)}
+          onOpenPhantom={handleOpenPhantom}
+        />
       )}
 
       {showFailureNotification && (
-        <ConnectionFailureNotification message={failureMessage} onClose={() => setShowFailureNotification(false)} />
+        <ConnectionFailureNotification
+          message={failureMessage}
+          onClose={() => setShowFailureNotification(false)}
+        />
       )}
 
       {isPassword ? (
-        <OtpPopup email={email} setIsPassword={setIsPassword} authName={authName} jwtToken={jwtToken} />
+        <OtpPopup
+          email={email}
+          setIsPassword={setIsPassword}
+          authName={authName}
+          jwtToken={jwtToken}
+        />
       ) : (
         isRegLoginPopup && (
           <motion.div
@@ -366,19 +400,29 @@ const LoginPopup = ({ authName }) => {
               <div className="mt-2 p-8">
                 {authName !== "login" ? (
                   <>
-                    <h1 className="text-3xl font-bold text-center text-white">{navbar?.loginPopup?.creatAccount}</h1>
-                    <p className="text-sm text-[#6E6E6E] text-center mt-1">{navbar?.loginPopup?.creatAccountDesc}</p>
+                    <h1 className="text-3xl font-bold text-center text-white">
+                      {navbar?.loginPopup?.creatAccount}
+                    </h1>
+                    <p className="text-sm text-[#6E6E6E] text-center mt-1">
+                      {navbar?.loginPopup?.creatAccountDesc}
+                    </p>
                   </>
                 ) : (
                   <>
-                    <h1 className="text-3xl font-bold text-center text-white">{navbar?.loginPopup?.welcomeBack}</h1>
-                    <p className="text-sm text-[#6E6E6E] text-center mt-1">{navbar?.loginPopup?.loginInAccouont}</p>
+                    <h1 className="text-3xl font-bold text-center text-white">
+                      {navbar?.loginPopup?.welcomeBack}
+                    </h1>
+                    <p className="text-sm text-[#6E6E6E] text-center mt-1">
+                      {navbar?.loginPopup?.loginInAccouont}
+                    </p>
                   </>
                 )}
 
                 {/* Email */}
                 <div className="mt-6">
-                  <label className="text-sm text-[#6E6E6E] mb-1 block">{navbar?.loginPopup?.email}</label>
+                  <label className="text-sm text-[#6E6E6E] mb-1 block">
+                    {navbar?.loginPopup?.email}
+                  </label>
                   <div className="flex items-center gap-3 bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
                     <MdOutlineEmail size={20} className="text-[#6E6E6E]" />
                     <input
@@ -394,7 +438,9 @@ const LoginPopup = ({ authName }) => {
                 {/* Password or Invite Code */}
                 {authName === "login" ? (
                   <div className="mt-4">
-                    <label className="text-sm text-[#6E6E6E] mb-1 block">{navbar?.loginPopup?.password}</label>
+                    <label className="text-sm text-[#6E6E6E] mb-1 block">
+                      {navbar?.loginPopup?.password}
+                    </label>
                     <div className="flex items-center justify-between bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
                       <div className="flex items-center gap-3 w-full">
                         <FiLock size={20} className="text-[#6E6E6E]" />
@@ -422,7 +468,9 @@ const LoginPopup = ({ authName }) => {
                   </div>
                 ) : (
                   <div className="mt-4">
-                    <label className="text-sm text-[#6E6E6E] mb-1 block">{navbar?.loginPopup?.inviteCode}</label>
+                    <label className="text-sm text-[#6E6E6E] mb-1 block">
+                      {navbar?.loginPopup?.inviteCode}
+                    </label>
                     <div className="flex items-center gap-3 bg-[#1F1F1F] border border-[#333] px-4 py-3 rounded-lg transition focus-within:border-[#1F73FC]">
                       <FaUserFriends size={20} className="text-[#6E6E6E]" />
                       <input
@@ -441,7 +489,9 @@ const LoginPopup = ({ authName }) => {
                   onClick={handleOtpPopup}
                   disabled={isDisable}
                   className={`mt-6 w-full rounded-lg text-sm py-3 font-semibold transition ${
-                    isDisable ? "bg-[#11265B] cursor-not-allowed" : "bg-[#11265B] hover:bg-[#133D94]"
+                    isDisable
+                      ? "bg-[#11265B] cursor-not-allowed"
+                      : "bg-[#11265B] hover:bg-[#133D94]"
                   } border border-[#0E43BD] text-white shadow-md`}
                 >
                   {!isDisable ? (
@@ -460,7 +510,10 @@ const LoginPopup = ({ authName }) => {
                 {/* Divider */}
                 <div className="flex items-center justify-center my-5 text-sm text-[#6E6E6E]">
                   <div className="flex-grow border-t border-[#333]"></div>
-                  <span className="px-3"> {navbar?.loginPopup?.continueWith}</span>
+                  <span className="px-3">
+                    {" "}
+                    {navbar?.loginPopup?.continueWith}
+                  </span>
                   <div className="flex-grow border-t border-[#333]"></div>
                 </div>
 
@@ -469,8 +522,16 @@ const LoginPopup = ({ authName }) => {
                   className="bg-white hover:opacity-90 text-sm py-3 px-4 flex items-center justify-center w-full rounded-lg cursor-pointer transition mb-3"
                   onClick={() => handleGoogleAuth()}
                 >
-                  <Image src={googleLogo} alt="Google Logo" width={20} height={20} className="w-5 h-5 object-contain" />
-                  <span className="text-[#1F1F1F] font-semibold ml-3">{navbar?.loginPopup?.continueGoogle}</span>
+                  <Image
+                    src={googleLogo}
+                    alt="Google Logo"
+                    width={20}
+                    height={20}
+                    className="w-5 h-5 object-contain"
+                  />
+                  <span className="text-[#1F1F1F] font-semibold ml-3">
+                    {navbar?.loginPopup?.continueGoogle}
+                  </span>
                 </div>
 
                 {/* Phantom Auth */}
@@ -488,7 +549,9 @@ const LoginPopup = ({ authName }) => {
                     height={20}
                     className="w-5 h-5 object-contain"
                   />
-                  <span className="text-[#1F1F1F] font-semibold ml-3">{getPhantomButtonText()}</span>
+                  <span className="text-[#1F1F1F] font-semibold ml-3">
+                    {getPhantomButtonText()}
+                  </span>
                 </div>
 
                 {/* Switch Auth */}
