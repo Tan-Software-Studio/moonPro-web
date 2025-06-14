@@ -9,7 +9,6 @@ import ReferralPage from "@/components/referral/ReferralPage";
 import { showToaster } from "@/utils/toaster/toaster.style";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 export default function ReferralLogin({ params }) {
@@ -69,11 +68,7 @@ export default function ReferralLogin({ params }) {
   }, [referralId]);
   return (
     <>
-      <ReferralPage
-        referralData={referralData}
-        referralId={referralIFromApi}
-        solWalletAddress={solWalletAddress}
-      />
+      <ReferralPage />
     </>
   );
 }

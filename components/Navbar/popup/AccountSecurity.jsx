@@ -22,7 +22,7 @@ const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL;
 const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
   const [language, setLanguage] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);;
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [copiedReferral, setCopiedReferral] = useState(false);
   const { t } = useTranslation();
 
@@ -32,7 +32,7 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
   const { i18n } = useTranslation();
 
   const referralLink = `${WEB_URL}/referral/${userDetails?.referralId || ""}`;
-  console.log("userDetails", userDetails)
+  console.log("userDetails", userDetails);
   const { currentTitle } = getPointsToNextTitle(userDetails);
 
   const getDisplayName = () => {
@@ -205,7 +205,7 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                         {navbar?.acountandsecurity?.level1}
                       </div>
                       <div className="text-white font-medium text-xs">
-                        {currentTitle || "Wood"} 🏆
+                        {currentTitle} 🏆
                       </div>
                     </div>
                     <div className="text-center sm:text-left">
@@ -218,13 +218,11 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                     </div>
                     <div className="text-center sm:text-left">
                       <div className="text-[#A8A8A8] mb-1 text-[10px] sm:text-xs flex items-center gap-2">
-                        <div>
-                          {navbar?.acountandsecurity?.level3}
-                        </div>
+                        <div>{navbar?.acountandsecurity?.level3}</div>
                         {/* {userDetails?.referralEdit && */}
-                          <div>
-                            <EditReferralCode />
-                          </div>
+                        <div>
+                          <EditReferralCode userDetails={userDetails} />
+                        </div>
                         {/* } */}
                       </div>
                       <div className="text-white font-medium cursor-pointer flex items-center justify-center sm:justify-start gap-1 text-xs">
@@ -503,15 +501,14 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
             </div>
           </div>
         </motion.div>
-      </motion.div >
+      </motion.div>
 
       {isShareModalOpen && (
         <div
           className="fixed inset-0 z-40"
           onClick={() => setIsShareModalOpen(false)}
         />
-      )
-      }
+      )}
     </>
   );
 };
