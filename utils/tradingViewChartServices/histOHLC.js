@@ -26,6 +26,48 @@ const TOKEN_DETAILS = (resolution, offset) => `query TradingView($token: String,
 }
 `;
 
+const TOKEN_SECONDS_DETAILS = () => `
+  query TradingView($token: String, $interval: Int) {
+  Solana(dataset: realtime, aggregates: no) {
+     DEXTradeByTokens(
+      orderBy: {ascendingByField: "Block_Time"}
+      where: {
+        Trade: {
+          Currency: {MintAddress: {is: $token}}, 
+          Side: {
+            Currency: {
+              MintAddress: {
+                in: [
+                  "11111111111111111111111111111111",
+                  "So11111111111111111111111111111111111111112",
+                  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+                  "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+                  "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
+                  "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"
+                ]
+              }
+            }
+          }
+        }, 
+        Transaction: {Result: {Success: true}}
+      }
+    ) {
+      Block {
+        Time(interval: {count: $interval, in: seconds})
+      }
+      low: quantile(of: Trade_PriceInUSD, level: 0.05)
+      high: quantile(of: Trade_PriceInUSD, level: 0.80)
+      close: Trade {
+        PriceInUSD(maximum: Block_Slot)
+      }
+      open: Trade {
+        PriceInUSD(minimum: Block_Slot)
+      }
+      volume: sum(of: Trade_Side_AmountInUSD)
+    }
+  }
+}`;
+
 export async function fetchHistoricalData(periodParams, resolution, token, isUsdActive, isMarketCapActive, supply, solPrice, tokenCreator, userWallet, offset) {
   // console.log("🚀 ~ fetchHistoricalData ~ resolution:", resolution);
   supply = supply ? Number(supply) === 0 ? 1_000_000_000 : Number(supply) : 1_000_000_000;
@@ -37,60 +79,60 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
   // const requiredBars = 20000;
   // const timeFromTv = new Date(from * 1000).toISOString();
   // const timeToTv = new Date(to * 1000).toISOString();
+
+  // console.log("timeFromTv", timeFromTv);
+  // console.log("timeToTv", timeToTv);
   // const oneDay = 86400;
 
   // console.log("🚀 ~ fetchHistoricalData ~ timeFromTv:", timeFromTv);
-  console.log(resolution);
+  // console.log(resolution);
 
-const resolutionStr = resolution?.toString() ?? "";
-const lastChar = resolutionStr.slice(-1);
-let resolutionNumber;
-let resolutionFinal;
+  const resolutionStr = resolution?.toString() ?? "";
+  const lastChar = resolutionStr.slice(-1);
+  let resolutionNumber;
+  let resolutionFinal;
 
-// Check if the last character is a letter
-if (/[a-zA-Z]/.test(lastChar)) {
-  resolutionNumber = Number(resolutionStr.slice(0, -1));
-  
-  if (lastChar === "S") {
-    resolutionFinal = "seconds";
-  } else if (lastChar === "D") {
-    resolutionFinal = "days"; // You can replace this with a meaningful value if needed
-  } else {
-    resolutionFinal = "unknown"; // Or handle unexpected characters
-  }
-} else {
   // Check if the last character is a letter
-if (/[a-zA-Z]/.test(lastChar)) {
-  resolutionNumber = Number(resolutionStr.slice(0, -1));
-  
-  if (lastChar === "S") {
-    resolutionFinal = "seconds";
-  } else if (lastChar === "D") {
-    resolutionFinal = "days"; // You can replace this with a meaningful value if needed
+  if (/[a-zA-Z]/.test(lastChar)) {
+    resolutionNumber = Number(resolutionStr.slice(0, -1));
+    
+    if (lastChar === "S") {
+      resolutionFinal = "seconds";
+    } else if (lastChar === "D") {
+      resolutionFinal = "days"; // You can replace this with a meaningful value if needed
+    } else {
+      resolutionFinal = "unknown"; // Or handle unexpected characters
+    }
   } else {
-    resolutionFinal = "unknown"; // Or handle unexpected characters
-  }
-} else {
-  resolutionNumber = Number(resolutionStr);
+    // Check if the last character is a letter
+  if (/[a-zA-Z]/.test(lastChar)) {
+    resolutionNumber = Number(resolutionStr.slice(0, -1));
+    
+    if (lastChar === "S") {
+      resolutionFinal = "seconds";
+    } else if (lastChar === "D") {
+      resolutionFinal = "days"; // You can replace this with a meaningful value if needed
+    } else {
+      resolutionFinal = "unknown"; // Or handle unexpected characters
+    }
+  } else {
+    resolutionNumber = Number(resolutionStr);
 
-  if (resolutionNumber >= 60) {
-    const hours = resolutionNumber / 60;
-    resolutionNumber = hours;
-    resolutionFinal = "hours";
-  } else {
-    resolutionFinal = "minutes";
+    if (resolutionNumber >= 60) {
+      const hours = resolutionNumber / 60;
+      resolutionNumber = hours;
+      resolutionFinal = "hours";
+    } else {
+      resolutionFinal = "minutes";
+    }
   }
 }
-}
 
-console.log(resolutionFinal);
-console.log(resolutionNumber);
-console.log(TOKEN_DETAILS(resolutionFinal, Number(offset)))
   try {
     const response = await axios.post(
       endpoint,
       {
-        query: TOKEN_DETAILS(resolutionFinal, offset),
+        query: resolutionFinal !== "seconds" ? TOKEN_DETAILS(resolutionFinal, offset) : TOKEN_SECONDS_DETAILS(),
         variables: {
           token: token,
           interval: resolutionNumber,
@@ -106,36 +148,34 @@ console.log(TOKEN_DETAILS(resolutionFinal, Number(offset)))
     // console.log("🚀 ~ fetchHistoricalData ~ response:", response.data.data)
     // console.log("API called");
     const trades = response.data.data.Solana.DEXTradeByTokens;
-    console.log(response)
-    console.log(trades)
     // console.log('trades', trades);
     // Preprocess the bars data
     let bars = trades
       ?.filter(trade => {
-        const usdOpen = isUsdActive
-          ? trade?.Trade?.open ?? 0
-          : (trade?.Trade?.open ?? 0) / (solPrice || 1);
+        const usdOpen = isUsdActive 
+          ? (trade?.Trade?.open || trade?.open?.PriceInUSD) ?? 0
+          : ((trade?.Trade?.open || trade?.open?.PriceInUSD) ?? 0) / (solPrice || 1);
         const open = isMarketCapActive ? usdOpen * (supply || 1) : usdOpen;
 
         const usdClose = isUsdActive
-          ? trade?.Trade?.close ?? 0
-          : (trade?.Trade?.close ?? 0) / (solPrice || 1);
+          ? (trade?.Trade?.close || trade?.close?.PriceInUSD) ?? 0
+          : ((trade?.Trade?.close || trade?.close?.PriceInUSD) ?? 0) / (solPrice || 1);
         const close = isMarketCapActive ? usdClose * (supply || 1) : usdClose;
 
         return open !== 0 && close !== 0; // Keep trades where both open and close are non-zero
       })
       .map(trade => {
-        const blockTime = new Date(trade.Block.Timefield).getTime();
+        const blockTime = new Date(trade.Block.Timefield || trade.Block.Time).getTime();
         if (isNaN(blockTime)) return null; // Skip invalid dates
 
         const usdOpen = isUsdActive
-          ? trade?.Trade?.open ?? 0
-          : (trade?.Trade?.open ?? 0) / (solPrice || 1);
+          ? (trade?.Trade?.open || trade?.open?.PriceInUSD) ?? 0
+          : ((trade?.Trade?.open || trade?.open?.PriceInUSD) ?? 0) / (solPrice || 1);
         const open = isMarketCapActive ? usdOpen * (supply || 1) : usdOpen;
 
         const usdClose = isUsdActive
-          ? trade?.Trade?.close ?? 0
-          : (trade?.Trade?.close ?? 0) / (solPrice || 1);
+          ? (trade?.Trade?.close || trade?.close?.PriceInUSD) ?? 0
+          : ((trade?.Trade?.close || trade?.close?.PriceInUSD) ?? 0) / (solPrice || 1);
         const close = isMarketCapActive ? usdClose * (supply || 1) : usdClose;
 
         const usdSolHigh = isUsdActive ? trade?.Trade?.high ?? 0 : (trade?.Trade?.high ?? 0) / (solPrice || 1);

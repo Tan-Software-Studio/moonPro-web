@@ -81,14 +81,14 @@ export const getBars = async (
     // Check time logic before fetching
     if (storedBarTime !== null) {
       if (storedBarTime > periodParams.to) {
-        console.log("[getBars] Stored bar time is newer than requested range → No data.");
+        // console.log("[getBars] Stored bar time is newer than requested range → No data.");
         onHistoryCallback([], { noData: true });
         return;
       }
 
       if (storedBarTime < periodParams.to) {
         // Different time window — reset offset
-        console.log("Trading view reseted cache")
+        // console.log("Trading view reseted cache")
         resolutionOffsets[resolution].offset = 0;
       }
     }
@@ -105,7 +105,7 @@ export const getBars = async (
       walletAddress,
       resolutionOffsets[resolution].offset,
     );
-    console.log(barsData);
+    // console.log(barsData);
     const bars = barsData.bars;
     if (bars?.length > 0) {
       // Increment offset for this resolution by 500
