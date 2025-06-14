@@ -437,7 +437,7 @@ const Memescope = () => {
                   <input
                     type="text"
                     placeholder={tredingPage?.tableheaders?.search}
-                    className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-2 outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto"
+                    className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-[7px] outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto"
                     value={newSearchData}
                     onChange={(e) => setNewSearchData(e.target.value)}
                   />
@@ -518,7 +518,7 @@ const Memescope = () => {
                   <input
                     type="text"
                     placeholder={tredingPage?.tableheaders?.search}
-                    className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto"
+                    className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-[4px] outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto"
                     value={newAboutToSearchData}
                     onChange={(e) => setAboutToSearchData(e.target.value)}
                   />
@@ -597,7 +597,7 @@ const Memescope = () => {
                   <input
                     type="text"
                     placeholder={tredingPage?.tableheaders?.search}
-                    className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-1 outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto"
+                    className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-[4px] outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto"
                     value={graduateSearchData}
                     onChange={(e) => setGraduateSearchData(e.target.value)}
                   />
