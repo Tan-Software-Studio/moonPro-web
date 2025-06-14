@@ -8,7 +8,7 @@ import { IoClose } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
 import { useDispatch } from "react-redux";
 
-const EditReferralCode = ({ userDetails }) => {
+const EditReferralCode = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [referralCode, setReferralCode] = useState("");
   const [error, setError] = useState("");
@@ -68,13 +68,11 @@ const EditReferralCode = ({ userDetails }) => {
 
   return (
     <>
-      {!userDetails?.referralEdit ? (
-        <MdEdit
-          onClick={() => setIsOpen(!isOpen)}
-          className="cursor-pointer text-xs hover:text-white transition-colors flex-shrink-0"
-          title="Edit Referral Link"
-        />
-      ) : null}
+      <MdEdit
+        onClick={() => setIsOpen(!isOpen)}
+        className="cursor-pointer text-xs hover:text-white transition-colors flex-shrink-0"
+        title="Edit Referral Link"
+      />
       {isOpen && (
         <motion.div
           key="backdrop"

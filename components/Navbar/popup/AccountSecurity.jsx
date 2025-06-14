@@ -219,11 +219,11 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                     <div className="text-center sm:text-left">
                       <div className="text-[#A8A8A8] mb-1 text-[10px] sm:text-xs flex items-center gap-2">
                         <div>{navbar?.acountandsecurity?.level3}</div>
-                        {/* {userDetails?.referralEdit && */}
-                        <div>
-                          <EditReferralCode userDetails={userDetails} />
-                        </div>
-                        {/* } */}
+                        {!userDetails?.referralEdit ? (
+                          <div>
+                            <EditReferralCode />
+                          </div>
+                        ) : null}
                       </div>
                       <div className="text-white font-medium cursor-pointer flex items-center justify-center sm:justify-start gap-1 text-xs">
                         <span className="truncate max-w-[60px] sm:max-w-none">
