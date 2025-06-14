@@ -8,9 +8,10 @@ import { unsubscribeFromWebSocket } from "@/utils/tradingViewChartServices/webso
 import { addMark, clearMarks } from "@/utils/tradingViewChartServices/mark";
 import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFunctions";
 import { clearLatestHistoricalBar } from "@/utils/tradingViewChartServices/latestHistoricalBar";
-import { clearSellItems, subscribeSellItems } from "@/utils/tradingViewChartServices/sellItems";
+import { clearSellItems } from "@/utils/tradingViewChartServices/sellItems";
 import { clearChunk } from "@/utils/tradingViewChartServices/historicalChunk";
 import axios from "axios";
+import { clear100SellLine, subscribe100SellLine } from "@/utils/tradingViewChartServices/firstSell100Percent";
 
 const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, solanaLivePrice, supply }) => {
   const chartContainerRef = useRef(null);
@@ -19,8 +20,9 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
   const [chartResolution, setChartResolution] = useState("15S"); // Track USD/SOL toggle state
   const [chart, setChart] = useState(null);
   const [chartReady, setChartReady] = useState(false);
-  const [averageSell, setAverageSell] = useState(0);
+  const [value100SellLine, setValue100SellLine] = useState(0);
   const [currentTokenAddress, setCurrentTokenAddress] = useState(null);
+  const [hasGottenMarks, setHasGottenMarks] = useState(false);
 
   const buyPositionLineRef = useRef(null);
   const sellPositionLineRef = useRef(null);
@@ -36,6 +38,12 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
     resetBuyLine();
     resetSellLine();
   }
+
+  useEffect(() => {
+    if (chartReady && solanaLivePrice > 0 && tokenaddress && !hasGottenMarks) {
+      getBuySellMarks();
+    }
+  }, [chartReady, solanaLivePrice, tokenaddress]);
 
   const resetBuyLine = () => {
     if (buyPositionLineRef.current !== null) {
@@ -88,8 +96,8 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
 
   }, []);
 
-  useEffect(() => {
-    const getBuySellMarks = async () => {
+  const getBuySellMarks = async () => {
+      setHasGottenMarks(true);
       const walletsToMark = [];
       const tokenCreator = localStorage.getItem("chartTokenCreator");
       const userWallet = localStorage.getItem("walletAddress");
@@ -154,6 +162,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
           },
         }
       );
+    console.log("currentSolPrice", solanaLivePrice);
     const creatorTransactions = response?.data?.data?.Solana?.creatorTransactions;
     if (creatorTransactions?.length > 0) {
       for (let i = 0; i < creatorTransactions.length; i++) {
@@ -165,7 +174,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
         const usdTraded = Number(creatorTransaction?.Trade?.Side?.AmountInUSD);
 
         const usdPrice = Number(creatorTransaction?.Trade?.PriceInUSD);
-        const usdSolPrice = isUsdSolToggled ? usdPrice : usdPrice / solPrice;
+        const usdSolPrice = isUsdSolToggled ? usdPrice : usdPrice / (solanaLivePrice != 0 ? solanaLivePrice : 1);
         const atPrice = isMcPriceToggled ? usdSolPrice * supply : usdSolPrice;
 
         if (creatorTransaction?.Transaction?.Signer === tokenCreator) {
@@ -179,21 +188,28 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
       console.error("Error:", error.response?.data || error.message || error);
     }
   };
-  // console.log("gettingBuySellMarks",);
-  getBuySellMarks();
-  }, [tokenaddress])
+  
 
   // Subscribe to array changes
   useEffect(() => {
     clearSellItems();
     // Update state when array changes
-    const unsubscribe = subscribeSellItems((avgSell) => {
-      setAverageSell(avgSell); // Create a new array to trigger re-render
+    const unsubscribe = subscribe100SellLine((avgSell) => {
+      setValue100SellLine(avgSell); // Create a new array to trigger re-render
     });
 
     // Cleanup subscription on component unmount
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (tokenaddress !== currentTokenAddress) {
+      resetLines();
+      clear100SellLine();
+      setHasGottenMarks(false);
+      setCurrentTokenAddress(tokenaddress);
+    }
+  }, [tokenaddress])
 
   useEffect(() => {
     if (!chart) return;
@@ -202,12 +218,11 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
       resetLines();
       return;
     }
-    if (tokenaddress !== currentTokenAddress) {
-      resetLines();
-      setCurrentTokenAddress(tokenaddress);
-    }
     const buyLineAmount = currentTokenPnLData?.averageBuyPrice ? currentTokenPnLData?.averageBuyPrice : currentTokenPnLData?.pastAverageBuyPrice || 0;
-    const sellLineAmount = currentTokenPnLData?.averageSellPrice ? currentTokenPnLData?.averageSellPrice : currentTokenPnLData?.pastAverageSellPrice || 0;
+    const sellLineAmount = currentTokenPnLData?.averageSellPrice ? currentTokenPnLData?.averageSellPrice : currentTokenPnLData?.pastAverageSellPrice || value100SellLine || 0;
+    console.log("currentTokenPnLData", currentTokenPnLData);
+    console.log("sellLineAmount", sellLineAmount);
+    console.log("buyLineAmount", buyLineAmount);
     if (buyLineAmount <= 0) {
       resetBuyLine();
     }
@@ -256,7 +271,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
       }
     };
     createChartLines();
-  }, [currentTokenPnLData, chartReady, isUsdSolToggled, isMcPriceToggled, averageSell, tokenaddress])
+  }, [currentTokenPnLData, chartReady, isUsdSolToggled, isMcPriceToggled, value100SellLine, currentTokenAddress])
 
   // console.log("TVChartContainer called.");
   useEffect(() => {

@@ -56,6 +56,7 @@ const Tradingview = () => {
   const scrollableDivRef4 = useRef(null);
   const [currentTokenPnLData, setCurrentTokenPnLData] = useState({});
   const [currentTokenAddress, setCurrentTokenAddress] = useState(null);
+  const [hasFetchedFromApi, setHasFetchedFromApi] = useState(false);
 
   const handleInstantTradeClick = () => {
     setIsInstantTradeActive(prev => !prev);
@@ -107,99 +108,102 @@ const Tradingview = () => {
       clearMarks()
       resetResolutionOffsets();
       setCurrentTokenPnLData({});
-      setCurrentTokenAddress(tokenaddress)
+      setHasFetchedFromApi(false);
+      setCurrentTokenAddress(tokenaddress);
     }
-  const runEffect = async () => {
-    const fetchPastPnLData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          // console.error("No auth token found in localStorage.");
-          return;
+    const runEffect = async () => {
+      const fetchPastPnLData = async () => {
+        try {
+          const token = localStorage.getItem("token");
+          if (!token) {
+            // console.error("No auth token found in localStorage.");
+            return;
+          }
+
+          const response = await axios({
+            url: `${BASE_URL}transactions/getSingleTokenlastAction/${tokenaddress}/${solWalletAddress}`,
+            method: "get",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          const pastTokenData = response?.data?.data?.lastAction;
+          // console.log("pastTokenData", pastTokenData);
+
+          if (pastTokenData != null) {
+            const pastTokenProperties = {
+              pastAverageBuyPrice: pastTokenData?.buyPrice || null,
+              pastAverageBuy: pastTokenData.qty * pastTokenData.buyPrice || null,
+              pastAverageSellPrice: pastTokenData?.sellPrice || null,
+              pastAverageSell: pastTokenData.qty * pastTokenData.sellPrice || null,
+              pastPnlPrice: pastTokenData.realizedProfit || null,
+              pastPnlPercentage: pastTokenData.pnlPercentage || null,
+            };
+
+            // console.log("pastTokenProperties", pastTokenProperties);
+            setCurrentTokenPnLData({ ...pastTokenProperties });
+          }
+          setHasFetchedFromApi(true);
+        } catch (error) {
+          // console.error("Error fetching past PnL data:", error);
         }
+      };
 
-        const response = await axios({
-          url: `${BASE_URL}transactions/getSingleTokenlastAction/${tokenaddress}/${solWalletAddress}`,
-          method: "get",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+      const currentPnlData = currentTabData.find(pnls => pnls?.token === tokenaddress);
 
-        const pastTokenData = response?.data?.data?.lastAction;
-        // console.log("pastTokenData", pastTokenData);
+      if (currentPnlData == null && Object.keys(currentTokenPnLData || {}).length === 0 && hasFetchedFromApi === false) {
+        console.log("im in");
+        await fetchPastPnLData();
+      } else {
+        if (currentPnlData?.chainBalance > 0) {
+          setHasFetchedFromApi(false);
+          const buyAmount =
+            currentPnlData?.activeQtyHeld * currentPnlData?.averageBuyPrice ||
+            0;
+          const soldAmount =
+            currentPnlData?.quantitySold *
+              currentPnlData?.averageHistoricalSellPrice || 0;
+          const activeQtyHeld = currentPnlData?.activeQtyHeld || 0;
+          const quantitySold = currentPnlData?.quantitySold || 0;
+          const averageBuyPrice = currentPnlData?.averageBuyPrice || 0;
+    
+          const holdingRawAmount = activeQtyHeld - quantitySold;
+          const availableQtyInUSDWhenBought = holdingRawAmount * averageBuyPrice;
+          const holdingsUsdInCurrentPrice = holdingRawAmount * (latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD || 0);
+    
+          const pnlAmount =
+            holdingsUsdInCurrentPrice - availableQtyInUSDWhenBought;
+          const isPositivePnL = pnlAmount >= 0;
+          const absolutePnL = Math.abs(pnlAmount);
+    
+          const pnlPercent =
+            availableQtyInUSDWhenBought !== 0
+              ? (pnlAmount / availableQtyInUSDWhenBought) * 100
+              : 0;
+    
+          const safePnLPercent = isNaN(pnlPercent) ? 0 : pnlPercent;
+    
+          const currentPnlProperties = {
+            buyAmount,
+            averageBuyPrice,
+            soldAmount,
+            averageSellPrice: currentPnlData?.averageHistoricalSellPrice || 0,
+            holdingRawAmount,
+            holdingsUsdInCurrentPrice,
+            isPositivePnL,
+            absolutePnL,
+            safePnLPercent
+          }
 
-        if (pastTokenData != null) {
-          const pastTokenProperties = {
-            pastAverageBuyPrice: pastTokenData?.buyPrice || null,
-            pastAverageBuy: pastTokenData.qty * pastTokenData.buyPrice || null,
-            pastAverageSellPrice: pastTokenData?.sellPrice || null,
-            pastAverageSell: pastTokenData.qty * pastTokenData.sellPrice || null,
-            pastPnlPrice: pastTokenData.realizedProfit || null,
-            pastPnlPercentage: pastTokenData.pnlPercentage || null,
-          };
-
-          // console.log("pastTokenProperties", pastTokenProperties);
-          setCurrentTokenPnLData({ ...pastTokenProperties });
+          // console.log("currentPnlProperties", currentPnlProperties)
+          setCurrentTokenPnLData({...currentPnlProperties});
         }
-
-      } catch (error) {
-        // console.error("Error fetching past PnL data:", error);
       }
     };
 
-    const currentPnlData = currentTabData.find(pnls => pnls?.token === tokenaddress);
-
-    if (currentPnlData == null && Object.keys(currentTokenPnLData || {}).length === 0) {
-      await fetchPastPnLData();
-    } else {
-      if (currentPnlData?.chainBalance > 0) {
-        const buyAmount =
-          currentPnlData?.activeQtyHeld * currentPnlData?.averageBuyPrice ||
-          0;
-        const soldAmount =
-          currentPnlData?.quantitySold *
-            currentPnlData?.averageHistoricalSellPrice || 0;
-        const activeQtyHeld = currentPnlData?.activeQtyHeld || 0;
-        const quantitySold = currentPnlData?.quantitySold || 0;
-        const averageBuyPrice = currentPnlData?.averageBuyPrice || 0;
-  
-        const holdingRawAmount = activeQtyHeld - quantitySold;
-        const availableQtyInUSDWhenBought = holdingRawAmount * averageBuyPrice;
-        const holdingsUsdInCurrentPrice = holdingRawAmount * (latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD || 0);
-  
-        const pnlAmount =
-          holdingsUsdInCurrentPrice - availableQtyInUSDWhenBought;
-        const isPositivePnL = pnlAmount >= 0;
-        const absolutePnL = Math.abs(pnlAmount);
-  
-        const pnlPercent =
-          availableQtyInUSDWhenBought !== 0
-            ? (pnlAmount / availableQtyInUSDWhenBought) * 100
-            : 0;
-  
-        const safePnLPercent = isNaN(pnlPercent) ? 0 : pnlPercent;
-  
-        const currentPnlProperties = {
-          buyAmount,
-          averageBuyPrice,
-          soldAmount,
-          averageSellPrice: currentPnlData?.averageHistoricalSellPrice || 0,
-          holdingRawAmount,
-          holdingsUsdInCurrentPrice,
-          isPositivePnL,
-          absolutePnL,
-          safePnLPercent
-        }
-
-        // console.log("currentPnlProperties", currentPnlProperties)
-        setCurrentTokenPnLData({...currentPnlProperties});
-      }
-    }
-  };
-
   runEffect(); // 👈 Call the async function
-}, [currentTabData, tokenaddress])
+  }, [currentTabData, tokenaddress])
 
   useEffect(() => {
     dispatch(setselectToken("Solana"));
