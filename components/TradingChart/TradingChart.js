@@ -162,7 +162,6 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
           },
         }
       );
-    console.log("currentSolPrice", solanaLivePrice);
     const creatorTransactions = response?.data?.data?.Solana?.creatorTransactions;
     if (creatorTransactions?.length > 0) {
       for (let i = 0; i < creatorTransactions.length; i++) {
@@ -220,9 +219,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
     }
     const buyLineAmount = currentTokenPnLData?.averageBuyPrice ? currentTokenPnLData?.averageBuyPrice : currentTokenPnLData?.pastAverageBuyPrice || 0;
     const sellLineAmount = currentTokenPnLData?.averageSellPrice ? currentTokenPnLData?.averageSellPrice : currentTokenPnLData?.pastAverageSellPrice || value100SellLine || 0;
-    console.log("currentTokenPnLData", currentTokenPnLData);
-    console.log("sellLineAmount", sellLineAmount);
-    console.log("buyLineAmount", buyLineAmount);
+   
     if (buyLineAmount <= 0) {
       resetBuyLine();
     }

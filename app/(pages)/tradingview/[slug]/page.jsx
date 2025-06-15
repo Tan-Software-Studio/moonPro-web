@@ -153,7 +153,6 @@ const Tradingview = () => {
       const currentPnlData = currentTabData.find(pnls => pnls?.token === tokenaddress);
 
       if (currentPnlData == null && Object.keys(currentTokenPnLData || {}).length === 0 && hasFetchedFromApi === false) {
-        console.log("im in");
         await fetchPastPnLData();
       } else {
         if (currentPnlData?.chainBalance > 0) {

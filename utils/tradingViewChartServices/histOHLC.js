@@ -149,6 +149,7 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
     // console.log("API called");
     const trades = response.data.data.Solana.DEXTradeByTokens;
     // console.log('trades', trades);
+
     // Preprocess the bars data
     let bars = trades
       ?.filter(trade => {
@@ -194,6 +195,15 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
         };
       })
       .filter(item => item != null);
+      
+    const deduped = Object.values(
+      bars.reduce((acc, bar) => {
+        acc[bar.time] = bar; // overwrite any previous one with same time
+        return acc;
+      }, {})
+    );
+
+    bars = deduped.sort((a, b) => a.time - b.time);
 
     if (bars?.length > 0) {
       let lastValidClose = bars[0].close; // Initialize with first bar's close
@@ -216,8 +226,7 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
           // Calculate percentage change
           const percentageChange = referencePrice === 0 ? 0 : (absoluteChange / referencePrice) * 100;
           
-          // If absolute change is over 1000%, return null
-          if (percentageChange > 1000) {
+          if (percentageChange > 10000) {
             return null;
           }
 
