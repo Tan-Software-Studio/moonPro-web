@@ -6,6 +6,10 @@ import {
 import { setNewLatestBarTime } from "./latestBarTime";
 import { setNewLatestHistoricalBar } from "./latestHistoricalBar";
 import { setHistoricalChunkAndConnectBars } from "./historicalChunk";
+import { intervalTV } from "./constant";
+
+let startingIntervalBeforeLoop = null;
+let moveToNextInterval = true;
 
 // Dictionary to store offsets per resolution
 let resolutionOffsets = {};
@@ -42,6 +46,25 @@ async function getSolWalletAddress() {
 export const resetResolutionOffsets = () => {
   resolutionOffsets = {};
 };
+function getNextInterval(savedInterval) {
+  const index = intervalTV.indexOf(savedInterval);
+
+  if (index !== -1) {
+    // Found: return next, or wrap around
+    return intervalTV[(index + 1) % intervalTV.length];
+  }
+
+  // Not found: find first interval that comes after savedInterval lexicographically
+  for (let i = 0; i < intervalTV.length; i++) {
+    if (intervalTV[i] > savedInterval) {
+      return intervalTV[i];
+    }
+  }
+
+  // If none is greater, wrap to the first
+  return intervalTV[0];
+}
+
 
 export const getBars = async (
   symbolInfo,
@@ -63,7 +86,7 @@ export const getBars = async (
     if (isMarketCapActive !== null) {
       marketCapActive = isMarketCapActive === "true";
     }
-
+    const chart = window?.tvWidget;
     const supply = await getChartSupply();
     const solPrice = await getSolPrice();
     const tokenCreator = await getChartTokenCreator();
@@ -77,6 +100,33 @@ export const getBars = async (
       };
     }
     const storedBarTime = resolutionOffsets[resolution].oldestBarTimeSec;
+
+    // Check time logic before fetching
+    if (storedBarTime !== null) {
+      if (storedBarTime > periodParams.to) {
+        // console.log("[getBars] Stored bar time is newer than requested range → No data.");
+        onHistoryCallback([], { noData: true });
+        return;
+      }
+
+      if (storedBarTime < periodParams.to) {
+        // Different time window — reset offset
+        // console.log("Trading view reseted cache")
+        resolutionOffsets[resolution].offset = 0;
+      }
+    }
+    
+    if (startingIntervalBeforeLoop === null) {
+      startingIntervalBeforeLoop = resolution;
+    }
+
+    // Initialize resolutionOffsets structure
+    if (!(resolution in resolutionOffsets)) {
+      resolutionOffsets[resolution] = {
+        offset: 0,
+        oldestBarTimeSec: null
+      };
+    }
 
     // Check time logic before fetching
     if (storedBarTime !== null) {
@@ -114,11 +164,19 @@ export const getBars = async (
       // Store last bar time in seconds
       const oldestBarTimeSec = Math.floor(bars[0].time / 1000);
       resolutionOffsets[resolution].oldestBarTimeSec = oldestBarTimeSec;
+      startingIntervalBeforeLoop = null;
+      moveToNextInterval = false;
       setHistoricalChunkAndConnectBars(bars, resolution);
       setNewLatestBarTime(bars[bars?.length - 1]?.time);
       setNewLatestHistoricalBar(bars[bars?.length - 1], resolution);
       onHistoryCallback(bars, { noData: false });
     } else {
+      if (moveToNextInterval) {
+        const nextInterval = getNextInterval(resolution);
+        if (nextInterval !== startingIntervalBeforeLoop) {
+          chart?.activeChart()?.setResolution(nextInterval);
+        }
+      }
       onHistoryCallback([], { noData: true });
     }
   } catch (err) {
