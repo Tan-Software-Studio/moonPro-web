@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
 import React, { useEffect, useState } from 'react'
-import { motion } from "framer-motion";
-import { NoDataFish, pump, pumpfun, tableImage } from '@/app/Images';
+import { motion } from "framer-motion"; 
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Copy, Trash2, X } from 'lucide-react';
@@ -12,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { setChartSymbolImage, setIsFaviouriteToken } from '@/app/redux/states';
 import { showToaster, showToasterSuccess } from '@/utils/toaster/toaster.style';
 import { useTranslation } from 'react-i18next';
+import NoData from '@/components/common/NoData/noData';
 
 const Watchlist = ({ setIsWatchlistPopup }) => {
     const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
@@ -271,14 +271,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
                                         <tr>
                                             <td colSpan="5">
                                                 <div className="flex flex-col items-center justify-center h-[300px] w-full">
-                                                    <Image
-                                                        src={NoDataFish}
-                                                        alt="No Data Available"
-                                                        width={200}
-                                                        height={100}
-                                                        className="rounded-lg mb-4"
-                                                    />
-                                                    <h1 className="text-[#89888e] text-lg">No data found.</h1>
+                                                    <NoData />
                                                 </div>
                                             </td>
                                         </tr>

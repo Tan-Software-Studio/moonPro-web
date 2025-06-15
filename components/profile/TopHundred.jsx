@@ -1,4 +1,3 @@
-import { NoDataFish } from "@/app/Images";
 import { setChartSymbolImage } from "@/app/redux/states";
 import axios from "axios";
 import { Check, Copy } from "lucide-react";
@@ -9,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { PiWallet } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { pnlPercentage } from "./calculation";
+import NoData from "../common/NoData/noData";
 
 const TopHundred = ({ }) => {
   const router = useRouter();
@@ -174,21 +174,7 @@ const TopHundred = ({ }) => {
           </div>
         ) : !topHundredHistoryData.length > 0 ? (
           <div className="flex flex-col items-center justify-center h-64 mt-10 text-center">
-            <div className="flex items-center justify-center mb-4">
-              <Image
-                src={NoDataFish}
-                alt="No Data Available"
-                width={200}
-                height={100}
-                className="text-slate-400"
-              />
-            </div>
-            <p className="text-slate-400 text-lg mb-2 break-words break-all">
-              No data available
-            </p>
-            <p className="text-slate-500 text-sm">
-              Information will appear here when availab
-            </p>
+            <NoData />
           </div>
         ) : null}
       </div>

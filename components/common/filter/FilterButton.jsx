@@ -8,7 +8,7 @@ function FilterButton({ onClick }) {
   const { t, ready } = useTranslation();
   const tredingPage = t("tredingPage");
   return (
-    <div className=" ">
+    <>
       <div
         className="flex items-center text-[12px] gap-1 pl-[20px] py-[10px] font-bold text-xs text-[#cdc8cd] cursor-pointer w-fit  h-[36px] xl:flex ease-in-out duration-300"
         onClick={onClick}
@@ -17,7 +17,7 @@ function FilterButton({ onClick }) {
         {/* {tredingPage?.mainHeader?.filter?.filter} */}
         <Image src={iconImage} alt="icon_image" className="h-5 w-5" />
       </div>
-    </div>
+    </>
   );
 }
 

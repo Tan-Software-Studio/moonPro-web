@@ -145,7 +145,7 @@ const Sidebar = () => {
                 <Image
                   alt="logotext"
                   src={logotext}
-                  className={`cursor-pointer h-[33px] w-[140px] `}
+                  className={`cursor-pointer h-[40px] w-[120px] `}
                 />
               </Link>
             </>

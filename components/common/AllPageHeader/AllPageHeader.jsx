@@ -611,7 +611,7 @@ const AllPageHeader = ({
 
                   {/* Solana Icon */}
                   <Image src={solana} width={20} height={20} alt="solana" />
-                  <span>{primaryWallet?.balance?.toFixed(2) || "0"}</span>
+                  <span>{primaryWallet?.balance?.toFixed(5) || "0"}</span>
 
                   {/* Dropdown Icon */}
                   <FaAngleDown size={20} />

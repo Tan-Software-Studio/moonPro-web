@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setChartSymbolImage } from "@/app/redux/states";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
+import { NoDataLogo } from "@/app/Images";
 
 // Truncate long strings
 const truncateString = (str, start = 4, end = 4) => {
@@ -198,16 +199,16 @@ const ActivityTable = ({ activitySearchQuery }) => {
           </div>
         ) : !transactionData?.length > 0 || !filteredActivityData?.length > 0 ? (
           <div className="flex flex-col items-center justify-center h-64  mt-10 text-center">
-            <div className=" flex items-center justify-center mb-4">
+            <div className=" flex items-center justify-center" style={{ maxWidth: "200px", maxHeight: "150px" }}>
               <Image
-                src="/assets/NoDataImages/NoDataImages.svg"
+                src={NoDataLogo}
                 alt={referral?.refMata?.noData}
                 width={200}
                 height={100}
-                className="text-slate-400"
+                className="text-slate-400 object-contain md:w-[200px] sm:w-[180px] w-[120px] h-auto"
               />
             </div>
-            <p className="text-slate-400 text-lg mb-2 break-all break-words">{!transactionData?.length > 0 ? referral?.refMata?.noHistory
+            <p className="text-slate-400 text-lg  break-all break-words">{!transactionData?.length > 0 ? referral?.refMata?.noHistory
               : !filteredActivityData?.length > 0 ? `No results found for "${activitySearchQuery}"`
                 : "No data"}</p>
             <p className="text-slate-500 text-sm">

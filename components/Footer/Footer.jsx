@@ -88,7 +88,7 @@ const Footer = () => {
   const getPrimaryWalletBalance = () => {
     const primaryWallet = reduxWallets?.find((w) => w.primary);
     return primaryWallet?.balance !== undefined
-      ? parseFloat(primaryWallet?.balance).toFixed(4)
+      ? parseFloat(primaryWallet?.balance).toFixed(5)
       : "0";
   };
 

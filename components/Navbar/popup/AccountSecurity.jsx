@@ -15,27 +15,25 @@ import { updatePnlTableData } from "@/app/redux/holdingDataSlice/holdingData.sli
 import { googleLogout } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
 import { makeUserEmptyOnLogout } from "@/app/redux/userDataSlice/UserData.slice";
+import { MdEdit } from "react-icons/md";
+import EditReferralCode from "./EditReferralCode";
+import getPointsToNextTitle from "@/components/referral/getPointsToNextTitle";
 const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL;
 const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
   const [language, setLanguage] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [copiedUserId, setCopiedUserId] = useState(false);
   const [copiedReferral, setCopiedReferral] = useState(false);
   const { t } = useTranslation();
 
   const navbar = t("navbar");
   const dispatch = useDispatch();
   const router = useRouter();
-  const accountPopupLng = t("accountPopup");
-
-  const solWalletAddress = useSelector(
-    (state) => state?.AllStatesData?.solWalletAddress
-  );
-
   const { i18n } = useTranslation();
 
   const referralLink = `${WEB_URL}/referral/${userDetails?.referralId || ""}`;
+  console.log("userDetails", userDetails);
+  const { currentTitle } = getPointsToNextTitle(userDetails);
 
   const getDisplayName = () => {
     if (userDetails?.phantomAddress) {
@@ -207,7 +205,7 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                         {navbar?.acountandsecurity?.level1}
                       </div>
                       <div className="text-white font-medium text-xs">
-                        {userDetails?.rewardsLevel || "Wood"} 🏆
+                        {currentTitle} 🏆
                       </div>
                     </div>
                     <div className="text-center sm:text-left">
@@ -219,8 +217,13 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                       </div>
                     </div>
                     <div className="text-center sm:text-left">
-                      <div className="text-[#A8A8A8] mb-1 text-[10px] sm:text-xs">
-                        {navbar?.acountandsecurity?.level3}
+                      <div className="text-[#A8A8A8] mb-1 text-[10px] sm:text-xs flex items-center gap-2">
+                        <div>{navbar?.acountandsecurity?.level3}</div>
+                        {!userDetails?.referralEdit ? (
+                          <div>
+                            <EditReferralCode />
+                          </div>
+                        ) : null}
                       </div>
                       <div className="text-white font-medium cursor-pointer flex items-center justify-center sm:justify-start gap-1 text-xs">
                         <span className="truncate max-w-[60px] sm:max-w-none">

@@ -205,6 +205,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
     if (tokenaddress !== currentTokenAddress) {
       resetLines();
       clear100SellLine();
+      clearMarks();
       setHasGottenMarks(false);
       setCurrentTokenAddress(tokenaddress);
     }
@@ -272,7 +273,6 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
 
   // console.log("TVChartContainer called.");
   useEffect(() => {
-    clearMarks();
     clearLatestHistoricalBar();
     clearChunk();
     setChart(null);

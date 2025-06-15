@@ -20,6 +20,8 @@ import { showToasterSuccess } from "@/utils/toaster/toaster.style";
 import { useTranslation } from "react-i18next";
 import { VscDebugBreakpointLogUnverified } from "react-icons/vsc";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
+import NoData from "../common/NoData/noData";
+import getPointsToNextTitle from "./getPointsToNextTitle";
 const URL_LINK = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL;
 const ReferralPage = () => {
@@ -38,15 +40,15 @@ const ReferralPage = () => {
     selectedTier === 1
       ? "firstTier"
       : selectedTier === 2
-      ? "secondTier"
-      : "thirdTier";
+        ? "secondTier"
+        : "thirdTier";
 
   const rewardPercentage =
     selectedTier === 1
       ? refData?.user?.referealRewardsFirstTierPer
       : selectedTier === 2
-      ? refData?.user?.referealRewardsSecondTierPer
-      : refData?.user?.referealRewardsThirdTierPer;
+        ? refData?.user?.referealRewardsSecondTierPer
+        : refData?.user?.referealRewardsThirdTierPer;
 
   const tierData = refData?.referrals?.[tierKey] || [];
 
@@ -62,7 +64,7 @@ const ReferralPage = () => {
   };
 
   const getUserDisplayInfo = (user) => {
-    if (user?.email === "phantom@phantom.com" && user?.phantomAddress) {
+    if (user?.phantomAddress) {
       return {
         displayText: shortenAddress(user.phantomAddress),
         isPhantomAddress: true,
@@ -81,7 +83,7 @@ const ReferralPage = () => {
   };
 
   const getReferralDisplayInfo = (referral) => {
-    if (referral?.email === "phantom@phantom.com" && referral?.phantomAddress) {
+    if (referral?.phantomAddress) {
       return shortenAddress(referral.phantomAddress);
     } else if (referral?.phantomAddress) {
       return shortenAddress(referral.phantomAddress);
@@ -104,6 +106,7 @@ const ReferralPage = () => {
       });
       setLoading(false);
       const responce = res.data.data;
+      console.log("🚀 ~ fetchData ~ responce:", responce)
       setRefData(responce);
       setProgress(
         ((responce?.user?.dailyPoints +
@@ -111,7 +114,7 @@ const ReferralPage = () => {
           responce?.user?.weeklyPoints +
           responce?.user?.referralPoints) /
           50000) *
-          100
+        100
       );
     } catch (e) {
       setLoading(false);
@@ -171,46 +174,8 @@ const ReferralPage = () => {
 
   const userDisplayInfo = getUserDisplayInfo(refData?.user);
 
-  function getPointsToNextTitle() {
-    const points =
-      (refData?.user?.dailyPoints || 0) +
-      (refData?.user?.tradePoints || 0) +
-      (refData?.user?.weeklyPoints || 0) +
-      (refData?.user?.referralPoints || 0);
 
-    const levels = [
-      { min: 0, max: 500, title: "Explorer" },
-      { min: 500, max: 2000, title: "Trader" },
-      { min: 2000, max: 5000, title: "Voyager" },
-      { min: 5000, max: 12000, title: "Prodigy" },
-      { min: 12000, max: 25000, title: "Elite" },
-      { min: 25000, max: 50000, title: "Master" },
-      { min: 50000, max: Infinity, title: "Legend" },
-    ];
-
-    for (let i = 0; i < levels.length; i++) {
-      const level = levels[i];
-      if (points < level.max) {
-        return {
-          currentTitle: level.title,
-          pointsToNext:
-            level.max === Infinity ? 0 : Math.max(level.max - points, 0),
-          nextTitle: levels[i + 1]?.title || "Legend",
-          maxLevelComplete: points < 50000 ? true : false,
-        };
-      }
-    }
-
-    localStorage.setItem("Rewards-Level", currentTitle);
-    return {
-      currentTitle: "Unknown",
-      pointsToNext: 0,
-      nextTitle: null,
-      maxLevelComplete: true,
-    };
-  }
-  const { currentTitle, pointsToNext, nextTitle, maxLevelComplete } =
-    getPointsToNextTitle();
+  const { currentTitle, pointsToNext, nextTitle, maxLevelComplete } = getPointsToNextTitle(refData?.user);
 
   return (
     <>
@@ -555,19 +520,8 @@ const ReferralPage = () => {
                         colSpan={3}
                         className="text-center text-gray-400 py-4"
                       >
-                        <div className="flex flex-col w-full items-center justify-center mt-5">
-                          <div className="text-4xl mb-2">
-                            <Image
-                              src={NoDataFish}
-                              alt="No Data Available"
-                              width={200}
-                              height={100}
-                              className="rounded-lg"
-                            />
-                          </div>
-                          <h1 className="text-[#89888e] text-lg">
-                            {referral?.refMata?.noReferralsFound}
-                          </h1>
+                        <div className="flex flex-col items-center justify-center h-64 mt-10 text-center">
+                          <NoData />
                         </div>
                       </td>
                     </tr>

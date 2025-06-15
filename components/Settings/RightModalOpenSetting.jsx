@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { GrCaretDown, GrCaretUp } from "react-icons/gr";
 import { IoSettingsOutline } from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
@@ -10,6 +10,7 @@ import Image from "next/image";
 import { solana } from "@/app/Images";
 import { useDispatch, useSelector } from "react-redux";
 import { setPresetActive, setPreSetOrderSetting } from "@/app/redux/states";
+import { debouncing } from "@/utils/debouncing";
 const RightModalOpenSetting = ({
   ordersettingLang,
   isOpen,
@@ -19,40 +20,42 @@ const RightModalOpenSetting = ({
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("buy");
   const [saveLoaderFlag, setSaveLoaderFlag] = useState(false);
+  const [slippageForDisplay, setSlippageForDisplay] = useState();
+  const [priorityForDisplay, setPriorityForDisplay] = useState();
   const [preSetData, setPreSetData] = useState({
     P1: {
       buy: {
         slippage: 40,
-        priorityFee: 0.002,
+        priorityFee: 0.001,
         mev: false,
       },
       sell: {
         slippage: 40,
-        priorityFee: 0.002,
+        priorityFee: 0.001,
         mev: false,
       },
     },
     P2: {
       buy: {
         slippage: 40,
-        priorityFee: 0.002,
+        priorityFee: 0.001,
         mev: false,
       },
       sell: {
         slippage: 40,
-        priorityFee: 0.002,
+        priorityFee: 0.001,
         mev: false,
       },
     },
     P3: {
       buy: {
         slippage: 40,
-        priorityFee: 0.002,
+        priorityFee: 0.001,
         mev: false,
       },
       sell: {
         slippage: 40,
-        priorityFee: 0.002,
+        priorityFee: 0.001,
         mev: false,
       },
     },
@@ -83,9 +86,13 @@ const RightModalOpenSetting = ({
   });
   // presetActive like P1 P2 and all
   const presist = useSelector((state) => state?.AllStatesData?.presetActive);
-  // onchange function for data update
-  function updatePreSetSetting(target) {
-    const { name, value } = target;
+  // onchange function for priorityFee
+  function updatePreSetPriorityFeeSetting(target) {
+    let { value } = target;
+    if (!value || value < 0.0001) {
+      value = 0.0001;
+    }
+    setPriorityForDisplay(value);
     setPreSetData((pre) => {
       const updated = {
         ...pre,
@@ -93,13 +100,44 @@ const RightModalOpenSetting = ({
           ...pre[presist],
           [activeTab]: {
             ...pre?.[presist]?.[activeTab],
-            [name]: parseFloat(value),
+            priorityFee: parseFloat(value),
           },
         },
       };
       return updated;
     });
   }
+  // onchange function for slippage
+  function updatePreSetSlippageSetting(target) {
+    let { value } = target;
+    if (!value || value < 20) {
+      value = 20;
+    }
+    setSlippageForDisplay(value);
+    setPreSetData((pre) => {
+      const updated = {
+        ...pre,
+        [presist]: {
+          ...pre[presist],
+          [activeTab]: {
+            ...pre?.[presist]?.[activeTab],
+            slippage: parseFloat(value),
+          },
+        },
+      };
+      return updated;
+    });
+  }
+  // make debounce for priority fee
+  const debounsUpdatePreSetPriorityFeeSetting = useCallback(
+    debouncing(updatePreSetPriorityFeeSetting, 700),
+    [presist, activeTab]
+  );
+  // make debounce for slippage
+  const debounsUpdatePreSetSlippageSetting = useCallback(
+    debouncing(updatePreSetSlippageSetting, 700),
+    [presist, activeTab]
+  );
   // update mev
   function updateMEV(value) {
     setPreSetData((pre) => {
@@ -118,49 +156,28 @@ const RightModalOpenSetting = ({
   }
   // handleReset for selected preset
   async function handleReset() {
-    if (presist == "P4" || presist == "P5") {
-      await setPreSetData((pre) => {
-        const update = {
-          ...pre,
-          [presist]: {
-            buy: {
-              slippage: 40,
-              priorityFee: 0.001,
-              mev: false,
-            },
-            sell: {
-              slippage: 40,
-              priorityFee: 0.001,
-              mev: false,
-            },
+    await setPreSetData((pre) => {
+      const update = {
+        ...pre,
+        [presist]: {
+          buy: {
+            slippage: 40,
+            priorityFee: 0.001,
+            mev: false,
           },
-        };
-        localStorage.setItem("preSetAllData", JSON.stringify(update));
-        dispatch(setPreSetOrderSetting(update));
-        return update;
-      });
-    } else {
-      await setPreSetData((pre) => {
-        const update = {
-          ...pre,
-          [presist]: {
-            buy: {
-              slippage: 40,
-              priorityFee: 0.002,
-              mev: false,
-            },
-            sell: {
-              slippage: 40,
-              priorityFee: 0.002,
-              mev: false,
-            },
+          sell: {
+            slippage: 40,
+            priorityFee: 0.001,
+            mev: false,
           },
-        };
-        localStorage.setItem("preSetAllData", JSON.stringify(update));
-        dispatch(setPreSetOrderSetting(update));
-        return update;
-      });
-    }
+        },
+      };
+      localStorage.setItem("preSetAllData", JSON.stringify(update));
+      dispatch(setPreSetOrderSetting(update));
+      return update;
+    });
+    setSlippageForDisplay(40);
+    setPriorityForDisplay(0.001);
   }
 
   // save function
@@ -173,6 +190,10 @@ const RightModalOpenSetting = ({
     }, 500);
     onClose();
   }
+  useEffect(() => {
+    setSlippageForDisplay(preSetData?.[presist]?.[activeTab]?.slippage);
+    setPriorityForDisplay(preSetData?.[presist]?.[activeTab]?.priorityFee);
+  }, [presist, activeTab]);
   useEffect(() => {
     const preSetFromLocalStorage = JSON.parse(
       localStorage.getItem("preSetAllData")
@@ -302,13 +323,14 @@ const RightModalOpenSetting = ({
               <input
                 type="number"
                 name="slippage"
-                value={preSetData?.[presist]?.[activeTab]?.slippage}
-                onChange={(e) =>
-                  updatePreSetSetting({
+                value={slippageForDisplay}
+                onChange={(e) => {
+                  setSlippageForDisplay(e?.target?.value);
+                  debounsUpdatePreSetSlippageSetting({
                     name: e?.target?.name,
                     value: Math.min(Number(e?.target?.value), 100),
-                  })
-                }
+                  });
+                }}
                 className="bg-transparent p-[11px] text-start w-full text-white outline-none text-[14px] h-[40px] 
                                [&::-webkit-inner-spin-button]:appearance-none 
                                [&::-webkit-outer-spin-button]:appearance-none 
@@ -328,13 +350,14 @@ const RightModalOpenSetting = ({
               <input
                 type="number"
                 name="priorityFee"
-                value={preSetData?.[presist]?.[activeTab]?.priorityFee}
-                onChange={(e) =>
-                  updatePreSetSetting({
+                value={priorityForDisplay}
+                onChange={(e) => {
+                  setPriorityForDisplay(e?.target?.value);
+                  debounsUpdatePreSetPriorityFeeSetting({
                     name: e?.target?.name,
                     value: Math.min(Number(e?.target?.value), 1),
-                  })
-                }
+                  });
+                }}
                 className="bg-transparent w-full text-white text-right outline-none text-[14px] h-[40px] [&::-webkit-inner-spin-button]:appearance-none 
              [&::-webkit-outer-spin-button]:appearance-none 
              [&::-moz-appearance]:textfield"
@@ -378,6 +401,10 @@ const RightModalOpenSetting = ({
           </div>
         </div>
         <div className="bottom-14 w-full">
+          <div className="text-[#8a8a8a] flex items-center gap-2 text-[12px] mx-[7px] my-[3px]">
+            <p>NOTE:-</p>
+            <p>Min Slippage = 20</p>,<p>Min Priority Fee = 0.0001</p>
+          </div>
           <div className="flex justify-between border-t border-gray-500 py-3 px-4 bg-[#16171c]">
             <button
               className="text-gray-200 gap-2 text-xs flex items-center"
