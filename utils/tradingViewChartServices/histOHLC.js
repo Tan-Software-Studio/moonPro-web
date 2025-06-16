@@ -240,7 +240,7 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
     // Check 4 candles before and after
     const lookback = 4;
     const lookahead = 4;
-    const normalThreshold = 20; // Normalization threshold: <10% change
+    const normalThreshold = 7; // Normalization threshold: <10% change
 
     // Collect percentage changes of surrounding candles
     const prevChanges = [];
