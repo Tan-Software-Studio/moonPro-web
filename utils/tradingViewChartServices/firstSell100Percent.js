@@ -6,13 +6,13 @@ function notifySubscribers(value) {
 }
 
 function set100SellLine(value) {
-    console.log("setting Sell line", value);
+    // console.log("setting Sell line", value);
     sell100SellLine = value;
     notifySubscribers(sell100SellLine);
 }
 
 function get100SellLine() {
-    console.log("getting Sell line", sell100SellLine);
+    // console.log("getting Sell line", sell100SellLine);
     return sell100SellLine;
 } 
 
