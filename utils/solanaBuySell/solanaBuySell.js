@@ -468,7 +468,7 @@ const sellSolanaTokens = async (
           set100SellLine(convertedPrice);
         }
       } catch (err) {
-        console.log("Saving 100 Sell Line", err);
+        // console.log("Saving 100 Sell Line", err);
       }
       setTimeout(async () => {
         const [tokenBalanceUpdate, solBalance] = await Promise.all([

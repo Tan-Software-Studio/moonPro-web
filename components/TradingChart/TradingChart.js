@@ -302,6 +302,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
         "header_saveload",
         "use_localstorage_for_settings",
         "time_scale_controls",
+        "popup_hints"
       ],
       toolbar_bg: "#08080E",
       enabled_features: ["study_templates", "seconds_resolution", "show_marks_on_series", "cropped_tick_marks", "end_of_period_timescale_marks", "two_character_bar_marks_labels"],
@@ -325,12 +326,12 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
         "paneProperties.vertGridProperties.color": "#1f1f1f",
         "paneProperties.horzGridProperties.color": "#1f1f1f",
         "scalesProperties.textColor": "#FFFFFF",
-        "mainSeriesProperties.candleStyle.wickUpColor": "#26a69a",
-        "mainSeriesProperties.candleStyle.wickDownColor": "#ef5350",
-        "mainSeriesProperties.candleStyle.upColor": "#26a69a",
-        "mainSeriesProperties.candleStyle.downColor": "#ef5350",
-        "mainSeriesProperties.candleStyle.borderUpColor": "#26a69a",
-        "mainSeriesProperties.candleStyle.borderDownColor": "#ef5350",
+        "mainSeriesProperties.candleStyle.wickUpColor": "#0a9980",
+        "mainSeriesProperties.candleStyle.wickDownColor": "#f33547",
+        "mainSeriesProperties.candleStyle.upColor": "#0a9980",
+        "mainSeriesProperties.candleStyle.downColor": "#f33547",
+        "mainSeriesProperties.candleStyle.borderUpColor": "#0a9980",
+        "mainSeriesProperties.candleStyle.borderDownColor": "#f33547",
       },
     });
     setChart(tvWidget);

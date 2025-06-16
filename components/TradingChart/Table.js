@@ -11,7 +11,7 @@ import {
   convertUTCToLocalTimeString
 } from "@/utils/calculation";
 import Moralis from "moralis";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import ProgressBar from "@ramonak/react-progress-bar";
 import CircularProgressChart from "../common/HolderTableChart/CircularProgressChart.jsx";
 import { useDispatch, useSelector } from "react-redux";
@@ -45,6 +45,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
   const [marketCapActive, setMarketCapActive] = useState(true);
   const [ageActive, setAgeActive] = useState(true);
   const [descTimeActive, setdescTimeActive] = useState(true);
+  const router = useRouter();
 
   const solanaLivePrice = useSelector(
     (state) => state?.AllStatesData?.solanaLivePrice
@@ -78,6 +79,15 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
     } else {
       setAgeActive(false);
     }
+  };
+
+   const navigateToChartScreen = (data, index) => {
+      console.log(data);
+      router.push(`/tradingview/solana?tokenaddress=${data?.token}&symbol=${data?.symbol}`);
+      localStorage.setItem("chartTokenImg", data?.img);
+      localStorage.setItem("chartTokenAddress", data?.token);
+      dispatch(setChartSymbolImage(data?.img));
+      setIsOpen(false)
   };
 
   useEffect(() => {
@@ -1072,7 +1082,8 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                         >
                           {/* Token */}
                           <td className="px-6 py-4 flex">
-                            <a
+                            <button
+                              onClick={() => {navigateToChartScreen(data)}}
                               href={`/tradingview/solana?tokenaddress=${data?.token}&symbol=${data?.symbol}`}
                               className="group/name hover:opacity-80 flex flex-col sm:flex-row items-start text-xs leading-4 font-semibold h-full justify-start"
                             >
@@ -1094,7 +1105,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                                 </div>
                                 <span className="pl-2 group-hover/name:underline">{data?.symbol}</span>
                               </div>
-                            </a>
+                            </button>
                           </td>
                           {/* Bought */}
                           <td className="px-6 py-4 items-start">

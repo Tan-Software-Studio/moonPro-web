@@ -205,54 +205,95 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
 
     bars = deduped.sort((a, b) => a.time - b.time);
 
-    if (bars?.length > 0) {
-      let lastValidClose = bars[0].close; // Initialize with first bar's close
+      if (bars?.length > 0) {
+  let lastValidClose = bars[0].close; // Initialize with first bar's close
 
-      bars = bars
-        .map((bar, index, arr) => {
-          if (index === 0) {
-            lastValidClose = bar.close; // Update for first bar
-            return bar;
-          }
-
-          // Use the last valid close price for newOpen
-          const newOpen = lastValidClose;
-          const newClose = bar.close;
-
-          // Calculate absolute percentage change within the candle
-          const absoluteChange = Math.abs(newClose - newOpen);
-          const referencePrice = Math.min(Math.abs(newOpen), Math.abs(newClose));
-          
-          // Calculate percentage change
-          const percentageChange = referencePrice === 0 ? 0 : (absoluteChange / referencePrice) * 100;
-          
-          if (percentageChange > 10000) {
-            return null;
-          }
-
-          // Update lastValidClose for the next bar
-          lastValidClose = newClose;
-
-          const bodyTop = Math.max(newOpen, newClose);
-          const bodyBottom = Math.min(newOpen, newClose);
-          const candleSize = Math.abs(newOpen - newClose);
-
-          const maxHigh = bodyTop + candleSize;
-          const minLow = bodyBottom - candleSize;
-
-          const clampedHigh = Math.min(bar.high, maxHigh);
-          const clampedLow = Math.max(bar.low, minLow);
-
-          return {
-            ...bar,
-            open: newOpen,
-            close: newClose,
-            high: clampedHigh,
-            low: clampedLow,
-          };
-        })
-        .filter(bar => bar !== null); // Remove null bars
+  // Calculate percentage changes and identify spikes
+  const barsWithMetrics = bars.map((bar, index, arr) => {
+    if (index === 0) {
+      lastValidClose = bar.close;
+      return { ...bar, percentageChange: 0 };
     }
+
+    const newOpen = lastValidClose;
+    const newClose = bar.close;
+    const absoluteChange = Math.abs(newClose - newOpen);
+    const referencePrice = Math.min(Math.abs(newOpen), Math.abs(newClose));
+    const percentageChange = referencePrice === 0 ? 0 : (absoluteChange / referencePrice) * 100;
+
+    lastValidClose = newClose;
+
+    return {
+      ...bar,
+      open: newOpen,
+      close: newClose,
+      percentageChange,
+      originalIndex: index // Store original index for reference
+    };
+  });
+
+  // Detect and remove spikes
+  const filteredBars = barsWithMetrics.filter((bar, index, arr) => {
+    const isSpike = bar.percentageChange > 3; // Spike threshold: >3% change
+    if (!isSpike) return true; // Keep non-spike bars
+
+    // Check 4 candles before and after
+    const lookback = 4;
+    const lookahead = 4;
+    const normalThreshold = 7; // Normalization threshold: <10% change
+
+    // Collect percentage changes of surrounding candles
+    const prevChanges = [];
+    const nextChanges = [];
+
+    // Look back
+    for (let i = 1; i <= lookback; i++) {
+      if (index - i >= 0) {
+        prevChanges.push(arr[index - i].percentageChange);
+      }
+    }
+
+    // Look forward
+    for (let i = 1; i <= lookahead; i++) {
+      if (index + i < arr.length) {
+        nextChanges.push(arr[index + i].percentageChange);
+      }
+    }
+
+    // Check if surrounding candles are "normal" (most have <5% change)
+    const normalPrev = prevChanges.length > 0 
+      ? prevChanges.filter(change => change < normalThreshold).length >= prevChanges.length * 0.75
+      : true; // Consider normal if not enough previous candles
+    const normalNext = nextChanges.length > 0 
+      ? nextChanges.filter(change => change < normalThreshold).length >= nextChanges.length * 0.75
+      : true; // Consider normal if not enough next candles
+
+    // If both surrounding sets are mostly normal, consider this a spike to remove
+    return !(normalPrev && normalNext);
+  });
+
+  // Reconstruct bars with clamped high/low and reconnect open prices
+  bars = filteredBars.map((bar, index, arr) => {
+    // Use previous bar's close as open for all bars except the first
+    const newOpen = index === 0 ? bar.open : arr[index - 1].close;
+
+    const bodyTop = Math.max(newOpen, bar.close);
+    const bodyBottom = Math.min(newOpen, bar.close);
+    const candleSize = Math.abs(newOpen - bar.close);
+
+    const maxHigh = bodyTop + candleSize;
+    const minLow = bodyBottom - candleSize;
+
+    return {
+      time: bar.time,
+      open: newOpen,
+      close: bar.close,
+      high: Math.min(bar.high, maxHigh),
+      low: Math.max(bar.low, minLow),
+      volume: bar.volume
+    };
+  });
+}
     // console.log('remaining bars before filter', bars.length);
     // ✅ Filter out flat or no-activity bars
     // if (bars?.length > 0) {
