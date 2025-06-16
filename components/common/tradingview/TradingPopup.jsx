@@ -386,7 +386,7 @@ const TradingPopup = ({
       {/* Buy/Sell Toggle */}
       <div className="flex items-center w-full justify-between mb-2">
         {/* order setting for small screen */}
-        <div className={`md:hidden flex items-center justify-between`}>
+        <div className={`lg:hidden flex items-center justify-between`}>
           <div className="flex items-center gap-[8px]">
             <FaCog className="text-[16px]" />
             <h1 className="text-[#F6F6F6] text-[12px] font-[400]">
@@ -401,9 +401,9 @@ const TradingPopup = ({
           </button>
         </div>
 
-        <div className="flex md:w-full w-fit md:h-[42px] items-center bg-[#1f1f1f] rounded-[8px] md:mb-[16px]">
+        <div className="flex lg:w-full w-fit lg:h-[42px] items-center bg-[#1f1f1f] rounded-[8px] lg:mb-[16px]">
           <button
-            className={`flex-1 py-1 rounded-[8px] text-[14px] md:h-full md:w-full w-fit px-5 font-[400] ease-in-out duration-500 outline-none ${
+            className={`flex-1 py-1 rounded-[8px] text-[14px] lg:h-full lg:w-full w-fit px-5 font-[400] ease-in-out duration-500 outline-none ${
               activeTab === "buy"
                 ? "bg-[#1F73FC] text-[#F6F6F6]"
                 : "bg-transparent text-[#6E6E6E]"
@@ -416,7 +416,7 @@ const TradingPopup = ({
             {tragindViewPage?.right?.buysell?.buy}
           </button>
           <button
-            className={`flex-1 py-1 rounded-[8px] text-[14px] md:h-full md:w-full w-fit px-5 font-[400] ease-in-out duration-500 outline-none ${
+            className={`flex-1 py-1 rounded-[8px] text-[14px] lg:h-full lg:w-full w-fit px-5 font-[400] ease-in-out duration-500 outline-none ${
               activeTab === "sell"
                 ? "bg-[#ED1B24] text-[#F6F6F6]"
                 : "bg-transparent text-[#6E6E6E]"
@@ -430,7 +430,7 @@ const TradingPopup = ({
         </div>
       </div>
       {/* preset settings big screen  */}
-      <div className={`md:flex hidden items-center justify-between mb-[16px]`}>
+      <div className={`lg:flex hidden items-center justify-between mb-[16px]`}>
         <div className="flex items-center gap-[8px]">
           <FaCog className="text-[16px]" />
           <h1 className="text-[#F6F6F6] text-[12px] font-[400]">

@@ -93,7 +93,7 @@ const Tradingview = () => {
 
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsSmallScreen(window.innerWidth < 768);
+      setIsSmallScreen(window.innerWidth < 1024);
     };
 
     checkScreenSize();
@@ -489,11 +489,11 @@ const Tradingview = () => {
 
   return (
     <div
-      className={`lg:flex relative overflow-y-auto  h-[90vh] md:h-[91vh] lg:h-[100vh] ${isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5"
+      className={`lg:flex relative overflow-y-auto h-svh max-h-svh ${isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5"
         }`}
     >
       {isSmallScreen && (
-        <div className="md:hidden flex  items-center justify-start bg-[#1F1F1F] rounded-md mt-2 text-white mx-2  text-[12px] font-semibold px-2 py-1">
+        <div className="lg:hidden flex  items-center justify-start bg-[#1F1F1F] rounded-md mt-2 text-white mx-2  text-[12px] font-semibold px-2 py-1">
           {["Trades", "Transaction"].map((item, index) => (
             <div
               onClick={() => setIsSmallScreenTab(item)}
@@ -509,11 +509,11 @@ const Tradingview = () => {
         </div>
       )}
       {/* left side */}
-      <div className="lg:!h-[91vh] mb-2 lg:w-[80%] grid place-items-center text-[#8d93b752] overflow-y-auto w-full">
+      <div className="lg:!h-svh mb-2 lg:w-[80%] grid place-items-center text-[#8d93b752] overflow-y-auto w-full">
         {/* original live chart */}
         <div
           ref={containerRef}
-          className="md:h-screen h-fit w-full overflow-y-auto"
+          className="lg:h-screen h-fit w-full overflow-y-auto"
         >
           {(!isSmallScreen || smallScreenTab === "Trades") && (
             <>
@@ -568,10 +568,10 @@ const Tradingview = () => {
       {(!isSmallScreen || smallScreenTab === "Trades") && (
         <div
           ref={scrollableDivRef4}
-          className="lg:h-[91.5vh] sm:mt-0 mt-2 sm:px-0 px-2 overflow-y-auto w-full lg:w-[25%] border-b border-b-[#404040] md:border-l md:border-l-[#404040] space-y-2 md:space-y-0"
+          className="lg:h-[91.5vh] min-h-svh sm:mt-0 mt-2 sm:px-0 px-2 overflow-y-auto w-full lg:w-[25%] border-b border-b-[#404040] md:border-l md:border-l-[#404040] space-y-2 md:space-y-0"
         >
-          <div className="flex sm:flex-col flex-col-reverse gap-2">
-            <div className="p-1 w-full border border-[#4D4D4D] md:border-l-0 md:border-r-0 md:border-t-0">
+          <div className="flex lg:flex-col flex-col-reverse gap-2">
+            <div className="p-1 w-full border border-[#4D4D4D] md:border-l-0 md:border-r-0 lg:border-t-0">
               <TradingStats
                 tragindViewPage={tragindViewPage}
                 data={tradeData}
@@ -579,7 +579,7 @@ const Tradingview = () => {
               />
             </div>
 
-            <div className="p-1 w-full border border-[#4D4D4D] md:border-t-0 md:border-l-0 md:border-r-0 md:border-b-0">
+            <div className="p-1 w-full border border-[#4D4D4D] lg:border-t-0 md:border-l-0 md:border-r-0 md:border-b-0">
               <TradingPopup
                 tragindViewPage={tragindViewPage}
                 activeTab={activeTab}
@@ -615,7 +615,7 @@ const Tradingview = () => {
             solanaLivePrice={solanaLivePrice}
           />
 
-          <div className="w-full border-[#4D4D4D] md:border-t-0 md:border-l-0 md:border-r-0 md:border-b-0">
+          <div className="w-full border-[#4D4D4D] lg:border-t-0 md:border-l-0 md:border-r-0 md:border-b-0">
             <UserPnL
               currentTokenPnLData={currentTokenPnLData}
               tokenSymbol={tokenSymbol}

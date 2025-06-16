@@ -179,9 +179,7 @@ const MscopePumpTable = ({
         </div>
       ) : MemscopeData.length > 0 ? (
         <>
-          <div
-            className={`h-[78vh] visibleScroll md:border-r-[1px]  md:border-r-[#26262e]  overflow-y-scroll`}
-          >
+          <div className={`h-svh max-h-svh visibleScroll md:border-r-[1px]  md:border-r-[#26262e]  overflow-y-scroll`}>
             {MemscopeData.map((block, index) => (
               <Link
                 key={index + 1}
