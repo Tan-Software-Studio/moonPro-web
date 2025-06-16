@@ -13,6 +13,7 @@ import {
   updateHoldingsDataWhileBuySell,
 } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import { showToaster } from "../toaster/toaster.style";
+import { set100SellLine } from "../tradingViewChartServices/firstSell100Percent";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 // handler to buy solana tokens
 const buySolanaTokens = async (
@@ -461,6 +462,13 @@ const sellSolanaTokens = async (
         );
       } catch (err) {
         console.log("Sell Add Mark error", err);
+      }
+      try {
+        if (isSellFullAmount) {
+          set100SellLine(convertedPrice);
+        }
+      } catch (err) {
+        console.log("Saving 100 Sell Line", err);
       }
       setTimeout(async () => {
         const [tokenBalanceUpdate, solBalance] = await Promise.all([

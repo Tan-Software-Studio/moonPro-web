@@ -52,9 +52,6 @@ export const addMark = async (time, isBuy, usdTraded, atPricePoint, tokenAmount,
   if (chart) {
     chart.activeChart().refreshMarks(); // Force re-request of marks
   }
-  if (!isBuy && isUser) {
-    addSellItems(atPricePoint);
-  }
 };
 
 export const getStoredUserMarks = () => {
