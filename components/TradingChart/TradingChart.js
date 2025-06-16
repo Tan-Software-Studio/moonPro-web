@@ -302,6 +302,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
         "header_saveload",
         "use_localstorage_for_settings",
         "time_scale_controls",
+        "popup_hints"
       ],
       toolbar_bg: "#08080E",
       enabled_features: ["study_templates", "seconds_resolution", "show_marks_on_series", "cropped_tick_marks", "end_of_period_timescale_marks", "two_character_bar_marks_labels"],
