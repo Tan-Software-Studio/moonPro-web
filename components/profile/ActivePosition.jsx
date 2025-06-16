@@ -103,9 +103,10 @@ const ActivePosition = ({
                           /> :
                           <div className="w-10 h-10 rounded-md  flex items-center justify-center bg-[#3b3b49] border border-[#1F73FC]">
                             <span className="text-sm text-white uppercase text-center">
-                              {item?.symbol || "T"}
+                              {item?.symbol.toString()?.slice(0, 1) || "T"}
                             </span>
-                          </div>}
+                          </div>
+                          }
                         <div className="min-w-0">
                           <div className="flex items-center gap-1">
                             <p className="font-medium text-base text-white truncate">
