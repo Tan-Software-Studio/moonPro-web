@@ -45,9 +45,11 @@ const Trending = () => {
   const isLoading = useSelector((state) => state?.solTrendingData?.loading);
 
   // Get data from Redux store
-  const getTimeFilterData = Object.values(useSelector(
-    (state) => state?.solTrendingData.filterTime[`${localFilterTime}`]
-  ));
+  const getTimeFilterData = Object.values(
+    useSelector(
+      (state) => state?.solTrendingData.filterTime[`${localFilterTime}`]
+    )
+  );
 
   // Convert data to array (safety check)
   let filterDataArray = Array.isArray(getTimeFilterData)
@@ -399,7 +401,11 @@ const Trending = () => {
 
   // show save filter data
   useEffect(() => {
+    const filterTimeFromLocal = localStorage.getItem("trendingTime");
     const savedFilters = loadFiltersFromStorage();
+    if (filterTimeFromLocal) {
+      setLocalFilterTime(filterTimeFromLocal);
+    }
     if (savedFilters) {
       setFilterValues(savedFilters);
     }
@@ -464,7 +470,12 @@ const Trending = () => {
                     sortColumn={sortColumn}
                     sortOrder={sortOrder}
                   />
-                  <TableBody data={sortedData} img={solana} isLoading={isLoading} isTimeCreated={false} />
+                  <TableBody
+                    data={sortedData}
+                    img={solana}
+                    isLoading={isLoading}
+                    isTimeCreated={false}
+                  />
                 </table>
               </div>
             </div>

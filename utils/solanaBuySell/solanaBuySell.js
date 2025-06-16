@@ -100,6 +100,7 @@ const buySolanaTokens = async (
           name: metaData?.name,
           symbol: metaData?.symbol,
           img: metaData?.img,
+          solPrice: Number(solanaLivePrice),
         })
       );
       dispatch(setBuyAndSellCountInPerformance("buy"));
@@ -224,6 +225,7 @@ const buySolanaTokensQuickBuyHandler = async (
           name: metaData?.name,
           symbol: metaData?.symbol,
           img: metaData?.img,
+          solPrice: Number(solanaLivePrice),
         })
       );
       dispatch(setBuyAndSellCountInPerformance("buy"));
@@ -330,6 +332,7 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
           name: metaData?.name,
           symbol: metaData?.symbol,
           img: metaData?.img,
+          solPrice: Number(solanaLivePrice),
         })
       );
       dispatch(setBuyAndSellCountInPerformance("buy"));
@@ -441,6 +444,7 @@ const sellSolanaTokens = async (
           symbol: metaData?.symbol,
           img: metaData?.img,
           isSellFullAmount,
+          solPrice: Number(solanaLivePrice),
         })
       );
       dispatch(setBuyAndSellCountInPerformance("sell"));

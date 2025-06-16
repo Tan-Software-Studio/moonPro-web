@@ -117,6 +117,7 @@ const AllPageHeader = ({
   const handleButtonClick = (option) => {
     // Dispatch the action and ensure the state updates
     setLocalFilterTime(option);
+    localStorage.setItem("trendingTime", option);
     // dispatch(setFilterTime(option));
   };
 

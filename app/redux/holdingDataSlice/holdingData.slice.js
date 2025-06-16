@@ -115,13 +115,23 @@ const holdingData = createSlice({
             state.PnlData[findTokenIndex]?.lots?.push({
               qty: tokenQty,
               price: payload?.price,
+              solPrice: payload?.solPrice,
             });
             let totalQty = 0;
             let weightedBuyAmount = 0;
+            let weightedSolBuyAmount = 0;
             for (const item of state.PnlData[findTokenIndex]?.lots) {
               totalQty += item.qty;
               weightedBuyAmount += item.qty * item.price;
+              weightedSolBuyAmount += item?.solPrice;
             }
+            const averageSolPrice = +Number(
+              (
+                weightedSolBuyAmount /
+                state.PnlData[findTokenIndex]?.lots?.length
+              ).toFixed(10)
+            );
+            state.PnlData[findTokenIndex].averageSolBuyPrice = averageSolPrice;
             state.PnlData[findTokenIndex].totalBoughtQty += tokenQty;
             state.PnlData[findTokenIndex].activeQtyHeld += tokenQty;
             state.PnlData[findTokenIndex].totalBuyAmount = Number(
@@ -138,6 +148,7 @@ const holdingData = createSlice({
                 {
                   qty: tokenQty,
                   price: payload?.price,
+                  solPrice: payload?.solPrice,
                 },
               ],
               realizedProfit: 0,
@@ -152,6 +163,8 @@ const holdingData = createSlice({
               symbol: payload?.symbol,
               img: payload?.img,
               chainBalance: tokenQty,
+              averageSolBuyPrice: payload?.solPrice,
+              averageSolSellPrice: 0,
             });
           }
         } else {
@@ -161,6 +174,7 @@ const holdingData = createSlice({
               {
                 qty: tokenQty,
                 price: payload?.price,
+                solPrice: payload?.solPrice,
               },
             ],
             realizedProfit: 0,
@@ -175,6 +189,8 @@ const holdingData = createSlice({
             symbol: payload?.symbol,
             img: payload?.img,
             chainBalance: tokenQty,
+            averageSolBuyPrice: payload?.solPrice,
+            averageSolSellPrice: 0,
           });
         }
       } else {
@@ -210,6 +226,17 @@ const holdingData = createSlice({
                 state?.PnlData?.[findTokenIndex]?.lots?.shift();
               }
             }
+            // add sell count
+            const sellCount = state?.PnlData?.[findTokenIndex]?.sellCount || 0;
+            const previousAvgSol = Number(
+              state?.PnlData?.[findTokenIndex]?.averageSolSellPrice || 0
+            );
+            // calculate solana averagePrice
+            state.PnlData[findTokenIndex].averageSolSellPrice =
+              Number(previousAvgSol * sellCount + Number(payload?.solPrice)) /
+              (sellCount + 1);
+            // update sell count
+            state.PnlData[findTokenIndex].sellCount++;
             // update realizedProfit
             state.PnlData[findTokenIndex].realizedProfit += Number(
               Number(realizedProfit).toFixed(10)
@@ -268,6 +295,10 @@ const holdingData = createSlice({
                 symbol: payload?.symbol || null,
                 img: payload?.img || null,
                 createdAt: new Date(),
+                solAvgPriceBuy:
+                  state?.PnlData[findTokenIndex]?.averageSolBuyPrice,
+                solAvgPriceSell:
+                  state?.PnlData[findTokenIndex]?.solAvgPriceSell,
               });
               // add in the chart of pnl
               state?.performance?.chartPnlHistory?.push({
