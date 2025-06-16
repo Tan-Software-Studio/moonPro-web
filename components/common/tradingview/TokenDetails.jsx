@@ -324,9 +324,19 @@ const TokenDetails = ({
             <div className="flex gap-2 md:hidden">
               <div
                 className="h-[36px] w-[36px] bg-[#1F1F1F] rounded-full flex items-center justify-center"
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => {
+                  {(Object.keys(currentTokenPnLData).length > 0) ? 
+                    setIsSharePnLModalActive(true)
+                    :
+                    setIsModalOpen(true)
+                  }
+                }}
               >
+                {(Object.keys(currentTokenPnLData).length > 0) ? 
+                <HiOutlineUpload size={22} className="text-[#4CAF50]"/>
+                :
                 <PiShare className="text-[#F6F6F6] text-[22px]" />
+                }
               </div>
               <div className="h-[36px] w-[36px] bg-[#1F1F1F] rounded-full flex items-center justify-center">
                 {isFavouriteLoading ? (
@@ -401,10 +411,10 @@ const TokenDetails = ({
                 </button> */}
             </div>
           </div>
-        {(Object.keys(currentTokenPnLData).length > 0)  &&
+        {(Object.keys(currentTokenPnLData).length > 0) &&
             <button 
               onClick={() => {setIsSharePnLModalActive(true)}}
-              className="text-[#4CAF50] flex gap-1"
+              className="text-[#4CAF50] hidden gap-1 md:flex"
             >
               <HiOutlineUpload size={16}/>
               <p className="text-xs">Share PnL</p>
