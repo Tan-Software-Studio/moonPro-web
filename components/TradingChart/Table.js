@@ -711,7 +711,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                 </table>
               </div>
             ) : activeTab === "Top Traders" && topTraderData?.length > 0 ? (
-              <div className="lg:h-[85vh] h-[50vh] overflow-y-auto visibleScroll">
+              <div className="lg:h-[85vh] h-svh overflow-y-auto visibleScroll">
                 <table className="min-w-[100%] table-auto overflow-y-scroll">
                   <thead className="bg-[#08080E] sticky top-0">
                     <tr className="">
@@ -852,8 +852,8 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
             ) : activeTab === "Holders" &&
               topHoldingData?.length > 0 ? (
               <>
-                <div className="lg:h-[85vh] h-[50vh] md:grid grid-cols-[65%_35%]">
-                  <div className="overflow-y-scroll lg:h-[85vh] h-[50vh] border-r-[#4D4D4D] border border-[#4D4D4D] visibleScroll ">
+                <div className="lg:h-[85vh] h-svh lg:grid grid-cols-[65%_35%]">
+                  <div className="overflow-y-scroll lg:h-[85vh] h-svh border-r-[#4D4D4D] border border-[#4D4D4D] visibleScroll ">
                     <table className=" min-w-[100%] table-auto overflow-y-scroll visibleScroll">
                       <thead className="bg-[#08080E] sticky top-0">
                         <tr className="px-3">
@@ -1034,7 +1034,7 @@ const Table = ({ scrollPosition, tokenCA, tvChartRef, solWalletAddress, tokenSup
                 </div>
               </>
             ) : activeTab === "Positions" && holdingsData?.length > 0 ? (
-              <div className="lg:h-[85vh] h-[50vh] visibleScroll overflow-y-scroll">
+              <div className="lg:h-[85vh] h-svh visibleScroll overflow-y-scroll">
                 <table className="min-w-full table-auto ">
                   <thead className="bg-[#08080E] sticky top-0">
                     <tr className="">

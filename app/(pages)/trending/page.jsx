@@ -457,7 +457,7 @@ const Trending = () => {
           <div className="overflow-x-auto">
             <div className="inline-block min-w-full -mt-0.5">
               <div
-                className="xl:h-[82vh] md:h-[75vh] h-[70vh] overflow-y-auto visibleScroll"
+                className="h-svh max-h-svh overflow-y-auto visibleScroll"
                 ref={tableRef}
               >
                 <table className="min-w-full !text-xs ">
