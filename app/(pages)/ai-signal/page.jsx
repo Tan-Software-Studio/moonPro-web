@@ -14,11 +14,12 @@ import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
 import TableHeaderData from "@/components/common/TableHeader/TableHeaderData";
 import TableBody from "@/components/common/TableBody/TableBody";
 import { useTranslation } from "react-i18next";
-import handleSort from "@/utils/sortTokenData"; 
+import handleSort from "@/utils/sortTokenData";
 import {
   subscribeToAiSignalTokens,
   subscribeToAiSignalTokensNewAddedToken,
 } from "@/websocket/walletTracker";
+const BASE_URL_MOON_USER = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL_SOCKET;
 // Initial filter values - all empty/false
 const initialFilterValues = {
   mintauth: { checked: false },
@@ -168,7 +169,7 @@ const AiSignal = () => {
       sortable: true,
       key: "dbCreatedAt",
       sortingKey: "dbCreatedAt",
-      notificationIcon : true,
+      notificationIcon: true,
       infoTipString: tredingPage?.tableheaders?.aicalltooltip,
     },
     {
@@ -406,7 +407,7 @@ const AiSignal = () => {
     if (savedFilters) {
       setFilterValues(savedFilters);
     }
-    
+
     subscribeToAiSignalTokens();
     subscribeToAiSignalTokensNewAddedToken();
   }, []);
@@ -476,6 +477,7 @@ const AiSignal = () => {
                     img={solana}
                     isLoading={isLoading}
                     isTimeCreated={true}
+                    BASE_URL={`${BASE_URL_MOON_USER}/aiSignal`}
                   />
                 </table>
               </div>
