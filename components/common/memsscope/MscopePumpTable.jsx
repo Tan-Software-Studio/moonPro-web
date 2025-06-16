@@ -55,6 +55,7 @@ const MscopePumpTable = ({
   barColor,
   capsuleImg,
   isChartHide,
+  dynamicImg,
 }) => {
   // console.log("🚀 ~ MscopePumpTable ~ searchbar:-->", showCircle);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -233,22 +234,34 @@ const MscopePumpTable = ({
                             />
                           </div>
                         ) : null}
-                        {block?.img ? (
+                        {dynamicImg ? (
+                          block?.img ? (
+                            <img
+                              key={index + 1}
+                              src={`${BASE_URL_MOON_STREAM}memescope/${block?.address}.webp`}
+                              alt="Profile"
+                              className={`absolute inset-0 m-auto w-[64px] h-[64px] object-cover ${
+                                showCircle ? "rounded-full" : ""
+                              }`}
+                              loading="lazy"
+                              onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src =
+                                  block?.img || nftProfileImage;
+                              }}
+                            />
+                          ) : null
+                        ) : (
                           <img
-                            key={block?.img}
-                            src={`${BASE_URL_MOON_STREAM}memescope/${block?.address}.webp`}
+                            key={index + 1}
+                            src={block?.img || nftProfileImage}
                             alt="Profile"
                             className={`absolute inset-0 m-auto w-[64px] h-[64px] object-cover ${
                               showCircle ? "rounded-full" : ""
                             }`}
                             loading="lazy"
-                            onError={(e) => {
-                              e.currentTarget.onerror = null;
-                              e.currentTarget.src =
-                                block?.img || nftProfileImage;
-                            }}
                           />
-                        ) : null}
+                        )}
                       </div>
                     </div>
 

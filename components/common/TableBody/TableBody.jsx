@@ -126,6 +126,7 @@ const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
                           src={`${BASE_URL_MOON_STREAM}trending/${row?.address}.webp`}
                           alt="Token"
                           className="w-12 md:w-10 h-12 md:h-10 xl:w-14 xl:h-14 rounded-[4px] border border-[#1F73FC]"
+                          loading="lazy"
                           onError={(e) => {
                             e.currentTarget.onerror = null;
                             e.currentTarget.src = row?.img;

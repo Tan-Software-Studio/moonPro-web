@@ -489,6 +489,7 @@ const Memescope = () => {
                 barColor={"#4FAFFE"}
                 capsuleImg={blue_pump}
                 isChartHide={isChartHide}
+                dynamicImg={false}
               />
             </div>
           </div>
@@ -564,6 +565,7 @@ const Memescope = () => {
                 barColor={"#41986b"}
                 capsuleImg={green_pump}
                 isChartHide={isChartHide}
+                dynamicImg={true}
               />
             </div>
           </div>
@@ -642,6 +644,7 @@ const Memescope = () => {
                 barColor={"#cfc328"}
                 capsuleImg={yellow_pump}
                 isChartHide={isChartHide}
+                dynamicImg={true}
               />
             </div>
           </div>
