@@ -48,6 +48,8 @@ const TradingPopup = ({
   isInstantTradeActive,
   handleInstantTradeClick,
   currentTokenPnLData,
+  isPnlUsdSolActive,
+  onClickPnlUsdActiveToggle
 }) => {
   const [loaderSwap, setLoaderSwap] = useState(false);
   const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
@@ -931,13 +933,15 @@ const TradingPopup = ({
           </div>
           <UserPnL
             currentTokenPnLData={currentTokenPnLData}
+            isPnlUsdSolActive={isPnlUsdSolActive}
             tokenSymbol={tokenName}
             useTitle={false}
-            customBgColor={`bg-transparent`}
+            customBgColor={`bg-transparent hover:bg-[#ffffff03] cursor-pointer`}
             customBorderColor={`border-[#323542]`}
             customHeight={`h-[32px]`}
             customLineSeparatorHeight={`h-[16px]`}
             customLineSeparatorColor={`bg-[#323542]`}
+            onClickWholeDiv={onClickPnlUsdActiveToggle}
           />
         </div>
       </DraggableModal>
