@@ -256,7 +256,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
         sellPositionLineRef.current
                 .setText("Current Average Exit Price")
                 .setQuantity("")
-                .setPrice(sellLineAmount)
+                .setPrice(convertPrice(Number(sellLineAmount)))
                 .setQuantityBackgroundColor("#AB5039")
                 .setQuantityBorderColor("#AB5039")
                 .setBodyBorderColor("#FFFFFF00")
