@@ -876,7 +876,7 @@ const TradingPopup = ({
               <p>Sell</p>
               <div className="flex gap-1 text-[#707070] text-xs items-center">
                 <p>{formatNumber(tokenBalance || 0, false, false)}</p>
-                <p>{tokenSymbol}</p>
+                <p>{tokenName}</p>
                 <p>•</p>
                 <p>{formatNumber(tokenBalance * price, false, true)}</p>
                 <p>•</p>
@@ -931,7 +931,7 @@ const TradingPopup = ({
           </div>
           <UserPnL
             currentTokenPnLData={currentTokenPnLData}
-            tokenSymbol={tokenSymbol}
+            tokenSymbol={tokenName}
             useTitle={false}
             customBgColor={`bg-transparent`}
             customBorderColor={`border-[#323542]`}
