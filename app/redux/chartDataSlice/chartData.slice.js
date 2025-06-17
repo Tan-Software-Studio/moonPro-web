@@ -135,8 +135,8 @@ const allCharTokenData = createSlice({
         20
       );
     },
-    updateChartData: (state, { payload }) => {
-      // console.log("🚀 ~ payload:", payload);
+    resetChartTokenState: (state, action) => {
+      state.latestTrades = [];
     },
   },
   extraReducers: (builder) => {
@@ -152,6 +152,6 @@ const allCharTokenData = createSlice({
 export const {
   addNewTransaction,
   addNewTransactionForWalletTracking,
-  updateChartData,
+  resetChartTokenState,
 } = allCharTokenData.actions;
 export default allCharTokenData.reducer;
