@@ -27,9 +27,8 @@ import { MdOutlineLanguage } from "react-icons/md";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaTelegramPlane } from "react-icons/fa";
 import NoData from "../NoData/noData";
-const BASE_URL_MOON_STREAM = process.env.NEXT_PUBLIC_BASE_URLS;
 
-const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
+const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
   const pathname = usePathname();
   const dispatch = useDispatch();
 
@@ -123,7 +122,7 @@ const TableBody = ({ isLoading, data, img, isTimeCreated }) => {
                     <div className="flex items-center gap-3 !text-left">
                       {row?.img ? (
                         <img
-                          src={`${BASE_URL_MOON_STREAM}trending/${row?.address}.webp`}
+                          src={`${BASE_URL}/${row?.address}.webp`}
                           alt="Token"
                           className="w-12 md:w-10 h-12 md:h-10 xl:w-14 xl:h-14 rounded-[4px] border border-[#1F73FC]"
                           loading="lazy"

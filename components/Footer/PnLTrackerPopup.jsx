@@ -90,14 +90,13 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
   return (
     <div
       ref={popupRef}
-      className={`fixed z-50 bg-[#1a1a1a] rounded-lg shadow-2xl select-none transition-opacity duration-200 ${
-        isDragging ? "opacity-70" : "opacity-100"
-      }`}
+      className={`fixed z-50 bg-[#1a1a1a] shadow-[0_0_16px_rgba(30,30,30,0.8)]  rounded-lg  border-[1px] border-[#404040] select-none transition-opacity duration-200 ${isDragging ? "opacity-70" : "opacity-100"
+        }`}
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
-        width: "440px",
-        height: "106px",
+        width: "392px",
+        height: "94px",
         cursor: isDragging ? "grabbing" : "default",
       }}
       onMouseDown={handleMouseDown}
@@ -112,9 +111,8 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
       </div>
 
       <div
-        className={`absolute top-2 left-2 flex items-center gap-1 z-20 transition-opacity duration-200 ${
-          isHovered ? "opacity-100" : "opacity-0"
-        }`}
+        className={`absolute top-2 left-2 flex items-center gap-1 z-20 transition-opacity duration-200 ${isHovered ? "opacity-100" : "opacity-0"
+          }`}
       >
         <div className="relative">
           <button
@@ -147,9 +145,8 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
       </div>
 
       <div
-        className={`absolute top-2 right-2 flex items-center gap-1 z-20 transition-opacity duration-200 ${
-          isHovered ? "opacity-100" : "opacity-0"
-        }`}
+        className={`absolute top-2 right-2 flex items-center gap-1 z-20 transition-opacity duration-200 ${isHovered ? "opacity-100" : "opacity-0"
+          }`}
       >
         <div className="relative">
           <button
@@ -179,24 +176,24 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
 
       <div className="p-4 h-full flex items-center justify-center relative z-10">
         <div className="flex items-center gap-12">
-          <div className="flex flex-col items-center">
-            <div className="flex items-center gap-3 mb-2">
-              <Image src={solanasollogo} width={32} height={32} alt="solanasollogo" />
-              <div className="text-white text-3xl font-bold">${Number(nativeTokenbalance).toFixed(5) || 0}</div>
+          <div className="flex flex-col">
+            <div className="text-sm text-[#A8A8A8]">Balance</div>
+            <div className="flex items-center gap-2 mb-2">
+              <Image src={solanasollogo} width={18} height={18} alt="solanasollogo" />
+              <div className="text-white text-2xl font-bold">${Number(nativeTokenbalance).toFixed(5) || 0}</div>
             </div>
-            <div className="text-base text-gray-300">Balance</div>
           </div>
 
-          <div className="flex flex-col items-center">
-            <div className="flex items-center gap-3 mb-2">
-              <Image src={solanasollogo} width={32} height={32} alt="solanasollogo" />
-              <div className={`text-3xl font-bold ${UnrealizedPNL >= 0 ? "text-green-400" : "text-red-400"}`}>
+          <div className="flex flex-col">
+            <div className="text-sm text-[#A8A8A8]">PNL</div>
+            <div className="flex items-center gap-2 mb-2">
+              <Image src={solanasollogo} width={18} height={18} alt="solanasollogo" />
+              <div className={`text-2xl font-bold ${UnrealizedPNL >= 0 ? "text-green-400" : "text-red-400"}`}>
                 {UnrealizedPNL >= 0 ? "+" : ""}
                 {UnrealizedPNL >= 0 ? "$" : "-$"}
                 {Math.abs(UnrealizedPNL).toFixed(5)}
               </div>
             </div>
-            <div className="text-base text-gray-300">PNL</div>
           </div>
         </div>
       </div>

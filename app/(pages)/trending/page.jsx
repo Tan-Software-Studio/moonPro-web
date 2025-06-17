@@ -15,7 +15,7 @@ import TableHeaderData from "@/components/common/TableHeader/TableHeaderData";
 import TableBody from "@/components/common/TableBody/TableBody";
 import { useTranslation } from "react-i18next";
 import handleSort from "@/utils/sortTokenData";
-
+const BASE_URL_MOON_STREAM = process.env.NEXT_PUBLIC_BASE_URLS;
 const Trending = () => {
   const { t } = useTranslation();
   const tredingPage = t("tredingPage");
@@ -475,6 +475,7 @@ const Trending = () => {
                     img={solana}
                     isLoading={isLoading}
                     isTimeCreated={false}
+                    BASE_URL={`${BASE_URL_MOON_STREAM}trending`}
                   />
                 </table>
               </div>
