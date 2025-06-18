@@ -275,10 +275,10 @@ const holdingData = createSlice({
             state.PnlData[findTokenIndex].averageBuyPrice =
               totalQty > 0
                 ? Number(
-                  (
-                    state?.PnlData[findTokenIndex]?.totalBuyAmount / totalQty
-                  ).toFixed(10)
-                )
+                    (
+                      state?.PnlData[findTokenIndex]?.totalBuyAmount / totalQty
+                    ).toFixed(10)
+                  )
                 : 0;
 
             // If there is no holdings anymore like user sells everything
@@ -304,11 +304,15 @@ const holdingData = createSlice({
                   state?.PnlData[findTokenIndex]?.solAvgPriceSell,
               });
               // add in the chart of pnl
+              const finalRealizedPnl =
+                Number(state?.performance?.totalPNL) +
+                Number(state?.PnlData[findTokenIndex]?.realizedProfit);
               state?.performance?.chartPnlHistory?.push({
-                value: state?.PnlData[findTokenIndex]?.realizedProfit,
+                value: finalRealizedPnl,
                 createdAt: new Date(),
               });
-
+              // add value in total pnl
+              state.performance.totalPNL = finalRealizedPnl;
               // add in the percentage in the performance section
               const realizedPnlPercentage = Number(
                 pnlPercentage(
@@ -461,7 +465,7 @@ export const {
   updateHoldingsDataWhileBuySell,
   updatePercentageCountData,
   setBuyAndSellCountInPerformance,
-  updateBalanceChangeInQuickSellPortfolio
+  updateBalanceChangeInQuickSellPortfolio,
 } = holdingData.actions;
 
 export default holdingData.reducer;
