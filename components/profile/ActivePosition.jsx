@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { pnlPercentage } from "./calculation";
 import { useTranslation } from "react-i18next";
 import InstantSell from "./InstantSell";
+import { FaArrowUp } from "react-icons/fa";
 
 const ActivePosition = ({
   filteredActivePosition,
@@ -15,6 +16,8 @@ const ActivePosition = ({
 }) => {
   const router = useRouter();
   const [copiedIndex, setCopiedIndex] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [quickSellTokenData, setQuickSellTokenData] = useState({});
   const dispatch = useDispatch();
   const currentTabData = useSelector(
     (state) => state?.setPnlData?.PnlData || []
@@ -28,7 +31,7 @@ const ActivePosition = ({
   );
 
   const { t } = useTranslation();
-  const referral = t('referral')
+  const referral = t('referral');
 
   const handleCopy = (address, index, e) => {
     e.preventDefault();
@@ -45,7 +48,7 @@ const ActivePosition = ({
 
 
   function pnlDollarCalc(item) {
-    return ((item.activeQtyHeld - item?.quantitySold) * (item.current_price - item.averageBuyPrice))
+    return ((item.activeQtyHeld - item?.quantitySold) * (item.current_price - item.averageBuyPrice));
   }
 
   const navigateToChartSreen = (item) => {
@@ -184,7 +187,17 @@ const ActivePosition = ({
                     </td>
 
                     <td className="px-4 py-2 " >
-                      <InstantSell tokenData={item} index={index} />
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          setQuickSellTokenData({ tokenData: item, index: index });
+                          setIsOpen(true);
+                        }}
+                        className="text-red-500 hover:bg-red-500/10 flex items-center justify-center px-2 w-fit py-2 rounded-md"
+                      >
+                        <FaArrowUp />
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -219,6 +232,9 @@ const ActivePosition = ({
           </div>
         ) : null}
       </div>
+      {
+        isOpen && quickSellTokenData?.tokenData && <InstantSell tokenData={quickSellTokenData?.tokenData} index={quickSellTokenData?.index} setIsOpen={setIsOpen} />
+      }
     </>
   );
 };
