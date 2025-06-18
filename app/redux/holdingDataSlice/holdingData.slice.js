@@ -85,6 +85,9 @@ const holdingData = createSlice({
     updatePnlTableData: (state, { payload }) => {
       state.pnlTableData = payload;
     },
+    updateBalanceChangeInQuickSellPortfolio: (state, { payload }) => {
+      state.PnlData[payload?.index].chainBalance = payload?.qty;
+    },
     updatePnlDataPriceOnly: (state, { payload }) => {
       if (state.PnlData?.length > 0) {
         if (payload?.length > 0) {
@@ -272,10 +275,10 @@ const holdingData = createSlice({
             state.PnlData[findTokenIndex].averageBuyPrice =
               totalQty > 0
                 ? Number(
-                    (
-                      state?.PnlData[findTokenIndex]?.totalBuyAmount / totalQty
-                    ).toFixed(10)
-                  )
+                  (
+                    state?.PnlData[findTokenIndex]?.totalBuyAmount / totalQty
+                  ).toFixed(10)
+                )
                 : 0;
 
             // If there is no holdings anymore like user sells everything
@@ -458,6 +461,7 @@ export const {
   updateHoldingsDataWhileBuySell,
   updatePercentageCountData,
   setBuyAndSellCountInPerformance,
+  updateBalanceChangeInQuickSellPortfolio
 } = holdingData.actions;
 
 export default holdingData.reducer;

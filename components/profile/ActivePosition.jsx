@@ -184,7 +184,7 @@ const ActivePosition = ({
                     </td>
 
                     <td className="px-4 py-2 " >
-                      <InstantSell tokenData={item} />
+                      <InstantSell tokenData={item} index={index} />
                     </td>
                   </tr>
                 ))}

@@ -1,4 +1,7 @@
 import { solanasollogo } from '@/app/Images';
+import { updateBalanceChangeInQuickSellPortfolio } from '@/app/redux/holdingDataSlice/holdingData.slice';
+import { calculateRecAmountSolToAnytoken } from '@/utils/calculation';
+import { sellSolanaTokensFromPortfolio } from '@/utils/solanaBuySell/solanaBuySell';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react'
@@ -6,36 +9,68 @@ import { FaArrowUp } from "react-icons/fa";
 import { FaPersonFalling } from 'react-icons/fa6';
 import { IoMdClose } from 'react-icons/io';
 import { IoWarningSharp } from 'react-icons/io5';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-const InstantSell = ({ tokenData }) => {
+const InstantSell = ({ tokenData, index }) => {
     const [isOpen, setIsOpen] = useState(false)
     const [percentage, setPercentage] = useState(100)
     const [isTyping, setIsTyping] = useState(false);
     const [isMoreAmount, setIsMoreAmount] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const dispatch = useDispatch();
 
+    const solWalletAddress = useSelector(
+        (state) => state?.AllStatesData?.solWalletAddress
+    );
+    const solanaLivePrice = useSelector(
+        (state) => state?.AllStatesData?.solanaLivePrice
+    );
     const [priorityFees, setPriorityFees] = useState()
     const presist = useSelector((state) => state?.AllStatesData?.presetActive);
 
-    const remainingQuantity = tokenData ? tokenData?.chainBalance : 0;
-    const [amount, setAmount] = useState(remainingQuantity)
+    const [amount, setAmount] = useState(() => {
+        return tokenData?.chainBalance
+    })
 
-    const handleSell = () => {
-        if (!tokenData) return;
-        setIsLoading(true);
-        setTimeout(() => {
-            setIsLoading(false);
-            setIsOpen(false);
-        }, 2000); 
+    const handleSell = async (token) => {
+        await sellSolanaTokensFromPortfolio(
+            token?.token,
+            Number(amount),
+            priorityFees?.slippage,
+            priorityFees?.priorityFee,
+            solWalletAddress,
+            token?.decimals,
+            token?.current_price,
+            setIsLoading,
+            token?.programAddress,
+            dispatch,
+            calculateRecAmountSolToAnytoken(
+                Number(amount),
+                token?.current_price,
+                solanaLivePrice
+            ),
+            solanaLivePrice,
+            {
+                name: token?.name,
+                symbol: token?.symbol,
+                img: token?.img
+            },
+            Number(amount) == tokenData?.chainBalance
+        ).then(() => {
+            dispatch(updateBalanceChangeInQuickSellPortfolio({ index, qty: Number(tokenData?.chainBalance) - Number(amount) }))
+            setPercentage(100)
+            setIsOpen(false)
+        }).catch((err) => {
+            console.log("🚀 ~ ).then ~ err:", err?.message)
+        })
     };
 
     useEffect(() => {
         if (tokenData && percentage > 0 && !isTyping) {
-            const calculatedAmount = ((remainingQuantity * percentage) / 100).toFixed(5);
+            const calculatedAmount = ((Number(tokenData?.chainBalance) * percentage) / 100).toFixed(5);
             setAmount(calculatedAmount);
         }
-    }, [percentage, remainingQuantity, tokenData]);
+    }, [percentage, amount, tokenData]);
 
 
     useEffect(() => {
@@ -114,10 +149,10 @@ const InstantSell = ({ tokenData }) => {
                                                         setAmount(val);
                                                         setIsTyping(true);
                                                         const parsed = parseFloat(val);
-                                                        const isTooMuch = parsed > remainingQuantity;
+                                                        const isTooMuch = parsed > amount;
                                                         setIsMoreAmount(isTooMuch);
-                                                        if (!isNaN(parsed) && remainingQuantity > 0) {
-                                                            const calculatedPercentage = Math.min(100, (parsed / remainingQuantity) * 100);
+                                                        if (!isNaN(parsed) && amount > 0) {
+                                                            const calculatedPercentage = Math.min(100, (parsed / amount) * 100);
                                                             setPercentage(Math.round(calculatedPercentage));
                                                         } else {
                                                             setPercentage(0);
@@ -174,11 +209,11 @@ const InstantSell = ({ tokenData }) => {
                                             ></div>
                                         </div>
                                         <div className='flex justify-between text-xs text-[#6E6E6E] pt-3'>
-                                            <span>0%</span>
-                                            <span>25%</span>
-                                            <span>50%</span>
-                                            <span>75%</span>
-                                            <span>100%</span>
+                                            <span onClick={() => setPercentage(0)} className={`${percentage == 0 && "text-white"} hover:text-white`} >0%</span>
+                                            <span onClick={() => setPercentage(25)} className={`${percentage == 25 && "text-white"} hover:text-white`}  >25%</span>
+                                            <span onClick={() => setPercentage(50)} className={`${percentage == 50 && "text-white"} hover:text-white`}  >50%</span>
+                                            <span onClick={() => setPercentage(75)} className={`${percentage == 75 && "text-white"} hover:text-white`}  >75%</span>
+                                            <span onClick={() => setPercentage(100)} className={`${percentage == 100 && "text-white"} hover:text-white`}  >100%</span>
                                         </div>
 
                                     </div>
@@ -207,7 +242,7 @@ const InstantSell = ({ tokenData }) => {
                                         </button>
                                         :
                                         <button
-                                            onClick={handleSell}
+                                            onClick={() => handleSell(tokenData)}
                                             disabled={!amount || parseFloat(amount) <= 0 || isMoreAmount}
                                             className='w-full bg-[#b91c1c] hover:bg-[#991b1b] disabled:bg-[#4A4A4A] mt-4 overflow-x-hidden disabled:text-[#6E6E6E] text-white font-semibold py-2 rounded-full transition-all duration-200 text-sm'
                                         >
