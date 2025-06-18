@@ -35,7 +35,7 @@ const InstantSell = ({ tokenData, index }) => {
   const handleSell = async (token) => {
     await sellSolanaTokensFromPortfolio(
       token?.token,
-      percentage == 100 ? Number(amount) : Number(amount).toFixed(token?.decimals || 6),
+      Number(amount),
       priorityFees?.slippage,
       priorityFees?.priorityFee,
       solWalletAddress,
@@ -77,6 +77,7 @@ const InstantSell = ({ tokenData, index }) => {
       const calculatedAmount =
         (Number(tokenData?.chainBalance) * percentage) / 100;
       setAmount(calculatedAmount);
+      console.log("🚀 ~ useEffect ~ calculatedAmount:", calculatedAmount);
     }
   }, [percentage, amount, tokenData]);
 

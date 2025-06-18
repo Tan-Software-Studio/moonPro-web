@@ -550,7 +550,7 @@ const sellSolanaTokensFromPortfolio = async (
       slippage: slipTolerance,
       priorityFee: priorityFee,
       decimal,
-      price: +Number(price).toFixed(decimal || 6),
+      price: +Number(price).toFixed(8),
       programAddress: programAddress
         ? programAddress
         : "nasdiuasdnasdudhsdjasbhid",
