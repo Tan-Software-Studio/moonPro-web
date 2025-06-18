@@ -33,7 +33,7 @@ const poppins = Poppins({
 
 export const metadata = {
     title: "Nexa",
-    description: "NEXA is the premier gateway to seamless on-chain trading and rapid asset discovery. Built for crypto enthusiasts who demand swift execution and crystal-clear market insights.",
+    description: "NEXA is the premier gateway to seamless on-chain trading and rapid asset discovery.",
 };
 
 export default function RootLayout({ children }) {
