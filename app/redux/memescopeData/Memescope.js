@@ -111,9 +111,6 @@ const allMemescopeData = createSlice({
               newLaunchFind.current_price = priceUSD;
               newLaunchFind.volume += volumeDelta;
               newLaunchFind.MKC = (newLaunchFind?.totalsupply || 0) * priceUSD;
-              if (programAddress) {
-                newLaunchFind.programAddress = programAddress;
-              }
             }
             // about to graduated
             const GraduateData = state?.MscopeGraduateData?.[mint];
@@ -144,9 +141,6 @@ const allMemescopeData = createSlice({
               GraduatedData.current_price = priceUSD;
               GraduatedData.volume += volumeDelta;
               GraduatedData.MKC = (GraduatedData?.totalsupply || 0) * priceUSD;
-              if (programAddress) {
-                GraduatedData.programAddress = programAddress;
-              }
             }
           }
         }
