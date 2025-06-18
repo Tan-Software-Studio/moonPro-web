@@ -129,6 +129,10 @@ const allMemescopeData = createSlice({
                   (item) => item?.address == mint
                 );
                 if (findIndex > 0) {
+                  console.log(
+                    "migrated and added in the graduated",
+                    GraduateData
+                  );
                   state?.MscopeGraduateData?.splice(findIndex, 1);
                   state?.MscopeGraduatedData?.unshift(GraduateData);
                 }
