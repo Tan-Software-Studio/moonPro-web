@@ -8,17 +8,23 @@ const TOKEN_DETAILS = (resolution, offset) => `query TradingView($token: String,
       orderBy: {descendingByField: "Block_Timefield"}
       where: {Trade: {Currency: {MintAddress: {is: $token}}, PriceAsymmetry: {lt: 0.1}}}
       limit: {count: 500, offset: ${offset}}
-
-      ) {
+    ) {
       Block {
         Timefield: Time(interval: {in: ${resolution}, count: $interval})
       }
-      volume: sum(of: Trade_Amount)
+      volume: sum(of: Trade_Side_AmountInUSD)
+      sol_volume: sum(of: Trade_Side_Amount)
       Trade {
         high: PriceInUSD(maximum: Trade_PriceInUSD)
         low: PriceInUSD(minimum: Trade_PriceInUSD)
         open: PriceInUSD(minimum: Block_Slot)
         close: PriceInUSD(maximum: Block_Slot)
+        
+        # Solana prices (in SOL)
+        highSOL: Price(maximum: Trade_Price)
+        lowSOL: Price(minimum: Trade_Price)
+        openSOL: Price(minimum: Block_Slot)
+        closeSOL: Price(maximum: Block_Slot)
       }
       count
     }
@@ -64,17 +70,24 @@ const TOKEN_SECONDS_DETAILS = () => `
         PriceInUSD(minimum: Block_Slot)
       }
       volume: sum(of: Trade_Side_AmountInUSD)
+
+      sol_low: quantile(of: Trade_Price, level: 0.05)
+      sol_high: quantile(of: Trade_Price, level: 0.80)
+      sol_close: Trade {
+        Price(maximum: Block_Slot)
+      }
+      sol_open: Trade {
+        Price(minimum: Block_Slot)
+      }
+      sol_volume: sum(of: Trade_Side_Amount)
     }
   }
 }`;
 
-export async function fetchHistoricalData(periodParams, resolution, token, isUsdActive, isMarketCapActive, supply, solPrice, tokenCreator, userWallet, offset) {
+export async function fetchHistoricalData(periodParams, resolution, token, isUsdActive, isMarketCapActive, supply, offset) {
   // console.log("🚀 ~ fetchHistoricalData ~ resolution:", resolution);
   supply = supply ? Number(supply) === 0 ? 1_000_000_000 : Number(supply) : 1_000_000_000;
-  solPrice = solPrice ? Number(solPrice) === 0 ? 1 : Number(solPrice) : 1; 
-  const isSecondsResolution = resolution.endsWith("S");
-  const { from, to, countBack } = periodParams;
-
+  // const { from, to, countBack } = periodParams;
   // console.log("🚀 ~ fetchHistoricalData ~ countBack:", countBack);
   // const requiredBars = 20000;
   // const timeFromTv = new Date(from * 1000).toISOString();
@@ -145,6 +158,7 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
         },
       }
     );
+    console.log(response);
     // console.log("🚀 ~ fetchHistoricalData ~ response:", response.data.data)
     // console.log("API called");
     const trades = response.data.data.Solana.DEXTradeByTokens;
@@ -155,14 +169,16 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
       ?.filter(trade => {
         const usdOpen = isUsdActive 
           ? (trade?.Trade?.open || trade?.open?.PriceInUSD) ?? 0
-          : ((trade?.Trade?.open || trade?.open?.PriceInUSD) ?? 0) / (solPrice || 1);
+          : (trade?.Trade?.openSOL || trade?.sol_open?.Price) ?? 0;
         const open = isMarketCapActive ? usdOpen * (supply || 1) : usdOpen;
 
         const usdClose = isUsdActive
           ? (trade?.Trade?.close || trade?.close?.PriceInUSD) ?? 0
-          : ((trade?.Trade?.close || trade?.close?.PriceInUSD) ?? 0) / (solPrice || 1);
+          : (trade?.Trade?.closeSOL || trade?.sol_close?.Price) ?? 0;
         const close = isMarketCapActive ? usdClose * (supply || 1) : usdClose;
-
+        if (trade?.Trade?.close === 0 && trade?.Trade?.open === 0) {
+          return false;
+        }
         return open !== 0 && close !== 0; // Keep trades where both open and close are non-zero
       })
       .map(trade => {
@@ -171,27 +187,27 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
 
         const usdOpen = isUsdActive
           ? (trade?.Trade?.open || trade?.open?.PriceInUSD) ?? 0
-          : ((trade?.Trade?.open || trade?.open?.PriceInUSD) ?? 0) / (solPrice || 1);
+          : (trade?.Trade?.openSOL || trade?.sol_open?.Price) ?? 0;
         const open = isMarketCapActive ? usdOpen * (supply || 1) : usdOpen;
 
         const usdClose = isUsdActive
           ? (trade?.Trade?.close || trade?.close?.PriceInUSD) ?? 0
-          : ((trade?.Trade?.close || trade?.close?.PriceInUSD) ?? 0) / (solPrice || 1);
+          : (trade?.Trade?.closeSOL || trade?.sol_close?.Price) ?? 0;
         const close = isMarketCapActive ? usdClose * (supply || 1) : usdClose;
 
-        const usdSolHigh = isUsdActive ? trade?.Trade?.high ?? 0 : (trade?.Trade?.high ?? 0) / (solPrice || 1);
+        const usdSolHigh = isUsdActive ? (trade?.Trade?.high || trade?.high) ?? 0 : (trade?.Trade?.highSOL || trade?.sol_high) ?? 0;
         const high = isMarketCapActive ? usdSolHigh * (supply || 1) : usdSolHigh;
 
-        const usdSolLow = isUsdActive ? trade?.Trade?.low ?? 0 : (trade?.Trade?.low ?? 0) / (solPrice || 1);
+        const usdSolLow = isUsdActive ? (trade?.Trade?.low || trade?.low) ?? 0 : (trade?.Trade?.lowSOL || trade?.sol_low) ?? 0;
         const low = isMarketCapActive ? usdSolLow * (supply || 1) : usdSolLow;
 
         return {
           time: blockTime,
           open,
-          high: isSecondsResolution ? open : high,
-          low: isSecondsResolution ? close : low,
+          high,
+          low,
           close,
-          volume: isNaN(Number(trade?.volume)) ? 0 : Number(trade?.volume),
+          volume: isUsdActive ? Number(trade?.volume) : Number(trade?.sol_volume) ,
         };
       })
       .filter(item => item != null);
@@ -205,7 +221,7 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
 
     bars = deduped.sort((a, b) => a.time - b.time);
 
-      if (bars?.length > 0) {
+  if (bars?.length > 0) {
   let lastValidClose = bars[0].close; // Initialize with first bar's close
 
   // Calculate percentage changes and identify spikes

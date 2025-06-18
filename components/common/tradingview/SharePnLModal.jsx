@@ -19,7 +19,7 @@ const SharePnLModal = ({
   solanaLivePrice
 }) => {
   const modalRef = useRef(null);
-  const [solIsActive, setSolIsActive] = useState(true);
+  const [solIsActive, setSolIsActive] = useState(false);
   const [renderedImage, setRenderedImage] = useState(null);
   const [copied, setCopied] = useState(false);
 
@@ -59,22 +59,26 @@ const SharePnLModal = ({
       return previousPnLRef.current;
     }
 
-    const absolutePnL = currentTokenPnLData?.absolutePnL ?? currentTokenPnLData?.pastPnlPrice ?? 0;
+    const nonPastPnlAmount = solIsActive ? currentTokenPnLData?.absoluteSolPnL || null : currentTokenPnLData?.absolutePnL || null;
+    const pastPnlAmount = solIsActive 
+      ? (currentTokenPnLData?.pastPnlPrice ?? 0) / (currentTokenPnLData?.pastAverageBuySolPrice ?? 1)
+      : (currentTokenPnLData?.pastPnlPrice ?? 0);    
+    let pnlAmt = nonPastPnlAmount != null ? nonPastPnlAmount : pastPnlAmount;
+    pnlAmt = Math.abs(pnlAmt);
+    
     const isPositive = currentTokenPnLData?.isPositivePnL != null
-      ? currentTokenPnLData.isPositivePnL
-      : (currentTokenPnLData?.pastPnlPrice ?? 0) >= 0;
+    ? currentTokenPnLData.isPositivePnL
+    : (currentTokenPnLData?.pastPnlPrice ?? 0) >= 0;
+    
+    const nonPastInvestmentAmount = solIsActive ? currentTokenPnLData?.buyAmount / currentTokenPnLData?.averageSolBuyPrice || null : currentTokenPnLData?.buyAmount || null;
+    const pastInvestmentAmount = solIsActive ? (currentTokenPnLData?.pastAverageBuy ?? 0) / (currentTokenPnLData?.pastAverageBuySolPrice ?? 1) : (currentTokenPnLData?.pastAverageBuy ?? 0);
 
-    let pnlAmt = Math.abs(absolutePnL);
-    pnlAmt = solIsActive ? pnlAmt / solanaLivePrice : pnlAmt;
-
-    let investAmt = currentTokenPnLData?.buyAmount ?? currentTokenPnLData?.pastAverageBuy ?? 0;
-    investAmt = solIsActive ? investAmt / solanaLivePrice : investAmt;
+    let investAmt = nonPastInvestmentAmount != null ? nonPastInvestmentAmount : pastInvestmentAmount;
 
     const pnlPerc = currentTokenPnLData?.safePnLPercent ?? currentTokenPnLData?.pastPnlPercentage ?? 0;
 
-    const pos = solIsActive
-      ? (currentTokenPnLData?.holdingsUsdInCurrentPrice ?? 0) / solanaLivePrice
-      : currentTokenPnLData?.holdingsUsdInCurrentPrice ?? 0;
+    const signedPnl = isPositive ? pnlAmt : -pnlAmt;
+    const pos = investAmt + signedPnl;
 
     const newPnL = {
       pnlAmount: pnlAmt,

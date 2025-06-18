@@ -33,6 +33,9 @@ import { FaArrowUpLong } from "react-icons/fa6";
 import { FaArrowDownLong } from "react-icons/fa6";
 import { CiFilter } from "react-icons/ci";
 import NoData from "../common/NoData/noData.jsx";
+import {
+  setChartSymbolImage,
+} from "@/app/redux/states";
 
 const Table = ({
   scrollPosition,

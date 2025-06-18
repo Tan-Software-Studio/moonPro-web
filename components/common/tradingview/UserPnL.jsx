@@ -5,15 +5,21 @@ import {
   humanReadableFormatWithNoDollar,
 } from "@/utils/basicFunctions";
 import { useTranslation } from "react-i18next";
+import { solana } from "@/app/Images";
+import Image from "next/image";
 
-const UserPnL = ({ currentTokenPnLData, tokenSymbol, useTitle = true, customBgColor = null, customBorderColor = null, customHeight = null, customLineSeparatorHeight = null, customLineSeparatorColor = null }) => {
+const UserPnL = ({ currentTokenPnLData, isPnlUsdSolActive, onClickToggle, tokenSymbol, useTitle = true, customBgColor = null, customBorderColor = null, customHeight = null, customLineSeparatorHeight = null, customLineSeparatorColor = null, onClickWholeDiv = null }) => {
   const {
         buyAmount,
         soldAmount,
+        averageSolBuyPrice,
+        averageSolSellPrice,
         holdingRawAmount,
         holdingsUsdInCurrentPrice,
+        holdingSolInCurrentPrice,
         isPositivePnL,
         absolutePnL,
+        absoluteSolPnL,
         safePnLPercent
       } = currentTokenPnLData
   const { t } = useTranslation();
@@ -22,19 +28,19 @@ const UserPnL = ({ currentTokenPnLData, tokenSymbol, useTitle = true, customBgCo
   const sections = [
     {
       title: wallettracker?.pnlpopup?.bottom?.activeposition?.bought,
-      value: buyAmount,
+      value: isPnlUsdSolActive ? buyAmount : buyAmount / averageSolBuyPrice,
       color: "text-[#21CB6B]",
       hasDollar: true,
     },
     {
       title: wallettracker?.pnlpopup?.bottom?.activeposition?.sold,
-      value: soldAmount,
+      value: isPnlUsdSolActive ? soldAmount : soldAmount / averageSolSellPrice,
       color: "text-[#ED1B24]",
       hasDollar: true,
     },
     {
       title: wallettracker?.pnlpopup?.bottom?.activeposition?.remaining,
-      value: holdingsUsdInCurrentPrice,
+      value: isPnlUsdSolActive ? holdingsUsdInCurrentPrice : holdingSolInCurrentPrice,
       color: "text-white",
       hoverValue: (
         <span>
@@ -48,11 +54,11 @@ const UserPnL = ({ currentTokenPnLData, tokenSymbol, useTitle = true, customBgCo
     },
     {
       title: wallettracker?.pnlpopup?.bottom?.activeposition?.pnl,
-      value: absolutePnL,
+      value: isPnlUsdSolActive ? absolutePnL : absoluteSolPnL,
       addSign: isPositivePnL !== undefined ? `${isPositivePnL === true ? "+" : "-"}` : "+",
       color: isPositivePnL !== undefined ? `${isPositivePnL === true ? "text-[#21CB6B]" : "text-[#ED1B24]"}` : `text-[#21CB6B]`,
       icon: (
-        <RiExchangeDollarLine className="text-[#21CB6B] w-[18px] h-[18px] lg:w-2 lg:h-2 xl:w-3 xl:h-3" />
+        <RiExchangeDollarLine className={`${isPnlUsdSolActive ? "text-[#21CB6B]" : "text-[#A8A8A8] group-hover/title:text-white"}  w-[18px] h-[18px] lg:w-2 lg:h-2 xl:w-3 xl:h-3`} />
       ),
       extra: safePnLPercent ? `(${isPositivePnL ? "+" : ""}${safePnLPercent?.toFixed(
         safePnLPercent < 1 ? 2 : 0
@@ -63,6 +69,11 @@ const UserPnL = ({ currentTokenPnLData, tokenSymbol, useTitle = true, customBgCo
 
   return (
     <div
+      onClick={() => {
+        if (onClickWholeDiv != null) {
+          onClickWholeDiv();
+        }
+      }}
       className={`${customBgColor ? customBgColor : `bg-[#08080E]`} border-t w-full py-1 ${customBorderColor ? customBorderColor : "border-[#4D4D4D]"} flex flex-wrap justify-between items-center`}
       style={{ boxSizing: "border-box" }}
     >
@@ -79,8 +90,14 @@ const UserPnL = ({ currentTokenPnLData, tokenSymbol, useTitle = true, customBgCo
           >
             <div className="flex flex-col items-center justify-center h-full">
               {useTitle &&
-                <div className="flex items-center justify-center gap-1 h-[14px]">
-                  <span className="text-center text-[#A8A8A8] font-[400] sm:text-base text-sm  xl:text-[12px] 2xl:text-[14px]">
+                <div
+                onClick={() => {
+                  if (section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.pnl) {
+                    onClickToggle();
+                  }
+                }} 
+                className={`${section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.pnl && "group/title"} flex items-center justify-center gap-1 h-[14px]`}>
+                  <span className={`${section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.pnl && "group-hover/title:text-white"} text-center text-[#A8A8A8] font-[400] sm:text-base text-sm  xl:text-[12px] 2xl:text-[14px]`}>
                     {section.title}
                   </span>
                   {section.icon && (
@@ -101,9 +118,12 @@ const UserPnL = ({ currentTokenPnLData, tokenSymbol, useTitle = true, customBgCo
               >
                 {section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.pnl ? (
                   <div className="flex items-center">
+                    {!isPnlUsdSolActive && 
+                      <Image className="flex flex-shrink-0" src={solana} width={15} height={15} alt="solana" />
+                    }
                     <span>
                       {section?.addSign && section.addSign}
-                      {section.hasDollar && "$"}
+                      {isPnlUsdSolActive && section.hasDollar && "$"}
                       {section.value > 1 || section.value < -1
                         ? humanReadableFormatWithNoDollar(section.value)
                         : formatDecimal(section.value, 1)}
@@ -112,17 +132,20 @@ const UserPnL = ({ currentTokenPnLData, tokenSymbol, useTitle = true, customBgCo
                   </div>
                 ) : (
                   <>
+                    {!isPnlUsdSolActive && 
+                      <Image className="flex flex-shrink-0" src={solana} width={15} height={15} alt="solana" />
+                    }
                     <span
                       className={
                         section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.remaining ? "group-hover:hidden" : ""
                       }
                     >
-                      {section.hasDollar && "$"}
+                      {isPnlUsdSolActive && section.hasDollar && "$"}
                       {section.value > 1 || section.value < -1
                         ? humanReadableFormatWithNoDollar(section.value, 2)
                         : formatDecimal(
                             section.value,
-                            section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.remaining ? 1 : undefined
+                            1
                           )}
                     </span>
                     {section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.remaining && (

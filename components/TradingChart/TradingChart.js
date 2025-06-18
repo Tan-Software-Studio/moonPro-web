@@ -29,7 +29,6 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
 
   const convertPrice = (price) => {
     let convertedPrice = price;
-    convertedPrice = isUsdSolToggled ? convertedPrice : convertedPrice / solanaLivePrice;
     convertedPrice = isMcPriceToggled ? convertedPrice * supply : convertedPrice;
     return convertedPrice;
   }
@@ -218,8 +217,17 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
       resetLines();
       return;
     }
-    const buyLineAmount = currentTokenPnLData?.averageBuyPrice ? currentTokenPnLData?.averageBuyPrice : currentTokenPnLData?.pastAverageBuyPrice || 0;
-    const sellLineAmount = currentTokenPnLData?.averageSellPrice ? currentTokenPnLData?.averageSellPrice : currentTokenPnLData?.pastAverageSellPrice || value100SellLine || 0;
+    const nonPastBuyAverage = isUsdSolToggled ? 
+      currentTokenPnLData?.averageBuyPrice || null : currentTokenPnLData?.averageBuyPrice / currentTokenPnLData?.averageSolBuyPrice || null
+    const pastBuyAverage = isUsdSolToggled ? 
+      currentTokenPnLData?.pastAverageBuyPrice || 0 : currentTokenPnLData?.pastAverageBuyPricecurrentTokenPnLData?.pastAverageBuyPrice / currentTokenPnLData?.pastAverageBuySolPrice || 0
+    const buyLineAmount = nonPastBuyAverage != null ? nonPastBuyAverage : pastBuyAverage;
+    
+    const nonPastSellAverage = isUsdSolToggled ?
+      currentTokenPnLData?.averageSellPrice || null : currentTokenPnLData?.averageSellPrice / currentTokenPnLData?.averageSolSellPrice || null;
+    const pastSellAverage = isUsdSolToggled ?
+      currentTokenPnLData?.pastAverageSellPrice || 0 : currentTokenPnLData?.pastAverageSellPrice / currentTokenPnLData?.pastAverageSellSolPrice || 0
+    const sellLineAmount = nonPastSellAverage != null ?  nonPastSellAverage : pastSellAverage;
    
     if (buyLineAmount <= 0) {
       resetBuyLine();
