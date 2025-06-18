@@ -159,7 +159,6 @@ const Tradingview = () => {
               pastPnlPercentage: pastTokenData?.pnlPercentage || null,
             };
 
-            console.log("pastTokenProperties", pastTokenProperties);
             setCurrentTokenPnLData({ ...pastTokenProperties });
           }
         } catch (error) {
@@ -226,7 +225,6 @@ const Tradingview = () => {
             safePnLPercent
           }
 
-          console.log("currentPnlProperties", currentPnlProperties)
           setCurrentTokenPnLData({...currentPnlProperties});
         }
       }

@@ -20,11 +20,11 @@ function calculateTimeDifference(dateString) {
 }
 function convertUTCToLocalTimeString(isoString) {
   const date = new Date(isoString);
-  return date.toLocaleTimeString('en-GB', {
+  return date.toLocaleTimeString("en-GB", {
     hour12: false,
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
   });
 }
 
@@ -54,7 +54,9 @@ function humanReadableFormat(number, withDollar = true) {
     ? parseInt(roundedStr).toString()
     : roundedStr;
 
-  return withDollar ? `$${displayStr}${units[unitIndex]}` : `${displayStr}${units[unitIndex]}`;
+  return withDollar
+    ? `$${displayStr}${units[unitIndex]}`
+    : `${displayStr}${units[unitIndex]}`;
 }
 
 function humanReadableFormatWithOutUsd(number) {
@@ -181,10 +183,9 @@ function UpdateTimeViaUTCWithCustomTime(utcString, currentTime) {
 
   return {
     time: timeString,
-    isRecent
-  }
+    isRecent,
+  };
 }
-
 
 function getTimeAgo(dateString, addAgo = true) {
   const now = new Date().getTime(); // Current UTC timestamp
@@ -283,6 +284,25 @@ function convertUTCToIST(utcTimestamp) {
 
   return `${formattedDate}, ${time}`;
 }
+
+// function to calculate rec. amount
+function calculateRecAmountSolToAnytoken(
+  amountToken1,
+  priceToken1,
+  priceToken2
+) {
+  if (priceToken2 === 0) {
+    throw new Error("Price of token 2 cannot be zero");
+  }
+  const usdValue = Number(amountToken1) * Number(priceToken1);
+  const amountToken2 = usdValue / Number(priceToken2);
+  if (amountToken2 > 1) {
+    return Number(amountToken2.toFixed(2));
+  } else {
+    return Number(amountToken2.toFixed(6));
+  }
+}
+
 export {
   getDateMinus24Hours,
   getDateMinusMinutes,
@@ -299,5 +319,6 @@ export {
   getTimeAgo,
   convertUTCToIST,
   convertUTCToLocalTimeString,
-  UpdateTimeViaUTCWithCustomTime
+  UpdateTimeViaUTCWithCustomTime,
+  calculateRecAmountSolToAnytoken,
 };
