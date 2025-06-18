@@ -321,8 +321,8 @@ const Navbar = () => {
                 <NewAiSignalTokens />
                 {/* Search bar */}
                 <div
-                  className={`md:flex items-center   border ${
-                    isSidebarOpen ? "ml-1 " : "ml-5 gap-2"
+                  className={`md:flex items-center  gap-2  border ${
+                    isSidebarOpen ? "ml-1 " : "ml-5"
                   } border-[#333333] ${
                     isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
                   } rounded-lg h-8 px-2 bg-[#191919] hidden `}

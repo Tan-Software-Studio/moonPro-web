@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { pnlPercentage } from "./calculation";
 import { useTranslation } from "react-i18next";
+import InstantSell from "./InstantSell";
 
 const ActivePosition = ({
   filteredActivePosition,
@@ -83,6 +84,7 @@ const ActivePosition = ({
                     Remaining
                   </th>
                   <th className="px-4 py-2 text-slate-300 font-medium">PnL</th>
+                  <th className="px-4 py-2 text-slate-300 font-medium">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -106,7 +108,7 @@ const ActivePosition = ({
                               {item?.symbol.toString()?.slice(0, 1) || "T"}
                             </span>
                           </div>
-                          }
+                        }
                         <div className="min-w-0">
                           <div className="flex items-center gap-1">
                             <p className="font-medium text-base text-white truncate">
@@ -181,6 +183,9 @@ const ActivePosition = ({
                       </div>
                     </td>
 
+                    <td className="px-4 py-2 " >
+                      <InstantSell tokenData={item} />
+                    </td>
                   </tr>
                 ))}
               </tbody>
