@@ -121,18 +121,14 @@ const allMemescopeData = createSlice({
               if (
                 programAddress != "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
               ) {
-                console.log(
-                  "migrated and added in the graduated",
-                  GraduateData
+                GraduateData.programAddress = programAddress;
+                const findIndex = state?.MscopeGraduateData?.findIndex(
+                  (item) => item?.address == mint
                 );
-                // GraduateData.programAddress = programAddress;
-                // const findIndex = state?.MscopeGraduateData?.findIndex(
-                //   (item) => item?.address == mint
-                // );
-                // if (findIndex > 0) {
-                //   state?.MscopeGraduateData?.splice(findIndex, 1);
-                //   state?.MscopeGraduatedData?.unshift(GraduateData);
-                // }
+                if (findIndex > 0) {
+                  state?.MscopeGraduateData?.splice(findIndex, 1);
+                  state?.MscopeGraduatedData?.unshift(GraduateData);
+                }
               }
             }
             // graduated
