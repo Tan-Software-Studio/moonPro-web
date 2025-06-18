@@ -80,9 +80,6 @@ export const getBars = async (
       usdActive,
       marketCapActive,
       supply,
-      solPrice,
-      tokenCreator,
-      walletAddress,
       resolutionOffsets[resolution].offset
     );
 

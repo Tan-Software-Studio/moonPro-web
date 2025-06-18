@@ -84,13 +84,10 @@ const TOKEN_SECONDS_DETAILS = () => `
   }
 }`;
 
-export async function fetchHistoricalData(periodParams, resolution, token, isUsdActive, isMarketCapActive, supply, solPrice, tokenCreator, userWallet, offset) {
+export async function fetchHistoricalData(periodParams, resolution, token, isUsdActive, isMarketCapActive, supply, offset) {
   // console.log("🚀 ~ fetchHistoricalData ~ resolution:", resolution);
   supply = supply ? Number(supply) === 0 ? 1_000_000_000 : Number(supply) : 1_000_000_000;
-  solPrice = solPrice ? Number(solPrice) === 0 ? 1 : Number(solPrice) : 1; 
-  const isSecondsResolution = resolution.endsWith("S");
-  const { from, to, countBack } = periodParams;
-
+  // const { from, to, countBack } = periodParams;
   // console.log("🚀 ~ fetchHistoricalData ~ countBack:", countBack);
   // const requiredBars = 20000;
   // const timeFromTv = new Date(from * 1000).toISOString();
@@ -179,7 +176,9 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
           ? (trade?.Trade?.close || trade?.close?.PriceInUSD) ?? 0
           : (trade?.Trade?.closeSOL || trade?.sol_close?.Price) ?? 0;
         const close = isMarketCapActive ? usdClose * (supply || 1) : usdClose;
-
+        if (trade?.Trade?.close === 0 && trade?.Trade?.open === 0) {
+          return;
+        }
         return open !== 0 && close !== 0; // Keep trades where both open and close are non-zero
       })
       .map(trade => {
@@ -205,8 +204,8 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
         return {
           time: blockTime,
           open,
-          high: isSecondsResolution ? open : high,
-          low: isSecondsResolution ? close : low,
+          high,
+          low,
           close,
           volume: isUsdActive ? Number(trade?.volume) : Number(trade?.sol_volume) ,
         };
@@ -222,7 +221,7 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
 
     bars = deduped.sort((a, b) => a.time - b.time);
 
-      if (bars?.length > 0) {
+  if (bars?.length > 0) {
   let lastValidClose = bars[0].close; // Initialize with first bar's close
 
   // Calculate percentage changes and identify spikes
