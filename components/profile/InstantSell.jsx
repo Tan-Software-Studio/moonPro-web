@@ -61,7 +61,7 @@ const InstantSell = ({ tokenData, index }) => {
         dispatch(
           updateBalanceChangeInQuickSellPortfolio({
             index,
-            qty: Number(tokenData?.chainBalance) - Number(amount),
+            qty: +Number(Number(tokenData?.chainBalance) - Number(amount)).toFixed(token?.decimals),
           })
         );
         setPercentage(100);
