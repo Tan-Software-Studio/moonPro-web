@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import transform from "../../../public/assets/Transfer-funds/transfer.png";
 import { useSelector } from "react-redux";
 
@@ -10,6 +10,10 @@ const TransferFunds = () => {
   const borderColor = useSelector(
     (state) => state?.AllthemeColorData?.borderColor
   );
+
+  useEffect(() => {
+    document.title = `Nexa | Transfer Funds`;
+  }, [])
 
   const [activeIndex, setActiveIndex] = useState(2);
 

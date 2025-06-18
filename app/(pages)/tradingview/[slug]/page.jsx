@@ -517,6 +517,10 @@ const Tradingview = () => {
   const isSidebarOpen = useSelector(
     (state) => state?.AllthemeColorData?.isSidebarOpen
   );
+  
+  useEffect(() => {
+    document.title = `${tokenSymbol} | Nexa`;
+  }, [tokenSymbol])
 
   return (
     <div

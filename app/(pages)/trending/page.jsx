@@ -56,6 +56,10 @@ const Trending = () => {
     ? getTimeFilterData
     : [];
 
+  useEffect(() => {
+      document.title = `Nexa | Trending`;
+    }, [])
+
   const Trendings = {
     Title: tredingPage?.mainHeader?.filter?.filter,
     FilterInput: [

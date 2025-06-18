@@ -28,6 +28,10 @@ const ReferralPage = () => {
   const { t } = useTranslation();
   const referral = t("referral");
 
+  useEffect(() => {
+    document.title = `Nexa | Referral`;
+  }, [])
+
   const dispatch = useDispatch();
 
   const [refData, setRefData] = useState([]);
