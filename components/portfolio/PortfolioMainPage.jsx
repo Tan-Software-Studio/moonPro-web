@@ -2,7 +2,7 @@
 import { updatePnlTableData } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import UserProfileControl from "@/components/portfolio/UserProfileControl";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import WalletManagement from "./WalletManagement";
 import NoData from "../../components/common/NoData/noData";
@@ -14,6 +14,9 @@ const PortfolioMainPage = () => {
     (state) => state?.AllStatesData?.solWalletAddress
   );
   const activeTab = useSelector((state) => state?.setPnlData?.pnlTableData);
+  useEffect(() => {
+      document.title = `Nexa | Portfolio`;
+  }, [])
 
   const { t } = useTranslation();
   const portfolio = t("portfolio");

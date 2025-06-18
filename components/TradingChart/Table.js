@@ -1211,7 +1211,6 @@ const Table = ({
                               onClick={() => {
                                 navigateToChartScreen(data);
                               }}
-                              href={`/tradingview/solana?tokenaddress=${data?.token}&symbol=${data?.symbol}`}
                               className="group/name hover:opacity-80 flex flex-col sm:flex-row items-start text-xs leading-4 font-semibold h-full justify-start"
                             >
                               <div className="flex items-center">

@@ -192,7 +192,7 @@ const SharePnLModal = ({
                 <p>Position</p>
                 <div className="flex items-center gap-[9px]">
                   {solIsActive && <SiSolana width={22} height={17} />}
-                  <p className="font-medium">{formatNumber(position, true, !solIsActive)}</p>
+                  <p className="font-medium">{formatNumber(position, false, !solIsActive)}</p>
                 </div>
               </div>
               <p className="mt-[30px] font-medium text-[26px]">Crushing every trade 🚀</p>

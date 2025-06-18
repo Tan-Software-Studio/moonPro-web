@@ -50,6 +50,10 @@ const AiSignal = () => {
   const aiSignalData = useSelector((state) => state?.aiSignal?.aiSignalData);
   const isLoading = useSelector((state) => state?.aiSignal?.initialLoading);
 
+  useEffect(() => {
+    document.title = `Nexa | AI Signal`;
+  }, [])
+
   const Trendings = {
     Title: tredingPage?.mainHeader?.filter?.filter,
     FilterInput: [
