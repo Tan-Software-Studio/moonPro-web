@@ -79,7 +79,7 @@ const InstantSell = ({ tokenData, index }) => {
       setAmount(calculatedAmount);
       console.log("🚀 ~ useEffect ~ calculatedAmount:", calculatedAmount);
     }
-  }, [percentage, amount, tokenData]);
+  }, [percentage, amount]);
 
   useEffect(() => {
     if (presist) {
