@@ -40,22 +40,22 @@ const InstantSell = ({ tokenData, index }) => {
       priorityFees?.priorityFee,
       solWalletAddress,
       token?.decimals,
-      token?.current_price,
+      Number(token?.current_price),
       setIsLoading,
       token?.programAddress,
       dispatch,
       calculateRecAmountSolToAnytoken(
         Number(amount),
-        token?.current_price,
-        solanaLivePrice
+        Number(token?.current_price),
+        Number(solanaLivePrice)
       ),
-      solanaLivePrice,
+      Number(solanaLivePrice),
       {
         name: token?.name,
         symbol: token?.symbol,
         img: token?.img,
       },
-      Number(amount) == tokenData?.chainBalance
+      percentage == 100
     )
       .then(() => {
         dispatch(
@@ -233,41 +233,36 @@ const InstantSell = ({ tokenData, index }) => {
                     <div className="flex justify-between text-xs text-[#6E6E6E] pt-3">
                       <span
                         onClick={() => setPercentage(0)}
-                        className={`${
-                          percentage == 0 && "text-white"
-                        } hover:text-white`}
+                        className={`${percentage == 0 && "text-white"
+                          } hover:text-white`}
                       >
                         0%
                       </span>
                       <span
                         onClick={() => setPercentage(25)}
-                        className={`${
-                          percentage == 25 && "text-white"
-                        } hover:text-white`}
+                        className={`${percentage == 25 && "text-white"
+                          } hover:text-white`}
                       >
                         25%
                       </span>
                       <span
                         onClick={() => setPercentage(50)}
-                        className={`${
-                          percentage == 50 && "text-white"
-                        } hover:text-white`}
+                        className={`${percentage == 50 && "text-white"
+                          } hover:text-white`}
                       >
                         50%
                       </span>
                       <span
                         onClick={() => setPercentage(75)}
-                        className={`${
-                          percentage == 75 && "text-white"
-                        } hover:text-white`}
+                        className={`${percentage == 75 && "text-white"
+                          } hover:text-white`}
                       >
                         75%
                       </span>
                       <span
                         onClick={() => setPercentage(100)}
-                        className={`${
-                          percentage == 100 && "text-white"
-                        } hover:text-white`}
+                        className={`${percentage == 100 && "text-white"
+                          } hover:text-white`}
                       >
                         100%
                       </span>
