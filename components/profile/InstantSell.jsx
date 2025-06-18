@@ -222,35 +222,35 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
                     <span
                       onClick={() => setPercentage(0)}
                       className={`${percentage == 0 && "text-white"
-                        } hover:text-white`}
+                        } hover:text-white cursor-pointer `}
                     >
                       0%
                     </span>
                     <span
                       onClick={() => setPercentage(25)}
                       className={`${percentage == 25 && "text-white"
-                        } hover:text-white`}
+                        } hover:text-white cursor-pointer`}
                     >
                       25%
                     </span>
                     <span
                       onClick={() => setPercentage(50)}
                       className={`${percentage == 50 && "text-white"
-                        } hover:text-white`}
+                        } hover:text-white cursor-pointer`}
                     >
                       50%
                     </span>
                     <span
                       onClick={() => setPercentage(75)}
                       className={`${percentage == 75 && "text-white"
-                        } hover:text-white`}
+                        } hover:text-white cursor-pointer`}
                     >
                       75%
                     </span>
                     <span
                       onClick={() => setPercentage(100)}
                       className={`${percentage == 100 && "text-white"
-                        } hover:text-white`}
+                        } hover:text-white cursor-pointer`}
                     >
                       100%
                     </span>
