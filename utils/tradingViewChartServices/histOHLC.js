@@ -177,7 +177,7 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
           : (trade?.Trade?.closeSOL || trade?.sol_close?.Price) ?? 0;
         const close = isMarketCapActive ? usdClose * (supply || 1) : usdClose;
         if (trade?.Trade?.close === 0 && trade?.Trade?.open === 0) {
-          return;
+          return false;
         }
         return open !== 0 && close !== 0; // Keep trades where both open and close are non-zero
       })
