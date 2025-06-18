@@ -158,7 +158,6 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
         },
       }
     );
-    console.log(response);
     // console.log("🚀 ~ fetchHistoricalData ~ response:", response.data.data)
     // console.log("API called");
     const trades = response.data.data.Solana.DEXTradeByTokens;
