@@ -104,12 +104,16 @@ const allMemescopeData = createSlice({
             const priceUSD = element?.Trade?.PriceInUSD;
             const amount = element?.Trade?.Amount;
             const volumeDelta = priceUSD * amount;
+            const programAddress = element?.Trade?.Dex?.ProgramAddress;
             // new launch
             const newLaunchFind = state?.newLaunch?.[mint];
             if (newLaunchFind) {
               newLaunchFind.current_price = priceUSD;
               newLaunchFind.volume += volumeDelta;
               newLaunchFind.MKC = (newLaunchFind?.totalsupply || 0) * priceUSD;
+              if (programAddress) {
+                newLaunchFind.programAddress = programAddress;
+              }
             }
             // about to graduated
             const GraduateData = state?.MscopeGraduateData?.[mint];
@@ -117,6 +121,12 @@ const allMemescopeData = createSlice({
               GraduateData.current_price = priceUSD;
               GraduateData.volume += volumeDelta;
               GraduateData.MKC = (GraduateData?.totalsupply || 0) * priceUSD;
+              if (
+                programAddress != "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+              ) {
+                GraduateData.programAddress = programAddress;
+                
+              }
             }
             // graduated
             const GraduatedData = state?.MscopeGraduatedData?.[mint];
@@ -124,6 +134,9 @@ const allMemescopeData = createSlice({
               GraduatedData.current_price = priceUSD;
               GraduatedData.volume += volumeDelta;
               GraduatedData.MKC = (GraduatedData?.totalsupply || 0) * priceUSD;
+              if (programAddress) {
+                GraduatedData.programAddress = programAddress;
+              }
             }
           }
         }

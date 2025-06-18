@@ -33,6 +33,7 @@ const solTrendingData = createSlice({
             const amount = element?.Trade?.Amount;
             const price = element?.Trade?.PriceInUSD;
             const totalTradedValue = amount * price;
+            const programAddress = element?.Trade?.Dex?.ProgramAddress;
             // 1m update from node
             const token1m = state?.filterTime["1m"]?.[mint];
             if (token1m) {
@@ -55,6 +56,9 @@ const solTrendingData = createSlice({
                 token1m?.marketCap
               );
               token1m.marketCap = newMKC;
+              if (programAddress) {
+                token1m.programAddress = programAddress;
+              }
             }
             // 5m update from node
             const token5m = state?.filterTime["5m"]?.[mint];
@@ -78,6 +82,9 @@ const solTrendingData = createSlice({
                 token5m?.marketCap
               );
               token5m.marketCap = newMKC;
+              if (programAddress) {
+                token5m.programAddress = programAddress;
+              }
             }
             // 30m update from node
             const token30m = state?.filterTime["30m"]?.[mint];
@@ -101,6 +108,9 @@ const solTrendingData = createSlice({
                 token30m?.marketCap
               );
               token30m.marketCap = newMKC;
+              if (programAddress) {
+                token30m.programAddress = programAddress;
+              }
             }
             // 1h update from node
             const token1h = state?.filterTime["1h"]?.[mint];
@@ -124,6 +134,9 @@ const solTrendingData = createSlice({
                 token1h?.marketCap
               );
               token1h.marketCap = newMKC;
+              if (programAddress) {
+                token1h.programAddress = programAddress;
+              }
             }
           }
         }
