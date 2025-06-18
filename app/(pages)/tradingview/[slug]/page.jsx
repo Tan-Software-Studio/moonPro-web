@@ -36,7 +36,6 @@ const Tradingview = () => {
   const tragindViewPage = t("tragindViewPage");
   const tredingPage = t("tredingPage");
   const [activeTab, setActiveTab] = useState("buy");
-  const [isInstantTradeActive, setIsInstantTradeActive] = useState(false);
   const [isSharePnLModalActive, setIsSharePnLModalActive] = useState(false);
   const [dataLoaderForChart, setDataLoaderForChart] = useState(false);
   const latestTradesData = useSelector((state) => state?.allCharTokenData);
@@ -57,9 +56,26 @@ const Tradingview = () => {
   const [currentTokenPnLData, setCurrentTokenPnLData] = useState({});
   const [currentTokenAddress, setCurrentTokenAddress] = useState(null);
   const [hasFetchedFromApi, setHasFetchedFromApi] = useState(false);
+  const [isPnlUsdSolActive, setIsPnlUsdSolActive] = useState(() => {
+    const saved = localStorage.getItem("PnlUsdActive");
+    return saved === null ? true : saved === "true";
+  });
+
+  const [isInstantTradeActive, setIsInstantTradeActive] = useState(() => {
+    const saved = localStorage.getItem("InstantTradeActive");
+    return saved === null ? false : saved === "true";
+  });
+
+  const handleClickPnlUsdActive = () => {
+    const newValue = !isPnlUsdSolActive;
+    setIsPnlUsdSolActive(newValue);
+    localStorage.setItem("PnlUsdActive", newValue.toString());
+  };
 
   const handleInstantTradeClick = () => {
-    setIsInstantTradeActive(prev => !prev);
+    const newValue = !isInstantTradeActive;
+    setIsInstantTradeActive(newValue);
+    localStorage.setItem("InstantTradeActive", newValue.toString());
   };
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
@@ -129,30 +145,30 @@ const Tradingview = () => {
           });
 
           const pastTokenData = response?.data?.data?.lastAction;
-          // console.log("pastTokenData", pastTokenData);
 
           if (pastTokenData != null) {
             const pastTokenProperties = {
+              pastAverageBuySolPrice: pastTokenData?.solAvgPriceBuy || null,
               pastAverageBuyPrice: pastTokenData?.buyPrice || null,
-              pastAverageBuy: pastTokenData.qty * pastTokenData.buyPrice || null,
+              pastAverageBuy: pastTokenData?.qty * pastTokenData.buyPrice || null,
+              pastAverageSellSolPrice: pastTokenData?.solAvgPriceSell || null,
               pastAverageSellPrice: pastTokenData?.sellPrice || null,
-              pastAverageSell: pastTokenData.qty * pastTokenData.sellPrice || null,
-              pastPnlPrice: pastTokenData.realizedProfit || null,
-              pastPnlPercentage: pastTokenData.pnlPercentage || null,
+              pastAverageSell: pastTokenData?.qty * pastTokenData?.sellPrice || null,
+              pastQty: pastTokenData?.qty || null,
+              pastPnlPrice: pastTokenData?.realizedProfit || null,
+              pastPnlPercentage: pastTokenData?.pnlPercentage || null,
             };
 
-            // console.log("pastTokenProperties", pastTokenProperties);
             setCurrentTokenPnLData({ ...pastTokenProperties });
           }
-          setHasFetchedFromApi(true);
         } catch (error) {
           // console.error("Error fetching past PnL data:", error);
         }
       };
 
       const currentPnlData = currentTabData.find(pnls => pnls?.token === tokenaddress);
-
-      if (currentPnlData == null && Object.keys(currentTokenPnLData || {}).length === 0 && hasFetchedFromApi === false) {
+      if (currentPnlData == null && Object.keys(currentTokenPnLData || {}).length === 0 && hasFetchedFromApi === false && tokenaddress && solWalletAddress) {
+        setHasFetchedFromApi(true);
         await fetchPastPnLData();
       } else {
         if (currentPnlData?.chainBalance > 0) {
@@ -160,9 +176,15 @@ const Tradingview = () => {
           const buyAmount =
             currentPnlData?.activeQtyHeld * currentPnlData?.averageBuyPrice ||
             0;
+          const solBuyAmount = 
+            currentPnlData?.activeQtyHeld * currentPnlData?.averageSolBuyPrice ||
+            0;
           const soldAmount =
             currentPnlData?.quantitySold *
               currentPnlData?.averageHistoricalSellPrice || 0;
+          const solSellAmount = 
+            currentPnlData?.quantitySold * 
+              currentPnlData?.averageSolSellPrice || 0;
           const activeQtyHeld = currentPnlData?.activeQtyHeld || 0;
           const quantitySold = currentPnlData?.quantitySold || 0;
           const averageBuyPrice = currentPnlData?.averageBuyPrice || 0;
@@ -170,11 +192,13 @@ const Tradingview = () => {
           const holdingRawAmount = activeQtyHeld - quantitySold;
           const availableQtyInUSDWhenBought = holdingRawAmount * averageBuyPrice;
           const holdingsUsdInCurrentPrice = holdingRawAmount * (latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD || 0);
-    
+          const holdingSolInCurrentPrice = holdingsUsdInCurrentPrice / solanaLivePrice;
+
           const pnlAmount =
             holdingsUsdInCurrentPrice - availableQtyInUSDWhenBought;
           const isPositivePnL = pnlAmount >= 0;
           const absolutePnL = Math.abs(pnlAmount);
+          const absoluteSolPnL = absolutePnL / solanaLivePrice;
     
           const pnlPercent =
             availableQtyInUSDWhenBought !== 0
@@ -185,17 +209,22 @@ const Tradingview = () => {
     
           const currentPnlProperties = {
             buyAmount,
+            solBuyAmount,
             averageBuyPrice,
+            averageSolBuyPrice: currentPnlData?.averageSolBuyPrice || 0, 
             soldAmount,
+            solSellAmount,
             averageSellPrice: currentPnlData?.averageHistoricalSellPrice || 0,
+            averageSolSellPrice: currentPnlData?.averageSolSellPrice || 0,
             holdingRawAmount,
             holdingsUsdInCurrentPrice,
+            holdingSolInCurrentPrice,
             isPositivePnL,
             absolutePnL,
+            absoluteSolPnL,
             safePnLPercent
           }
 
-          // console.log("currentPnlProperties", currentPnlProperties)
           setCurrentTokenPnLData({...currentPnlProperties});
         }
       }
@@ -486,6 +515,10 @@ const Tradingview = () => {
   const isSidebarOpen = useSelector(
     (state) => state?.AllthemeColorData?.isSidebarOpen
   );
+  
+  useEffect(() => {
+    document.title = `${tokenSymbol} | Nexa`;
+  }, [tokenSymbol])
 
   return (
     <div
@@ -603,6 +636,8 @@ const Tradingview = () => {
                 isInstantTradeActive={isInstantTradeActive}
                 handleInstantTradeClick={handleInstantTradeClick}
                 currentTokenPnLData={currentTokenPnLData}
+                isPnlUsdSolActive={isPnlUsdSolActive}
+                onClickPnlUsdActiveToggle={handleClickPnlUsdActive}
               />
             </div>
           </div>
@@ -618,6 +653,8 @@ const Tradingview = () => {
           <div className="w-full border-[#4D4D4D] lg:border-t-0 md:border-l-0 md:border-r-0 md:border-b-0">
             <UserPnL
               currentTokenPnLData={currentTokenPnLData}
+              isPnlUsdSolActive={isPnlUsdSolActive}
+              onClickToggle={handleClickPnlUsdActive}
               tokenSymbol={tokenSymbol}
             />
           </div>

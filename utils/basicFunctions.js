@@ -92,7 +92,7 @@ function formatDecimal(num, numAfterCount = 3) {
   const leadingZeros = leadingZerosMatch[0].length;
 
   const totalPrecision = leadingZeros + numAfterCount;
-  const rounded = absNum.toFixed(totalPrecision).split(".")[1];
+  const rounded = Number(absNum.toFixed(totalPrecision)).toFixed(totalPrecision).split(".")[1];
   const trimmed = rounded.slice(leadingZeros);
 
   const subscripts = {
@@ -109,7 +109,13 @@ function formatDecimal(num, numAfterCount = 3) {
 
   let result;
   if (leadingZeros > 2) {
-    result = `0.0${toSubscript(leadingZeros)}${trimmed}`;
+    // Check if rounding caused a carry-over to the next significant digit
+    if (Number(trimmed) === 0 && absNum.toFixed(totalPrecision - 1) >= 1e-20) {
+      // Adjust for carry-over by reducing leading zeros and setting trimmed to 1
+      result = `0.0${toSubscript(leadingZeros - 1)}1`;
+    } else {
+      result = `0.0${toSubscript(leadingZeros)}${trimmed}`;
+    }
   } else {
     result = `${absNum.toFixed(3)}`;
   }

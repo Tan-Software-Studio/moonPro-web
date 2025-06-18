@@ -93,6 +93,10 @@ const Memescope = () => {
   // input of about graduate data
   const aboutGraduateFilterDataJson = aboutGraduateFilterData(memescopePage);
 
+  useEffect(() => {
+    document.title = `Nexa | Memescope`;
+  }, [])
+
   // onApply function
   function onApplyAboutGraduatData() {
     applyAboutGraduatDataFilters(

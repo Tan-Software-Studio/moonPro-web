@@ -31,10 +31,14 @@ const aiSignalSlice = createSlice({
       if (payload?.length > 0 && state.aiSignalData?.length > 0) {
         for (const element of payload) {
           if (element?.Trade?.PriceInUSD) {
+            const programAddress = element?.Trade?.Dex?.ProgramAddress;
             const findIndex = state?.aiSignalData?.findIndex(
               (item) => item?.address == element?.Trade?.Currency?.MintAddress
             );
             if (findIndex >= 0) {
+              if (programAddress) {
+                state.aiSignalData[findIndex].programAddress = programAddress;
+              }
               const totalTradedValue =
                 element?.Trade?.Amount * element?.Trade?.PriceInUSD;
               state.aiSignalData[findIndex].current_price =

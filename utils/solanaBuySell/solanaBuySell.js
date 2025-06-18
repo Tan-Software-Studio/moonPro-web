@@ -489,6 +489,116 @@ const sellSolanaTokens = async (
   return;
 };
 
+// handle sell function for quick sell from portfolio
+const sellSolanaTokensFromPortfolio = async (
+  fromToken,
+  amt,
+  slipTolerance = 50,
+  priorityFee = 0.0001,
+  address,
+  decimal,
+  price,
+  setLoaderSwap,
+  programAddress,
+  dispatch,
+  recQty,
+  solanaLivePrice,
+  metaData,
+  isSellFullAmount
+) => {
+  // console.log("🚀 ~ setTokenBalance:", setTokenBalance);
+  // console.log("🚀 ~ setLoaderSwap:", setLoaderSwap);
+  // console.log("🚀 ~ price:", price);
+  // console.log("🚀 ~ decimal:", decimal);
+  // console.log("🚀 ~ address:", address);
+  // console.log("🚀 ~ priorityFee:", priorityFee);
+  // console.log("🚀 ~ slipTolerance:", slipTolerance);
+  // console.log("🚀 ~ amt:", amt);
+  // console.log("🚀 ~ fromToken:", fromToken);
+  if (amt <= 0) {
+    return showToaster("Invalid amount.");
+  }
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return dispatch(openCloseLoginRegPopup(true));
+  }
+  setLoaderSwap(true);
+  toast(
+    <div className="flex items-center gap-5">
+      <div className="loaderPopup"></div>
+      <div className="text-white text-sm">Attempting transaction</div>
+    </div>,
+    {
+      id: "saveToast",
+      position: "top-center",
+      duration: Infinity,
+      style: {
+        border: "1px solid #4D4D4D",
+        color: "#FFFFFF",
+        fontSize: "14px",
+        letterSpacing: "1px",
+        backgroundColor: "#1F1F1F",
+      },
+    }
+  );
+  await axios({
+    url: `${BASE_URL}transactions/solsell`,
+    method: "post",
+    data: {
+      token: fromToken,
+      amount: Number(amt),
+      slippage: slipTolerance,
+      priorityFee: priorityFee,
+      decimal,
+      price,
+      programAddress: programAddress
+        ? programAddress
+        : "nasdiuasdnasdudhsdjasbhid",
+      amountRecInsol: Number(recQty),
+      isSellFullAmount,
+      solPrice: solanaLivePrice,
+      metaData: metaData || null,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then(async () => {
+      setLoaderSwap(false);
+      await toast.success("Transaction successfully", {
+        id: "saveToast",
+        duration: 3000,
+      });
+      dispatch(
+        updateHoldingsDataWhileBuySell({
+          token: fromToken,
+          type: "sell",
+          amountInDollar: Number(Number(amt) * price),
+          qty: Number(amt),
+          price: Number(price),
+          name: metaData?.name,
+          symbol: metaData?.symbol,
+          img: metaData?.img,
+          isSellFullAmount,
+          solPrice: Number(solanaLivePrice),
+        })
+      );
+      dispatch(setBuyAndSellCountInPerformance("sell"));
+      setTimeout(async () => {
+        dispatch(fetchSolanaNativeBalance(address));
+      }, 5000);
+    })
+    .catch(async (err) => {
+      setLoaderSwap(false);
+      await toast.error("Somthing went wrong please try again later.", {
+        id: "saveToast",
+        duration: 3000,
+      });
+      console.log("🚀 ~ err:", err?.message);
+    });
+  return;
+};
+
 const getDateMinus24Hours = async (hours) => {
   const date = new Date();
   await date.setHours(date.getHours() - hours);
@@ -680,6 +790,7 @@ const convertUSDCtoSOL = async (
 export {
   buySolanaTokens,
   sellSolanaTokens,
+  sellSolanaTokensFromPortfolio,
   getDateMinus24Hours,
   buySolanaTokensQuickBuyHandler,
   buySolanaTokensQuickBuyHandlerCopyTrading,
