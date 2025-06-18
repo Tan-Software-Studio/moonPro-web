@@ -35,7 +35,7 @@ const InstantSell = ({ tokenData, index }) => {
   const handleSell = async (token) => {
     await sellSolanaTokensFromPortfolio(
       token?.token,
-      Number(amount),
+      percentage == 100 ? Number(amount) : Number(amount).toFixed(token?.decimals || 6),
       priorityFees?.slippage,
       priorityFees?.priorityFee,
       solWalletAddress,
@@ -49,7 +49,7 @@ const InstantSell = ({ tokenData, index }) => {
         Number(token?.current_price),
         Number(solanaLivePrice)
       ),
-      Number(solanaLivePrice),
+      +Number(solanaLivePrice).toFixed(9),
       {
         name: token?.name,
         symbol: token?.symbol,
