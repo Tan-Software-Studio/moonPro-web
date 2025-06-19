@@ -45,10 +45,14 @@ const Trending = () => {
   const isLoading = useSelector((state) => state?.solTrendingData?.loading);
 
   // Get data from Redux store
-  const getTimeFilterData = Object.values(
+  const getUnfilterDataOfTrending = Object.values(
     useSelector(
       (state) => state?.solTrendingData.filterTime[`${localFilterTime}`]
     )
+  );
+
+  const getTimeFilterData = getUnfilterDataOfTrending?.sort(
+    (a, b) => (b.Percentage || 0) - (a.Percentage || 0)
   );
 
   // Convert data to array (safety check)
@@ -57,8 +61,8 @@ const Trending = () => {
     : [];
 
   useEffect(() => {
-      document.title = `Nexa | Trending`;
-    }, [])
+    document.title = `Nexa | Trending`;
+  }, []);
 
   const Trendings = {
     Title: tredingPage?.mainHeader?.filter?.filter,
