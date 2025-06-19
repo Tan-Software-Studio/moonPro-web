@@ -32,11 +32,12 @@ const TOKEN_DETAILS = (resolution, offset) => `query TradingView($token: String,
 }
 `;
 
-const TOKEN_SECONDS_DETAILS = () => `
+const TOKEN_SECONDS_DETAILS = (offset) => `
   query TradingView($token: String, $interval: Int) {
   Solana(dataset: realtime, aggregates: no) {
      DEXTradeByTokens(
-      orderBy: {ascendingByField: "Block_Time"}
+      orderBy: {descendingByField: "Block_Timefield"}
+      limit: {count: 500, offset: ${offset}}
       where: {
         Trade: {
           Currency: {MintAddress: {is: $token}}, 
@@ -59,7 +60,7 @@ const TOKEN_SECONDS_DETAILS = () => `
       }
     ) {
       Block {
-        Time(interval: {count: $interval, in: seconds})
+        Timefield: Time(interval: {count: $interval, in: seconds})
       }
       low: quantile(of: Trade_PriceInUSD, level: 0.05)
       high: quantile(of: Trade_PriceInUSD, level: 0.80)
@@ -145,7 +146,7 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
     const response = await axios.post(
       endpoint,
       {
-        query: resolutionFinal !== "seconds" ? TOKEN_DETAILS(resolutionFinal, offset) : TOKEN_SECONDS_DETAILS(),
+        query: resolutionFinal !== "seconds" ? TOKEN_DETAILS(resolutionFinal, offset) : TOKEN_SECONDS_DETAILS(offset),
         variables: {
           token: token,
           interval: resolutionNumber,
@@ -181,7 +182,7 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
         return open !== 0 && close !== 0; // Keep trades where both open and close are non-zero
       })
       .map(trade => {
-        const blockTime = new Date(trade.Block.Timefield || trade.Block.Time).getTime();
+        const blockTime = new Date(trade.Block.Timefield).getTime();
         if (isNaN(blockTime)) return null; // Skip invalid dates
 
         const usdOpen = isUsdActive
@@ -206,7 +207,7 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
           high,
           low,
           close,
-          volume: isUsdActive ? Number(trade?.volume) : Number(trade?.sol_volume) ,
+          volume: isUsdActive ? Number(trade?.volume) : Number(trade?.sol_volume),
         };
       })
       .filter(item => item != null);
@@ -344,7 +345,6 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
       );
       await bars.sort((a, b) => a.time - b.time);
     }
-    
     return {
       bars,
       offset: trades?.length
