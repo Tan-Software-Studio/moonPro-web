@@ -85,6 +85,9 @@ const holdingData = createSlice({
     updatePnlTableData: (state, { payload }) => {
       state.pnlTableData = payload;
     },
+    updateBalanceChangeInQuickSellPortfolio: (state, { payload }) => {
+      state.PnlData[payload?.index].chainBalance = payload?.qty;
+    },
     updatePnlDataPriceOnly: (state, { payload }) => {
       if (state.PnlData?.length > 0) {
         if (payload?.length > 0) {
@@ -301,11 +304,15 @@ const holdingData = createSlice({
                   state?.PnlData[findTokenIndex]?.solAvgPriceSell,
               });
               // add in the chart of pnl
+              const finalRealizedPnl =
+                Number(state?.performance?.totalPNL) +
+                Number(state?.PnlData[findTokenIndex]?.realizedProfit);
               state?.performance?.chartPnlHistory?.push({
-                value: state?.PnlData[findTokenIndex]?.realizedProfit,
+                value: finalRealizedPnl,
                 createdAt: new Date(),
               });
-
+              // add value in total pnl
+              state.performance.totalPNL = finalRealizedPnl;
               // add in the percentage in the performance section
               const realizedPnlPercentage = Number(
                 pnlPercentage(
@@ -458,6 +465,7 @@ export const {
   updateHoldingsDataWhileBuySell,
   updatePercentageCountData,
   setBuyAndSellCountInPerformance,
+  updateBalanceChangeInQuickSellPortfolio,
 } = holdingData.actions;
 
 export default holdingData.reducer;

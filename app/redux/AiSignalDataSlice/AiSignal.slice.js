@@ -36,37 +36,35 @@ const aiSignalSlice = createSlice({
               (item) => item?.address == element?.Trade?.Currency?.MintAddress
             );
             if (findIndex >= 0) {
-              if (programAddress) {
-                state.aiSignalData[findIndex].programAddress = programAddress;
-              }
+              const existingData = state?.aiSignalData[findIndex];
               const totalTradedValue =
                 element?.Trade?.Amount * element?.Trade?.PriceInUSD;
-              state.aiSignalData[findIndex].current_price =
-                element?.Trade?.PriceInUSD;
-              if (element?.Trade?.Side?.Type == "buy") {
-                state.aiSignalData[findIndex].buys += 1;
-                state.aiSignalData[findIndex].liquidity += totalTradedValue;
-              } else {
-                state.aiSignalData[findIndex].sells += 1;
-                if (
-                  state.aiSignalData[findIndex].liquidity - totalTradedValue <=
-                  0
-                ) {
-                  state.aiSignalData[findIndex].liquidity = 0;
-                } else {
-                  state.aiSignalData[findIndex].liquidity -= totalTradedValue;
-                }
-              }
-              state.aiSignalData[findIndex].traded_volume += totalTradedValue;
               const newMKC =
                 state.aiSignalData[findIndex].totalsupply *
                 element?.Trade?.PriceInUSD;
-              state.aiSignalData[findIndex].Percentage =
-                calculatePercentageDifference(
+              const updateAiSignleData = {
+                ...existingData,
+                ...(programAddress ? { programAddress } : {}),
+                current_price: element?.Trade?.PriceInUSD,
+                traded_volume: existingData?.traded_volume + totalTradedValue,
+                Percentage: calculatePercentageDifference(
                   newMKC,
-                  state.aiSignalData[findIndex].marketCap
+                  existingData.marketCap
+                ),
+                marketCap: newMKC,
+              };
+              if (element?.Trade?.Side?.Type == "buy") {
+                updateAiSignleData.buys++;
+                updateAiSignleData.liquidity =
+                  existingData?.liquidity + totalTradedValue;
+              } else {
+                updateAiSignleData.sells++;
+                updateAiSignleData.liquidity = Math.max(
+                  existingData.liquidity - totalTradedValue,
+                  0
                 );
-              state.aiSignalData[findIndex].marketCap = newMKC;
+              }
+              state.aiSignalData[findIndex] = updateAiSignleData;
             }
           }
         }

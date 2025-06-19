@@ -100,7 +100,7 @@ function DataSecurity({
         className={`grid ease-in-out duration-300 origin-top text-white text-[12px] ${
           isDataSecurity
             ? "max-h-[1000px] opacity-100 scale-y-100 border-t-[1px] border-[#4D4D4D]"
-            : "max-h-0 opacity-0 scale-y-0"
+            : "max-h-[100px] opacity-0 scale-y-0"
         }`}
       >
         <div className="2xl:p-6 p-4">
@@ -285,6 +285,8 @@ function DataSecurity({
           </div>
         </div>
       </div>
+
+
     </div>
   );
 }

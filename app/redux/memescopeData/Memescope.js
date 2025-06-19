@@ -108,16 +108,24 @@ const allMemescopeData = createSlice({
             // new launch
             const newLaunchFind = state?.newLaunch?.[mint];
             if (newLaunchFind) {
-              newLaunchFind.current_price = priceUSD;
-              newLaunchFind.volume += volumeDelta;
-              newLaunchFind.MKC = (newLaunchFind?.totalsupply || 0) * priceUSD;
+              const updateNewLanuchData = {
+                ...newLaunchFind,
+                current_price: priceUSD,
+                volume: newLaunchFind?.volume + volumeDelta,
+                MKC: (newLaunchFind?.totalsupply || 0) * priceUSD,
+              };
+              state.newLaunch[mint] = updateNewLanuchData;
             }
             // about to graduated
             const GraduateData = state?.MscopeGraduateData?.[mint];
             if (GraduateData) {
-              GraduateData.current_price = priceUSD;
-              GraduateData.volume += volumeDelta;
-              GraduateData.MKC = (GraduateData?.totalsupply || 0) * priceUSD;
+              const updateGraduateData = {
+                ...GraduateData,
+                current_price: priceUSD,
+                volume: GraduateData?.volume + volumeDelta,
+                MKC: (GraduateData?.totalsupply || 0) * priceUSD,
+              };
+              state.MscopeGraduateData[mint] = updateGraduateData;
               if (
                 programAddress != "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
               ) {
@@ -127,16 +135,20 @@ const allMemescopeData = createSlice({
                 );
                 if (findIndex > 0) {
                   state?.MscopeGraduateData?.splice(findIndex, 1);
-                  state?.MscopeGraduatedData?.unshift(GraduateData);
+                  state?.MscopeGraduatedData?.unshift(updateGraduateData);
                 }
               }
             }
             // graduated
             const GraduatedData = state?.MscopeGraduatedData?.[mint];
             if (GraduatedData) {
-              GraduatedData.current_price = priceUSD;
-              GraduatedData.volume += volumeDelta;
-              GraduatedData.MKC = (GraduatedData?.totalsupply || 0) * priceUSD;
+              const updateGraduatedData = {
+                ...GraduatedData,
+                current_price: priceUSD,
+                volume: GraduatedData?.volume + volumeDelta,
+                MKC: (GraduatedData?.totalsupply || 0) * priceUSD,
+              };
+              state.MscopeGraduatedData[mint] = updateGraduatedData;
             }
           }
         }
