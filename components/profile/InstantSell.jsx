@@ -103,7 +103,7 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
             e.preventDefault();
             setIsOpen(false);
           }}
-          className="fixed inset-0 bg-[#1E1E1ECC] bg-opacity-80 flex items-center justify-center z-50 "
+          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 "
         >
           <motion.div
             key="modal"
@@ -112,7 +112,7 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
             exit={{ scale: 0.8, opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-black  border border-[#2A2A2A]  rounded-md w-[500px] relative"
+            className="bg-[#08080E] rounded-md w-[500px] relative"
           >
             {/* Header */}
             <div className="py-3 px-4 border-b border-[#2A2A2A]">
@@ -282,9 +282,9 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
                     disabled={
                       !amount || parseFloat(amount) <= 0 || isMoreAmount
                     }
-                    className="w-full bg-[#b91c1c] hover:bg-[#991b1b] disabled:bg-[#4A4A4A] mt-4 overflow-x-hidden disabled:text-[#6E6E6E] text-white font-semibold py-2 rounded-full transition-all duration-200 text-sm"
+                    className="w-full bg-blue-600  disabled:bg-[#4A4A4A] mt-4 overflow-x-hidden disabled:text-[#6E6E6E] text-white font-semibold py-2 rounded-full transition-all duration-200 text-sm"
                   >
-                    Instantly sell $
+                    Instantly sell 
                   </button>
                 )}
               </div>
