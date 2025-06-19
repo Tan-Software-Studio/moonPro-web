@@ -39,19 +39,6 @@ const aiSignalSlice = createSlice({
               const existingData = state?.aiSignalData[findIndex];
               const totalTradedValue =
                 element?.Trade?.Amount * element?.Trade?.PriceInUSD;
-              let buys = 0;
-              let sells = 0;
-              let liquidity = 0;
-              if (element?.Trade?.Side?.Type == "buy") {
-                buys = state?.aiSignalData[findIndex]?.buys + 1;
-                liquidity = existingData?.liquidity + totalTradedValue;
-              } else {
-                sells = state?.aiSignalData[findIndex]?.sells + 1;
-                liquidity = Math.max(
-                  existingData.liquidity - totalTradedValue,
-                  0
-                );
-              }
               const newMKC =
                 state.aiSignalData[findIndex].totalsupply *
                 element?.Trade?.PriceInUSD;
@@ -59,9 +46,6 @@ const aiSignalSlice = createSlice({
                 ...existingData,
                 ...(programAddress ? { programAddress } : {}),
                 current_price: element?.Trade?.PriceInUSD,
-                buys: buys,
-                sells: sells,
-                liquidity: liquidity,
                 traded_volume: existingData?.traded_volume + totalTradedValue,
                 Percentage: calculatePercentageDifference(
                   newMKC,
@@ -69,6 +53,17 @@ const aiSignalSlice = createSlice({
                 ),
                 marketCap: newMKC,
               };
+              if (element?.Trade?.Side?.Type == "buy") {
+                updateAiSignleData.buys++;
+                updateAiSignleData.liquidity =
+                  existingData?.liquidity + totalTradedValue;
+              } else {
+                updateAiSignleData.sells++;
+                updateAiSignleData.liquidity = Math.max(
+                  existingData.liquidity - totalTradedValue,
+                  0
+                );
+              }
               state.aiSignalData[findIndex] = updateAiSignleData;
             }
           }

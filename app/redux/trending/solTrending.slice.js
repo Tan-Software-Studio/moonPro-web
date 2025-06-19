@@ -37,23 +37,10 @@ const solTrendingData = createSlice({
             // 1m update from node
             const token1m = state?.filterTime["1m"]?.[mint];
             if (token1m) {
-              let buys = 0;
-              let sells = 0;
-              let liquidity = 0;
-              if (element?.Trade?.Side?.Type == "buy") {
-                buys = token1m?.buys + 1;
-                liquidity = token1m?.liquidity + totalTradedValue;
-              } else {
-                sells = token1m.sells + 1;
-                liquidity = Math.max(token1m?.liquidity - totalTradedValue, 0);
-              }
               const newMKC = token1m?.totalsupply * price;
               const updateToken1m = {
                 ...token1m,
                 current_price: price,
-                buys: buys,
-                sells: sells,
-                liquidity: liquidity,
                 traded_volume: token1m?.traded_volume + totalTradedValue,
                 Percentage: calculatePercentageDifference(
                   newMKC,
@@ -61,28 +48,26 @@ const solTrendingData = createSlice({
                 ),
                 marketCap: newMKC,
               };
+              if (element?.Trade?.Side?.Type == "buy") {
+                updateToken1m.buys++;
+                updateToken1m.liquidity = token1m?.liquidity + totalTradedValue;
+              } else {
+                updateToken1m.sells++;
+                updateToken1m.liquidity = Math.max(
+                  token1m?.liquidity - totalTradedValue,
+                  0
+                );
+              }
+
               state.filterTime["1m"][mint] = updateToken1m;
             }
             // 5m update from node
             const token5m = state?.filterTime["5m"]?.[mint];
             if (token5m) {
-              let buys = 0;
-              let sells = 0;
-              let liquidity = 0;
-              if (element?.Trade?.Side?.Type == "buy") {
-                buys = token5m?.buys + 1;
-                liquidity = token5m?.liquidity + totalTradedValue;
-              } else {
-                sells = token5m.sells + 1;
-                liquidity = Math.max(token5m?.liquidity - totalTradedValue, 0);
-              }
               const newMKC = token5m?.totalsupply * price;
               const updateToken5m = {
                 ...token5m,
                 current_price: price,
-                buys: buys,
-                sells: sells,
-                liquidity: liquidity,
                 traded_volume: token5m?.traded_volume + totalTradedValue,
                 Percentage: calculatePercentageDifference(
                   newMKC,
@@ -90,28 +75,25 @@ const solTrendingData = createSlice({
                 ),
                 marketCap: newMKC,
               };
+              if (element?.Trade?.Side?.Type == "buy") {
+                updateToken5m.buys++;
+                updateToken5m.liquidity = token5m?.liquidity + totalTradedValue;
+              } else {
+                updateToken5m.sells++;
+                updateToken5m.liquidity = Math.max(
+                  token5m?.liquidity - totalTradedValue,
+                  0
+                );
+              }
               state.filterTime["5m"][mint] = updateToken5m;
             }
             // 30m update from node
             const token30m = state?.filterTime["30m"]?.[mint];
             if (token30m) {
-              let buys = 0;
-              let sells = 0;
-              let liquidity = 0;
-              if (element?.Trade?.Side?.Type == "buy") {
-                buys = token30m?.buys + 1;
-                liquidity = token30m?.liquidity + totalTradedValue;
-              } else {
-                sells = token30m.sells + 1;
-                liquidity = Math.max(token30m?.liquidity - totalTradedValue, 0);
-              }
               const newMKC = token30m?.totalsupply * price;
               const updateToken30m = {
                 ...token30m,
                 current_price: price,
-                buys: buys,
-                sells: sells,
-                liquidity: liquidity,
                 traded_volume: token30m?.traded_volume + totalTradedValue,
                 Percentage: calculatePercentageDifference(
                   newMKC,
@@ -119,28 +101,26 @@ const solTrendingData = createSlice({
                 ),
                 marketCap: newMKC,
               };
+              if (element?.Trade?.Side?.Type == "buy") {
+                updateToken30m.buys++;
+                updateToken30m.liquidity =
+                  token30m?.liquidity + totalTradedValue;
+              } else {
+                updateToken30m.sells++;
+                updateToken30m.liquidity = Math.max(
+                  token30m?.liquidity - totalTradedValue,
+                  0
+                );
+              }
               state.filterTime["30m"][mint] = updateToken30m;
             }
             // 1h update from node
             const token1h = state?.filterTime["1h"]?.[mint];
             if (token1h) {
-              let buys = 0;
-              let sells = 0;
-              let liquidity = 0;
-              if (element?.Trade?.Side?.Type == "buy") {
-                buys = token1h?.buys + 1;
-                liquidity = token1h?.liquidity + totalTradedValue;
-              } else {
-                sells = token1h.sells + 1;
-                liquidity = Math.max(token1h?.liquidity - totalTradedValue, 0);
-              }
               const newMKC = token1h?.totalsupply * price;
               const updateToken1h = {
                 ...token1h,
                 current_price: price,
-                buys: buys,
-                sells: sells,
-                liquidity: liquidity,
                 traded_volume: token1h?.traded_volume + totalTradedValue,
                 Percentage: calculatePercentageDifference(
                   newMKC,
@@ -148,6 +128,16 @@ const solTrendingData = createSlice({
                 ),
                 marketCap: newMKC,
               };
+              if (element?.Trade?.Side?.Type == "buy") {
+                updateToken1h.buys++;
+                updateToken1h.liquidity = token1h?.liquidity + totalTradedValue;
+              } else {
+                updateToken1h.sells++;
+                updateToken1h.liquidity = Math.max(
+                  token1h?.liquidity - totalTradedValue,
+                  0
+                );
+              }
               state.filterTime["1h"][mint] = updateToken1h;
             }
           }
