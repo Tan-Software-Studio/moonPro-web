@@ -87,7 +87,7 @@ const ActivePosition = ({
                     Remaining
                   </th>
                   <th className="px-4 py-2 text-slate-300 font-medium">PnL</th>
-                  <th className="px-4 py-2 text-slate-300 font-medium">Action</th>
+                  {/* <th className="px-4 py-2 text-slate-300 font-medium">Action</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -186,7 +186,7 @@ const ActivePosition = ({
                       </div>
                     </td>
 
-                    <td className="px-4 py-2 " >
+                    {/* <td className="px-4 py-2 " >
                       <div
                         onClick={(e) => {
                           e.stopPropagation();
@@ -198,7 +198,7 @@ const ActivePosition = ({
                       >
                         <FaArrowUp />
                       </div>
-                    </td>
+                    </td> */}
                   </tr>
                 ))}
               </tbody>

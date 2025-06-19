@@ -60,7 +60,9 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
           dispatch(
             updateBalanceChangeInQuickSellPortfolio({
               index,
-              qty: +Number(Number(tokenData?.chainBalance) - Number(amount)).toFixed(token?.decimals),
+              qty: +Number(
+                Number(tokenData?.chainBalance) - Number(amount)
+              ).toFixed(token?.decimals),
             })
           );
         }
@@ -174,9 +176,7 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
                       />
                     </div>
                     <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-md px-3 py-2">
-                      <span className="text-white text-sm">
-                        {percentage}%
-                      </span>
+                      <span className="text-white text-sm">{percentage}%</span>
                     </div>
                   </div>
                   <div className="text-xs text-red-500">
@@ -221,36 +221,41 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
                   <div className="flex justify-between text-xs text-[#6E6E6E] pt-3">
                     <span
                       onClick={() => setPercentage(0)}
-                      className={`${percentage == 0 && "text-white"
-                        } hover:text-white cursor-pointer `}
+                      className={`${
+                        percentage == 0 && "text-white"
+                      } hover:text-white cursor-pointer `}
                     >
                       0%
                     </span>
                     <span
                       onClick={() => setPercentage(25)}
-                      className={`${percentage == 25 && "text-white"
-                        } hover:text-white cursor-pointer`}
+                      className={`${
+                        percentage == 25 && "text-white"
+                      } hover:text-white cursor-pointer`}
                     >
                       25%
                     </span>
                     <span
                       onClick={() => setPercentage(50)}
-                      className={`${percentage == 50 && "text-white"
-                        } hover:text-white cursor-pointer`}
+                      className={`${
+                        percentage == 50 && "text-white"
+                      } hover:text-white cursor-pointer`}
                     >
                       50%
                     </span>
                     <span
                       onClick={() => setPercentage(75)}
-                      className={`${percentage == 75 && "text-white"
-                        } hover:text-white cursor-pointer`}
+                      className={`${
+                        percentage == 75 && "text-white"
+                      } hover:text-white cursor-pointer`}
                     >
                       75%
                     </span>
                     <span
                       onClick={() => setPercentage(100)}
-                      className={`${percentage == 100 && "text-white"
-                        } hover:text-white cursor-pointer`}
+                      className={`${
+                        percentage == 100 && "text-white"
+                      } hover:text-white cursor-pointer`}
                     >
                       100%
                     </span>
@@ -273,7 +278,10 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
               <div className="border-t border-t-[#2A2A2A]"></div>
               <div className="py-2 px-4">
                 {isLoading ? (
-                  <button className="w-full bg-[#b91c1c] hover:bg-[#991b1b]   mt-4 overflow-x-hidden   text-white font-semibold py-2 rounded-full transition-all duration-200 text-sm">
+                  <button
+                    className="w-full bg-[#ED1B24]
+    mt-4 overflow-x-hidden   text-white font-semibold py-2 rounded-full transition-all duration-200 text-sm"
+                  >
                     selling...
                   </button>
                 ) : (
@@ -282,9 +290,10 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
                     disabled={
                       !amount || parseFloat(amount) <= 0 || isMoreAmount
                     }
-                    className="w-full bg-blue-600  disabled:bg-[#4A4A4A] mt-4 overflow-x-hidden disabled:text-[#6E6E6E] text-white font-semibold py-2 rounded-full transition-all duration-200 text-sm"
+                    className="w-full bg-[#ED1B24]
+   disabled:bg-[#4A4A4A] mt-4 overflow-x-hidden disabled:text-[#6E6E6E] text-white font-semibold py-2 rounded-full transition-all duration-200 text-sm"
                   >
-                    Instantly sell 
+                    Instantly sell
                   </button>
                 )}
               </div>
