@@ -194,7 +194,7 @@ const ActivePosition = ({
                           setQuickSellTokenData({ tokenData: item, index: index });
                           setIsOpen(true);
                         }}
-                        className="text-red-500 hover:bg-red-500/10 flex items-center justify-center px-2 w-fit py-2 rounded-md"
+                        className={`${pnlDollarCalc(item) >= 0 ? "text-emerald-500 hover:bg-emerald-500/10" : "text-red-500 hover:bg-red-500/10 "} flex items-center justify-center px-2 w-fit py-2 rounded-md`}
                       >
                         <FaArrowUp />
                       </div>
