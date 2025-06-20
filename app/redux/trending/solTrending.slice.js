@@ -43,8 +43,8 @@ const solTrendingData = createSlice({
                 current_price: price,
                 traded_volume: token1m?.traded_volume + totalTradedValue,
                 Percentage: calculatePercentageDifference(
-                  newMKC,
-                  token1m?.marketCap
+                  price,
+                  token1m?.startPrice
                 ),
                 marketCap: newMKC,
               };
@@ -70,8 +70,8 @@ const solTrendingData = createSlice({
                 current_price: price,
                 traded_volume: token5m?.traded_volume + totalTradedValue,
                 Percentage: calculatePercentageDifference(
-                  newMKC,
-                  token5m?.marketCap
+                  price,
+                  token5m?.startPrice
                 ),
                 marketCap: newMKC,
               };
@@ -96,8 +96,8 @@ const solTrendingData = createSlice({
                 current_price: price,
                 traded_volume: token30m?.traded_volume + totalTradedValue,
                 Percentage: calculatePercentageDifference(
-                  newMKC,
-                  token30m?.marketCap
+                  price,
+                  token30m?.startPrice
                 ),
                 marketCap: newMKC,
               };
@@ -123,8 +123,8 @@ const solTrendingData = createSlice({
                 current_price: price,
                 traded_volume: token1h?.traded_volume + totalTradedValue,
                 Percentage: calculatePercentageDifference(
-                  newMKC,
-                  token1h?.marketCap
+                  price,
+                  token1h?.startPrice
                 ),
                 marketCap: newMKC,
               };
@@ -144,6 +144,9 @@ const solTrendingData = createSlice({
         }
       }
     },
+    updateData15Secinterval: (state, { payload }) => {
+      state.filterTime[payload?.frame] = payload?.data;
+    },
   },
 });
 
@@ -152,6 +155,7 @@ export const {
   setLoading,
   updateTrendingData,
   updateTrendingLiveData,
+  updateData15Secinterval,
 } = solTrendingData.actions;
 
 export default solTrendingData.reducer;
