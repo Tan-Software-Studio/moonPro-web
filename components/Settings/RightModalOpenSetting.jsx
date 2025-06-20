@@ -411,7 +411,7 @@ const RightModalOpenSetting = ({
               onClick={() => handleReset()}
             >
               <VscDebugRestart />
-              {tredingPage?.mainHeader?.filter?.reset}
+              {tredingPage?.mainHeader?.filter?.reset || "Reset"}
             </button>
             <button
               onClick={() => savePresetData()}

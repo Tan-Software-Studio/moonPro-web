@@ -13,16 +13,18 @@ import { showToastLoader } from "../common/toastLoader/ToastLoder";
 import PnLTrackerPopup from "./PnLTrackerPopup";
 import { updateWalletToPrimary } from "@/app/redux/userDataSlice/UserData.slice";
 import { showToaster } from "@/utils/toaster/toaster.style";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+  const { t } = useTranslation();
+  const tredingPage = t("tredingPage");
   const dispatch = useDispatch();
   const borderColor = useSelector(
     (state) => state?.AllthemeColorData?.borderColor
   );
   const isRightModalOpenSetting = useSelector(
-    (state) => state?.yourSliceName?.isRightModalOpenSetting
+    (state) => state?.AllStatesData?.openOrderSetting
   );
-  const tredingPage = useSelector((state) => state?.yourSliceName?.tredingPage);
 
   const presetActive = useSelector(
     (state) => state?.AllStatesData?.presetActive
