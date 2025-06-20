@@ -236,8 +236,7 @@ const MscopePumpTable = ({
                           block?.img ? (
                             <img
                               key={index + 1}
-                              src={`${BASE_URL_MOON_STREAM}memescope/${block?.address}.webp`}
-                              alt="Profile"
+                              src={`${BASE_URL_MOON_STREAM}memescope/${block?.address}.webp`} 
                               className={`absolute inset-0 m-auto w-[64px] h-[64px] object-cover ${
                                 showCircle ? "rounded-full" : ""
                               }`}

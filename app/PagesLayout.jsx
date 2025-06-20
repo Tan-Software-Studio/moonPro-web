@@ -47,7 +47,7 @@ const PagesLayout = ({ childrens }) => {
               : `!sticky  top-0 left-0 right-0`
           }`}
         ></div> */}
-            <div className={` w-full z-50 !sticky top-0 left-0 right-0`}>
+            <div className={` w-full z-40 !sticky top-0 left-0 right-0`}>
               <Navbar />
             </div>
             {isSearchbarPopup && (

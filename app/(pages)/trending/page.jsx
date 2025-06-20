@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Filter,
   Advanced,
@@ -9,17 +9,19 @@ import {
   TrendingImg,
   solana,
 } from "@/app/Images";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
 import TableHeaderData from "@/components/common/TableHeader/TableHeaderData";
 import TableBody from "@/components/common/TableBody/TableBody";
 import { useTranslation } from "react-i18next";
 import handleSort from "@/utils/sortTokenData";
+import { throttlingFunctionWrapper } from "@/utils/debouncing";
 const BASE_URL_MOON_STREAM = process.env.NEXT_PUBLIC_BASE_URLS;
 const Trending = () => {
   const { t } = useTranslation();
   const tredingPage = t("tredingPage");
   const tableRef = useRef(null);
+  const dispatch = useDispatch();
   const [sortColumn, setSortColumn] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [localFilterTime, setLocalFilterTime] = useState("5m");
@@ -51,14 +53,20 @@ const Trending = () => {
     )
   );
 
+  const throttledSortData = useCallback(throttlingFunctionWrapper(15000), [
+    localFilterTime,
+  ]);
+  // call every time but not change a data
+  throttledSortData(getTimeFilterData, dispatch, localFilterTime);
+
   // Convert data to array (safety check)
   let filterDataArray = Array.isArray(getTimeFilterData)
     ? getTimeFilterData
     : [];
 
   useEffect(() => {
-      document.title = `Nexa | Trending`;
-    }, [])
+    document.title = `Nexa | Trending`;
+  }, []);
 
   const Trendings = {
     Title: tredingPage?.mainHeader?.filter?.filter,

@@ -172,7 +172,7 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.8, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="w-full max-w-[700px] bg-[#08080E] rounded-md !z-[999999999999999] max-h-[95vh] overflow-y-auto"
+          className="w-full max-w-[700px] bg-[#08080E] rounded-md !z-[999999999999999] md:max-h-[95vh] max-h-[70vh] overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="">

@@ -440,7 +440,7 @@ const AllPageHeader = ({
               {/* Dropdown Panel */}
               {isDisplayOpen && (
                 <div
-                  className="absolute right-44 mt-2 w-[320px] bg-[#18181a] border border-gray-700 text-white rounded-md shadow-xl !z-[9999]"
+                  className="absolute sm:right-44 right-0 mt-2 w-[320px] bg-[#18181a] border border-gray-700 text-white rounded-md shadow-xl !z-[9999]"
                   ref={displayPanelRef}
                 >
                   <div className="p-4 space-y-4">

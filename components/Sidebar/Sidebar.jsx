@@ -31,6 +31,7 @@ import {
 } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import AISignalsButton from "../Navbar/ai-signalBtn/AiSignalBtn";
 import { setIsChartByDefault } from "@/app/redux/memescopeData/Memescope";
+import { IoClose } from "react-icons/io5";
 
 const Sidebar = () => {
   const { t } = useTranslation();
@@ -158,6 +159,12 @@ const Sidebar = () => {
               />
             </Link>
           )}
+          <div
+            className={`md:hidden flex items-center justify-center cursor-pointer border-[1px] border-[#2e2e2e] rounded-md  `}
+            onClick={() => dispatch(setIsSidebarOpen(!isSidebarOpen))}
+          >
+            <IoClose className="text-[30px] text-[#fdf5f5] p-[2px]" />
+          </div>
         </div>
 
         {/* Munu */}
@@ -178,11 +185,11 @@ const Sidebar = () => {
             </button>
           )}
         </div>
-        <div className="mt-[38px]">
+        <div className="md:mt-[38px]">
           <ul className={`flex flex-col gap-6 mt-6`}>
             <div className="flex items-center md:px-0 px-4 md:ml-3">
               <div
-                className="w-fit rounded-md"
+                className="md:w-fit w-full rounded-md"
                 onClick={() => {
                   isMobileScreenData && dispatch(setIsSidebarOpen(false));
                 }}
