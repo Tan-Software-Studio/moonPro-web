@@ -436,12 +436,12 @@ const Memescope = () => {
               </div>
 
               {/* Unified search + filter section for all screen sizes */}
-              <div className="flex items-center gap-1 w-full xl:w-auto justify-end">
+              <div className="flex items-center gap-1 w-full xl:w-auto md:justify-end">
                 {searchbar && (
                   <input
                     type="text"
                     placeholder={tredingPage?.tableheaders?.search}
-                    className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-[7px] outline-none focus:ring-2 focus:ring-blue-400 transition w-full sm:w-auto"
+                    className="bg-[#101115] border border-gray-700 text-gray-400 placeholder-gray-500 rounded-full text-sm px-2 py-[7px] outline-none focus:ring-2 focus:ring-blue-400 transition w-1/2 md:w-auto"
                     value={newSearchData}
                     onChange={(e) => setNewSearchData(e.target.value)}
                   />

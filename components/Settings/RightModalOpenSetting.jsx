@@ -236,7 +236,7 @@ const RightModalOpenSetting = ({
             />
           </div>
           <div className="p-[16px]">
-            <div className="flex items-center bg-[#1f1f1f] md:rounded-[8px]">
+            <div className="flex items-center bg-[#1f1f1f] rounded-[8px]">
               <button
                 className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-500 outline-none ${
                   activeTab === "buy"

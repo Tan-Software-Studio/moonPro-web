@@ -26,7 +26,7 @@ const AISignalsButton = () => {
         <>
             <Link href='/ai-signal'>
                 {isSidebarOpen ?
-                    <button className="button group relative inline-flex items-center sm:gap-3 gap-2 pag-1 sm:px-6 px-3 py-1.5  border-[1.5px] border-blue-500 rounded-md transition-all duration-300 ">
+                    <button className="button group relative inline-flex items-center sm:gap-3 gap-2 pag-1 sm:px-6 px-3 md:py-1.5 py-1 w-full border-[1.5px] border-blue-500 rounded-md transition-all duration-300 ">
                         <div class="dots_border"></div>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
