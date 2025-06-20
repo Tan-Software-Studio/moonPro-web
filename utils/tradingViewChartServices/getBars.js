@@ -53,10 +53,16 @@ export const getBars = async (
       resolutionOffsets[resolution] = {
         offset: 0,
         oldestBarTimeSec: null,
+        fetchedSeconds: false
       };
     }
 
     const storedBarTime = resolutionOffsets[resolution].oldestBarTimeSec;
+
+    if (resolutionOffsets[resolution].fetchedSeconds === true) {
+      onHistoryCallback([], { noData: true });
+      return;
+    }
 
     if (storedBarTime !== null) {
       if (storedBarTime > periodParams.to) {
@@ -66,6 +72,9 @@ export const getBars = async (
 
       if (storedBarTime < periodParams.to) {
         resolutionOffsets[resolution].offset = 0;
+        if (resolution.endsWith("S")) {
+          resolutionOffsets[resolution].fetchedSeconds = false;
+        }
       }
     }
 
@@ -92,11 +101,14 @@ export const getBars = async (
       startingIntervalBeforeLoop = null;
       moveToNextInterval = false;
 
-      // setHistoricalChunkAndConnectBars(bars, resolution);
+      setHistoricalChunkAndConnectBars(bars, resolution);
       setNewLatestBarTime(bars[bars.length - 1].time);
       setNewLatestHistoricalBar(bars[bars.length - 1], resolution);
 
       onHistoryCallback(bars, { noData: false });
+      if (resolution.endsWith("S")) {
+        resolutionOffsets[resolution].fetchedSeconds = true;
+      }
     } else {
       if (moveToNextInterval) {
         const nextInterval = getNextInterval(resolution);

@@ -17,12 +17,15 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
   const chartContainerRef = useRef(null);
   const [isUsdSolToggled, setIsUsdSolToggled] = useState(true); // Track USD/SOL toggle state
   const [isMcPriceToggled, setIsMcPriceToggled] = useState(true); // Track MarketCap/Price toggle state
-  const [chartResolution, setChartResolution] = useState("15S"); // Track USD/SOL toggle state
   const [chart, setChart] = useState(null);
   const [chartReady, setChartReady] = useState(false);
   const [value100SellLine, setValue100SellLine] = useState(0);
   const [currentTokenAddress, setCurrentTokenAddress] = useState(null);
   const [hasGottenMarks, setHasGottenMarks] = useState(false);
+  const [chartResolution, setChartResolution] = useState(() => {
+   const saved = localStorage.getItem("chartResolution");
+      return saved === null ? "15S" : saved;
+  });
 
   const buyPositionLineRef = useRef(null);
   const sellPositionLineRef = useRef(null);
@@ -70,26 +73,6 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
         setIsMcPriceToggled(mcPriceToggle === "true");
       }
     };
-
-    const getChartResolution = () => {
-      try {
-        const storedResolution = localStorage.getItem("chartResolution");
-        const defaultResolution = "15S";
-        
-        // Validate stored resolution against allowed intervals
-        if (storedResolution && intervalTV.includes(storedResolution)) {
-          setChartResolution(storedResolution);
-        } else {
-          localStorage.setItem("chartResolution", defaultResolution);
-          setChartResolution(defaultResolution);
-        }
-      } catch (e) {
-        console.error("Failed to access localStorage for chartResolution:", e);
-        setChartResolution("15S"); // Fallback to default
-      }
-    };
-
-    getChartResolution();
 
     fetchToggle();
 
