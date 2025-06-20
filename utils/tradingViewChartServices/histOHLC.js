@@ -6,7 +6,12 @@ const TOKEN_DETAILS = (resolution, offset) => `query TradingView($token: String,
   Solana(dataset: combined) {
     DEXTradeByTokens(
       orderBy: {descendingByField: "Block_Timefield"}
-      where: {Trade: {Currency: {MintAddress: {is: $token}}, PriceAsymmetry: {lt: 0.1}}}
+      where: {
+        Trade: {
+          Currency: {MintAddress: {is: $token}}, 
+          PriceAsymmetry: {lt: 0.1}
+        }
+      }
       limit: {count: 500, offset: ${offset}}
     ) {
       Block {
@@ -36,7 +41,7 @@ const TOKEN_SECONDS_DETAILS = () => `
   query TradingView($token: String, $interval: Int) {
   Solana(dataset: realtime, aggregates: no) {
      DEXTradeByTokens(
-      orderBy: {ascendingByField: "Block_Time"}
+      orderBy: {descendingByField: "Block_Timefield"}
       where: {
         Trade: {
           Currency: {MintAddress: {is: $token}}, 
@@ -59,7 +64,7 @@ const TOKEN_SECONDS_DETAILS = () => `
       }
     ) {
       Block {
-        Time(interval: {count: $interval, in: seconds})
+        Timefield: Time(interval: {count: $interval, in: seconds})
       }
       low: quantile(of: Trade_PriceInUSD, level: 0.05)
       high: quantile(of: Trade_PriceInUSD, level: 0.80)
@@ -206,7 +211,7 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
           high,
           low,
           close,
-          volume: isUsdActive ? Number(trade?.volume) : Number(trade?.sol_volume) ,
+          volume: isUsdActive ? Number(trade?.volume) : Number(trade?.sol_volume),
         };
       })
       .filter(item => item != null);
@@ -221,75 +226,48 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
     bars = deduped.sort((a, b) => a.time - b.time);
 
   if (bars?.length > 0) {
-  let lastValidClose = bars[0].close; // Initialize with first bar's close
+    const confirmationWindow = 3;
 
-  // Calculate percentage changes and identify spikes
-  const barsWithMetrics = bars.map((bar, index, arr) => {
-    if (index === 0) {
-      lastValidClose = bar.close;
-      return { ...bar, percentageChange: 0 };
-    }
+    const filteredBars = bars.map((bar, index, arr) => {
+      const surrounding = [];
 
-    const newOpen = lastValidClose;
-    const newClose = bar.close;
-    const absoluteChange = Math.abs(newClose - newOpen);
-    const referencePrice = Math.min(Math.abs(newOpen), Math.abs(newClose));
-    const percentageChange = referencePrice === 0 ? 0 : (absoluteChange / referencePrice) * 100;
-
-    lastValidClose = newClose;
-
-    return {
-      ...bar,
-      open: newOpen,
-      close: newClose,
-      percentageChange,
-      originalIndex: index // Store original index for reference
-    };
-  });
-
-  // Detect and remove spikes
-  const filteredBars = barsWithMetrics.filter((bar, index, arr) => {
-    const isSpike = bar.percentageChange > 3; // Spike threshold: >3% change
-    if (!isSpike) return true; // Keep non-spike bars
-
-    // Check 4 candles before and after
-    const lookback = 4;
-    const lookahead = 4;
-    const normalThreshold = 7; // Normalization threshold: <10% change
-
-    // Collect percentage changes of surrounding candles
-    const prevChanges = [];
-    const nextChanges = [];
-
-    // Look back
-    for (let i = 1; i <= lookback; i++) {
-      if (index - i >= 0) {
-        prevChanges.push(arr[index - i].percentageChange);
+      for (let i = 1; i <= confirmationWindow; i++) {
+        if (arr[index - i]) surrounding.push(arr[index - i].close);
+        if (arr[index + i]) surrounding.push(arr[index + i].close);
       }
-    }
 
-    // Look forward
-    for (let i = 1; i <= lookahead; i++) {
-      if (index + i < arr.length) {
-        nextChanges.push(arr[index + i].percentageChange);
-      }
-    }
+      const surroundingAvg = surrounding.length
+        ? surrounding.reduce((sum, p) => sum + p, 0) / surrounding.length
+        : bar.close;
 
-    // Check if surrounding candles are "normal" (most have <5% change)
-    const normalPrev = prevChanges.length > 0 
-      ? prevChanges.filter(change => change < normalThreshold).length >= prevChanges.length * 0.75
-      : true; // Consider normal if not enough previous candles
-    const normalNext = nextChanges.length > 0 
-      ? nextChanges.filter(change => change < normalThreshold).length >= nextChanges.length * 0.75
-      : true; // Consider normal if not enough next candles
+      // ✅ Compute local standard deviation (volatility)
+      const localVolatility = surrounding.length
+        ? Math.sqrt(
+            surrounding.reduce((sum, p) => sum + Math.pow(p - surroundingAvg, 2), 0) / surrounding.length
+          ) / surroundingAvg // normalize it
+        : 0;
 
-    // If both surrounding sets are mostly normal, consider this a spike to remove
-    return !(normalPrev && normalNext);
-  });
+      const deviation = Math.abs(bar.close - surroundingAvg) / surroundingAvg;
 
-  // Reconstruct bars with clamped high/low and reconnect open prices
+      // ✅ Define a spike as anything beyond X × local volatility
+      const volatilityMultiplier = 3; // tweak this
+      const dynamicThreshold = localVolatility * volatilityMultiplier;
+
+      const isSpike = deviation > dynamicThreshold;
+
+      return {
+        ...bar,
+        isSpike,
+        surroundingAvg,
+        deviation,
+        dynamicThreshold,
+        localVolatility,
+      };
+    }).filter(bar => !bar.isSpike);
+
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
   bars = filteredBars.map((bar, index, arr) => {
-    // Use previous bar's close as open for all bars except the first
     const newOpen = index === 0 ? bar.open : arr[index - 1].close;
 
     const bodyTop = Math.max(newOpen, bar.close);
@@ -303,8 +281,8 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
       time: bar.time,
       open: newOpen,
       close: bar.close,
-      high: Math.min(bar.high, maxHigh),
-      low: Math.max(bar.low, minLow),
+      high: clamp(bar.high, bodyTop, maxHigh),
+      low: clamp(bar.low, minLow, bodyBottom),
       volume: bar.volume
     };
   });
@@ -344,7 +322,6 @@ export async function fetchHistoricalData(periodParams, resolution, token, isUsd
       );
       await bars.sort((a, b) => a.time - b.time);
     }
-    
     return {
       bars,
       offset: trades?.length
