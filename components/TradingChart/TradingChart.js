@@ -12,6 +12,7 @@ import { clearSellItems } from "@/utils/tradingViewChartServices/sellItems";
 import { clearChunk } from "@/utils/tradingViewChartServices/historicalChunk";
 import axios from "axios";
 import { clear100SellLine, subscribe100SellLine } from "@/utils/tradingViewChartServices/firstSell100Percent";
+import { resetResolutionOffsets } from "@/utils/tradingViewChartServices/getBars";
 
 const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, solanaLivePrice, supply }) => {
   const chartContainerRef = useRef(null);
@@ -356,6 +357,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
         resetLines();
         clearChunk();
         clearSellItems();
+        resetResolutionOffsets();
         setIsUsdSolToggled((prev) => {
           const newState = !prev;
           usdSolButton.innerHTML = newState ? 
@@ -376,6 +378,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
       mcUsdButton.addEventListener("click", () => {
         resetLines();
         clearChunk();
+        resetResolutionOffsets();
         clearSellItems();
         setIsMcPriceToggled((prev) => {
           const newState = !prev;
