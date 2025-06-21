@@ -131,7 +131,7 @@ export async function subscribeToWalletTracker() {
 
     // watch balance updates
     await socket.on("balance_updates", async (data) => {
-      // console.log("🚀 ~ awaitsocket.on ~ data:", data);
+      console.log("🚀 ~ awaitsocket.on ~ data:=========================>");
       store.dispatch(updateWalletAddressesBalanceLive(data));
     });
     socket.on("disconnect", async () => {
