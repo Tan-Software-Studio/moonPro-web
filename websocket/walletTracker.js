@@ -47,27 +47,6 @@ let isSocketOnAISignalCore = false;
 let isTrendingSocketOn = false;
 export async function subscribeToWalletTracker() {
   try {
-    // const token = localStorage.getItem("token");
-    // let wallets = null;
-    try {
-      // if (token) {
-      //   wallets = await axios({
-      //     method: "get",
-      //     url: `${BASE_URL_MOON}wallettracker/walletTracking`,
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   });
-      // }
-    } catch (error) {}
-    // let walletsToTrack = [];
-    // if (wallets?.data?.data?.wallets?.length > 0) {
-    //   await wallets?.data?.data?.wallets?.map((item) => {
-    //     if (item?.alert == true) {
-    //       walletsToTrack.push(item?.walletAddress?.toLowerCase());
-    //     }
-    //   });
-    // }
     if (isSocketOn) {
       console.log("Trades websocket is already connected.");
       return;
@@ -128,20 +107,15 @@ export async function subscribeToWalletTracker() {
       //   }
       // }
     });
-
-    // watch balance updates
-    await socket.on("balance_updates", async (data) => {
-      console.log("🚀 ~ awaitsocket.on ~ data:=========================>");
-      store.dispatch(updateWalletAddressesBalanceLive(data));
-    });
     socket.on("disconnect", async () => {
-      console.log("Balance updates disconnected.");
+      console.log("New trades disconnected.");
       isSocketOn = false;
     });
   } catch (error) {
     console.log("🚀 ~ subscribeToWalletTracker ~ error:", error?.message);
   }
 }
+
 export async function subscribeToTrendingTokens() {
   try {
     if (isTrendingSocketOn) {
@@ -151,7 +125,7 @@ export async function subscribeToTrendingTokens() {
     await socket.connect();
     isTrendingSocketOn = true;
     await socket.on("connect", () => {
-      console.log("Trades websocket connected.");
+      console.log("Trades trending websocket connected.");
     });
 
     // new launch pumpfun data
@@ -197,12 +171,21 @@ export async function subscribeToTrendingTokens() {
       }
     });
 
-    // live solana price
-    let liveSolanaPrice = 0;
-    // solana wallet address
-    store.subscribe(() => {
-      liveSolanaPrice = store?.getState()?.AllStatesData?.solanaLivePrice;
+    await socket.on("balance_updates", async (data) => {
+      console.log("🚀 ~ awaitsocket.on ~ data:=========================>");
+      store.dispatch(updateWalletAddressesBalanceLive(data));
     });
+    socket.on("disconnect", async () => {
+      console.log("Trendings and memescope disconnected.");
+      isTrendingSocketOn = false;
+    });
+
+    // live solana price
+    // let liveSolanaPrice = 0;
+    // solana wallet address
+    // store.subscribe(() => {
+    //   liveSolanaPrice = store?.getState()?.AllStatesData?.solanaLivePrice;
+    // });
 
     // gRPC node data
     // socket.on("gRPC_node_tx", async (data) => {
