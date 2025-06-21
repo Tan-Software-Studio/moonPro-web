@@ -80,6 +80,19 @@ const userDataSlice = createSlice({
           });
       }
     },
+    updateWalletAddressesBalanceLive: (state, { payload }) => {
+      if (state?.userDetails?.walletAddressSOL?.length > 0) {
+        for (const element of state?.userDetails?.walletAddressSOL) {
+          const isWallet = payload[element?.wallet];
+          if (isWallet) {
+            console.log("🚀 ~ isWallet:", isWallet);
+            state.userDetails.walletAddressSOL[element?.index].balance = Number(
+              isWallet?.BalanceUpdate?.PostBalance
+            );
+          }
+        }
+      }
+    },
     setBalancesLoading: (state, action) => {
       state.isLoadingBalances = action.payload;
     },
@@ -120,5 +133,6 @@ export const {
   updateWalletToPrimary,
   addNewGeneratedWallet,
   updateUserReferralId,
+  updateWalletAddressesBalanceLive,
 } = userDataSlice.actions;
 export default userDataSlice.reducer;
