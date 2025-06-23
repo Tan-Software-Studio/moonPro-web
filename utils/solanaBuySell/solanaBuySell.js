@@ -120,13 +120,15 @@ const buySolanaTokens = async (
         console.log("Buy Add Mark error", err);
       }
       setLoaderSwap(false);
-      setTimeout(async () => {
-        const [tokenBalanceUpdate, solBalance] = await Promise.all([
-          getSoalanaTokenBalance(address, toToken),
-          dispatch(fetchSolanaNativeBalance(address)),
-        ]);
-        setTokenBalance(tokenBalanceUpdate);
-      }, 5000);
+      if (address) {
+        setTimeout(async () => {
+          const tokenBalanceUpdate = await getSoalanaTokenBalance(
+            address,
+            toToken
+          );
+          setTokenBalance(tokenBalanceUpdate);
+        }, 5000);
+      }
     })
     .catch(async (err) => {
       setLoaderSwap(false);
@@ -230,9 +232,6 @@ const buySolanaTokensQuickBuyHandler = async (
         })
       );
       dispatch(setBuyAndSellCountInPerformance("buy"));
-      setTimeout(() => {
-        dispatch(fetchSolanaNativeBalance(address));
-      }, 2000);
     })
     .catch(async (err) => {
       await toast.error("Somthing went wrong please try again later.", {
@@ -337,9 +336,6 @@ const buySolanaTokensQuickBuyHandlerCopyTrading = async (
         })
       );
       dispatch(setBuyAndSellCountInPerformance("buy"));
-      setTimeout(() => {
-        dispatch(fetchSolanaNativeBalance(address));
-      }, 2000);
     })
     .catch(async (err) => {
       await toast.error("Somthing went wrong please try again later.", {
@@ -470,13 +466,15 @@ const sellSolanaTokens = async (
       } catch (err) {
         // console.log("Saving 100 Sell Line", err);
       }
-      setTimeout(async () => {
-        const [tokenBalanceUpdate, solBalance] = await Promise.all([
-          getSoalanaTokenBalance(address, fromToken),
-          dispatch(fetchSolanaNativeBalance(address)),
-        ]);
-        setTokenBalance(tokenBalanceUpdate);
-      }, 5000);
+      if (address) {
+        setTimeout(async () => {
+          const tokenBalanceUpdate = await getSoalanaTokenBalance(
+            address,
+            fromToken
+          );
+          setTokenBalance(tokenBalanceUpdate);
+        }, 5000);
+      }
     })
     .catch(async (err) => {
       setLoaderSwap(false);
@@ -584,9 +582,6 @@ const sellSolanaTokensFromPortfolio = async (
         })
       );
       dispatch(setBuyAndSellCountInPerformance("sell"));
-      setTimeout(async () => {
-        dispatch(fetchSolanaNativeBalance(address));
-      }, 5000);
     })
     .catch(async (err) => {
       setLoaderSwap(false);

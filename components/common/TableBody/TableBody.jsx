@@ -34,11 +34,12 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [copied, setCopied] = useState(false);
-  const nativeTokenbalance = useSelector(
-    (state) => state?.AllStatesData?.solNativeBalance
-  );
+
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
+  );
+  const activeSolWalletAddress = useSelector(
+    (state) => state?.userData?.activeSolanaWallet
   );
   // solana live price
   const solanaLivePrice = useSelector(
@@ -82,11 +83,6 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
 
     return () => clearInterval(interval);
   }, []);
-  useEffect(() => {
-    if (solWalletAddress) {
-      dispatch(fetchSolanaNativeBalance(solWalletAddress));
-    }
-  }, [solWalletAddress]);
   return (
     <>
       {isLoading ? (
@@ -455,8 +451,8 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
                           solanaLivePrice,
                           row?.address,
                           quickBuy,
-                          solWalletAddress,
-                          nativeTokenbalance,
+                          activeSolWalletAddress?.wallet || solWalletAddress,
+                          activeSolWalletAddress?.balance || 0,
                           e,
                           row?.programAddress
                             ? row?.programAddress

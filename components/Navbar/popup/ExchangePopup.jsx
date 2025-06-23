@@ -7,7 +7,10 @@ import { Solana, usdc } from "@/app/Images";
 import { useSelector } from "react-redux";
 import { BiCheckDouble } from "react-icons/bi";
 import { getSoalanaTokenBalance } from "@/utils/solanaNativeBalance";
-import { convertSOLtoUSDC, convertUSDCtoSOL,  } from "@/utils/solanaBuySell/solanaBuySell";
+import {
+  convertSOLtoUSDC,
+  convertUSDCtoSOL,
+} from "@/utils/solanaBuySell/solanaBuySell";
 
 const ExchangePopup = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState("Deposit");
@@ -18,29 +21,40 @@ const ExchangePopup = ({ isOpen, onClose }) => {
   const [isSwapped, setIsSwapped] = useState(false);
   const [usdcBalance, setUsdcBalance] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-
-  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
-  const solWalletAddress = useSelector((state) => state?.AllStatesData?.solWalletAddress);
-  const depositAddress = useSelector((state) => state?.AllStatesData?.solWalletAddress);
-  const solanaLivePrice = useSelector((state) => state?.AllStatesData?.solanaLivePrice);
-  const usdcLivePrice = useSelector((state) => state?.AllStatesData?.usdcLivePrice);
+  const solWalletAddress = useSelector(
+    (state) => state?.AllStatesData?.solWalletAddress
+  );
+  const activeSolWalletAddress = useSelector(
+    (state) => state?.userData?.activeSolanaWallet
+  );
+  const solanaLivePrice = useSelector(
+    (state) => state?.AllStatesData?.solanaLivePrice
+  );
+  const usdcLivePrice = useSelector(
+    (state) => state?.AllStatesData?.usdcLivePrice
+  );
   const dispatch = useSelector((state) => state?.dispatch);
 
   const USDC_MINT_ADDRESS = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 
   useEffect(() => {
     const fetchUsdcBalance = async () => {
-      if (solWalletAddress) {
-        const balance = await getSoalanaTokenBalance(solWalletAddress, USDC_MINT_ADDRESS);
+      if (activeSolWalletAddress?.wallet) {
+        const balance = await getSoalanaTokenBalance(
+          solWalletAddress,
+          USDC_MINT_ADDRESS
+        );
         setUsdcBalance(balance);
       }
     };
 
     fetchUsdcBalance();
-  }, [solWalletAddress]);
+  }, [activeSolWalletAddress]);
 
   const handleCopyAddress = () => {
-    navigator.clipboard.writeText(depositAddress);
+    navigator.clipboard.writeText(
+      activeSolWalletAddress?.wallet || solWalletAddress
+    );
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -48,7 +62,9 @@ const ExchangePopup = ({ isOpen, onClose }) => {
   const handleConvertAmountChange = (value) => {
     const numValue = parseFloat(value) || 0;
 
-    const maxBalance = isSwapped ? usdcBalance : nativeTokenbalance;
+    const maxBalance = isSwapped
+      ? usdcBalance
+      : activeSolWalletAddress?.balance || 0;
     if (numValue > maxBalance) {
       return;
     }
@@ -78,7 +94,7 @@ const ExchangePopup = ({ isOpen, onClose }) => {
     } else {
       const solPrice = solanaLivePrice || 174.21;
       const convertValue = numValue / solPrice;
-      if (convertValue > nativeTokenbalance) {
+      if (convertValue > activeSolWalletAddress?.balance || 0) {
         return;
       }
       setConvertAmount(convertValue.toFixed(6));
@@ -105,7 +121,7 @@ const ExchangePopup = ({ isOpen, onClose }) => {
           50,
           0.0001,
           usdcLivePrice || 1,
-          solWalletAddress,
+          activeSolWalletAddress?.wallet || solWalletAddress,
           setIsLoading,
           setUsdcBalance,
           dispatch
@@ -118,7 +134,7 @@ const ExchangePopup = ({ isOpen, onClose }) => {
           0.0001,
           solanaLivePrice || 174.21,
           usdcLivePrice || 1,
-          solWalletAddress,
+          activeSolWalletAddress?.wallet || solWalletAddress,
           setIsLoading,
           setUsdcBalance,
           dispatch
@@ -139,10 +155,16 @@ const ExchangePopup = ({ isOpen, onClose }) => {
 
   const fromToken = isSwapped ? "USDC" : "SOL";
   const toToken = isSwapped ? "SOL" : "USDC";
-  const fromBalance = isSwapped ? usdcBalance : nativeTokenbalance;
-  const toBalance = isSwapped ? nativeTokenbalance : usdcBalance;
+  const fromBalance = isSwapped
+    ? usdcBalance
+    : activeSolWalletAddress?.balance || 0;
+  const toBalance = isSwapped
+    ? activeSolWalletAddress?.balance || 0
+    : usdcBalance;
   const solPrice = solanaLivePrice || 174.21;
-  const rateText = isSwapped ? `1 USDC ≈ ${(1 / solPrice).toFixed(5)} SOL` : `1 SOL = ${solPrice.toFixed(2)} USDC`;
+  const rateText = isSwapped
+    ? `1 USDC ≈ ${(1 / solPrice).toFixed(5)} SOL`
+    : `1 SOL = ${solPrice.toFixed(2)} USDC`;
 
   return (
     <motion.div
@@ -166,7 +188,10 @@ const ExchangePopup = ({ isOpen, onClose }) => {
         {/* Header */}
         <div className="flex items-center justify-between sm:p-4 p-3 border-b border-gray-800">
           <h2 className="text-lg font-medium text-white">Exchange</h2>
-          <button onClick={() => onClose()} className="text-gray-400 hover:text-white">
+          <button
+            onClick={() => onClose()}
+            className="text-gray-400 hover:text-white"
+          >
             <X size={20} />
           </button>
         </div>
@@ -182,7 +207,9 @@ const ExchangePopup = ({ isOpen, onClose }) => {
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   className={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-colors ${
-                    activeTab === tab ? "text-white bg-[#2A2A2A]" : "text-gray-400 hover:text-white"
+                    activeTab === tab
+                      ? "text-white bg-[#2A2A2A]"
+                      : "text-gray-400 hover:text-white"
                   }`}
                 >
                   {tab}
@@ -295,11 +322,21 @@ const ExchangePopup = ({ isOpen, onClose }) => {
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <Image src={Solana} alt="solana" height={20} width={20} className="rounded-full" />
+                    <Image
+                      src={Solana}
+                      alt="solana"
+                      height={20}
+                      width={20}
+                      className="rounded-full"
+                    />
                     <span className="text-white text-sm">Solana</span>
                   </div>
                   <span className="text-white text-sm">
-                    Balance: <span className="text-blue-500">{Number(nativeTokenbalance || 0).toFixed(3)} SOL</span>
+                    Balance:{" "}
+                    <span className="text-blue-500">
+                      {Number(activeSolWalletAddress?.balance || 0).toFixed(3)}{" "}
+                      SOL
+                    </span>
                   </span>
                 </div>
 
@@ -314,19 +351,36 @@ const ExchangePopup = ({ isOpen, onClose }) => {
                     <div className="bg-white p-3 rounded-lg w-32 h-32 flex items-center justify-center flex-shrink-0">
                       <QRCode
                         size={256}
-                        style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                        value={depositAddress}
+                        style={{
+                          height: "auto",
+                          maxWidth: "100%",
+                          width: "100%",
+                        }}
+                        value={
+                          activeSolWalletAddress?.wallet || solWalletAddress
+                        }
                         viewBox={`0 0 256 256`}
                       />
                     </div>
                     <div className="flex-1 flex flex-col justify-between min-w-0">
                       <div>
-                        <p className="text-[#A8A8A8] text-sm mb-2">Deposit Address</p>
-                        <p className="text-white text-sm break-all font-mono leading-tight">{depositAddress}</p>
+                        <p className="text-[#A8A8A8] text-sm mb-2">
+                          Deposit Address
+                        </p>
+                        <p className="text-white text-sm break-all font-mono leading-tight">
+                          {activeSolWalletAddress?.wallet || solWalletAddress}
+                        </p>
                       </div>
                       <div className="flex justify-end">
-                        <button onClick={handleCopyAddress} className="text-gray-400 hover:text-white p-1">
-                          {copied ? <BiCheckDouble size={16} /> : <Copy size={16} />}
+                        <button
+                          onClick={handleCopyAddress}
+                          className="text-gray-400 hover:text-white p-1"
+                        >
+                          {copied ? (
+                            <BiCheckDouble size={16} />
+                          ) : (
+                            <Copy size={16} />
+                          )}
                         </button>
                       </div>
                     </div>
@@ -353,7 +407,7 @@ const ExchangePopup = ({ isOpen, onClose }) => {
                     <span className="text-white text-sm">Solana</span>
                   </div>
                   <span className="text-white text-sm">
-                    Balance: <span className="text-blue-500">{Number(nativeTokenbalance || 0).toFixed(3)} SOL</span>
+                    Balance: <span className="text-blue-500">{Number(activeSolWalletAddress?.balance  || 0).toFixed(3)} SOL</span>
                   </span>
                 </div>
 

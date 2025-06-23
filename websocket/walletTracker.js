@@ -172,7 +172,7 @@ export async function subscribeToTrendingTokens() {
     });
 
     await socket.on("balance_updates", async (data) => {
-      console.log("🚀 ~ awaitsocket.on ~ data:=========================>");
+      // console.log("🚀 ~ awaitsocket.on ~ data:=========================>");
       store.dispatch(updateWalletAddressesBalanceLive(data));
     });
     socket.on("disconnect", async () => {
@@ -254,6 +254,7 @@ export async function subscribeToAiSignalTokensNewAddedToken() {
     aiSignalDataFromStore = store?.getState().aiSignal.aiSignalData;
   });
   socketAiSignalBackend.on("aiSignleLiveData", async (data) => {
+    console.log("🚀 ~ socketAiSignalBackend.on ~ data:", data)
     let newDataArr = [];
     if (data?.length >= 100) {
       newDataArr = [...data];

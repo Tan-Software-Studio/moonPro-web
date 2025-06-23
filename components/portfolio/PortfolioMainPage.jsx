@@ -10,8 +10,8 @@ import { useTranslation } from "react-i18next";
 
 const PortfolioMainPage = () => {
   const dispatch = useDispatch();
-  const solWalletAddress = useSelector(
-    (state) => state?.AllStatesData?.solWalletAddress
+  const activeSolWalletAddress = useSelector(
+    (state) => state?.userData?.activeSolanaWallet
   );
   const activeTab = useSelector((state) => state?.setPnlData?.pnlTableData);
   useEffect(() => {
@@ -23,7 +23,7 @@ const PortfolioMainPage = () => {
 
   return (
     <>
-      {solWalletAddress ? (
+      {activeSolWalletAddress?.wallet ? (
         <>
           <div className="overflow-y-scroll h-[95vh]">
             <div className="flex items-center gap-5 p-5">

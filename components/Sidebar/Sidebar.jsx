@@ -41,6 +41,9 @@ const Sidebar = () => {
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
+  const activeSolWalletAddress = useSelector(
+    (state) => state?.userData?.activeSolanaWallet
+  );
   const selectToken = useSelector(
     (state) => state?.AllthemeColorData?.selectToken
   );
@@ -111,12 +114,12 @@ const Sidebar = () => {
 
   // start websocket for wallet tracking
   useEffect(() => {
-    if (solWalletAddress) {
-      dispatch(fetchPNLData(solWalletAddress));
-      dispatch(fetchPNLDataHistory(solWalletAddress));
-      dispatch(fetchPerformanceHistory(solWalletAddress));
+    if (activeSolWalletAddress?.wallet) {
+      dispatch(fetchPNLData(activeSolWalletAddress?.wallet));
+      dispatch(fetchPNLDataHistory(activeSolWalletAddress?.wallet));
+      dispatch(fetchPerformanceHistory(activeSolWalletAddress?.wallet));
     }
-  }, [solWalletAddress]);
+  }, [activeSolWalletAddress]);
 
 
   useEffect(() => {

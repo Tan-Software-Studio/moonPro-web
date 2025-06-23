@@ -40,6 +40,7 @@ import ExchangePopup from "./popup/ExchangePopup";
 import {
   fetchUserData,
   makeUserEmptyOnLogout,
+  resetActiveWalletAddress,
   setBalancesError,
   setBalancesLoading,
   setWalletBalances,
@@ -76,6 +77,10 @@ const Navbar = () => {
   const [hasCalledBitquery, setHasCalledBitquery] = useState(false);
 
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
+
+  const activeSolWalletAddress = useSelector(
+    (state) => state?.userData?.activeSolanaWallet
+  );
 
   // handle to get phrase of solana
   async function handleToGetSolanaPhrase() {
@@ -172,9 +177,6 @@ const Navbar = () => {
   const userDetails = useSelector((state) => state?.userData?.userDetails);
 
   // X===================X Use selectors X===================X //
-  const nativeTokenbalance = useSelector(
-    (state) => state?.AllStatesData?.solNativeBalance
-  );
   const usdcBalance = useSelector((state) => state?.AllStatesData?.usdcBalance);
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
@@ -190,6 +192,7 @@ const Navbar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("walletAddress");
     dispatch(setSolWalletAddress());
+    dispatch(resetActiveWalletAddress());
     dispatch(makeUserEmptyOnLogout());
     router.replace("/trending");
     setIsProfileOpen(false);
@@ -257,9 +260,6 @@ const Navbar = () => {
 
   useEffect(() => {
     if (solWalletAddress) {
-      dispatch(fetchSolanaNativeBalance(solWalletAddress));
-      // dispatch(fetchUsdcBalance(solWalletAddress));
-
       if (!userDetails?.email) {
         dispatch(fetchUserData());
       }
@@ -288,7 +288,7 @@ const Navbar = () => {
   const handleCopyAddress = async (e) => {
     e.stopPropagation();
     try {
-      await navigator.clipboard.writeText(solWalletAddress);
+      await navigator.clipboard.writeText(activeSolWalletAddress?.wallet);
       setToastMessage("SOL address copied to clipboard");
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
@@ -345,7 +345,7 @@ const Navbar = () => {
                   <LuSearch size={24} />
                 </div>
 
-                {mounted && solWalletAddress && (
+                {mounted && activeSolWalletAddress?.wallet && (
                   <button
                     onClick={() => handleOpenDeposit("deposit")}
                     className="px-3 py-1.5 sm:block hidden bg-[#1d73fc] hover:bg-[#438bff] text-black rounded-md text-sm font-bold transition-colors cursor-pointer"
@@ -355,7 +355,7 @@ const Navbar = () => {
                 )}
 
                 {/* Watchlist */}
-                {mounted && solWalletAddress && (
+                {mounted && activeSolWalletAddress?.wallet && (
                   <div
                     onClick={() => setIsWatchlistPopup(true)}
                     className="cursor-pointer"
@@ -367,15 +367,7 @@ const Navbar = () => {
                   </div>
                 )}
 
-                {/* Notifications */}
-                {/* {mounted && solWalletAddress && (
-                <div onClick={() => dispatch(setIsEnabled(!isEnabled))} className="cursor-pointer relative">
-                  <RiNotification4Line size={24} />
-                  <div className="w-2 h-2 rounded-full bg-[#ED1B24] absolute right-[0.6px] top-[0.6px]"></div>
-                </div>
-              )} */}
-
-                {solWalletAddress && (
+                {activeSolWalletAddress?.wallet && (
                   <div className={`relative`} ref={walletDropdownRef}>
                     <div
                       onClick={() =>
@@ -392,15 +384,22 @@ const Navbar = () => {
                           className="rounded-full"
                         />
                         <div className="sm:flex hidden">
-                          {Number(nativeTokenbalance).toFixed(5) || 0}
+                          {Number(activeSolWalletAddress?.balance || 0).toFixed(
+                            5
+                          ) || 0}
                         </div>
                       </div>
 
                       <div className="sm:flex  hidden items-center gap-3">
                         <FaWallet className="h-4 w-4 text-[#FFFFFF]" />
                         <div className={` text-[#A8A8A8] text-sm font-thin `}>
-                          {solWalletAddress?.toString()?.slice(0, 4)}...
-                          {solWalletAddress?.toString()?.slice(-4)}
+                          {activeSolWalletAddress?.wallet
+                            ?.toString()
+                            ?.slice(0, 4)}
+                          ...
+                          {activeSolWalletAddress?.wallet
+                            ?.toString()
+                            ?.slice(-4)}
                         </div>
                       </div>
                     </div>
@@ -429,7 +428,7 @@ const Navbar = () => {
                               {/* ${(Number(nativeTokenbalance) * (solanaLivePrice || 0)).toFixed(2)}$ */}
                               $
                               {(
-                                Number(nativeTokenbalance) *
+                                Number(activeSolWalletAddress?.balance) *
                                   (solanaLivePrice || 0) +
                                 Number(usdcBalance) * 1
                               ).toFixed(2)}
@@ -441,7 +440,7 @@ const Navbar = () => {
                             onClick={() =>
                               handleOpenDeposit(
                                 "balance",
-                                Number(nativeTokenbalance)
+                                Number(activeSolWalletAddress?.balance)
                               )
                             }
                           >
@@ -454,7 +453,9 @@ const Navbar = () => {
                                 className="rounded-full"
                               />
                               <span className="text-lg font-semibold text-white">
-                                {Number(nativeTokenbalance).toFixed(5)}
+                                {Number(
+                                  activeSolWalletAddress?.balance
+                                ).toFixed(5)}
                               </span>
                             </div>
 
@@ -491,7 +492,7 @@ const Navbar = () => {
 
                 {/* Profile */}
                 <div className="flex items-center gap-2 ">
-                  {solWalletAddress ? (
+                  {activeSolWalletAddress?.wallet ? (
                     <div className=" " ref={dropdownRef}>
                       <div onClick={() => setIsProfileOpen((prev) => !prev)}>
                         <PiUserBold size={26} className={`cursor-pointer`} />
@@ -594,7 +595,7 @@ const Navbar = () => {
           <WithdrawPopup
             isOpen={isWithdrawPopup}
             onClose={() => setIsWithdrawPopup(false)}
-            balance={nativeTokenbalance} // Pass the actual balance
+            balance={activeSolWalletAddress?.balance} // Pass the actual balance
             tokenSymbol="SOL"
             solanaLivePrice={solanaLivePrice}
           />

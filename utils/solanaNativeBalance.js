@@ -43,7 +43,7 @@ const getSoalanaTokenBalance = async (walletAddress, tokenMintAddress) => {
     const balance = Number(accountInfo.amount) / 10 ** mintInfo.decimals;
     return balance;
   } catch (error) {
-    // console.log("🚀 ~ getSoalanaTokenBalance ~ error:", error);
+    console.log("🚀 ~ getSoalanaTokenBalance ~ error:", error);
     return 0;
   }
 };

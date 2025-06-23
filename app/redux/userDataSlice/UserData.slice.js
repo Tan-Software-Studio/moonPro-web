@@ -25,6 +25,7 @@ const userDataSlice = createSlice({
   initialState: {
     userDetails: {},
     walletBalances: [],
+    activeSolanaWallet: {},
     isLoadingBalances: false,
     balancesError: null,
   },
@@ -39,6 +40,10 @@ const userDataSlice = createSlice({
     addNewGeneratedWallet: (state, { payload }) => {
       state?.userDetails?.walletAddressSOL.push(payload);
     },
+    resetActiveWalletAddress: (state, { payload }) => {
+      state.activeSolanaWallet = {};
+    },
+
     clearWalletBalances: (state) => {
       if (state.userDetails && state.userDetails.walletAddressSOL) {
         state.userDetails.walletAddressSOL =
@@ -79,6 +84,12 @@ const userDataSlice = createSlice({
             };
           });
       }
+      const findPrimaryWallet = state.userDetails.walletAddressSOL?.find(
+        (item) => item?.primary
+      );
+      if (findPrimaryWallet) {
+        state.activeSolanaWallet = findPrimaryWallet;
+      }
     },
     updateWalletAddressesBalanceLive: (state, { payload }) => {
       if (state?.userDetails?.walletAddressSOL?.length > 0) {
@@ -114,12 +125,20 @@ const userDataSlice = createSlice({
         );
       if (setNewPrimaryToFalse >= 0) {
         state.userDetails.walletAddressSOL[setNewPrimaryToFalse].primary = true;
+        state.activeSolanaWallet =
+          state.userDetails.walletAddressSOL[setNewPrimaryToFalse];
       }
     },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserData.fulfilled, (state, { payload }) => {
       state.userDetails = payload?.user;
+      const findPrimaryWallet = state.userDetails.walletAddressSOL?.find(
+        (item) => item?.primary
+      );
+      if (findPrimaryWallet) {
+        state.activeSolanaWallet = findPrimaryWallet;
+      }
     });
   },
 });
@@ -134,5 +153,6 @@ export const {
   addNewGeneratedWallet,
   updateUserReferralId,
   updateWalletAddressesBalanceLive,
+  resetActiveWalletAddress,
 } = userDataSlice.actions;
 export default userDataSlice.reducer;

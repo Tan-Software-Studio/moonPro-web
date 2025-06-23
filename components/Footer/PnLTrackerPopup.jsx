@@ -12,18 +12,23 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
   const [hoveredControl, setHoveredControl] = useState(null);
   const popupRef = useRef(null);
 
-  const nativeTokenbalance = useSelector((state) => state?.AllStatesData?.solNativeBalance);
-  const currentTabData = useSelector((state) => state?.setPnlData?.PnlData || []);
+  const currentTabData = useSelector(
+    (state) => state?.setPnlData?.PnlData || []
+  );
 
   // unrealized pnl calculation
   const UnrealizedPNL = currentTabData.reduce((acc, item) => {
-    const pnl = (item?.activeQtyHeld - item?.quantitySold) * (item.current_price - item.averageBuyPrice);
+    const pnl =
+      (item?.activeQtyHeld - item?.quantitySold) *
+      (item.current_price - item.averageBuyPrice);
     return acc + pnl;
   }, 0);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const savedPosition = JSON.parse(localStorage.getItem("pnlTrackerPosition") || "null");
+      const savedPosition = JSON.parse(
+        localStorage.getItem("pnlTrackerPosition") || "null"
+      );
       if (savedPosition) {
         setPosition(savedPosition);
       } else {
@@ -90,8 +95,9 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
   return (
     <div
       ref={popupRef}
-      className={`fixed z-50 bg-[#1a1a1a] shadow-[0_0_16px_rgba(30,30,30,0.8)]  rounded-lg  border-[1px] border-[#404040] select-none transition-opacity duration-200 ${isDragging ? "opacity-70" : "opacity-100"
-        }`}
+      className={`fixed z-50 bg-[#1a1a1a] shadow-[0_0_16px_rgba(30,30,30,0.8)]  rounded-lg  border-[1px] border-[#404040] select-none transition-opacity duration-200 ${
+        isDragging ? "opacity-70" : "opacity-100"
+      }`}
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
@@ -107,12 +113,18 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
       }}
     >
       <div className="absolute inset-0 rounded-lg overflow-hidden">
-        <Image src={pnlbg} alt="PnL Background" fill style={{ objectFit: "cover" }} />
+        <Image
+          src={pnlbg}
+          alt="PnL Background"
+          fill
+          style={{ objectFit: "cover" }}
+        />
       </div>
 
       <div
-        className={`absolute top-2 left-2 flex items-center gap-1 z-20 transition-opacity duration-200 ${isHovered ? "opacity-100" : "opacity-0"
-          }`}
+        className={`absolute top-2 left-2 flex items-center gap-1 z-20 transition-opacity duration-200 ${
+          isHovered ? "opacity-100" : "opacity-0"
+        }`}
       >
         <div className="relative">
           <button
@@ -145,8 +157,9 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
       </div>
 
       <div
-        className={`absolute top-2 right-2 flex items-center gap-1 z-20 transition-opacity duration-200 ${isHovered ? "opacity-100" : "opacity-0"
-          }`}
+        className={`absolute top-2 right-2 flex items-center gap-1 z-20 transition-opacity duration-200 ${
+          isHovered ? "opacity-100" : "opacity-0"
+        }`}
       >
         <div className="relative">
           <button
@@ -179,16 +192,32 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
           <div className="flex flex-col">
             <div className="text-sm text-[#A8A8A8]">Balance</div>
             <div className="flex items-center gap-2 mb-2">
-              <Image src={solanasollogo} width={18} height={18} alt="solanasollogo" />
-              <div className="text-white text-2xl font-bold">${Number(nativeTokenbalance).toFixed(5) || 0}</div>
+              <Image
+                src={solanasollogo}
+                width={18}
+                height={18}
+                alt="solanasollogo"
+              />
+              <div className="text-white text-2xl font-bold">
+                ${Number(activeSolWalletAddress?.balance || 0).toFixed(5) || 0}
+              </div>
             </div>
           </div>
 
           <div className="flex flex-col">
             <div className="text-sm text-[#A8A8A8]">PNL</div>
             <div className="flex items-center gap-2 mb-2">
-              <Image src={solanasollogo} width={18} height={18} alt="solanasollogo" />
-              <div className={`text-2xl font-bold ${UnrealizedPNL >= 0 ? "text-green-400" : "text-red-400"}`}>
+              <Image
+                src={solanasollogo}
+                width={18}
+                height={18}
+                alt="solanasollogo"
+              />
+              <div
+                className={`text-2xl font-bold ${
+                  UnrealizedPNL >= 0 ? "text-green-400" : "text-red-400"
+                }`}
+              >
                 {UnrealizedPNL >= 0 ? "+" : ""}
                 {UnrealizedPNL >= 0 ? "$" : "-$"}
                 {Math.abs(UnrealizedPNL).toFixed(5)}

@@ -64,11 +64,11 @@ const MscopePumpTable = ({
   const solanaLivePrice = useSelector(
     (state) => state?.AllStatesData?.solanaLivePrice
   );
-  const nativeTokenbalance = useSelector(
-    (state) => state?.AllStatesData?.solNativeBalance
-  );
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
+  );
+  const activeSolWalletAddress = useSelector(
+    (state) => state?.userData?.activeSolanaWallet
   );
   const bigLoader = useSelector((state) => state?.AllStatesData?.bigLoader);
 
@@ -161,11 +161,6 @@ const MscopePumpTable = ({
 
     return () => clearInterval(interval);
   }, []);
-  useEffect(() => {
-    if (solWalletAddress) {
-      dispatch(fetchSolanaNativeBalance(solWalletAddress));
-    }
-  }, [solWalletAddress]);
   return (
     <>
       {initialLoading ? (
@@ -179,7 +174,9 @@ const MscopePumpTable = ({
         </div>
       ) : MemscopeData.length > 0 ? (
         <>
-          <div className={`h-svh max-h-svh visibleScroll md:border-r-[1px]  md:border-r-[#26262e]  overflow-y-scroll`}>
+          <div
+            className={`h-svh max-h-svh visibleScroll md:border-r-[1px]  md:border-r-[#26262e]  overflow-y-scroll`}
+          >
             {MemscopeData.map((block, index) => (
               <Link
                 key={index + 1}
@@ -236,7 +233,7 @@ const MscopePumpTable = ({
                           block?.img ? (
                             <img
                               key={index + 1}
-                              src={`${BASE_URL_MOON_STREAM}memescope/${block?.address}.webp`} 
+                              src={`${BASE_URL_MOON_STREAM}memescope/${block?.address}.webp`}
                               className={`absolute inset-0 m-auto w-[64px] h-[64px] object-cover ${
                                 showCircle ? "rounded-full" : ""
                               }`}
@@ -417,8 +414,9 @@ const MscopePumpTable = ({
                                       solanaLivePrice,
                                       block?.address,
                                       quickBuy,
-                                      solWalletAddress,
-                                      nativeTokenbalance,
+                                      activeSolWalletAddress?.wallet ||
+                                        solWalletAddress,
+                                      activeSolWalletAddress?.balance || 0,
                                       e,
                                       block?.programAddress
                                         ? block?.programAddress
