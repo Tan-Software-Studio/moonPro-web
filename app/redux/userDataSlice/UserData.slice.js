@@ -100,6 +100,10 @@ const userDataSlice = createSlice({
             state.userDetails.walletAddressSOL[element?.index].balance = Number(
               isWallet?.BalanceUpdate?.PostBalance
             );
+            if (state.userDetails.walletAddressSOL[element?.index].primary) {
+              state.activeSolanaWallet =
+                state.userDetails.walletAddressSOL[element?.index];
+            }
           }
         }
       }
