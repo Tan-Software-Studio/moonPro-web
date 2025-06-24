@@ -49,7 +49,7 @@ const ExchangePopup = ({ isOpen, onClose }) => {
     };
 
     fetchUsdcBalance();
-  }, [activeSolWalletAddress]);
+  }, [activeSolWalletAddress?.wallet]);
 
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(

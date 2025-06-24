@@ -183,7 +183,7 @@ const ReferralPage = () => {
         fetchData();
       }
     }
-  }, [activeSolWalletAddress]);
+  }, [activeSolWalletAddress?.wallet]);
 
   const userDisplayInfo = getUserDisplayInfo(refData?.user);
 

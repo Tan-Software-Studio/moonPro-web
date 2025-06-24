@@ -296,7 +296,7 @@ const Tradingview = () => {
     if (activeSolWalletAddress?.wallet) {
       fetchTokenMeta();
     }
-  }, [activeSolWalletAddress, tokenaddress]);
+  }, [tokenaddress]);
 
   const handleCopy = (mintAddress) => {
     setCopied(true);
