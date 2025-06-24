@@ -28,6 +28,9 @@ function WalletTracker() {
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
+  const activeSolWalletAddress = useSelector(
+    (state) => state?.userData?.activeSolanaWallet
+  );
 
   const fetchWalletData = async () => {
     const token = localStorage.getItem("token");
@@ -49,8 +52,8 @@ function WalletTracker() {
   };
 
   useEffect(() => {
-    solWalletAddress && fetchWalletData();
-  }, [solWalletAddress]);
+    activeSolWalletAddress?.wallet && fetchWalletData();
+  }, [activeSolWalletAddress]);
 
   const handleWalletAdd = (newWallet) => {
     setWalletData((prevWallets) => [...prevWallets, newWallet]);
@@ -88,7 +91,9 @@ function WalletTracker() {
                 {wallettrackerPage?.mainHeader?.title}
               </span>
               <span className="text-[#A8A8A8] md:text-[18px] font-normal text-[12px]">
-                {`(${solWalletAddress ? walletData.length : 0}/300)`}
+                {`(${
+                  activeSolWalletAddress?.wallet ? walletData.length : 0
+                }/300)`}
               </span>
             </div>
             <div className="flex  md:gap-3 gap-1">
@@ -103,7 +108,7 @@ function WalletTracker() {
               </div>
               <div
                 onClick={() => {
-                  if (!solWalletAddress) {
+                  if (!activeSolWalletAddress?.wallet) {
                     showToaster("Please Login");
                     return;
                   }
@@ -122,11 +127,11 @@ function WalletTracker() {
             </div>
           </div>
           <div className="w-full">
-            {solWalletAddress ? (
+            {activeSolWalletAddress?.wallet ? (
               <LeftSideWallet
                 walletData={walletData}
                 setWalletData={setWalletData}
-                solAddress={solWalletAddress}
+                solAddress={activeSolWalletAddress?.wallet || solWalletAddress}
                 onChartOpen={() => setIsChartOpen(true)}
                 setWalletChartData={setWalletChartData}
               />
@@ -161,7 +166,7 @@ function WalletTracker() {
         wallettrackerPage={wallettrackerPage?.leftsidebar?.addnew?.addnewwallet}
         walletData={walletData}
         isOpen={isModalOpen}
-        solAddress={solWalletAddress}
+        solAddress={activeSolWalletAddress?.wallet || solWalletAddress}
         onClose={() => setModalOpen(false)}
         onAddWallet={handleWalletAdd}
       />

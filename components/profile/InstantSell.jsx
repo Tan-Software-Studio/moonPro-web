@@ -17,8 +17,8 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
-  const solWalletAddress = useSelector(
-    (state) => state?.AllStatesData?.solWalletAddress
+  const activeSolWalletAddress = useSelector(
+    (state) => state?.userData?.activeSolanaWallet
   );
   const solanaLivePrice = useSelector(
     (state) => state?.AllStatesData?.solanaLivePrice
@@ -36,7 +36,7 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
       +Number(amount).toFixed(token?.decimals),
       priorityFees?.slippage,
       priorityFees?.priorityFee,
-      solWalletAddress,
+      activeSolWalletAddress?.wallet,
       token?.decimals,
       Number(token?.current_price),
       setIsLoading,

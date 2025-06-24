@@ -34,7 +34,9 @@ const Footer = () => {
     (state) => state?.AllStatesData?.solWalletAddress
   );
 
-
+  const activeSolWalletAddress = useSelector(
+    (state) => state?.userData?.activeSolanaWallet
+  );
   const isLargeScreen = useSelector(
     (state) => state?.AllthemeColorData?.isLargeScreen
   );
@@ -180,7 +182,7 @@ const Footer = () => {
         className={`fixed hidden md:block bottom-0 left-0 right-0 z-40 bg-[#0A0A0F] px-3 border-t ${borderColor}  py-1 ${getFooterPadding()}`}
       >
         <div className="flex items-center justify-between md:gap-0 gap-10 text-xs">
-          {solWalletAddress && (
+          {activeSolWalletAddress?.wallet && (
             <div className="flex items-center space-x-2 overflow-x-auto pl-3">
               <button
                 onClick={handlePresetClick}
@@ -239,23 +241,27 @@ const Footer = () => {
                         return (
                           <div
                             key={wallet._id || wallet.id || idx}
-                            className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${wallet.active ? "bg-[#18181a]" : ""
-                              }`}
+                            className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${
+                              wallet.active ? "bg-[#18181a]" : ""
+                            }`}
                           >
                             <div className="flex items-center gap-3">
                               <input
                                 type="checkbox"
                                 className="w-4 h-4 rounded border border-gray-500 bg-transparent checked:bg-[#ff8f1b] checked:border-[#ff8f1b] focus:ring-2 focus:ring-[#ff8f1b] focus:ring-opacity-50"
                                 checked={wallet.primary}
-                                onChange={() => handlePrimary(wallet?.index, idx)}
+                                onChange={() =>
+                                  handlePrimary(wallet?.index, idx)
+                                }
                               />
                               <div className="flex flex-col">
                                 <div className="flex items-center gap-2 text-sm">
                                   <span
-                                    className={`font-medium ${wallet.primary
-                                      ? "text-orange-400"
-                                      : "text-white"
-                                      }`}
+                                    className={`font-medium ${
+                                      wallet.primary
+                                        ? "text-orange-400"
+                                        : "text-white"
+                                    }`}
                                   >
                                     {idx === 0
                                       ? "Nexa Pro Main"
@@ -347,7 +353,6 @@ const Footer = () => {
               </div>
             </div>
           )}
-
 
           <div className="flex items-center space-x-4"></div>
 

@@ -10,12 +10,17 @@ import {
   setNewLaunchData,
   updateAllDataByNode,
 } from "@/app/redux/memescopeData/Memescope";
-import { setChartSymbolImage, setSolanaLivePrice, setUsdcLivePrice } from "@/app/redux/states";
+import {
+  setChartSymbolImage,
+  setSolanaLivePrice,
+  setUsdcLivePrice,
+} from "@/app/redux/states";
 import store from "@/app/redux/store";
 import {
   updateTrendingData,
   updateTrendingLiveData,
 } from "@/app/redux/trending/solTrending.slice";
+import { updateWalletAddressesBalanceLive } from "@/app/redux/userDataSlice/UserData.slice";
 import { playNotificationSound } from "@/components/Notification/playNotificationSound";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -42,27 +47,6 @@ let isSocketOnAISignalCore = false;
 let isTrendingSocketOn = false;
 export async function subscribeToWalletTracker() {
   try {
-    // const token = localStorage.getItem("token");
-    // let wallets = null;
-    try {
-      // if (token) {
-      //   wallets = await axios({
-      //     method: "get",
-      //     url: `${BASE_URL_MOON}wallettracker/walletTracking`,
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   });
-      // }
-    } catch (error) { }
-    // let walletsToTrack = [];
-    // if (wallets?.data?.data?.wallets?.length > 0) {
-    //   await wallets?.data?.data?.wallets?.map((item) => {
-    //     if (item?.alert == true) {
-    //       walletsToTrack.push(item?.walletAddress?.toLowerCase());
-    //     }
-    //   });
-    // }
     if (isSocketOn) {
       console.log("Trades websocket is already connected.");
       return;
@@ -124,13 +108,14 @@ export async function subscribeToWalletTracker() {
       // }
     });
     socket.on("disconnect", async () => {
-      console.log("Trades webSocket disconnected.");
+      console.log("New trades disconnected.");
       isSocketOn = false;
     });
   } catch (error) {
     console.log("🚀 ~ subscribeToWalletTracker ~ error:", error?.message);
   }
 }
+
 export async function subscribeToTrendingTokens() {
   try {
     if (isTrendingSocketOn) {
@@ -140,7 +125,7 @@ export async function subscribeToTrendingTokens() {
     await socket.connect();
     isTrendingSocketOn = true;
     await socket.on("connect", () => {
-      console.log("Trades websocket connected.");
+      console.log("Trades trending websocket connected.");
     });
 
     // new launch pumpfun data
@@ -186,12 +171,21 @@ export async function subscribeToTrendingTokens() {
       }
     });
 
-    // live solana price
-    let liveSolanaPrice = 0;
-    // solana wallet address
-    store.subscribe(() => {
-      liveSolanaPrice = store?.getState()?.AllStatesData?.solanaLivePrice;
+    await socket.on("balance_updates", async (data) => {
+      // console.log("🚀 ~ awaitsocket.on ~ data:=========================>");
+      store.dispatch(updateWalletAddressesBalanceLive(data));
     });
+    socket.on("disconnect", async () => {
+      console.log("Trendings and memescope disconnected.");
+      isTrendingSocketOn = false;
+    });
+
+    // live solana price
+    // let liveSolanaPrice = 0;
+    // solana wallet address
+    // store.subscribe(() => {
+    //   liveSolanaPrice = store?.getState()?.AllStatesData?.solanaLivePrice;
+    // });
 
     // gRPC node data
     // socket.on("gRPC_node_tx", async (data) => {
@@ -260,6 +254,7 @@ export async function subscribeToAiSignalTokensNewAddedToken() {
     aiSignalDataFromStore = store?.getState().aiSignal.aiSignalData;
   });
   socketAiSignalBackend.on("aiSignleLiveData", async (data) => {
+    console.log("🚀 ~ socketAiSignalBackend.on ~ data:", data)
     let newDataArr = [];
     if (data?.length >= 100) {
       newDataArr = [...data];
@@ -270,13 +265,13 @@ export async function subscribeToAiSignalTokensNewAddedToken() {
       ];
     }
     store.dispatch(setAiSignalData(newDataArr));
-    
-    const storedValue = localStorage.getItem('ai-signal-notification');
+
+    const storedValue = localStorage.getItem("ai-signal-notification");
     if (storedValue == "true") {
       playNotificationSound();
       toast.custom((t) => (
         <div
-          className={`${t.visible ? 'animate-enter' : 'animate-leave'} 
+          className={`${t.visible ? "animate-enter" : "animate-leave"} 
             max-w-sm w-full bg-[#18181a] backdrop-blur-lg 
             border border-gray-700 shadow-2xl rounded-xl 
             pointer-events-auto overflow-hidden`}
@@ -292,20 +287,27 @@ export async function subscribeToAiSignalTokensNewAddedToken() {
               onClick={() => toast.dismiss(t.id)}
               className="text-gray-500 hover:text-white transition-colors p-1 rounded-md hover:bg-[#2A2A2A]"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
           <div className="p-4">
-            <p className="text-sm text-white">
-              New token added in AI Signal
-            </p>
+            <p className="text-sm text-white">New token added in AI Signal</p>
           </div>
         </div>
-      ))
+      ));
     }
-
   });
 }
 

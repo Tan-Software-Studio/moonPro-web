@@ -91,6 +91,9 @@ const AllPageHeader = ({
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
+  const activeSolWalletAddress = useSelector(
+    (state) => state?.userData?.activeSolanaWallet
+  );
 
   const presist = useSelector((state) => state?.AllStatesData?.presetActive);
 
@@ -582,7 +585,7 @@ const AllPageHeader = ({
             </div>
 
             <div>
-              {solWalletAddress && (
+              {activeSolWalletAddress?.wallet && (
                 <button
                   onClick={() => dispatch(setOpenOrderSetting(true))}
                   className="flex items-center justify-center gap-2 px-3 text-[#ecf6fd] text-xs rounded-[4px] transition duration-300"
@@ -598,7 +601,7 @@ const AllPageHeader = ({
               tredingPage={tredingPage}
             />
 
-            {solWalletAddress && (
+            {activeSolWalletAddress?.wallet && (
               <div className=" inline-block">
                 {/* Wallet Button */}
                 <div
@@ -728,7 +731,7 @@ const AllPageHeader = ({
               </div>
 
               {/* Right section: Solana + value */}
-              {solWalletAddress ? (
+              {activeSolWalletAddress?.wallet ? (
                 <div
                   className="flex items-center gap-1 pl-3 pr-8  py-1 border-l border-[#26262e] cursor-pointer"
                   onClick={() => dispatch(setOpenOrderSetting(true))}

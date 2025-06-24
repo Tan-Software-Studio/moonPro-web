@@ -23,7 +23,6 @@ import TradingPopup from "@/components/common/tradingview/TradingPopup";
 import TokenInfo from "@/components/common/tradingview/TokenInfo";
 import DataSecurity from "@/components/common/tradingview/DataSecurity";
 import { useTranslation } from "react-i18next";
-import { fetchSolanaNativeBalance } from "@/app/redux/states";
 import { humanReadableFormat } from "@/utils/calculation";
 import { fetchChartAllData } from "@/app/redux/chartDataSlice/chartData.slice";
 import SharePnLModal from "@/components/common/tradingview/SharePnLModal";
@@ -81,15 +80,13 @@ const Tradingview = () => {
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
+  const activeSolWalletAddress = useSelector(
+    (state) => state?.userData?.activeSolanaWallet
+  );
 
   // token image
   const tokenImage = useSelector(
     (state) => state?.AllStatesData?.chartSymbolImage
-  );
-
-  // native balance
-  const nativeTokenbalance = useSelector(
-    (state) => state?.AllStatesData?.solNativeBalance
   );
 
   // chart data from redux
@@ -122,7 +119,7 @@ const Tradingview = () => {
 
   useEffect(() => {
     if (tokenaddress !== currentTokenAddress) {
-      clearMarks()
+      clearMarks();
       resetResolutionOffsets();
       setCurrentTokenPnLData({});
       setHasFetchedFromApi(false);
@@ -138,7 +135,9 @@ const Tradingview = () => {
           }
 
           const response = await axios({
-            url: `${BASE_URL}transactions/getSingleTokenlastAction/${tokenaddress}/${solWalletAddress}`,
+            url: `${BASE_URL}transactions/getSingleTokenlastAction/${tokenaddress}/${
+              activeSolWalletAddress?.wallet || solWalletAddress
+            }`,
             method: "get",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -151,10 +150,12 @@ const Tradingview = () => {
             const pastTokenProperties = {
               pastAverageBuySolPrice: pastTokenData?.solAvgPriceBuy || null,
               pastAverageBuyPrice: pastTokenData?.buyPrice || null,
-              pastAverageBuy: pastTokenData?.qty * pastTokenData.buyPrice || null,
+              pastAverageBuy:
+                pastTokenData?.qty * pastTokenData.buyPrice || null,
               pastAverageSellSolPrice: pastTokenData?.solAvgPriceSell || null,
               pastAverageSellPrice: pastTokenData?.sellPrice || null,
-              pastAverageSell: pastTokenData?.qty * pastTokenData?.sellPrice || null,
+              pastAverageSell:
+                pastTokenData?.qty * pastTokenData?.sellPrice || null,
               pastQty: pastTokenData?.qty || null,
               pastPnlPrice: pastTokenData?.realizedProfit || null,
               pastPnlPercentage: pastTokenData?.pnlPercentage || null,
@@ -167,8 +168,16 @@ const Tradingview = () => {
         }
       };
 
-      const currentPnlData = currentTabData.find(pnls => pnls?.token === tokenaddress);
-      if (currentPnlData == null && Object.keys(currentTokenPnLData || {}).length === 0 && hasFetchedFromApi === false && tokenaddress && solWalletAddress) {
+      const currentPnlData = currentTabData.find(
+        (pnls) => pnls?.token === tokenaddress
+      );
+      if (
+        currentPnlData == null &&
+        Object.keys(currentTokenPnLData || {}).length === 0 &&
+        hasFetchedFromApi === false &&
+        tokenaddress &&
+        solWalletAddress
+      ) {
         setHasFetchedFromApi(true);
         await fetchPastPnLData();
       } else {
@@ -177,42 +186,46 @@ const Tradingview = () => {
           const buyAmount =
             currentPnlData?.activeQtyHeld * currentPnlData?.averageBuyPrice ||
             0;
-          const solBuyAmount = 
-            currentPnlData?.activeQtyHeld * currentPnlData?.averageSolBuyPrice ||
-            0;
+          const solBuyAmount =
+            currentPnlData?.activeQtyHeld *
+              currentPnlData?.averageSolBuyPrice || 0;
           const soldAmount =
             currentPnlData?.quantitySold *
               currentPnlData?.averageHistoricalSellPrice || 0;
-          const solSellAmount = 
-            currentPnlData?.quantitySold * 
+          const solSellAmount =
+            currentPnlData?.quantitySold *
               currentPnlData?.averageSolSellPrice || 0;
           const activeQtyHeld = currentPnlData?.activeQtyHeld || 0;
           const quantitySold = currentPnlData?.quantitySold || 0;
           const averageBuyPrice = currentPnlData?.averageBuyPrice || 0;
-    
+
           const holdingRawAmount = activeQtyHeld - quantitySold;
-          const availableQtyInUSDWhenBought = holdingRawAmount * averageBuyPrice;
-          const holdingsUsdInCurrentPrice = holdingRawAmount * (latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD || 0);
-          const holdingSolInCurrentPrice = holdingsUsdInCurrentPrice / solanaLivePrice;
+          const availableQtyInUSDWhenBought =
+            holdingRawAmount * averageBuyPrice;
+          const holdingsUsdInCurrentPrice =
+            holdingRawAmount *
+            (latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD || 0);
+          const holdingSolInCurrentPrice =
+            holdingsUsdInCurrentPrice / solanaLivePrice;
 
           const pnlAmount =
             holdingsUsdInCurrentPrice - availableQtyInUSDWhenBought;
           const isPositivePnL = pnlAmount >= 0;
           const absolutePnL = Math.abs(pnlAmount);
           const absoluteSolPnL = absolutePnL / solanaLivePrice;
-    
+
           const pnlPercent =
             availableQtyInUSDWhenBought !== 0
               ? (pnlAmount / availableQtyInUSDWhenBought) * 100
               : 0;
-    
+
           const safePnLPercent = isNaN(pnlPercent) ? 0 : pnlPercent;
-    
+
           const currentPnlProperties = {
             buyAmount,
             solBuyAmount,
             averageBuyPrice,
-            averageSolBuyPrice: currentPnlData?.averageSolBuyPrice || 0, 
+            averageSolBuyPrice: currentPnlData?.averageSolBuyPrice || 0,
             soldAmount,
             solSellAmount,
             averageSellPrice: currentPnlData?.averageHistoricalSellPrice || 0,
@@ -223,16 +236,16 @@ const Tradingview = () => {
             isPositivePnL,
             absolutePnL,
             absoluteSolPnL,
-            safePnLPercent
-          }
+            safePnLPercent,
+          };
 
-          setCurrentTokenPnLData({...currentPnlProperties});
+          setCurrentTokenPnLData({ ...currentPnlProperties });
         }
       }
     };
 
-  runEffect(); // 👈 Call the async function
-  }, [currentTabData, tokenaddress])
+    runEffect(); // 👈 Call the async function
+  }, [currentTabData, tokenaddress]);
 
   useEffect(() => {
     dispatch(setselectToken("Solana"));
@@ -261,28 +274,30 @@ const Tradingview = () => {
 
   useEffect(() => {
     if (tvChartRef?.current) {
-          const el = tvChartRef.current;
+      const el = tvChartRef.current;
 
-          if (isSmallScreen) {
-            el.style.height = "380px";
-          } else {
-            el.style.height = "600px";
-          }
-        }
-  }, [isSmallScreen])
-
-  useEffect(() => {
-    const fetchTokenMeta = async () => {
-      const [singleTokenBalance, solBalance] = await Promise.all([
-        getSoalanaTokenBalance(solWalletAddress, tokenaddress),
-        dispatch(fetchSolanaNativeBalance(solWalletAddress)),
-      ]);
-      if (singleTokenBalance) {
-        setTokenBalance(singleTokenBalance || 0);
+      if (isSmallScreen) {
+        el.style.height = "380px";
+      } else {
+        el.style.height = "600px";
       }
-    };
-    fetchTokenMeta();
-  }, [solWalletAddress, tokenaddress]);
+    }
+  }, [isSmallScreen]);
+
+  const fetchTokenMeta = async () => {
+    const singleTokenBalance = await getSoalanaTokenBalance(
+      activeSolWalletAddress?.wallet || solWalletAddress,
+      tokenaddress
+    );
+    if (singleTokenBalance) {
+      setTokenBalance(singleTokenBalance || 0);
+    }
+  };
+  useEffect(() => {
+    if (activeSolWalletAddress?.wallet) {
+      fetchTokenMeta();
+    }
+  }, [tokenaddress]);
 
   const handleCopy = (mintAddress) => {
     setCopied(true);
@@ -293,7 +308,7 @@ const Tradingview = () => {
       const formattedAddress = mintAddress;
       navigator?.clipboard
         ?.writeText(formattedAddress)
-        .then(() => { })
+        .then(() => {})
         .catch((err) => {
           console.error("Failed to copy: ", err?.message);
         });
@@ -305,7 +320,7 @@ const Tradingview = () => {
 
   const tokenDetailsMarketCap = humanReadableFormat(
     chartTokenData?.currentSupply *
-    latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+      latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
   );
 
   const TokenDetailsNumberData = [
@@ -390,9 +405,9 @@ const Tradingview = () => {
         chartTokenData?.perfomancePertnage_5min == "NaN"
           ? 0
           : `${calculatePercentageDifference(
-            latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
-            chartTokenData?.perfomancePertnage_5min
-          ).toFixed(2)}` || "N/A",
+              latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+              chartTokenData?.perfomancePertnage_5min
+            ).toFixed(2)}` || "N/A",
     },
     {
       label: "1H",
@@ -400,9 +415,9 @@ const Tradingview = () => {
         chartTokenData?.perfomancePertnage_1h == "NaN"
           ? 0
           : `${calculatePercentageDifference(
-            latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
-            chartTokenData?.perfomancePertnage_1h
-          ).toFixed(2)}` || "N/A",
+              latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+              chartTokenData?.perfomancePertnage_1h
+            ).toFixed(2)}` || "N/A",
     },
     {
       label: "6H",
@@ -410,9 +425,9 @@ const Tradingview = () => {
         chartTokenData?.perfomancePertnage_6h == "NaN"
           ? 0
           : `${calculatePercentageDifference(
-            latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
-            chartTokenData?.perfomancePertnage_6h
-          ).toFixed(2)}` || "N/A",
+              latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+              chartTokenData?.perfomancePertnage_6h
+            ).toFixed(2)}` || "N/A",
     },
     {
       label: "24H",
@@ -420,9 +435,9 @@ const Tradingview = () => {
         chartTokenData?.perfomancePertnage_24h == "NaN"
           ? 0
           : `${calculatePercentageDifference(
-            latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
-            chartTokenData?.perfomancePertnage_24h
-          ).toFixed(2)}` || "N/A",
+              latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+              chartTokenData?.perfomancePertnage_24h
+            ).toFixed(2)}` || "N/A",
     },
   ];
 
@@ -456,14 +471,14 @@ const Tradingview = () => {
       label: "FDV",
       price: humanReadableFormat(
         chartTokenData?.currentSupply *
-        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
       ),
     },
     {
       label: tragindViewPage?.right?.tokeninfo?.mc,
       price: humanReadableFormat(
         chartTokenData?.currentSupply *
-        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
       ),
     },
   ];
@@ -491,7 +506,7 @@ const Tradingview = () => {
         chartTokenData?.Pooled_Base || 0
       )} | ${humanReadableFormat(
         chartTokenData?.Pooled_Base *
-        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
       )}`,
     },
     {
@@ -516,10 +531,10 @@ const Tradingview = () => {
   const isSidebarOpen = useSelector(
     (state) => state?.AllthemeColorData?.isSidebarOpen
   );
-  
+
   useEffect(() => {
     document.title = `${tokenSymbol} | Nexa`;
-  }, [tokenSymbol])
+  }, [tokenSymbol]);
 
   const currentTokenDevHoldingData = {
     tokenImage: tokenImage,
@@ -533,18 +548,20 @@ const Tradingview = () => {
 
   return (
     <div
-      className={`lg:flex relative overflow-y-auto h-svh max-h-svh ${isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5"
-        }`}
+      className={`lg:flex relative overflow-y-auto h-svh max-h-svh ${
+        isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5"
+      }`}
     >
       {isSmallScreen && (
         <div className="lg:hidden flex  items-center justify-start bg-[#1F1F1F] rounded-md mt-2 text-white mx-2  text-[12px] font-semibold px-2 py-1">
           {["Trades", "Transaction"].map((item, index) => (
             <div
               onClick={() => setIsSmallScreenTab(item)}
-              className={`${smallScreenTab === item
-                ? "bg-[#11265B] border-2 border-[#0E43BD]"
-                : "border-[1px] border-[#1F1F1F]"
-                } cursor-pointer  min-w-fit w-20 text-sm font-light flex justify-center tracking-wider px-2 py-1 rounded-md`}
+              className={`${
+                smallScreenTab === item
+                  ? "bg-[#11265B] border-2 border-[#0E43BD]"
+                  : "border-[1px] border-[#1F1F1F]"
+              } cursor-pointer  min-w-fit w-20 text-sm font-light flex justify-center tracking-wider px-2 py-1 rounded-md`}
               key={index}
             >
               {item}
@@ -570,7 +587,9 @@ const Tradingview = () => {
                   TokenDetailsNumberData={TokenDetailsNumberData}
                   tokenDetailsMarketCap={tokenDetailsMarketCap}
                   chartTokenData={chartTokenData}
-                  walletAddress={solWalletAddress}
+                  walletAddress={
+                    activeSolWalletAddress?.wallet || solWalletAddress
+                  }
                   pairAddress={latestTradesData?.chartData?.pairaddress}
                   tokenImage={tokenImage}
                   setIsSharePnLModalActive={setIsSharePnLModalActive}
@@ -578,7 +597,12 @@ const Tradingview = () => {
                 />
               </div>
 
-              <div ref={tvChartRef} className={`${isSmallScreen ? 'h-[380px]' : 'h-[10000px]'} w-full`}>
+              <div
+                ref={tvChartRef}
+                className={`${
+                  isSmallScreen ? "h-[380px]" : "h-[10000px]"
+                } w-full`}
+              >
                 <TVChartContainer
                   tokenSymbol={tokenSymbol}
                   tokenaddress={tokenaddress}
@@ -593,12 +617,16 @@ const Tradingview = () => {
             <div className="overflow-y-auto border-t border-t-[#4D4D4D]">
               <Table
                 tokenCA={tokenaddress}
-                address={solWalletAddress}
+                address={activeSolWalletAddress?.wallet || solWalletAddress}
                 scrollPosition={scrollPosition}
                 tvChartRef={tvChartRef}
-                solWalletAddress={solWalletAddress}
+                solWalletAddress={
+                  activeSolWalletAddress?.wallet || solWalletAddress
+                }
                 tokenSupply={chartTokenData?.currentSupply}
-                currentUsdPrice={latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD}
+                currentUsdPrice={
+                  latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+                }
                 currentTabData={currentTabData}
                 currentTokenDevHoldingData={currentTokenDevHoldingData}
                 isInstantTradeActive={isInstantTradeActive}
@@ -630,13 +658,15 @@ const Tradingview = () => {
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
                 token={tokenaddress}
-                walletAddress={solWalletAddress}
+                walletAddress={
+                  activeSolWalletAddress?.wallet || solWalletAddress
+                }
                 setTokenBalance={setTokenBalance}
                 tokenBalance={tokenBalance}
                 tokenName={tokenSymbol}
                 tokenSymbol={chartTokenData?.name}
                 tokenImage={tokenImage}
-                nativeTokenbalance={nativeTokenbalance}
+                nativeTokenbalance={activeSolWalletAddress?.balance || 0}
                 decimal={chartTokenData?.decimal || decimalFindInArray}
                 progranAddress={chartTokenData?.programAddress}
                 bondingProgress={chartTokenData?.bondingCurveProgress || 0}
@@ -654,9 +684,11 @@ const Tradingview = () => {
             </div>
           </div>
 
-          <SharePnLModal 
-            isOpen={isSharePnLModalActive} 
-            onClose={() => {setIsSharePnLModalActive(false)}}
+          <SharePnLModal
+            isOpen={isSharePnLModalActive}
+            onClose={() => {
+              setIsSharePnLModalActive(false);
+            }}
             tokenSymbol={tokenSymbol}
             currentTokenPnLData={currentTokenPnLData}
             solanaLivePrice={solanaLivePrice}

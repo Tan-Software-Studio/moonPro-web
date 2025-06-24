@@ -30,11 +30,13 @@ const ReferralPage = () => {
 
   useEffect(() => {
     document.title = `Nexa | Referral`;
-  }, [])
+  }, []);
 
   const dispatch = useDispatch();
 
   const [refData, setRefData] = useState([]);
+  const [checkIsReferralApiCalled, setCheckIsReferralApiCalled] =
+    useState(false);
   const [selectedTier, setSelectedTier] = useState(1);
   const [showWithdrawPopup, setShowWithdrawPopup] = useState(false);
   const [hideEmail, setHideEmail] = useState(false);
@@ -44,15 +46,15 @@ const ReferralPage = () => {
     selectedTier === 1
       ? "firstTier"
       : selectedTier === 2
-        ? "secondTier"
-        : "thirdTier";
+      ? "secondTier"
+      : "thirdTier";
 
   const rewardPercentage =
     selectedTier === 1
       ? refData?.user?.referealRewardsFirstTierPer
       : selectedTier === 2
-        ? refData?.user?.referealRewardsSecondTierPer
-        : refData?.user?.referealRewardsThirdTierPer;
+      ? refData?.user?.referealRewardsSecondTierPer
+      : refData?.user?.referealRewardsThirdTierPer;
 
   const tierData = refData?.referrals?.[tierKey] || [];
 
@@ -61,7 +63,9 @@ const ReferralPage = () => {
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
-
+  const activeSolWalletAddress = useSelector(
+    (state) => state?.userData?.activeSolanaWallet
+  );
   const shortenAddress = (address) => {
     if (!address || address.length < 8) return address || "...";
     return `${address.slice(0, 4)}...${address.slice(-4)}`;
@@ -110,7 +114,7 @@ const ReferralPage = () => {
       });
       setLoading(false);
       const responce = res.data.data;
-      console.log("🚀 ~ fetchData ~ responce:", responce)
+      console.log("🚀 ~ fetchData ~ responce:", responce);
       setRefData(responce);
       setProgress(
         ((responce?.user?.dailyPoints +
@@ -118,7 +122,7 @@ const ReferralPage = () => {
           responce?.user?.weeklyPoints +
           responce?.user?.referralPoints) /
           50000) *
-        100
+          100
       );
     } catch (e) {
       setLoading(false);
@@ -127,7 +131,7 @@ const ReferralPage = () => {
 
   const handleWithdrawClick = () => {
     const tokenInStorage = localStorage.getItem("token");
-    if (solWalletAddress && tokenInStorage) {
+    if (activeSolWalletAddress?.wallet && tokenInStorage) {
       setShowWithdrawPopup(true);
     } else {
       return dispatch(openCloseLoginRegPopup(true));
@@ -166,20 +170,25 @@ const ReferralPage = () => {
   };
 
   const handleCopy3 = () => {
-    navigator.clipboard.writeText(solWalletAddress);
+    navigator.clipboard.writeText(
+      activeSolWalletAddress?.wallet || solWalletAddress
+    );
     showToasterSuccess("Wallet address copied!");
   };
 
   useEffect(() => {
-    if (solWalletAddress) {
-      fetchData();
+    if (activeSolWalletAddress?.wallet) {
+      if (!checkIsReferralApiCalled) {
+        setCheckIsReferralApiCalled(true);
+        fetchData();
+      }
     }
-  }, [solWalletAddress]);
+  }, [activeSolWalletAddress?.wallet]);
 
   const userDisplayInfo = getUserDisplayInfo(refData?.user);
 
-
-  const { currentTitle, pointsToNext, nextTitle, maxLevelComplete } = getPointsToNextTitle(refData?.user);
+  const { currentTitle, pointsToNext, nextTitle, maxLevelComplete } =
+    getPointsToNextTitle(refData?.user);
 
   return (
     <>
@@ -202,7 +211,7 @@ const ReferralPage = () => {
                   onClick={handleCopy3}
                   className="font-semibold hover:text-blue-400 cursor-pointer"
                 >
-                  {shortenAddress(token ? solWalletAddress : "")}
+                  {shortenAddress(token ? activeSolWalletAddress?.wallet : "")}
                 </div>
                 <div className="flex items-center gap-1">
                   <VscDebugBreakpointLogUnverified size={18} />
@@ -217,7 +226,7 @@ const ReferralPage = () => {
               </div>
 
               <div>
-                {solWalletAddress && (
+                {activeSolWalletAddress?.wallet && (
                   <div
                     onClick={() => handleCopy1(refData?.user?.referralId)}
                     className="flex items-center gap-1 cursor-pointer text-sm group"
@@ -406,7 +415,7 @@ const ReferralPage = () => {
 
               <div className="flex gap-3 items-center">
                 <div>
-                  {solWalletAddress && (
+                  {activeSolWalletAddress?.wallet && (
                     <div
                       onClick={() => handleCopy2(refData?.user?.referralId)}
                       className="flex items-center gap-1 cursor-pointer text-[14px] group"
@@ -540,7 +549,7 @@ const ReferralPage = () => {
         <RefPopup
           setAddClaimed={setAddClaimed}
           Available={refData?.totalEarningInSol - refData?.user?.totalClaimed}
-          address={solWalletAddress}
+          address={activeSolWalletAddress?.wallet}
           onClose={() => setShowWithdrawPopup(false)}
         />
       )}

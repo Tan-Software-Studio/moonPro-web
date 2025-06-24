@@ -22,6 +22,9 @@ const Settings = () => {
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
   );
+  const activeSolWalletAddress = useSelector(
+    (state) => state?.userData?.activeSolanaWallet
+  );
 
   const [copied, setCopied] = useState(false);
   const copyAddress = (address) => {
@@ -69,16 +72,20 @@ const Settings = () => {
           className={`${
             isSidebarOpen ? `md: truncate` : ``
           } md:block hidden  md:w-96 w-56 px-8 md:px-4 py-1.5 bg-transparent border ${borderColor} rounded-full outline-none text-[#A5A5A7] text-center text-xs placeholder:text-xs font-normal cursor-pointer`}
-          value={solWalletAddress}
+          value={activeSolWalletAddress?.wallet || solWalletAddress}
           readOnly
-          onClick={() => copyAddress(solWalletAddress)}
+          onClick={() =>
+            copyAddress(activeSolWalletAddress?.wallet || solWalletAddress)
+          }
         />
         <input
           type="text"
           className={`block md:hidden md:w-96 w-56 px-8 md:px-4 py-1.5 bg-transparent border ${borderColor} rounded-full outline-none text-[#A5A5A7] text-center text-xs placeholder:text-xs font-normal cursor-pointer`}
-          value={solWalletAddress}
+          value={activeSolWalletAddress?.wallet || solWalletAddress}
           readOnly
-          onClick={() => copyAddress(solWalletAddress)}
+          onClick={() =>
+            copyAddress(activeSolWalletAddress?.wallet || solWalletAddress)
+          }
         />
         {/* <PiCopySimpleFill
             className={`absolute end-4  top-1/2 transform -translate-y-1/2 text-[#6B6B6D] cursor-pointer`}
