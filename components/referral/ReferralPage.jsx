@@ -35,6 +35,8 @@ const ReferralPage = () => {
   const dispatch = useDispatch();
 
   const [refData, setRefData] = useState([]);
+  const [checkIsReferralApiCalled, setCheckIsReferralApiCalled] =
+    useState(false);
   const [selectedTier, setSelectedTier] = useState(1);
   const [showWithdrawPopup, setShowWithdrawPopup] = useState(false);
   const [hideEmail, setHideEmail] = useState(false);
@@ -176,7 +178,10 @@ const ReferralPage = () => {
 
   useEffect(() => {
     if (activeSolWalletAddress?.wallet) {
-      fetchData();
+      if (!checkIsReferralApiCalled) {
+        setCheckIsReferralApiCalled(true);
+        fetchData();
+      }
     }
   }, [activeSolWalletAddress?.wallet]);
 
