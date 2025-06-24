@@ -5,11 +5,9 @@ import { useSearchParams } from "next/navigation";
 import { setselectToken, setselectTokenLogo } from "@/app/redux/CommonUiData";
 import Table from "@/components/TradingChart/Table";
 import { solana } from "@/app/Images";
-import { getSoalanaTokenBalance } from "@/utils/solanaNativeBalance";
 import {
   calculatePercentageDifference,
   convertAnyPriceToSol,
-  decimalConvert,
   numberFormated,
   formatDecimal,
   capitalizeFirstLetter,
@@ -43,7 +41,6 @@ const Tradingview = () => {
   )?.Trade?.Currency?.Decimals;
   const [copied, setCopied] = useState(false);
   const dispatch = useDispatch();
-  const [tokenBalance, setTokenBalance] = useState(0);
   const searchParams = useSearchParams();
   const tokenaddress = searchParams.get("tokenaddress");
   const tokenSymbol = searchParams.get("symbol");
@@ -76,9 +73,6 @@ const Tradingview = () => {
     setIsInstantTradeActive(newValue);
     localStorage.setItem("InstantTradeActive", newValue.toString());
   };
-  const solWalletAddress = useSelector(
-    (state) => state?.AllStatesData?.solWalletAddress
-  );
   const activeSolWalletAddress = useSelector(
     (state) => state?.userData?.activeSolanaWallet
   );
@@ -134,9 +128,8 @@ const Tradingview = () => {
           }
 
           const response = await axios({
-            url: `${BASE_URL}transactions/getSingleTokenlastAction/${tokenaddress}/${
-              activeSolWalletAddress?.wallet || solWalletAddress
-            }`,
+            url: `${BASE_URL}transactions/getSingleTokenlastAction/${tokenaddress}/${activeSolWalletAddress?.wallet
+              }`,
             method: "get",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -175,7 +168,7 @@ const Tradingview = () => {
         Object.keys(currentTokenPnLData || {}).length === 0 &&
         hasFetchedFromApi === false &&
         tokenaddress &&
-        solWalletAddress
+        activeSolWalletAddress?.wallet
       ) {
         setHasFetchedFromApi(true);
         await fetchPastPnLData();
@@ -187,13 +180,13 @@ const Tradingview = () => {
             0;
           const solBuyAmount =
             currentPnlData?.activeQtyHeld *
-              currentPnlData?.averageSolBuyPrice || 0;
+            currentPnlData?.averageSolBuyPrice || 0;
           const soldAmount =
             currentPnlData?.quantitySold *
-              currentPnlData?.averageHistoricalSellPrice || 0;
+            currentPnlData?.averageHistoricalSellPrice || 0;
           const solSellAmount =
             currentPnlData?.quantitySold *
-              currentPnlData?.averageSolSellPrice || 0;
+            currentPnlData?.averageSolSellPrice || 0;
           const activeQtyHeld = currentPnlData?.activeQtyHeld || 0;
           const quantitySold = currentPnlData?.quantitySold || 0;
           const averageBuyPrice = currentPnlData?.averageBuyPrice || 0;
@@ -283,21 +276,6 @@ const Tradingview = () => {
     }
   }, [isSmallScreen]);
 
-  const fetchTokenMeta = async () => {
-    const singleTokenBalance = await getSoalanaTokenBalance(
-      activeSolWalletAddress?.wallet || solWalletAddress,
-      tokenaddress
-    );
-    if (singleTokenBalance) {
-      setTokenBalance(singleTokenBalance || 0);
-    }
-  };
-  useEffect(() => {
-    if (activeSolWalletAddress?.wallet) {
-      fetchTokenMeta();
-    }
-  }, [tokenaddress]);
-
   const handleCopy = (mintAddress) => {
     setCopied(true);
     // toast.success("TokenAddress copied to clipboard!", {
@@ -307,7 +285,7 @@ const Tradingview = () => {
       const formattedAddress = mintAddress;
       navigator?.clipboard
         ?.writeText(formattedAddress)
-        .then(() => {})
+        .then(() => { })
         .catch((err) => {
           console.error("Failed to copy: ", err?.message);
         });
@@ -319,7 +297,7 @@ const Tradingview = () => {
 
   const tokenDetailsMarketCap = humanReadableFormat(
     chartTokenData?.currentSupply *
-      latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+    latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
   );
 
   const TokenDetailsNumberData = [
@@ -404,9 +382,9 @@ const Tradingview = () => {
         chartTokenData?.perfomancePertnage_5min == "NaN"
           ? 0
           : `${calculatePercentageDifference(
-              latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
-              chartTokenData?.perfomancePertnage_5min
-            ).toFixed(2)}` || "N/A",
+            latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+            chartTokenData?.perfomancePertnage_5min
+          ).toFixed(2)}` || "N/A",
     },
     {
       label: "1H",
@@ -414,9 +392,9 @@ const Tradingview = () => {
         chartTokenData?.perfomancePertnage_1h == "NaN"
           ? 0
           : `${calculatePercentageDifference(
-              latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
-              chartTokenData?.perfomancePertnage_1h
-            ).toFixed(2)}` || "N/A",
+            latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+            chartTokenData?.perfomancePertnage_1h
+          ).toFixed(2)}` || "N/A",
     },
     {
       label: "6H",
@@ -424,9 +402,9 @@ const Tradingview = () => {
         chartTokenData?.perfomancePertnage_6h == "NaN"
           ? 0
           : `${calculatePercentageDifference(
-              latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
-              chartTokenData?.perfomancePertnage_6h
-            ).toFixed(2)}` || "N/A",
+            latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+            chartTokenData?.perfomancePertnage_6h
+          ).toFixed(2)}` || "N/A",
     },
     {
       label: "24H",
@@ -434,9 +412,9 @@ const Tradingview = () => {
         chartTokenData?.perfomancePertnage_24h == "NaN"
           ? 0
           : `${calculatePercentageDifference(
-              latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
-              chartTokenData?.perfomancePertnage_24h
-            ).toFixed(2)}` || "N/A",
+            latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD,
+            chartTokenData?.perfomancePertnage_24h
+          ).toFixed(2)}` || "N/A",
     },
   ];
 
@@ -470,14 +448,14 @@ const Tradingview = () => {
       label: "FDV",
       price: humanReadableFormat(
         chartTokenData?.currentSupply *
-          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
       ),
     },
     {
       label: tragindViewPage?.right?.tokeninfo?.mc,
       price: humanReadableFormat(
         chartTokenData?.currentSupply *
-          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
       ),
     },
   ];
@@ -505,7 +483,7 @@ const Tradingview = () => {
         chartTokenData?.Pooled_Base || 0
       )} | ${humanReadableFormat(
         chartTokenData?.Pooled_Base *
-          latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
+        latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
       )}`,
     },
     {
@@ -537,20 +515,18 @@ const Tradingview = () => {
 
   return (
     <div
-      className={`lg:flex relative overflow-y-auto h-svh max-h-svh ${
-        isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5"
-      }`}
+      className={`lg:flex relative overflow-y-auto h-svh max-h-svh ${isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5"
+        }`}
     >
       {isSmallScreen && (
         <div className="lg:hidden flex  items-center justify-start bg-[#1F1F1F] rounded-md mt-2 text-white mx-2  text-[12px] font-semibold px-2 py-1">
           {["Trades", "Transaction"].map((item, index) => (
             <div
               onClick={() => setIsSmallScreenTab(item)}
-              className={`${
-                smallScreenTab === item
-                  ? "bg-[#11265B] border-2 border-[#0E43BD]"
-                  : "border-[1px] border-[#1F1F1F]"
-              } cursor-pointer  min-w-fit w-20 text-sm font-light flex justify-center tracking-wider px-2 py-1 rounded-md`}
+              className={`${smallScreenTab === item
+                ? "bg-[#11265B] border-2 border-[#0E43BD]"
+                : "border-[1px] border-[#1F1F1F]"
+                } cursor-pointer  min-w-fit w-20 text-sm font-light flex justify-center tracking-wider px-2 py-1 rounded-md`}
               key={index}
             >
               {item}
@@ -577,7 +553,7 @@ const Tradingview = () => {
                   tokenDetailsMarketCap={tokenDetailsMarketCap}
                   chartTokenData={chartTokenData}
                   walletAddress={
-                    activeSolWalletAddress?.wallet || solWalletAddress
+                    activeSolWalletAddress?.wallet
                   }
                   pairAddress={latestTradesData?.chartData?.pairaddress}
                   tokenImage={tokenImage}
@@ -588,9 +564,8 @@ const Tradingview = () => {
 
               <div
                 ref={tvChartRef}
-                className={`${
-                  isSmallScreen ? "h-[380px]" : "h-[10000px]"
-                } w-full`}
+                className={`${isSmallScreen ? "h-[380px]" : "h-[10000px]"
+                  } w-full`}
               >
                 <TVChartContainer
                   tokenSymbol={tokenSymbol}
@@ -606,11 +581,11 @@ const Tradingview = () => {
             <div className="overflow-y-auto border-t border-t-[#4D4D4D]">
               <Table
                 tokenCA={tokenaddress}
-                address={activeSolWalletAddress?.wallet || solWalletAddress}
+                address={activeSolWalletAddress?.wallet}
                 scrollPosition={scrollPosition}
                 tvChartRef={tvChartRef}
                 solWalletAddress={
-                  activeSolWalletAddress?.wallet || solWalletAddress
+                  activeSolWalletAddress?.wallet
                 }
                 tokenSupply={chartTokenData?.currentSupply}
                 currentUsdPrice={
@@ -647,10 +622,8 @@ const Tradingview = () => {
                 setActiveTab={setActiveTab}
                 token={tokenaddress}
                 walletAddress={
-                  activeSolWalletAddress?.wallet || solWalletAddress
+                  activeSolWalletAddress?.wallet
                 }
-                setTokenBalance={setTokenBalance}
-                tokenBalance={tokenBalance}
                 tokenName={tokenSymbol}
                 tokenSymbol={chartTokenData?.name}
                 tokenImage={tokenImage}
