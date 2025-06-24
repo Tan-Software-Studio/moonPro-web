@@ -15,6 +15,9 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
   const currentTabData = useSelector(
     (state) => state?.setPnlData?.PnlData || []
   );
+  const activeSolWalletAddress = useSelector(
+    (state) => state?.userData?.activeSolanaWallet
+  );
 
   // unrealized pnl calculation
   const UnrealizedPNL = currentTabData.reduce((acc, item) => {
