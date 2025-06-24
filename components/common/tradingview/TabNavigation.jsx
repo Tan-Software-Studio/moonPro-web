@@ -14,6 +14,7 @@ const TabNavigation = ({
   setActiveTab,
   topHoldersApiCall,
   toptradersApiCall,
+  devTokensApiCall,
   tvChartRef,
   isInstantTradeActive,
   handleInstantTradeClick,
@@ -34,6 +35,11 @@ const TabNavigation = ({
       typeof toptradersApiCall == "function"
     ) {
       toptradersApiCall();
+    } else if (
+      tabName == "Dev Tokens" &&
+      typeof devTokensApiCall == "function"
+    ) {
+      devTokensApiCall();
     }
 
     // Small delay to ensure state updates

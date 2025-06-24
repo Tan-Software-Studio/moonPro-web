@@ -13,6 +13,7 @@ import {
   numberFormated,
   formatDecimal,
   capitalizeFirstLetter,
+  formatNumber,
 } from "@/utils/basicFunctions";
 import TVChartContainer from "@/components/TradingChart/TradingChart";
 import TokenDetails from "@/components/common/tradingview/TokenDetails";
@@ -520,6 +521,16 @@ const Tradingview = () => {
     document.title = `${tokenSymbol} | Nexa`;
   }, [tokenSymbol])
 
+  const currentTokenDevHoldingData = {
+    tokenImage: tokenImage,
+    tokenMintAddress: tokenaddress,
+    tokenSymbol: tokenSymbol,
+    tokenMarketCap: tokenDetailsMarketCap || 0,
+    tokenLiquidity: chartTokenData?.Liqudity || 0,
+    oneHourVolume: formatNumber(chartTokenData?.buy_volume_1h + chartTokenData?.sell_volume_1h, false, true) || 0,
+    migrated: chartTokenData?.bondingCurveProgress >= 100
+  }
+
   return (
     <div
       className={`lg:flex relative overflow-y-auto h-svh max-h-svh ${isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5"
@@ -589,6 +600,7 @@ const Tradingview = () => {
                 tokenSupply={chartTokenData?.currentSupply}
                 currentUsdPrice={latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD}
                 currentTabData={currentTabData}
+                currentTokenDevHoldingData={currentTokenDevHoldingData}
                 isInstantTradeActive={isInstantTradeActive}
                 handleInstantTradeClick={handleInstantTradeClick}
               />
