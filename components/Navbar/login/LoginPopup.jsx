@@ -379,7 +379,7 @@ const LoginPopup = ({ authName }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-[#1E1E1ECC] flex items-center justify-center"
+            className="fixed inset-0 bg-[#1E1E1ECC] flex !z-50 items-center justify-center"
             onClick={() => dispatch(openCloseLoginRegPopup(false))}
           >
             <motion.div
@@ -389,7 +389,7 @@ const LoginPopup = ({ authName }) => {
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-[#141414]/90 backdrop-blur-lg border border-[#2A2A2A] rounded-2xl w-[400px] relative"
+              className="bg-[#141414]/90 backdrop-blur-lg !z-50 border border-[#2A2A2A] rounded-2xl w-[400px] relative"
             >
               <IoMdClose
                 size={22}
