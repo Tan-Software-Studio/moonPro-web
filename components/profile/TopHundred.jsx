@@ -69,7 +69,7 @@ const TopHundred = ({}) => {
   useEffect(() => {
     setTopHundredHistoryData([]);
     getTopHundredHistoryData();
-  }, [activeSolWalletAddress]);
+  }, [activeSolWalletAddress?.wallet]);
 
   return (
     <>

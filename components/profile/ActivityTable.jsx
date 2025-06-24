@@ -190,7 +190,7 @@ const ActivityTable = ({ activitySearchQuery }) => {
 
   useEffect(() => {
     getData();
-  }, [activeSolWalletAddress]);
+  }, [activeSolWalletAddress?.wallet]);
 
   return (
     <>
