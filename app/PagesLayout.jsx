@@ -10,6 +10,7 @@ import "../app/i18n";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Footer from "@/components/Footer/Footer";
 import { PhantomWalletProvider } from "@/app/providers/PhantomWalletProvider";
+import Sidebar from "@/components/Sidebar/Sidebar";
 
 const PagesLayout = ({ childrens }) => {
   const dispatch = useDispatch();
@@ -36,19 +37,14 @@ const PagesLayout = ({ childrens }) => {
       <PhantomWalletProvider>
         <GoogleOAuthProvider clientId={clientId}>
           <div
-            className={`w-full ${
-              (isSidebarOpen && isLargeScreen) || (isSidebarOpen && isSmallScreenData) ? "md:pl-48  " : "md:pl-[64px]"
-            } relative`}
+            className={`w-full ${(isSidebarOpen && isLargeScreen) || (isSidebarOpen && isSmallScreenData) ? "md:pl-48  " : "md:pl-[66px] lg:pl-[64px]"
+              } relative`}
           >
-            {/* <div
-          className={` w-full ${
-            hasScrolled
-              ? ` bg-[#101018] backdrop-blur-3xl border-l-[1px] ${borderColor}`
-              : `!sticky  top-0 left-0 right-0`
-          }`}
-        ></div> */}
-            <div className={` w-full z-40 !sticky top-0 left-0 right-0`}>
+            <div className={` `}>
               <Navbar />
+            </div>
+            <div className="w-auto relative md:z-20 z-50">
+              <Sidebar />
             </div>
             {isSearchbarPopup && (
               <div className="absolute">
@@ -59,8 +55,10 @@ const PagesLayout = ({ childrens }) => {
             <Notification />
             <WalletScan />
 
-            <div className="w-full">{childrens}</div>
-            <Footer />
+            <div className="w-full  ">{childrens}</div>
+            <div className="">
+              <Footer />
+            </div>
           </div>
         </GoogleOAuthProvider>
       </PhantomWalletProvider>
