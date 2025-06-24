@@ -49,7 +49,7 @@ const TradingPopup = ({
   handleInstantTradeClick,
   currentTokenPnLData,
   isPnlUsdSolActive,
-  onClickPnlUsdActiveToggle
+  onClickPnlUsdActiveToggle,
 }) => {
   const [loaderSwap, setLoaderSwap] = useState(false);
   const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
@@ -287,6 +287,7 @@ const TradingPopup = ({
           {
             name: tokenSymbol,
             symbol: tokenName,
+            decimal: decimal,
             img: tokenImage || null,
           }
         );
