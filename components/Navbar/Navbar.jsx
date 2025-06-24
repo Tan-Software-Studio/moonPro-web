@@ -308,7 +308,7 @@ const Navbar = () => {
   return (
     <>
       <div
-        className={`backdrop-blur-3xl bg-[#08080E] transition-all duration-500 sm:px-1 px-2  md:px-[8px] ease-in-out border-b-[1px] border-b-[#404040]`}
+        className={`backdrop-blur-3xl sticky top-0 left-0 right-0 md:z-50 z-40 bg-[#08080E] transition-all duration-500 sm:px-1 px-2  md:px-[8px] ease-in-out border-b-[1px] border-b-[#404040]`}
       >
         <div className="transition-all duration-500 ease-in-out  ">
           <div className="flex items-center sm:gap-2 py-2   justify-between  sm:mx-4 md:mx-0">

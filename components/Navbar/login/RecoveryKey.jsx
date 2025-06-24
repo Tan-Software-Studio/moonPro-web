@@ -28,7 +28,7 @@ const RecoveryKey = ({ PK, setPK, setOpenRecovery, flag }) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="fixed inset-0 bg-[#1E1E1ECC] flex items-center justify-center z-50 "
+        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 "
       >
         <motion.div
           key="modal"
@@ -37,7 +37,7 @@ const RecoveryKey = ({ PK, setPK, setOpenRecovery, flag }) => {
           exit={{ scale: 0.8, opacity: 0 }}
           transition={{ duration: 0.2 }}
           onClick={(e) => e.stopPropagation()}
-          className="bg-[#141414]/90 backdrop-blur-lg border border-[#2A2A2A]  rounded-2xl w-[400px] relative"
+          className="bg-[#08080e] backdrop-blur-lg border border-[#2A2A2A]  rounded-2xl w-[400px] relative"
         >
           <IoMdClose
             size={22}
@@ -65,8 +65,9 @@ const RecoveryKey = ({ PK, setPK, setOpenRecovery, flag }) => {
                   : navbar?.recovery?.privateKey}
               </div>
               <div
-                className={`flex w-full border-[1px] border-[#404040] rounded-md  mt-1 p-3  bg-[#1F1F1F] ${!isRevealed ? "blur-sm select-none" : ""
-                  }`}
+                className={`flex w-full border-[1px] border-[#404040] rounded-md  mt-1 p-3  bg-[#1F1F1F] ${
+                  !isRevealed ? "blur-sm select-none" : ""
+                }`}
               >
                 <div className="w-[90%] overflow-x-hidden  break-words text-sm ">
                   {PK}
