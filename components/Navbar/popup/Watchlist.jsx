@@ -106,139 +106,149 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
     }
 
     return (
+      <motion.div
+        key="backdrop"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        onClick={() => setIsWatchlistPopup(false)}
+        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center !z-[999999999999999]"
+      >
         <motion.div
-            key="backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={() => setIsWatchlistPopup(false)}
-            className="fixed inset-0 bg-[#1E1E1ECC] flex items-center justify-center !z-[999999999999999]"
+          key="modal"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.8, opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="LanguagePopup-lg xl:w-[1100px] lg:w-[1000px] md:w-[90%]  w-full bg-[#08080e] rounded-md !z-[999999999999999]"
+          onClick={(e) => e.stopPropagation()}
         >
-            <motion.div
-                key="modal"
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="LanguagePopup-lg xl:w-[1100px] lg:w-[1000px] md:w-[90%]  w-full bg-[#08080E] rounded-md !z-[999999999999999]"
-                onClick={(e) => e.stopPropagation()}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
+            <h2 className="text-2xl font-bold text-white">
+              {accountPopup?.watchlist?.watchlist}
+            </h2>
+            <button
+              onClick={() => setIsWatchlistPopup(false)}
+              className="text-gray-400 hover:text-white transition-colors"
             >
-                <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
-                    <h2 className="text-2xl font-bold text-white">{accountPopup?.watchlist?.watchlist}</h2>
-                    <button
-                        onClick={() => setIsWatchlistPopup(false)}
-                        className="text-gray-400 hover:text-white transition-colors"
-                    >
-                        <X size={24} />
-                    </button>
-                </div>
+              <X size={24} />
+            </button>
+          </div>
 
-                {/* Table Container */}
-                <div className="overflow-x-auto px-5 pb-5  min-h-[300px] ">
-                    <table className="w-full">
-                        {/* Table Header */}
-                        <thead>
-                            <tr className="border-b border-gray-800">
-                                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
-                                    {accountPopup?.watchlist?.token}
-                                </th>
-                                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
-                                    {accountPopup?.watchlist?.marketCap}
-                                </th>
-                                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
-                                    {accountPopup?.watchlist?.volume1h}
-                                </th>
-                                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
-                                    {accountPopup?.watchlist?.liquidity}
-                                </th>
-                                <th className="text-center px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
-                                    {accountPopup?.watchlist?.actions}
-                                </th>
-                            </tr>
-                        </thead>
+          {/* Table Container */}
+          <div className="overflow-x-auto px-5 pb-5  min-h-[300px] ">
+            <table className="w-full">
+              {/* Table Header */}
+              <thead>
+                <tr className="border-b border-gray-800">
+                  <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
+                    {accountPopup?.watchlist?.token}
+                  </th>
+                  <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
+                    {accountPopup?.watchlist?.marketCap}
+                  </th>
+                  <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
+                    {accountPopup?.watchlist?.volume1h}
+                  </th>
+                  <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
+                    {accountPopup?.watchlist?.liquidity}
+                  </th>
+                  <th className="text-center px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
+                    {accountPopup?.watchlist?.actions}
+                  </th>
+                </tr>
+              </thead>
 
-                        {/* Table Body */}
-                        <tbody className="divide-y divide-gray-800 max-h-[500px]  overflow-y-auto cursor-pointer">
-                            {loading ? (
-                                <tr>
-                                    <td colSpan="5">
-                                        <div className="flex justify-center items-center h-[200px]">
-                                            <div className="stage">
-                                                <div className="dot-spin"></div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ) :
-                                getWatchlistData.length > 0 ?
-                                    <>
-                                        {
-                                            getWatchlistData.map((item, index) => (
-                                                <tr key={index}
-                                                    onClick={() => navigateToChartSreen(item)}
-                                                    className="hover:bg-gray-900 transition-colors">
-                                                    {/* Token Column */}
-                                                    <td className="px-6 py-4">
-                                                        <div className="flex items-center gap-3 relative">
-                                                            <div className="relative w-10 h-10">
-                                                                <img
-                                                                    src={item.img}
-                                                                    alt={item.name}
-                                                                    className="w-10 h-10 rounded-md border-2 border-gray-500 object-cover"
-                                                                />
+              {/* Table Body */}
+              <tbody className="divide-y divide-gray-800 max-h-[500px]  overflow-y-auto cursor-pointer">
+                {loading ? (
+                  <tr>
+                    <td colSpan="5">
+                      <div className="flex justify-center items-center h-[200px]">
+                        <div className="stage">
+                          <div className="dot-spin"></div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ) : getWatchlistData.length > 0 ? (
+                  <>
+                    {getWatchlistData.map((item, index) => (
+                      <tr
+                        key={index}
+                        onClick={() => navigateToChartSreen(item)}
+                        className="hover:bg-gray-900 transition-colors"
+                      >
+                        {/* Token Column */}
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3 relative">
+                            <div className="relative w-10 h-10">
+                              <img
+                                src={item.img}
+                                alt={item.name}
+                                className="w-10 h-10 rounded-md border-2 border-gray-500 object-cover"
+                              />
 
-                                                                {/* Pump badge image in bottom-right corner */}
-                                                                {item.img && (
-                                                                    <img
-                                                                        src={'https://play-lh.googleusercontent.com/38AumHMi-kqROWOkerx9qhrNhEtgfu12mqfYSrUizzYd_9cf3h8l4ngNLOT3IEzC2K0=w240-h480-rw'}
-                                                                        alt="Pump"
-                                                                        className="w-4 h-4 absolute bottom-[-4px] right-[-4px] rounded-full border border-black bg-white p-[1px]"
-                                                                    />
-                                                                )}
-                                                            </div>
+                              {/* Pump badge image in bottom-right corner */}
+                              {item.img && (
+                                <img
+                                  src={
+                                    "https://play-lh.googleusercontent.com/38AumHMi-kqROWOkerx9qhrNhEtgfu12mqfYSrUizzYd_9cf3h8l4ngNLOT3IEzC2K0=w240-h480-rw"
+                                  }
+                                  alt="Pump"
+                                  className="w-4 h-4 absolute bottom-[-4px] right-[-4px] rounded-full border border-black bg-white p-[1px]"
+                                />
+                              )}
+                            </div>
 
-                                                            <div>
-                                                                <div className="text-white font-semibold text-base">
-                                                                    {item.name || item?.symbol || "Unknown"}
-                                                                </div>
-                                                                <div className="flex items-center gap-2 text-gray-400 text-sm">
-                                                                    <span>{`${item?.tokenAddress?.slice(0, 5)}...${item?.tokenAddress?.slice(-5)}`}</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
+                            <div>
+                              <div className="text-white font-semibold text-base">
+                                {item.name || item?.symbol || "Unknown"}
+                              </div>
+                              <div className="flex items-center gap-2 text-gray-400 text-sm">
+                                <span>{`${item?.tokenAddress?.slice(
+                                  0,
+                                  5
+                                )}...${item?.tokenAddress?.slice(-5)}`}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
 
+                        {/* Market Cap Column */}
+                        <td
+                          // onClick={() => navigateToChartSreen(item)}
+                          className="px-6 py-4"
+                        >
+                          <span className="text-gray-300 text-sm">
+                            {item?.marketCap || "N/A"}
+                          </span>
+                        </td>
 
-                                                    {/* Market Cap Column */}
-                                                    <td
-                                                        // onClick={() => navigateToChartSreen(item)}
-                                                        className="px-6 py-4">
-                                                        <span className="text-gray-300 text-sm">
-                                                            {item?.marketCap || "N/A"}
-                                                        </span>
-                                                    </td>
+                        {/* Volume Column */}
+                        <td
+                          // onClick={() => navigateToChartSreen(item)}
+                          className="px-6 py-4"
+                        >
+                          <span className="text-gray-300 text-sm">
+                            {"$"}
+                            {formatNumberCompact(item.tradedVolumeUSD || 0)}
+                          </span>
+                        </td>
 
-                                                    {/* Volume Column */}
-                                                    <td
-                                                        // onClick={() => navigateToChartSreen(item)}
-                                                        className="px-6 py-4">
-                                                        <span className="text-gray-300 text-sm">
-                                                            {"$"}{formatNumberCompact(item.tradedVolumeUSD || 0)}
-                                                        </span>
-                                                    </td>
+                        {/* Liquidity Column */}
+                        <td
+                          // onClick={() => navigateToChartSreen(item)}
+                          className="px-6 py-4"
+                        >
+                          <span className="text-gray-300 text-sm">
+                            {item.Liqudity || "N/A"}
+                          </span>
+                        </td>
 
-                                                    {/* Liquidity Column */}
-                                                    <td
-                                                        // onClick={() => navigateToChartSreen(item)}
-                                                        className="px-6 py-4">
-                                                        <span className="text-gray-300 text-sm">
-                                                            {item.Liqudity || "N/A"}
-                                                        </span>
-                                                    </td>
-
-                                                    {/* Actions Column */}
-                                                    {/* <td className="px-6 py-4 text-center">
+                        {/* Actions Column */}
+                        {/* <td className="px-6 py-4 text-center">
                                                         <button
                                                             onClick={() => handleDeleteItem(item?.tokenAddress, index)}
                                                             className="text-red-500 hover:text-red-400 transition-colors"
@@ -246,43 +256,39 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
                                                             <Trash2 size={18} />
                                                         </button>
                                                     </td> */}
-                                                    <td className="px-6 py-4 text-center">
-                                                        {
-                                                            deletingItem === item?.tokenAddress ? (
-                                                                <div className="w-4 h-4 mx-auto border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-                                                            ) : (
-                                                                <button
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        handleDeleteItem(item?.tokenAddress, index)
-                                                                    }}
-                                                                    className="text-red-500 hover:text-red-400 transition-colors"
-                                                                >
-                                                                    <Trash2 size={18} />
-                                                                </button>
-                                                            )
-                                                        }
-                                                    </td>
-
-                                                </tr>
-                                            ))
-                                        }
-                                    </> : (
-                                        <tr>
-                                            <td colSpan="5">
-                                                <div className="flex flex-col items-center justify-center h-[300px] w-full">
-                                                    <NoData />
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    )
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </motion.div>
-        </motion.div >
-    )
+                        <td className="px-6 py-4 text-center">
+                          {deletingItem === item?.tokenAddress ? (
+                            <div className="w-4 h-4 mx-auto border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                          ) : (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteItem(item?.tokenAddress, index);
+                              }}
+                              className="text-red-500 hover:text-red-400 transition-colors"
+                            >
+                              <Trash2 size={18} />
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </>
+                ) : (
+                  <tr>
+                    <td colSpan="5">
+                      <div className="flex flex-col items-center justify-center h-[300px] w-full">
+                        <NoData />
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </motion.div>
+      </motion.div>
+    );
 }
 
 export default Watchlist
