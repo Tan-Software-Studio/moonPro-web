@@ -68,11 +68,19 @@ const Table = ({
   const [ageActive, setAgeActive] = useState(true);
   const [descTimeActive, setdescTimeActive] = useState(true);
   const [migratedPercent, setMigratedPercent] = useState(0);
+  const [currentTokenAddress, setCurrentTokenAddress] = useState(null);
   const router = useRouter();
 
   const solanaLivePrice = useSelector(
     (state) => state?.AllStatesData?.solanaLivePrice
   );
+
+  useEffect(() => {
+    if (tokenCA !== currentTokenAddress) {
+      setDevTokensData([]);
+      setCurrentTokenAddress(tokenCA);
+    }
+  }, [tokenCA]);
 
   const toggleTotalUsdActive = () => {
     if (solanaLivePrice === 0) {
