@@ -1,15 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Solana, Copy, Telegram, linkedin, NewX } from "@/app/Images";
+import { Solana, Copy } from "@/app/Images";
 import Image from "next/image";
 import { IoMdDoneAll } from "react-icons/io";
 import { formatDecimal } from "@/utils/basicFunctions";
 import { useDispatch, useSelector } from "react-redux";
 import {
   openCloseLoginRegPopup,
-  removeFavouriteToken,
   setChartSymbolImage,
-  setFavouriteTokens,
   setIsFaviouriteToken,
 } from "@/app/redux/states";
 import { CiHeart } from "react-icons/ci";
@@ -31,7 +29,6 @@ import { RxCross1 } from "react-icons/rx";
 import { BsCopy, BsTwitterX } from "react-icons/bs";
 import { RiFacebookCircleLine } from "react-icons/ri";
 import Link from "next/link";
-import toast from "react-hot-toast";
 import { IoSearchSharp } from "react-icons/io5";
 import SquareProgressBar from "../../common/SquareProgressBarcom/SquareProgressBar";
 import { pumpfun, telegrams, twitter, website } from "@/app/Images";
@@ -39,18 +36,16 @@ import { showToaster, showToasterSuccess } from "@/utils/toaster/toaster.style";
 import { HiOutlineUpload } from "react-icons/hi";
 
 const TokenDetails = ({
-  tokenSymbol,
   tokenaddress,
   copied,
   handleCopy,
   TokenDetailsNumberData,
   tokenDetailsMarketCap,
   chartTokenData,
-  walletAddress,
   pairAddress,
   tokenImage,
   setIsSharePnLModalActive,
-  currentTokenPnLData
+  currentTokenPnLData,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCopyUrl, setIsCopyUrl] = useState(false);
@@ -80,7 +75,7 @@ const TokenDetails = ({
       } else {
         dispatch(setChartSymbolImage(getImageFromLocalStorage));
       }
-    } catch (error) { }
+    } catch (error) {}
   }
   const token = localStorage.getItem("token");
 
@@ -92,7 +87,7 @@ const TokenDetails = ({
       method: "post",
       url: `${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}user/createTokenFavourite`,
       data: {
-        symbol: tokenSymbol || "Unknown",
+        symbol: chartTokenData?.symbol || "Unknown",
         name: chartTokenData?.name,
         img: tokenImage,
         tokenAddress: tokenaddress,
@@ -160,7 +155,7 @@ const TokenDetails = ({
       .then((res) => {
         dispatch(setIsFaviouriteToken(res?.data?.data?.exists));
       })
-      .catch((err) => { })
+      .catch((err) => {})
       .finally(() => {
         setIsFavouriteLoading(false);
       });
@@ -237,7 +232,7 @@ const TokenDetails = ({
                   />
                 ) : (
                   <h1 className="absolute inset-0 m-auto w-[30px] h-[30px] rounded-sm text-[22px] border-[1px] border-[#26262e] bg-[#191919] flex items-center justify-center ">
-                    {tokenSymbol?.toString()?.slice(0, 1)}
+                    {chartTokenData?.symbol?.toString()?.slice(0, 1)}
                   </h1>
                 )}
               </div>
@@ -245,15 +240,15 @@ const TokenDetails = ({
               <div className="flex flex-col md:mr-5">
                 <div className="flex items-center gap-2">
                   <div className="text-white text-base sm:text-lg font-spaceGrotesk">
-                    {tokenSymbol?.length > 7
-                      ? `${tokenSymbol.slice(0, 5)}...`
-                      : tokenSymbol}
+                    {chartTokenData?.symbol?.length > 7
+                      ? `${chartTokenData?.symbol.slice(0, 5)}...`
+                      : chartTokenData?.symbol}
                   </div>
                   <div className="text-[#A8A8A8] text-xs md:text-[14px]">
                     {tokenaddress && tokenaddress.length >= 10
                       ? `${tokenaddress.slice(0, 5)}...${tokenaddress.slice(
-                        -3
-                      )}`
+                          -3
+                        )}`
                       : tokenaddress}
                   </div>
                   <div
@@ -325,18 +320,18 @@ const TokenDetails = ({
               <div
                 className="h-[36px] w-[36px] bg-[#1F1F1F] rounded-full flex items-center justify-center"
                 onClick={() => {
-                  {(Object.keys(currentTokenPnLData).length > 0) ? 
-                    setIsSharePnLModalActive(true)
-                    :
-                    setIsModalOpen(true)
+                  {
+                    Object.keys(currentTokenPnLData).length > 0
+                      ? setIsSharePnLModalActive(true)
+                      : setIsModalOpen(true);
                   }
                 }}
               >
-                {(Object.keys(currentTokenPnLData).length > 0) ? 
-                <HiOutlineUpload size={22} className="text-[#4CAF50]"/>
-                :
-                <PiShare className="text-[#F6F6F6] text-[22px]" />
-                }
+                {Object.keys(currentTokenPnLData).length > 0 ? (
+                  <HiOutlineUpload size={22} className="text-[#4CAF50]" />
+                ) : (
+                  <PiShare className="text-[#F6F6F6] text-[22px]" />
+                )}
               </div>
               <div className="h-[36px] w-[36px] bg-[#1F1F1F] rounded-full flex items-center justify-center">
                 {isFavouriteLoading ? (
@@ -364,7 +359,9 @@ const TokenDetails = ({
               <p className="inline">{tokenDetailsMarketCap}</p>
             </div>
             <div className="p-0 md:p-3 flex items-center">
-              <div className={`grid grid-cols-${TokenDetailsNumberData?.length} lg:gap-5 md:gap-4 gap-2`}>
+              <div
+                className={`grid grid-cols-${TokenDetailsNumberData?.length} lg:gap-5 md:gap-4 gap-2`}
+              >
                 {TokenDetailsNumberData?.map((num, index) => {
                   return (
                     <div
@@ -387,8 +384,9 @@ const TokenDetails = ({
                         </span>
                       </span>
                       <span
-                        className={`${index === 3 ? "text-[#4CAF50]" : "text-white"
-                          } text-sm`}
+                        className={`${
+                          index === 3 ? "text-[#4CAF50]" : "text-white"
+                        } text-sm`}
                       >
                         {num?.label == "Price USD"
                           ? formatDecimal(num?.price)
@@ -411,15 +409,17 @@ const TokenDetails = ({
                 </button> */}
             </div>
           </div>
-        {(Object.keys(currentTokenPnLData).length > 0) &&
-            <button 
-              onClick={() => {setIsSharePnLModalActive(true)}}
+          {Object.keys(currentTokenPnLData).length > 0 && (
+            <button
+              onClick={() => {
+                setIsSharePnLModalActive(true);
+              }}
               className="text-[#4CAF50] hidden gap-1 md:flex"
             >
-              <HiOutlineUpload size={16}/>
+              <HiOutlineUpload size={16} />
               <p className="text-xs">Share PnL</p>
             </button>
-        }
+          )}
         </div>
         <div className="items-center justify-between mb-[5px] md:mb-[0px] hidden md:flex">
           <div className="flex items-center md:flex-col">
@@ -570,7 +570,7 @@ const TokenDetails = ({
                     </h1>
                   </div>
                   <div className="mt-[16px] flex flex-col items-center justify-center gap-[4px] ">
-                    <div >
+                    <div>
                       <a
                         href={`https://www.facebook.com/dialog/send?link=https://wavepro.com&app_id=YOUR_APP_ID&redirect_uri=${encodeURIComponent(
                           window.location.href
