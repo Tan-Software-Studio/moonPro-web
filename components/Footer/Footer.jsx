@@ -153,15 +153,7 @@ const Footer = () => {
     }
   };
 
-  const getFooterPadding = () => {
-    if (
-      (isSidebarOpen && isLargeScreen) ||
-      (isSidebarOpen && isSmallScreenData)
-    ) {
-      return "md:pl-48";
-    }
-    return "md:pl-[64px]";
-  };
+
 
   // Handle external links
   const handleDiscordClick = () => {
@@ -179,7 +171,7 @@ const Footer = () => {
   return (
     <>
       <footer
-        className={`fixed hidden md:block bottom-0 left-0 right-0 z-40 bg-[#0A0A0F] px-3 border-t ${borderColor}  py-1 ${getFooterPadding()}`}
+        className={`${(isSidebarOpen && isLargeScreen) || (isSidebarOpen && isSmallScreenData) ? "md:ml-48  " : "md:ml-[66px] lg:ml-[64px]"} hidden md:block fixed bottom-0 left-0 right-0  bg-[#0A0A0F] border-t ${borderColor}  py-1`}
       >
         <div className="flex items-center justify-between md:gap-0 gap-10 text-xs">
           {activeSolWalletAddress?.wallet && (
@@ -241,9 +233,8 @@ const Footer = () => {
                         return (
                           <div
                             key={wallet._id || wallet.id || idx}
-                            className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${
-                              wallet.active ? "bg-[#18181a]" : ""
-                            }`}
+                            className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${wallet.active ? "bg-[#18181a]" : ""
+                              }`}
                           >
                             <div className="flex items-center gap-3">
                               <input
@@ -257,11 +248,10 @@ const Footer = () => {
                               <div className="flex flex-col">
                                 <div className="flex items-center gap-2 text-sm">
                                   <span
-                                    className={`font-medium ${
-                                      wallet.primary
+                                    className={`font-medium ${wallet.primary
                                         ? "text-orange-400"
                                         : "text-white"
-                                    }`}
+                                      }`}
                                   >
                                     {idx === 0
                                       ? "Nexa Pro Main"
@@ -411,6 +401,7 @@ const Footer = () => {
 
       <PnLTrackerPopup
         isOpen={isPnLPopupOpen}
+        activeSolWalletAddress={activeSolWalletAddress}
         onClose={() => setIsPnLPopupOpen(false)}
       />
     </>

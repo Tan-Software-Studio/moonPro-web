@@ -51,10 +51,7 @@ export default function RootLayout({ children }) {
                 className={`${geistSans.variable} ${geistMono.variable}  ${poppins.variable} ${spaceGrotesk.variable} antialiased`}
             >
                     <Providers>
-                        <div className="flex">
-                            <div className="w-auto">
-                                <Sidebar />
-                            </div>
+                        <div className="flex"> 
                             <PagesLayout childrens={children} />
                             <Toaster
                                 position="top-right"

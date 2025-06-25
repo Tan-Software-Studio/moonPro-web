@@ -82,14 +82,14 @@ function FilterMemescope({ isOpen, setIsOpen, data, onApply, onReset, filterValu
     <>
       {isOpen && (
         <div
-          className="absolute inset-0 bg-black bg-opacity-50 z-[9999998]"
+          className="fixed z-[9999998] inset-0 bg-black bg-opacity-50 "
 
         />
       )}
       <div
         ref={panelRef}
         className={`absolute transition-all duration-500 ease-in-out top-0 ${isOpen ? "right-0" : "-right-full"
-          } md:w-[366px] w-full h-screen bg-[#16171c] z-[9999999]`}
+          } md:w-[366px] w-full h-svh bg-[#16171c] z-[9999999]`}
       >
         <div className="">
           <div className="flex w-full justify-between p-3 px-3 py-4 h-full items-center border-b border-gray-500">
