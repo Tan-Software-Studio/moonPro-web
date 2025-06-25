@@ -206,6 +206,10 @@ const TokenDetails = ({
   useEffect(() => {
     getAndSetImageFromLocalStorage();
   }, []);
+
+   useEffect(() => {
+    console.log("tokenImage", tokenImage)
+  }, [tokenImage]);
   return (
     <div className="bg-transparent border-b-[1px] border-b-[#26262e] w-full">
       <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center ">
@@ -223,17 +227,19 @@ const TokenDetails = ({
                   size={36.5}
                   trailColor="#7b8085"
                   progressColor={"#4FAFFE"}
+                  showPercentText={false}
                 />
-                {tokenImage ? (
+                {tokenImage && tokenImage !== "undefined" && tokenImage !== "null" ? (
                   <img
-                    key={tokenImage || Solana}
-                    src={
-                      tokenImage || Solana
-                        ? tokenImage || Solana
-                        : "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/in/wp-content/uploads/2022/03/monkey-g412399084_1280.jpg"
-                    }
+                    key={tokenImage}
+                    src={tokenImage}
                     alt="Profile"
                     className="absolute inset-0 m-auto w-[30px] h-[30px] rounded-sm"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src =
+                        "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/in/wp-content/uploads/2022/03/monkey-g412399084_1280.jpg";
+                    }}
                   />
                 ) : (
                   <h1 className="absolute inset-0 m-auto w-[30px] h-[30px] rounded-sm text-[22px] border-[1px] border-[#26262e] bg-[#191919] flex items-center justify-center ">

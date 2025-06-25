@@ -10,7 +10,8 @@ const SquareProgressBar = ({
   size = 70.5,
   trailColor = "#3c3c44",
   progressColor,
-  capsuleImg
+  capsuleImg,
+  showPercentText = true
 }) => {
   const progress = Math.min(Math.max((value / maxValue) * 100, 0), 100); // Ensures progress is between 0 and 100
   const strokeWidth = 2; // Thinner border width
@@ -55,12 +56,14 @@ const SquareProgressBar = ({
             strokeLinecap="round"
           />
         </svg>
-        <div
-          className="absolute inset-0 flex justify-center items-center text-sm font-semibold"
-          style={{ color: progressColor }}
-        >
-          {Math.round(progress)}%
-        </div>
+        {showPercentText &&
+          <div
+            className="absolute inset-0 flex justify-center items-center text-sm font-semibold"
+            style={{ color: progressColor }}
+          >
+            {Math.round(progress)}%
+          </div>
+        }
         {/* top-left Icon */}
         {/* <div 
           className="absolute rounded-full bg-black text-white text-xs border border-[#6ec3f5] bottom-12 right-12 p-[1px] z-10">
