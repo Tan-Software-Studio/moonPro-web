@@ -1,12 +1,11 @@
-"use client"; 
-import { setChartSymbolImage } from "@/app/redux/states";
+"use client";
 import { Check, Copy } from "lucide-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { pnlPercentage } from "./calculation";
 import NoData from "../common/NoData/noData";
+import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
 
 const History = ({ }) => {
   const router = useRouter();
@@ -15,11 +14,10 @@ const History = ({ }) => {
   // history data from redux
   const historyData = useSelector((state) => state?.setPnlData?.PnlDataHistory);
   const navigateToChartSreen = (item) => {
+    dispatch(setActiveChartToken({ symbol: item?.symbol, img: item?.img }));
     router.push(
       `/tradingview/solana?tokenaddress=${item?.token}`
     );
-    localStorage.setItem("chartTokenImg", item?.img);
-    dispatch(setChartSymbolImage(item?.img));
   };
 
   const handleCopy = (address, index, e) => {
@@ -119,14 +117,14 @@ const History = ({ }) => {
                     <td className="px-4 py-2 ">
                       <div
                         className={`flex items-center gap-0.5 text-base font-semibold whitespace-nowrap break-keep ${pnlPercentage(item?.sellPrice, item?.buyPrice) >= 0
-                            ? "text-emerald-500"
-                            : "text-red-500"
+                          ? "text-emerald-500"
+                          : "text-red-500"
                           }`}
                       >
                         <p className="">
                           {`${(item?.buyPrice - item.sellPrice) * item.qty >= 0
-                              ? "-$"
-                              : "$"
+                            ? "-$"
+                            : "$"
                             }${Math.abs(
                               (item?.buyPrice - item.sellPrice) * item.qty
                             ).toFixed(2)}`}

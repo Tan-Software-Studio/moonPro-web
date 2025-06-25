@@ -36,6 +36,7 @@ import { showToaster, showToasterSuccess } from "@/utils/toaster/toaster.style";
 import { HiOutlineUpload } from "react-icons/hi";
 
 const TokenDetails = ({
+  chartTokenDataState,
   tokenaddress,
   copied,
   handleCopy,
@@ -43,7 +44,6 @@ const TokenDetails = ({
   tokenDetailsMarketCap,
   chartTokenData,
   pairAddress,
-  tokenImage,
   setIsSharePnLModalActive,
   currentTokenPnLData,
 }) => {
@@ -59,9 +59,9 @@ const TokenDetails = ({
   ];
 
   const dispatch = useDispatch();
-  const tokenFavList = useSelector(
-    (state) => state?.AllStatesData?.favouriteTokens
-  );
+  // const tokenFavList = useSelector(
+  //   (state) => state?.AllStatesData?.favouriteTokens
+  // );
 
   const isFavourite = useSelector(
     (state) => state?.AllStatesData?.isFaviourite
@@ -75,7 +75,7 @@ const TokenDetails = ({
       } else {
         dispatch(setChartSymbolImage(getImageFromLocalStorage));
       }
-    } catch (error) {}
+    } catch (error) { }
   }
   const token = localStorage.getItem("token");
 
@@ -87,9 +87,9 @@ const TokenDetails = ({
       method: "post",
       url: `${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}user/createTokenFavourite`,
       data: {
-        symbol: chartTokenData?.symbol || "Unknown",
+        symbol: chartTokenDataState?.symbol || chartTokenData?.symbol || "Unknown",
         name: chartTokenData?.name,
-        img: tokenImage,
+        img: chartTokenData?.img,
         tokenAddress: tokenaddress,
         marketCap: tokenDetailsMarketCap,
         // volume: '0',
@@ -155,7 +155,7 @@ const TokenDetails = ({
       .then((res) => {
         dispatch(setIsFaviouriteToken(res?.data?.data?.exists));
       })
-      .catch((err) => {})
+      .catch((err) => { })
       .finally(() => {
         setIsFavouriteLoading(false);
       });
@@ -219,20 +219,16 @@ const TokenDetails = ({
                   trailColor="#7b8085"
                   progressColor={"#4FAFFE"}
                 />
-                {tokenImage ? (
+                {chartTokenDataState?.img ? (
                   <img
-                    key={tokenImage || Solana}
-                    src={
-                      tokenImage || Solana
-                        ? tokenImage || Solana
-                        : "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/in/wp-content/uploads/2022/03/monkey-g412399084_1280.jpg"
-                    }
+                    key={"Token"}
+                    src={chartTokenDataState?.img || chartTokenData?.img}
                     alt="Profile"
                     className="absolute inset-0 m-auto w-[30px] h-[30px] rounded-sm"
                   />
                 ) : (
                   <h1 className="absolute inset-0 m-auto w-[30px] h-[30px] rounded-sm text-[22px] border-[1px] border-[#26262e] bg-[#191919] flex items-center justify-center ">
-                    {chartTokenData?.symbol?.toString()?.slice(0, 1)}
+                    {(chartTokenDataState?.symbol || chartTokenData?.symbol)?.toString()?.slice(0, 1)}
                   </h1>
                 )}
               </div>
@@ -240,15 +236,15 @@ const TokenDetails = ({
               <div className="flex flex-col md:mr-5">
                 <div className="flex items-center gap-2">
                   <div className="text-white text-base sm:text-lg font-spaceGrotesk">
-                    {chartTokenData?.symbol?.length > 7
-                      ? `${chartTokenData?.symbol.slice(0, 5)}...`
-                      : chartTokenData?.symbol}
+                    {chartTokenDataState?.symbol?.length > 7
+                      ? `${chartTokenDataState?.symbol.slice(0, 5)}...`
+                      : chartTokenDataState?.symbol}
                   </div>
                   <div className="text-[#A8A8A8] text-xs md:text-[14px]">
                     {tokenaddress && tokenaddress.length >= 10
                       ? `${tokenaddress.slice(0, 5)}...${tokenaddress.slice(
-                          -3
-                        )}`
+                        -3
+                      )}`
                       : tokenaddress}
                   </div>
                   <div
@@ -384,9 +380,8 @@ const TokenDetails = ({
                         </span>
                       </span>
                       <span
-                        className={`${
-                          index === 3 ? "text-[#4CAF50]" : "text-white"
-                        } text-sm`}
+                        className={`${index === 3 ? "text-[#4CAF50]" : "text-white"
+                          } text-sm`}
                       >
                         {num?.label == "Price USD"
                           ? formatDecimal(num?.price)

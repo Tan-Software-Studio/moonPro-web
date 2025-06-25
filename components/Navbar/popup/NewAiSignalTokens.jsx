@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Check, Copy, TrendingUp } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { humanReadableFormat } from "@/utils/basicFunctions";
 import { UpdateTimeViaUTCWithCustomTime } from "@/utils/calculation";
-import { setChartSymbolImage } from "@/app/redux/states";
 import { useRouter } from "next/navigation";
 import NoData from "@/components/common/NoData/noData";
+import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
 
 const NewAiSignalTokens = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,10 +26,9 @@ const NewAiSignalTokens = () => {
   };
 
   const navigateToChartScreen = (item, index) => {
+    dispatch(setActiveChartToken({ symbol: item?.symbol, img: item?.img }));
     router.push(`/tradingview/solana?tokenaddress=${item?.address}`);
-    localStorage.setItem("chartTokenImg", item?.img);
     localStorage.setItem("chartTokenAddress", item?.address);
-    dispatch(setChartSymbolImage(item?.img));
     setIsOpen(false);
   };
 
@@ -66,9 +65,8 @@ const NewAiSignalTokens = () => {
           {aiSignalData[0]?.symbol || "Tokens"}
         </span>
         <div
-          className={`transition-transform duration-300 ${
-            isOpen ? "rotate-180" : ""
-          }`}
+          className={`transition-transform duration-300 ${isOpen ? "rotate-180" : ""
+            }`}
         >
           <svg
             className="w-4 h-4"
@@ -127,9 +125,8 @@ const NewAiSignalTokens = () => {
                   <div
                     key={ind}
                     onClick={() => navigateToChartScreen(item, ind)}
-                    className={`group cursor-pointer relative bg-[#18181a]  hover:bg-[#2a2a2a] ${
-                      ind != 4 && "border-b border-gray-700"
-                    }  px-2 py-1   transition-all duration-300 `}
+                    className={`group cursor-pointer relative bg-[#18181a]  hover:bg-[#2a2a2a] ${ind != 4 && "border-b border-gray-700"
+                      }  px-2 py-1   transition-all duration-300 `}
                   >
                     <div className="grid grid-cols-5  gap-4 items-center">
                       {/* Token Info */}

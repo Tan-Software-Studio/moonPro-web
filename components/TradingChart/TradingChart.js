@@ -21,6 +21,8 @@ import {
 import { resetResolutionOffsets } from "@/utils/tradingViewChartServices/getBars";
 
 const TVChartContainer = ({
+  chartTokenDataState,
+  searchParams,
   tokenSymbol,
   tokenaddress,
   currentTokenPnLData,
@@ -468,7 +470,7 @@ const TVChartContainer = ({
       // Unsubscribe from WebSocket when component unmounts
       unsubscribeFromWebSocket();
     };
-  }, [tokenaddress, isUsdSolToggled, isMcPriceToggled]);
+  }, [chartTokenDataState, tokenaddress, isUsdSolToggled, isMcPriceToggled]);
 
   return <div ref={chartContainerRef} className="h-full w-full bg-[#08080E]" />;
 };

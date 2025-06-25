@@ -3,12 +3,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Clear, solana } from "@/app/Images";
 import Image from "next/image";
-import { setChartSymbolImage, setIsSearchPopup } from "@/app/redux/states";
+import { setIsSearchPopup } from "@/app/redux/states";
 import { useDispatch } from "react-redux";
 import SearchResultData from "./SearchResultData";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
 
 const SearchPopup = () => {
   const [searchData, setsearchData] = useState(false);
@@ -17,7 +18,6 @@ const SearchPopup = () => {
   const [searchLoader, setSearchLoader] = useState(false);
   const [notFoundMessage, setNotFoundMessage] = useState("");
   const [resentTokens, setResentTokens] = useState([]);
-  const navigate = useRouter();
 
   const popupRef = useRef(null);
   const debounceRef = useRef(null);
@@ -93,9 +93,8 @@ const SearchPopup = () => {
   }, []);
 
   function navigateToChartView(e) {
-    localStorage.setItem("chartTokenImg", e?.img);
     dispatch(setIsSearchPopup(false));
-    dispatch(setChartSymbolImage(e?.img));
+    dispatch(setActiveChartToken({ symbol: e?.Trade?.Currency?.Symbol, img: e?.img }));
     localStorage.setItem("chartTokenAddress", e?.Trade?.Currency?.MintAddress);
   }
   return (

@@ -3,15 +3,14 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
-import toast from "react-hot-toast";
-import { Copy, Trash2, X } from "lucide-react";
+import { Trash2, X } from "lucide-react";
 import { useDispatch } from "react-redux";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { setChartSymbolImage, setIsFaviouriteToken } from "@/app/redux/states";
 import { showToaster, showToasterSuccess } from "@/utils/toaster/toaster.style";
 import { useTranslation } from "react-i18next";
 import NoData from "@/components/common/NoData/noData";
+import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
 
 const Watchlist = ({ setIsWatchlistPopup }) => {
   const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
@@ -103,6 +102,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
   };
 
   const navigateToChartSreen = (item) => {
+    dispatch(setActiveChartToken({ symbol: item?.symbol, item: row?.img }));
     router.push(`/tradingview/solana?tokenaddress=${item?.tokenAddress}`);
     setIsWatchlistPopup(false);
     localStorage.setItem("chartTokenImg", item?.img);

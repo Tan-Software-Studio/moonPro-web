@@ -3,15 +3,16 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
 
 const ResizableChartContainer = ({
-    isSmallScreen,
-    bottomOffset = 173,
-    minHeight = 200,
-    maxHeightFallback = 1000,
-    tokenSymbol,
-    tokenaddress,
-    currentTokenPnLData,
-    solanaLivePrice,
-    supply,
+  chartTokenDataState,
+  isSmallScreen,
+  bottomOffset = 173,
+  minHeight = 200,
+  maxHeightFallback = 1000,
+  tokenSymbol,
+  tokenaddress,
+  currentTokenPnLData,
+  solanaLivePrice,
+  supply,
 }) => {
   const [chartHeight, setChartHeight] = useState(isSmallScreen ? 380 : 600);
   const [isResizing, setIsResizing] = useState(false);
@@ -111,11 +112,12 @@ const ResizableChartContainer = ({
     <div className="relative w-full">
       <div className="w-full relative" style={{ height: `${chartHeight}px` }}>
         <TVChartContainer
-            tokenSymbol={tokenSymbol}
-            tokenaddress={tokenaddress}
-            currentTokenPnLData={currentTokenPnLData}
-            solanaLivePrice={solanaLivePrice}
-            supply={supply}
+          chartTokenDataState={chartTokenDataState}
+          tokenSymbol={tokenSymbol}
+          tokenaddress={tokenaddress}
+          currentTokenPnLData={currentTokenPnLData}
+          solanaLivePrice={solanaLivePrice}
+          supply={supply}
         />
         {showOverlay && (
           <div
@@ -127,9 +129,8 @@ const ResizableChartContainer = ({
 
       {!isSmallScreen && (
         <div
-          className={`w-full h-1 flex bg-[#404040] items-center text-[14px] text-[#8f92a4] justify-center cursor-ns-resize transition-colors duration-300 ease ${
-            !isResizing ? 'hover:bg-[#646363]' : ''
-          }`}
+          className={`w-full h-1 flex bg-[#404040] items-center text-[14px] text-[#8f92a4] justify-center cursor-ns-resize transition-colors duration-300 ease ${!isResizing ? 'hover:bg-[#646363]' : ''
+            }`}
           onMouseDown={startResizing}
         >
           <BsThreeDots />

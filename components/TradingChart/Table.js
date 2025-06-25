@@ -10,14 +10,14 @@ import {
   humanReadableFormatWithOutUsd,
   convertUTCToLocalTimeString,
 } from "@/utils/calculation";
-import Moralis from "moralis";
 import { usePathname, useRouter } from "next/navigation";
 import ProgressBar from "@ramonak/react-progress-bar";
 import CircularProgressChart from "../common/HolderTableChart/CircularProgressChart.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchTradesData,
-  resetChartTokenState,
+  resetChartDataState,
+  setActiveChartToken,
 } from "@/app/redux/chartDataSlice/chartData.slice.js";
 import TabNavigation from "../common/tradingview/TabNavigation.jsx";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
@@ -111,11 +111,9 @@ const Table = ({
   };
 
   const navigateToChartScreen = (data, index) => {
-    console.log(data);
+    dispatch(setActiveChartToken({ symbol: data?.symbol, img: data?.img }));
     router.push(`/tradingview/solana?tokenaddress=${data?.token}`);
-    localStorage.setItem("chartTokenImg", data?.img);
     localStorage.setItem("chartTokenAddress", data?.token);
-    dispatch(setChartSymbolImage(data?.img));
     setIsOpen(false);
   };
 
@@ -868,7 +866,7 @@ const Table = ({
   }, [currentTabData]);
 
   useEffect(() => {
-    dispatch(resetChartTokenState());
+    dispatch(resetChartDataState());
     dispatch(fetchTradesData(tokenCA));
     if (tokenSupply === undefined) {
       setMarketCapActive(false);
