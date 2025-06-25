@@ -64,9 +64,9 @@ export async function subscribeToWalletTracker() {
     // watch all solana trades
     await socket.on("new_trades", async (data) => {
       // console.log("🚀 ~ socket.on ~ data:", data?.length);
-      store.dispatch(setAiSignalLiveDataUpdate(data));
-      store.dispatch(updateTrendingLiveData(data));
-      store.dispatch(updateAllDataByNode(data));
+      // store.dispatch(setAiSignalLiveDataUpdate(data));
+      // store.dispatch(updateTrendingLiveData(data));
+      // store.dispatch(updateAllDataByNode(data));
       // send data to update pnl
       if (solanaWalletAddress) {
         store.dispatch(updatePnlDataPriceOnly(data));
