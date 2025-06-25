@@ -846,7 +846,6 @@ const Table = ({
           topHoldersApiCall={topHoldersApiCall}
           toptradersApiCall={toptradersApiCall}
           devTokensApiCall={devTokensApiCall}
-          tvChartRef={tvChartRef}
           isInstantTradeActive={isInstantTradeActive}
           handleInstantTradeClick={handleInstantTradeClick}
         />
