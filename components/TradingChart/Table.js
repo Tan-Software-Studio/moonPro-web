@@ -33,9 +33,8 @@ import { FaArrowUpLong } from "react-icons/fa6";
 import { FaArrowDownLong } from "react-icons/fa6";
 import { CiFilter } from "react-icons/ci";
 import NoData from "../common/NoData/noData.jsx";
-import {
-  setChartSymbolImage,
-} from "@/app/redux/states";
+import { setChartSymbolImage } from "@/app/redux/states";
+import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 
 const Table = ({
   scrollPosition,
@@ -45,6 +44,7 @@ const Table = ({
   tokenSupply,
   currentUsdPrice,
   currentTabData,
+  currentTokenDevHoldingData,
   isInstantTradeActive,
   handleInstantTradeClick,
 }) => {
@@ -53,6 +53,7 @@ const Table = ({
   const dispatch = useDispatch();
   const latestTradesData = useSelector((state) => state.allCharTokenData);
   const [loader, setLoader] = useState(false);
+  const [devTokensData, setDevTokensData] = useState([]);
   const [topHoldingData, setTopHoldingData] = useState([]);
   const [topTraderData, setTopTraderData] = useState([]);
   const [holdingsData, setHoldingsData] = useState([]);
@@ -64,11 +65,20 @@ const Table = ({
   const [marketCapActive, setMarketCapActive] = useState(true);
   const [ageActive, setAgeActive] = useState(true);
   const [descTimeActive, setdescTimeActive] = useState(true);
+  const [migratedPercent, setMigratedPercent] = useState(0);
+  const [currentTokenAddress, setCurrentTokenAddress] = useState(null);
   const router = useRouter();
 
   const solanaLivePrice = useSelector(
     (state) => state?.AllStatesData?.solanaLivePrice
   );
+
+  useEffect(() => {
+    if (tokenCA !== currentTokenAddress) {
+      setDevTokensData([]);
+      setCurrentTokenAddress(tokenCA);
+    }
+  }, [tokenCA]);
 
   const toggleTotalUsdActive = () => {
     if (solanaLivePrice === 0) {
@@ -102,9 +112,7 @@ const Table = ({
 
   const navigateToChartScreen = (data, index) => {
     console.log(data);
-    router.push(
-      `/tradingview/solana?tokenaddress=${data?.token}&symbol=${data?.symbol}`
-    );
+    router.push(`/tradingview/solana?tokenaddress=${data?.token}`);
     localStorage.setItem("chartTokenImg", data?.img);
     localStorage.setItem("chartTokenAddress", data?.token);
     dispatch(setChartSymbolImage(data?.img));
@@ -168,6 +176,7 @@ const Table = ({
     { name: tragindViewPagePage?.table2?.positions },
     { name: tragindViewPagePage?.table2?.holders },
     { name: tragindViewPagePage?.table2?.topTraders },
+    { name: "Dev Tokens" },
   ];
 
   const tableHeader = [
@@ -321,6 +330,20 @@ const Table = ({
     //   id: 6,
     //   title: "Actions",
     // },
+  ];
+
+  const devTokenHeader = [
+    {
+      id: 1,
+      title: "Token",
+    },
+    { id: 2, title: "Migrated" },
+    {
+      id: 3,
+      title: "Market Cap",
+    },
+    { id: 4, title: "Liquidity" },
+    { id: 5, title: "1h Volume" },
   ];
 
   //  Holders api call
@@ -576,9 +599,264 @@ const Table = ({
 
         topTraders.sort((a, b) => b.realizedPnl - a.realizedPnl);
       }
-      console.log("topTraders", topTraders);
+      // console.log("topTraders", topTraders);
       setLoader(false);
       await setTopTraderData(topTraders);
+    } catch (error) {
+      setLoader(false);
+      console.error("Error:", error.response?.data || error.message || error);
+    }
+  };
+
+  // dev tokens api call
+  const devTokensApiCall = async () => {
+    try {
+      const tokenCreator = localStorage.getItem("chartTokenCreator");
+      setLoader(true);
+
+      // Fetch initial token supply updates
+      const devTokensResponse = await axios.post(
+        "https://streaming.bitquery.io/eap",
+        {
+          query: `query myQuery($tokenCreator: String!)  {
+    Solana {
+      TokenSupplyUpdates(
+        where: {
+          Transaction: {
+            Signer: {
+              is: $tokenCreator
+            },
+            Result: {
+              Success: true
+            }
+          },
+          TokenSupplyUpdate: {
+            Currency: {
+              MintAddress: {
+                not: "7dAWpAtqjHgSLX1GEibwQD5ahkJTtGRDytoGrgTFcXL5"
+              }
+            }
+          }
+        },
+        orderBy: {descending: Block_Time},
+        limitBy: {by: TokenSupplyUpdate_Currency_MintAddress, count: 1}
+      ) {
+        TokenSupplyUpdate {
+          Currency {
+            MintAddress
+            Name
+            Symbol
+            Uri
+          }
+          PostBalance
+        }
+      }
+    }
+  }`,
+          variables: { tokenCreator },
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_STREAM_BITQUERY_API}`,
+          },
+        }
+      );
+
+      const currentMint =
+        currentTokenDevHoldingData?.tokenMintAddress?.trim?.();
+      const devTokens = (
+        devTokensResponse?.data?.data?.Solana?.TokenSupplyUpdates || []
+      )
+        .map((devToken) => {
+          const mintAddress =
+            devToken?.TokenSupplyUpdate?.Currency?.MintAddress?.trim?.();
+          const symbol =
+            devToken?.TokenSupplyUpdate?.Currency?.Symbol?.trim?.();
+          return !symbol || !mintAddress || mintAddress === currentMint
+            ? null
+            : devToken;
+        })
+        .filter(Boolean);
+
+      // Prepare data for concurrent fetches
+      const devTokenURIs = devTokens
+        .map((devToken) => devToken?.TokenSupplyUpdate?.Currency?.Uri)
+        .filter(Boolean);
+      const devTokenMintAddresses = devTokens
+        .map((devToken) => devToken?.TokenSupplyUpdate?.Currency?.MintAddress)
+        .filter(Boolean);
+
+      // Fetch metadata and coin data concurrently
+      const [tokenImages, { devTokensInfo, frontEndApiResult }] =
+        await Promise.all([
+          Promise.all(
+            devTokenURIs.map(async (uri) => {
+              try {
+                const res = await fetch(uri);
+                if (!res.ok) return null;
+                const json = await res.json();
+                return json?.image || null;
+              } catch {
+                return null;
+              }
+            })
+          ),
+          (async () => {
+            const oneHourAgoUTC = new Date(
+              Date.now() - 60 * 60 * 1000
+            ).toISOString();
+            const fetchCoinData = (address) =>
+              fetch(`https://frontend-api-v3.pump.fun/coins/${address}`)
+                .then((res) => res.json())
+                .catch(() => null);
+
+            const [bitqueryResponse, coinData] = await Promise.all([
+              axios.post(
+                "https://streaming.bitquery.io/eap",
+                {
+                  query: `query TokensVolumeAndLiquidity($tokens: [String!], $time_1hr: DateTime) {
+    Solana {
+      DEXTradeByTokens(
+        where: {
+          Trade: {
+            Currency: { MintAddress: { in: $tokens } }
+          },
+          Block: { Time: { since: $time_1hr } },
+          Transaction: { Result: { Success: true } }
+        }
+        orderBy: {descendingByField: "trade_volume"}
+        limitBy: {by: Trade_Currency_MintAddress, count: 100}
+      ) {
+        Trade {
+          Currency {
+            MintAddress
+          }
+        }
+        trade_volume: sum(of: Trade_Side_AmountInUSD)
+      }
+      
+      DEXPools(
+        where: {
+          Pool: {
+            Market: {
+              BaseCurrency: { MintAddress: { in: $tokens } }
+            }
+          }
+        }
+        limitBy: {by: Pool_Market_BaseCurrency_MintAddress, count: 100}
+      ) {
+        Pool {
+          Market {
+            BaseCurrency {
+              MintAddress
+            }
+          }
+          Base {
+            PostAmount(maximum: Block_Slot)
+            PostAmountInUSD(maximum: Block_Slot)
+          }
+          Quote {
+            PostAmount(maximum: Block_Slot)
+            PostAmountInUSD(maximum: Block_Slot)
+          }
+        }
+      }
+    }
+  }`,
+                  variables: {
+                    tokens: devTokenMintAddresses,
+                    time_1hr: oneHourAgoUTC,
+                  },
+                },
+                {
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${process.env.NEXT_PUBLIC_STREAM_BITQUERY_API}`,
+                  },
+                }
+              ),
+              Promise.all(devTokenMintAddresses.map(fetchCoinData)),
+            ]);
+
+            return {
+              devTokensInfo: bitqueryResponse?.data?.data?.Solana || {},
+              frontEndApiResult: coinData,
+            };
+          })(),
+        ]);
+
+      // Process devTokens data
+      const devTokensData = [currentTokenDevHoldingData];
+      devTokens.forEach((devToken, index) => {
+        const devTokenInfo = devToken?.TokenSupplyUpdate?.Currency;
+        const frontEndAPIMatch = frontEndApiResult?.find(
+          (api) => devTokenInfo?.MintAddress === api?.mint
+        );
+        const dexPoolMatch = devTokensInfo?.DEXPools?.find(
+          (pool) =>
+            devTokenInfo?.MintAddress ===
+            pool?.Pool?.Market?.BaseCurrency?.MintAddress
+        );
+        const dexTradeByTokensMatch = devTokensInfo?.DEXTradeByTokens?.find(
+          (trade) =>
+            devTokenInfo?.MintAddress === trade?.Trade?.Currency?.MintAddress
+        );
+
+        const basePoolAmount =
+          parseInt(dexPoolMatch?.Pool?.Base?.PostAmount || 0) * currentUsdPrice;
+        const sidePoolAmount =
+          parseInt(dexPoolMatch?.Pool?.Quote?.PostAmount || 0) *
+          solanaLivePrice;
+        const totalSupply =
+          tokenSupply || frontEndAPIMatch?.total_supply || 1_000_000_000;
+        const reservedTokens = 206_900_000;
+        const realTokenReserves = parseFloat(
+          dexPoolMatch?.Pool?.Base?.PostAmount || 0
+        );
+        const initialRealTokenReserves = totalSupply - reservedTokens;
+        const leftTokens = realTokenReserves - reservedTokens;
+        const bondingCurvePercentFrontEnd =
+          (frontEndAPIMatch?.real_token_reserves / totalSupply) * 100;
+        const bondingCurveProgressValue =
+          100 - (leftTokens * 100) / initialRealTokenReserves || null;
+
+        devTokensData.push({
+          tokenImage: tokenImages[index],
+          tokenMintAddress: devTokenInfo?.MintAddress,
+          tokenSymbol: devTokenInfo?.Symbol || frontEndAPIMatch?.symbol,
+          tokenMarketCap: formatNumber(
+            frontEndAPIMatch?.usd_market_cap || 0,
+            false,
+            true
+          ),
+          tokenLiquidity: formatNumber(
+            basePoolAmount + sidePoolAmount,
+            false,
+            true
+          ),
+          oneHourVolume: formatNumber(
+            dexTradeByTokensMatch?.trade_volume || 0,
+            false,
+            true
+          ),
+          migrated: bondingCurveProgressValue
+            ? bondingCurveProgressValue >= 100
+            : bondingCurvePercentFrontEnd >= 100 || false,
+        });
+      });
+
+      const migratedCount = devTokensData.filter(
+        (item) => item.migrated
+      ).length;
+      const percentMigrated = (
+        (migratedCount / devTokensData.length) *
+        100
+      ).toFixed(0);
+
+      setLoader(false);
+      setMigratedPercent(percentMigrated);
+      setDevTokensData(devTokensData);
     } catch (error) {
       setLoader(false);
       console.error("Error:", error.response?.data || error.message || error);
@@ -619,7 +897,7 @@ const Table = ({
           setActiveTab={setActiveTab}
           topHoldersApiCall={topHoldersApiCall}
           toptradersApiCall={toptradersApiCall}
-          tvChartRef={tvChartRef}
+          devTokensApiCall={devTokensApiCall}
           isInstantTradeActive={isInstantTradeActive}
           handleInstantTradeClick={handleInstantTradeClick}
         />
@@ -1305,6 +1583,183 @@ const Table = ({
                   </tbody>
                 </table>
               </div>
+            ) : activeTab === "Dev Tokens" && devTokensData?.length > 0 ? (
+              <>
+                <div className="lg:h-[85vh] h-[50vh] md:grid grid-cols-[65%_35%]">
+                  <div className="overflow-y-scroll lg:h-[85vh] h-[50vh] border-r-[#4D4D4D] border border-[#4D4D4D] visibleScroll ">
+                    <table className=" min-w-[100%] table-auto overflow-y-scroll visibleScroll">
+                      <thead className="bg-[#08080E] sticky top-0">
+                        <tr className="">
+                          {devTokenHeader.map((header, index) => (
+                            <th
+                              key={header.id}
+                              className="py-3 text-xs font-medium text-[#A8A8A8] whitespace-nowrap leading-4"
+                            >
+                              <div
+                                className={`flex justify-start ${
+                                  index === 0 && "px-6"
+                                }`}
+                              >
+                                {header.title}
+                              </div>
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody className="bg-transparent">
+                        {devTokensData?.map((data, index) => {
+                          const navigateData = {
+                            token: data?.tokenMintAddress,
+                            symbol: data?.tokenSymbol,
+                          };
+                          return (
+                            <tr
+                              key={index}
+                              className="bg-[#08080E] text-[#F6F6F6] font-normal text-xs leading-4 onest border-b px-3 border-[#404040]"
+                            >
+                              <td className="px-6 py-4 flex">
+                                <a
+                                  onClick={() => {
+                                    navigateToChartScreen(navigateData);
+                                  }}
+                                  className="group/name hover:opacity-80 flex flex-col sm:flex-row items-start text-xs leading-4 font-semibold h-full justify-start"
+                                >
+                                  <div className="flex items-center">
+                                    <div className="w-7 h-7 flex-shrink-0 group-hover/image:opacity-80 relative rounded-[4px]">
+                                      {data?.tokenImage ? (
+                                        <img
+                                          alt={data?.tokenSymbol}
+                                          key={data?.tokenImage || Solana}
+                                          src={
+                                            data?.tokenImage || Solana
+                                              ? data?.tokenImage || Solana
+                                              : "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/in/wp-content/uploads/2022/03/monkey-g412399084_1280.jpg"
+                                          }
+                                          width={28}
+                                          height={28}
+                                          className="w-full h-full object-cover rounded-[4px]"
+                                        />
+                                      ) : (
+                                        <h1 className="absolute inset-0 m-auto w-[28px] h-[28px] rounded-sm text-[12px] border-[1px] border-[#26262e] bg-[#191919] flex items-center justify-center">
+                                          {data?.tokenSymbol
+                                            ?.toString()
+                                            ?.slice(0, 1)}
+                                        </h1>
+                                      )}
+                                    </div>
+                                    <span className="pl-2 group-hover/name:underline">
+                                      {data?.tokenSymbol}
+                                    </span>
+                                  </div>
+                                </a>
+                              </td>
+                              <td>
+                                <div
+                                  className={`w-4 h-4 border-[1px] ease-in-out duration-200 rounded-full flex items-center justify-center
+                                  ${
+                                    !data?.migrated
+                                      ? "bg-[#ed1b2642] border-[#ED1B247A]"
+                                      : "bg-[#21cb6b38] border-[#21CB6B]"
+                                  }`}
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="2"
+                                    stroke={`${
+                                      !data?.migrated ? "#ED1B247A" : "#21CB6B"
+                                    }`}
+                                    class="w-3 h-3"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="M5 13l4 4L19 7"
+                                    />
+                                  </svg>
+                                </div>
+                              </td>
+                              {/* Market Cap */}
+                              <td>
+                                <div className="flex flex-col gap-[2px] h-full justify-start">
+                                  <p className="text-[#9b9999] text-sm leading-4">
+                                    {data?.tokenMarketCap}
+                                  </p>
+                                </div>
+                              </td>
+                              {/* Liqudity */}
+                              <td>
+                                <div className="flex flex-col gap-[2px] h-full justify-start">
+                                  <p className="text-[#9b9999] text-sm leading-4">
+                                    {data?.tokenLiquidity}
+                                  </p>
+                                </div>
+                              </td>
+                              {/* 1H Volume */}
+                              <td>
+                                <div className="flex flex-col gap-[2px] h-full justify-start">
+                                  <p className="text-[#9b9999] text-sm leading-4">
+                                    {data?.oneHourVolume}
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div>
+                    <div
+                      className={`h-full md:flex hidden justify-center  ${
+                        scrollPosition >= 20
+                          ? "items-center"
+                          : `lg:items-start lg:pt-5 items-center`
+                      } transition-all duration-500 overflow-y-auto`}
+                    >
+                      <div className="flex-col">
+                        <div className="flex justify-center items-center">
+                          <div className="relative xl:w-[300px] xl:h-[300px] w-[150px] h-[150px] ">
+                            <CircularProgressbar
+                              value={100}
+                              strokeWidth={8}
+                              styles={buildStyles({
+                                pathColor: "#ED1B247A",
+                                trailColor: "transparent",
+                                strokeLinecap: "round",
+                              })}
+                            />
+
+                            <div className="absolute top-0 left-0 w-full h-full z-20">
+                              <CircularProgressbar
+                                value={migratedPercent}
+                                strokeWidth={8}
+                                styles={buildStyles({
+                                  pathColor: "#21CB6B",
+                                  trailColor: "transparent",
+                                  strokeLinecap: "round",
+                                  strokeDasharray: "80 20",
+                                })}
+                              />
+                            </div>
+
+                            {/* Center Text */}
+                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-xxl font-bold text-center z-40">
+                              <p className="text-3xl font-semibold">
+                                {migratedPercent}%
+                              </p>
+                              <div className=" text-[#7b809e] font-light ">
+                                Migrated
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
             ) : (
               <>
                 <div className="flex w-full flex-col items-center justify-center lg:h-[20vh] h-[80vh] rounded-lg">

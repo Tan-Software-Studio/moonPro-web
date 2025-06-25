@@ -167,7 +167,7 @@ const ActivityTable = ({ activitySearchQuery }) => {
 
   const navigateToChartSreen = (item, img) => {
     router.push(
-      `/tradingview/solana?tokenaddress=${item?.Trade?.Currency?.MintAddress}&symbol=${item?.Trade?.Currency?.Symbol}`
+      `/tradingview/solana?tokenaddress=${item?.Trade?.Currency?.MintAddress}`
     );
     localStorage.setItem("chartTokenImg", img);
     dispatch(setChartSymbolImage(img));

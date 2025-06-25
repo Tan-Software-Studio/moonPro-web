@@ -16,7 +16,7 @@ const History = ({ }) => {
   const historyData = useSelector((state) => state?.setPnlData?.PnlDataHistory);
   const navigateToChartSreen = (item) => {
     router.push(
-      `/tradingview/solana?tokenaddress=${item?.token}&symbol=${item?.symbol}`
+      `/tradingview/solana?tokenaddress=${item?.token}`
     );
     localStorage.setItem("chartTokenImg", item?.img);
     dispatch(setChartSymbolImage(item?.img));

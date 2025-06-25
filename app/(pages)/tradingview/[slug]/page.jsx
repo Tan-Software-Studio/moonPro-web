@@ -11,6 +11,7 @@ import {
   numberFormated,
   formatDecimal,
   capitalizeFirstLetter,
+  formatNumber,
 } from "@/utils/basicFunctions";
 import TVChartContainer from "@/components/TradingChart/TradingChart";
 import TokenDetails from "@/components/common/tradingview/TokenDetails";
@@ -26,6 +27,7 @@ import SharePnLModal from "@/components/common/tradingview/SharePnLModal";
 import axios from "axios";
 import { resetResolutionOffsets } from "@/utils/tradingViewChartServices/getBars";
 import { clearMarks } from "@/utils/tradingViewChartServices/mark";
+import ResizableChartContainer from "@/components/common/tradingview/ResizableChartContainer";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
 const Tradingview = () => {
@@ -45,7 +47,6 @@ const Tradingview = () => {
   const tokenaddress = searchParams.get("tokenaddress");
   let pairAddress = searchParams?.get("pair") || null;
   const containerRef = useRef(null);
-  const tvChartRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const scrollableDivRef4 = useRef(null);
   const [currentTokenPnLData, setCurrentTokenPnLData] = useState({});
@@ -261,18 +262,6 @@ const Tradingview = () => {
       }
     };
   }, []);
-
-  useEffect(() => {
-    if (tvChartRef?.current) {
-      const el = tvChartRef.current;
-
-      if (isSmallScreen) {
-        el.style.height = "380px";
-      } else {
-        el.style.height = "600px";
-      }
-    }
-  }, [isSmallScreen]);
 
   const handleCopy = (mintAddress) => {
     setCopied(true);
@@ -511,6 +500,16 @@ const Tradingview = () => {
     document.title = `${chartTokenData?.symbol || "Unknown"} | Nexa`;
   }, [chartTokenData?.symbol]);
 
+  const currentTokenDevHoldingData = {
+    tokenImage: tokenImage,
+    tokenMintAddress: tokenaddress,
+    tokenSymbol: tokenSymbol,
+    tokenMarketCap: tokenDetailsMarketCap || 0,
+    tokenLiquidity: chartTokenData?.Liqudity || 0,
+    oneHourVolume: formatNumber(chartTokenData?.buy_volume_1h + chartTokenData?.sell_volume_1h, false, true) || 0,
+    migrated: chartTokenData?.bondingCurveProgress >= 100
+  }
+
   return (
     <div
       className={`lg:flex relative overflow-y-auto h-svh max-h-svh ${
@@ -559,20 +558,14 @@ const Tradingview = () => {
                 />
               </div>
 
-              <div
-                ref={tvChartRef}
-                className={`${
-                  isSmallScreen ? "h-[380px]" : "h-[10000px]"
-                } w-full`}
-              >
-                <TVChartContainer
-                  tokenSymbol={chartTokenData?.symbol || "Unknown"}
-                  tokenaddress={tokenaddress}
-                  currentTokenPnLData={currentTokenPnLData}
-                  solanaLivePrice={solanaLivePrice}
-                  supply={chartTokenData?.currentSupply}
-                />
-              </div>
+              <ResizableChartContainer 
+                isSmallScreen={isSmallScreen}
+                tokenSymbol={chartTokenData?.symbol || "Unknown"}
+                tokenaddress={tokenaddress}
+                currentTokenPnLData={currentTokenPnLData}
+                solanaLivePrice={solanaLivePrice}
+                supply={chartTokenData?.currentSupply}
+              />
             </>
           )}
           {(!isSmallScreen || smallScreenTab === "Transaction") && (
@@ -581,13 +574,15 @@ const Tradingview = () => {
                 tokenCA={tokenaddress}
                 address={activeSolWalletAddress?.wallet}
                 scrollPosition={scrollPosition}
-                tvChartRef={tvChartRef}
-                solWalletAddress={activeSolWalletAddress?.wallet}
+                solWalletAddress={
+                  activeSolWalletAddress?.wallet
+                }
                 tokenSupply={chartTokenData?.currentSupply}
                 currentUsdPrice={
                   latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
                 }
                 currentTabData={currentTabData}
+                currentTokenDevHoldingData={currentTokenDevHoldingData}
                 isInstantTradeActive={isInstantTradeActive}
                 handleInstantTradeClick={handleInstantTradeClick}
               />

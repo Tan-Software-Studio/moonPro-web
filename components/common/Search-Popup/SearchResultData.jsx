@@ -1,4 +1,3 @@
-
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useRef, useState } from "react";
@@ -31,7 +30,7 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
 
   const copyAddress = (address, uniqueId, event) => {
     event.stopPropagation();
-    event.preventDefault()
+    event.preventDefault();
 
     // Copy the address to clipboard
     navigator?.clipboard?.writeText(address);
@@ -80,7 +79,6 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
 
     return `${diffDays}d`;
   }
-
 
   async function navigateToChartView(e) {
     localStorage.setItem("chartTokenImg", e?.img);
@@ -139,16 +137,17 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
           const TokenSupplyUpdate = e.TokenSupplyUpdate;
           const Trade = e.Trade;
           const MarketCap = TokenSupplyUpdate?.totalSupply * Trade?.currentUSD;
-          console.log("🚀 ~ searchResult.map ~ e?.liquidityUSD:", e?.liquidityUSD)
+          console.log(
+            "🚀 ~ searchResult.map ~ e?.liquidityUSD:",
+            e?.liquidityUSD
+          );
 
           const converted = decimalConvert(Trade?.currentUSD || 0);
           return (
             <>
               <Link
                 key={ind}
-                href={`/tradingview/solana?tokenaddress=${e?.Trade?.Currency?.MintAddress
-                  }&symbol=${e?.Trade?.Currency?.Symbol || "unknown"}&pair=${e?.Trade?.Market?.MarketAddress
-                  }`}
+                href={`/tradingview/solana?tokenaddress=${e?.Trade?.Currency?.MintAddress}&pair=${e?.Trade?.Market?.MarketAddress}`}
               >
                 <div
                   className="flex flex-col lg:flex-row lg:flex-1 items-center overflow-hidden hover:bg-[#3333339c] bg-[#08080E] cursor-pointer rounded-md border border-[#333333] mb-3 py-[11px] px-3"
@@ -272,8 +271,9 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                         <div className="lg:flex hidden gap-1 items-center justify-center">
                           <span className="text-[#B2B2B7] text-xs">Liq: </span>
                           <span className="text-sm font-semibold text-[#FFFFFF]">
-                            {` $ ${formatNumber(parseInt(e?.liquidityUSD)) || null
-                              }`}
+                            {` $ ${
+                              formatNumber(parseInt(e?.liquidityUSD)) || null
+                            }`}
                           </span>
                         </div>
                         <div className="lg:flex hidden   items-center gap-1">
@@ -281,9 +281,10 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                             24h Vol:{" "}
                           </span>
                           <span className="text-sm font-semibold text-[#FFFFFF]">
-                            {` $ ${formatNumber(parseInt(e?.traded_volume_total)) ||
+                            {` $ ${
+                              formatNumber(parseInt(e?.traded_volume_total)) ||
                               null
-                              }`}
+                            }`}
                           </span>
                         </div>
                       </div>
@@ -304,8 +305,9 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                         <div className="flex flex-1 items-center justify-center border border-gray-700 rounded h-6 px-[0.375rem]">
                           <span className="text-[#B2B2B7] text-xs">Liq: </span>
                           <span className="text-sm text-[#D5D5DA] ml-1">
-                            {` $ ${formatNumber(parseInt(e?.liquidityUSD)) || null
-                              }`}
+                            {` $ ${
+                              formatNumber(parseInt(e?.liquidityUSD)) || null
+                            }`}
                           </span>
                         </div>
                       </div>
@@ -315,9 +317,10 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                             24h Vol:{" "}
                           </span>
                           <span className="text-sm text-[#D5D5DA] ml-1">
-                            {` $ ${formatNumber(parseInt(e?.traded_volume_total)) ||
+                            {` $ ${
+                              formatNumber(parseInt(e?.traded_volume_total)) ||
                               null
-                              }`}
+                            }`}
                           </span>
                         </div>
                         <div className="flex flex-1 items-center justify-center border border-gray-700 rounded h-6 px-[0.375rem] gap-1">
@@ -335,8 +338,9 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                             <path d="M512 32c0 113.6-84.6 207.5-194.2 222c-7.1-53.4-30.6-101.6-65.3-139.3C290.8 46.3 364 0 448 0h32c17.7 0 32 14.3 32 32zM0 96C0 78.3 14.3 64 32 64H64c123.7 0 224 100.3 224 224v32V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V320C100.3 320 0 219.7 0 96z"></path>
                           </svg>
                           <span className="text-xs text-[#D5D5DA]">
-                            {`${convertToRelativeTime(e?.Block?.createdAt) || null
-                              }`}
+                            {`${
+                              convertToRelativeTime(e?.Block?.createdAt) || null
+                            }`}
                           </span>
                         </div>
                       </div>
