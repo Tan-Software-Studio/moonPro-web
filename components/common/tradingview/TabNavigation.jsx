@@ -15,7 +15,6 @@ const TabNavigation = ({
   topHoldersApiCall,
   toptradersApiCall,
   devTokensApiCall,
-  tvChartRef,
   isInstantTradeActive,
   handleInstantTradeClick,
 }) => {
@@ -74,36 +73,6 @@ const TabNavigation = ({
       });
     }
   };
-
-  useEffect(() => {
-    if (tvChartRef?.current) {
-      const el = tvChartRef.current;
-
-      // Only set if not already set
-      if (!el.style.height) {
-        el.style.height = "600px";
-      }
-    }
-  }, []);
-
-  function swapTvHeight() {
-      if (tvChartRef?.current) {
-      const el = tvChartRef.current;
-
-      // Set smooth transition
-      el.style.transition = "height 0.4s ease";
-
-      // Toggle height based on state
-      if (isExpanded) {
-        el.style.height = "200px";
-      } else {
-        el.style.height = "600px";
-      }
-
-      // Update state
-      setIsExpanded(!isExpanded);
-    }
-  }
 
   // Update indicator position when tab changes or when component mounts
   useEffect(() => {
@@ -171,21 +140,6 @@ const TabNavigation = ({
         }
         <p className="flex flex-shrink-0 text-sm">Instant Trade</p>
       </button>
-      {/* DownToUp Icon */}
-      <div
-        className="hidden md:flex items-center justify-center cursor-pointer ml-4 md:ml-6 p-1 md:p-2"
-        onClick={() => swapTvHeight()}
-      >
-        <Image
-          src={DownToUp}
-          alt="DownToUp"
-          width={20}
-          height={20}
-          className={`w-5 h-5 md:w-6 md:h-6 transition-transform duration-300 ${
-            !isExpanded ? "rotate-180" : ""
-          }`}
-        />
-      </div>
     </div>
   );
 };
