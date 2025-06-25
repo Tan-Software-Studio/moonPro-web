@@ -27,6 +27,7 @@ import { MdOutlineLanguage } from "react-icons/md";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaTelegramPlane } from "react-icons/fa";
 import NoData from "../NoData/noData";
+import TrendingImage from "./TrendingImage";
 
 const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
   const pathname = usePathname();
@@ -116,24 +117,7 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
                   {/* Column 1: Icon and Pair Info */}
                   <td className="whitespace-nowrap w-60 md:px-6 px-3 py-2 ">
                     <div className="flex items-center gap-3 !text-left">
-                      {row?.img ? (
-                        <img
-                          src={`${BASE_URL}/${row?.address}.webp`}
-                          alt="Token"
-                          className="w-12 md:w-10 h-12 md:h-10 xl:w-14 xl:h-14 rounded-[4px] border border-[#1F73FC]"
-                          loading="lazy"
-                          onError={(e) => {
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src = row?.img;
-                          }}
-                        />
-                      ) : (
-                        <div className="w-12 md:w-10 h-12 md:h-10 xl:w-14 xl:h-14 rounded-sm flex items-center justify-center bg-[#3b3b49] border border-[#1F73FC]">
-                          <span className="text-sm text-white uppercase text-center">
-                            {row?.name?.toString()?.slice(0, 1) || "T"}
-                          </span>
-                        </div>
-                      )}
+                      <TrendingImage name={row?.name} address={row?.address} url={BASE_URL} />
                       <div className="">
                         <div className="flex items-center justify-center gap-[10px]">
                           <div className="flex flex-col gap-2">
@@ -200,20 +184,20 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
 
                                 {(row?.offchainData?.extensions?.twitter ||
                                   row?.offchainData?.twitter) && (
-                                  <Link
-                                    href={
-                                      row?.offchainData?.extensions?.twitter ||
-                                      row?.offchainData?.twitter
-                                    }
-                                    target="_blank"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <FaXTwitter
-                                      size={16}
-                                      className="text-[#6E6E6E] hover:text-[#ffffff]"
-                                    />
-                                  </Link>
-                                )}
+                                    <Link
+                                      href={
+                                        row?.offchainData?.extensions?.twitter ||
+                                        row?.offchainData?.twitter
+                                      }
+                                      target="_blank"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      <FaXTwitter
+                                        size={16}
+                                        className="text-[#6E6E6E] hover:text-[#ffffff]"
+                                      />
+                                    </Link>
+                                  )}
 
                                 {row?.offchainData?.extensions?.website && (
                                   <Link
@@ -269,11 +253,10 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
                         </p>
                       </div>
                       <p
-                        className={`text-[12px] font-medium ${
-                          row?.Percentage < 0
-                            ? "text-[#ED1B24]"
-                            : "text-[#21CB6B]"
-                        }`}
+                        className={`text-[12px] font-medium ${row?.Percentage < 0
+                          ? "text-[#ED1B24]"
+                          : "text-[#21CB6B]"
+                          }`}
                       >
                         {`${row?.Percentage > 0 ? "+" : ""}${Number(
                           row?.Percentage || 0
@@ -320,9 +303,8 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
                   </td> */}
                   <td className="whitespace-nowrap w-60 py-3 flex justify-center z-0">
                     <div
-                      className={`flex  gap-2 ${
-                        !row.mint_authority ? "text-white" : "text-[#828282]"
-                      }`}
+                      className={`flex  gap-2 ${!row.mint_authority ? "text-white" : "text-[#828282]"
+                        }`}
                     >
                       <Tooltip
                         body={
@@ -353,11 +335,10 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
                       <Tooltip body={"No one can freeze token transfers."}>
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${
-                              !row.freeze_authority
-                                ? "text-white"
-                                : "text-[#828282]"
-                            }`}
+                            className={`flex flex-col text-start opacity-75 ${!row.freeze_authority
+                              ? "text-white"
+                              : "text-[#828282]"
+                              }`}
                           >
                             {!row.freeze_authority ? (
                               <CiCircleCheck
@@ -385,9 +366,8 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
                       >
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${
-                              true ? "text-white" : "text-[#828282]"
-                            }`}
+                            className={`flex flex-col text-start opacity-75 ${true ? "text-white" : "text-[#828282]"
+                              }`}
                           >
                             {true ? (
                               <CiCircleCheck
@@ -415,9 +395,8 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
                       >
                         <div className="grid  text-start">
                           <div
-                            className={`flex flex-col text-start opacity-75 ${
-                              row?.top10Holder ? "text-white" : "text-[#828282]"
-                            }`}
+                            className={`flex flex-col text-start opacity-75 ${row?.top10Holder ? "text-white" : "text-[#828282]"
+                              }`}
                           >
                             {row?.top10Holder ? (
                               <CiCircleCheck
@@ -443,9 +422,8 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
                   {/* Column 6: Quick Buy Button */}
                   <td className="whitespace-nowrap w-32 py-2 place-items-center">
                     <button
-                      className={`text-[#111111] font-bold rounded-[20px] py-2 ${
-                        quickBuy > 0 ? "px-2" : "px-3"
-                      } bg-[#1d73fc] hover:bg-[#438bff] transition-all duration-300 ease-in-out flex items-center justify-center`}
+                      className={`text-[#111111] font-bold rounded-[20px] py-2 ${quickBuy > 0 ? "px-2" : "px-3"
+                        } bg-[#1d73fc] hover:bg-[#438bff] transition-all duration-300 ease-in-out flex items-center justify-center`}
                       onClick={(e) =>
                         buySolanaTokensQuickBuyHandler(
                           solanaLivePrice,
@@ -472,11 +450,10 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
                       </span>
                       <span>
                         {quickBuy > 0
-                          ? `${
-                              quickBuy.length > 6
-                                ? `Buy ${quickBuy.slice(0, 7)}... SOL`
-                                : `Buy ${quickBuy} SOL`
-                            }`
+                          ? `${quickBuy.length > 6
+                            ? `Buy ${quickBuy.slice(0, 7)}... SOL`
+                            : `Buy ${quickBuy} SOL`
+                          }`
                           : `Buy`}
                       </span>
                     </button>
