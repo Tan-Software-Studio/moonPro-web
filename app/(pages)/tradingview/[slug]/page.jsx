@@ -503,12 +503,17 @@ const Tradingview = () => {
   const currentTokenDevHoldingData = {
     tokenImage: tokenImage,
     tokenMintAddress: tokenaddress,
-    tokenSymbol: tokenSymbol,
+    tokenSymbol: chartTokenData?.symbol || "Unknown",
     tokenMarketCap: tokenDetailsMarketCap || 0,
     tokenLiquidity: chartTokenData?.Liqudity || 0,
-    oneHourVolume: formatNumber(chartTokenData?.buy_volume_1h + chartTokenData?.sell_volume_1h, false, true) || 0,
-    migrated: chartTokenData?.bondingCurveProgress >= 100
-  }
+    oneHourVolume:
+      formatNumber(
+        chartTokenData?.buy_volume_1h + chartTokenData?.sell_volume_1h,
+        false,
+        true
+      ) || 0,
+    migrated: chartTokenData?.bondingCurveProgress >= 100,
+  };
 
   return (
     <div
@@ -558,7 +563,7 @@ const Tradingview = () => {
                 />
               </div>
 
-              <ResizableChartContainer 
+              <ResizableChartContainer
                 isSmallScreen={isSmallScreen}
                 tokenSymbol={chartTokenData?.symbol || "Unknown"}
                 tokenaddress={tokenaddress}
@@ -574,9 +579,7 @@ const Tradingview = () => {
                 tokenCA={tokenaddress}
                 address={activeSolWalletAddress?.wallet}
                 scrollPosition={scrollPosition}
-                solWalletAddress={
-                  activeSolWalletAddress?.wallet
-                }
+                solWalletAddress={activeSolWalletAddress?.wallet}
                 tokenSupply={chartTokenData?.currentSupply}
                 currentUsdPrice={
                   latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
