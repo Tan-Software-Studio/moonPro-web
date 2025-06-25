@@ -1,8 +1,7 @@
 
 import { pump_img } from "@/app/Images";
 import Image from "next/image";
-import React from "react";
-import { BiSolidCapsule } from "react-icons/bi";
+import React from "react"; 
 
 const SquareProgressBar = ({
   value,
