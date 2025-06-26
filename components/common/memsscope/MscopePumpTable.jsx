@@ -175,7 +175,7 @@ const MscopePumpTable = ({
             {MemscopeData.map((block, index) => (
               <Link
                 key={index + 1}
-                href={`/tradingview/solana?tokenaddress=${block?.address}`}
+                href={`/tradingview/${block?.address}`}
               >
                 <div
                   className={`cursor-pointer border-b md:border-b md:border-l-0 md:border-t-0 border-[#26262e] bg-[#08080E] hover:bg-[#6e6e6e1a] ease-in-out duration-200`}

@@ -29,7 +29,7 @@ import { clearMarks } from "@/utils/tradingViewChartServices/mark";
 import ResizableChartContainer from "@/components/common/tradingview/ResizableChartContainer";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
-const Tradingview = () => {
+const Tradingview = ({ params }) => {
   const { t } = useTranslation();
   const tragindViewPage = t("tragindViewPage");
   const tredingPage = t("tredingPage");
@@ -42,9 +42,7 @@ const Tradingview = () => {
   )?.Trade?.Currency?.Decimals;
   const [copied, setCopied] = useState(false);
   const dispatch = useDispatch();
-  const searchParams = useSearchParams();
-  const tokenaddress = searchParams.get("tokenaddress");
-  let pairAddress = searchParams?.get("pair") || null;
+  const tokenaddress = params?.slug;
   const containerRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const scrollableDivRef4 = useRef(null);
@@ -486,7 +484,7 @@ const Tradingview = () => {
       setDataLoaderForChart(true);
       dispatch(resetChartTokenState());
       dispatch(
-        fetchChartAllData({ tokenaddress, pairAddress, setDataLoaderForChart })
+        fetchChartAllData({ tokenaddress, pairAddress: chartTokenDataState?.pairAddress, setDataLoaderForChart })
       );
     }
   }, [tokenaddress]);

@@ -470,7 +470,7 @@ const TVChartContainer = ({
       // Unsubscribe from WebSocket when component unmounts
       unsubscribeFromWebSocket();
     };
-  }, [chartTokenDataState, tokenaddress, isUsdSolToggled, isMcPriceToggled]);
+  }, [tokenaddress, isUsdSolToggled, isMcPriceToggled]);
 
   return <div ref={chartContainerRef} className="h-full w-full bg-[#08080E]" />;
 };

@@ -112,7 +112,7 @@ const Table = ({
 
   const navigateToChartScreen = (data, index) => {
     dispatch(setActiveChartToken({ symbol: data?.symbol, img: data?.img }));
-    router.push(`/tradingview/solana?tokenaddress=${data?.token}`);
+    router.push(`/tradingview/${data?.token}`);
     localStorage.setItem("chartTokenAddress", data?.token);
     setIsOpen(false);
   };

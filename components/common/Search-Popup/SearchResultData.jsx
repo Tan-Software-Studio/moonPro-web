@@ -82,7 +82,7 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
   }
 
   async function navigateToChartView(e) {
-    dispatch(setActiveChartToken({ symbol: token?.Trade?.Currency?.Symbol, img: e?.img }));
+    dispatch(setActiveChartToken({ symbol: token?.Trade?.Currency?.Symbol, img: e?.img, pairAddress: e?.Trade?.Market?.MarketAddress }));
     // Retrieve existing recent tokens or initialize an empty array
     let recentTokens = JSON.parse(localStorage.getItem("recentTokens")) || [];
 
@@ -147,7 +147,7 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
             <>
               <Link
                 key={ind}
-                href={`/tradingview/solana?tokenaddress=${e?.Trade?.Currency?.MintAddress}&pair=${e?.Trade?.Market?.MarketAddress}`}
+                href={`/tradingview/${e?.Trade?.Currency?.MintAddress}`}
               >
                 <div
                   className="flex flex-col lg:flex-row lg:flex-1 items-center overflow-hidden hover:bg-[#3333339c] bg-[#08080E] cursor-pointer rounded-md border border-[#333333] mb-3 py-[11px] px-3"

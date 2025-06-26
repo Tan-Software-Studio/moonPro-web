@@ -94,7 +94,7 @@ const SearchPopup = () => {
 
   function navigateToChartView(e) {
     dispatch(setIsSearchPopup(false));
-    dispatch(setActiveChartToken({ symbol: e?.Trade?.Currency?.Symbol, img: e?.img }));
+    dispatch(setActiveChartToken({ symbol: e?.Trade?.Currency?.Symbol, img: e?.img, pairAddress: e?.Trade?.Market?.MarketAddress }));
     localStorage.setItem("chartTokenAddress", e?.Trade?.Currency?.MintAddress);
   }
   return (
@@ -165,7 +165,7 @@ const SearchPopup = () => {
                     {resentTokens.map((recentData, index) => (
                       <Link
                         key={index}
-                        href={`/tradingview/solana?tokenaddress=${recentData?.Trade?.Currency?.MintAddress}&pair=${recentData?.Trade?.Market?.MarketAddress}`}
+                        href={`/tradingview/${recentData?.Trade?.Currency?.MintAddress}`}
                       >
                         <button
                           onClick={() => navigateToChartView(recentData)}
