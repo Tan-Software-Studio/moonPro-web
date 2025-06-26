@@ -94,7 +94,13 @@ const SearchPopup = () => {
 
   function navigateToChartView(e) {
     dispatch(setIsSearchPopup(false));
-    dispatch(setActiveChartToken({ symbol: e?.Trade?.Currency?.Symbol, img: e?.img, pairAddress: e?.Trade?.Market?.MarketAddress }));
+    dispatch(
+      setActiveChartToken({
+        symbol: e?.Trade?.Currency?.Symbol,
+        img: e?.img || e?.dexImg,
+        pairAddress: e?.Trade?.Market?.MarketAddress,
+      })
+    );
     localStorage.setItem("chartTokenAddress", e?.Trade?.Currency?.MintAddress);
   }
   return (
