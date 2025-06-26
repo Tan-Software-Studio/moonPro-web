@@ -43,7 +43,7 @@ import polygon from "../public/assets/Navbar/polygon.png";
 import baseIcon from "../public/assets/Navbar/base.png";
 import phantom from "../public/assets/Navbar/phantom.png";
 import phantompurple from "../public/assets/Navbar/phantompurple.svg";
-import solana from "../public/assets/Navbar/solana.png";
+import solana from "../public/assets/Navbar/solana.webp";
 import solanaBlackLogo from "../public/assets/common/solanaBlackLogo.png";
 import BUYICON from "../public/assets/Trading/BUY.png";
 import SELLICON from "../public/assets/Trading/SELL.png";
@@ -88,7 +88,7 @@ import proWallet from "../public/assets/Sidebar/proWallet.svg";
 import proWalletColor from "../public/assets/Sidebar/proWalletColor.svg";
 // import NoDataFish from "../public/assets/NoDataImages/qwe.svg";
 import NoDataFish from "../public/assets/NoDataImages/NoDataImages.svg";
-import NoDataLogo from "../public/assets/NoDataImages/nexapro-noData1.png"; 
+import NoDataLogo from "../public/assets/NoDataImages/nexapro-noData1.webp"; 
 import CryptoWithoutColor from "../public/assets/crypto-Stack/CryptoWithoutColor.svg";
 import CryptoColor from "../public/assets/crypto-Stack/CryptoColor.svg";
 
@@ -152,12 +152,12 @@ import pnlbg from "../public/assets/Footer/pnlbg2.png";
 import articlefill from "../public/assets/Footer/article-fill.svg";
 
 // SharePnl
-import nexaLogo from "../public/assets/SharePnL/nexa-logo.png"
-import nexaText from "../public/assets/SharePnL/nexa-text.png"
-import sharePnlBg from "../public/assets/SharePnL/share-pnl-bg.png"
+import nexaLogo from "../public/assets/SharePnL/nexa-logo.webp"
+import nexaText from "../public/assets/SharePnL/nexa-text.webp"
+import sharePnlBg from "../public/assets/SharePnL/share-pnl-bg.webp"
 
 // sol logo 
-import solWhiteBg from "../public/assets/Trending/solWhiteBg.png"
+import solWhiteBg from "../public/assets/Trending/solWhiteBg.webp"
 
 
 export {

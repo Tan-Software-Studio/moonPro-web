@@ -207,9 +207,6 @@ const TokenDetails = ({
     getAndSetImageFromLocalStorage();
   }, []);
 
-   useEffect(() => {
-    console.log("tokenImage", tokenImage)
-  }, [tokenImage]);
   return (
     <div className="bg-transparent border-b-[1px] border-b-[#26262e] w-full">
       <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center ">

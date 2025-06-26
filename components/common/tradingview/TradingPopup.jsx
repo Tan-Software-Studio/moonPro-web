@@ -506,7 +506,13 @@ const TradingPopup = ({
             />
           ) : (
             <img
-              src={tokenImage || solana}
+              src={
+                tokenImage &&
+                tokenImage !== "undefined" &&
+                tokenImage !== "null"
+                  ? tokenImage
+                  : solana?.src || solana
+              }    
               alt="Token Image"
               className="w-[35px] h-[20px]"
             />
