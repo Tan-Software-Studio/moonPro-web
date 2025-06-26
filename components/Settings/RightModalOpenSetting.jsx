@@ -203,6 +203,13 @@ const RightModalOpenSetting = ({
     if (!isReset) {
       localStorage.setItem("isPresetReset", true);
       localStorage.setItem("preSetAllData", JSON.stringify(preSetData));
+      setSlippageForDisplay(
+        preSetData[preSetActiveFLag || "p1"]?.buy?.slippage
+      );
+      setPriorityForDisplay(
+        preSetData[preSetActiveFLag || "p1"]?.buy?.priorityFee
+      );
+      setPreSetData(preSetData);
     }
     if (preSetFromLocalStorage) {
       setSlippageForDisplay(
