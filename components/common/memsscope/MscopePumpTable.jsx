@@ -13,9 +13,7 @@ import {
   DH,
   H10,
   MC,
-  nftProfileImage,
   pumpfun,
-  sniper,
   telegrams,
   twitter,
   Users,
@@ -24,16 +22,13 @@ import {
 } from "@/app/Images";
 import Image from "next/image";
 import ChartComponent from "./ChartComponent";
-import {
-  fetchSolanaNativeBalance,
-  setChartSymbolImage,
-} from "@/app/redux/states";
 import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 import { IoSearchSharp } from "react-icons/io5";
 import RoundProgressBar from "@/components/RoundProgressBar/RoundProgressBar";
 import SingleLineProgressBar from "@/components/SingleLineProgressBar/SingleLineProgressBar";
 import NoData from "../NoData/noData";
 import MemescopeImages from "./MemescopeImages";
+import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
 
 const MscopePumpTable = ({
   MemscopeData,
@@ -57,7 +52,7 @@ const MscopePumpTable = ({
   capsuleImg,
   isChartHide,
   dynamicImg,
-  url
+  url,
 }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoverRow, sethoverRow] = useState(false);
@@ -152,8 +147,7 @@ const MscopePumpTable = ({
 
   const [copied, setCopied] = useState(false);
   function navigateToChartSreen(block) {
-    localStorage.setItem("chartTokenImg", block?.img);
-    dispatch(setChartSymbolImage(block?.img));
+    dispatch(setActiveChartToken({ symbol: block?.symbol, img: block?.img }));
   }
   useEffect(() => {
     const interval = setInterval(() => {
@@ -181,7 +175,7 @@ const MscopePumpTable = ({
             {MemscopeData.map((block, index) => (
               <Link
                 key={index + 1}
-                href={`/tradingview/solana?tokenaddress=${block?.address}&symbol=${block?.symbol}`}
+                href={`/tradingview/${block?.address}`}
               >
                 <div
                   className={`cursor-pointer border-b md:border-b md:border-l-0 md:border-t-0 border-[#26262e] bg-[#08080E] hover:bg-[#6e6e6e1a] ease-in-out duration-200`}
@@ -228,7 +222,13 @@ const MscopePumpTable = ({
                             />
                           </div>
                         ) : null}
-                        <MemescopeImages showCircle={showCircle} index={index} address={block?.address} symbol={block?.symbol} base_url={url} />
+                        <MemescopeImages
+                          showCircle={showCircle}
+                          index={index}
+                          address={block?.address}
+                          symbol={block?.symbol}
+                          base_url={url}
+                        />
                       </div>
                     </div>
 

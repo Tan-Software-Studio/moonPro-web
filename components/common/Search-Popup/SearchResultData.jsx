@@ -1,4 +1,3 @@
-
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useRef, useState } from "react";
@@ -18,6 +17,7 @@ import Image from "next/image";
 import Link from "next/link";
 // import { IoSearchSharp } from "react-icons/io5";
 import { FaXTwitter } from "react-icons/fa6";
+import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
 // import { humanReadableFormat } from "@/utils/basicFunctions";
 
 const SearchResultData = ({ searchResult, searchLoader }) => {
@@ -31,7 +31,7 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
 
   const copyAddress = (address, uniqueId, event) => {
     event.stopPropagation();
-    event.preventDefault()
+    event.preventDefault();
 
     // Copy the address to clipboard
     navigator?.clipboard?.writeText(address);
@@ -81,10 +81,8 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
     return `${diffDays}d`;
   }
 
-
   async function navigateToChartView(e) {
-    localStorage.setItem("chartTokenImg", e?.img);
-    await dispatch(setChartSymbolImage(e?.img));
+    dispatch(setActiveChartToken({ symbol: token?.Trade?.Currency?.Symbol, img: e?.img, pairAddress: e?.Trade?.Market?.MarketAddress }));
     // Retrieve existing recent tokens or initialize an empty array
     let recentTokens = JSON.parse(localStorage.getItem("recentTokens")) || [];
 
@@ -139,16 +137,17 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
           const TokenSupplyUpdate = e.TokenSupplyUpdate;
           const Trade = e.Trade;
           const MarketCap = TokenSupplyUpdate?.totalSupply * Trade?.currentUSD;
-          console.log("🚀 ~ searchResult.map ~ e?.liquidityUSD:", e?.liquidityUSD)
+          console.log(
+            "🚀 ~ searchResult.map ~ e?.liquidityUSD:",
+            e?.liquidityUSD
+          );
 
           const converted = decimalConvert(Trade?.currentUSD || 0);
           return (
             <>
               <Link
                 key={ind}
-                href={`/tradingview/solana?tokenaddress=${e?.Trade?.Currency?.MintAddress
-                  }&symbol=${e?.Trade?.Currency?.Symbol || "unknown"}&pair=${e?.Trade?.Market?.MarketAddress
-                  }`}
+                href={`/tradingview/${e?.Trade?.Currency?.MintAddress}`}
               >
                 <div
                   className="flex flex-col lg:flex-row lg:flex-1 items-center overflow-hidden hover:bg-[#3333339c] bg-[#08080E] cursor-pointer rounded-md border border-[#333333] mb-3 py-[11px] px-3"

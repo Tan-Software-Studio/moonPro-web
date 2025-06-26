@@ -16,10 +16,6 @@ import {
 } from "@/utils/calculation";
 import { buySolanaTokensQuickBuyHandler } from "@/utils/solanaBuySell/solanaBuySell";
 import LoaderPopup from "../LoaderPopup/LoaderPopup";
-import {
-  fetchSolanaNativeBalance,
-  setChartSymbolImage,
-} from "@/app/redux/states";
 import { PiCopyThin } from "react-icons/pi";
 import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 import Link from "next/link";
@@ -28,6 +24,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import { FaTelegramPlane } from "react-icons/fa";
 import NoData from "../NoData/noData";
 import TrendingImage from "./TrendingImage";
+import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
 
 const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
   const pathname = usePathname();
@@ -69,11 +66,8 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
   //   chainName !== "Solana" ? Array(9).fill(null) : Array(8).fill(null);
   const SkeletonInnerData = Array(isTimeCreated ? 8 : 7).fill(null);
   async function navigateToChartScreen(row) {
-    await localStorage.setItem("chartTokenImg", row?.img);
-    await dispatch(setChartSymbolImage(row?.img));
-    router.push(
-      `/tradingview/solana?tokenaddress=${row?.address}&symbol=${row?.symbol}`
-    );
+    dispatch(setActiveChartToken({ symbol: row?.symbol, img: row?.img }));
+    router.push(`/tradingview/${row?.address}`);
     localStorage.setItem("silectChainName", getNetwork);
   }
 
@@ -117,7 +111,11 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
                   {/* Column 1: Icon and Pair Info */}
                   <td className="whitespace-nowrap w-60 md:px-6 px-3 py-2 ">
                     <div className="flex items-center gap-3 !text-left">
-                      <TrendingImage name={row?.name} address={row?.address} url={BASE_URL} />
+                      <TrendingImage
+                        name={row?.name}
+                        address={row?.address}
+                        url={BASE_URL}
+                      />
                       <div className="">
                         <div className="flex items-center justify-center gap-[10px]">
                           <div className="flex flex-col gap-2">
