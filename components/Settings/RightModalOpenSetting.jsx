@@ -195,9 +195,6 @@ const RightModalOpenSetting = ({
     setPriorityForDisplay(preSetData?.[presist]?.[activeTab]?.priorityFee);
   }, [presist, activeTab]);
   useEffect(() => {
-    const preSetFromLocalStorage = JSON.parse(
-      localStorage.getItem("preSetAllData")
-    );
     const isReset = localStorage.getItem("isPresetReset");
     const preSetActiveFLag = localStorage.getItem("preSetSettingActive");
     if (!isReset) {
@@ -211,6 +208,9 @@ const RightModalOpenSetting = ({
       );
       setPreSetData(preSetData);
     }
+    const preSetFromLocalStorage = JSON.parse(
+      localStorage.getItem("preSetAllData")
+    );
     if (preSetFromLocalStorage) {
       setSlippageForDisplay(
         preSetFromLocalStorage[preSetActiveFLag]?.buy?.slippage
