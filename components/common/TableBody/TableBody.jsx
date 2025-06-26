@@ -67,7 +67,7 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
   const SkeletonInnerData = Array(isTimeCreated ? 8 : 7).fill(null);
   async function navigateToChartScreen(row) {
     dispatch(setActiveChartToken({ symbol: row?.symbol, img: row?.img }));
-    router.push(`/tradingview/${row?.address}`);
+    router.push(`/meme/${row?.address}`);
     localStorage.setItem("silectChainName", getNetwork);
   }
 

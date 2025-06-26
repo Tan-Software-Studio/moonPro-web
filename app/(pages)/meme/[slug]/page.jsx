@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useSearchParams } from "next/navigation";
 import { setselectToken, setselectTokenLogo } from "@/app/redux/CommonUiData";
 import Table from "@/components/TradingChart/Table";
 import { solana } from "@/app/Images";

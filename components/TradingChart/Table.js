@@ -112,7 +112,7 @@ const Table = ({
 
   const navigateToChartScreen = (data, index) => {
     dispatch(setActiveChartToken({ symbol: data?.symbol, img: data?.img }));
-    router.push(`/tradingview/${data?.token}`);
+    router.push(`/meme/${data?.token}`);
     localStorage.setItem("chartTokenAddress", data?.token);
     setIsOpen(false);
   };

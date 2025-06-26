@@ -171,7 +171,7 @@ const SearchPopup = () => {
                     {resentTokens.map((recentData, index) => (
                       <Link
                         key={index}
-                        href={`/tradingview/${recentData?.Trade?.Currency?.MintAddress}`}
+                        href={`/meme/${recentData?.Trade?.Currency?.MintAddress}`}
                       >
                         <button
                           onClick={() => navigateToChartView(recentData)}

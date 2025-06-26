@@ -103,7 +103,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
 
   const navigateToChartSreen = (item) => {
     dispatch(setActiveChartToken({ symbol: item?.symbol, item: row?.img }));
-    router.push(`/tradingview/${item?.tokenAddress}`);
+    router.push(`/meme/${item?.tokenAddress}`);
     setIsWatchlistPopup(false);
     localStorage.setItem("chartTokenImg", item?.img);
     dispatch(setChartSymbolImage(item?.img));

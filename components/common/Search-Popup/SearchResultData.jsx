@@ -149,7 +149,7 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
             <>
               <Link
                 key={ind}
-                href={`/tradingview/${e?.Trade?.Currency?.MintAddress}`}
+                href={`/meme/${e?.Trade?.Currency?.MintAddress}`}
               >
                 <div
                   className="flex flex-col lg:flex-row lg:flex-1 items-center overflow-hidden hover:bg-[#3333339c] bg-[#08080E] cursor-pointer rounded-md border border-[#333333] mb-3 py-[11px] px-3"
