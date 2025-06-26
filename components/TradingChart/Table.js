@@ -120,7 +120,6 @@ const Table = ({
     localStorage.setItem("chartTokenImg", data?.img);
     localStorage.setItem("chartTokenAddress", data?.token);
     dispatch(setChartSymbolImage(data?.img));
-    setIsOpen(false);
   };
 
   useEffect(() => {
