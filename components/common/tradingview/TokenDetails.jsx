@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Solana, Copy } from "@/app/Images";
+import { Copy } from "@/app/Images";
 import Image from "next/image";
 import { IoMdDoneAll } from "react-icons/io";
-import { formatDecimal } from "@/utils/basicFunctions";
+import { formatDecimal, shortenText } from "@/utils/basicFunctions";
 import { useDispatch, useSelector } from "react-redux";
 import {
   openCloseLoginRegPopup,
@@ -75,7 +75,7 @@ const TokenDetails = ({
       } else {
         dispatch(setChartSymbolImage(getImageFromLocalStorage));
       }
-    } catch (error) { }
+    } catch (error) {}
   }
   const token = localStorage.getItem("token");
 
@@ -87,7 +87,8 @@ const TokenDetails = ({
       method: "post",
       url: `${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}user/createTokenFavourite`,
       data: {
-        symbol: chartTokenDataState?.symbol || chartTokenData?.symbol || "Unknown",
+        symbol:
+          chartTokenDataState?.symbol || chartTokenData?.symbol || "Unknown",
         name: chartTokenData?.name,
         img: chartTokenData?.img,
         tokenAddress: tokenaddress,
@@ -155,7 +156,7 @@ const TokenDetails = ({
       .then((res) => {
         dispatch(setIsFaviouriteToken(res?.data?.data?.exists));
       })
-      .catch((err) => { })
+      .catch((err) => {})
       .finally(() => {
         setIsFavouriteLoading(false);
       });
@@ -218,6 +219,7 @@ const TokenDetails = ({
                   size={36.5}
                   trailColor="#7b8085"
                   progressColor={"#4FAFFE"}
+                  showPercentText={false}
                 />
                 {chartTokenDataState?.img ? (
                   <img
@@ -225,10 +227,17 @@ const TokenDetails = ({
                     src={chartTokenDataState?.img || chartTokenData?.img}
                     alt="Profile"
                     className="absolute inset-0 m-auto w-[30px] h-[30px] rounded-sm"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src =
+                        "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/in/wp-content/uploads/2022/03/monkey-g412399084_1280.jpg";
+                    }}
                   />
                 ) : (
                   <h1 className="absolute inset-0 m-auto w-[30px] h-[30px] rounded-sm text-[22px] border-[1px] border-[#26262e] bg-[#191919] flex items-center justify-center ">
-                    {(chartTokenDataState?.symbol || chartTokenData?.symbol)?.toString()?.slice(0, 1)}
+                    {(chartTokenDataState?.symbol || chartTokenData?.symbol)
+                      ?.toString()
+                      ?.slice(0, 1)}
                   </h1>
                 )}
               </div>
@@ -240,30 +249,44 @@ const TokenDetails = ({
                       ? `${chartTokenDataState?.symbol.slice(0, 5)}...`
                       : chartTokenDataState?.symbol}
                   </div>
-                  <div className="text-[#A8A8A8] text-xs md:text-[14px]">
-                    {tokenaddress && tokenaddress.length >= 10
-                      ? `${tokenaddress.slice(0, 5)}...${tokenaddress.slice(
-                        -3
-                      )}`
-                      : tokenaddress}
-                  </div>
-                  <div
-                    className="flex flex-shrink-0"
-                    onClick={() => handleCopy(tokenaddress)}
-                  >
-                    {copied ? (
-                      <IoMdDoneAll className="text-white cursor-pointer" />
-                    ) : (
-                      <Image
-                        src={Copy}
-                        alt="Copy"
-                        width={18}
-                        height={18}
-                        className="cursor-pointer"
+                  {chartTokenData?.name && (
+                    <>
+                      <div className="text-[#A8A8A8] text-xs md:text-[14px]">
+                        <span className="hidden 2xl:inline">
+                          {chartTokenData?.name}
+                        </span>
+                        <span className="hidden xl:inline 2xl:hidden">
+                          {shortenText(chartTokenData?.name, 20)}
+                        </span>
+                        <span className="hidden lg:inline xl:hidden">
+                          {shortenText(chartTokenData?.name, 14)}
+                        </span>
+                        <span className="hidden md:inline lg:hidden">
+                          {shortenText(chartTokenData?.name, 10)}
+                        </span>
+                        <span className="md:hidden">
+                          {shortenText(chartTokenData?.name, 5)}
+                        </span>
+                      </div>
+                      <div
+                        className="flex flex-shrink-0"
                         onClick={() => handleCopy(tokenaddress)}
-                      />
-                    )}
-                  </div>
+                      >
+                        {copied ? (
+                          <IoMdDoneAll className="text-white cursor-pointer" />
+                        ) : (
+                          <Image
+                            src={Copy}
+                            alt="Copy"
+                            width={18}
+                            height={18}
+                            className="cursor-pointer"
+                            onClick={() => handleCopy(tokenaddress)}
+                          />
+                        )}
+                      </div>
+                    </>
+                  )}
                 </div>
                 <div className="flex gap-2 items-center">
                   {chartTokenData?.socialIconsLink
@@ -380,8 +403,9 @@ const TokenDetails = ({
                         </span>
                       </span>
                       <span
-                        className={`${index === 3 ? "text-[#4CAF50]" : "text-white"
-                          } text-sm`}
+                        className={`${
+                          index === 3 ? "text-[#4CAF50]" : "text-white"
+                        } text-sm`}
                       >
                         {num?.label == "Price USD"
                           ? formatDecimal(num?.price)

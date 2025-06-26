@@ -53,7 +53,7 @@ const ActivePosition = ({
   const navigateToChartSreen = (item) => {
     dispatch(setActiveChartToken({ symbol: item?.symbol, img: item?.img }));
     router.push(
-      `/tradingview/${item?.token}`
+      `/meme/${item?.token}`
     );
   };
 

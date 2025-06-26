@@ -167,7 +167,7 @@ const ActivityTable = ({ activitySearchQuery }) => {
 
   const navigateToChartSreen = (item, img) => {
     router.push(
-      `/tradingview/${item?.Trade?.Currency?.MintAddress}`
+      `/meme/${item?.Trade?.Currency?.MintAddress}`
     );
     localStorage.setItem("chartTokenImg", img);
     dispatch(setChartSymbolImage(img));

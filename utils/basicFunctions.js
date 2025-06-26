@@ -160,6 +160,11 @@ const formatNumber = (amount, addSign = true, addDollar = true) => {
     return `${sign}${addDollar ? "$" : ""}${formattedAmount}`
   };
 
+  function shortenText(str, length) {
+    if (!str) return '';
+    return str.length > length ? str.slice(0, length).trim() + '...' : str;
+  }
+
 export {
   humanReadableFormat,
   humanReadableFormatNoDollar,
@@ -170,5 +175,6 @@ export {
   convertAnyPriceToSol,
   numberFormated,
   capitalizeFirstLetter,
-  formatNumber
+  formatNumber,
+  shortenText
 };

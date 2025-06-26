@@ -14,8 +14,10 @@ const TrendingImage = memo(({ name, address, url }) => {
             <Image
                 src={`${url}/${address}.webp`}
                 alt="Token"
-                className="w-12 md:w-10 h-12 md:h-10 xl:w-14 xl:h-14 rounded-[4px] border border-[#1F73FC]"
-                loading="lazy"
+                className="!w-12 md:w-10 !h-12 !md:h-10 !xl:w-14 !xl:h-14 rounded-[4px] border border-[#1F73FC]"
+                    loading="lazy"
+                    width={50}
+                    height={50}
                 onError={(e) => {
                     setIsImageError(true);
                 }}

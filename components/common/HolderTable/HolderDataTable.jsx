@@ -36,7 +36,7 @@ const HolderDataTable = ({ data, img, loading }) => {
   async function redirectHandler(address, symbol) {
     dispatch(setActiveChartToken({ symbol: symbol, img: null }));
     router.push(
-      `/tradingview/${address}`
+      `/meme/${address}`
     );
   }
 

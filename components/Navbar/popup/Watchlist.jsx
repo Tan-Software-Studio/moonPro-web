@@ -102,8 +102,8 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
   };
 
   const navigateToChartSreen = (item) => {
-    dispatch(setActiveChartToken({ symbol: item?.symbol, item: row?.img }));
-    router.push(`/tradingview/${item?.tokenAddress}`);
+    dispatch(setActiveChartToken({ symbol: item?.symbol, item: item?.img }));
+    router.push(`/meme/${item?.tokenAddress}`);
     setIsWatchlistPopup(false);
     localStorage.setItem("chartTokenImg", item?.img);
     dispatch(setChartSymbolImage(item?.img));
@@ -125,7 +125,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.8, opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="LanguagePopup-lg xl:w-[1100px] lg:w-[1000px] md:w-[90%]  w-full bg-[#08080e] rounded-md !z-[999999999999999]"
+        className="LanguagePopup-lg xl:w-[1100px] lg:w-[1000px] md:w-[90%]  w-full bg-[#08080e] border border-gray-800 rounded-md !z-[999999999999999]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
@@ -141,11 +141,11 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
         </div>
 
         {/* Table Container */}
-        <div className="overflow-x-auto px-5 pb-5  min-h-[300px] ">
+        <div className="overflow-x-auto px-5 pb-5  min-h-[300px]  max-h-[500px] overflow-y-auto ">
           <table className="w-full">
             {/* Table Header */}
-            <thead>
-              <tr className="border-b border-gray-800">
+            <thead className="sticky top-0 bg-[#08080e] z-50">
+              <tr className="border-b border-gray-800 ">
                 <th className="text-left px-6 py-4 text-sm font-medium text-gray-400 uppercase tracking-wider text-nowrap">
                   {accountPopup?.watchlist?.token}
                 </th>
