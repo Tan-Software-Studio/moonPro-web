@@ -4,7 +4,7 @@ import { BsThreeDots } from 'react-icons/bs';
 
 const ResizableChartContainer = ({
     isSmallScreen,
-    bottomOffset = 173,
+    bottomOffset = 181,
     minHeight = 200,
     maxHeightFallback = 1000,
     tokenSymbol,
