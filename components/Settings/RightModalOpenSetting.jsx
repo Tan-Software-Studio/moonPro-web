@@ -200,7 +200,6 @@ const RightModalOpenSetting = ({
     );
     const isReset = localStorage.getItem("isPresetReset");
     const preSetActiveFLag = localStorage.getItem("preSetSettingActive");
-    console.log("🚀 ~ useEffect ~ preSetActiveFLag:", preSetActiveFLag);
     if (!isReset) {
       localStorage.setItem("isPresetReset", true);
       localStorage.setItem("preSetAllData", JSON.stringify(preSetData));
