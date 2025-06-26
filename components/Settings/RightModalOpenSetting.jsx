@@ -25,61 +25,61 @@ const RightModalOpenSetting = ({
   const [preSetData, setPreSetData] = useState({
     P1: {
       buy: {
-        slippage: 40,
-        priorityFee: 0.001,
+        slippage: 30,
+        priorityFee: 0.01,
         mev: false,
       },
       sell: {
-        slippage: 40,
-        priorityFee: 0.001,
+        slippage: 30,
+        priorityFee: 0.01,
         mev: false,
       },
     },
     P2: {
       buy: {
-        slippage: 40,
-        priorityFee: 0.001,
+        slippage: 30,
+        priorityFee: 0.01,
         mev: false,
       },
       sell: {
-        slippage: 40,
-        priorityFee: 0.001,
+        slippage: 30,
+        priorityFee: 0.01,
         mev: false,
       },
     },
     P3: {
       buy: {
-        slippage: 40,
-        priorityFee: 0.001,
+        slippage: 30,
+        priorityFee: 0.01,
         mev: false,
       },
       sell: {
-        slippage: 40,
-        priorityFee: 0.001,
+        slippage: 30,
+        priorityFee: 0.01,
         mev: false,
       },
     },
     P4: {
       buy: {
-        slippage: 40,
-        priorityFee: 0.001,
+        slippage: 30,
+        priorityFee: 0.01,
         mev: false,
       },
       sell: {
-        slippage: 40,
-        priorityFee: 0.001,
+        slippage: 30,
+        priorityFee: 0.01,
         mev: false,
       },
     },
     P5: {
       buy: {
-        slippage: 40,
-        priorityFee: 0.001,
+        slippage: 30,
+        priorityFee: 0.01,
         mev: false,
       },
       sell: {
-        slippage: 40,
-        priorityFee: 0.001,
+        slippage: 30,
+        priorityFee: 0.01,
         mev: false,
       },
     },
@@ -110,8 +110,8 @@ const RightModalOpenSetting = ({
   // onchange function for slippage
   function updatePreSetSlippageSetting(target) {
     let { value } = target;
-    if (!value || value < 20) {
-      value = 20;
+    if (!value || value < 10) {
+      value = 10;
     }
     setSlippageForDisplay(value);
     setPreSetData((pre) => {
@@ -198,8 +198,20 @@ const RightModalOpenSetting = ({
     const preSetFromLocalStorage = JSON.parse(
       localStorage.getItem("preSetAllData")
     );
+    const isReset = localStorage.getItem("isPresetReset");
     const preSetActiveFLag = localStorage.getItem("preSetSettingActive");
+    console.log("🚀 ~ useEffect ~ preSetActiveFLag:", preSetActiveFLag);
+    if (!isReset) {
+      localStorage.setItem("isPresetReset", true);
+      localStorage.setItem("preSetAllData", JSON.stringify(preSetData));
+    }
     if (preSetFromLocalStorage) {
+      setSlippageForDisplay(
+        preSetFromLocalStorage[preSetActiveFLag]?.buy?.slippage
+      );
+      setPriorityForDisplay(
+        preSetFromLocalStorage[preSetActiveFLag]?.buy?.priorityFee
+      );
       setPreSetData(preSetFromLocalStorage);
     } else {
       localStorage.setItem("preSetAllData", JSON.stringify(preSetData));
@@ -211,14 +223,16 @@ const RightModalOpenSetting = ({
   return (
     <>
       <div
-        className={`fixed inset-0 bg-black bg-opacity-50 z-[9999998] transition-opacity duration-500 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-          }`}
+        className={`fixed inset-0 bg-black bg-opacity-50 z-[9999998] transition-opacity duration-500 ${
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
         onClick={onClose}
       />
       {/* Modal */}
       <div
-        className={`flex flex-col justify-between fixed top-0 !z-[99999999981] h-svh bottom-5 transition-all duration-500 ease-in-out xl:w-[20%] lg:w-[30%]  w-full bg-[#08080e] border border-[#191919] ${isOpen ? "right-0" : "-right-full"
-          }`}
+        className={`flex flex-col justify-between fixed top-0 !z-[99999999981] h-svh bottom-5 transition-all duration-500 ease-in-out xl:w-[20%] lg:w-[30%]  w-full bg-[#08080e] border border-[#191919] ${
+          isOpen ? "right-0" : "-right-full"
+        }`}
       >
         <div>
           <div className="bg-[#1F1F1F] flex items-center justify-between py-[13px] px-[16px]">
@@ -236,10 +250,11 @@ const RightModalOpenSetting = ({
           <div className="p-[16px]">
             <div className="flex items-center bg-[#1f1f1f] rounded-[8px]">
               <button
-                className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-500 outline-none ${activeTab === "buy"
+                className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-500 outline-none ${
+                  activeTab === "buy"
                     ? "bg-[#1F73FC] text-[#F6F6F6]"
                     : "bg-transparent text-[#6E6E6E]"
-                  }`}
+                }`}
                 onClick={() => {
                   setActiveTab("buy");
                 }}
@@ -247,10 +262,11 @@ const RightModalOpenSetting = ({
                 {ordersettingLang?.buy}
               </button>
               <button
-                className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-300 ${activeTab === "sell"
+                className={`flex-1 py-2 rounded-[8px] h-full text-[14px] font-[400] ease-in-out duration-300 ${
+                  activeTab === "sell"
                     ? "bg-[#ED1B24] text-[#F6F6F6]"
                     : "bg-transparent text-[#6E6E6E]"
-                  }`}
+                }`}
                 onClick={() => {
                   setActiveTab("sell");
                 }}
@@ -263,20 +279,22 @@ const RightModalOpenSetting = ({
                 return (
                   <Tooltip
                     key={index + 1}
-                    body={`Preset ${index + 1
-                      }: Save your trade settings such as quantity, slippage, and fees.`}
+                    body={`Preset ${
+                      index + 1
+                    }: Save your trade settings such as quantity, slippage, and fees.`}
                   >
                     <button
                       onClick={() => {
                         dispatch(setPresetActive(item));
                         localStorage.setItem("preSetSettingActive", item);
                       }}
-                      className={`w-full py-[10px] text-[#F6F6F6] font-[700] text-[12px] border-r-[0.5px] border-r-[#404040] duration-300 ease-in-out ${presist == item
+                      className={`w-full py-[10px] text-[#F6F6F6] font-[700] text-[12px] border-r-[0.5px] border-r-[#404040] duration-300 ease-in-out ${
+                        presist == item
                           ? activeTab == "buy"
                             ? "bg-[#1F73FC]"
                             : "bg-[#ED1B24]"
                           : "bg-transparent"
-                        }`}
+                      }`}
                     >
                       {item}
                     </button>
@@ -376,17 +394,19 @@ const RightModalOpenSetting = ({
                 onClick={() => {
                   updateMEV(!preSetData?.[presist]?.[activeTab]?.mev);
                 }}
-                className={`flex ${preSetData?.[presist]?.[activeTab]?.mev
+                className={`flex ${
+                  preSetData?.[presist]?.[activeTab]?.mev
                     ? `${activeTab == "buy" ? "bg-[#278BFE]" : "bg-[#ed1819]"}`
                     : "bg-[#4D4D4D]"
-                  } w-[36px] h-[20px] items-center cursor-pointer pl-[3px] rounded-[1000px] transition-all duration-300`}
+                } w-[36px] h-[20px] items-center cursor-pointer pl-[3px] rounded-[1000px] transition-all duration-300`}
               >
                 <div
                   className={`w-[12px] h-[12px] bg-white rounded-full shadow-md transform transition-all duration-300 
-      ${preSetData?.[presist]?.[activeTab]?.mev
-                      ? "translate-x-[18px]"
-                      : "translate-x-0 "
-                    }`}
+      ${
+        preSetData?.[presist]?.[activeTab]?.mev
+          ? "translate-x-[18px]"
+          : "translate-x-0 "
+      }`}
                 />
               </div>
             </div>
