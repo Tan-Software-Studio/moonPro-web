@@ -14,7 +14,17 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "nexastreaming.wavebot.app/",
+        hostname: "nexastreaming.wavebot.app",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "nexauserbackend.wavebot.app",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "moon-bk-9e55cf86c25b.herokuapp.com",
         pathname: "/**",
       },
       {
