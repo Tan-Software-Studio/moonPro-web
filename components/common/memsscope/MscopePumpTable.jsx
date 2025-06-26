@@ -223,6 +223,7 @@ const MscopePumpTable = ({
                         ) : null}
                         <MemescopeImages
                           showCircle={showCircle}
+                          key={`${block?.address}-${index}`}
                           address={block?.address}
                           symbol={block?.symbol}
                           base_url={url}
