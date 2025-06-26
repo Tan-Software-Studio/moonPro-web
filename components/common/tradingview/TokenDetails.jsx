@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Solana, Copy, Telegram, linkedin, NewX } from "@/app/Images";
 import Image from "next/image";
 import { IoMdDoneAll } from "react-icons/io";
-import { formatDecimal } from "@/utils/basicFunctions";
+import { formatDecimal, shortenText } from "@/utils/basicFunctions";
 import { useDispatch, useSelector } from "react-redux";
 import {
   openCloseLoginRegPopup,
@@ -255,30 +255,34 @@ const TokenDetails = ({
                       ? `${tokenSymbol.slice(0, 5)}...`
                       : tokenSymbol}
                   </div>
-                  <div className="text-[#A8A8A8] text-xs md:text-[14px]">
-                    {tokenaddress && tokenaddress.length >= 10
-                      ? `${tokenaddress.slice(0, 5)}...${tokenaddress.slice(
-                        -3
-                      )}`
-                      : tokenaddress}
-                  </div>
-                  <div
-                    className="flex flex-shrink-0"
-                    onClick={() => handleCopy(tokenaddress)}
-                  >
-                    {copied ? (
-                      <IoMdDoneAll className="text-white cursor-pointer" />
-                    ) : (
-                      <Image
-                        src={Copy}
-                        alt="Copy"
-                        width={18}
-                        height={18}
-                        className="cursor-pointer"
-                        onClick={() => handleCopy(tokenaddress)}
-                      />
-                    )}
-                  </div>
+                  {chartTokenData?.name && 
+                  <>
+                    <div className="text-[#A8A8A8] text-xs md:text-[14px]">
+                      <span className="hidden 2xl:inline">{chartTokenData?.name}</span>
+                      <span className="hidden xl:inline 2xl:hidden">{shortenText(chartTokenData?.name, 20)}</span>
+                      <span className="hidden lg:inline xl:hidden">{shortenText(chartTokenData?.name, 14)}</span>
+                      <span className="hidden md:inline lg:hidden">{shortenText(chartTokenData?.name, 10)}</span>
+                      <span className="md:hidden">{shortenText(chartTokenData?.name, 5)}</span>
+                    </div>
+                    <div
+                      className="flex flex-shrink-0"
+                      onClick={() => handleCopy(tokenaddress)}
+                    >
+                      {copied ? (
+                        <IoMdDoneAll className="text-white cursor-pointer" />
+                      ) : (
+                        <Image
+                          src={Copy}
+                          alt="Copy"
+                          width={18}
+                          height={18}
+                          className="cursor-pointer"
+                          onClick={() => handleCopy(tokenaddress)}
+                        />
+                      )}
+                    </div>
+                  </>
+                  }
                 </div>
                 <div className="flex gap-2 items-center">
                   {chartTokenData?.socialIconsLink
