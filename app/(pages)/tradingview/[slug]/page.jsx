@@ -28,6 +28,7 @@ import axios from "axios";
 import { resetResolutionOffsets } from "@/utils/tradingViewChartServices/getBars";
 import { clearMarks } from "@/utils/tradingViewChartServices/mark";
 import ResizableChartContainer from "@/components/common/tradingview/ResizableChartContainer";
+import AutoRefreshOnInactivity from "@/utils/AutoRefreshOnInactivity";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
 const Tradingview = () => {
@@ -517,6 +518,7 @@ const Tradingview = () => {
       className={`lg:flex relative overflow-y-auto h-svh max-h-svh ${isSidebarOpen ? "ml-0 mr-0" : " md:ml-2.5"
         }`}
     >
+      <AutoRefreshOnInactivity minutes={10} />
       {isSmallScreen && (
         <div className="lg:hidden flex  items-center justify-start bg-[#1F1F1F] rounded-md mt-2 text-white mx-2  text-[12px] font-semibold px-2 py-1">
           {["Trades", "Transaction"].map((item, index) => (
