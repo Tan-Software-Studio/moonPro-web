@@ -110,6 +110,7 @@ const allCharTokenData = createSlice({
       state.activeChartToken = {
         symbol: payload?.symbol,
         img: payload?.img,
+        pairAddress: payload?.pairAddres || null,
       };
     },
     addNewTransaction: (state, { payload }) => {
@@ -156,6 +157,11 @@ const allCharTokenData = createSlice({
       })
       .addCase(fetchChartAllData.fulfilled, (state, { payload }) => {
         state.chartData = payload;
+        state.activeChartToken = {
+          symbol: payload?.symbol,
+          img: payload?.img,
+          pairAddress: payload?.pairaddress || null,
+        };
       });
   },
 });
