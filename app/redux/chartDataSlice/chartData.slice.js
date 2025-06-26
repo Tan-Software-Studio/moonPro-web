@@ -100,8 +100,19 @@ const allCharTokenData = createSlice({
     latestTrades: [],
     tradesForWalletTracking: [],
     chartData: {},
+    activeChartToken: {},
   },
   reducers: {
+    resetChartDataState: (state, action) => {
+      state.chartData = {};
+    },
+    setActiveChartToken: (state, { payload }) => {
+      state.activeChartToken = {
+        symbol: payload?.symbol,
+        img: payload?.img,
+        pairAddress: payload?.pairAddres || null,
+      };
+    },
     addNewTransaction: (state, { payload }) => {
       for (const item of payload) {
         const newVolume = item.Trade.Amount * item?.Trade?.PriceInUSD;
@@ -146,6 +157,11 @@ const allCharTokenData = createSlice({
       })
       .addCase(fetchChartAllData.fulfilled, (state, { payload }) => {
         state.chartData = payload;
+        state.activeChartToken = {
+          symbol: payload?.symbol,
+          img: payload?.img,
+          pairAddress: payload?.pairaddress || null,
+        };
       });
   },
 });
@@ -153,5 +169,7 @@ export const {
   addNewTransaction,
   addNewTransactionForWalletTracking,
   resetChartTokenState,
+  resetChartDataState,
+  setActiveChartToken,
 } = allCharTokenData.actions;
 export default allCharTokenData.reducer;

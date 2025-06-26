@@ -1,15 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Solana, Copy, Telegram, linkedin, NewX } from "@/app/Images";
+import { Copy } from "@/app/Images";
 import Image from "next/image";
 import { IoMdDoneAll } from "react-icons/io";
 import { formatDecimal, shortenText } from "@/utils/basicFunctions";
 import { useDispatch, useSelector } from "react-redux";
 import {
   openCloseLoginRegPopup,
-  removeFavouriteToken,
   setChartSymbolImage,
-  setFavouriteTokens,
   setIsFaviouriteToken,
 } from "@/app/redux/states";
 import { CiHeart } from "react-icons/ci";
@@ -31,7 +29,6 @@ import { RxCross1 } from "react-icons/rx";
 import { BsCopy, BsTwitterX } from "react-icons/bs";
 import { RiFacebookCircleLine } from "react-icons/ri";
 import Link from "next/link";
-import toast from "react-hot-toast";
 import { IoSearchSharp } from "react-icons/io5";
 import SquareProgressBar from "../../common/SquareProgressBarcom/SquareProgressBar";
 import { pumpfun, telegrams, twitter, website } from "@/app/Images";
@@ -39,18 +36,16 @@ import { showToaster, showToasterSuccess } from "@/utils/toaster/toaster.style";
 import { HiOutlineUpload } from "react-icons/hi";
 
 const TokenDetails = ({
-  tokenSymbol,
+  chartTokenDataState,
   tokenaddress,
   copied,
   handleCopy,
   TokenDetailsNumberData,
   tokenDetailsMarketCap,
   chartTokenData,
-  walletAddress,
   pairAddress,
-  tokenImage,
   setIsSharePnLModalActive,
-  currentTokenPnLData
+  currentTokenPnLData,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCopyUrl, setIsCopyUrl] = useState(false);
@@ -64,9 +59,9 @@ const TokenDetails = ({
   ];
 
   const dispatch = useDispatch();
-  const tokenFavList = useSelector(
-    (state) => state?.AllStatesData?.favouriteTokens
-  );
+  // const tokenFavList = useSelector(
+  //   (state) => state?.AllStatesData?.favouriteTokens
+  // );
 
   const isFavourite = useSelector(
     (state) => state?.AllStatesData?.isFaviourite
@@ -80,7 +75,7 @@ const TokenDetails = ({
       } else {
         dispatch(setChartSymbolImage(getImageFromLocalStorage));
       }
-    } catch (error) { }
+    } catch (error) {}
   }
   const token = localStorage.getItem("token");
 
@@ -92,9 +87,10 @@ const TokenDetails = ({
       method: "post",
       url: `${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}user/createTokenFavourite`,
       data: {
-        symbol: tokenSymbol || "Unknown",
+        symbol:
+          chartTokenDataState?.symbol || chartTokenData?.symbol || "Unknown",
         name: chartTokenData?.name,
-        img: tokenImage,
+        img: chartTokenData?.img,
         tokenAddress: tokenaddress,
         marketCap: tokenDetailsMarketCap,
         // volume: '0',
@@ -160,7 +156,7 @@ const TokenDetails = ({
       .then((res) => {
         dispatch(setIsFaviouriteToken(res?.data?.data?.exists));
       })
-      .catch((err) => { })
+      .catch((err) => {})
       .finally(() => {
         setIsFavouriteLoading(false);
       });
@@ -206,10 +202,6 @@ const TokenDetails = ({
   useEffect(() => {
     getAndSetImageFromLocalStorage();
   }, []);
-
-   useEffect(() => {
-    console.log("tokenImage", tokenImage)
-  }, [tokenImage]);
   return (
     <div className="bg-transparent border-b-[1px] border-b-[#26262e] w-full">
       <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center ">
@@ -229,10 +221,10 @@ const TokenDetails = ({
                   progressColor={"#4FAFFE"}
                   showPercentText={false}
                 />
-                {tokenImage && tokenImage !== "undefined" && tokenImage !== "null" ? (
+                {chartTokenDataState?.img ? (
                   <img
-                    key={tokenImage}
-                    src={tokenImage}
+                    key={"Token"}
+                    src={chartTokenDataState?.img || chartTokenData?.img}
                     alt="Profile"
                     className="absolute inset-0 m-auto w-[30px] h-[30px] rounded-sm"
                     onError={(e) => {
@@ -243,7 +235,9 @@ const TokenDetails = ({
                   />
                 ) : (
                   <h1 className="absolute inset-0 m-auto w-[30px] h-[30px] rounded-sm text-[22px] border-[1px] border-[#26262e] bg-[#191919] flex items-center justify-center ">
-                    {tokenSymbol?.toString()?.slice(0, 1)}
+                    {(chartTokenDataState?.symbol || chartTokenData?.symbol)
+                      ?.toString()
+                      ?.slice(0, 1)}
                   </h1>
                 )}
               </div>
@@ -251,38 +245,48 @@ const TokenDetails = ({
               <div className="flex flex-col md:mr-5">
                 <div className="flex items-center gap-2">
                   <div className="text-white text-base sm:text-lg font-spaceGrotesk">
-                    {tokenSymbol?.length > 7
-                      ? `${tokenSymbol.slice(0, 5)}...`
-                      : tokenSymbol}
+                    {chartTokenDataState?.symbol?.length > 7
+                      ? `${chartTokenDataState?.symbol.slice(0, 5)}...`
+                      : chartTokenDataState?.symbol}
                   </div>
-                  {chartTokenData?.name && 
-                  <>
-                    <div className="text-[#A8A8A8] text-xs md:text-[14px]">
-                      <span className="hidden 2xl:inline">{chartTokenData?.name}</span>
-                      <span className="hidden xl:inline 2xl:hidden">{shortenText(chartTokenData?.name, 20)}</span>
-                      <span className="hidden lg:inline xl:hidden">{shortenText(chartTokenData?.name, 14)}</span>
-                      <span className="hidden md:inline lg:hidden">{shortenText(chartTokenData?.name, 10)}</span>
-                      <span className="md:hidden">{shortenText(chartTokenData?.name, 5)}</span>
-                    </div>
-                    <div
-                      className="flex flex-shrink-0"
-                      onClick={() => handleCopy(tokenaddress)}
-                    >
-                      {copied ? (
-                        <IoMdDoneAll className="text-white cursor-pointer" />
-                      ) : (
-                        <Image
-                          src={Copy}
-                          alt="Copy"
-                          width={18}
-                          height={18}
-                          className="cursor-pointer"
-                          onClick={() => handleCopy(tokenaddress)}
-                        />
-                      )}
-                    </div>
-                  </>
-                  }
+                  {chartTokenData?.name && (
+                    <>
+                      <div className="text-[#A8A8A8] text-xs md:text-[14px]">
+                        <span className="hidden 2xl:inline">
+                          {chartTokenData?.name}
+                        </span>
+                        <span className="hidden xl:inline 2xl:hidden">
+                          {shortenText(chartTokenData?.name, 20)}
+                        </span>
+                        <span className="hidden lg:inline xl:hidden">
+                          {shortenText(chartTokenData?.name, 14)}
+                        </span>
+                        <span className="hidden md:inline lg:hidden">
+                          {shortenText(chartTokenData?.name, 10)}
+                        </span>
+                        <span className="md:hidden">
+                          {shortenText(chartTokenData?.name, 5)}
+                        </span>
+                      </div>
+                      <div
+                        className="flex flex-shrink-0"
+                        onClick={() => handleCopy(tokenaddress)}
+                      >
+                        {copied ? (
+                          <IoMdDoneAll className="text-white cursor-pointer" />
+                        ) : (
+                          <Image
+                            src={Copy}
+                            alt="Copy"
+                            width={18}
+                            height={18}
+                            className="cursor-pointer"
+                            onClick={() => handleCopy(tokenaddress)}
+                          />
+                        )}
+                      </div>
+                    </>
+                  )}
                 </div>
                 <div className="flex gap-2 items-center">
                   {chartTokenData?.socialIconsLink
@@ -335,18 +339,18 @@ const TokenDetails = ({
               <div
                 className="h-[36px] w-[36px] bg-[#1F1F1F] rounded-full flex items-center justify-center"
                 onClick={() => {
-                  {(Object.keys(currentTokenPnLData).length > 0) ? 
-                    setIsSharePnLModalActive(true)
-                    :
-                    setIsModalOpen(true)
+                  {
+                    Object.keys(currentTokenPnLData).length > 0
+                      ? setIsSharePnLModalActive(true)
+                      : setIsModalOpen(true);
                   }
                 }}
               >
-                {(Object.keys(currentTokenPnLData).length > 0) ? 
-                <HiOutlineUpload size={22} className="text-[#4CAF50]"/>
-                :
-                <PiShare className="text-[#F6F6F6] text-[22px]" />
-                }
+                {Object.keys(currentTokenPnLData).length > 0 ? (
+                  <HiOutlineUpload size={22} className="text-[#4CAF50]" />
+                ) : (
+                  <PiShare className="text-[#F6F6F6] text-[22px]" />
+                )}
               </div>
               <div className="h-[36px] w-[36px] bg-[#1F1F1F] rounded-full flex items-center justify-center">
                 {isFavouriteLoading ? (
@@ -374,7 +378,9 @@ const TokenDetails = ({
               <p className="inline">{tokenDetailsMarketCap}</p>
             </div>
             <div className="p-0 md:p-3 flex items-center">
-              <div className={`grid grid-cols-${TokenDetailsNumberData?.length} lg:gap-5 md:gap-4 gap-2`}>
+              <div
+                className={`grid grid-cols-${TokenDetailsNumberData?.length} lg:gap-5 md:gap-4 gap-2`}
+              >
                 {TokenDetailsNumberData?.map((num, index) => {
                   return (
                     <div
@@ -397,8 +403,9 @@ const TokenDetails = ({
                         </span>
                       </span>
                       <span
-                        className={`${index === 3 ? "text-[#4CAF50]" : "text-white"
-                          } text-sm`}
+                        className={`${
+                          index === 3 ? "text-[#4CAF50]" : "text-white"
+                        } text-sm`}
                       >
                         {num?.label == "Price USD"
                           ? formatDecimal(num?.price)
@@ -421,15 +428,17 @@ const TokenDetails = ({
                 </button> */}
             </div>
           </div>
-        {(Object.keys(currentTokenPnLData).length > 0) &&
-            <button 
-              onClick={() => {setIsSharePnLModalActive(true)}}
+          {Object.keys(currentTokenPnLData).length > 0 && (
+            <button
+              onClick={() => {
+                setIsSharePnLModalActive(true);
+              }}
               className="text-[#4CAF50] hidden gap-1 md:flex"
             >
-              <HiOutlineUpload size={16}/>
+              <HiOutlineUpload size={16} />
               <p className="text-xs">Share PnL</p>
             </button>
-        }
+          )}
         </div>
         <div className="items-center justify-between mb-[5px] md:mb-[0px] hidden md:flex">
           <div className="flex items-center md:flex-col">
@@ -580,7 +589,7 @@ const TokenDetails = ({
                     </h1>
                   </div>
                   <div className="mt-[16px] flex flex-col items-center justify-center gap-[4px] ">
-                    <div >
+                    <div>
                       <a
                         href={`https://www.facebook.com/dialog/send?link=https://wavepro.com&app_id=YOUR_APP_ID&redirect_uri=${encodeURIComponent(
                           window.location.href

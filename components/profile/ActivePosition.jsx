@@ -1,5 +1,4 @@
 import { NoDataLogo } from "@/app/Images";
-import { setChartSymbolImage } from "@/app/redux/states";
 import { Check, Copy } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -8,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { pnlPercentage } from "./calculation";
 import { useTranslation } from "react-i18next";
 import InstantSell from "./InstantSell";
-import { FaArrowUp } from "react-icons/fa";
+import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
 
 const ActivePosition = ({
   filteredActivePosition,
@@ -52,11 +51,10 @@ const ActivePosition = ({
   }
 
   const navigateToChartSreen = (item) => {
+    dispatch(setActiveChartToken({ symbol: item?.symbol, img: item?.img }));
     router.push(
-      `/tradingview/solana?tokenaddress=${item?.token}&symbol=${item?.symbol}`
+      `/meme/${item?.token}`
     );
-    localStorage.setItem("chartTokenImg", item?.img);
-    dispatch(setChartSymbolImage(item?.img));
   };
 
   return (

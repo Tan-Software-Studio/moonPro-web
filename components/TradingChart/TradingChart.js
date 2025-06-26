@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import { widget } from "../../public/charting_library";
@@ -6,15 +6,29 @@ import Datafeed from "../../utils/tradingViewChartServices/customDatafeed";
 import { intervalTV } from "../../utils/tradingViewChartServices/constant";
 import { unsubscribeFromWebSocket } from "@/utils/tradingViewChartServices/websocketOHLC";
 import { addMark, clearMarks } from "@/utils/tradingViewChartServices/mark";
-import { humanReadableFormatWithNoDollar, formatDecimal } from "@/utils/basicFunctions";
+import {
+  humanReadableFormatWithNoDollar,
+  formatDecimal,
+} from "@/utils/basicFunctions";
 import { clearLatestHistoricalBar } from "@/utils/tradingViewChartServices/latestHistoricalBar";
 import { clearSellItems } from "@/utils/tradingViewChartServices/sellItems";
 import { clearChunk } from "@/utils/tradingViewChartServices/historicalChunk";
 import axios from "axios";
-import { clear100SellLine, subscribe100SellLine } from "@/utils/tradingViewChartServices/firstSell100Percent";
+import {
+  clear100SellLine,
+  subscribe100SellLine,
+} from "@/utils/tradingViewChartServices/firstSell100Percent";
 import { resetResolutionOffsets } from "@/utils/tradingViewChartServices/getBars";
 
-const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, solanaLivePrice, supply }) => {
+const TVChartContainer = ({
+  chartTokenDataState,
+  searchParams,
+  tokenSymbol,
+  tokenaddress,
+  currentTokenPnLData,
+  solanaLivePrice,
+  supply,
+}) => {
   const chartContainerRef = useRef(null);
   const [isUsdSolToggled, setIsUsdSolToggled] = useState(true); // Track USD/SOL toggle state
   const [isMcPriceToggled, setIsMcPriceToggled] = useState(true); // Track MarketCap/Price toggle state
@@ -24,8 +38,8 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
   const [currentTokenAddress, setCurrentTokenAddress] = useState(null);
   const [hasGottenMarks, setHasGottenMarks] = useState(false);
   const [chartResolution, setChartResolution] = useState(() => {
-   const saved = localStorage.getItem("chartResolution");
-      return saved === null ? "15S" : saved;
+    const saved = localStorage.getItem("chartResolution");
+    return saved === null ? "15S" : saved;
   });
 
   const buyPositionLineRef = useRef(null);
@@ -33,14 +47,16 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
 
   const convertPrice = (price) => {
     let convertedPrice = price;
-    convertedPrice = isMcPriceToggled ? convertedPrice * supply : convertedPrice;
+    convertedPrice = isMcPriceToggled
+      ? convertedPrice * supply
+      : convertedPrice;
     return convertedPrice;
-  }
+  };
 
   const resetLines = () => {
     resetBuyLine();
     resetSellLine();
-  }
+  };
 
   useEffect(() => {
     if (chartReady && solanaLivePrice > 0 && tokenaddress && !hasGottenMarks) {
@@ -53,53 +69,56 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
       buyPositionLineRef.current.remove();
     }
     buyPositionLineRef.current = null;
-  }
+  };
 
   const resetSellLine = () => {
     if (sellPositionLineRef.current !== null) {
       sellPositionLineRef.current.remove();
     }
     sellPositionLineRef.current = null;
-  }
+  };
 
   useEffect(() => {
     const fetchToggle = async () => {
-      const usdSolToggle = await localStorage.getItem("chartUsdSolToggleActive");
+      const usdSolToggle = await localStorage.getItem(
+        "chartUsdSolToggleActive"
+      );
       if (usdSolToggle !== null) {
         setIsUsdSolToggled(usdSolToggle === "true");
       }
 
-      const mcPriceToggle = await localStorage.getItem("chartMarketCapPriceToggleActive");
+      const mcPriceToggle = await localStorage.getItem(
+        "chartMarketCapPriceToggleActive"
+      );
       if (mcPriceToggle !== null) {
         setIsMcPriceToggled(mcPriceToggle === "true");
       }
     };
 
     fetchToggle();
-
   }, []);
 
   const getBuySellMarks = async () => {
-      setHasGottenMarks(true);
-      const walletsToMark = [];
-      const tokenCreator = localStorage.getItem("chartTokenCreator");
-      const userWallet = localStorage.getItem("walletAddress");
-      if (tokenCreator !== "0") {
-        walletsToMark.push(tokenCreator);
-      }
-      if (userWallet != null) {
-        walletsToMark.push(userWallet);
-      }
-      // console.log("chart address", tokenaddress);
-      // console.log("walletsToMark", walletsToMark);
-      if (walletsToMark.length === 0) {
-        return;
-      }
-      try {
-        const response = await axios.post(
-          "https://streaming.bitquery.io/eap",
-          {
-            query: `query TradingView($token: String, $walletsToMark: [String!] = []) {
+    setHasGottenMarks(true);
+    const walletsToMark = [];
+    const tokenCreator = localStorage.getItem("chartTokenCreator");
+    const userWallet = localStorage.getItem("walletAddress");
+    if (tokenCreator !== "0") {
+      walletsToMark.push(tokenCreator);
+    }
+    if (userWallet != null) {
+      walletsToMark.push(userWallet);
+    }
+    // console.log("chart address", tokenaddress);
+    // console.log("walletsToMark", walletsToMark);
+    if (walletsToMark.length === 0) {
+      return;
+    }
+    try {
+      const response = await axios.post(
+        "https://streaming.bitquery.io/eap",
+        {
+          query: `query TradingView($token: String, $walletsToMark: [String!] = []) {
   Solana {
     creatorTransactions: DEXTradeByTokens(
       orderBy: {descending: Block_Time}
@@ -133,10 +152,10 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
   }
 }
 `,
-         variables: {
-          token: tokenaddress,
-          walletsToMark
-        },
+          variables: {
+            token: tokenaddress,
+            walletsToMark,
+          },
         },
         {
           headers: {
@@ -145,32 +164,55 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
           },
         }
       );
-    const creatorTransactions = response?.data?.data?.Solana?.creatorTransactions;
-    if (creatorTransactions?.length > 0) {
-      for (let i = 0; i < creatorTransactions.length; i++) {
-        const creatorTransaction = creatorTransactions[i];
-        const blockTime = new Date(creatorTransaction?.Block?.Time).getTime() / 1000;
-        const isBuy = creatorTransaction?.Trade?.Side?.Type === 'buy';
-        const tokenAmount = Number(creatorTransaction?.Trade?.Amount);
+      const creatorTransactions =
+        response?.data?.data?.Solana?.creatorTransactions;
+      if (creatorTransactions?.length > 0) {
+        for (let i = 0; i < creatorTransactions.length; i++) {
+          const creatorTransaction = creatorTransactions[i];
+          const blockTime =
+            new Date(creatorTransaction?.Block?.Time).getTime() / 1000;
+          const isBuy = creatorTransaction?.Trade?.Side?.Type === "buy";
+          const tokenAmount = Number(creatorTransaction?.Trade?.Amount);
 
-        const usdTraded = Number(creatorTransaction?.Trade?.Side?.AmountInUSD);
+          const usdTraded = Number(
+            creatorTransaction?.Trade?.Side?.AmountInUSD
+          );
 
-        const usdPrice = Number(creatorTransaction?.Trade?.PriceInUSD);
-        const usdSolPrice = isUsdSolToggled ? usdPrice : usdPrice / (solanaLivePrice != 0 ? solanaLivePrice : 1);
-        const atPrice = isMcPriceToggled ? usdSolPrice * supply : usdSolPrice;
+          const usdPrice = Number(creatorTransaction?.Trade?.PriceInUSD);
+          const usdSolPrice = isUsdSolToggled
+            ? usdPrice
+            : usdPrice / (solanaLivePrice != 0 ? solanaLivePrice : 1);
+          const atPrice = isMcPriceToggled ? usdSolPrice * supply : usdSolPrice;
 
-        if (creatorTransaction?.Transaction?.Signer === tokenCreator) {
-          await addMark(blockTime, isBuy, usdTraded, atPrice, tokenAmount, isUsdSolToggled, isMcPriceToggled, "dev");
-        } else if (creatorTransaction?.Transaction?.Signer === userWallet) {
-          await addMark(blockTime, isBuy,  usdTraded,atPrice, tokenAmount, isUsdSolToggled, isMcPriceToggled, "user");
+          if (creatorTransaction?.Transaction?.Signer === tokenCreator) {
+            await addMark(
+              blockTime,
+              isBuy,
+              usdTraded,
+              atPrice,
+              tokenAmount,
+              isUsdSolToggled,
+              isMcPriceToggled,
+              "dev"
+            );
+          } else if (creatorTransaction?.Transaction?.Signer === userWallet) {
+            await addMark(
+              blockTime,
+              isBuy,
+              usdTraded,
+              atPrice,
+              tokenAmount,
+              isUsdSolToggled,
+              isMcPriceToggled,
+              "user"
+            );
+          }
         }
       }
-    }
     } catch (error) {
       console.error("Error:", error.response?.data || error.message || error);
     }
   };
-  
 
   // Subscribe to array changes
   useEffect(() => {
@@ -192,7 +234,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
       setHasGottenMarks(false);
       setCurrentTokenAddress(tokenaddress);
     }
-  }, [tokenaddress])
+  }, [tokenaddress]);
 
   useEffect(() => {
     if (!chart) return;
@@ -201,18 +243,29 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
       resetLines();
       return;
     }
-    const nonPastBuyAverage = isUsdSolToggled ? 
-      currentTokenPnLData?.averageBuyPrice || null : currentTokenPnLData?.averageBuyPrice / currentTokenPnLData?.averageSolBuyPrice || null
-    const pastBuyAverage = isUsdSolToggled ? 
-      currentTokenPnLData?.pastAverageBuyPrice || 0 : currentTokenPnLData?.pastAverageBuyPricecurrentTokenPnLData?.pastAverageBuyPrice / currentTokenPnLData?.pastAverageBuySolPrice || 0
-    const buyLineAmount = nonPastBuyAverage != null ? nonPastBuyAverage : pastBuyAverage;
-    
-    const nonPastSellAverage = isUsdSolToggled ?
-      currentTokenPnLData?.averageSellPrice || null : currentTokenPnLData?.averageSellPrice / currentTokenPnLData?.averageSolSellPrice || null;
-    const pastSellAverage = isUsdSolToggled ?
-      currentTokenPnLData?.pastAverageSellPrice || 0 : currentTokenPnLData?.pastAverageSellPrice / currentTokenPnLData?.pastAverageSellSolPrice || 0
-    const sellLineAmount = nonPastSellAverage != null ?  nonPastSellAverage : pastSellAverage;
-   
+    const nonPastBuyAverage = isUsdSolToggled
+      ? currentTokenPnLData?.averageBuyPrice || null
+      : currentTokenPnLData?.averageBuyPrice /
+          currentTokenPnLData?.averageSolBuyPrice || null;
+    const pastBuyAverage = isUsdSolToggled
+      ? currentTokenPnLData?.pastAverageBuyPrice || 0
+      : currentTokenPnLData?.pastAverageBuyPricecurrentTokenPnLData
+          ?.pastAverageBuyPrice / currentTokenPnLData?.pastAverageBuySolPrice ||
+        0;
+    const buyLineAmount =
+      nonPastBuyAverage != null ? nonPastBuyAverage : pastBuyAverage;
+
+    const nonPastSellAverage = isUsdSolToggled
+      ? currentTokenPnLData?.averageSellPrice || null
+      : currentTokenPnLData?.averageSellPrice /
+          currentTokenPnLData?.averageSolSellPrice || null;
+    const pastSellAverage = isUsdSolToggled
+      ? currentTokenPnLData?.pastAverageSellPrice || 0
+      : currentTokenPnLData?.pastAverageSellPrice /
+          currentTokenPnLData?.pastAverageSellSolPrice || 0;
+    const sellLineAmount =
+      nonPastSellAverage != null ? nonPastSellAverage : pastSellAverage;
+
     if (buyLineAmount <= 0) {
       resetBuyLine();
     }
@@ -223,45 +276,56 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
       // Average Buy Sell
       if (buyLineAmount > 0 && buyPositionLineRef.current === null) {
         // console.log("creating buy line")
-        buyPositionLineRef.current = await chart.activeChart().createPositionLine();
+        buyPositionLineRef.current = await chart
+          .activeChart()
+          .createPositionLine();
       }
       if (buyPositionLineRef.current) {
         // console.log("modyfing buy line")
         buyPositionLineRef.current
-                  .setText("Current Average Cost Basis")
-                  .setQuantity("")
-                  .setPrice(convertPrice(Number(buyLineAmount)))
-                  .setQuantityBackgroundColor("#427A2C")
-                  .setQuantityBorderColor("#427A2C")
-                  .setBodyBorderColor("#FFFFFF00")
-                  .setBodyTextColor("#427A2C")
-                  .setBodyBackgroundColor("#FFFFFF00")
-                  .setExtendLeft(true)
-                  .setLineStyle(2)
-                  .setLineLength(0)
-                  .setLineColor("#427A2C");
+          .setText("Current Average Cost Basis")
+          .setQuantity("")
+          .setPrice(convertPrice(Number(buyLineAmount)))
+          .setQuantityBackgroundColor("#427A2C")
+          .setQuantityBorderColor("#427A2C")
+          .setBodyBorderColor("#FFFFFF00")
+          .setBodyTextColor("#427A2C")
+          .setBodyBackgroundColor("#FFFFFF00")
+          .setExtendLeft(true)
+          .setLineStyle(2)
+          .setLineLength(0)
+          .setLineColor("#427A2C");
       }
       if (sellLineAmount > 0 && sellPositionLineRef.current === null) {
-        sellPositionLineRef.current = await chart.activeChart().createPositionLine();
+        sellPositionLineRef.current = await chart
+          .activeChart()
+          .createPositionLine();
       }
       if (sellPositionLineRef.current) {
         sellPositionLineRef.current
-                .setText("Current Average Exit Price")
-                .setQuantity("")
-                .setPrice(convertPrice(Number(sellLineAmount)))
-                .setQuantityBackgroundColor("#AB5039")
-                .setQuantityBorderColor("#AB5039")
-                .setBodyBorderColor("#FFFFFF00")
-                .setBodyTextColor("#AB5039")
-                .setBodyBackgroundColor("#FFFFFF00")
-                .setExtendLeft(true)
-                .setLineStyle(2)
-                .setLineLength(0)
-                .setLineColor("#AB5039");
+          .setText("Current Average Exit Price")
+          .setQuantity("")
+          .setPrice(convertPrice(Number(sellLineAmount)))
+          .setQuantityBackgroundColor("#AB5039")
+          .setQuantityBorderColor("#AB5039")
+          .setBodyBorderColor("#FFFFFF00")
+          .setBodyTextColor("#AB5039")
+          .setBodyBackgroundColor("#FFFFFF00")
+          .setExtendLeft(true)
+          .setLineStyle(2)
+          .setLineLength(0)
+          .setLineColor("#AB5039");
       }
     };
     createChartLines();
-  }, [currentTokenPnLData, chartReady, isUsdSolToggled, isMcPriceToggled, value100SellLine, currentTokenAddress])
+  }, [
+    currentTokenPnLData,
+    chartReady,
+    isUsdSolToggled,
+    isMcPriceToggled,
+    value100SellLine,
+    currentTokenAddress,
+  ]);
 
   // console.log("TVChartContainer called.");
   useEffect(() => {
@@ -274,16 +338,16 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
       symbol: tokenSymbol,
       datafeed: Datafeed,
       custom_formatters: {
-          priceFormatterFactory: (symbolInfo, minTick) => {
-              return {
-                format: (price, signPositive) => {
-                  if (typeof price !== 'number' || isNaN(price)) return '';
-                  return price >= 1 || price <= -1
-                    ? humanReadableFormatWithNoDollar(price, 2)
-                    : formatDecimal(price);
-                },
-              };
-          },
+        priceFormatterFactory: (symbolInfo, minTick) => {
+          return {
+            format: (price, signPositive) => {
+              if (typeof price !== "number" || isNaN(price)) return "";
+              return price >= 1 || price <= -1
+                ? humanReadableFormatWithNoDollar(price, 2)
+                : formatDecimal(price);
+            },
+          };
+        },
       },
       tokenAddress: tokenaddress,
       interval: chartResolution,
@@ -294,10 +358,17 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
         "header_saveload",
         "use_localstorage_for_settings",
         "time_scale_controls",
-        "popup_hints"
+        "popup_hints",
       ],
       toolbar_bg: "#08080E",
-      enabled_features: ["study_templates", "seconds_resolution", "show_marks_on_series", "cropped_tick_marks", "end_of_period_timescale_marks", "two_character_bar_marks_labels"],
+      enabled_features: [
+        "study_templates",
+        "seconds_resolution",
+        "show_marks_on_series",
+        "cropped_tick_marks",
+        "end_of_period_timescale_marks",
+        "two_character_bar_marks_labels",
+      ],
       charts_storage_url: "https://saveload.tradingview.com",
       charts_storage_api_version: "1.1",
       client_id: "tradingview.com",
@@ -331,28 +402,30 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
     tvWidget.onChartReady(async () => {
       setChartReady(true);
       window.chartReady = true;
-      // console.log("Chart has loaded!");  
+      // console.log("Chart has loaded!");
       const priceScale = tvWidget
         .activeChart()
         .getPanes()[0]
         .getMainSourcePriceScale();
       priceScale.setAutoScale(true);
-      tvWidget.activeChart().onIntervalChanged().subscribe(null, async (interval, timeframeObj) => {
-        setChartResolution(interval);
-        localStorage.setItem("chartResolution", interval);
-        clearSellItems();
-        clearChunk();
-      });
+      tvWidget
+        .activeChart()
+        .onIntervalChanged()
+        .subscribe(null, async (interval, timeframeObj) => {
+          setChartResolution(interval);
+          localStorage.setItem("chartResolution", interval);
+          clearSellItems();
+          clearChunk();
+        });
     });
     // Add custom toggle buttons
     tvWidget.headerReady().then(() => {
       // USD/SOL Toggle Button
       const usdSolButton = tvWidget.createButton();
       usdSolButton.setAttribute("title", "Toggle between USD/SOL");
-      usdSolButton.innerHTML = isUsdSolToggled ? 
-        '<span style="color: #1E90FF">USD</span>/<span style="color: #808080">SOL</span>'
-        : 
-        '<span style="color: #808080">USD</span>/<span style="color: #1E90FF">SOL</span>';    
+      usdSolButton.innerHTML = isUsdSolToggled
+        ? '<span style="color: #1E90FF">USD</span>/<span style="color: #808080">SOL</span>'
+        : '<span style="color: #808080">USD</span>/<span style="color: #1E90FF">SOL</span>';
       usdSolButton.addEventListener("click", () => {
         resetLines();
         clearChunk();
@@ -360,10 +433,9 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
         resetResolutionOffsets();
         setIsUsdSolToggled((prev) => {
           const newState = !prev;
-          usdSolButton.innerHTML = newState ? 
-            '<span style="color: #1E90FF">USD</span>/<span style="color: #808080">SOL</span>'
-            : 
-            '<span style="color: #808080">USD</span>/<span style="color: #1E90FF">SOL</span>';
+          usdSolButton.innerHTML = newState
+            ? '<span style="color: #1E90FF">USD</span>/<span style="color: #808080">SOL</span>'
+            : '<span style="color: #808080">USD</span>/<span style="color: #1E90FF">SOL</span>';
           localStorage.setItem("chartUsdSolToggleActive", newState);
           return newState;
         });
@@ -371,10 +443,9 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
 
       const mcUsdButton = tvWidget.createButton();
       mcUsdButton.setAttribute("title", "Toggle between MarketCap and Price");
-      mcUsdButton.innerHTML = isMcPriceToggled ? 
-      '<span style="color: #1E90FF">MarketCap</span>/<span style="color: #808080">Price</span>'
-      : 
-      '<span style="color: #808080">MarketCap</span>/<span style="color: #1E90FF">Price</span>';     
+      mcUsdButton.innerHTML = isMcPriceToggled
+        ? '<span style="color: #1E90FF">MarketCap</span>/<span style="color: #808080">Price</span>'
+        : '<span style="color: #808080">MarketCap</span>/<span style="color: #1E90FF">Price</span>';
       mcUsdButton.addEventListener("click", () => {
         resetLines();
         clearChunk();
@@ -382,10 +453,9 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
         clearSellItems();
         setIsMcPriceToggled((prev) => {
           const newState = !prev;
-          mcUsdButton.innerHTML = newState ? 
-          '<span style="color: #1E90FF">MarketCap</span>/<span style="color: #808080">Price</span>'
-          : 
-          '<span style="color: #808080">MarketCap</span>/<span style="color: #1E90FF">Price</span>';
+          mcUsdButton.innerHTML = newState
+            ? '<span style="color: #1E90FF">MarketCap</span>/<span style="color: #808080">Price</span>'
+            : '<span style="color: #808080">MarketCap</span>/<span style="color: #1E90FF">Price</span>';
           localStorage.setItem("chartMarketCapPriceToggleActive", newState);
           return newState;
         });
@@ -400,7 +470,7 @@ const TVChartContainer = ({ tokenSymbol, tokenaddress, currentTokenPnLData, sola
       // Unsubscribe from WebSocket when component unmounts
       unsubscribeFromWebSocket();
     };
-  }, [tokenSymbol, tokenaddress, isUsdSolToggled, isMcPriceToggled]);
+  }, [tokenaddress, isUsdSolToggled, isMcPriceToggled]);
 
   return <div ref={chartContainerRef} className="h-full w-full bg-[#08080E]" />;
 };
