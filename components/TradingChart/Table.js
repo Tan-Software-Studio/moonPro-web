@@ -114,7 +114,6 @@ const Table = ({
     dispatch(setActiveChartToken({ symbol: data?.symbol, img: data?.img }));
     router.push(`/meme/${data?.token}`);
     localStorage.setItem("chartTokenAddress", data?.token);
-    setIsOpen(false);
   };
 
   useEffect(() => {
@@ -1492,7 +1491,7 @@ const Table = ({
                               <div className="flex items-center">
                                 <div className="w-7 h-7 flex-shrink-0 group-hover/image:opacity-80 relative rounded-[4px]">
                                   {data?.img ? (
-                                    <Image
+                                    <img
                                       src={data?.img}
                                       alt={data?.symbol}
                                       width={28}
