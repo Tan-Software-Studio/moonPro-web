@@ -161,13 +161,13 @@ const RightModalOpenSetting = ({
         ...pre,
         [presist]: {
           buy: {
-            slippage: 40,
-            priorityFee: 0.001,
+            slippage: 30,
+            priorityFee: 0.01,
             mev: false,
           },
           sell: {
-            slippage: 40,
-            priorityFee: 0.001,
+            slippage: 30,
+            priorityFee: 0.01,
             mev: false,
           },
         },
@@ -176,8 +176,8 @@ const RightModalOpenSetting = ({
       dispatch(setPreSetOrderSetting(update));
       return update;
     });
-    setSlippageForDisplay(40);
-    setPriorityForDisplay(0.001);
+    setSlippageForDisplay(30);
+    setPriorityForDisplay(0.01);
   }
 
   // save function
