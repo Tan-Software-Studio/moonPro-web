@@ -9,6 +9,31 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "wavepro-core-89e1c8f57054.herokuapp.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "nexastreaming.wavebot.app",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "nexauserbackend.wavebot.app",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "moon-bk-9e55cf86c25b.herokuapp.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "192.168.29.154",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "logo.moralis.io",
         pathname: "/**",
       },

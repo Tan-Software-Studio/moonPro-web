@@ -13,9 +13,7 @@ import {
   DH,
   H10,
   MC,
-  nftProfileImage,
   pumpfun,
-  sniper,
   telegrams,
   twitter,
   Users,
@@ -24,16 +22,14 @@ import {
 } from "@/app/Images";
 import Image from "next/image";
 import ChartComponent from "./ChartComponent";
-import {
-  fetchSolanaNativeBalance,
-  setChartSymbolImage,
-} from "@/app/redux/states";
 import Tooltip from "@/components/common/Tooltip/ToolTip.jsx";
 import { IoSearchSharp } from "react-icons/io5";
 import RoundProgressBar from "@/components/RoundProgressBar/RoundProgressBar";
 import SingleLineProgressBar from "@/components/SingleLineProgressBar/SingleLineProgressBar";
 import NoData from "../NoData/noData";
-const BASE_URL_MOON_STREAM = process.env.NEXT_PUBLIC_BASE_URLS;
+import MemescopeImages from "./MemescopeImages";
+import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
+
 const MscopePumpTable = ({
   MemscopeData,
   selectedMetric,
@@ -56,8 +52,8 @@ const MscopePumpTable = ({
   capsuleImg,
   isChartHide,
   dynamicImg,
+  url,
 }) => {
-  // console.log("🚀 ~ MscopePumpTable ~ searchbar:-->", showCircle);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoverRow, sethoverRow] = useState(false);
   // solana live price
@@ -151,8 +147,7 @@ const MscopePumpTable = ({
 
   const [copied, setCopied] = useState(false);
   function navigateToChartSreen(block) {
-    localStorage.setItem("chartTokenImg", block?.img);
-    dispatch(setChartSymbolImage(block?.img));
+    dispatch(setActiveChartToken({ symbol: block?.symbol, img: block?.img }));
   }
   useEffect(() => {
     const interval = setInterval(() => {
@@ -180,7 +175,7 @@ const MscopePumpTable = ({
             {MemscopeData.map((block, index) => (
               <Link
                 key={index + 1}
-                href={`/tradingview/solana?tokenaddress=${block?.address}&symbol=${block?.symbol}`}
+                href={`/meme/${block?.address}`}
               >
                 <div
                   className={`cursor-pointer border-b md:border-b md:border-l-0 md:border-t-0 border-[#26262e] bg-[#08080E] hover:bg-[#6e6e6e1a] ease-in-out duration-200`}
@@ -197,13 +192,12 @@ const MscopePumpTable = ({
                             capsuleImg={capsuleImg}
                             maxValue={100}
                             trailColor="#7b8085"
-                            progressColor={`${
-                              !progerssBar
-                                ? barColor
-                                : barColor === "#cfc328"
+                            progressColor={`${!progerssBar
+                              ? barColor
+                              : barColor === "#cfc328"
                                 ? "#cfc328 "
                                 : "#7b8085"
-                            }`}
+                              }`}
                           />
                         ) : (
                           <SquareProgressBar
@@ -211,13 +205,12 @@ const MscopePumpTable = ({
                             capsuleImg={capsuleImg}
                             maxValue={100}
                             trailColor="#7b8085"
-                            progressColor={`${
-                              !progerssBar
-                                ? barColor
-                                : barColor === "#cfc328"
+                            progressColor={`${!progerssBar
+                              ? barColor
+                              : barColor === "#cfc328"
                                 ? "#cfc328 "
                                 : "#7b8085"
-                            }`}
+                              }`}
                           />
                         )}
                         {progerssBar ? (
@@ -229,33 +222,13 @@ const MscopePumpTable = ({
                             />
                           </div>
                         ) : null}
-                        {dynamicImg ? (
-                          block?.img ? (
-                            <img
-                              key={index + 1}
-                              src={`${BASE_URL_MOON_STREAM}memescope/${block?.address}.webp`}
-                              className={`absolute inset-0 m-auto w-[64px] h-[64px] object-cover ${
-                                showCircle ? "rounded-full" : ""
-                              }`}
-                              loading="lazy"
-                              onError={(e) => {
-                                e.currentTarget.onerror = null;
-                                e.currentTarget.src =
-                                  block?.img || nftProfileImage;
-                              }}
-                            />
-                          ) : null
-                        ) : (
-                          <img
-                            key={index + 1}
-                            src={block?.img || nftProfileImage}
-                            alt="Profile"
-                            className={`absolute inset-0 m-auto w-[64px] h-[64px] object-cover ${
-                              showCircle ? "rounded-full" : ""
-                            }`}
-                            loading="lazy"
-                          />
-                        )}
+                        <MemescopeImages
+                          showCircle={showCircle}
+                          index={index}
+                          address={block?.address}
+                          symbol={block?.symbol}
+                          base_url={url}
+                        />
                       </div>
                     </div>
 
@@ -381,11 +354,10 @@ const MscopePumpTable = ({
                           <div className="w-[90px] h-[60px] relative flex items-center justify-center">
                             {isChartHide && (
                               <div
-                                className={`${
-                                  hoverRow === index
-                                    ? "opacity-40 absolute inset-0 flex items-center justify-center"
-                                    : "opacity-100"
-                                } `}
+                                className={`${hoverRow === index
+                                  ? "opacity-40 absolute inset-0 flex items-center justify-center"
+                                  : "opacity-100"
+                                  } `}
                               >
                                 <ChartComponent
                                   candlesticks={block?.candlesticks}
@@ -395,16 +367,15 @@ const MscopePumpTable = ({
                             {hoverRow === index && (
                               <>
                                 <div
-                                  className={`absolute ${
-                                    index == 0 ? "-top-2" : "-top-12"
-                                  } right-44 rounded-md text-[#21CB6B] text-xs font-light border-[1px]  border-[#333333] bg-[#191919]  px-4 py-1 flex items-center justify-between !z-[9] w-fit whitespace-nowrap transition-all duration-100 ease-in-out`}
+                                  className={`absolute ${index == 0 ? "-top-2" : "-top-12"
+                                    } right-44 rounded-md text-[#21CB6B] text-xs font-light border-[1px]  border-[#333333] bg-[#191919]  px-4 py-1 flex items-center justify-between !z-[9] w-fit whitespace-nowrap transition-all duration-100 ease-in-out`}
                                 >
                                   <p>Bonding : </p>
                                   {block?.bonding_curv >= 100
                                     ? "100%"
                                     : block?.bonding_curv
-                                    ? `${block?.bonding_curv?.toFixed(2)} %`
-                                    : "0%"}
+                                      ? `${block?.bonding_curv?.toFixed(2)} %`
+                                      : "0%"}
                                 </div>
                                 <button
                                   className="absolute  w-fit whitespace-nowrap rounded-md bg-[#1d73fc] hover:bg-[#438bff] text-[#111111] font-bold py-1 px-5 text-xs transition-all duration-100 ease-in-out"
@@ -415,7 +386,7 @@ const MscopePumpTable = ({
                                       block?.address,
                                       quickBuy,
                                       activeSolWalletAddress?.wallet ||
-                                        solWalletAddress,
+                                      solWalletAddress,
                                       activeSolWalletAddress?.balance || 0,
                                       e,
                                       block?.programAddress
@@ -432,11 +403,10 @@ const MscopePumpTable = ({
                                   }}
                                 >
                                   {quickBuy > 0
-                                    ? `${
-                                        quickBuy?.length > 6
-                                          ? `${quickBuy.slice(0, 7)}...`
-                                          : `${quickBuy} SOL`
-                                      }`
+                                    ? `${quickBuy?.length > 6
+                                      ? `${quickBuy.slice(0, 7)}...`
+                                      : `${quickBuy} SOL`
+                                    }`
                                     : "Buy"}
                                 </button>
                               </>
@@ -449,9 +419,8 @@ const MscopePumpTable = ({
                         <div className="flex gap-[12px] order-2">
                           {showHolders ? (
                             <Tooltip
-                              body={`Number of Holders: ${
-                                block?.holders ? block.holders : 0
-                              }`}
+                              body={`Number of Holders: ${block?.holders ? block.holders : 0
+                                }`}
                             >
                               <div className="flex items-center gap-[4px]">
                                 <Image src={Users} alt="user" />
@@ -464,21 +433,20 @@ const MscopePumpTable = ({
 
                           {showVolume ? (
                             <Tooltip
-                              body={`Volume: ${
-                                block?.volume
-                                  ? humanReadableFormat(
-                                      block?.volume.toFixed(2)
-                                    )
-                                  : 0
-                              }`}
+                              body={`Volume: ${block?.volume
+                                ? humanReadableFormat(
+                                  block?.volume.toFixed(2)
+                                )
+                                : 0
+                                }`}
                             >
                               <div className="flex items-center gap-[4px]">
                                 <Image src={Vol} alt="volume" />
                                 <div className="text-[#F1F0F0] text-xs md:text-[12px] font-400">
                                   {block?.volume
                                     ? humanReadableFormat(
-                                        block?.volume.toFixed(2)
-                                      )
+                                      block?.volume.toFixed(2)
+                                    )
                                     : 0}{" "}
                                 </div>
                               </div>
@@ -487,9 +455,8 @@ const MscopePumpTable = ({
 
                           {showMarketCap ? (
                             <Tooltip
-                              body={`Market Cap: ${
-                                block?.MKC ? humanReadableFormat(block?.MKC) : 0
-                              }`}
+                              body={`Market Cap: ${block?.MKC ? humanReadableFormat(block?.MKC) : 0
+                                }`}
                             >
                               <div className="flex items-center gap-[4px]">
                                 <Image

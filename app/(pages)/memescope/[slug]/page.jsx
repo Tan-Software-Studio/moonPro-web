@@ -43,7 +43,7 @@ import {
   newCreationFilterData,
   resetNewCreationDataFilters,
 } from "@/components/memescope/NewCreationDataFilter";
-
+const BASE_URL_MOON_STREAM = process.env.NEXT_PUBLIC_BASE_URLS;
 const Memescope = () => {
   const { t } = useTranslation();
   const memescopePage = t("memescope");
@@ -153,8 +153,8 @@ const Memescope = () => {
       ? aboutSearchedData
       : filteredAboutGraduatData
     : hasAboutSearch
-    ? aboutSearchedData
-    : Graduatedata;
+      ? aboutSearchedData
+      : Graduatedata;
 
   // =======*=*= All graduated data filter ==========//
   const Graduateddata = Object.values(
@@ -218,8 +218,8 @@ const Memescope = () => {
       ? graduatedSearchData
       : filteredGraduatedData
     : hasGraduateSearch
-    ? graduatedSearchData
-    : GraduateddataSortedData;
+      ? graduatedSearchData
+      : GraduateddataSortedData;
 
   // == new creation data filter == \\
   const NewData = Object.values(
@@ -280,8 +280,8 @@ const Memescope = () => {
       ? searchedData
       : filteredNewCreationData
     : hasSearch
-    ? searchedData
-    : NewData;
+      ? searchedData
+      : NewData;
 
   const handleSidebarToggle = (id) => {
     setOpenDropdown((prev) => (prev === id ? null : id));
@@ -349,11 +349,10 @@ const Memescope = () => {
     <>
       <div className="relative">
         <div
-          className={`${
-            pathname === "/memescope"
-              ? "sticky z-10 top-0"
-              : "sticky z-10 top-[50px]"
-          }  `}
+          className={`${pathname === "/memescope"
+            ? "sticky z-10 top-0"
+            : "sticky z-10 top-[50px]"
+            }  `}
         >
           <AllPageHeader
             HeaderData={HeaderData}
@@ -381,9 +380,8 @@ const Memescope = () => {
         <div className={`grid xl:grid-cols-3 w-full  `}>
           {/* box 1 */}
           <div
-            className={` ${
-              NewData.length === 0 ? `border-r ${borderColor} ` : ""
-            }`}
+            className={` ${NewData.length === 0 ? `border-r ${borderColor} ` : ""
+              }`}
           >
             <div
               className={`md:flex border-r ${borderColor} justify-between items-center w-full sticky px-3 sm:px-3 md:px-[24px] md:py-[12px] py-3 border-b`}
@@ -407,27 +405,24 @@ const Memescope = () => {
                   >
                     <button
                       onClick={() => setSelectedScope(1)}
-                      className={`${
-                        selectedScope === 1 &&
+                      className={`${selectedScope === 1 &&
                         "bg-[#1F73FC] first-of-type:rounded-l-md"
-                      } py-2 px-3 text-xs text-[#ffffff] hover:bg-[#1F73FC] border-r ${borderColor}`}
+                        } py-2 px-3 text-xs text-[#ffffff] hover:bg-[#1F73FC] border-r ${borderColor}`}
                     >
                       {memescopePage?.tableheaders?.newcreations}
                     </button>
                     <button
                       onClick={() => setSelectedScope(2)}
-                      className={`${
-                        selectedScope === 2 && "bg-[#1F73FC]"
-                      } py-2 px-3 text-xs text-[#ffffff] hover:bg-[#1F73FC] border-r ${borderColor}`}
+                      className={`${selectedScope === 2 && "bg-[#1F73FC]"
+                        } py-2 px-3 text-xs text-[#ffffff] hover:bg-[#1F73FC] border-r ${borderColor}`}
                     >
                       {memescopePage?.tableheaders?.abouttogra}
                     </button>
                     <button
                       onClick={() => setSelectedScope(3)}
-                      className={`${
-                        selectedScope === 3 &&
+                      className={`${selectedScope === 3 &&
                         "bg-[#1F73FC] last-of-type:rounded-r-md"
-                      } py-2 px-3 text-xs text-[#ffffff] hover:bg-[#1F73FC]`}
+                        } py-2 px-3 text-xs text-[#ffffff] hover:bg-[#1F73FC]`}
                     >
                       {memescopePage?.tableheaders?.graduated}
                     </button>
@@ -469,9 +464,8 @@ const Memescope = () => {
 
             {/* Box body */}
             <div
-              className={`${
-                selectedScope === 1 ? "block " : "hidden xl:block"
-              }`}
+              className={`${selectedScope === 1 ? "block " : "hidden xl:block"
+                }`}
             >
               <MscopePumpTable
                 MemscopeData={newCreationDataToShow}
@@ -494,15 +488,15 @@ const Memescope = () => {
                 capsuleImg={blue_pump}
                 isChartHide={isChartHide}
                 dynamicImg={false}
+                url={`${BASE_URL_MOON_STREAM}newpump`}
               />
             </div>
           </div>
 
           {/* 2 box */}
           <div
-            className={` ${
-              Graduatedata.length === 0 ? `border-r ${borderColor}` : ""
-            }`}
+            className={` ${Graduatedata.length === 0 ? `border-r ${borderColor}` : ""
+              }`}
           >
             {/* Box header */}
             <div
@@ -545,9 +539,8 @@ const Memescope = () => {
             </div>
             {/* Box body */}
             <div
-              className={`${
-                selectedScope === 2 ? "block " : "hidden xl:block"
-              }`}
+              className={`${selectedScope === 2 ? "block " : "hidden xl:block"
+                }`}
             >
               <MscopePumpTable
                 MemscopeData={aboutDataToShow}
@@ -570,17 +563,17 @@ const Memescope = () => {
                 capsuleImg={green_pump}
                 isChartHide={isChartHide}
                 dynamicImg={true}
+                url={`${BASE_URL_MOON_STREAM}memescope`}
               />
             </div>
           </div>
 
           {/* 3 box */}
           <div
-            className={` ${
-              Graduateddata.length === 0
-                ? `border-r ${borderColor} h-screen`
-                : ""
-            }`}
+            className={` ${Graduateddata.length === 0
+              ? `border-r ${borderColor} h-screen`
+              : ""
+              }`}
           >
             {/* Box header */}
             <div
@@ -624,9 +617,8 @@ const Memescope = () => {
             </div>
             {/* Box body */}
             <div
-              className={`${
-                selectedScope === 3 ? "block " : "hidden xl:block"
-              }`}
+              className={`${selectedScope === 3 ? "block " : "hidden xl:block"
+                }`}
             >
               <MscopePumpTable
                 MemscopeData={graduateDataToShow}
@@ -649,6 +641,7 @@ const Memescope = () => {
                 capsuleImg={yellow_pump}
                 isChartHide={isChartHide}
                 dynamicImg={true}
+                url={`${BASE_URL_MOON_STREAM}memescope`}
               />
             </div>
           </div>

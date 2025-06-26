@@ -1,16 +1,17 @@
 "use client";
 import { React, useState } from "react";
 import Image from "next/image";
-import toast from "react-hot-toast";
 import { BiSolidCopy } from "react-icons/bi";
 import { IoMdDoneAll } from "react-icons/io";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LoaderPopup from "../LoaderPopup/LoaderPopup";
 import { useRouter } from "next/navigation";
 import { showToaster } from "@/utils/toaster/toaster.style";
+import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
 
 const HolderDataTable = ({ data, img, loading }) => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const bigLoader = useSelector((state) => state?.AllStatesData?.bigLoader);
   const borderColor = useSelector(
     (state) => state?.AllthemeColorData?.borderColor
@@ -33,8 +34,9 @@ const HolderDataTable = ({ data, img, loading }) => {
       });
   };
   async function redirectHandler(address, symbol) {
-    await router.push(
-      `/tradingview/solana?tokenaddress=${address}&symbol=${symbol}`
+    dispatch(setActiveChartToken({ symbol: symbol, img: null }));
+    router.push(
+      `/meme/${address}`
     );
   }
 

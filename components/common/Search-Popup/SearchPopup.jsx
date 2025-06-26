@@ -3,12 +3,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Clear, solana } from "@/app/Images";
 import Image from "next/image";
-import { setChartSymbolImage, setIsSearchPopup } from "@/app/redux/states";
+import { setIsSearchPopup } from "@/app/redux/states";
 import { useDispatch } from "react-redux";
 import SearchResultData from "./SearchResultData";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
 
 const SearchPopup = () => {
   const [searchData, setsearchData] = useState(false);
@@ -17,7 +18,6 @@ const SearchPopup = () => {
   const [searchLoader, setSearchLoader] = useState(false);
   const [notFoundMessage, setNotFoundMessage] = useState("");
   const [resentTokens, setResentTokens] = useState([]);
-  const navigate = useRouter();
 
   const popupRef = useRef(null);
   const debounceRef = useRef(null);
@@ -93,9 +93,14 @@ const SearchPopup = () => {
   }, []);
 
   function navigateToChartView(e) {
-    localStorage.setItem("chartTokenImg", e?.img);
     dispatch(setIsSearchPopup(false));
-    dispatch(setChartSymbolImage(e?.img));
+    dispatch(
+      setActiveChartToken({
+        symbol: e?.Trade?.Currency?.Symbol,
+        img: e?.img || e?.dexImg,
+        pairAddress: e?.Trade?.Market?.MarketAddress,
+      })
+    );
     localStorage.setItem("chartTokenAddress", e?.Trade?.Currency?.MintAddress);
   }
   return (
@@ -104,7 +109,10 @@ const SearchPopup = () => {
         className={`h-svh bg-black bg-opacity-60  w-full fixed top-0 left-0 right0 z-[999] duration-75 transition-all ease-in-out block cursor-pointer`}
       ></div>
       <div className="fixed inset-0 flex items-center justify-center z-[999999] h-[100dvh] w-full">
-        <div className="overflow-y-auto md:w-auto w-full visibleScroll" ref={popupRef}>
+        <div
+          className="overflow-y-auto md:w-auto w-full visibleScroll"
+          ref={popupRef}
+        >
           <div className="relative z-[999999] w-full flex items-center justify-center">
             <div className="mt-3 bg-[#08080e] md:mx-5 w-[90%] sm:w-[80%] md:w-[40rem] lg:w-[56rem] xl:w-[58rem] ">
               {/* Searchbar */}
@@ -163,11 +171,7 @@ const SearchPopup = () => {
                     {resentTokens.map((recentData, index) => (
                       <Link
                         key={index}
-                        href={`/tradingview/solana?tokenaddress=${
-                          recentData?.Trade?.Currency?.MintAddress
-                        }&symbol=${
-                          recentData?.Trade?.Currency?.Symbol || "unknown"
-                        }&pair=${recentData?.Trade?.Market?.MarketAddress}`}
+                        href={`/meme/${recentData?.Trade?.Currency?.MintAddress}`}
                       >
                         <button
                           onClick={() => navigateToChartView(recentData)}

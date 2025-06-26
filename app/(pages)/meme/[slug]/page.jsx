@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useSearchParams } from "next/navigation";
 import { setselectToken, setselectTokenLogo } from "@/app/redux/CommonUiData";
 import Table from "@/components/TradingChart/Table";
 import { solana } from "@/app/Images";
@@ -13,7 +12,6 @@ import {
   capitalizeFirstLetter,
   formatNumber,
 } from "@/utils/basicFunctions";
-import TVChartContainer from "@/components/TradingChart/TradingChart";
 import TokenDetails from "@/components/common/tradingview/TokenDetails";
 import UserPnL from "@/components/common/tradingview/UserPnL";
 import TradingStats from "@/components/common/tradingview/TradingStats";
@@ -22,7 +20,7 @@ import TokenInfo from "@/components/common/tradingview/TokenInfo";
 import DataSecurity from "@/components/common/tradingview/DataSecurity";
 import { useTranslation } from "react-i18next";
 import { humanReadableFormat } from "@/utils/calculation";
-import { fetchChartAllData } from "@/app/redux/chartDataSlice/chartData.slice";
+import { fetchChartAllData, resetChartTokenState } from "@/app/redux/chartDataSlice/chartData.slice";
 import SharePnLModal from "@/components/common/tradingview/SharePnLModal";
 import axios from "axios";
 import { resetResolutionOffsets } from "@/utils/tradingViewChartServices/getBars";
@@ -31,7 +29,7 @@ import ResizableChartContainer from "@/components/common/tradingview/ResizableCh
 import AutoRefreshOnInactivity from "@/utils/AutoRefreshOnInactivity";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
-const Tradingview = () => {
+const Tradingview = ({ params }) => {
   const { t } = useTranslation();
   const tragindViewPage = t("tragindViewPage");
   const tredingPage = t("tredingPage");
@@ -44,10 +42,7 @@ const Tradingview = () => {
   )?.Trade?.Currency?.Decimals;
   const [copied, setCopied] = useState(false);
   const dispatch = useDispatch();
-  const searchParams = useSearchParams();
-  const tokenaddress = searchParams.get("tokenaddress");
-  const tokenSymbol = searchParams.get("symbol");
-  let pairAddress = searchParams?.get("pair") || null;
+  const tokenaddress = params?.slug;
   const containerRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const scrollableDivRef4 = useRef(null);
@@ -79,9 +74,8 @@ const Tradingview = () => {
     (state) => state?.userData?.activeSolanaWallet
   );
 
-  // token image
-  const tokenImage = useSelector(
-    (state) => state?.AllStatesData?.chartSymbolImage
+  const chartTokenDataState = useSelector(
+    (state) => state?.allCharTokenData?.activeChartToken
   );
 
   // chart data from redux
@@ -130,8 +124,7 @@ const Tradingview = () => {
           }
 
           const response = await axios({
-            url: `${BASE_URL}transactions/getSingleTokenlastAction/${tokenaddress}/${activeSolWalletAddress?.wallet
-              }`,
+            url: `${BASE_URL}transactions/getSingleTokenlastAction/${tokenaddress}/${activeSolWalletAddress?.wallet}`,
             method: "get",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -468,7 +461,7 @@ const Tradingview = () => {
       value: Number(chartTokenData?.TopHolders),
     },
     {
-      label: `Pooled ${tokenSymbol}`,
+      label: `Pooled ${chartTokenDataState?.symbol || chartTokenData?.symbol || "Unknown"}`,
       value: `${numberFormated(
         chartTokenData?.Pooled_Base || 0
       )} | ${humanReadableFormat(
@@ -489,8 +482,9 @@ const Tradingview = () => {
   useEffect(() => {
     if (tokenaddress) {
       setDataLoaderForChart(true);
+      dispatch(resetChartTokenState());
       dispatch(
-        fetchChartAllData({ tokenaddress, pairAddress, setDataLoaderForChart })
+        fetchChartAllData({ tokenaddress, pairAddress: chartTokenDataState?.pairAddress, setDataLoaderForChart })
       );
     }
   }, [tokenaddress]);
@@ -500,18 +494,23 @@ const Tradingview = () => {
   );
 
   useEffect(() => {
-    document.title = `${tokenSymbol} | Nexa`;
-  }, [tokenSymbol]);
+    document.title = `${chartTokenDataState?.symbol || chartTokenData?.symbol || "Unknown"} | Nexa`;
+  }, [chartTokenDataState?.symbol]);
 
   const currentTokenDevHoldingData = {
-    tokenImage: tokenImage,
+    tokenImage: chartTokenData?.img,
     tokenMintAddress: tokenaddress,
-    tokenSymbol: tokenSymbol,
+    tokenSymbol: chartTokenDataState?.symbol || chartTokenData?.symbol || "Unknown",
     tokenMarketCap: tokenDetailsMarketCap || 0,
     tokenLiquidity: chartTokenData?.Liqudity || 0,
-    oneHourVolume: formatNumber(chartTokenData?.buy_volume_1h + chartTokenData?.sell_volume_1h, false, true) || 0,
-    migrated: chartTokenData?.bondingCurveProgress >= 100
-  }
+    oneHourVolume:
+      formatNumber(
+        chartTokenData?.buy_volume_1h + chartTokenData?.sell_volume_1h,
+        false,
+        true
+      ) || 0,
+    migrated: chartTokenData?.bondingCurveProgress >= 100,
+  };
 
   return (
     <div
@@ -546,26 +545,24 @@ const Tradingview = () => {
             <>
               <div className="md:mx-0 mx-2">
                 <TokenDetails
-                  tokenSymbol={tokenSymbol}
+                  chartTokenDataState={chartTokenDataState}
                   tokenaddress={tokenaddress}
                   copied={copied}
                   handleCopy={handleCopy}
                   TokenDetailsNumberData={TokenDetailsNumberData}
                   tokenDetailsMarketCap={tokenDetailsMarketCap}
                   chartTokenData={chartTokenData}
-                  walletAddress={
-                    activeSolWalletAddress?.wallet
-                  }
+                  walletAddress={activeSolWalletAddress?.wallet}
                   pairAddress={latestTradesData?.chartData?.pairaddress}
-                  tokenImage={tokenImage}
                   setIsSharePnLModalActive={setIsSharePnLModalActive}
                   currentTokenPnLData={currentTokenPnLData}
                 />
               </div>
 
-              <ResizableChartContainer 
+              <ResizableChartContainer
+                chartTokenDataState={chartTokenDataState}
                 isSmallScreen={isSmallScreen}
-                tokenSymbol={tokenSymbol}
+                tokenSymbol={chartTokenDataState?.symbol || chartTokenData?.symbol || "Unknown"}
                 tokenaddress={tokenaddress}
                 currentTokenPnLData={currentTokenPnLData}
                 solanaLivePrice={solanaLivePrice}
@@ -579,9 +576,7 @@ const Tradingview = () => {
                 tokenCA={tokenaddress}
                 address={activeSolWalletAddress?.wallet}
                 scrollPosition={scrollPosition}
-                solWalletAddress={
-                  activeSolWalletAddress?.wallet
-                }
+                solWalletAddress={activeSolWalletAddress?.wallet}
                 tokenSupply={chartTokenData?.currentSupply}
                 currentUsdPrice={
                   latestTradesData?.latestTrades?.[0]?.Trade?.PriceInUSD
@@ -617,12 +612,10 @@ const Tradingview = () => {
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
                 token={tokenaddress}
-                walletAddress={
-                  activeSolWalletAddress?.wallet
-                }
-                tokenName={tokenSymbol}
+                walletAddress={activeSolWalletAddress?.wallet}
+                tokenName={chartTokenDataState?.symbol || chartTokenData?.symbol || "Unknown"}
                 tokenSymbol={chartTokenData?.name}
-                tokenImage={tokenImage}
+                tokenImage={chartTokenData?.img}
                 nativeTokenbalance={activeSolWalletAddress?.balance || 0}
                 decimal={chartTokenData?.decimal || decimalFindInArray}
                 progranAddress={chartTokenData?.programAddress}
@@ -646,7 +639,7 @@ const Tradingview = () => {
             onClose={() => {
               setIsSharePnLModalActive(false);
             }}
-            tokenSymbol={tokenSymbol}
+            tokenSymbol={chartTokenDataState?.symbol || chartTokenData?.symbol || "Unknown"}
             currentTokenPnLData={currentTokenPnLData}
             solanaLivePrice={solanaLivePrice}
           />
@@ -656,7 +649,7 @@ const Tradingview = () => {
               currentTokenPnLData={currentTokenPnLData}
               isPnlUsdSolActive={isPnlUsdSolActive}
               onClickToggle={handleClickPnlUsdActive}
-              tokenSymbol={tokenSymbol}
+              tokenSymbol={chartTokenDataState?.symbol || chartTokenData?.symbol || "Unknown"}
             />
           </div>
 
@@ -671,7 +664,7 @@ const Tradingview = () => {
           <div className="w-full border border-[#4D4D4D] md:border-l-0 mb-3 md:border-r-0">
             <DataSecurity
               tokenCA={tokenaddress}
-              tokenSymbol={tokenSymbol}
+              tokenSymbol={chartTokenDataState?.symbol || chartTokenData?.symbol || "Unknown"}
               tragindViewPage={tragindViewPage?.right?.datasecurity}
               activeTab={activeTab}
               dataAndSecurity={dataAndSecurity}
