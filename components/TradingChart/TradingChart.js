@@ -269,6 +269,10 @@ const TVChartContainer = ({
         : (pastSellAverage !== 0 && pastSellAverage != null)
           ? pastSellAverage
           : value100SellLine ?? 0;
+    console.log("nonPastSellAverage",nonPastSellAverage)
+    console.log("pastSellAverage",pastSellAverage)
+    console.log("value100SellLine",value100SellLine)
+    console.log("sellLineAmount",sellLineAmount)
 
     if (buyLineAmount <= 0) {
       resetBuyLine();
