@@ -157,11 +157,16 @@ const allCharTokenData = createSlice({
       })
       .addCase(fetchChartAllData.fulfilled, (state, { payload }) => {
         state.chartData = payload;
-        state.activeChartToken = {
-          symbol: payload?.symbol,
-          img: payload?.img,
-          pairAddress: payload?.pairaddress || null,
-        };
+        if (
+          state.activeChartToken?.symbol == "..." ||
+          !state.activeChartToken?.symbol
+        ) {
+          state.activeChartToken = {
+            symbol: payload?.symbol || "Token",
+            img: payload?.img || null,
+            pairAddress: payload?.pairaddress || null,
+          };
+        }
       });
   },
 });
