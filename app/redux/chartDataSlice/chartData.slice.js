@@ -157,7 +157,10 @@ const allCharTokenData = createSlice({
       })
       .addCase(fetchChartAllData.fulfilled, (state, { payload }) => {
         state.chartData = payload;
-        if (state.activeChartToken?.symbol == "...") {
+        if (
+          state.activeChartToken?.symbol == "..." ||
+          !state.activeChartToken?.symbol
+        ) {
           state.activeChartToken = {
             symbol: payload?.symbol || "Token",
             img: payload?.img || null,
