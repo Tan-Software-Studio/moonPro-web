@@ -1728,7 +1728,7 @@ const Table = ({
                               })}
                             />
 
-                            <div className="absolute top-0 left-0 w-full h-full z-20">
+                            <div className="absolute top-0 left-0 w-full h-full">
                               <CircularProgressbar
                                 value={migratedPercent}
                                 strokeWidth={8}
