@@ -33,13 +33,13 @@ import lable from "../public/assets/Trading/lable.png";
 import lable1 from "../public/assets/Trading/lable1.png";
 import eth from "../public/assets/Trading/Ethereum.png";
 import per from "../public/assets/Trending/percentage.png";
-import arbitrum from "../public/assets/Navbar/arbitrum.png";
+import arbitrum from "../public/assets/Navbar/arbitrum.webp";
 import avalanche from "../public/assets/Navbar/avalanche.png";
-import bnb from "../public/assets/Navbar/bnb.png";
+import bnb from "../public/assets/Navbar/bnb.webp";
 import ethereum from "../public/assets/Navbar/ethereum.png";
 import linea from "../public/assets/Navbar/linea.svg";
 import optimism from "../public/assets/Navbar/optimism.png";
-import polygon from "../public/assets/Navbar/polygon.png";
+import polygon from "../public/assets/Navbar/polygon.webp";
 import baseIcon from "../public/assets/Navbar/base.png";
 import phantom from "../public/assets/Navbar/phantom.png";
 import phantompurple from "../public/assets/Navbar/phantompurple.svg";
@@ -121,10 +121,10 @@ import Plus from "../public/assets/wallet-tracker/Plus.svg";
 import china from "../public/assets/languageImages/china.jpg";
 import dubai from "../public/assets/languageImages/dubai.jpg";
 import germen from "../public/assets/languageImages/germen.png";
-import india from "../public/assets/languageImages/india.png";
+import india from "../public/assets/languageImages/india.webp";
 import itli from "../public/assets/languageImages/itli.png";
 import japan from "../public/assets/languageImages/japan.webp";
-import pakistan from "../public/assets/languageImages/pakistan.png";
+import pakistan from "../public/assets/languageImages/pakistan.webp";
 import southkorea from "../public/assets/languageImages/southkorea.webp";
 import span from "../public/assets/languageImages/span.webp";
 import sweden from "../public/assets/languageImages/sweden.webp";
@@ -133,22 +133,22 @@ import vietnam from "../public/assets/languageImages/vietnam.webp";
 
 import googleLogo from "../public/assets/Navbar/google-logo.svg";
 import profileImage from "../public/assets/Profile/profile.png";
-import tableImage from "../public/assets/Profile/table.png";
-import walletBalance from "../public/assets/Navbar/walletBalance.png";
+import tableImage from "../public/assets/Profile/table.webp";
+import walletBalance from "../public/assets/Navbar/walletBalance.webp";
 
 // referral
-import nftImg from "../public/assets/referral/nft.jpeg";
-import nftImg2 from "../public/assets/referral/nft.jpeg";
+import nftImg from "../public/assets/referral/nft.webp";
+import nftImg2 from "../public/assets/referral/nft.webp";
 import nftImg3 from "../public/assets/referral/nft1.jpg";
 import nftImg4 from "../public/assets/referral/nft2.png";
-import nftImg5 from "../public/assets/referral/nft4.png";
+import nftImg5 from "../public/assets/referral/nft4.webp";
 
 // footer
 import barchart from "../public/assets/Footer/barchart.svg";
 import discord from "../public/assets/Footer/discord.svg";
 import docs from "../public/assets/Footer/docs.svg";
-import solanasollogo from "../public/assets/Footer/solana-sol-logo.png";
-import pnlbg from "../public/assets/Footer/pnlbg2.png";
+import solanasollogo from "../public/assets/Footer/solana-sol-logo.webp";
+import pnlbg from "../public/assets/Footer/pnlbg2.webp";
 import articlefill from "../public/assets/Footer/article-fill.svg";
 
 // SharePnl
