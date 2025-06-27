@@ -264,7 +264,11 @@ const TVChartContainer = ({
       : currentTokenPnLData?.pastAverageSellPrice /
           currentTokenPnLData?.pastAverageSellSolPrice || 0;
     const sellLineAmount =
-      nonPastSellAverage != null ? nonPastSellAverage : pastSellAverage || value100SellLine || 0;
+      nonPastSellAverage != null
+        ? nonPastSellAverage
+        : (pastSellAverage !== 0 && pastSellAverage != null)
+          ? pastSellAverage
+          : value100SellLine ?? 0;
 
     if (buyLineAmount <= 0) {
       resetBuyLine();
