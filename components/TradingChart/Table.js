@@ -1742,7 +1742,7 @@ const Table = ({
                             </div>
 
                             {/* Center Text */}
-                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-xxl font-bold text-center z-40">
+                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-xxl font-bold text-center">
                               <p className="text-3xl font-semibold">
                                 {migratedPercent}%
                               </p>
