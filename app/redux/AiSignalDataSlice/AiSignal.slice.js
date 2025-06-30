@@ -70,6 +70,18 @@ const aiSignalSlice = createSlice({
         }
       }
     },
+    updateAiSignalTokenRedis: (state, { payload }) => {
+      try {
+        if (state?.aiSignalData?.length > 0) {
+          const findIndex = state?.aiSignalData?.findIndex(
+            (item) => item?.address == payload?.token?.address
+          );
+          if (findIndex >= 0) {
+            state.aiSignalData[findIndex] = payload?.token;
+          }
+        }
+      } catch (error) {}
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -83,7 +95,10 @@ const aiSignalSlice = createSlice({
   },
 });
 
-export const { setAiSignalData, setAiSignalLiveDataUpdate } =
-  aiSignalSlice.actions;
+export const {
+  setAiSignalData,
+  setAiSignalLiveDataUpdate,
+  updateAiSignalTokenRedis,
+} = aiSignalSlice.actions;
 
 export default aiSignalSlice.reducer;

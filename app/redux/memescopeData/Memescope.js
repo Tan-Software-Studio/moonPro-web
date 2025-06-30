@@ -9,7 +9,7 @@ export const fetchMemescopeData = createAsyncThunk(
   "fetchMemescopeData",
   async () => {
     try {
-      const res = await axios.get(`${URL}wavePro/users/findmemescopeData`);
+      const res = await axios.get(`${URL}wavePro/users/findmemescopeDataRedis`);
       return res?.data?.data;
     } catch (err) {
       throw err;
@@ -154,6 +154,32 @@ const allMemescopeData = createSlice({
         }
       }
     },
+    updatememescopeDataRedis: (state, { payload }) => {
+      try {
+        switch (payload?.type) {
+          case "newLaunch":
+            if (state?.newLaunch?.[payload?.token?.address]) {
+              state.newLaunch[payload?.token?.address] = payload?.token;
+            }
+            break;
+          case "graduate":
+            if (state?.MscopeGraduateData?.[payload?.token?.address]) {
+              state.MscopeGraduateData[payload?.token?.address] =
+                payload?.token;
+            }
+            break;
+          case "graduated":
+            if (state?.MscopeGraduatedData?.[payload?.token?.address]) {
+              state.MscopeGraduatedData[payload?.token?.address] =
+                payload?.token;
+            }
+            break;
+
+          default:
+            break;
+        }
+      } catch (error) {}
+    },
   },
 
   extraReducers: (builder) => {
@@ -182,6 +208,7 @@ export const {
   setMemeScopeGraduatedData,
   setNewLaunchData,
   updateAllDataByNode,
+  updatememescopeDataRedis,
   setMemescopeChart,
   setIsChartByDefault,
 } = allMemescopeData.actions;

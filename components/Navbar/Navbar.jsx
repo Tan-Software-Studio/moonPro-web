@@ -202,14 +202,14 @@ const Navbar = () => {
   async function fetchData() {
     dispatch(setLoading(true));
     await axios
-      .get(`${URL}findallTrendingToken`)
+      .get(`${URL}findallTrendingTokenRedis`)
       .then((response) => {
         const rawData = response?.data?.data;
         const formattedData = {
-          "1m": rawData?.["1+min"]?.tokens || {},
-          "5m": rawData?.["5+min"]?.tokens || {},
-          "30m": rawData?.["30+min"]?.tokens || {},
-          "1h": rawData?.["1+hr"]?.tokens || {},
+          "1m": rawData?.["1+min"] || {},
+          "5m": rawData?.["5+min"] || {},
+          "30m": rawData?.["30+min"] || {},
+          "1h": rawData?.["1+hr"] || {},
         };
         dispatch(setFilterTime(formattedData));
         dispatch(setLoading(false));
