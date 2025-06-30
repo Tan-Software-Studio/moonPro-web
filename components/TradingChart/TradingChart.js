@@ -441,6 +441,8 @@ const TVChartContainer = ({
         ? '<span style="color: #1E90FF">USD</span>/<span style="color: #808080">SOL</span>'
         : '<span style="color: #808080">USD</span>/<span style="color: #1E90FF">SOL</span>';
       usdSolButton.addEventListener("click", () => {
+        setHasGottenMarks(false);
+        clearMarks();
         resetLines();
         clearChunk();
         clearSellItems();
@@ -461,6 +463,8 @@ const TVChartContainer = ({
         ? '<span style="color: #1E90FF">MarketCap</span>/<span style="color: #808080">Price</span>'
         : '<span style="color: #808080">MarketCap</span>/<span style="color: #1E90FF">Price</span>';
       mcUsdButton.addEventListener("click", () => {
+        setHasGottenMarks(false);
+        clearMarks();
         resetLines();
         clearChunk();
         resetResolutionOffsets();
