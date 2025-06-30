@@ -531,7 +531,7 @@ const Tradingview = ({ params }) => {
     >
       <AutoRefreshOnInactivity minutes={10} />
       {isSmallScreen && (
-        <div className="lg:hidden flex  items-center justify-start bg-[#1F1F1F] rounded-md mt-2 text-white mx-2  text-[12px] font-semibold px-2 py-1">
+        <div className="lg:hidden flex items-center justify-start bg-[#1F1F1F] rounded-md mt-2 text-white mx-2  text-[12px] font-semibold px-2 py-1">
           {["Trades", "Transaction"].map((item, index) => (
             <div
               onClick={() => setIsSmallScreenTab(item)}
@@ -603,6 +603,7 @@ const Tradingview = ({ params }) => {
               />
             </div>
           )}
+          <div className={`w-full ${isSmallScreen ? "h-[100px]" : "h-[81px]"} `}/>
         </div>
       </div>
 
@@ -696,6 +697,7 @@ const Tradingview = ({ params }) => {
               tokenSupply={chartTokenData?.currentSupply}
             />
           </div>
+          <div className={`w-full ${isSmallScreen ? "h-[100px]" : "h-[81px]"} `}/>
         </div>
       )}
     </div>
