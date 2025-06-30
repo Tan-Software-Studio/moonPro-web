@@ -19,11 +19,13 @@ function DataSecurity({
   const [totalBalance, setTotalBalance] = useState(-1);
 
   useEffect(() => {
-    const init = async () => {
-      await topHoldersApiCall();
+    const getTop10Holder = async () => {
+      if (pairAddress != null) {
+        await topHoldersApiCall();
+      }
     };
-    init();
-  }, []);
+    getTop10Holder();
+  }, [pairAddress]);
 
   useEffect(() => {
     if (tokenSupply !== undefined && totalBalance !== -1) {

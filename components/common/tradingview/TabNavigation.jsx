@@ -10,7 +10,6 @@ const TabNavigation = ({
   tabList,
   activeTab,
   setActiveTab,
-  topHoldersApiCall,
   toptradersApiCall,
   devTokensApiCall,
   isInstantTradeActive,
@@ -24,9 +23,7 @@ const TabNavigation = ({
     setActiveTab(tabName);
 
     // Call the appropriate API function based on which tab was clicked
-    if (tabName == "Holders" && typeof topHoldersApiCall == "function") {
-      topHoldersApiCall();
-    } else if (
+    if (
       tabName == "Top Traders" &&
       typeof toptradersApiCall == "function"
     ) {

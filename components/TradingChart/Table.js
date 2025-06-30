@@ -31,15 +31,13 @@ import { RiExchangeDollarLine } from "react-icons/ri";
 import { RiArrowLeftRightFill } from "react-icons/ri";
 import { FaArrowUpLong } from "react-icons/fa6";
 import { FaArrowDownLong } from "react-icons/fa6";
-import { CiFilter } from "react-icons/ci";
 import NoData from "../common/NoData/noData.jsx";
-import { setChartSymbolImage } from "@/app/redux/states";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 
 const Table = ({
   scrollPosition,
   tokenCA,
-  tvChartRef,
+  pairAddress,
   solWalletAddress,
   tokenSupply,
   currentUsdPrice,
@@ -347,7 +345,6 @@ const Table = ({
   const topHoldersApiCall = async () => {
     const date = new Date();
     const currentTime = date.toISOString();
-    const pairAddress = localStorage?.getItem("currentPairAddress");
     // Try to find the most recent trade time
     const mostRecentDate =
       latestTradesData?.latestTrades?.reduce((latest, trade) => {
@@ -504,6 +501,13 @@ const Table = ({
       console.error("Error:", error.response?.data || error.message || error);
     }
   };
+
+  useEffect(() => {
+    if (pairAddress != null && activeTab === "Holders" && topHoldingData.length <= 0) {
+      topHoldersApiCall();
+    }
+  }, [pairAddress, activeTab])
+
   // top traders api call
   const toptradersApiCall = async () => {
     const date = await new Date();
@@ -892,7 +896,6 @@ const Table = ({
           tabList={tabList}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
-          topHoldersApiCall={topHoldersApiCall}
           toptradersApiCall={toptradersApiCall}
           devTokensApiCall={devTokensApiCall}
           isInstantTradeActive={isInstantTradeActive}

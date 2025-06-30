@@ -588,6 +588,7 @@ const Tradingview = ({ params }) => {
             <div className="overflow-y-auto border-t border-t-[#4D4D4D]">
               <Table
                 tokenCA={tokenaddress}
+                pairAddress={chartTokenData?.pairaddress || chartTokenDataState?.pairAddress || null}
                 address={activeSolWalletAddress?.wallet}
                 scrollPosition={scrollPosition}
                 solWalletAddress={activeSolWalletAddress?.wallet}
@@ -687,6 +688,7 @@ const Tradingview = ({ params }) => {
               tokenSymbol={
                 chartTokenDataState?.symbol || chartTokenData?.symbol || "..."
               }
+              pairAddress={chartTokenData?.pairaddress || chartTokenDataState?.pairAddress || null}
               tragindViewPage={tragindViewPage?.right?.datasecurity}
               activeTab={activeTab}
               dataAndSecurity={dataAndSecurity}
