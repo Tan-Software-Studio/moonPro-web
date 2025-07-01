@@ -20,7 +20,7 @@ export const fetchAiSignalData = createAsyncThunk(
 const aiSignalSlice = createSlice({
   name: "aiSignalSlice",
   initialState: {
-    aiSignalData: [],
+    aiSignalData: {},
     initialLoading: true,
   },
   reducers: {
@@ -32,16 +32,13 @@ const aiSignalSlice = createSlice({
         for (const element of payload) {
           if (element?.Trade?.PriceInUSD) {
             const programAddress = element?.Trade?.Dex?.ProgramAddress;
-            const findIndex = state?.aiSignalData?.findIndex(
-              (item) => item?.address == element?.Trade?.Currency?.MintAddress
-            );
-            if (findIndex >= 0) {
-              const existingData = state?.aiSignalData[findIndex];
+            if (state?.aiSignalData?.[element?.Trade?.Currency?.MintAddress]) {
+              const existingData =
+                state?.aiSignalData[element?.Trade?.Currency?.MintAddress];
               const totalTradedValue =
                 element?.Trade?.Amount * element?.Trade?.PriceInUSD;
               const newMKC =
-                state.aiSignalData[findIndex].totalsupply *
-                element?.Trade?.PriceInUSD;
+                existingData?.totalsupply * element?.Trade?.PriceInUSD;
               const updateAiSignleData = {
                 ...existingData,
                 ...(programAddress ? { programAddress } : {}),
@@ -64,7 +61,8 @@ const aiSignalSlice = createSlice({
                   0
                 );
               }
-              state.aiSignalData[findIndex] = updateAiSignleData;
+              state.aiSignalData[element?.Trade?.Currency?.MintAddress] =
+                updateAiSignleData;
             }
           }
         }
@@ -72,12 +70,9 @@ const aiSignalSlice = createSlice({
     },
     updateAiSignalTokenRedis: (state, { payload }) => {
       try {
-        if (state?.aiSignalData?.length > 0) {
-          const findIndex = state?.aiSignalData?.findIndex(
-            (item) => item?.address == payload?.token?.address
-          );
-          if (findIndex >= 0) {
-            state.aiSignalData[findIndex] = payload?.token;
+        for (const element of payload) {
+          if (state.aiSignalData[element?.token?.address]) {
+            state.aiSignalData[element?.token?.address] = element?.token;
           }
         }
       } catch (error) {}

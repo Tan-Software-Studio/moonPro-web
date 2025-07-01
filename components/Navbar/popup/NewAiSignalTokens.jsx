@@ -12,7 +12,9 @@ const NewAiSignalTokens = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [copiedIndex, setCopiedIndex] = useState(null);
   const dispatch = useDispatch();
-  const aiSignalData = useSelector((state) => state?.aiSignal?.aiSignalData);
+  const aiSignalData = Object.values(
+    useSelector((state) => state?.aiSignal?.aiSignalData)
+  );
   const isLoading = useSelector((state) => state?.aiSignal?.initialLoading);
   const router = useRouter();
   const dropdownRef = useRef(null);
@@ -65,8 +67,9 @@ const NewAiSignalTokens = () => {
           {aiSignalData[0]?.symbol || "Tokens"}
         </span>
         <div
-          className={`transition-transform duration-300 ${isOpen ? "rotate-180" : ""
-            }`}
+          className={`transition-transform duration-300 ${
+            isOpen ? "rotate-180" : ""
+          }`}
         >
           <svg
             className="w-4 h-4"
@@ -125,8 +128,9 @@ const NewAiSignalTokens = () => {
                   <div
                     key={ind}
                     onClick={() => navigateToChartScreen(item, ind)}
-                    className={`group cursor-pointer relative bg-[#18181a]  hover:bg-[#2a2a2a] ${ind != 4 && "border-b border-gray-700"
-                      }  px-2 py-1   transition-all duration-300 `}
+                    className={`group cursor-pointer relative bg-[#18181a]  hover:bg-[#2a2a2a] ${
+                      ind != 4 && "border-b border-gray-700"
+                    }  px-2 py-1   transition-all duration-300 `}
                   >
                     <div className="grid grid-cols-5  gap-4 items-center">
                       {/* Token Info */}

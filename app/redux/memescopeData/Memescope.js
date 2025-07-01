@@ -156,27 +156,29 @@ const allMemescopeData = createSlice({
     },
     updatememescopeDataRedis: (state, { payload }) => {
       try {
-        switch (payload?.type) {
-          case "newLaunch":
-            if (state?.newLaunch?.[payload?.token?.address]) {
-              state.newLaunch[payload?.token?.address] = payload?.token;
-            }
-            break;
-          case "graduate":
-            if (state?.MscopeGraduateData?.[payload?.token?.address]) {
-              state.MscopeGraduateData[payload?.token?.address] =
-                payload?.token;
-            }
-            break;
-          case "graduated":
-            if (state?.MscopeGraduatedData?.[payload?.token?.address]) {
-              state.MscopeGraduatedData[payload?.token?.address] =
-                payload?.token;
-            }
-            break;
+        for (const element of payload) {
+          switch (element?.type) {
+            case "newLaunch":
+              if (state?.newLaunch?.[element?.token?.address]) {
+                state.newLaunch[element?.token?.address] = element?.token;
+              }
+              break;
+            case "graduate":
+              if (state?.MscopeGraduateData?.[element?.token?.address]) {
+                state.MscopeGraduateData[element?.token?.address] =
+                  element?.token;
+              }
+              break;
+            case "graduated":
+              if (state?.MscopeGraduatedData?.[element?.token?.address]) {
+                state.MscopeGraduatedData[element?.token?.address] =
+                  element?.token;
+              }
+              break;
 
-          default:
-            break;
+            default:
+              break;
+          }
         }
       } catch (error) {}
     },

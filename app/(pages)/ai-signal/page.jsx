@@ -9,7 +9,7 @@ import {
   TrendingImg,
   solana,
 } from "@/app/Images";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
 import TableHeaderData from "@/components/common/TableHeader/TableHeaderData";
 import TableBody from "@/components/common/TableBody/TableBody";
@@ -38,7 +38,6 @@ const AiSignal = () => {
   const { t } = useTranslation();
   const tredingPage = t("tredingPage");
   const tableRef = useRef(null);
-  const dispatch = useDispatch();
   const [sortColumn, setSortColumn] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [localFilterTime, setLocalFilterTime] = useState("5m");
@@ -47,12 +46,14 @@ const AiSignal = () => {
   const [filterValues, setFilterValues] = useState(initialFilterValues);
 
   // ai signal tokens data
-  const aiSignalData = useSelector((state) => state?.aiSignal?.aiSignalData);
+  const aiSignalData = Object.values(
+    useSelector((state) => state?.aiSignal?.aiSignalData)
+  );
   const isLoading = useSelector((state) => state?.aiSignal?.initialLoading);
 
   useEffect(() => {
     document.title = `Nexa | AI Signal`;
-  }, [])
+  }, []);
 
   const Trendings = {
     Title: tredingPage?.mainHeader?.filter?.filter,

@@ -149,30 +149,36 @@ const solTrendingData = createSlice({
     },
     updateTrendingDataRedis: (state, { payload }) => {
       try {
-        switch (payload?.type) {
-          case "1+m":
-            if (state?.filterTime["1m"]?.[payload?.token?.address]) {
-              state.filterTime["1m"][payload?.token?.address] = payload?.token;
-            }
-            break;
-          case "5+m":
-            if (state?.filterTime["5m"]?.[payload?.token?.address]) {
-              state.filterTime["5m"][payload?.token?.address] = payload?.token;
-            }
-            break;
-          case "30+m":
-            if (state?.filterTime["30m"]?.[payload?.token?.address]) {
-              state.filterTime["30m"][payload?.token?.address] = payload?.token;
-            }
-            break;
-          case "1+h":
-            if (state?.filterTime["1h"]?.[payload?.token?.address]) {
-              state.filterTime["1h"][payload?.token?.address] = payload?.token;
-            }
-            break;
+        for (const element of payload) {
+          switch (element?.type) {
+            case "1+m":
+              if (state?.filterTime["1m"]?.[element?.token?.address]) {
+                state.filterTime["1m"][element?.token?.address] =
+                  element?.token;
+              }
+              break;
+            case "5+m":
+              if (state?.filterTime["5m"]?.[element?.token?.address]) {
+                state.filterTime["5m"][element?.token?.address] =
+                  element?.token;
+              }
+              break;
+            case "30+m":
+              if (state?.filterTime["30m"]?.[element?.token?.address]) {
+                state.filterTime["30m"][element?.token?.address] =
+                  element?.token;
+              }
+              break;
+            case "1+h":
+              if (state?.filterTime["1h"]?.[element?.token?.address]) {
+                state.filterTime["1h"][element?.token?.address] =
+                  element?.token;
+              }
+              break;
 
-          default:
-            break;
+            default:
+              break;
+          }
         }
       } catch (error) {}
     },

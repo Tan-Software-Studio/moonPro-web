@@ -21,6 +21,7 @@ import {
 } from "@/app/redux/trending/solTrending.slice";
 import { updateWalletAddressesBalanceLive } from "@/app/redux/userDataSlice/UserData.slice";
 import { playNotificationSound } from "@/components/Notification/playNotificationSound";
+import { id } from "ethers";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;
@@ -74,17 +75,17 @@ export async function subscribeToWalletTracker() {
           item?.Trade?.Currency?.MintAddress ==
           "So11111111111111111111111111111111111111112"
       );
-      const usdcLivePrice = await data?.find(
-        (item) =>
-          item?.Trade?.Currency?.MintAddress ==
-          "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
-      );
+      // const usdcLivePrice = await data?.find(
+      //   (item) =>
+      //     item?.Trade?.Currency?.MintAddress ==
+      //     "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+      // );
       if (solPrice?.Trade?.PriceInUSD) {
         store.dispatch(setSolanaLivePrice(solPrice?.Trade?.PriceInUSD));
       }
-      if (usdcLivePrice?.Trade?.PriceInUSD) {
-        store.dispatch(setUsdcLivePrice(solPrice?.Trade?.PriceInUSD));
-      }
+      // if (usdcLivePrice?.Trade?.PriceInUSD) {
+      //   store.dispatch(setUsdcLivePrice(solPrice?.Trade?.PriceInUSD));
+      // }
       // if (walletsToTrack?.length > 0) {
       //   const filteredData = await data?.filter((item) =>
       //     walletsToTrack.includes(item?.Transaction?.Signer?.toLowerCase())
@@ -173,27 +174,38 @@ export async function subscribeToTrendingTokens() {
       // console.log("🚀 ~ awaitsocket.on ~ data:=========================>");
       store.dispatch(updateWalletAddressesBalanceLive(data));
     });
+    let updateQueue = {
+      trending: [],
+      memescope: [],
+      aisignle: [],
+    };
 
-    // get single tokens updates
-    socket.on("singleTokenUpdate", async (data) => {
-      console.log("🚀 ~ socket.on ~ data:", data);
-      if (data?.token?.address) {
-        switch (data?.mainTable) {
-          case "trending":
-            store.dispatch(updateTrendingDataRedis(data));
-            break;
-          case "memescope":
-            store.dispatch(updatememescopeDataRedis(data));
-            break;
-          case "aisignle":
-            store.dispatch(updateAiSignalTokenRedis(data));
-            break;
+    socket.on("singleTokenUpdate", (data) => {
+      if (!data?.token?.address) return;
 
-          default:
-            break;
-        }
-      }
+      const table = data?.mainTable;
+      if (!updateQueue[table]) return;
+
+      updateQueue[table].push(data);
     });
+
+    // Flush every 100ms
+    setInterval(() => {
+      if (updateQueue?.trending?.length > 0) {
+        store.dispatch(updateTrendingDataRedis(updateQueue.trending));
+      }
+      if (updateQueue?.memescope?.length > 0) {
+        store.dispatch(updatememescopeDataRedis(updateQueue.memescope));
+      }
+      if (updateQueue?.aisignle?.length > 0) {
+        store.dispatch(updateAiSignalTokenRedis(updateQueue.aisignle));
+      }
+      updateQueue = {
+        trending: [],
+        memescope: [],
+        aisignle: [],
+      }; // clear after dispatch
+    }, 2000); // Adjust to 50ms or 200ms as needed
     socket.on("disconnect", async () => {
       console.log("Trendings and memescope disconnected.");
       isTrendingSocketOn = false;
@@ -233,17 +245,16 @@ export async function subscribeToAiSignalTokensNewAddedToken() {
     aiSignalDataFromStore = store?.getState().aiSignal.aiSignalData;
   });
   socketAiSignalBackend.on("aiSignleLiveData", async (data) => {
-    console.log("🚀 ~ socketAiSignalBackend.on ~ data:", data);
-    let newDataArr = [];
-    if (data?.length >= 100) {
-      newDataArr = [...data];
-    } else {
-      newDataArr = [
-        ...data,
-        ...aiSignalDataFromStore?.slice(0, 100 - data?.length),
-      ];
+    if (data?.length > 0) {
+      const convertIntoObj = Object.fromEntries(
+        data.map((token) => [token.address, token])
+      );
+      let newDataArr = {
+        ...convertIntoObj,
+        ...aiSignalDataFromStore,
+      };
+      store.dispatch(setAiSignalData(newDataArr));
     }
-    store.dispatch(setAiSignalData(newDataArr));
 
     const storedValue = localStorage.getItem("ai-signal-notification");
     if (storedValue == "true") {
