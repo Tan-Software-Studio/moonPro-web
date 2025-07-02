@@ -70,19 +70,11 @@ export async function subscribeToWalletTracker() {
       if (solanaWalletAddress) {
         store.dispatch(updatePnlDataPriceOnly(data));
       }
-      const solPrice = await data?.find(
-        (item) =>
-          item?.Trade?.Currency?.MintAddress ==
-          "So11111111111111111111111111111111111111112"
-      );
       // const usdcLivePrice = await data?.find(
       //   (item) =>
       //     item?.Trade?.Currency?.MintAddress ==
       //     "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
       // );
-      if (solPrice?.Trade?.PriceInUSD) {
-        store.dispatch(setSolanaLivePrice(solPrice?.Trade?.PriceInUSD));
-      }
       // if (usdcLivePrice?.Trade?.PriceInUSD) {
       //   store.dispatch(setUsdcLivePrice(solPrice?.Trade?.PriceInUSD));
       // }
@@ -181,14 +173,17 @@ export async function subscribeToTrendingTokens() {
     };
 
     socket.on("singleTokenUpdate", (data) => {
-      if (Array.isArray(data.trending)) {
-        updateQueue.trending.push(...data.trending);
+      if (Array.isArray(data?.trending)) {
+        updateQueue.trending.push(...data?.trending);
       }
-      if (Array.isArray(data.memescope)) {
-        updateQueue.memescope.push(...data.memescope);
+      if (Array.isArray(data?.memescope)) {
+        updateQueue.memescope.push(...data?.memescope);
       }
-      if (Array.isArray(data.aisignle)) {
-        updateQueue.aisignle.push(...data.aisignle);
+      if (Array.isArray(data?.aisignle)) {
+        updateQueue.aisignle.push(...data?.aisignle);
+      }
+      if (data?.solanaPrice) {
+        store.dispatch(setSolanaLivePrice(data?.solanaPrice));
       }
     });
 
