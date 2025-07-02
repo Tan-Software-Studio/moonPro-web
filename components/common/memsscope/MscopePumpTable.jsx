@@ -149,6 +149,9 @@ const MscopePumpTable = ({
   function navigateToChartSreen(block) {
     dispatch(setActiveChartToken({ symbol: block?.symbol, img: block?.img }));
   }
+
+  const SkeletonData = Array(8).fill(null);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
@@ -159,14 +162,24 @@ const MscopePumpTable = ({
   return (
     <>
       {initialLoading ? (
-        <div
-          className="snippet flex justify-center mt-20   "
-          data-title=".dot-spin"
-        >
-          <div className="stage">
-            <div className="dot-spin"></div>
+        SkeletonData.map((_, ind) => (
+          <div
+            key={ind}
+            className={` ${ind % 2 === 0 && "bg-[#16171ca4]"} w-full`}
+          >
+            <div className="whitespace-nowrap py-4 h-[100px] flex justify-between items-center animate-pulse w-full">
+              <div className="px-2 w-full">
+                <div className="flex items-start gap-2 w-full">
+                  <div className="w-[80px] h-[70px] rounded bg-[#191919]"></div>
+                  <div className="w-full">
+                    <div className="w-[170px] mt-2 h-[12px] rounded-sm bg-[#191919]"></div>
+                    <div className="w-[110px] h-[10px] rounded-sm bg-[#191919] mt-1"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        ))
       ) : MemscopeData.length > 0 ? (
         <>
           <div
@@ -189,13 +202,12 @@ const MscopePumpTable = ({
                             capsuleImg={capsuleImg}
                             maxValue={100}
                             trailColor="#7b8085"
-                            progressColor={`${
-                              !progerssBar
-                                ? barColor
-                                : barColor === "#cfc328"
+                            progressColor={`${!progerssBar
+                              ? barColor
+                              : barColor === "#cfc328"
                                 ? "#cfc328 "
                                 : "#7b8085"
-                            }`}
+                              }`}
                           />
                         ) : (
                           <SquareProgressBar
@@ -203,13 +215,12 @@ const MscopePumpTable = ({
                             capsuleImg={capsuleImg}
                             maxValue={100}
                             trailColor="#7b8085"
-                            progressColor={`${
-                              !progerssBar
-                                ? barColor
-                                : barColor === "#cfc328"
+                            progressColor={`${!progerssBar
+                              ? barColor
+                              : barColor === "#cfc328"
                                 ? "#cfc328 "
                                 : "#7b8085"
-                            }`}
+                              }`}
                           />
                         )}
                         {progerssBar ? (
@@ -353,11 +364,10 @@ const MscopePumpTable = ({
                           <div className="w-[90px] h-[60px] relative flex items-center justify-center">
                             {isChartHide && (
                               <div
-                                className={`${
-                                  hoverRow === index
-                                    ? "opacity-40 absolute inset-0 flex items-center justify-center"
-                                    : "opacity-100"
-                                } `}
+                                className={`${hoverRow === index
+                                  ? "opacity-40 absolute inset-0 flex items-center justify-center"
+                                  : "opacity-100"
+                                  } `}
                               >
                                 <ChartComponent
                                   candlesticks={block?.candlesticks}
@@ -367,16 +377,15 @@ const MscopePumpTable = ({
                             {hoverRow === index && (
                               <>
                                 <div
-                                  className={`absolute ${
-                                    index == 0 ? "-top-2" : "-top-12"
-                                  } right-44 rounded-md text-[#21CB6B] text-xs font-light border-[1px]  border-[#333333] bg-[#191919]  px-4 py-1 flex items-center justify-between !z-[9] w-fit whitespace-nowrap transition-all duration-100 ease-in-out`}
+                                  className={`absolute ${index == 0 ? "-top-2" : "-top-12"
+                                    } right-44 rounded-md text-[#21CB6B] text-xs font-light border-[1px]  border-[#333333] bg-[#191919]  px-4 py-1 flex items-center justify-between !z-[9] w-fit whitespace-nowrap transition-all duration-100 ease-in-out`}
                                 >
                                   <p>Bonding : </p>
                                   {block?.bonding_curv >= 100
                                     ? "100%"
                                     : block?.bonding_curv
-                                    ? `${block?.bonding_curv?.toFixed(2)} %`
-                                    : "0%"}
+                                      ? `${block?.bonding_curv?.toFixed(2)} %`
+                                      : "0%"}
                                 </div>
                                 <button
                                   className="absolute  w-fit whitespace-nowrap rounded-md bg-[#1d73fc] hover:bg-[#438bff] text-[#111111] font-bold py-1 px-5 text-xs transition-all duration-100 ease-in-out"
@@ -387,7 +396,7 @@ const MscopePumpTable = ({
                                       block?.address,
                                       quickBuy,
                                       activeSolWalletAddress?.wallet ||
-                                        solWalletAddress,
+                                      solWalletAddress,
                                       activeSolWalletAddress?.balance || 0,
                                       e,
                                       block?.programAddress
@@ -404,11 +413,10 @@ const MscopePumpTable = ({
                                   }}
                                 >
                                   {quickBuy > 0
-                                    ? `${
-                                        quickBuy?.length > 6
-                                          ? `${quickBuy.slice(0, 7)}...`
-                                          : `${quickBuy} SOL`
-                                      }`
+                                    ? `${quickBuy?.length > 6
+                                      ? `${quickBuy.slice(0, 7)}...`
+                                      : `${quickBuy} SOL`
+                                    }`
                                     : "Buy"}
                                 </button>
                               </>
@@ -421,9 +429,8 @@ const MscopePumpTable = ({
                         <div className="flex gap-[12px] order-2">
                           {showHolders ? (
                             <Tooltip
-                              body={`Number of Holders: ${
-                                block?.holders ? block.holders : 0
-                              }`}
+                              body={`Number of Holders: ${block?.holders ? block.holders : 0
+                                }`}
                             >
                               <div className="flex items-center gap-[4px]">
                                 <Image src={Users} alt="user" />
@@ -436,21 +443,20 @@ const MscopePumpTable = ({
 
                           {showVolume ? (
                             <Tooltip
-                              body={`Volume: ${
-                                block?.volume
-                                  ? humanReadableFormat(
-                                      block?.volume.toFixed(2)
-                                    )
-                                  : 0
-                              }`}
+                              body={`Volume: ${block?.volume
+                                ? humanReadableFormat(
+                                  block?.volume.toFixed(2)
+                                )
+                                : 0
+                                }`}
                             >
                               <div className="flex items-center gap-[4px]">
                                 <Image src={Vol} alt="volume" />
                                 <div className="text-[#F1F0F0] text-xs md:text-[12px] font-400">
                                   {block?.volume
                                     ? humanReadableFormat(
-                                        block?.volume.toFixed(2)
-                                      )
+                                      block?.volume.toFixed(2)
+                                    )
                                     : 0}{" "}
                                 </div>
                               </div>
@@ -459,9 +465,8 @@ const MscopePumpTable = ({
 
                           {showMarketCap ? (
                             <Tooltip
-                              body={`Market Cap: ${
-                                block?.MKC ? humanReadableFormat(block?.MKC) : 0
-                              }`}
+                              body={`Market Cap: ${block?.MKC ? humanReadableFormat(block?.MKC) : 0
+                                }`}
                             >
                               <div className="flex items-center gap-[4px]">
                                 <Image
