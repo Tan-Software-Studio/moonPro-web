@@ -181,12 +181,15 @@ export async function subscribeToTrendingTokens() {
     };
 
     socket.on("singleTokenUpdate", (data) => {
-      if (!data?.token?.address) return;
-
-      const table = data?.mainTable;
-      if (!updateQueue[table]) return;
-
-      updateQueue[table].push(data);
+      if (Array.isArray(data.trending)) {
+        updateQueue.trending.push(...data.trending);
+      }
+      if (Array.isArray(data.memescope)) {
+        updateQueue.memescope.push(...data.memescope);
+      }
+      if (Array.isArray(data.aisignle)) {
+        updateQueue.aisignle.push(...data.aisignle);
+      }
     });
 
     // Flush every 100ms
