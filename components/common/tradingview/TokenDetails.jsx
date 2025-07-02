@@ -485,7 +485,7 @@ const TokenDetails = ({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             onClick={() => setIsModalOpen(false)}
-            className="fixed inset-0 bg-[#0d0d0f] bg-opacity-50 flex items-center justify-center"
+            className="fixed inset-0 bg-[#0d0d0f] bg-opacity-50 !z-50 flex items-center justify-center"
           >
             <motion.div
               key="modal"

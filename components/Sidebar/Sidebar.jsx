@@ -32,6 +32,7 @@ import {
 import AISignalsButton from "../Navbar/ai-signalBtn/AiSignalBtn";
 import { setIsChartByDefault } from "@/app/redux/memescopeData/Memescope";
 import { IoClose } from "react-icons/io5";
+import { fetchAiSignalData } from "@/app/redux/AiSignalDataSlice/AiSignal.slice";
 
 const Sidebar = () => {
   const { t } = useTranslation();
@@ -106,6 +107,7 @@ const Sidebar = () => {
   useEffect(() => {
     subscribeToWalletTracker();
     subscribeToTrendingTokens();
+    dispatch(fetchAiSignalData());
     dispatch(setIsChartByDefault());
   }, []);
 
