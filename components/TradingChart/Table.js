@@ -31,15 +31,13 @@ import { RiExchangeDollarLine } from "react-icons/ri";
 import { RiArrowLeftRightFill } from "react-icons/ri";
 import { FaArrowUpLong } from "react-icons/fa6";
 import { FaArrowDownLong } from "react-icons/fa6";
-import { CiFilter } from "react-icons/ci";
 import NoData from "../common/NoData/noData.jsx";
-import { setChartSymbolImage } from "@/app/redux/states";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 
 const Table = ({
   scrollPosition,
   tokenCA,
-  tvChartRef,
+  pairAddress,
   solWalletAddress,
   tokenSupply,
   currentUsdPrice,
@@ -347,7 +345,6 @@ const Table = ({
   const topHoldersApiCall = async () => {
     const date = new Date();
     const currentTime = date.toISOString();
-    const pairAddress = localStorage?.getItem("currentPairAddress");
     // Try to find the most recent trade time
     const mostRecentDate =
       latestTradesData?.latestTrades?.reduce((latest, trade) => {
@@ -504,6 +501,13 @@ const Table = ({
       console.error("Error:", error.response?.data || error.message || error);
     }
   };
+
+  useEffect(() => {
+    if (pairAddress != null && activeTab === "Holders" && topHoldingData.length <= 0) {
+      topHoldersApiCall();
+    }
+  }, [pairAddress, activeTab])
+
   // top traders api call
   const toptradersApiCall = async () => {
     const date = await new Date();
@@ -892,7 +896,6 @@ const Table = ({
           tabList={tabList}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
-          topHoldersApiCall={topHoldersApiCall}
           toptradersApiCall={toptradersApiCall}
           devTokensApiCall={devTokensApiCall}
           isInstantTradeActive={isInstantTradeActive}
@@ -1728,7 +1731,7 @@ const Table = ({
                               })}
                             />
 
-                            <div className="absolute top-0 left-0 w-full h-full z-20">
+                            <div className="absolute top-0 left-0 w-full h-full">
                               <CircularProgressbar
                                 value={migratedPercent}
                                 strokeWidth={8}
@@ -1742,7 +1745,7 @@ const Table = ({
                             </div>
 
                             {/* Center Text */}
-                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-xxl font-bold text-center z-40">
+                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-xxl font-bold text-center">
                               <p className="text-3xl font-semibold">
                                 {migratedPercent}%
                               </p>

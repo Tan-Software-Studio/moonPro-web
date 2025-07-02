@@ -3,6 +3,11 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
+        protocol: "http",
+        hostname: "localhost",
+        pathname: "/**",
+      },
+      {
         protocol: "https",
         hostname: "ipfs.io",
         pathname: "/**",

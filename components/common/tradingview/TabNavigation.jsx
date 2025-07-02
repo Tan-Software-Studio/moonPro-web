@@ -2,8 +2,6 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
-import DownToUp from "../../../public/assets/Trading/DownToUp.svg";
 import { PiLightningLight } from "react-icons/pi";
 import { PiLightningFill } from "react-icons/pi";
 
@@ -12,7 +10,6 @@ const TabNavigation = ({
   tabList,
   activeTab,
   setActiveTab,
-  topHoldersApiCall,
   toptradersApiCall,
   devTokensApiCall,
   isInstantTradeActive,
@@ -21,15 +18,12 @@ const TabNavigation = ({
   const tabsRef = useRef([]);
   const scrollContainerRef = useRef(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
-  const [isExpanded, setIsExpanded] = useState(true);
   // Function to handle tab click with centering behavior
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
 
     // Call the appropriate API function based on which tab was clicked
-    if (tabName == "Holders" && typeof topHoldersApiCall == "function") {
-      topHoldersApiCall();
-    } else if (
+    if (
       tabName == "Top Traders" &&
       typeof toptradersApiCall == "function"
     ) {
@@ -90,7 +84,7 @@ const TabNavigation = ({
   }, [activeTab, tabList]);
 
   return (
-    <div className="relative w-full z-10 top-0 bg-[#1f1f1f3a] text-[#A8A8A8] text-xs font-normal border border-[#08080E] sm:px-4 px-1 leading-4 text-center flex justify-between items-center">
+    <div className="relative w-full top-0 bg-[#1f1f1f3a] text-[#A8A8A8] text-xs font-normal border border-[#08080E] sm:px-4 px-1 leading-4 text-center flex justify-between items-center">
       {/* Tabs with Scrollable Feature */}
       <div
         ref={scrollContainerRef}

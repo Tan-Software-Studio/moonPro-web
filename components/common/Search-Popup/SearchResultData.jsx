@@ -9,6 +9,7 @@ import {
   // calculatePercentageChange,
   convertToRelativeTime,
   decimalConvert,
+  UpdateTime
 } from "@/utils/calculation";
 import { setIsSearchPopup } from "@/app/redux/states";
 // import { usePathname, useRouter } from "next/navigation";
@@ -232,7 +233,7 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                           </div>
                           <div className="flex gap-[0.375rem] w-full items-center grow-[2]  ">
                             <div className="text-sm text-[#B2B2B7]">
-                              {`${getDaysDiff(e?.Block?.createdAt) || null}`}
+                              {UpdateTime(new Date(e?.Block?.createdAt)?.getTime(), Date.now()) || null}
                             </div>
 
                             <Link
@@ -274,7 +275,7 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                           <span className="text-[#B2B2B7] text-xs">Liq: </span>
                           <span className="text-sm font-semibold text-[#FFFFFF]">
                             {` $ ${
-                              formatNumber(parseInt(e?.liquidityUSD)) || null
+                              formatNumber(parseInt(e?.liquidityUSD || 0)) || null
                             }`}
                           </span>
                         </div>
@@ -308,7 +309,7 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                           <span className="text-[#B2B2B7] text-xs">Liq: </span>
                           <span className="text-sm text-[#D5D5DA] ml-1">
                             {` $ ${
-                              formatNumber(parseInt(e?.liquidityUSD)) || null
+                              formatNumber(parseInt(e?.liquidityUSD || 0)) || null
                             }`}
                           </span>
                         </div>

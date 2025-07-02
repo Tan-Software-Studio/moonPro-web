@@ -5,7 +5,7 @@ import {
 } from "./websocketOHLC";
 import { setNewLatestBarTime } from "./latestBarTime";
 import { setNewLatestHistoricalBar } from "./latestHistoricalBar";
-import { setHistoricalChunkAndConnectBars } from "./historicalChunk";
+import { clearChunk, setHistoricalChunkAndConnectBars } from "./historicalChunk";
 import { intervalTV } from "./constant";
 
 let startingIntervalBeforeLoop = null;
@@ -15,6 +15,7 @@ let resolutionOffsets = {};
 
 export const resetResolutionOffsets = () => {
   resolutionOffsets = {};
+  clearChunk();
 };
 
 function getNextInterval(savedInterval) {
@@ -42,9 +43,6 @@ export const getBars = async (
     const isUsdActive = localStorage.getItem("chartUsdSolToggleActive");
     const isMarketCapActive = localStorage.getItem("chartMarketCapPriceToggleActive");
     const supply = localStorage.getItem("chartSupply");
-    const solPrice = localStorage.getItem("solPrice");
-    const tokenCreator = localStorage.getItem("chartTokenCreator");
-    const walletAddress = localStorage.getItem("walletAddress");
 
     const usdActive = isUsdActive === null ? true : isUsdActive === "true";
     const marketCapActive = isMarketCapActive === null ? true : isMarketCapActive === "true";
@@ -71,10 +69,12 @@ export const getBars = async (
       }
 
       if (storedBarTime < periodParams.to) {
-        resolutionOffsets[resolution].offset = 0;
-        if (resolution.endsWith("S")) {
-          resolutionOffsets[resolution].fetchedSeconds = false;
-        }
+        resolutionOffsets[resolution] = {
+          offset: 0,
+          oldestBarTimeSec: null,
+          fetchedSeconds: false
+        };
+        clearChunk();
       }
     }
 

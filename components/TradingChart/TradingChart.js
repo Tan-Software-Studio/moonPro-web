@@ -263,8 +263,18 @@ const TVChartContainer = ({
       ? currentTokenPnLData?.pastAverageSellPrice || 0
       : currentTokenPnLData?.pastAverageSellPrice /
           currentTokenPnLData?.pastAverageSellSolPrice || 0;
-    const sellLineAmount =
-      nonPastSellAverage != null ? nonPastSellAverage : pastSellAverage;
+
+    const getSellLineAmount = () => {
+      if (nonPastSellAverage != null) {
+        return { amount: nonPastSellAverage, shouldConvert: true };
+      }
+      if (pastSellAverage !== 0 && pastSellAverage != null) {
+        return { amount: pastSellAverage, shouldConvert: true };
+      }
+      return { amount: value100SellLine ?? 0, shouldConvert: false };
+    };
+
+    const { amount: sellLineAmount, shouldConvert } = getSellLineAmount();
 
     if (buyLineAmount <= 0) {
       resetBuyLine();
@@ -302,10 +312,14 @@ const TVChartContainer = ({
           .createPositionLine();
       }
       if (sellPositionLineRef.current) {
+        const priceToSet = shouldConvert
+          ? convertPrice(Number(sellLineAmount))
+          : Number(sellLineAmount);
+
         sellPositionLineRef.current
           .setText("Current Average Exit Price")
           .setQuantity("")
-          .setPrice(convertPrice(Number(sellLineAmount)))
+          .setPrice(priceToSet)
           .setQuantityBackgroundColor("#AB5039")
           .setQuantityBorderColor("#AB5039")
           .setBodyBorderColor("#FFFFFF00")
@@ -427,6 +441,8 @@ const TVChartContainer = ({
         ? '<span style="color: #1E90FF">USD</span>/<span style="color: #808080">SOL</span>'
         : '<span style="color: #808080">USD</span>/<span style="color: #1E90FF">SOL</span>';
       usdSolButton.addEventListener("click", () => {
+        setHasGottenMarks(false);
+        clearMarks();
         resetLines();
         clearChunk();
         clearSellItems();
@@ -447,6 +463,8 @@ const TVChartContainer = ({
         ? '<span style="color: #1E90FF">MarketCap</span>/<span style="color: #808080">Price</span>'
         : '<span style="color: #808080">MarketCap</span>/<span style="color: #1E90FF">Price</span>';
       mcUsdButton.addEventListener("click", () => {
+        setHasGottenMarks(false);
+        clearMarks();
         resetLines();
         clearChunk();
         resetResolutionOffsets();

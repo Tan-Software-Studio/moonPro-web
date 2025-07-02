@@ -147,6 +147,41 @@ const solTrendingData = createSlice({
     updateData15Secinterval: (state, { payload }) => {
       state.filterTime[payload?.frame] = payload?.data;
     },
+    updateTrendingDataRedis: (state, { payload }) => {
+      try {
+        for (const element of payload) {
+          switch (element?.type) {
+            case "1+m":
+              if (state?.filterTime["1m"]?.[element?.token?.address]) {
+                state.filterTime["1m"][element?.token?.address] =
+                  element?.token;
+              }
+              break;
+            case "5+m":
+              if (state?.filterTime["5m"]?.[element?.token?.address]) {
+                state.filterTime["5m"][element?.token?.address] =
+                  element?.token;
+              }
+              break;
+            case "30+m":
+              if (state?.filterTime["30m"]?.[element?.token?.address]) {
+                state.filterTime["30m"][element?.token?.address] =
+                  element?.token;
+              }
+              break;
+            case "1+h":
+              if (state?.filterTime["1h"]?.[element?.token?.address]) {
+                state.filterTime["1h"][element?.token?.address] =
+                  element?.token;
+              }
+              break;
+
+            default:
+              break;
+          }
+        }
+      } catch (error) {}
+    },
   },
 });
 
@@ -156,6 +191,7 @@ export const {
   updateTrendingData,
   updateTrendingLiveData,
   updateData15Secinterval,
+  updateTrendingDataRedis,
 } = solTrendingData.actions;
 
 export default solTrendingData.reducer;

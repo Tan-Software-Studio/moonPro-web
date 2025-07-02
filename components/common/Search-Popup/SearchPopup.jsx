@@ -36,19 +36,75 @@ const SearchPopup = () => {
   }, []);
 
   const SearchResult = async (value) => {
+    // const startTime = Date.now();
+    setSearchLoader(true);
+
     try {
-      const res = await axios.post(
+      // Step 1: Fetch basic data
+      const { data: res } = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URLS}wavePro/users/searchToken`,
         { search: value }
       );
-      if (res?.data?.success) {
-        setSearchLoader(false);
-        setSearchResult(res?.data?.data);
-      }
+
+      // const searchDuration = Date.now() - startTime;
+      // console.log(`✅ Basic search took ${searchDuration} ms`);
+
+      if (!res?.success) throw new Error('Search failed on server');
+
+      const basicData = res.data;
+      setSearchResult(basicData);
+      setSearchLoader(false);
+
+      // Step 2: Fetch images in parallel (non-blocking)
+      const tokensForImages = basicData.map((item) => ({
+        mintAddress: item?.Trade?.Currency?.MintAddress,
+        uri: item?.Trade?.Currency?.Uri,
+        dex: item?.Trade?.Dex?.ProtocolName,
+      }));
+
+      fetchTokenImages(tokensForImages);
     } catch (error) {
+      // const searchDuration = Date.now() - startTime;
+      // console.error(`❌ Search failed after ${searchDuration} ms:`, error?.message);
+
       setSearchLoader(false);
       setSearchResult([]);
-      setNotFoundMessage(error?.response?.data?.message);
+      setNotFoundMessage(error?.response?.data?.message || 'Search failed');
+    }
+  };
+
+  const fetchTokenImages = async (tokensForImages) => {
+    const imageFetchStart = Date.now();
+
+    try {
+      const { data: imgRes } = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URLS}wavePro/users/fetchSearchTokenImages`,
+        { tokens: tokensForImages }
+      );
+
+      const imageDuration = Date.now() - imageFetchStart;
+      // console.log(`🖼️ Image fetching took ${imageDuration} ms`);
+
+      if (!imgRes?.success) return;
+
+      const imagesData = imgRes.data;
+
+      setSearchResult((prevData) =>
+        prevData.map((token) => {
+          const found = imagesData.find(
+            (img) => img.mintAddress === token?.Trade?.Currency?.MintAddress
+          );
+          return {
+            ...token,
+            img: found?.img || null,
+            dexImg: found?.dexImg || null,
+          };
+        })
+      );
+    } catch (imageErr) {
+      const imageDuration = Date.now() - imageFetchStart;
+      // console.error(`❌ Image fetch failed after ${imageDuration} ms:`, imageErr?.message);
+      // Ignore image fetch error; basic data is already displayed
     }
   };
 
