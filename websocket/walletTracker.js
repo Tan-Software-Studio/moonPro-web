@@ -9,10 +9,9 @@ import {
   setMemeScopeGraduateData,
   setMemeScopeGraduatedData,
   setNewLaunchData,
-  updateAllDataByNode,
   updatememescopeDataRedis,
 } from "@/app/redux/memescopeData/Memescope";
-import { setSolanaLivePrice, setUsdcLivePrice } from "@/app/redux/states";
+import { setSolanaLivePrice } from "@/app/redux/states";
 import store from "@/app/redux/store";
 import {
   updateTrendingData,
@@ -21,7 +20,6 @@ import {
 } from "@/app/redux/trending/solTrending.slice";
 import { updateWalletAddressesBalanceLive } from "@/app/redux/userDataSlice/UserData.slice";
 import { playNotificationSound } from "@/components/Notification/playNotificationSound";
-import { id } from "ethers";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URLS;

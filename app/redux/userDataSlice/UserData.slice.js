@@ -19,6 +19,27 @@ export const fetchUserData = createAsyncThunk("fetchUserData", async () => {
     throw error;
   }
 });
+export const fetchUserWalletBalances = createAsyncThunk(
+  "fetchUserWalletBalances",
+  async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return 0;
+      }
+      const res = await axios({
+        url: `${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}user/getWalletBalances`,
+        method: "get",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return res?.data?.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
 
 const userDataSlice = createSlice({
   name: "userDataSlice",
@@ -53,44 +74,6 @@ const userDataSlice = createSlice({
           }));
       }
     },
-    setWalletBalances: (state, action) => {
-      state.isLoadingBalances = false;
-      state.balancesError = null;
-
-      if (
-        state.userDetails &&
-        state.userDetails.walletAddressSOL &&
-        action.payload
-      ) {
-        const balancesByWallet = action.payload.reduce((acc, item) => {
-          const walletAddress = item.BalanceUpdate?.Account?.Owner;
-
-          if (walletAddress) {
-            acc[walletAddress] = {
-              balance: Number(item.BalanceUpdate?.Balance),
-              currency: item.BalanceUpdate?.Currency,
-            };
-          }
-          return acc;
-        }, {});
-
-        state.userDetails.walletAddressSOL =
-          state.userDetails.walletAddressSOL.map((wallet) => {
-            const walletBalance = balancesByWallet[wallet.wallet];
-            return {
-              ...wallet,
-              balance: walletBalance?.balance || 0,
-              currency: walletBalance?.currency || null,
-            };
-          });
-      }
-      const findPrimaryWallet = state.userDetails.walletAddressSOL?.find(
-        (item) => item?.primary
-      );
-      if (findPrimaryWallet) {
-        state.activeSolanaWallet = findPrimaryWallet;
-      }
-    },
     updateWalletAddressesBalanceLive: (state, { payload }) => {
       if (state?.userDetails?.walletAddressSOL?.length > 0) {
         for (const element of state?.userDetails?.walletAddressSOL) {
@@ -106,13 +89,6 @@ const userDataSlice = createSlice({
           }
         }
       }
-    },
-    setBalancesLoading: (state, action) => {
-      state.isLoadingBalances = action.payload;
-    },
-    setBalancesError: (state, action) => {
-      state.isLoadingBalances = false;
-      state.balancesError = action.payload;
     },
     updateWalletToPrimary: (state, { payload }) => {
       const setOldPrimaryToFalse =
@@ -134,24 +110,33 @@ const userDataSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchUserData.fulfilled, (state, { payload }) => {
-      state.userDetails = payload?.user;
-      const findPrimaryWallet = state.userDetails.walletAddressSOL?.find(
-        (item) => item?.primary
-      );
-      if (findPrimaryWallet) {
-        state.activeSolanaWallet = findPrimaryWallet;
-      }
-    });
+    builder
+      .addCase(fetchUserData.fulfilled, (state, { payload }) => {
+        state.userDetails = payload?.user;
+        const findPrimaryWallet = state.userDetails.walletAddressSOL?.find(
+          (item) => item?.primary
+        );
+        if (findPrimaryWallet) {
+          state.activeSolanaWallet = findPrimaryWallet;
+        }
+      })
+      .addCase(fetchUserWalletBalances.fulfilled, (state, { payload }) => {
+        if (payload?.balances?.length > 0) {
+          state.userDetails.walletAddressSOL = payload?.balances;
+          const findPrimaryWallet = payload?.balances?.find(
+            (item) => item?.primary
+          );
+          if (findPrimaryWallet) {
+            state.activeSolanaWallet = findPrimaryWallet;
+          }
+        }
+      });
   },
 });
 
 export const {
   makeUserEmptyOnLogout,
   clearWalletBalances,
-  setWalletBalances,
-  setBalancesLoading,
-  setBalancesError,
   updateWalletToPrimary,
   addNewGeneratedWallet,
   updateUserReferralId,
