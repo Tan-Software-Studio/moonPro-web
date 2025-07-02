@@ -9,7 +9,7 @@ import {
   TrendingImg,
   solana,
 } from "@/app/Images";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AllPageHeader from "@/components/common/AllPageHeader/AllPageHeader";
 import TableHeaderData from "@/components/common/TableHeader/TableHeaderData";
 import TableBody from "@/components/common/TableBody/TableBody";
@@ -19,6 +19,7 @@ import {
   subscribeToAiSignalTokens,
   subscribeToAiSignalTokensNewAddedToken,
 } from "@/websocket/walletTracker";
+import { fetchAiSignalData } from "@/app/redux/AiSignalDataSlice/AiSignal.slice";
 const BASE_URL_MOON_USER = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL_SOCKET;
 // Initial filter values - all empty/false
 const initialFilterValues = {
@@ -38,6 +39,7 @@ const AiSignal = () => {
   const { t } = useTranslation();
   const tredingPage = t("tredingPage");
   const tableRef = useRef(null);
+  const dispatch = useDispatch();
   const [sortColumn, setSortColumn] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [localFilterTime, setLocalFilterTime] = useState("5m");
@@ -53,6 +55,7 @@ const AiSignal = () => {
 
   useEffect(() => {
     document.title = `Nexa | AI Signal`;
+    dispatch(fetchAiSignalData());
   }, []);
 
   const Trendings = {

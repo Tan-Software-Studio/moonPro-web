@@ -9,8 +9,6 @@ import { IoMenu } from "react-icons/io5";
 import { setIsSidebarOpen } from "@/app/redux/CommonUiData";
 import { logo, Solana } from "@/app/Images";
 import {
-  fetchSolanaNativeBalance,
-  fetchUsdcBalance,
   openCloseLoginRegPopup,
   setIsSearchPopup,
   setLoginRegPopupAuth,
@@ -47,7 +45,6 @@ import {
 } from "@/app/redux/userDataSlice/UserData.slice";
 import WithdrawPopup from "./popup/WithdrawPopup";
 import NewAiSignalTokens from "./popup/NewAiSignalTokens";
-import { fetchAiSignalData } from "@/app/redux/AiSignalDataSlice/AiSignal.slice";
 import { showToaster } from "@/utils/toaster/toaster.style";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
@@ -248,7 +245,6 @@ const Navbar = () => {
   useEffect(() => {
     setMounted(true);
     fetchData();
-    dispatch(fetchAiSignalData());
     dispatch(fetchMemescopeData());
     fetchSolPrice();
     dispatch(setSolWalletAddress());
