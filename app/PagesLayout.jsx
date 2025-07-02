@@ -3,8 +3,6 @@ import React, { useEffect } from "react";
 import Navbar from "@/components/Navbar/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import SearchPopup from "@/components/common/Search-Popup/SearchPopup";
-import Notification from "@/components/Notification/Notification";
-import WalletScan from "@/components/walletTrackerNotification/WalletScan";
 import { setGlobalBuyAmt } from "./redux/states";
 import "../app/i18n";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -17,8 +15,6 @@ const PagesLayout = ({ childrens }) => {
   const isLargeScreen = useSelector((state) => state?.AllthemeColorData?.isLargeScreen);
   const isSmallScreenData = useSelector((state) => state?.AllthemeColorData?.isSmallScreen);
   const isSidebarOpen = useSelector((state) => state?.AllthemeColorData?.isSidebarOpen);
-  const borderColor = useSelector((state) => state?.AllthemeColorData?.borderColor);
-  const hasScrolled = useSelector((state) => state?.AllthemeColorData?.hasTableScroll);
   const isSearchbarPopup = useSelector((state) => state?.AllStatesData?.isSearchPopup);
 
   useEffect(() => {
@@ -51,9 +47,6 @@ const PagesLayout = ({ childrens }) => {
                 <SearchPopup />
               </div>
             )}
-            {/* {isEnabled && <Notification />} */}
-            <Notification />
-            <WalletScan />
 
             <div className="w-full  ">{childrens}</div>
             <div className="">

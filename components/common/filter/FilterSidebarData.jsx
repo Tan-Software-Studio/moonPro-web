@@ -1,4 +1,3 @@
-import { moon, pump } from "@/app/Images";
 
 const FilterInput = [
     {

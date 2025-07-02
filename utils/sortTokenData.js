@@ -5,35 +5,18 @@ const handleSort = (key, data, order) => {
   return [...data].sort((a, b) => {
     if (order === "desc") {
       return key === "dbCreatedAt"
-        ? new Date(a[key]) - new Date(b[key]) : key === "buys" ? (a["buys"] + a["sells"] || 0) - (b["buys"] + b["sells"] || 0)
-          : (a[key] || 0) - (b[key] || 0);
+        ? new Date(a[key]) - new Date(b[key])
+        : key === "buys"
+        ? (a["buys"] + a["sells"] || 0) - (b["buys"] + b["sells"] || 0)
+        : (a[key] || 0) - (b[key] || 0);
     } else {
       return key === "dbCreatedAt"
-        ? new Date(b[key]) - new Date(a[key]) : key === "buys" ? (b["buys"] + b["sells"] || 0) - (a["buys"] + a["sells"] || 0)
-          : (b[key] || 0) - (a[key] || 0);
+        ? new Date(b[key]) - new Date(a[key])
+        : key === "buys"
+        ? (b["buys"] + b["sells"] || 0) - (a["buys"] + a["sells"] || 0)
+        : (b[key] || 0) - (a[key] || 0);
     }
   });
 };
 
 export default handleSort;
-
-// const handleSort = (key, order) => {
-//   console.log("🚀 ~ handleSort ~ order:", order)
-//   console.log("🚀 ~ handleSort ~ key:", key)
-//   setSortColumn(key);
-//   setSortOrder(order);
-//   const sortedData = [...data].sort((a, b) => {
-//     if (order === "asc") {
-//       if (key == "date") {
-//         return new Date(a[key]) - new Date(b[key]);
-//       }
-//       return a[key] - b[key];
-//     } else {
-//       if (key == "date") {
-//         return new Date(b[key]) - new Date(a[key]);
-//       }
-//       return b[key] - a[key];
-//     }
-//   });
-//   setData(sortedData);
-// };

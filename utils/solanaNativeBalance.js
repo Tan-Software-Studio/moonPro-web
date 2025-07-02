@@ -48,21 +48,4 @@ const getSoalanaTokenBalance = async (walletAddress, tokenMintAddress) => {
   }
 };
 
-async function getSolanaTokenDecimals(token, connection) {
-  try {
-    const tokenAddress = new PublicKey(token);
-    // Fetch mint info of the token
-    const mintInfo = await getMint(connection, tokenAddress);
-
-    // Get the decimals
-    return mintInfo.decimals;
-  } catch (error) {
-    console.log("🚀 ~ getSolanaTokenDecimals ~ error:", error?.message);
-  }
-}
-
-export {
-  getSolanaBalanceAndPrice,
-  getSoalanaTokenBalance,
-  getSolanaTokenDecimals,
-};
+export { getSolanaBalanceAndPrice, getSoalanaTokenBalance };

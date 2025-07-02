@@ -3,16 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx"
 import { FaBell, FaBellSlash } from "react-icons/fa";
-import toast from "react-hot-toast";
 const TableHeaderData = ({ headers, onSort, sortColumn, sortOrder, data }) => {
   const [sortStates, setSortStates] = useState({});
   const [isAiSignalNotificationOn, setIsAiSignalNotificationOn] = useState(() => {
     const storedValue = localStorage.getItem('ai-signal-notification');
     return storedValue ? JSON.parse(storedValue) : true;
   });
-  const borderColor = useSelector(
-    (state) => state?.AllthemeColorData?.borderColor
-  );
   const hasScrolled = useSelector(
     (state) => state?.AllthemeColorData?.hasTableScroll
   );

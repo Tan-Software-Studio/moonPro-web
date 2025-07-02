@@ -84,39 +84,6 @@ function calculateHoldersPercentage(holdingAmount, totalSupply) {
   const percentage = (holdingAmount / totalSupply) * 100;
   return `${percentage.toFixed(2)}%`;
 }
-function calculateHoldersPercentageWithoutPercentage(
-  holdingAmount,
-  totalSupply
-) {
-  if (totalSupply === 0) {
-    return "Total supply cannot be zero.";
-  }
-  const percentage = (holdingAmount / totalSupply) * 100;
-  return `${percentage.toFixed(2)}`;
-}
-
-const getDateMinus24Hours = (hours) => {
-  const date = new Date();
-  date.setHours(date.getHours() - hours);
-  return date.toISOString();
-};
-const getDateMinusMinutes = (minutes) => {
-  const date = new Date();
-  date.setMinutes(date.getMinutes() - minutes);
-  return date.toISOString();
-};
-
-function calculatePercentageChange(currentPrice, oldPrice) {
-  if (oldPrice === 0) {
-    return "0.00";
-  }
-  const percentageChange = ((currentPrice - oldPrice) / oldPrice) * 100;
-  const finalPercentage =
-    percentageChange > 0
-      ? `+${Number(percentageChange).toFixed(2)}`
-      : Number(percentageChange).toFixed(2);
-  return finalPercentage;
-}
 
 function convertToRelativeTime(dateString) {
   const givenDate = new Date(dateString);
@@ -187,33 +154,6 @@ function UpdateTimeViaUTCWithCustomTime(utcString, currentTime) {
   };
 }
 
-function getTimeAgo(dateString, addAgo = true) {
-  const now = new Date().getTime(); // Current UTC timestamp
-  const past = new Date(dateString).getTime(); // UTC timestamp of the input
-
-  if (past > now) return `0s${addAgo ? " ago" : ""}`; // Handle future dates gracefully
-
-  const diffInSeconds = Math.floor((now - past) / 1000);
-  const suffix = addAgo ? " ago" : "";
-
-  if (diffInSeconds < 60) return `${diffInSeconds}s${suffix}`;
-
-  const diffInMinutes = Math.floor(diffInSeconds / 60);
-  if (diffInMinutes < 60) return `${diffInMinutes}m${suffix}`;
-
-  const diffInHours = Math.floor(diffInMinutes / 60);
-  if (diffInHours < 24) return `${diffInHours}h${suffix}`;
-
-  const diffInDays = Math.floor(diffInHours / 24);
-  if (diffInDays < 30) return `${diffInDays}d${suffix}`;
-
-  const diffInMonths = Math.floor(diffInDays / 30);
-  if (diffInMonths < 12) return `${diffInMonths}mo${suffix}`;
-
-  const diffInYears = Math.floor(diffInMonths / 12);
-  return `${diffInYears}yrs${suffix}`;
-}
-
 function decimalConvert(price) {
   const [integerPart, decimalPart] = Number(price).toFixed(11).split(".");
   const leadingZeros = decimalPart?.match(/^0*/)[0].length;
@@ -241,50 +181,6 @@ function decimalConvert(price) {
   }
 }
 
-const formatNumberNoLoop = (num) => {
-  const number = Number(num);
-
-  // Return "0" if it's NaN or exactly 0
-  if (isNaN(number) || number === 0) return "0";
-
-  // Handle numbers between -1 and 1 (but not 0)
-  if (Math.abs(number) < 1) return number.toPrecision(2);
-
-  const suffixes = ["", "K", "M", "B", "T", "Q", "Qi", "S", "Sp", "O"];
-
-  // Ensure number isn't 0 before using log10
-  const exponent = Math.floor(Math.log10(Math.abs(number)) / 3);
-  const i = Math.max(0, Math.min(exponent, suffixes.length - 1)); // Ensure valid index
-
-  const scaled = Math.abs(number) / Math.pow(1000, i);
-  const formattedNum = parseFloat(scaled.toFixed(1)); // This removes trailing ".0" if unnecessary
-
-  return `${number < 0 ? "-" : ""}${formattedNum}${suffixes[i]}`;
-};
-
-function convertUTCToIST(utcTimestamp) {
-  const date = new Date(utcTimestamp);
-
-  // Convert to IST by adding 5 hours 30 minutes
-  const istOffset = 5.5 * 60; // IST offset in minutes
-  const istDate = new Date(date.getTime() + istOffset * 60000);
-
-  // Format date and time
-  const day = String(istDate.getDate()).padStart(2, "0");
-  const month = String(istDate.getMonth() + 1).padStart(2, "0"); // Months are zero-based
-  const year = istDate.getFullYear();
-
-  let hours = istDate.getHours();
-  const minutes = String(istDate.getMinutes()).padStart(2, "0");
-  const ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12 || 12; // Convert to 12-hour format
-
-  const time = `${hours}:${minutes} ${ampm}`;
-  const formattedDate = `${day}-${month}-${year}`;
-
-  return `${formattedDate}, ${time}`;
-}
-
 // function to calculate rec. amount
 function calculateRecAmountSolToAnytoken(
   amountToken1,
@@ -304,20 +200,13 @@ function calculateRecAmountSolToAnytoken(
 }
 
 export {
-  getDateMinus24Hours,
-  getDateMinusMinutes,
-  calculatePercentageChange,
   convertToRelativeTime,
   calculateTimeDifference,
   humanReadableFormat,
   humanReadableFormatWithOutUsd,
   calculateHoldersPercentage,
-  calculateHoldersPercentageWithoutPercentage,
   UpdateTime,
   decimalConvert,
-  formatNumberNoLoop,
-  getTimeAgo,
-  convertUTCToIST,
   convertUTCToLocalTimeString,
   UpdateTimeViaUTCWithCustomTime,
   calculateRecAmountSolToAnytoken,

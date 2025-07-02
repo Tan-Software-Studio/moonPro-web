@@ -16,25 +16,6 @@ function humanReadableFormat(number) {
   return `$${number.toFixed(2)}${units[unitIndex]}`;
 }
 
-//  NoDollar function
-function humanReadableFormatNoDollar(number, decimals = 0) {
-  const units = ["", "K", "M", "B", "T"];
-  let unitIndex = 0;
-  number = parseFloat(number);
-
-  if (isNaN(number)) {
-    return "0";
-  }
-  number /= Math.pow(10, decimals);
-
-  while (Math.abs(number) >= 1000 && unitIndex < units.length - 1) {
-    number /= 1000;
-    unitIndex++;
-  }
-  number = Math.trunc(number);
-  return `${number}${units[unitIndex]}`;
-}
-
 // dynamic decimals
 function humanReadableFormatWithNoDollar(number, decimal) {
   const units = ["", "K", "M", "B", "T"];
@@ -167,7 +148,6 @@ const formatNumber = (amount, addSign = true, addDollar = true) => {
 
 export {
   humanReadableFormat,
-  humanReadableFormatNoDollar,
   decimalConvert,
   humanReadableFormatWithNoDollar,
   formatDecimal,

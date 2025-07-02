@@ -1,7 +1,6 @@
 "use client";
 import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import SolQuery from "@/components/common/NewPair/SolQuery";
 
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 // Helper function to format large numbers
@@ -18,35 +17,6 @@ export const fetchnewPairData = createAsyncThunk(
     try {
       const res = await axios.get(`${URL}findAllToken`);
       const records = res?.data?.records;
-
-      // // Process the data
-      // const processedData = await Promise.all(
-      //   records.map(async (message) => {
-      //     const time = "2024-09-24T08:03:00Z";
-
-      //     // const data = await SolQuery(message?.mint, time);
-
-      //     return {
-      //       Img: message?.Img,
-      //       symbol: message?.symbol,
-      //       name: message?.name,
-      //       address: message?.address,
-      //       MKC: message?.MKC,
-      //       created_time: Date.now(),
-      //       liquidity: message?.liquidity,
-      //       solliquidity: message?.solliquidity,
-      //       // buyer: Number(data[0]?.buyers || 0),
-      //       // sellers: Number(data[0]?.sellers || 0),
-      //       // volume: formatNumberWithUnits(Number(data[0]?.traded_volume || 0)),
-      //       buyer: 0,
-      //       sellers: 0,
-      //       volume: 0,
-      //     };
-      //   })
-      // );
-
-      // return processedData;
-
       return records;
     } catch (err) {
       throw err;
