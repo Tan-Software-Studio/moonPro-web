@@ -123,6 +123,7 @@ const TVChartContainer = ({
     creatorTransactions: DEXTradeByTokens(
       orderBy: {descending: Block_Time}
       limit: {count: 1000}
+      limitBy: {by: Transaction_Signature, count: 1}
       where: {
         Trade: {
           Currency: {MintAddress: {is: $token}}, 
