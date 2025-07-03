@@ -55,14 +55,14 @@ const SquareProgressBar = ({
             strokeLinecap="round"
           />
         </svg>
-        {showPercentText &&
+        {/* {showPercentText &&
           <div
             className="absolute inset-0 flex justify-center items-center text-sm font-semibold"
             style={{ color: progressColor }}
           >
             {Math.round(progress)}%
           </div>
-        }
+        } */}
         {/* top-left Icon */}
         {/* <div 
           className="absolute rounded-full bg-black text-white text-xs border border-[#6ec3f5] bottom-12 right-12 p-[1px] z-10">

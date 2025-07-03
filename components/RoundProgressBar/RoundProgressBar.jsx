@@ -50,12 +50,12 @@ const RoundProgressBar = ({
         </svg>
 
         {/* Center text */}
-        <div
+        {/* <div
           className="absolute inset-0 flex justify-center items-center text-sm font-semibold"
           style={{ color: progressColor }}
         >
           {Math.round(progress)}%
-        </div>
+        </div> */}
 
         {/* top-left icon */}
         <div
