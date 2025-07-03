@@ -7,7 +7,6 @@ import { setIsSearchPopup } from "@/app/redux/states";
 import { useDispatch } from "react-redux";
 import SearchResultData from "./SearchResultData";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
 

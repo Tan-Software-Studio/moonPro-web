@@ -104,7 +104,7 @@ const WithdrawPopup = ({
       );
 
       // Handle successful response
-      console.log("Withdrawal successful:", response.data);
+      // console.log("Withdrawal successful:", response.data);
 
       // Show success message
       setSuccess(true);
