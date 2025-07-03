@@ -3,7 +3,11 @@
 import { nexaLogo, nexaText, sharePnlBg } from "@/app/Images";
 import { SiSolana } from "react-icons/si";
 import { BiSolidUpArrow, BiSolidDownArrow } from "react-icons/bi";
-import { RiArrowUpDownFill, RiDownloadLine, RiFileCopyLine } from "react-icons/ri";
+import {
+  RiArrowUpDownFill,
+  RiDownloadLine,
+  RiFileCopyLine,
+} from "react-icons/ri";
 import { IoMdDoneAll } from "react-icons/io";
 
 import Image from "next/image";
@@ -16,7 +20,7 @@ const SharePnLModal = ({
   onClose,
   tokenSymbol,
   currentTokenPnLData,
-  solanaLivePrice
+  solanaLivePrice,
 }) => {
   const modalRef = useRef(null);
   const [solIsActive, setSolIsActive] = useState(false);
@@ -24,14 +28,14 @@ const SharePnLModal = ({
   const [copied, setCopied] = useState(false);
 
   const handleClickSwapCurrency = () => {
-    setSolIsActive(prev => !prev);
+    setSolIsActive((prev) => !prev);
   };
 
   const handleDownload = async () => {
     if (!renderedImage) return;
     try {
       const link = document.createElement("a");
-      link.download = `${tokenSymbol || 'pnl'}.png`;
+      link.download = `${tokenSymbol || "pnl"}.png`;
       link.href = renderedImage;
       link.click();
     } catch (error) {
@@ -44,63 +48,76 @@ const SharePnLModal = ({
     isPositivePnL: false,
     pnlPercent: 0,
     invested: 0,
-    position: 0
+    position: 0,
   });
 
-  const {
-    pnlAmount,
-    isPositivePnL,
-    pnlPercent,
-    invested,
-    position
-  } = useMemo(() => {
-    if (!currentTokenPnLData || Object.keys(currentTokenPnLData).length === 0) {
-      previousPnLRef.current.position = 0;
-      return previousPnLRef.current;
-    }
+  const { pnlAmount, isPositivePnL, pnlPercent, invested, position } =
+    useMemo(() => {
+      if (
+        !currentTokenPnLData ||
+        Object.keys(currentTokenPnLData).length === 0
+      ) {
+        previousPnLRef.current.position = 0;
+        return previousPnLRef.current;
+      }
 
-    const nonPastPnlAmount = solIsActive ? currentTokenPnLData?.absoluteSolPnL || null : currentTokenPnLData?.absolutePnL || null;
-    const pastPnlAmount = solIsActive 
-      ? (currentTokenPnLData?.pastPnlPrice ?? 0) / (currentTokenPnLData?.pastAverageBuySolPrice ?? 1)
-      : (currentTokenPnLData?.pastPnlPrice ?? 0);    
-    let pnlAmt = nonPastPnlAmount != null ? nonPastPnlAmount : pastPnlAmount;
-    pnlAmt = Math.abs(pnlAmt);
-    
-    const isPositive = currentTokenPnLData?.isPositivePnL != null
-    ? currentTokenPnLData.isPositivePnL
-    : (currentTokenPnLData?.pastPnlPrice ?? 0) >= 0;
-    
-    const nonPastInvestmentAmount = solIsActive ? currentTokenPnLData?.buyAmount / currentTokenPnLData?.averageSolBuyPrice || null : currentTokenPnLData?.buyAmount || null;
-    const pastInvestmentAmount = solIsActive ? (currentTokenPnLData?.pastAverageBuy ?? 0) / (currentTokenPnLData?.pastAverageBuySolPrice ?? 1) : (currentTokenPnLData?.pastAverageBuy ?? 0);
+      const nonPastPnlAmount = solIsActive
+        ? currentTokenPnLData?.absoluteSolPnL || null
+        : currentTokenPnLData?.absolutePnL || null;
+      const pastPnlAmount = solIsActive
+        ? (currentTokenPnLData?.pastPnlPrice ?? 0) /
+          (currentTokenPnLData?.pastAverageBuySolPrice ?? 1)
+        : currentTokenPnLData?.pastPnlPrice ?? 0;
+      let pnlAmt = nonPastPnlAmount != null ? nonPastPnlAmount : pastPnlAmount;
+      pnlAmt = Math.abs(pnlAmt);
 
-    let investAmt = nonPastInvestmentAmount != null ? nonPastInvestmentAmount : pastInvestmentAmount;
+      const isPositive =
+        currentTokenPnLData?.isPositivePnL != null
+          ? currentTokenPnLData.isPositivePnL
+          : (currentTokenPnLData?.pastPnlPrice ?? 0) >= 0;
 
-    const pnlPerc = currentTokenPnLData?.safePnLPercent ?? currentTokenPnLData?.pastPnlPercentage ?? 0;
+      const nonPastInvestmentAmount = solIsActive
+        ? currentTokenPnLData?.buyAmount /
+            currentTokenPnLData?.averageSolBuyPrice || null
+        : currentTokenPnLData?.buyAmount || null;
+      const pastInvestmentAmount = solIsActive
+        ? (currentTokenPnLData?.pastAverageBuy ?? 0) /
+          (currentTokenPnLData?.pastAverageBuySolPrice ?? 1)
+        : currentTokenPnLData?.pastAverageBuy ?? 0;
 
-    const signedPnl = isPositive ? pnlAmt : -pnlAmt;
-    const pos = investAmt + signedPnl;
+      let investAmt =
+        nonPastInvestmentAmount != null
+          ? nonPastInvestmentAmount
+          : pastInvestmentAmount;
 
-    const newPnL = {
-      pnlAmount: pnlAmt,
-      isPositivePnL: isPositive,
-      pnlPercent: pnlPerc,
-      invested: investAmt,
-      position: pos
-    };
+      const pnlPerc =
+        currentTokenPnLData?.safePnLPercent ??
+        currentTokenPnLData?.pastPnlPercentage ??
+        0;
 
-    // Save for future fallback
-    previousPnLRef.current = newPnL;
+      const signedPnl = isPositive ? pnlAmt : -pnlAmt;
+      const pos = investAmt + signedPnl;
 
-    return newPnL;
-  }, [currentTokenPnLData, solIsActive, solanaLivePrice]);
+      const newPnL = {
+        pnlAmount: pnlAmt,
+        isPositivePnL: isPositive,
+        pnlPercent: pnlPerc,
+        invested: investAmt,
+        position: pos,
+      };
 
+      // Save for future fallback
+      previousPnLRef.current = newPnL;
+
+      return newPnL;
+    }, [currentTokenPnLData, solIsActive]);
 
   const handleCopy = async () => {
     if (!renderedImage) return;
     try {
       const blob = await (await fetch(renderedImage)).blob();
       await navigator.clipboard.write([
-        new ClipboardItem({ [blob.type]: blob })
+        new ClipboardItem({ [blob.type]: blob }),
       ]);
     } catch (error) {
       console.error("Failed to copy image", error);
@@ -115,7 +132,10 @@ const SharePnLModal = ({
   const generateImage = async () => {
     if (!modalRef.current) return;
     try {
-      const dataUrl = await toPng(modalRef.current, { cacheBust: true, pixelRatio: 1 });
+      const dataUrl = await toPng(modalRef.current, {
+        cacheBust: true,
+        pixelRatio: 1,
+      });
       setRenderedImage(dataUrl);
     } catch (err) {
       console.error("Failed to generate image", err);
@@ -164,11 +184,17 @@ const SharePnLModal = ({
                 className="flex py-[14.2px]"
               />
             </div>
-            <p className="font-bold uppercase text-[41.67px]">{tokenSymbol || "TOKEN NAME"}</p>
+            <p className="font-bold uppercase text-[41.67px]">
+              {tokenSymbol || "TOKEN NAME"}
+            </p>
             <div className="bg-[#1F73FC] w-[125.67px] h-[45px] my-4 gap-2 flex justify-center items-center py-3 px-4 rounded-[4px]">
               {solIsActive && <SiSolana width={20} height={16} />}
               <p className="font-medium text-xl">
-                {isPositivePnL != null ? isPositivePnL === true ? "+" : "-" : ""}
+                {isPositivePnL != null
+                  ? isPositivePnL === true
+                    ? "+"
+                    : "-"
+                  : ""}
                 {formatNumber(pnlAmount, false, !solIsActive) || 0}
               </p>
             </div>
@@ -176,8 +202,16 @@ const SharePnLModal = ({
             <div className="w-[314px] mt-10 flex gap-[10px] flex-col justify-center font-normal text-2xl">
               <div className="w-full flex justify-between">
                 <p>PnL</p>
-                <div className={`${isPositivePnL ? "text-[#21CB6B]" : "text-[#ed1b26]"} flex gap-1 items-center font-bold`}>
-                  {isPositivePnL ? <BiSolidUpArrow size={12} /> : <BiSolidDownArrow size={12} />}
+                <div
+                  className={`${
+                    isPositivePnL ? "text-[#21CB6B]" : "text-[#ed1b26]"
+                  } flex gap-1 items-center font-bold`}
+                >
+                  {isPositivePnL ? (
+                    <BiSolidUpArrow size={12} />
+                  ) : (
+                    <BiSolidDownArrow size={12} />
+                  )}
                   <p>{pnlPercent.toFixed(2) || 0}%</p>
                 </div>
               </div>
@@ -185,17 +219,23 @@ const SharePnLModal = ({
                 <p>Invested</p>
                 <div className="flex items-center gap-[9px]">
                   {solIsActive && <SiSolana width={22} height={17} />}
-                  <p className="font-medium">{formatNumber(invested, false, !solIsActive)}</p>
+                  <p className="font-medium">
+                    {formatNumber(invested, false, !solIsActive)}
+                  </p>
                 </div>
               </div>
               <div className="w-full flex justify-between">
                 <p>Position</p>
                 <div className="flex items-center gap-[9px]">
                   {solIsActive && <SiSolana width={22} height={17} />}
-                  <p className="font-medium">{formatNumber(position, false, !solIsActive)}</p>
+                  <p className="font-medium">
+                    {formatNumber(position, false, !solIsActive)}
+                  </p>
                 </div>
               </div>
-              <p className="mt-[30px] font-medium text-[26px]">Crushing every trade 🚀</p>
+              <p className="mt-[30px] font-medium text-[26px]">
+                Crushing every trade 🚀
+              </p>
               <div className="w-full bg-[#1F73FC] mt-[2px] font-normal text-base flex items-center justify-center rounded-md py-2 gap-3">
                 <div className="border-[3px] rounded-full w-3 h-3" />
                 <p>with AI Signal Powered by Nexa</p>
@@ -207,10 +247,13 @@ const SharePnLModal = ({
 
       {/* Modal UI */}
       {isOpen && renderedImage && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 p-20 flex flex-col justify-center items-center z-50" onClick={onClose}>
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 p-20 flex flex-col justify-center items-center z-50"
+          onClick={onClose}
+        >
           <div
             className="w-full max-w-[800px] aspect-[800/640] rounded-lg flex justify-center items-center overflow-hidden"
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           >
             <img
               src={renderedImage}
@@ -247,13 +290,11 @@ const SharePnLModal = ({
                   event.stopPropagation();
                   handleCopy();
                 }}
-                className={`bg-[#6b728030] flex gap-1 items-center text-white px-4 py-2 rounded  ${!copied && "hover:bg-[#6b728075]"}`}
+                className={`bg-[#6b728030] flex gap-1 items-center text-white px-4 py-2 rounded  ${
+                  !copied && "hover:bg-[#6b728075]"
+                }`}
               >
-                {copied ? 
-                  <IoMdDoneAll />
-                :
-                   <RiFileCopyLine />
-                }
+                {copied ? <IoMdDoneAll /> : <RiFileCopyLine />}
                 <p>Copy</p>
               </button>
             </div>

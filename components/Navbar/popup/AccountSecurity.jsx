@@ -14,7 +14,10 @@ import { setSolWalletAddress } from "@/app/redux/states";
 import { updatePnlTableData } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import { googleLogout } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
-import { makeUserEmptyOnLogout } from "@/app/redux/userDataSlice/UserData.slice";
+import {
+  makeUserEmptyOnLogout,
+  resetActiveWalletAddress,
+} from "@/app/redux/userDataSlice/UserData.slice";
 import { MdEdit } from "react-icons/md";
 import EditReferralCode from "./EditReferralCode";
 import getPointsToNextTitle from "@/components/referral/getPointsToNextTitle";
@@ -58,6 +61,7 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("walletAddress");
     dispatch(setSolWalletAddress());
+    dispatch(resetActiveWalletAddress());
     dispatch(makeUserEmptyOnLogout());
     setIsAccountPopup(false);
 
