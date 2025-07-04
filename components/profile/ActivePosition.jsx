@@ -10,6 +10,7 @@ import InstantSell from "./InstantSell";
 import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
 import { FiUpload } from "react-icons/fi";
 import SharePnLModal from "../common/tradingview/SharePnLModal";
+import Tooltip from "../common/Tooltip/ToolTip";
 
 const ActivePosition = ({
   filteredActivePosition,
@@ -260,15 +261,17 @@ const ActivePosition = ({
 
                     {/* Action */}
                     <td className="px-4 py-2">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleSharePnlButton(item);
-                        }} 
-                        className="flex cursor-pointer items-center justify-center text-slate-400 text-lg"
-                      >
-                        <FiUpload />
-                      </button>
+                      <Tooltip body={"Share PnL"}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSharePnlButton(item);
+                          }} 
+                          className="flex cursor-pointer items-center justify-center text-slate-400 text-lg hover:bg-slate-700 p-1 rounded-lg"
+                        >
+                          <FiUpload />
+                        </button>
+                      </Tooltip>
                       
                     </td>
 
