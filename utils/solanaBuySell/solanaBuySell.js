@@ -161,6 +161,9 @@ const buySolanaTokensQuickBuyHandler = async (
   if (amt <= 0) {
     return showToaster("Invalid amount");
   }
+  if (nativeTokenbalance < 0.005) {
+    return showToaster("Minimum wallet balance is 0.005 SOL");
+  }
   if (nativeTokenbalance < amt) {
     return showToaster("Insufficient funds.");
   }
@@ -208,110 +211,6 @@ const buySolanaTokensQuickBuyHandler = async (
       price: Number(solanaLivePrice),
       programAddress: programAddress,
       tokenPrice: tokenPrice,
-      metaData: metaData || null,
-    },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then(async (res) => {
-      await toast.success("Transaction successfully", {
-        id: "saveToast",
-        duration: 3000,
-      });
-      dispatch(
-        updateHoldingsDataWhileBuySell({
-          token: toToken,
-          type: "buy",
-          amountInDollar: Number(Number(amt) * solanaLivePrice),
-          price: Number(tokenPrice),
-          name: metaData?.name,
-          symbol: metaData?.symbol,
-          img: metaData?.img,
-          solPrice: Number(solanaLivePrice),
-        })
-      );
-      dispatch(setBuyAndSellCountInPerformance("buy"));
-    })
-    .catch(async (err) => {
-      await toast.error("Somthing went wrong please try again later.", {
-        id: "saveToast",
-        duration: 3000,
-      });
-      console.log("🚀 ~ err:", err?.message);
-    });
-  return;
-};
-// quick buy handler
-const buySolanaTokensQuickBuyHandlerCopyTrading = async (
-  solanaLivePrice,
-  toToken,
-  address,
-  nativeTokenbalance,
-  e,
-  programAddress,
-  dispatch,
-  tokenPrice,
-  metaData
-) => {
-  e && e.stopPropagation();
-  const amt = await localStorage.getItem("copyBuySol");
-  const token = localStorage.getItem("token");
-  if (!token) {
-    return dispatch(openCloseLoginRegPopup(true));
-  }
-  if (amt <= 0) {
-    return showToaster("Invalid amount.");
-  }
-  if (nativeTokenbalance < amt) {
-    return showToaster("Insufficient funds");
-  }
-  if (amt < 0.0001) {
-    return showToaster("Minimum buy amount is 0.0001 SOL");
-  }
-  let slippage = 50;
-  let priorityFee = 0.0001;
-  const preSetFromLocalStorage = JSON.parse(
-    localStorage.getItem("preSetAllData")
-  );
-  const preSetActiveFLag = localStorage.getItem("preSetSettingActive");
-  if (preSetFromLocalStorage) {
-    slippage =
-      preSetFromLocalStorage?.[preSetActiveFLag || "P1"]?.["buy"]?.slippage;
-    priorityFee =
-      preSetFromLocalStorage?.[preSetActiveFLag || "P1"]?.["buy"]?.priorityFee;
-  }
-  toast(
-    <div className="flex items-center gap-5">
-      <div className="loaderPopup"></div>
-      <div className="text-white text-sm">Attempting transaction</div>
-    </div>,
-    {
-      id: "saveToast",
-      position: "top-center",
-      duration: Infinity,
-      style: {
-        border: "1px solid #4D4D4D",
-        color: "#FFFFFF",
-        fontSize: "14px",
-        letterSpacing: "1px",
-        backgroundColor: "#1F1F1F",
-      },
-    }
-  );
-  await axios({
-    url: `${BASE_URL}transactions/solbuy`,
-    method: "post",
-    data: {
-      token: toToken,
-      amount: Number(amt),
-      slippage: slippage,
-      priorityFee: priorityFee,
-      price: Number(solanaLivePrice),
-      tokenPrice: tokenPrice,
-      programAddress: programAddress
-        ? programAddress
-        : "nasdiuasdnasdudhsdjasbhid",
       metaData: metaData || null,
     },
     headers: {
@@ -494,6 +393,7 @@ const sellSolanaTokensFromPortfolio = async (
   slipTolerance = 50,
   priorityFee = 0.0001,
   address,
+  nativeTokenbalance,
   decimal,
   price,
   setLoaderSwap,
@@ -513,6 +413,9 @@ const sellSolanaTokensFromPortfolio = async (
   // console.log("🚀 ~ slipTolerance:", slipTolerance);
   // console.log("🚀 ~ amt:", amt);
   // console.log("🚀 ~ fromToken:", fromToken);
+  if (nativeTokenbalance < 0.005) {
+    return showToaster("Minimum wallet balance is 0.005 SOL");
+  }
   if (amt <= 0) {
     return showToaster("Invalid amount.");
   }
@@ -788,7 +691,6 @@ export {
   sellSolanaTokensFromPortfolio,
   getDateMinus24Hours,
   buySolanaTokensQuickBuyHandler,
-  buySolanaTokensQuickBuyHandlerCopyTrading,
   convertSOLtoUSDC,
   convertUSDCtoSOL,
 };
