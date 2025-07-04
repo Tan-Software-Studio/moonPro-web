@@ -37,6 +37,7 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
       priorityFees?.slippage,
       priorityFees?.priorityFee,
       activeSolWalletAddress?.wallet,
+      activeSolWalletAddress?.balance || 0,
       token?.decimals,
       Number(token?.current_price),
       setIsLoading,
