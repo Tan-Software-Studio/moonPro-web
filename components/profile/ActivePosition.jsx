@@ -2,12 +2,14 @@ import { NoDataLogo } from "@/app/Images";
 import { Check, Copy } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { pnlPercentage } from "./calculation";
 import { useTranslation } from "react-i18next";
 import InstantSell from "./InstantSell";
 import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
+import { FiUpload } from "react-icons/fi";
+import SharePnLModal from "../common/tradingview/SharePnLModal";
 
 const ActivePosition = ({
   filteredActivePosition,
@@ -17,6 +19,9 @@ const ActivePosition = ({
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [quickSellTokenData, setQuickSellTokenData] = useState({});
+  const [currentPnlDataToShow, setCurrentPnlDataToShow] = useState({});
+  const [isSharePnLModalActive, setIsSharePnLModalActive] = useState(false);
+  const [currentPnlDataToShowSymbol, setCurrentPnlDataToShowSymbol] = useState(null);
   const dispatch = useDispatch();
   const currentTabData = useSelector(
     (state) => state?.setPnlData?.PnlData || []
@@ -27,6 +32,9 @@ const ActivePosition = ({
   const isDataLoaded = useSelector((state) => state?.setPnlData?.isDataLoaded);
   const hasAttemptedLoad = useSelector(
     (state) => state?.setPnlData?.hasAttemptedLoad
+  );
+  const solanaLivePrice = useSelector(
+    (state) => state?.AllStatesData?.solanaLivePrice
   );
 
   const { t } = useTranslation();
@@ -45,7 +53,6 @@ const ActivePosition = ({
   const shouldShowNoData = !initialLoading && hasAttemptedLoad && isDataLoaded && currentTabData?.length === 0;
   const shouldNoSearchData = !initialLoading && isDataLoaded && currentTabData?.length > 0 && filteredActivePosition.length === 0;
 
-
   function pnlDollarCalc(item) {
     return ((item.activeQtyHeld - item?.quantitySold) * (item.current_price - item.averageBuyPrice));
   }
@@ -56,6 +63,72 @@ const ActivePosition = ({
       `/meme/${item?.token}`
     );
   };
+
+  const handleSharePnlButton = (newPnlData) => {
+    if (shouldShowData) {
+      setCurrentPnlDataToShow(convertPnlDataToSharePnl(newPnlData));
+      setCurrentPnlDataToShowSymbol(newPnlData.symbol);
+      setIsSharePnLModalActive(true);
+    }
+  }
+
+  const convertPnlDataToSharePnl = (pnlData) => {
+    const buyAmount =
+    pnlData?.activeQtyHeld * pnlData?.averageBuyPrice ||
+      0;
+    const solBuyAmount =
+      pnlData?.activeQtyHeld *
+        pnlData?.averageSolBuyPrice || 0;
+    const soldAmount =
+      pnlData?.quantitySold *
+        pnlData?.averageHistoricalSellPrice || 0;
+    const solSellAmount =
+      pnlData?.quantitySold *
+        pnlData?.averageSolSellPrice || 0;
+    const activeQtyHeld = pnlData?.activeQtyHeld || 0;
+    const quantitySold = pnlData?.quantitySold || 0;
+    const averageBuyPrice = pnlData?.averageBuyPrice || 0;
+
+    const holdingRawAmount = activeQtyHeld - quantitySold;
+    const availableQtyInUSDWhenBought =
+      holdingRawAmount * averageBuyPrice;
+    const holdingsUsdInCurrentPrice =
+      holdingRawAmount *
+      (pnlData?.current_price || 0);
+    const holdingSolInCurrentPrice =
+      holdingsUsdInCurrentPrice / solanaLivePrice;
+
+    const pnlAmount =
+      holdingsUsdInCurrentPrice - availableQtyInUSDWhenBought;
+    const isPositivePnL = pnlAmount >= 0;
+    const absolutePnL = Math.abs(pnlAmount);
+    const absoluteSolPnL = absolutePnL / solanaLivePrice;
+
+    const pnlPercent =
+      availableQtyInUSDWhenBought !== 0
+        ? (pnlAmount / availableQtyInUSDWhenBought) * 100
+        : 0;
+
+    const safePnLPercent = isNaN(pnlPercent) ? 0 : pnlPercent;
+
+    return {
+      buyAmount,
+      solBuyAmount,
+      averageBuyPrice,
+      averageSolBuyPrice: pnlData?.averageSolBuyPrice || 0,
+      soldAmount,
+      solSellAmount,
+      averageSellPrice: pnlData?.averageHistoricalSellPrice || 0,
+      averageSolSellPrice: pnlData?.averageSolSellPrice || 0,
+      holdingRawAmount,
+      holdingsUsdInCurrentPrice,
+      holdingSolInCurrentPrice,
+      isPositivePnL,
+      absolutePnL,
+      absoluteSolPnL,
+      safePnLPercent,
+    };
+  }
 
   return (
     <>
@@ -85,6 +158,7 @@ const ActivePosition = ({
                     Remaining
                   </th>
                   <th className="px-4 py-2 text-slate-300 font-medium">PnL</th>
+                  <th className="px-4 py-2 text-slate-300 font-medium">Action</th>
                   {/* <th className="px-4 py-2 text-slate-300 font-medium">Action</th> */}
                 </tr>
               </thead>
@@ -184,6 +258,20 @@ const ActivePosition = ({
                       </div>
                     </td>
 
+                    {/* Action */}
+                    <td className="px-4 py-2">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSharePnlButton(item);
+                        }} 
+                        className="flex cursor-pointer items-center justify-center text-slate-400 text-lg"
+                      >
+                        <FiUpload />
+                      </button>
+                      
+                    </td>
+
                     {/* <td className="px-4 py-2 " >
                       <div
                         onClick={(e) => {
@@ -233,6 +321,14 @@ const ActivePosition = ({
       {
         isOpen && quickSellTokenData?.tokenData && <InstantSell tokenData={quickSellTokenData?.tokenData} index={quickSellTokenData?.index} setIsOpen={setIsOpen} />
       }
+      <SharePnLModal 
+        currentTokenPnLData={currentPnlDataToShow} 
+        isOpen={isSharePnLModalActive} 
+        onClose={() => {
+          setIsSharePnLModalActive(false);
+        }}
+        tokenSymbol={currentPnlDataToShowSymbol} 
+      />
     </>
   );
 };
