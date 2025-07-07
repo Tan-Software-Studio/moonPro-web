@@ -62,6 +62,7 @@ const ActivityTable = ({ activitySearchQuery }) => {
             }
           },
           limit: { count: 100 },
+          limitBy:{count:1,by:Transaction_Signature}
           orderBy: { descending: Block_Time }
         ) {
           Trade {
