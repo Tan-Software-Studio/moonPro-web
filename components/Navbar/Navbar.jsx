@@ -170,7 +170,9 @@ const Navbar = () => {
     })
       .then((res) => {
         const price = res?.data?.data[res?.data?.data?.length - 1]?.price;
-        dispatch(setSolanaLivePrice(price));
+        if (price) {
+          dispatch(setSolanaLivePrice(price));
+        }
       })
       .catch((err) => {});
   }

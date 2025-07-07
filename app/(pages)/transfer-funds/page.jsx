@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import transform from "../../../public/assets/Transfer-funds/transfer.png";
 import { useSelector } from "react-redux";
-
+const metaDataMainName = process.env.NEXT_PUBLIC_METADATA_MAIN_NAME || "Nexa";
 const TransferFunds = () => {
   const [activeTab, setActiveTab] = useState("Deposit");
 
@@ -12,12 +12,8 @@ const TransferFunds = () => {
   );
 
   useEffect(() => {
-    document.title = `Nexa | Transfer Funds`;
-  }, [])
-
-  const [activeIndex, setActiveIndex] = useState(2);
-
-  const timeOptions = ["1M", "5M", "30M", "1H"];
+    document.title = `${metaDataMainName} | Transfer Funds`;
+  }, []);
   return (
     <>
       <div className={``}>
@@ -35,15 +31,17 @@ const TransferFunds = () => {
             >
               <p
                 onClick={() => setActiveTab(`Deposit`)}
-                className={`cursor-pointer  ${activeTab === `Deposit` ? `border-b pb-4  text-whi` : ``
-                  }`}
+                className={`cursor-pointer  ${
+                  activeTab === `Deposit` ? `border-b pb-4  text-whi` : ``
+                }`}
               >
                 Deposit
               </p>
               <p
                 onClick={() => setActiveTab(`Withdraw`)}
-                className={`cursor-pointer ${activeTab === `Withdraw` ? `border-b pb-4  text-white` : ``
-                  }`}
+                className={`cursor-pointer ${
+                  activeTab === `Withdraw` ? `border-b pb-4  text-white` : ``
+                }`}
               >
                 Withdraw
               </p>

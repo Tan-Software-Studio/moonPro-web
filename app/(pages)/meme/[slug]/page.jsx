@@ -31,6 +31,7 @@ import { clearMarks } from "@/utils/tradingViewChartServices/mark";
 import ResizableChartContainer from "@/components/common/tradingview/ResizableChartContainer";
 import AutoRefreshOnInactivity from "@/utils/AutoRefreshOnInactivity";
 const BASE_URL = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
+const metaDataMainName = process.env.NEXT_PUBLIC_METADATA_MAIN_NAME || "Nexa";
 
 const Tradingview = ({ params }) => {
   const { t } = useTranslation();
@@ -505,7 +506,7 @@ const Tradingview = ({ params }) => {
   useEffect(() => {
     document.title = `${
       chartTokenDataState?.symbol || chartTokenData?.symbol || "..."
-    } | Nexa`;
+    } | ${metaDataMainName}`;
   }, [chartTokenDataState?.symbol]);
 
   const currentTokenDevHoldingData = {
@@ -588,7 +589,11 @@ const Tradingview = ({ params }) => {
             <div className="overflow-y-auto border-t border-t-[#4D4D4D]">
               <Table
                 tokenCA={tokenaddress}
-                pairAddress={chartTokenData?.pairaddress || chartTokenDataState?.pairAddress || null}
+                pairAddress={
+                  chartTokenData?.pairaddress ||
+                  chartTokenDataState?.pairAddress ||
+                  null
+                }
                 address={activeSolWalletAddress?.wallet}
                 scrollPosition={scrollPosition}
                 solWalletAddress={activeSolWalletAddress?.wallet}
@@ -603,7 +608,9 @@ const Tradingview = ({ params }) => {
               />
             </div>
           )}
-          <div className={`w-full ${isSmallScreen ? "h-[100px]" : "h-[81px]"} `}/>
+          <div
+            className={`w-full ${isSmallScreen ? "h-[100px]" : "h-[81px]"} `}
+          />
         </div>
       </div>
 
@@ -689,7 +696,11 @@ const Tradingview = ({ params }) => {
               tokenSymbol={
                 chartTokenDataState?.symbol || chartTokenData?.symbol || "..."
               }
-              pairAddress={chartTokenData?.pairaddress || chartTokenDataState?.pairAddress || null}
+              pairAddress={
+                chartTokenData?.pairaddress ||
+                chartTokenDataState?.pairAddress ||
+                null
+              }
               tragindViewPage={tragindViewPage?.right?.datasecurity}
               activeTab={activeTab}
               dataAndSecurity={dataAndSecurity}
@@ -697,7 +708,9 @@ const Tradingview = ({ params }) => {
               tokenSupply={chartTokenData?.currentSupply}
             />
           </div>
-          <div className={`w-full ${isSmallScreen ? "h-[100px]" : "h-[81px]"} `}/>
+          <div
+            className={`w-full ${isSmallScreen ? "h-[100px]" : "h-[81px]"} `}
+          />
         </div>
       )}
     </div>

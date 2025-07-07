@@ -20,6 +20,7 @@ import {
   subscribeToAiSignalTokensNewAddedToken,
 } from "@/websocket/walletTracker";
 const BASE_URL_MOON_USER = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL_SOCKET;
+const metaDataMainName = process.env.NEXT_PUBLIC_METADATA_MAIN_NAME || "Nexa";
 // Initial filter values - all empty/false
 const initialFilterValues = {
   mintauth: { checked: false },
@@ -52,7 +53,7 @@ const AiSignal = () => {
   const isLoading = useSelector((state) => state?.aiSignal?.initialLoading);
 
   useEffect(() => {
-    document.title = `Nexa | AI Signal`;
+    document.title = `${metaDataMainName} | AI Signal`;
   }, []);
 
   const Trendings = {

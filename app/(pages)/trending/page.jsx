@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import handleSort from "@/utils/sortTokenData";
 import { throttlingFunctionWrapper } from "@/utils/debouncing";
 const BASE_URL_MOON_STREAM = process.env.NEXT_PUBLIC_BASE_URLS;
+const metaDataMainName = process.env.NEXT_PUBLIC_METADATA_MAIN_NAME || "Nexa";
 const Trending = () => {
   const { t } = useTranslation();
   const tredingPage = t("tredingPage");
@@ -65,7 +66,7 @@ const Trending = () => {
     : [];
 
   useEffect(() => {
-    document.title = `Nexa | Trending`;
+    document.title = `${metaDataMainName} | Trending`;
   }, []);
 
   const Trendings = {

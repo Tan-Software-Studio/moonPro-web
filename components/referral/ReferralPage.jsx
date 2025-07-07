@@ -24,12 +24,13 @@ import NoData from "../common/NoData/noData";
 import getPointsToNextTitle from "./getPointsToNextTitle";
 const URL_LINK = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL;
+const metaDataMainName = process.env.NEXT_PUBLIC_METADATA_MAIN_NAME || "Nexa";
 const ReferralPage = () => {
   const { t } = useTranslation();
   const referral = t("referral");
 
   useEffect(() => {
-    document.title = `Nexa | Referral`;
+    document.title = `${metaDataMainName} | Referral`;
   }, []);
 
   const dispatch = useDispatch();

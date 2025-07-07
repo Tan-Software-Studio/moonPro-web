@@ -44,6 +44,7 @@ import {
   resetNewCreationDataFilters,
 } from "@/components/memescope/NewCreationDataFilter";
 const BASE_URL_MOON_STREAM = process.env.NEXT_PUBLIC_BASE_URLS;
+const metaDataMainName = process.env.NEXT_PUBLIC_METADATA_MAIN_NAME || "Nexa";
 const Memescope = () => {
   const { t } = useTranslation();
   const memescopePage = t("memescope");
@@ -94,7 +95,7 @@ const Memescope = () => {
   const aboutGraduateFilterDataJson = aboutGraduateFilterData(memescopePage);
 
   useEffect(() => {
-    document.title = `Nexa | Memescope`;
+    document.title = `${metaDataMainName} | Memescope`;
   }, []);
 
   // onApply function

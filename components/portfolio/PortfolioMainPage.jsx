@@ -1,13 +1,12 @@
 "use client";
 import { updatePnlTableData } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import UserProfileControl from "@/components/portfolio/UserProfileControl";
-import Image from "next/image";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import WalletManagement from "./WalletManagement";
 import NoData from "../../components/common/NoData/noData";
 import { useTranslation } from "react-i18next";
-
+const metaDataMainName = process.env.NEXT_PUBLIC_METADATA_MAIN_NAME || "Nexa";
 const PortfolioMainPage = () => {
   const dispatch = useDispatch();
   const activeSolWalletAddress = useSelector(
@@ -15,8 +14,8 @@ const PortfolioMainPage = () => {
   );
   const activeTab = useSelector((state) => state?.setPnlData?.pnlTableData);
   useEffect(() => {
-      document.title = `Nexa | Portfolio`;
-  }, [])
+    document.title = `${metaDataMainName} | Portfolio`;
+  }, []);
 
   const { t } = useTranslation();
   const portfolio = t("portfolio");
