@@ -2,6 +2,7 @@ import { solanasollogo } from "@/app/Images";
 import { updateBalanceChangeInQuickSellPortfolio } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import { calculateRecAmountSolToAnytoken } from "@/utils/calculation";
 import { sellSolanaTokensFromPortfolio } from "@/utils/solanaBuySell/solanaBuySell";
+import { showToaster } from "@/utils/toaster/toaster.style";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
@@ -72,6 +73,7 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
       })
       .catch((err) => {
         console.log("🚀 ~ ).then ~ err:", err?.message);
+        return showToaster("Something went wrong please try again later.");
       });
   };
 

@@ -11,6 +11,7 @@ import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice"
 import { FiUpload } from "react-icons/fi";
 import SharePnLModal from "../common/tradingview/SharePnLModal";
 import Tooltip from "../common/Tooltip/ToolTip";
+import { FaArrowUp } from "react-icons/fa6";
 
 const ActivePosition = ({
   filteredActivePosition,
@@ -22,7 +23,8 @@ const ActivePosition = ({
   const [quickSellTokenData, setQuickSellTokenData] = useState({});
   const [currentPnlDataToShow, setCurrentPnlDataToShow] = useState({});
   const [isSharePnLModalActive, setIsSharePnLModalActive] = useState(false);
-  const [currentPnlDataToShowSymbol, setCurrentPnlDataToShowSymbol] = useState(null);
+  const [currentPnlDataToShowSymbol, setCurrentPnlDataToShowSymbol] =
+    useState(null);
   const dispatch = useDispatch();
   const currentTabData = useSelector(
     (state) => state?.setPnlData?.PnlData || []
@@ -39,7 +41,7 @@ const ActivePosition = ({
   );
 
   const { t } = useTranslation();
-  const referral = t('referral');
+  const referral = t("referral");
 
   const handleCopy = (address, index, e) => {
     e.preventDefault();
@@ -49,20 +51,34 @@ const ActivePosition = ({
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
-  const shouldShowLoading = initialLoading || (!hasAttemptedLoad && !isDataLoaded);
-  const shouldShowData = !initialLoading && isDataLoaded && currentTabData?.length > 0 && filteredActivePosition?.length > 0;
-  const shouldShowNoData = !initialLoading && hasAttemptedLoad && isDataLoaded && currentTabData?.length === 0;
-  const shouldNoSearchData = !initialLoading && isDataLoaded && currentTabData?.length > 0 && filteredActivePosition.length === 0;
+  const shouldShowLoading =
+    initialLoading || (!hasAttemptedLoad && !isDataLoaded);
+  const shouldShowData =
+    !initialLoading &&
+    isDataLoaded &&
+    currentTabData?.length > 0 &&
+    filteredActivePosition?.length > 0;
+  const shouldShowNoData =
+    !initialLoading &&
+    hasAttemptedLoad &&
+    isDataLoaded &&
+    currentTabData?.length === 0;
+  const shouldNoSearchData =
+    !initialLoading &&
+    isDataLoaded &&
+    currentTabData?.length > 0 &&
+    filteredActivePosition.length === 0;
 
   function pnlDollarCalc(item) {
-    return ((item.activeQtyHeld - item?.quantitySold) * (item.current_price - item.averageBuyPrice));
+    return (
+      (item.activeQtyHeld - item?.quantitySold) *
+      (item.current_price - item.averageBuyPrice)
+    );
   }
 
   const navigateToChartSreen = (item) => {
     dispatch(setActiveChartToken({ symbol: item?.symbol, img: item?.img }));
-    router.push(
-      `/meme/${item?.token}`
-    );
+    router.push(`/meme/${item?.token}`);
   };
 
   const handleSharePnlButton = (newPnlData) => {
@@ -71,36 +87,28 @@ const ActivePosition = ({
       setCurrentPnlDataToShowSymbol(newPnlData.symbol);
       setIsSharePnLModalActive(true);
     }
-  }
+  };
 
   const convertPnlDataToSharePnl = (pnlData) => {
-    const buyAmount =
-    pnlData?.activeQtyHeld * pnlData?.averageBuyPrice ||
-      0;
+    const buyAmount = pnlData?.activeQtyHeld * pnlData?.averageBuyPrice || 0;
     const solBuyAmount =
-      pnlData?.activeQtyHeld *
-        pnlData?.averageSolBuyPrice || 0;
+      pnlData?.activeQtyHeld * pnlData?.averageSolBuyPrice || 0;
     const soldAmount =
-      pnlData?.quantitySold *
-        pnlData?.averageHistoricalSellPrice || 0;
+      pnlData?.quantitySold * pnlData?.averageHistoricalSellPrice || 0;
     const solSellAmount =
-      pnlData?.quantitySold *
-        pnlData?.averageSolSellPrice || 0;
+      pnlData?.quantitySold * pnlData?.averageSolSellPrice || 0;
     const activeQtyHeld = pnlData?.activeQtyHeld || 0;
     const quantitySold = pnlData?.quantitySold || 0;
     const averageBuyPrice = pnlData?.averageBuyPrice || 0;
 
     const holdingRawAmount = activeQtyHeld - quantitySold;
-    const availableQtyInUSDWhenBought =
-      holdingRawAmount * averageBuyPrice;
+    const availableQtyInUSDWhenBought = holdingRawAmount * averageBuyPrice;
     const holdingsUsdInCurrentPrice =
-      holdingRawAmount *
-      (pnlData?.current_price || 0);
+      holdingRawAmount * (pnlData?.current_price || 0);
     const holdingSolInCurrentPrice =
       holdingsUsdInCurrentPrice / solanaLivePrice;
 
-    const pnlAmount =
-      holdingsUsdInCurrentPrice - availableQtyInUSDWhenBought;
+    const pnlAmount = holdingsUsdInCurrentPrice - availableQtyInUSDWhenBought;
     const isPositivePnL = pnlAmount >= 0;
     const absolutePnL = Math.abs(pnlAmount);
     const absoluteSolPnL = absolutePnL / solanaLivePrice;
@@ -129,7 +137,7 @@ const ActivePosition = ({
       absoluteSolPnL,
       safePnLPercent,
     };
-  }
+  };
 
   return (
     <>
@@ -159,7 +167,9 @@ const ActivePosition = ({
                     Remaining
                   </th>
                   <th className="px-4 py-2 text-slate-300 font-medium">PnL</th>
-                  <th className="px-4 py-2 text-slate-300 font-medium">Action</th>
+                  <th className="px-4 py-2 text-slate-300 font-medium">
+                    Action
+                  </th>
                   {/* <th className="px-4 py-2 text-slate-300 font-medium">Action</th> */}
                 </tr>
               </thead>
@@ -173,18 +183,19 @@ const ActivePosition = ({
                   >
                     <td className="px-4 py-2">
                       <div className="flex items-center gap-3">
-                        {item?.img || item?.img != null ?
+                        {item?.img || item?.img != null ? (
                           <img
                             src={item?.img}
                             alt="Token Icon"
                             className="w-10 h-10 rounded-md object-cover"
-                          /> :
+                          />
+                        ) : (
                           <div className="w-10 h-10 rounded-md  flex items-center justify-center bg-[#3b3b49] border border-[#1F73FC]">
                             <span className="text-sm text-white uppercase text-center">
                               {item?.symbol.toString()?.slice(0, 1) || "T"}
                             </span>
                           </div>
-                        }
+                        )}
                         <div className="min-w-0">
                           <div className="flex items-center gap-1">
                             <p className="font-medium text-base text-white truncate">
@@ -216,78 +227,123 @@ const ActivePosition = ({
                     {/* Bought */}
                     <td className="px-4 py-2">
                       <p className="font-semibold  text-emerald-500 ">
-                        ${Number(item?.activeQtyHeld * item?.averageBuyPrice).toFixed(2)}
+                        $
+                        {Number(
+                          item?.activeQtyHeld * item?.averageBuyPrice
+                        ).toFixed(2)}
                       </p>
                       <p className="text-slate-400 text-xs ">
-                        {Number(item.activeQtyHeld).toFixed(2)} {item?.symbol?.length > 5 ? item.symbol.slice(0, 5) + '...' : item.symbol}
+                        {Number(item.activeQtyHeld).toFixed(2)}{" "}
+                        {item?.symbol?.length > 5
+                          ? item.symbol.slice(0, 5) + "..."
+                          : item.symbol}
                       </p>
                     </td>
 
                     {/* Sold */}
                     <td className="px-4 py-2">
                       <p className="font-semibold text-red-500  ">
-                        ${Number(item?.quantitySold * item?.averageHistoricalSellPrice).toFixed(2)}
+                        $
+                        {Number(
+                          item?.quantitySold * item?.averageHistoricalSellPrice
+                        ).toFixed(2)}
                       </p>
                       <p className="text-slate-400 text-xs ">
-                        {Number(item.quantitySold).toFixed(2)} {item?.symbol?.length > 5 ? item.symbol.slice(0, 5) + '...' : item.symbol}
-
+                        {Number(item.quantitySold).toFixed(2)}{" "}
+                        {item?.symbol?.length > 5
+                          ? item.symbol.slice(0, 5) + "..."
+                          : item.symbol}
                       </p>
                     </td>
 
                     {/* Remaining */}
                     <td className="px-4 py-2">
                       <p className="font-semibold text-white">
-                        ${((item.activeQtyHeld - item.quantitySold) * item?.current_price).toFixed(2)}
+                        $
+                        {(
+                          (item.activeQtyHeld - item.quantitySold) *
+                          item?.current_price
+                        ).toFixed(2)}
                       </p>
                       <p className="text-slate-400 text-xs  ">
-                        {(item.activeQtyHeld - item.quantitySold).toFixed(2)} {item?.symbol?.length > 5 ? item.symbol.slice(0, 5) + '...' : item.symbol}
-
+                        {(item.activeQtyHeld - item.quantitySold).toFixed(2)}{" "}
+                        {item?.symbol?.length > 5
+                          ? item.symbol.slice(0, 5) + "..."
+                          : item.symbol}
                       </p>
                     </td>
 
                     {/* PnL */}
-                    <td className="px-4 py-2 " >
+                    <td className="px-4 py-2 ">
                       <div className="flex items-center gap-0.5 text-base font-semibold whitespace-nowrap break-keep">
-
-                        <p className={`${pnlDollarCalc(item) >= 0 ? "text-emerald-500" : "text-red-500"} `}>
-                          {`${pnlDollarCalc(item) >= 0 ? "$" : "-$"}${Math.abs(pnlDollarCalc(item)).toFixed(2)}`}
+                        <p
+                          className={`${
+                            pnlDollarCalc(item) >= 0
+                              ? "text-emerald-500"
+                              : "text-red-500"
+                          } `}
+                        >
+                          {`${pnlDollarCalc(item) >= 0 ? "$" : "-$"}${Math.abs(
+                            pnlDollarCalc(item)
+                          ).toFixed(2)}`}
                         </p>
 
-                        <p className={`${pnlPercentage(item?.current_price, item?.averageBuyPrice) >= 0 ? "text-emerald-500" : "text-red-500"}`}>
-                          ({`${pnlPercentage(item?.current_price, item?.averageBuyPrice)}%`})
+                        <p
+                          className={`${
+                            pnlPercentage(
+                              item?.current_price,
+                              item?.averageBuyPrice
+                            ) >= 0
+                              ? "text-emerald-500"
+                              : "text-red-500"
+                          }`}
+                        >
+                          (
+                          {`${pnlPercentage(
+                            item?.current_price,
+                            item?.averageBuyPrice
+                          )}%`}
+                          )
                         </p>
                       </div>
                     </td>
 
                     {/* Action */}
                     <td className="px-4 py-2">
-                      <Tooltip body={"Share PnL"}>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSharePnlButton(item);
-                          }} 
-                          className="flex cursor-pointer items-center justify-center text-slate-400 text-lg hover:bg-slate-700 p-1 rounded-lg"
-                        >
-                          <FiUpload />
-                        </button>
-                      </Tooltip>
-                      
-                    </td>
-
-                    {/* <td className="px-4 py-2 " >
-                      <div
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          setQuickSellTokenData({ tokenData: item, index: index });
-                          setIsOpen(true);
-                        }}
-                        className={`${pnlDollarCalc(item) >= 0 ? "text-emerald-500 hover:bg-emerald-500/10" : "text-red-500 hover:bg-red-500/10 "} flex items-center justify-center px-2 w-fit py-2 rounded-md`}
-                      >
-                        <FaArrowUp />
+                      <div className="flex items-center justify-center gap-2">
+                        {/* <Tooltip body={"Sell"}>
+                          <div
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              setQuickSellTokenData({
+                                tokenData: item,
+                                index: index,
+                              });
+                              setIsOpen(true);
+                            }}
+                            className={`${
+                              pnlDollarCalc(item) >= 0
+                                ? "text-emerald-500 hover:bg-emerald-500/10"
+                                : "text-red-500 hover:bg-red-500/10 "
+                            } flex items-center justify-center px-2 w-fit py-2 rounded-md`}
+                          >
+                            <FaArrowUp />
+                          </div>
+                        </Tooltip> */}
+                        <Tooltip body={"Share PnL"}>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSharePnlButton(item);
+                            }}
+                            className="flex cursor-pointer items-center justify-center text-slate-400 text-lg hover:bg-slate-700 p-1 rounded-lg"
+                          >
+                            <FiUpload />
+                          </button>
+                        </Tooltip>
                       </div>
-                    </td> */}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -295,7 +351,10 @@ const ActivePosition = ({
           </div>
         ) : shouldShowNoData || shouldNoSearchData ? (
           <div className="flex flex-col items-center justify-center h-64 mt-10 text-center">
-            <div className="flex items-center justify-center  " style={{ maxWidth: "200px", maxHeight: "150px" }}>
+            <div
+              className="flex items-center justify-center  "
+              style={{ maxWidth: "200px", maxHeight: "150px" }}
+            >
               <Image
                 src={NoDataLogo}
                 alt={referral?.refMata?.noData}
@@ -304,33 +363,39 @@ const ActivePosition = ({
                 className="text-slate-400 object-contain md:w-[200px] sm:w-[180px] w-[120px] h-auto"
               />
             </div>
-            <p className="text-slate-400 text-lg  break-words break-all">{`${shouldShowNoData
-              ? referral?.refMata?.noData
-              : shouldNoSearchData
+            <p className="text-slate-400 text-lg  break-words break-all">{`${
+              shouldShowNoData
+                ? referral?.refMata?.noData
+                : shouldNoSearchData
                 ? `No results found for "${activePositionSearchQuery}"`
                 : "No data"
-              }`}</p>
+            }`}</p>
             <p className="text-slate-500 text-sm">
-              {`${shouldShowNoData
-                ? referral?.refMata?.infoWillAppear
-                : shouldNoSearchData
+              {`${
+                shouldShowNoData
+                  ? referral?.refMata?.infoWillAppear
+                  : shouldNoSearchData
                   ? referral?.refMata?.adjustSearch
                   : null
-                }`}
+              }`}
             </p>
           </div>
         ) : null}
       </div>
-      {
-        isOpen && quickSellTokenData?.tokenData && <InstantSell tokenData={quickSellTokenData?.tokenData} index={quickSellTokenData?.index} setIsOpen={setIsOpen} />
-      }
-      <SharePnLModal 
-        currentTokenPnLData={currentPnlDataToShow} 
-        isOpen={isSharePnLModalActive} 
+      {isOpen && quickSellTokenData?.tokenData && (
+        <InstantSell
+          tokenData={quickSellTokenData?.tokenData}
+          index={quickSellTokenData?.index}
+          setIsOpen={setIsOpen}
+        />
+      )}
+      <SharePnLModal
+        currentTokenPnLData={currentPnlDataToShow}
+        isOpen={isSharePnLModalActive}
         onClose={() => {
           setIsSharePnLModalActive(false);
         }}
-        tokenSymbol={currentPnlDataToShowSymbol} 
+        tokenSymbol={currentPnlDataToShowSymbol}
       />
     </>
   );
