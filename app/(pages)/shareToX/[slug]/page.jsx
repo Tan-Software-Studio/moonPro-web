@@ -8,7 +8,9 @@ export default function ShareToX() {
   const slug = searchParams.get('slug') || 'default-slug'
   const title = searchParams.get('title') || `My Cool Site | ${slug}`
   const description = searchParams.get('description') || 'Default description'
-  const imageUrl = searchParams.get('image') || `${process.env.NEXT_PUBLIC_WEB_URL}/api/og?title=TOKEN%20NAME`
+
+  const baseWebUrl = process.env.NEXT_PUBLIC_WEB_URL || 'https://yourdomain.com'
+  const imageUrl = searchParams.get('image') || `${baseWebUrl}/api/og?title=TOKEN%20NAME`
 
   return (
     <>
