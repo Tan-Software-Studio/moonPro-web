@@ -161,17 +161,15 @@ const Navbar = () => {
   }
 
   async function fetchSolPrice() {
-    await axios({
-      method: "get",
-      url: `https://frontend-api-v3.pump.fun/sol-price`,
-    })
-      .then((res) => {
-        const price = res?.data?.solPrice;
-        if (price) {
-          dispatch(setSolanaLivePrice(price));
+    await fetch(`https://frontend-api-v3.pump.fun/sol-price`)
+      .then(async (res) => {
+        const dataJson = await res.json();
+        console.log("🚀 ~ .then ~ dataJson:", dataJson)
+        if (dataJson?.solPrice) {
+          dispatch(setSolanaLivePrice(dataJson?.solPrice));
         }
       })
-      .catch((err) => {});
+      .catch((err) => console.log(err?.message));
   }
   function handleClickOutside(event) {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
