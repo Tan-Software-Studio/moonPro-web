@@ -138,7 +138,7 @@ const SharePnLModal = ({
 
   const handleShareToX = () => {
     const tweetText = encodeURIComponent(`💰💰${isPositivePnL ? "Earn" : "Loss"} ${formatNumber(pnlAmount, true, !solIsActive)}${solIsActive ? " SOL" : ""}(${pnlPercent?.toFixed(2)}%), ${walletAddress?.slice(0, 4) + "..." + walletAddress?.slice(-4) } -- at ${tokenSymbol}, holding ${formatNumber(holdings, false, !solIsActive)}${solIsActive ? " SOL" : ""}, Discover faster, trade faster with ${process.env.NEXT_PUBLIC_METADATA_MAIN_NAME?.toUpperCase()}! #${tokenSymbol} #${process.env.NEXT_PUBLIC_METADATA_MAIN_NAME?.toUpperCase()}`);
-    const tweetUrl = encodeURIComponent(`${process.env.NEXT_PUBLIC_WEB_URL}portfolio/${walletAddress}`); // optional
+    const tweetUrl = encodeURIComponent(`${process.env.NEXT_PUBLIC_WEB_URL}/portfolio/${walletAddress}`); // optional
     const intentUrl = `https://twitter.com/intent/tweet?text=${tweetText}&url=${tweetUrl}`;
 
     window.open(intentUrl, '_blank', 'noopener,noreferrer');
@@ -306,7 +306,7 @@ const SharePnLModal = ({
               <p>{solIsActive ? "SOL" : "USD"}</p>
             </button>
             <div className="flex gap-2">
-              {walletAddress && 
+              {/* {walletAddress && 
                 <button
                   onClick={(event) => {
                     event.stopPropagation();
@@ -317,7 +317,7 @@ const SharePnLModal = ({
                   <FaXTwitter />
                   <p>Share to X</p>
                 </button>
-              }
+              } */}
               <button
                 onClick={(event) => {
                   event.stopPropagation();
