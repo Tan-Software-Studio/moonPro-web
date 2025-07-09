@@ -44,6 +44,7 @@ import {
 import WithdrawPopup from "./popup/WithdrawPopup";
 import NewAiSignalTokens from "./popup/NewAiSignalTokens";
 import { showToaster } from "@/utils/toaster/toaster.style";
+import Moralis from "moralis";
 const URL = process.env.NEXT_PUBLIC_BASE_URLS;
 const Navbar = () => {
   const [mounted, setMounted] = useState(false);
@@ -161,15 +162,23 @@ const Navbar = () => {
   }
 
   async function fetchSolPrice() {
-    await fetch(`https://frontend-api-v3.pump.fun/sol-price`)
-      .then(async (res) => {
-        const dataJson = await res.json();
-        console.log("🚀 ~ .then ~ dataJson:", dataJson)
-        if (dataJson?.solPrice) {
-          dispatch(setSolanaLivePrice(dataJson?.solPrice));
-        }
-      })
-      .catch((err) => console.log(err?.message));
+    try {
+      if (!Moralis.Core.isStarted) {
+        await Moralis.start({
+          apiKey: `${process.env.NEXT_PUBLIC_MORALIS_API_KEY}`,
+        });
+      }
+      const response = await Moralis.SolApi.token.getTokenPrice({
+        network: "mainnet",
+        address: "So11111111111111111111111111111111111111112",
+      });
+      const price = response?.raw?.usdPrice;
+      if (price) {
+        dispatch(setSolanaLivePrice(price));
+      }
+    } catch (error) {
+      console.log("🚀 ~ fetchSolPrice ~ error:", error?.message);
+    }
   }
   function handleClickOutside(event) {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
