@@ -87,8 +87,8 @@ const PortfolioMainPage = () => {
   }
 
   const convertHistoricalPnlDataToSharePnl = (pnlData) => {
-    const pnlAmount = (pnlData?.buyPrice - pnlData.sellPrice) * pnlData.qty;
-    const pnlSolAmount = ((pnlData?.buyPrice / pnlData?.solAvgPriceBuy) - (pnlData.sellPrice / pnlData?.solAvgPriceSell)) * pnlData.qty;
+    const pnlAmount = (pnlData.sellPrice - pnlData?.buyPrice) * pnlData.qty;
+    const pnlSolAmount = ((pnlData.sellPrice / pnlData?.solAvgPriceSell) - (pnlData?.buyPrice / pnlData?.solAvgPriceBuy)) * pnlData.qty;
     const boughtAmount = pnlData?.qty * pnlData?.buyPrice;
     const boughtSolAmount = (pnlData?.qty * pnlData?.buyPrice) / pnlData?.solAvgPriceBuy;
     const absPnl = Math.abs(pnlAmount);
@@ -96,7 +96,7 @@ const PortfolioMainPage = () => {
     return {
         pnlAmount: absPnl,
         pnlSolAmount: absSolPnl,
-        isPositivePnL: pnlAmount < 0,
+        isPositivePnL: pnlAmount >= 0,
         pnlPercent: pnlData?.pnlPercentage,
         invested: boughtAmount,
         investedSol: boughtSolAmount,
