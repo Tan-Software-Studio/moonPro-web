@@ -2,7 +2,7 @@ import { solanasollogo } from "@/app/Images";
 import { updateBalanceChangeInQuickSellPortfolio } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import { calculateRecAmountSolToAnytoken } from "@/utils/calculation";
 import { sellSolanaTokensFromPortfolio } from "@/utils/solanaBuySell/solanaBuySell";
-import { getSoalanaTokenBalance } from "@/utils/solanaNativeBalance";
+import { getSoalanaTokenBalanceAndDecimals } from "@/utils/solanaNativeBalance";
 import { showToaster } from "@/utils/toaster/toaster.style";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
@@ -20,6 +20,7 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
   const [balanceUpdateLoading, setBalanceUpdateLoading] = useState(false);
   const [priorityFees, setPriorityFees] = useState();
   const [amount, setAmount] = useState(0);
+  const [decimals, setDecimals] = useState(0);
   const [originalAmount, setOriginalAmount] = useState(0);
   const dispatch = useDispatch();
 
@@ -34,15 +35,17 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
   async function getTokenBalanceFromChain(address, toToken) {
     try {
       setBalanceUpdateLoading(true);
-      const tokenBalanceUpdate = await getSoalanaTokenBalance(address, toToken);
-      console.log(
-        "🚀 ~ getTokenBalanceFromChain ~ tokenBalanceUpdate:",
-        tokenBalanceUpdate
+      const tokenBalanceUpdate = await getSoalanaTokenBalanceAndDecimals(
+        address,
+        toToken
       );
-      if (tokenBalanceUpdate) {
-        setOriginalAmount(tokenBalanceUpdate);
+      if (tokenBalanceUpdate?.balance) {
+        setOriginalAmount(tokenBalanceUpdate?.balance);
       } else if (tokenData?.chainBalance) {
         setOriginalAmount(tokenData?.chainBalance);
+      }
+      if (tokenBalanceUpdate?.decimals) {
+        setDecimals(tokenBalanceUpdate?.decimals);
       }
       setBalanceUpdateLoading(false);
     } catch (error) {
@@ -63,12 +66,12 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
   const handleSell = async (token) => {
     await sellSolanaTokensFromPortfolio(
       token?.token,
-      +Number(amount).toFixed(token?.decimals),
+      +Number(amount).toFixed(decimals),
       priorityFees?.slippage,
       priorityFees?.priorityFee,
       activeSolWalletAddress?.wallet,
       activeSolWalletAddress?.balance || 0,
-      token?.decimals,
+      decimals,
       Number(token?.current_price),
       setIsLoading,
       token?.programAddress,
@@ -92,7 +95,7 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
             updateBalanceChangeInQuickSellPortfolio({
               index,
               qty: +Number(Number(originalAmount) - Number(amount)).toFixed(
-                token?.decimals
+                decimals
               ),
             })
           );
