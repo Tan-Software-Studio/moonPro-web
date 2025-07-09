@@ -12,7 +12,7 @@ import RealizedPnLChart from "./PNLChart";
 import Image from "next/image";
 import NoData from "../common/NoData/noData";
 
-const UserProfileControl = () => {
+const UserProfileControl = ({ handleShowPnlCard, handleShowPnlHistoricalCard }) => {
   const { t, i18n } = useTranslation();
   const portfolio = t("portfolio", { returnObjects: true });
   const [leftTableTab, setLeftTableTab] = useState(portfolio?.activePosition);
@@ -331,17 +331,18 @@ const UserProfileControl = () => {
                   <ActivePosition
                     filteredActivePosition={filteredActivePosition}
                     activePositionSearchQuery={activePositionSearchQuery}
+                    handleShowPnlCard={handleShowPnlCard}
                   />
                 </div>
               )}
               {leftTableTab === portfolio?.history && (
                 <div>
-                  <History />
+                  <History handleShowPnlHistoricalCard={handleShowPnlHistoricalCard}/>
                 </div>
               )}
               {leftTableTab === portfolio?.top100 && (
                 <div>
-                  <TopHundred />
+                  <TopHundred handleShowPnlHistoricalCard={handleShowPnlHistoricalCard}/>
                 </div>
               )}
             </div>

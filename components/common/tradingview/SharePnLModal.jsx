@@ -9,6 +9,7 @@ import {
   RiFileCopyLine,
 } from "react-icons/ri";
 import { IoMdDoneAll } from "react-icons/io";
+import { FaXTwitter } from "react-icons/fa6";
 
 import Image from "next/image";
 import { useRef, useState, useEffect, useMemo } from "react";
@@ -21,6 +22,8 @@ const SharePnLModal = ({
   tokenSymbol,
   currentTokenPnLData,
   solanaLivePrice,
+  walletAddress,
+  overridePnlData = null,
 }) => {
   const modalRef = useRef(null);
   const [solIsActive, setSolIsActive] = useState(false);
@@ -51,8 +54,24 @@ const SharePnLModal = ({
     position: 0,
   });
 
-  const { pnlAmount, isPositivePnL, pnlPercent, invested, position } =
+  const { pnlAmount, isPositivePnL, pnlPercent, invested, position, holdings } =
     useMemo(() => {
+      if (overridePnlData != null) {
+        const pnlAmt = solIsActive ? overridePnlData?.pnlSolAmount : overridePnlData?.pnlAmount;
+        const investAmt = solIsActive ? overridePnlData?.investedSol : overridePnlData?.invested;
+        const pos = solIsActive ? overridePnlData?.positionSol : overridePnlData?.position;
+
+        const newPnL = {
+          pnlAmount: pnlAmt,
+          isPositivePnL: overridePnlData?.isPositivePnL,
+          pnlPercent: overridePnlData?.pnlPercent,
+          invested: investAmt,
+          position: pos,
+          holdings: overridePnlData?.holdings
+        };
+        previousPnLRef.current = newPnL;
+        return newPnL;
+      } 
       if (
         !currentTokenPnLData ||
         Object.keys(currentTokenPnLData).length === 0
@@ -70,6 +89,10 @@ const SharePnLModal = ({
         : currentTokenPnLData?.pastPnlPrice ?? 0;
       let pnlAmt = nonPastPnlAmount != null ? nonPastPnlAmount : pastPnlAmount;
       pnlAmt = Math.abs(pnlAmt);
+
+      const holdings = solIsActive
+        ? currentTokenPnLData?.holdingSolInCurrentPrice
+        : currentTokenPnLData?.holdingsUsdInCurrentPrice || 0
 
       const isPositive =
         currentTokenPnLData?.isPositivePnL != null
@@ -104,13 +127,22 @@ const SharePnLModal = ({
         pnlPercent: pnlPerc,
         invested: investAmt,
         position: pos,
+        holdings
       };
 
       // Save for future fallback
       previousPnLRef.current = newPnL;
 
       return newPnL;
-    }, [currentTokenPnLData, solIsActive]);
+    }, [currentTokenPnLData, solIsActive, overridePnlData]);
+
+  const handleShareToX = () => {
+    const tweetText = encodeURIComponent(`💰💰${isPositivePnL ? "Earn" : "Loss"} ${formatNumber(pnlAmount, true, !solIsActive)}${solIsActive ? " SOL" : ""}(${pnlPercent?.toFixed(2)}%), ${walletAddress?.slice(0, 4) + "..." + walletAddress?.slice(-4) } -- at ${tokenSymbol}, holding ${formatNumber(holdings, false, !solIsActive)}${solIsActive ? " SOL" : ""}, Discover faster, trade faster with ${process.env.NEXT_PUBLIC_METADATA_MAIN_NAME?.toUpperCase()}! #${tokenSymbol} #${process.env.NEXT_PUBLIC_METADATA_MAIN_NAME?.toUpperCase()}`);
+    const tweetUrl = encodeURIComponent(`${process.env.NEXT_PUBLIC_WEB_URL}portfolio/${walletAddress}`); // optional
+    const intentUrl = `https://twitter.com/intent/tweet?text=${tweetText}&url=${tweetUrl}`;
+
+    window.open(intentUrl, '_blank', 'noopener,noreferrer');
+  };
 
   const handleCopy = async () => {
     if (!renderedImage) return;
@@ -145,7 +177,7 @@ const SharePnLModal = ({
   // Trigger when solIsActive or currentTokenPnLData changes
   useEffect(() => {
     generateImage();
-  }, [solIsActive, currentTokenPnLData]);
+  }, [solIsActive, currentTokenPnLData, overridePnlData]);
 
   // Trigger when solanaLivePrice changes AND solIsActive is true
   useEffect(() => {
@@ -274,6 +306,18 @@ const SharePnLModal = ({
               <p>{solIsActive ? "SOL" : "USD"}</p>
             </button>
             <div className="flex gap-2">
+              {walletAddress && 
+                <button
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handleShareToX();
+                  }}
+                  className="bg-[#6b728030] flex gap-1 items-center text-white px-4 py-2 rounded hover:bg-[#6b728075]"
+                >
+                  <FaXTwitter />
+                  <p>Share to X</p>
+                </button>
+              }
               <button
                 onClick={(event) => {
                   event.stopPropagation();

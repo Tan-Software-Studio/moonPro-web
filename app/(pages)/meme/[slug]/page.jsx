@@ -669,6 +669,7 @@ const Tradingview = ({ params }) => {
             }
             currentTokenPnLData={currentTokenPnLData}
             solanaLivePrice={solanaLivePrice}
+            walletAddress={activeSolWalletAddress?.wallet || null}
           />
 
           <div className="w-full border-[#4D4D4D] lg:border-t-0 md:border-l-0 md:border-r-0 md:border-b-0">

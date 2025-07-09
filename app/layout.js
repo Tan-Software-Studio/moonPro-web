@@ -36,6 +36,15 @@ export const metadata = {
   description: `${metaDataMainName
     ?.toString()
     ?.toUpperCase()} is the premier gateway to seamless on-chain trading and rapid asset discovery.`,
+
+  twitter: {
+    card: 'summary', // or 'summary_large_image' if you have a larger preview image
+    title: metaDataMainName,
+    description: `${metaDataMainName
+      ?.toString()
+      ?.toUpperCase()} is the premier gateway to seamless on-chain trading and rapid asset discovery.`,
+    images: [`${process.env.NEXT_PUBLIC_WEB_URL}assets/SharePnL/x-card.webp`], // replace with your actual image URL(s)
+  },
 };
 
 export default function RootLayout({ children }) {

@@ -9,9 +9,11 @@ import { PiWallet } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { pnlPercentage } from "./calculation";
 import NoData from "../common/NoData/noData";
+import { FiUpload } from "react-icons/fi";
+import Tooltip from "../common/Tooltip/ToolTip";
 import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
 
-const TopHundred = ({ }) => {
+const TopHundred = ({ handleShowPnlHistoricalCard }) => {
   const router = useRouter();
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -95,6 +97,7 @@ const TopHundred = ({ }) => {
                   </th>
                   <th className="px-4 py-2 text-slate-300 font-medium">Sold</th>
                   <th className="px-4 py-2 text-slate-300 font-medium">PnL</th>
+                  <th className="px-4 py-2 text-slate-300 font-medium">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -185,6 +188,20 @@ const TopHundred = ({ }) => {
                           )
                         </p>
                       </div>
+                    </td>
+                    {/* Action */}
+                    <td className="px-4 py-2">
+                        <Tooltip body={"Share PnL"}>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleShowPnlHistoricalCard(item);
+                            }}
+                            className="flex cursor-pointer items-center justify-center text-slate-400 text-lg hover:bg-slate-700 p-1 rounded-lg"
+                          >
+                            <FiUpload />
+                          </button>
+                        </Tooltip>
                     </td>
                   </tr>
                 ))}

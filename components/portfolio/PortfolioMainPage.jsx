@@ -1,13 +1,19 @@
 "use client";
+
 import { updatePnlTableData } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import UserProfileControl from "@/components/portfolio/UserProfileControl";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import WalletManagement from "./WalletManagement";
 import NoData from "../../components/common/NoData/noData";
 import { useTranslation } from "react-i18next";
+import SharePnLModal from "../common/tradingview/SharePnLModal";
 const metaDataMainName = process.env.NEXT_PUBLIC_METADATA_MAIN_NAME || "Nexa";
 const PortfolioMainPage = () => {
+  const [currentPnlDataToShow, setCurrentPnlDataToShow] = useState({});
+  const [currentPnlOverride, setCurrentPnlOverride] = useState(null);
+  const [isSharePnLModalActive, setIsSharePnLModalActive] = useState(false);
+  const [currentPnlDataToShowSymbol, setCurrentPnlDataToShowSymbol] = useState(null);
   const dispatch = useDispatch();
   const activeSolWalletAddress = useSelector(
     (state) => state?.userData?.activeSolanaWallet
@@ -16,9 +22,95 @@ const PortfolioMainPage = () => {
   useEffect(() => {
     document.title = `${metaDataMainName} | Portfolio`;
   }, []);
+  const solanaLivePrice = useSelector(
+    (state) => state?.AllStatesData?.solanaLivePrice
+  );
 
   const { t } = useTranslation();
   const portfolio = t("portfolio");
+
+  const convertPnlDataToSharePnl = (pnlData) => {
+    const buyAmount = pnlData?.activeQtyHeld * pnlData?.averageBuyPrice || 0;
+    const solBuyAmount =
+      pnlData?.activeQtyHeld * pnlData?.averageSolBuyPrice || 0;
+    const soldAmount =
+      pnlData?.quantitySold * pnlData?.averageHistoricalSellPrice || 0;
+    const solSellAmount =
+      pnlData?.quantitySold * pnlData?.averageSolSellPrice || 0;
+    const activeQtyHeld = pnlData?.activeQtyHeld || 0;
+    const quantitySold = pnlData?.quantitySold || 0;
+    const averageBuyPrice = pnlData?.averageBuyPrice || 0;
+
+    const holdingRawAmount = activeQtyHeld - quantitySold;
+    const availableQtyInUSDWhenBought = holdingRawAmount * averageBuyPrice;
+    const holdingsUsdInCurrentPrice =
+      holdingRawAmount * (pnlData?.current_price || 0);
+    const holdingSolInCurrentPrice =
+      holdingsUsdInCurrentPrice / solanaLivePrice;
+
+    const pnlAmount = holdingsUsdInCurrentPrice - availableQtyInUSDWhenBought;
+    const isPositivePnL = pnlAmount >= 0;
+    const absolutePnL = Math.abs(pnlAmount);
+    const absoluteSolPnL = absolutePnL / solanaLivePrice;
+
+    const pnlPercent =
+      availableQtyInUSDWhenBought !== 0
+        ? (pnlAmount / availableQtyInUSDWhenBought) * 100
+        : 0;
+
+    const safePnLPercent = isNaN(pnlPercent) ? 0 : pnlPercent;
+
+    return {
+      buyAmount,
+      solBuyAmount,
+      averageBuyPrice,
+      averageSolBuyPrice: pnlData?.averageSolBuyPrice || 0,
+      soldAmount,
+      solSellAmount,
+      averageSellPrice: pnlData?.averageHistoricalSellPrice || 0,
+      averageSolSellPrice: pnlData?.averageSolSellPrice || 0,
+      holdingRawAmount,
+      holdingsUsdInCurrentPrice,
+      holdingSolInCurrentPrice,
+      isPositivePnL,
+      absolutePnL,
+      absoluteSolPnL,
+      safePnLPercent,
+    };
+  };
+
+  const handleShowPnlCard = (newPnlData) => {
+    setCurrentPnlOverride(null);
+    setCurrentPnlDataToShow(convertPnlDataToSharePnl(newPnlData));
+    setCurrentPnlDataToShowSymbol(newPnlData.symbol);
+    setIsSharePnLModalActive(true);
+  }
+
+  const convertHistoricalPnlDataToSharePnl = (pnlData) => {
+    const pnlAmount = (pnlData?.buyPrice - pnlData.sellPrice) * pnlData.qty;
+    const pnlSolAmount = ((pnlData?.buyPrice / pnlData?.solAvgPriceBuy) - (pnlData.sellPrice / pnlData?.solAvgPriceSell)) * pnlData.qty;
+    const boughtAmount = pnlData?.qty * pnlData?.buyPrice;
+    const boughtSolAmount = (pnlData?.qty * pnlData?.buyPrice) / pnlData?.solAvgPriceBuy;
+    const absPnl = Math.abs(pnlAmount);
+    const absSolPnl = Math.abs(pnlSolAmount);
+    return {
+        pnlAmount: absPnl,
+        pnlSolAmount: absSolPnl,
+        isPositivePnL: pnlAmount > 0,
+        pnlPercent: pnlData?.pnlPercentage,
+        invested: boughtAmount,
+        investedSol: boughtSolAmount,
+        position: boughtAmount + pnlAmount,
+        positionSol: boughtSolAmount + pnlSolAmount,
+        holdings: 0
+      };
+  };
+
+  const handleShowPnlHistoricalCard = (newHistoricalData) => {
+    setCurrentPnlOverride(convertHistoricalPnlDataToSharePnl(newHistoricalData));
+    setCurrentPnlDataToShowSymbol(newHistoricalData.symbol);
+    setIsSharePnLModalActive(true);
+  }
 
   return (
     <>
@@ -44,9 +136,19 @@ const PortfolioMainPage = () => {
               </div>
             </div>
 
-            {activeTab == "profile" && <UserProfileControl />}
+            {activeTab == "profile" && <UserProfileControl handleShowPnlCard={handleShowPnlCard} handleShowPnlHistoricalCard={handleShowPnlHistoricalCard}  />}
             {activeTab == "portfolio" && <WalletManagement />}
           </div>
+          <SharePnLModal
+            currentTokenPnLData={currentPnlDataToShow}
+            isOpen={isSharePnLModalActive}
+            onClose={() => {
+              setIsSharePnLModalActive(false);
+            }}
+            tokenSymbol={currentPnlDataToShowSymbol}
+            walletAddress={activeSolWalletAddress?.wallet || null}
+            overridePnlData={currentPnlOverride}
+          />
         </>
       ) : (
         <div className="flex flex-col h-[70vh] w-full items-center justify-center mt-5">
