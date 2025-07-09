@@ -96,7 +96,7 @@ const PortfolioMainPage = () => {
     return {
         pnlAmount: absPnl,
         pnlSolAmount: absSolPnl,
-        isPositivePnL: pnlAmount > 0,
+        isPositivePnL: pnlAmount < 0,
         pnlPercent: pnlData?.pnlPercentage,
         invested: boughtAmount,
         investedSol: boughtSolAmount,
