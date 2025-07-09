@@ -47,5 +47,38 @@ const getSoalanaTokenBalance = async (walletAddress, tokenMintAddress) => {
     return 0;
   }
 };
+const getSoalanaTokenBalanceAndDecimals = async (
+  walletAddress,
+  tokenMintAddress
+) => {
+  // Create a connection to the Solana cluster
+  try {
+    const connection = new Connection(
+      `${process.env.NEXT_PUBLIC_SOLANA_RPC_URL}`,
+      "confirmed"
+    );
+    const walletPublicKey = new PublicKey(walletAddress);
+    const tokenMintPublicKey = new PublicKey(tokenMintAddress);
 
-export { getSolanaBalanceAndPrice, getSoalanaTokenBalance };
+    const tokenAccount = await getOrCreateAssociatedTokenAccount(
+      connection,
+      walletPublicKey,
+      tokenMintPublicKey,
+      walletPublicKey
+    );
+
+    const accountInfo = await getAccount(connection, tokenAccount.address);
+    const mintInfo = await getMint(connection, tokenMintPublicKey);
+    const balance = Number(accountInfo.amount) / 10 ** mintInfo.decimals;
+    return { balance, decimals: mintInfo?.decimals };
+  } catch (error) {
+    console.log("🚀 ~ getSoalanaTokenBalance ~ error:", error);
+    return 0;
+  }
+};
+
+export {
+  getSolanaBalanceAndPrice,
+  getSoalanaTokenBalance,
+  getSoalanaTokenBalanceAndDecimals,
+};

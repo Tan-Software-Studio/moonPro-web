@@ -311,7 +311,7 @@ const ActivePosition = ({
                     {/* Action */}
                     <td className="px-4 py-2">
                       <div className="flex items-center justify-center gap-2">
-                        {/* <Tooltip body={"Sell"}>
+                        <Tooltip body={"Sell"}>
                           <div
                             onClick={(e) => {
                               e.stopPropagation();
@@ -322,15 +322,11 @@ const ActivePosition = ({
                               });
                               setIsOpen(true);
                             }}
-                            className={`${
-                              pnlDollarCalc(item) >= 0
-                                ? "text-emerald-500 hover:bg-emerald-500/10"
-                                : "text-red-500 hover:bg-red-500/10 "
-                            } flex items-center justify-center px-2 w-fit py-2 rounded-md`}
+                            className={`text-red-500 hover:bg-red-500/10 flex items-center justify-center px-2 w-fit py-2 rounded-md`}
                           >
                             <FaArrowUp />
                           </div>
-                        </Tooltip> */}
+                        </Tooltip>
                         <Tooltip body={"Share PnL"}>
                           <button
                             onClick={(e) => {

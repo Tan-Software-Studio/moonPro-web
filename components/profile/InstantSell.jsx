@@ -2,6 +2,7 @@ import { solanasollogo } from "@/app/Images";
 import { updateBalanceChangeInQuickSellPortfolio } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import { calculateRecAmountSolToAnytoken } from "@/utils/calculation";
 import { sellSolanaTokensFromPortfolio } from "@/utils/solanaBuySell/solanaBuySell";
+import { getSoalanaTokenBalanceAndDecimals } from "@/utils/solanaNativeBalance";
 import { showToaster } from "@/utils/toaster/toaster.style";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
@@ -16,6 +17,11 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [isMoreAmount, setIsMoreAmount] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [balanceUpdateLoading, setBalanceUpdateLoading] = useState(false);
+  const [priorityFees, setPriorityFees] = useState();
+  const [amount, setAmount] = useState(0);
+  const [decimals, setDecimals] = useState(0);
+  const [originalAmount, setOriginalAmount] = useState(0);
   const dispatch = useDispatch();
 
   const activeSolWalletAddress = useSelector(
@@ -24,22 +30,48 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
   const solanaLivePrice = useSelector(
     (state) => state?.AllStatesData?.solanaLivePrice
   );
-  const [priorityFees, setPriorityFees] = useState();
   const presist = useSelector((state) => state?.AllStatesData?.presetActive);
 
-  const [amount, setAmount] = useState(() => {
-    return tokenData?.chainBalance;
-  });
+  async function getTokenBalanceFromChain(address, toToken) {
+    try {
+      setBalanceUpdateLoading(true);
+      const tokenBalanceUpdate = await getSoalanaTokenBalanceAndDecimals(
+        address,
+        toToken
+      );
+      if (tokenBalanceUpdate?.balance) {
+        setOriginalAmount(tokenBalanceUpdate?.balance);
+      } else if (tokenData?.chainBalance) {
+        setOriginalAmount(tokenData?.chainBalance);
+      }
+      if (tokenBalanceUpdate?.decimals) {
+        setDecimals(tokenBalanceUpdate?.decimals);
+      }
+      setBalanceUpdateLoading(false);
+    } catch (error) {
+      console.log("🚀 ~ getTokenBalanceFromChain ~ error:", error?.message);
+      setBalanceUpdateLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (activeSolWalletAddress?.wallet) {
+      getTokenBalanceFromChain(
+        activeSolWalletAddress?.wallet,
+        tokenData?.token
+      );
+    }
+  }, [activeSolWalletAddress?.wallet]);
 
   const handleSell = async (token) => {
     await sellSolanaTokensFromPortfolio(
       token?.token,
-      +Number(amount).toFixed(token?.decimals),
+      +Number(amount).toFixed(decimals),
       priorityFees?.slippage,
       priorityFees?.priorityFee,
       activeSolWalletAddress?.wallet,
       activeSolWalletAddress?.balance || 0,
-      token?.decimals,
+      decimals,
       Number(token?.current_price),
       setIsLoading,
       token?.programAddress,
@@ -62,9 +94,9 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
           dispatch(
             updateBalanceChangeInQuickSellPortfolio({
               index,
-              qty: +Number(
-                Number(tokenData?.chainBalance) - Number(amount)
-              ).toFixed(token?.decimals),
+              qty: +Number(Number(originalAmount) - Number(amount)).toFixed(
+                decimals
+              ),
             })
           );
         }
@@ -79,11 +111,10 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
 
   useEffect(() => {
     if (tokenData && percentage > 0 && !isTyping) {
-      const calculatedAmount =
-        (Number(tokenData?.chainBalance) * percentage) / 100;
+      const calculatedAmount = (Number(originalAmount) * percentage) / 100;
       setAmount(calculatedAmount);
     }
-  }, [percentage, amount]);
+  }, [percentage, originalAmount]);
 
   useEffect(() => {
     if (presist) {
@@ -291,7 +322,10 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
                   <button
                     onClick={() => handleSell(tokenData)}
                     disabled={
-                      !amount || parseFloat(amount) <= 0 || isMoreAmount
+                      balanceUpdateLoading ||
+                      !amount ||
+                      parseFloat(amount) <= 0 ||
+                      isMoreAmount
                     }
                     className="w-full bg-[#ED1B24]
    disabled:bg-[#4A4A4A] mt-4 overflow-x-hidden disabled:text-[#6E6E6E] text-white font-semibold py-2 rounded-full transition-all duration-200 text-sm"
