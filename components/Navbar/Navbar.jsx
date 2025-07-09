@@ -163,13 +163,10 @@ const Navbar = () => {
   async function fetchSolPrice() {
     await axios({
       method: "get",
-      url: `https://pro-api.solscan.io/v2.0/token/price?address=So11111111111111111111111111111111111111112`,
-      headers: {
-        token: process.env.NEXT_PUBLIC_SOLANAPRO_TOKEN,
-      },
+      url: `https://frontend-api-v3.pump.fun/sol-price`,
     })
       .then((res) => {
-        const price = res?.data?.data[res?.data?.data?.length - 1]?.price;
+        const price = res?.data?.solPrice;
         if (price) {
           dispatch(setSolanaLivePrice(price));
         }
