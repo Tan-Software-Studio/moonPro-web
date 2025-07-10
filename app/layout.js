@@ -38,8 +38,10 @@ export const metadata = {
     ?.toUpperCase()} is the premier gateway to seamless on-chain trading and rapid asset discovery.`,
 
   twitter: {
-    card: 'summary', // or 'summary_large_image' if you have a larger preview image
-    title: metaDataMainName,
+    card: 'summary_large_image', // or 'summary_large_image' if you have a larger preview image
+    title: `${metaDataMainName
+      ?.toString()
+      ?.toUpperCase()} is the premier gateway to seamless on-chain trading and rapid asset discovery.`,
     description: `${metaDataMainName
       ?.toString()
       ?.toUpperCase()} is the premier gateway to seamless on-chain trading and rapid asset discovery.`,
