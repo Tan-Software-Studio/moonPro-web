@@ -13,6 +13,7 @@ import Tooltip from "../common/Tooltip/ToolTip";
 import { FaArrowUp } from "react-icons/fa6";
 
 const ActivePosition = ({
+  walletAddress,
   filteredActivePosition,
   activePositionSearchQuery,
   handleShowPnlCard
@@ -31,6 +32,9 @@ const ActivePosition = ({
   const isDataLoaded = useSelector((state) => state?.setPnlData?.isDataLoaded);
   const hasAttemptedLoad = useSelector(
     (state) => state?.setPnlData?.hasAttemptedLoad
+  );
+  const activeSolWalletAddress = useSelector(
+    (state) => state?.userData?.activeSolanaWallet
   );
 
   const { t } = useTranslation();
@@ -243,22 +247,24 @@ const ActivePosition = ({
                     {/* Action */}
                     <td className="px-4 py-2">
                       <div className="flex items-center justify-center gap-2">
-                        <Tooltip body={"Sell"}>
-                          <div
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              e.preventDefault();
-                              setQuickSellTokenData({
-                                tokenData: item,
-                                index: index,
-                              });
-                              setIsOpen(true);
-                            }}
-                            className={`text-red-500 hover:bg-red-500/10 flex items-center justify-center px-2 w-fit py-2 rounded-md`}
-                          >
-                            <FaArrowUp />
-                          </div>
-                        </Tooltip>
+                        {walletAddress == activeSolWalletAddress?.wallet &&
+                          <Tooltip body={"Sell"}>
+                            <div
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                setQuickSellTokenData({
+                                  tokenData: item,
+                                  index: index,
+                                });
+                                setIsOpen(true);
+                              }}
+                              className={`text-red-500 hover:bg-red-500/10 flex items-center justify-center px-2 w-fit py-2 rounded-md`}
+                            >
+                              <FaArrowUp />
+                            </div>
+                          </Tooltip>
+                        }
                         <Tooltip body={"Share PnL"}>
                           <button
                             onClick={(e) => {

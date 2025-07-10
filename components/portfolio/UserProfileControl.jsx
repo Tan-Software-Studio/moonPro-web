@@ -11,8 +11,16 @@ import { useTranslation } from "react-i18next";
 import RealizedPnLChart from "./PNLChart";
 import Image from "next/image";
 import NoData from "../common/NoData/noData";
+import { getSolanaBalanceAndPrice } from "@/utils/solanaNativeBalance";
 
-const UserProfileControl = ({ handleShowPnlCard, handleShowPnlHistoricalCard }) => {
+const UserProfileControl = ({ 
+  walletAddress, 
+  handleShowPnlCard, 
+  handleShowPnlHistoricalCard,
+  pnlData,
+  pnlDataHistory,
+  performance
+}) => {
   const { t, i18n } = useTranslation();
   const portfolio = t("portfolio", { returnObjects: true });
   const [leftTableTab, setLeftTableTab] = useState(portfolio?.activePosition);
@@ -23,24 +31,18 @@ const UserProfileControl = ({ handleShowPnlCard, handleShowPnlHistoricalCard }) 
   const [mobileActiveTab, setMobileActiveTab] = useState(
     portfolio?.activePosition
   );
-  const performance = useSelector((state) => state?.setPnlData?.performance);
-  const loading = useSelector((state) => state?.setPnlData?.loading);
-  const currentTabData = useSelector(
-    (state) => state?.setPnlData?.PnlData || []
-  );
-  const activeSolWalletAddress = useSelector(
-    (state) => state?.userData?.activeSolanaWallet
-  );
+  const loading = pnlData.loading;
+
 
   // total value calculation
-  const totalValue = currentTabData.reduce((acc, item) => {
+  const totalValue = pnlData.reduce((acc, item) => {
     const value =
       (item?.activeQtyHeld - item?.quantitySold) * item?.current_price;
     return acc + value;
   }, 0);
 
   // unrealized pnl calculation
-  const UnrealizedPNL = currentTabData.reduce((acc, item) => {
+  const UnrealizedPNL = pnlData.reduce((acc, item) => {
     const pnl =
       (item?.activeQtyHeld - item?.quantitySold) *
       (item.current_price - item.averageBuyPrice);
@@ -49,7 +51,7 @@ const UserProfileControl = ({ handleShowPnlCard, handleShowPnlHistoricalCard }) 
 
   // search active position
   const hasSearch = activePositionSearchQuery.trim() !== "";
-  const filteredData = currentTabData.filter(
+  const filteredData = pnlData.filter(
     (item) =>
       item?.token
         .toLowerCase()
@@ -61,7 +63,7 @@ const UserProfileControl = ({ handleShowPnlCard, handleShowPnlHistoricalCard }) 
         ?.toLowerCase()
         ?.includes(activePositionSearchQuery.toLowerCase())
   );
-  const filteredActivePosition = hasSearch ? filteredData : currentTabData;
+  const filteredActivePosition = hasSearch ? filteredData : pnlData;
 
   const performanceData = [
     {
@@ -165,7 +167,7 @@ const UserProfileControl = ({ handleShowPnlCard, handleShowPnlHistoricalCard }) 
                 <p className="text-base font-semibold tracking-wider text-emerald-500">
                   SOL{" "}
                   {`${
-                    Number(activeSolWalletAddress?.balance || 0).toFixed(5) || 0
+                    Number(getSolanaBalanceAndPrice(walletAddress) || 0).toFixed(5) || 0
                   }`}
                 </p>
               </div>
@@ -329,6 +331,7 @@ const UserProfileControl = ({ handleShowPnlCard, handleShowPnlHistoricalCard }) 
               {leftTableTab === portfolio?.activePosition && (
                 <div>
                   <ActivePosition
+                    walletAddress={walletAddress}
                     filteredActivePosition={filteredActivePosition}
                     activePositionSearchQuery={activePositionSearchQuery}
                     handleShowPnlCard={handleShowPnlCard}
@@ -379,7 +382,7 @@ const UserProfileControl = ({ handleShowPnlCard, handleShowPnlHistoricalCard }) 
                   </div>
                 </div>
               </div>
-              <ActivityTable activitySearchQuery={activitySearchQuery} />
+              <ActivityTable activitySearchQuery={activitySearchQuery} walletAddress={walletAddress} />
             </div>
           </div>
 

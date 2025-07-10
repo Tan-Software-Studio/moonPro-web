@@ -15,7 +15,7 @@ const truncateString = (str, start = 4, end = 4) => {
   return `${str.slice(0, start)}...${str.slice(-end)}`;
 };
 
-const ActivityTable = ({ activitySearchQuery }) => {
+const ActivityTable = ({ activitySearchQuery, walletAddress }) => {
   const [transactionData, setTransactionData] = useState([]);
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -26,13 +26,6 @@ const ActivityTable = ({ activitySearchQuery }) => {
 
   const { t } = useTranslation();
   const referral = t("referral");
-
-  const solWalletAddress = useSelector(
-    (state) => state?.AllStatesData?.solWalletAddress
-  );
-  const activeSolWalletAddress = useSelector(
-    (state) => state?.userData?.activeSolanaWallet
-  );
 
   async function getData() {
     try {
@@ -89,7 +82,7 @@ const ActivityTable = ({ activitySearchQuery }) => {
     }
         `,
           variables: {
-            wallet: activeSolWalletAddress?.wallet || solWalletAddress,
+            wallet: walletAddress,
           },
         },
         {
@@ -175,7 +168,7 @@ const ActivityTable = ({ activitySearchQuery }) => {
   };
 
   const hasSearch = activitySearchQuery.trim() !== "";
-  const filteredData = transactionData.filter(
+  const filteredData = transactionData?.filter(
     (item) =>
       item?.Trade?.Currency?.MintAddress.toLowerCase()?.includes(
         activitySearchQuery.toLowerCase()
@@ -191,7 +184,7 @@ const ActivityTable = ({ activitySearchQuery }) => {
 
   useEffect(() => {
     getData();
-  }, [activeSolWalletAddress?.wallet]);
+  }, [walletAddress]);
 
   return (
     <>

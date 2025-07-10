@@ -28,6 +28,7 @@ const metaDataMainName = process.env.NEXT_PUBLIC_METADATA_MAIN_NAME || "Nexa";
 const ReferralPage = () => {
   const { t } = useTranslation();
   const referral = t("referral");
+  const portfolio = t("portfolio");
 
   useEffect(() => {
     document.title = `${metaDataMainName} | Referral`;
@@ -193,233 +194,46 @@ const ReferralPage = () => {
 
   return (
     <>
-      <div className=" text-white py-6 md:px-6 px-3  rounded-2xl space-y-6 overflow-y-auto h-[90vh]">
-        {/* User Header */}
-        <div className="flex md:flex-row flex-col items-center md:items-start gap-4 w-full">
-          {/* Image */}
-          <div
-            className={`w-20 h-20 min-w-[3.5rem] flex justify-center items-center font-bold text-[30px] rounded-md bg-yellow-500 overflow-hidden  relative`}
-          >
-            {userDisplayInfo.displayText?.[0]?.toUpperCase() || "U"}
-          </div>
-
-          {/* Right Content */}
-          <div className="flex-1 flex flex-col items-center md:items-start w-full">
-            {/* Top row: username, points, icons */}
-            <div className="flex flex-col md:flex-row items-center md:items-center justify-center md:justify-between w-full gap-2 md:gap-0 mt-2">
-              <div className="flex gap-4 items-center">
-                <div
-                  onClick={handleCopy3}
-                  className="font-semibold hover:text-blue-400 cursor-pointer"
-                >
-                  {shortenAddress(token ? activeSolWalletAddress?.wallet : "")}
-                </div>
-                <div className="flex items-center gap-1">
-                  <VscDebugBreakpointLogUnverified size={18} />
-                  <div>
-                    {refData?.user?.dailyPoints +
-                      refData?.user?.tradePoints +
-                      refData?.user?.weeklyPoints +
-                      refData?.user?.referralPoints || 0}{" "}
-                    Points
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                {activeSolWalletAddress?.wallet && (
+     {activeSolWalletAddress?.wallet ? 
+        <>
+          <div className=" text-white py-6 md:px-6 px-3  rounded-2xl space-y-6 overflow-y-auto h-[90vh]">
+          {/* User Header */}
+          <div className="flex md:flex-row flex-col items-center md:items-start gap-4 w-full">
+            {/* Image */}
+            <div
+              className={`w-20 h-20 min-w-[3.5rem] flex justify-center items-center font-bold text-[30px] rounded-md bg-yellow-500 overflow-hidden  relative`}
+            >
+              {userDisplayInfo.displayText?.[0]?.toUpperCase() || "U"}
+            </div>
+          
+            {/* Right Content */}
+            <div className="flex-1 flex flex-col items-center md:items-start w-full">
+              {/* Top row: username, points, icons */}
+              <div className="flex flex-col md:flex-row items-center md:items-center justify-center md:justify-between w-full gap-2 md:gap-0 mt-2">
+                <div className="flex gap-4 items-center">
                   <div
-                    onClick={() => handleCopy1(refData?.user?.referralId)}
-                    className="flex items-center gap-1 cursor-pointer text-sm group"
+                    onClick={handleCopy3}
+                    className="font-semibold hover:text-blue-400 cursor-pointer"
                   >
-                    <RiLinkM
-                      size={18}
-                      className="text-[#a0a4b8] group-hover:text-white transition-colors duration-200"
-                    />
-                    <span className="text-[#a0a4b8]">
-                      {refData?.user?.referralId}
-                    </span>
+                    {shortenAddress(token ? activeSolWalletAddress?.wallet : "")}
                   </div>
-                )}
-              </div>
-            </div>
-
-            {/* Progress Bar */}
-            <div className="mt-2 w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-blue-500 transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              ></div>
-            </div>
-
-            <div className="mt-2 flex items-center gap-2">
-              <p className="tracking-wider text-sm">
-                {hideEmail ? "******" : userDisplayInfo.displayText}
-              </p>
-              <div
-                className="cursor-pointer"
-                onClick={() => setHideEmail(!hideEmail)}
-              >
-                {hideEmail ? <FaRegEye /> : <FaRegEyeSlash />}
-              </div>
-            </div>
-          </div>
-        </div>
-        {maxLevelComplete && (
-          <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:items-center text-xs text-gray-400">
-            <div className="flex items-start gap-1 sm:items-center flex-wrap tracking-wider">
-              <MdOutlineKeyboardDoubleArrowUp
-                className="text-blue-500 mt-[2px]"
-                size={16}
-              />
-              <span className="text-[#cdced4]">
-                {referral?.refMata?.nextLevel}
-              </span>
-              <span className="font-medium text-blue-500">
-                Earn {pointsToNext} points to reach
-                <span className="text-sm text-orange-400 ml-1 tracking-wider">
-                  {nextTitle}
-                </span>
-              </span>
-            </div>
-          </div>
-        )}
-
-        {/* Info Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Level Card */}
-          <div className=" bg-[#191919]  rounded-xl p-4 space-y-2 ">
-            <div className="flex items-center gap-1">
-              <div className="text-sm text-orange-400 tracking-wider ">
-                {currentTitle}
-              </div>
-              <Infotip
-                iconSize={20}
-                body={`Your current level is ${currentTitle}, Earn ${pointsToNext} points to reach ${nextTitle}`}
-              />
-            </div>
-            <div className="text-2xl font-bold  flex items-center gap-2">
-              <VscDebugBreakpointLogUnverified size={18} />
-              <div>
-                {refData?.user?.dailyPoints +
-                  refData?.user?.tradePoints +
-                  refData?.user?.weeklyPoints +
-                  refData?.user?.referralPoints || 0}{" "}
-                Points
-              </div>
-            </div>
-          </div>
-
-          {/* SOL Earned */}
-          <div className=" bg-[#191919]  rounded-xl p-4">
-            <div className="text-sm text-[rgb(200,201,209)] flex justify-between items-center gap-2">
-              <div className="flex items-center gap-1">
-                <div className="flex items-center gap-2 tracking-wider text-nowrap">
-                  <HiOutlineCurrencyDollar
-                    className="text-blue-500"
-                    size={22}
-                  />
-                  {referral?.refMata?.solEarned}
+                  <div className="flex items-center gap-1">
+                    <VscDebugBreakpointLogUnverified size={18} />
+                    <div>
+                      {refData?.user?.dailyPoints +
+                        refData?.user?.tradePoints +
+                        refData?.user?.weeklyPoints +
+                        refData?.user?.referralPoints || 0}{" "}
+                      Points
+                    </div>
+                  </div>
                 </div>
-                {/* <Infotip
-                  iconSize={20}
-                  body="SOL Earned"
-                /> */}
-              </div>
-              <button
-                onClick={handleWithdrawClick}
-                className="lg:py-2 md:py-2 py-2 lg:px-3 md:px-2 px-3 bg-blue-500 rounded-md hover:bg-blue-700 tracking-wider"
-              >
-                {referral?.refMata?.claim}
-              </button>
-            </div>
-            <div className="text-2xl font-thin pt-2 tracking-wider">
-              {refData?.totalEarningInSol > 0
-                ? decimalConvert(refData?.totalEarningInSol)
-                : 0}{" "}
-              SOL
-            </div>
 
-            <div className="flex items-center gap-1">
-              <div className="text-sm text-[#a0a4b8] tracking-wider">
-                {referral?.refMata?.claimed}{" "}
-                {(
-                  (Number(refData?.user?.totalClaimed) || 0) +
-                  (Number(addClaimed) || 0)
-                ).toFixed(5)}{" "}
-                SOL
-              </div>
-              <Infotip
-                iconSize={20}
-                body="This is the total SOL you've already withdrawn from your rewards."
-              />
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="text-sm text-[#a0a4b8] tracking-wider">
-                {referral?.refMata?.availableToClaim}{" "}
-                {(
-                  (Number(refData?.totalEarningInSol) || 0) -
-                  (Number(refData?.user?.totalClaimed) || 0) -
-                  (Number(addClaimed) || 0)
-                ).toFixed(5)}{" "}
-                SOL
-              </div>
-              <Infotip
-                iconSize={20}
-                body="This is the SOL you've earned but haven't claimed yet."
-              />
-            </div>
-          </div>
-
-          {/* Points Breakdown */}
-          <div className=" bg-[#191919]  rounded-xl p-4">
-            <div className="flex items-center gap-1">
-              <div className="text-sm text-[rgb(200,201,209)] flex items-center gap-2 tracking-wider">
-                <IoPieChartOutline className="text-blue-500" size={22} />
-                <div> Points Breakdown </div>
-                <Infotip
-                  iconSize={20}
-                  body={`Shows how your total points are distributed`}
-                />
-              </div>
-            </div>
-            <div className="flex flex-col gap-1 text-sm mt-2 pt-1.5">
-              <div className="text-[#a0a4b8] tracking-wider">
-                Trading{" "}
-                <span className="float-right text-[#a0a4b8]">
-                  {refData?.user?.dailyPoints +
-                    refData?.user?.tradePoints +
-                    refData?.user?.weeklyPoints || 0}
-                </span>
-              </div>
-              <div className="text-[#a0a4b8] tracking-wider">
-                Referrals{" "}
-                <span className="float-right text-[#a0a4b8]">
-                  {refData?.user?.referralPoints || 0}
-                </span>
-              </div>
-              {/* <div className="text-[#a0a4b8] tracking-wider">
-                Quests <span className="float-right text-[#a0a4b8]">0</span>
-              </div> */}
-            </div>
-          </div>
-        </div>
-
-        {/* Referral Table */}
-        <div className="bg-[#191919]  rounded-t-xl ">
-          <div className="text-white text-sm">
-            {/* Header */}
-            <div className="flex justify-between border-b border-[#2c2c34] px-4 py-2 overflow-x-auto whitespace-nowrap">
-              <div className="flex gap-2 items-center flex-shrink-0">
-                {referral?.refMata?.referrals}
-              </div>
-
-              <div className="flex gap-3 items-center">
                 <div>
                   {activeSolWalletAddress?.wallet && (
                     <div
-                      onClick={() => handleCopy2(refData?.user?.referralId)}
-                      className="flex items-center gap-1 cursor-pointer text-[14px] group"
+                      onClick={() => handleCopy1(refData?.user?.referralId)}
+                      className="flex items-center gap-1 cursor-pointer text-sm group"
                     >
                       <RiLinkM
                         size={18}
@@ -431,129 +245,328 @@ const ReferralPage = () => {
                     </div>
                   )}
                 </div>
-                <div className="flex relative items-center gap-3 text-sm text-gray-400 flex-shrink-0 border-none focus:outline-none focus:ring-0">
-                  <select
-                    value={selectedTier}
-                    onChange={(e) => setSelectedTier(Number(e.target.value))}
-                    className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 rounded border-none focus:outline-none focus:ring-0 cursor-pointer appearance-none pr-8 "
-                  >
-                    <option
-                      className="bg-black text-white cursor-pointer"
-                      value={1}
-                    >
-                      1 Tier
-                    </option>
-                    <option
-                      className="bg-black text-white cursor-pointer"
-                      value={2}
-                    >
-                      2 Tier
-                    </option>
-                    <option
-                      className="bg-black text-white cursor-pointer"
-                      value={3}
-                    >
-                      3 Tier
-                    </option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-white">
-                    <FaAngleDown />
-                  </div>
-                </div>
+              </div>
 
-                <div className="flex justify-center items-center gap-1">
-                  <SlUserFollow className="text-blue-500" />{" "}
-                  <span className="text-[#89888e]">{tierData.length}</span>
+              {/* Progress Bar */}
+              <div className="mt-2 w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-blue-500 transition-all duration-300"
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
+
+              <div className="mt-2 flex items-center gap-2">
+                <p className="tracking-wider text-sm">
+                  {hideEmail ? "******" : userDisplayInfo.displayText}
+                </p>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => setHideEmail(!hideEmail)}
+                >
+                  {hideEmail ? <FaRegEye /> : <FaRegEyeSlash />}
+                </div>
+              </div>
+            </div>
+          </div>
+          {maxLevelComplete && (
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:items-center text-xs text-gray-400">
+              <div className="flex items-start gap-1 sm:items-center flex-wrap tracking-wider">
+                <MdOutlineKeyboardDoubleArrowUp
+                  className="text-blue-500 mt-[2px]"
+                  size={16}
+                />
+                <span className="text-[#cdced4]">
+                  {referral?.refMata?.nextLevel}
+                </span>
+                <span className="font-medium text-blue-500">
+                  Earn {pointsToNext} points to reach
+                  <span className="text-sm text-orange-400 ml-1 tracking-wider">
+                    {nextTitle}
+                  </span>
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Info Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Level Card */}
+            <div className=" bg-[#191919]  rounded-xl p-4 space-y-2 ">
+              <div className="flex items-center gap-1">
+                <div className="text-sm text-orange-400 tracking-wider ">
+                  {currentTitle}
+                </div>
+                <Infotip
+                  iconSize={20}
+                  body={`Your current level is ${currentTitle}, Earn ${pointsToNext} points to reach ${nextTitle}`}
+                />
+              </div>
+              <div className="text-2xl font-bold  flex items-center gap-2">
+                <VscDebugBreakpointLogUnverified size={18} />
+                <div>
+                  {refData?.user?.dailyPoints +
+                    refData?.user?.tradePoints +
+                    refData?.user?.weeklyPoints +
+                    refData?.user?.referralPoints || 0}{" "}
+                  Points
                 </div>
               </div>
             </div>
 
-            {/* Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full border border-[#2c2c34] rounded-b-lg text-left text-sm  border-collapse">
-                <thead className="text-gray-500 border-b border-[#2c2c34]">
-                  <tr>
-                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">
-                      {referral?.refMata?.emailWallet}
-                    </th>
-                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">
-                      {referral?.refMata?.dateJoined}
-                    </th>
-                    <th className="px-4 py-2 whitespace-nowrap text-blue-500">
-                      <div className="flex items-center gap-1">
-                        <div>{referral?.refMata?.solEarned}</div>
-                        <Infotip
-                          iconSize={20}
-                          body={`This is the amount of SOL you've earned from referral’s activity`}
-                        />
-                      </div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
-                    <tr>
-                      <td
-                        colSpan={3}
-                        className="text-center text-gray-400 py-4  "
-                      >
-                        <div
-                          className="snippet   flex justify-center items-center h-[200px]  "
-                          data-title=".dot-spin"
-                        >
-                          <div className="stage">
-                            <div className="dot-spin"></div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  ) : tierData.length > 0 ? (
-                    tierData.map((row, idx) => (
-                      <tr
-                        key={row._id || idx}
-                        className="text-white border-b border-[#2c2c34] last:border-b-0 hover:bg-[#08080e]"
-                      >
-                        <td className="px-4 py-4 whitespace-nowrap tracking-wider font-spaceGrotesk">
-                          {hideEmail ? "*******" : getReferralDisplayInfo(row)}
-                        </td>
-                        {/* <td className="px-4 py-4 whitespace-nowrap">{new Date(row.referralAddedAt).toLocaleDateString()}</td> */}
-                        <td className="px-4 py-4 whitespace-nowrap text-gray-400">
-                          {formatTimeAgo(row.referralAddedAt)}
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap">
-                          {(
-                            row.feeCollected *
-                            (rewardPercentage / 100)
-                          ).toFixed(5)}
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan={3}
-                        className="text-center text-gray-400 py-4"
-                      >
-                        <div className="flex flex-col items-center justify-center h-64 mt-10 text-center">
-                          <NoData />
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+            {/* SOL Earned */}
+            <div className=" bg-[#191919]  rounded-xl p-4">
+              <div className="text-sm text-[rgb(200,201,209)] flex justify-between items-center gap-2">
+                <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2 tracking-wider text-nowrap">
+                    <HiOutlineCurrencyDollar
+                      className="text-blue-500"
+                      size={22}
+                    />
+                    {referral?.refMata?.solEarned}
+                  </div>
+                  {/* <Infotip
+                    iconSize={20}
+                    body="SOL Earned"
+                  /> */}
+                </div>
+                <button
+                  onClick={handleWithdrawClick}
+                  className="lg:py-2 md:py-2 py-2 lg:px-3 md:px-2 px-3 bg-blue-500 rounded-md hover:bg-blue-700 tracking-wider"
+                >
+                  {referral?.refMata?.claim}
+                </button>
+              </div>
+              <div className="text-2xl font-thin pt-2 tracking-wider">
+                {refData?.totalEarningInSol > 0
+                  ? decimalConvert(refData?.totalEarningInSol)
+                  : 0}{" "}
+                SOL
+              </div>
+
+              <div className="flex items-center gap-1">
+                <div className="text-sm text-[#a0a4b8] tracking-wider">
+                  {referral?.refMata?.claimed}{" "}
+                  {(
+                    (Number(refData?.user?.totalClaimed) || 0) +
+                    (Number(addClaimed) || 0)
+                  ).toFixed(5)}{" "}
+                  SOL
+                </div>
+                <Infotip
+                  iconSize={20}
+                  body="This is the total SOL you've already withdrawn from your rewards."
+                />
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="text-sm text-[#a0a4b8] tracking-wider">
+                  {referral?.refMata?.availableToClaim}{" "}
+                  {(
+                    (Number(refData?.totalEarningInSol) || 0) -
+                    (Number(refData?.user?.totalClaimed) || 0) -
+                    (Number(addClaimed) || 0)
+                  ).toFixed(5)}{" "}
+                  SOL
+                </div>
+                <Infotip
+                  iconSize={20}
+                  body="This is the SOL you've earned but haven't claimed yet."
+                />
+              </div>
+            </div>
+
+            {/* Points Breakdown */}
+            <div className=" bg-[#191919]  rounded-xl p-4">
+              <div className="flex items-center gap-1">
+                <div className="text-sm text-[rgb(200,201,209)] flex items-center gap-2 tracking-wider">
+                  <IoPieChartOutline className="text-blue-500" size={22} />
+                  <div> Points Breakdown </div>
+                  <Infotip
+                    iconSize={20}
+                    body={`Shows how your total points are distributed`}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col gap-1 text-sm mt-2 pt-1.5">
+                <div className="text-[#a0a4b8] tracking-wider">
+                  Trading{" "}
+                  <span className="float-right text-[#a0a4b8]">
+                    {refData?.user?.dailyPoints +
+                      refData?.user?.tradePoints +
+                      refData?.user?.weeklyPoints || 0}
+                  </span>
+                </div>
+                <div className="text-[#a0a4b8] tracking-wider">
+                  Referrals{" "}
+                  <span className="float-right text-[#a0a4b8]">
+                    {refData?.user?.referralPoints || 0}
+                  </span>
+                </div>
+                {/* <div className="text-[#a0a4b8] tracking-wider">
+                  Quests <span className="float-right text-[#a0a4b8]">0</span>
+                </div> */}
+              </div>
             </div>
           </div>
+
+          {/* Referral Table */}
+          <div className="bg-[#191919]  rounded-t-xl ">
+            <div className="text-white text-sm">
+              {/* Header */}
+              <div className="flex justify-between border-b border-[#2c2c34] px-4 py-2 overflow-x-auto whitespace-nowrap">
+                <div className="flex gap-2 items-center flex-shrink-0">
+                  {referral?.refMata?.referrals}
+                </div>
+
+                <div className="flex gap-3 items-center">
+                  <div>
+                    {activeSolWalletAddress?.wallet && (
+                      <div
+                        onClick={() => handleCopy2(refData?.user?.referralId)}
+                        className="flex items-center gap-1 cursor-pointer text-[14px] group"
+                      >
+                        <RiLinkM
+                          size={18}
+                          className="text-[#a0a4b8] group-hover:text-white transition-colors duration-200"
+                        />
+                        <span className="text-[#a0a4b8]">
+                          {refData?.user?.referralId}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex relative items-center gap-3 text-sm text-gray-400 flex-shrink-0 border-none focus:outline-none focus:ring-0">
+                    <select
+                      value={selectedTier}
+                      onChange={(e) => setSelectedTier(Number(e.target.value))}
+                      className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 rounded border-none focus:outline-none focus:ring-0 cursor-pointer appearance-none pr-8 "
+                    >
+                      <option
+                        className="bg-black text-white cursor-pointer"
+                        value={1}
+                      >
+                        1 Tier
+                      </option>
+                      <option
+                        className="bg-black text-white cursor-pointer"
+                        value={2}
+                      >
+                        2 Tier
+                      </option>
+                      <option
+                        className="bg-black text-white cursor-pointer"
+                        value={3}
+                      >
+                        3 Tier
+                      </option>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-white">
+                      <FaAngleDown />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-center items-center gap-1">
+                    <SlUserFollow className="text-blue-500" />{" "}
+                    <span className="text-[#89888e]">{tierData.length}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Table */}
+              <div className="overflow-x-auto">
+                <table className="w-full border border-[#2c2c34] rounded-b-lg text-left text-sm  border-collapse">
+                  <thead className="text-gray-500 border-b border-[#2c2c34]">
+                    <tr>
+                      <th className="px-4 py-2 whitespace-nowrap text-blue-500">
+                        {referral?.refMata?.emailWallet}
+                      </th>
+                      <th className="px-4 py-2 whitespace-nowrap text-blue-500">
+                        {referral?.refMata?.dateJoined}
+                      </th>
+                      <th className="px-4 py-2 whitespace-nowrap text-blue-500">
+                        <div className="flex items-center gap-1">
+                          <div>{referral?.refMata?.solEarned}</div>
+                          <Infotip
+                            iconSize={20}
+                            body={`This is the amount of SOL you've earned from referral’s activity`}
+                          />
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {loading ? (
+                      <tr>
+                        <td
+                          colSpan={3}
+                          className="text-center text-gray-400 py-4  "
+                        >
+                          <div
+                            className="snippet   flex justify-center items-center h-[200px]  "
+                            data-title=".dot-spin"
+                          >
+                            <div className="stage">
+                              <div className="dot-spin"></div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    ) : tierData.length > 0 ? (
+                      tierData.map((row, idx) => (
+                        <tr
+                          key={row._id || idx}
+                          className="text-white border-b border-[#2c2c34] last:border-b-0 hover:bg-[#08080e]"
+                        >
+                          <td className="px-4 py-4 whitespace-nowrap tracking-wider font-spaceGrotesk">
+                            {hideEmail ? "*******" : getReferralDisplayInfo(row)}
+                          </td>
+                          {/* <td className="px-4 py-4 whitespace-nowrap">{new Date(row.referralAddedAt).toLocaleDateString()}</td> */}
+                          <td className="px-4 py-4 whitespace-nowrap text-gray-400">
+                            {formatTimeAgo(row.referralAddedAt)}
+                          </td>
+                          <td className="px-4 py-4 whitespace-nowrap">
+                            {(
+                              row.feeCollected *
+                              (rewardPercentage / 100)
+                            ).toFixed(5)}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan={3}
+                          className="text-center text-gray-400 py-4"
+                        >
+                          <div className="flex flex-col items-center justify-center h-64 mt-10 text-center">
+                            <NoData />
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          </div>
+          {showWithdrawPopup && (
+            <RefPopup
+              setAddClaimed={setAddClaimed}
+              Available={refData?.totalEarningInSol - refData?.user?.totalClaimed}
+              address={activeSolWalletAddress?.wallet}
+              onClose={() => setShowWithdrawPopup(false)}
+            />
+          )}
+        </>
+        :
+        <div className="flex flex-col h-[70vh] w-full items-center justify-center mt-5">
+          <NoData
+            title={portfolio?.loginRequired}
+            description="Please login to view your Referral."
+          />
         </div>
-      </div>
-      {showWithdrawPopup && (
-        <RefPopup
-          setAddClaimed={setAddClaimed}
-          Available={refData?.totalEarningInSol - refData?.user?.totalClaimed}
-          address={activeSolWalletAddress?.wallet}
-          onClose={() => setShowWithdrawPopup(false)}
-        />
-      )}
+      }
+      
     </>
   );
 };
