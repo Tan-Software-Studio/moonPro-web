@@ -19,6 +19,7 @@ export const resetResolutionOffsets = () => {
 };
 
 export const resetMoveToNextInterval = () => {
+  startingIntervalBeforeLoop= null;
   moveToNextInterval = true;
 }
 
