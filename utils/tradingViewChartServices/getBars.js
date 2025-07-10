@@ -18,6 +18,10 @@ export const resetResolutionOffsets = () => {
   clearChunk();
 };
 
+export const resetMoveToNextInterval = () => {
+  moveToNextInterval = true;
+}
+
 function getNextInterval(savedInterval) {
   const index = intervalTV.indexOf(savedInterval);
   if (index !== -1) {

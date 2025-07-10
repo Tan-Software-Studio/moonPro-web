@@ -18,7 +18,7 @@ import {
   clear100SellLine,
   subscribe100SellLine,
 } from "@/utils/tradingViewChartServices/firstSell100Percent";
-import { resetResolutionOffsets } from "@/utils/tradingViewChartServices/getBars";
+import { resetResolutionOffsets, resetMoveToNextInterval } from "@/utils/tradingViewChartServices/getBars";
 
 const TVChartContainer = ({
   chartTokenDataState,
@@ -233,6 +233,7 @@ const TVChartContainer = ({
       clear100SellLine();
       clearMarks();
       setHasGottenMarks(false);
+      resetMoveToNextInterval();
       setCurrentTokenAddress(tokenaddress);
     }
   }, [tokenaddress]);

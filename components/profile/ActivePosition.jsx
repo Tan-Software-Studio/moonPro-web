@@ -22,9 +22,6 @@ const ActivePosition = ({
   const [isOpen, setIsOpen] = useState(false);
   const [quickSellTokenData, setQuickSellTokenData] = useState({});
   const dispatch = useDispatch();
-  useEffect(() => {
-    console.log("filteredActivePosition", filteredActivePosition)
-  }, [filteredActivePosition])
   const currentTabData = useSelector(
     (state) => state?.setPnlData?.PnlData || []
   );
