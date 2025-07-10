@@ -115,11 +115,11 @@ export const getBars = async (
         resolutionOffsets[resolution].fetchedSeconds = true;
       }
     } else {
-      if (moveToNextInterval) {
-        const nextInterval = getNextInterval(resolution);
-        if (nextInterval !== startingIntervalBeforeLoop) {
-          window?.tvWidget?.activeChart()?.setResolution(nextInterval);
-        }
+      if (moveToNextInterval && resolution.endsWith("S")) {
+        window?.tvWidget?.activeChart()?.setResolution("1");
+        // const nextInterval = getNextInterval(resolution);
+        // if (nextInterval !== startingIntervalBeforeLoop) {
+        // }
       }
       onHistoryCallback([], { noData: true });
     }
