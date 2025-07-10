@@ -160,8 +160,11 @@ export async function subscribeToTrendingTokens() {
       }
     });
 
-    socket.on("balance_updates", async (data) => {
-      // console.log("🚀 ~ awaitsocket.on ~ data:=========================>");
+    socket.on("balance_update_node", async (data) => {
+      // console.log(
+      //   "🚀 ~ awaitsocket.on ~ data:=========================>",
+      //   Object.keys(data).length
+      // );
       store.dispatch(updateWalletAddressesBalanceLive(data));
     });
     let updateQueue = {

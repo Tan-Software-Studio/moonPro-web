@@ -80,7 +80,7 @@ const userDataSlice = createSlice({
           const isWallet = payload[element?.wallet];
           if (isWallet) {
             state.userDetails.walletAddressSOL[element?.index].balance = Number(
-              isWallet?.BalanceUpdate?.PostBalance
+              isWallet?.balanceSol
             );
             if (state.userDetails.walletAddressSOL[element?.index].primary) {
               state.activeSolanaWallet =
