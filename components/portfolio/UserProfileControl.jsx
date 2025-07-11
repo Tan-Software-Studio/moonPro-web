@@ -442,7 +442,7 @@ const UserProfileControl = ({
             {mobileActiveTab == portfolio?.activePosition && (
               <div>
                 <ActivePosition
-                  walletAddress={walletAddress}
+                  pnlData={pnlData}
                   filteredActivePosition={filteredActivePosition}
                   activePositionSearchQuery={activePositionSearchQuery}
                   handleShowPnlCard={handleShowPnlCard}
