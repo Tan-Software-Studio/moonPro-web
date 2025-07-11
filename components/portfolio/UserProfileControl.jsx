@@ -19,19 +19,22 @@ const UserProfileControl = ({
   handleShowPnlHistoricalCard,
   pnlData,
   pnlDataHistory,
-  performance
+  performance,
+  userOwnsPortfolio,
+  hasFetchedPnlData
 }) => {
   const { t, i18n } = useTranslation();
   const portfolio = t("portfolio", { returnObjects: true });
   const [leftTableTab, setLeftTableTab] = useState(portfolio?.activePosition);
   const [rightTableTab, setRightTableTab] = useState(portfolio?.activity);
+  const [availableBalance, setActiveBalance] = useState(0);
   const [activePositionSearchQuery, setActivePositionSearchQuery] =
     useState("");
   const [activitySearchQuery, setActivitySearchQuery] = useState("");
   const [mobileActiveTab, setMobileActiveTab] = useState(
     portfolio?.activePosition
   );
-  const loading = pnlData.loading;
+  const loading = pnlData?.loading;
 
 
   // total value calculation
@@ -116,6 +119,14 @@ const UserProfileControl = ({
     setMobileActiveTab(updatedPortfolio?.activePosition);
   }, [i18n.language]);
 
+  useEffect(() => {
+    const availableBalance = async () => {
+      const balance = Number(await getSolanaBalanceAndPrice(walletAddress) || 0)?.toFixed(5) || 0;
+      setActiveBalance(balance);
+    } 
+    availableBalance();
+  }, [])
+
   return (
     <>
       <div className=" ">
@@ -157,20 +168,19 @@ const UserProfileControl = ({
                   ).toFixed(5)}`}
                 </p>
               </div>
-
-              <div className="py-2">
-                <div className="flex items-center gap-2 mb-2">
-                  <p className="text-sm text-gray-400">
-                    {portfolio?.availableBalance}
+              {userOwnsPortfolio && 
+                <div className="py-2">
+                  <div className="flex items-center gap-2 mb-2">
+                    <p className="text-sm text-gray-400">
+                      {portfolio?.availableBalance}
+                    </p>
+                  </div>
+                  <p className="text-base font-semibold tracking-wider text-emerald-500">
+                    SOL{" "}
+                    {`${availableBalance}`}
                   </p>
                 </div>
-                <p className="text-base font-semibold tracking-wider text-emerald-500">
-                  SOL{" "}
-                  {`${
-                    Number(getSolanaBalanceAndPrice(walletAddress) || 0).toFixed(5) || 0
-                  }`}
-                </p>
-              </div>
+              }
             </div>
           </div>
 
@@ -331,21 +341,23 @@ const UserProfileControl = ({
               {leftTableTab === portfolio?.activePosition && (
                 <div>
                   <ActivePosition
-                    walletAddress={walletAddress}
+                    pnlData={pnlData}
                     filteredActivePosition={filteredActivePosition}
                     activePositionSearchQuery={activePositionSearchQuery}
                     handleShowPnlCard={handleShowPnlCard}
+                    userOwnsPortfolio={userOwnsPortfolio}
+                    hasFetchedPnlData={hasFetchedPnlData}
                   />
                 </div>
               )}
               {leftTableTab === portfolio?.history && (
                 <div>
-                  <History handleShowPnlHistoricalCard={handleShowPnlHistoricalCard}/>
+                  <History handleShowPnlHistoricalCard={handleShowPnlHistoricalCard} historyData={pnlDataHistory}/>
                 </div>
               )}
               {leftTableTab === portfolio?.top100 && (
                 <div>
-                  <TopHundred handleShowPnlHistoricalCard={handleShowPnlHistoricalCard}/>
+                  <TopHundred handleShowPnlHistoricalCard={handleShowPnlHistoricalCard} walletAddress={walletAddress}/>
                 </div>
               )}
             </div>
@@ -430,24 +442,28 @@ const UserProfileControl = ({
             {mobileActiveTab == portfolio?.activePosition && (
               <div>
                 <ActivePosition
+                  walletAddress={walletAddress}
                   filteredActivePosition={filteredActivePosition}
                   activePositionSearchQuery={activePositionSearchQuery}
+                  handleShowPnlCard={handleShowPnlCard}
+                  userOwnsPortfolio={userOwnsPortfolio}
+                  hasFetchedPnlData={hasFetchedPnlData}
                 />
               </div>
             )}
             {mobileActiveTab == portfolio?.activity && (
               <div>
-                <ActivityTable activitySearchQuery={activitySearchQuery} />
+                <ActivityTable activitySearchQuery={activitySearchQuery} walletAddress={walletAddress} />
               </div>
             )}
             {mobileActiveTab === portfolio?.history && (
               <div>
-                <History />
+                <History handleShowPnlHistoricalCard={handleShowPnlHistoricalCard} historyData={pnlDataHistory} />
               </div>
             )}
             {mobileActiveTab === portfolio?.top100 && (
               <div>
-                <TopHundred />
+                <TopHundred handleShowPnlHistoricalCard={handleShowPnlHistoricalCard} walletAddress={walletAddress} />
               </div>
             )}
           </div>

@@ -306,7 +306,7 @@ const SharePnLModal = ({
               <p>{solIsActive ? "SOL" : "USD"}</p>
             </button>
             <div className="flex gap-2">
-              {/* {walletAddress && 
+              {walletAddress && 
                 <button
                   onClick={(event) => {
                     event.stopPropagation();
@@ -317,7 +317,7 @@ const SharePnLModal = ({
                   <FaXTwitter />
                   <p>Share to X</p>
                 </button>
-              } */}
+              }
               <button
                 onClick={(event) => {
                   event.stopPropagation();

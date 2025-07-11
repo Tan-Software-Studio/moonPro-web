@@ -13,37 +13,23 @@ import { FiUpload } from "react-icons/fi";
 import Tooltip from "../common/Tooltip/ToolTip";
 import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
 
-const TopHundred = ({ handleShowPnlHistoricalCard }) => {
+const TopHundred = ({ handleShowPnlHistoricalCard, walletAddress }) => {
   const router = useRouter();
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const [topHundredHistoryData, setTopHundredHistoryData] = useState([]);
-  const solWalletAddress = useSelector(
-    (state) => state?.AllStatesData?.solWalletAddress
-  );
-  const activeSolWalletAddress = useSelector(
-    (state) => state?.userData?.activeSolanaWallet
-  );
 
   const backendUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
   async function getTopHundredHistoryData() {
-    const token = localStorage.getItem("token");
-    if (!token) return;
     setLoading(true);
     await axios
       .get(
-        `${backendUrl}transactions/PNLHistoryTop/${activeSolWalletAddress?.wallet || solWalletAddress
-        }`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `${backendUrl}transactions/PNLHistoryTop/${walletAddress}`,
       )
       .then((response) => {
-        console.log("🚀 ~ awaitaxios.get ~ response:", response?.data?.data);
+        // console.log("🚀 ~ awaitaxios.get ~ response:", response?.data?.data);
         setTopHundredHistoryData(response?.data?.data?.pnlHistory);
         setLoading(false);
       })
@@ -70,7 +56,7 @@ const TopHundred = ({ handleShowPnlHistoricalCard }) => {
   useEffect(() => {
     setTopHundredHistoryData([]);
     getTopHundredHistoryData();
-  }, [activeSolWalletAddress?.wallet]);
+  }, []);
 
   return (
     <>

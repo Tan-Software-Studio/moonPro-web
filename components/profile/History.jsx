@@ -9,12 +9,11 @@ import { FiUpload } from "react-icons/fi";
 import Tooltip from "../common/Tooltip/ToolTip";
 import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
 
-const History = ({ handleShowPnlHistoricalCard }) => {
+const History = ({ handleShowPnlHistoricalCard, historyData }) => {
   const router = useRouter();
   const [copiedIndex, setCopiedIndex] = useState(null);
   const dispatch = useDispatch();
   // history data from redux
-  const historyData = useSelector((state) => state?.setPnlData?.PnlDataHistory);
   const navigateToChartSreen = (item) => {
     dispatch(setActiveChartToken({ symbol: item?.symbol, img: item?.img }));
     router.push(

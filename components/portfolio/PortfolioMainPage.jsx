@@ -8,11 +8,6 @@ import WalletManagement from "./WalletManagement";
 import { useTranslation } from "react-i18next";
 import { notFound } from "next/navigation"
 import axios from "axios";
-import {
-  fetchPerformanceHistory,
-  fetchPNLData,
-  fetchPNLDataHistory,
-} from "@/app/redux/holdingDataSlice/holdingData.slice";
 import SharePnLModal from "../common/tradingview/SharePnLModal";
 const metaDataMainName = process.env.NEXT_PUBLIC_METADATA_MAIN_NAME || "Nexa";
 const PortfolioMainPage = ({ walletAddress }) => {
@@ -23,11 +18,13 @@ const PortfolioMainPage = ({ walletAddress }) => {
   const [foundWallet, setFoundWallet] = useState(false);
   const [isFetchingWallet, setIsFetchingWallet] = useState(true);
   const [pnlData, setPnlData] = useState([]);
+  const [hasFetchedPnlData, setHasFetchedPnlData] = useState(false);
   const [pnlDataHistory, setPnlDataHistory] = useState([]);
   const [performanceHistory, setPerformanceHistory] = useState({});
+  const [userOwnsPortfolio, setUserOwnsPortfolio] = useState(false);
   const dispatch = useDispatch();
-  const activeSolWalletAddress = useSelector(
-    (state) => state?.userData?.activeSolanaWallet
+  const userWallets = useSelector(
+    (state) => state?.userData?.userDetails?.walletAddressSOL
   );
   const activeTab = useSelector((state) => state?.setPnlData?.pnlTableData);
   useEffect(() => {
@@ -102,12 +99,19 @@ const PortfolioMainPage = ({ walletAddress }) => {
         return;
       } catch (err) {
         setIsFetchingWallet(false);
-        setFoundWallet(false);
+        setFoundWallet(true);
         return;
       }
     }
     fetchWalletExistsInDB();
   }, [])
+
+  useEffect(() => {
+    if (userWallets?.length > 0) {
+      const found = userWallets.some(userWallet => userWallet.wallet === walletAddress);
+      setUserOwnsPortfolio(found);
+    }
+  },[userWallets, walletAddress])
   
 
   useEffect(() => {
@@ -121,20 +125,22 @@ const PortfolioMainPage = ({ walletAddress }) => {
 
         if (pnlDataRes.status === "fulfilled") {
           setPnlData(pnlDataRes.value?.data?.data?.pnl);
+          setHasFetchedPnlData(true);
         } else {
-          console.log("Pnl Data Fetch Error - Portfolio Page", pnlDataRes.reason.message);
+          // console.log("Pnl Data Fetch Error - Portfolio Page", pnlDataRes.reason.message);
+          setHasFetchedPnlData(true);
         }
 
         if (pnlDataHistoryRes.status === "fulfilled") {
           setPnlDataHistory(pnlDataHistoryRes.value?.data?.data?.pnlHistory);
         } else {
-          console.log("Pnl Data History Fetch Error - Portfolio Page", pnlDataHistoryRes.reason.message);
+          // console.log("Pnl Data History Fetch Error - Portfolio Page", pnlDataHistoryRes.reason.message);
         }
 
         if (performanceHistoryRes.status === "fulfilled") {
           setPerformanceHistory(performanceHistoryRes.value?.data?.data?.performance);
         } else {
-          console.log("Performance History Fetch Error - Portfolio Page", performanceHistoryRes.reason.message);
+          // console.log("Performance History Fetch Error - Portfolio Page", performanceHistoryRes.reason.message);
         }
       };
 
@@ -195,7 +201,7 @@ const PortfolioMainPage = ({ walletAddress }) => {
                 >
                   {portfolio?.spots}
                 </div>
-                {walletAddress == activeSolWalletAddress?.wallet &&
+                {userOwnsPortfolio &&
                   <div
                     className={`text-xl font-bold cursor-pointer ${
                       activeTab == "portfolio" ? "text-white" : "text-gray-400"
@@ -215,9 +221,11 @@ const PortfolioMainPage = ({ walletAddress }) => {
                   pnlData={pnlData} 
                   pnlDataHistory={pnlDataHistory} 
                   performance={performanceHistory}
+                  userOwnsPortfolio={userOwnsPortfolio}
+                  hasFetchedPnlData={hasFetchedPnlData}
                 />
               }
-              {walletAddress == activeSolWalletAddress?.wallet && activeTab == "portfolio" && <WalletManagement />}
+              {userOwnsPortfolio && activeTab == "portfolio" && <WalletManagement />}
             </div>
             <SharePnLModal
               currentTokenPnLData={currentPnlDataToShow}

@@ -13,30 +13,18 @@ import Tooltip from "../common/Tooltip/ToolTip";
 import { FaArrowUp } from "react-icons/fa6";
 
 const ActivePosition = ({
-  walletAddress,
+  pnlData,
   filteredActivePosition,
   activePositionSearchQuery,
-  handleShowPnlCard
+  handleShowPnlCard,
+  userOwnsPortfolio,
+  hasFetchedPnlData
 }) => {
   const router = useRouter();
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [quickSellTokenData, setQuickSellTokenData] = useState({});
   const dispatch = useDispatch();
-  const currentTabData = useSelector(
-    (state) => state?.setPnlData?.PnlData || []
-  );
-  const initialLoading = useSelector(
-    (state) => state?.setPnlData?.initialLoading
-  );
-  const isDataLoaded = useSelector((state) => state?.setPnlData?.isDataLoaded);
-  const hasAttemptedLoad = useSelector(
-    (state) => state?.setPnlData?.hasAttemptedLoad
-  );
-  const activeSolWalletAddress = useSelector(
-    (state) => state?.userData?.activeSolanaWallet
-  );
-
   const { t } = useTranslation();
   const referral = t("referral");
 
@@ -49,21 +37,14 @@ const ActivePosition = ({
   };
 
   const shouldShowLoading =
-    initialLoading || (!hasAttemptedLoad && !isDataLoaded);
+    !hasFetchedPnlData
   const shouldShowData =
-    !initialLoading &&
-    isDataLoaded &&
-    currentTabData?.length > 0 &&
+    pnlData?.length > 0 &&
     filteredActivePosition?.length > 0;
   const shouldShowNoData =
-    !initialLoading &&
-    hasAttemptedLoad &&
-    isDataLoaded &&
-    currentTabData?.length === 0;
+    pnlData?.length === 0;
   const shouldNoSearchData =
-    !initialLoading &&
-    isDataLoaded &&
-    currentTabData?.length > 0 &&
+    pnlData?.length > 0 &&
     filteredActivePosition.length === 0;
 
   function pnlDollarCalc(item) {
@@ -247,7 +228,7 @@ const ActivePosition = ({
                     {/* Action */}
                     <td className="px-4 py-2">
                       <div className="flex items-center justify-center gap-2">
-                        {walletAddress == activeSolWalletAddress?.wallet &&
+                        {userOwnsPortfolio &&
                           <Tooltip body={"Sell"}>
                             <div
                               onClick={(e) => {
