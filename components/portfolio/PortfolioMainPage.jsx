@@ -99,7 +99,7 @@ const PortfolioMainPage = ({ walletAddress }) => {
         return;
       } catch (err) {
         setIsFetchingWallet(false);
-        setFoundWallet(true);
+        setFoundWallet(false);
         return;
       }
     }
