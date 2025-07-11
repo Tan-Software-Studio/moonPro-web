@@ -16,6 +16,7 @@ const PortfolioMainPage = ({ walletAddress }) => {
   const [isSharePnLModalActive, setIsSharePnLModalActive] = useState(false);
   const [currentPnlDataToShowSymbol, setCurrentPnlDataToShowSymbol] = useState(null);
   const [foundWallet, setFoundWallet] = useState(false);
+  const [doneCheckIfUserOwnsPortfolio, setDoneCheckIfUserOwnsPortfolio] = useState(false);
   const [isFetchingWallet, setIsFetchingWallet] = useState(true);
   const [pnlData, setPnlData] = useState([]);
   const [hasFetchedPnlData, setHasFetchedPnlData] = useState(false);
@@ -110,13 +111,33 @@ const PortfolioMainPage = ({ walletAddress }) => {
     if (userWallets?.length > 0) {
       const found = userWallets.some(userWallet => userWallet.wallet === walletAddress);
       setUserOwnsPortfolio(found);
+      setDoneCheckIfUserOwnsPortfolio(true)
     }
   },[userWallets, walletAddress])
-  
+  const userPnlData = useSelector(
+    (state) => state?.setPnlData?.PnlData || []
+  );
+  const userHistoryData = useSelector((state) => state?.setPnlData?.PnlDataHistory);
+  const userPerformanceData = useSelector((state) => state?.setPnlData?.performance);
+  const initialLoading = useSelector(
+    (state) => state?.setPnlData?.initialLoading
+  );
+   const isDataLoaded = useSelector(
+    (state) => state?.setPnlData?.isDataLoaded
+  );
+  const hasAttemptedLoad = useSelector(
+    (state) => state?.setPnlData?.hasAttemptedLoad
+  );
 
   useEffect(() => {
-    if (foundWallet) {
-      const fetchUserPnl = async () => {
+    if (doneCheckIfUserOwnsPortfolio && foundWallet) {
+      if (userOwnsPortfolio) {
+          setPnlData(userPnlData);
+          setPnlDataHistory(userHistoryData);
+          setPerformanceHistory(userPerformanceData);
+          setHasFetchedPnlData(!(initialLoading || (!hasAttemptedLoad && !isDataLoaded)));
+        } else {
+        const fetchUserPnl = async () => {
         const [pnlDataRes, pnlDataHistoryRes, performanceHistoryRes] = await Promise.allSettled([
           axios.get(`${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}transactions/PNLSolana/${walletAddress}`),
           axios.get(`${process.env.NEXT_PUBLIC_MOONPRO_BASE_URL}transactions/PNLHistory/${walletAddress}`),
@@ -145,9 +166,9 @@ const PortfolioMainPage = ({ walletAddress }) => {
       };
 
       fetchUserPnl();
+      }
     }
-  }, [foundWallet]);
-
+  }, [foundWallet, doneCheckIfUserOwnsPortfolio, userPnlData, userHistoryData, userPerformanceData, initialLoading, isDataLoaded]);
 
   const handleShowPnlCard = (newPnlData) => {
     setCurrentPnlOverride(null);
