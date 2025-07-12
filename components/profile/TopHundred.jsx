@@ -22,15 +22,9 @@ const TopHundred = ({ handleShowPnlHistoricalCard, wallet }) => {
   const backendUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 
   async function getTopHundredHistoryData() {
-    const token = localStorage.getItem("token");
-    if (!token) return;
     setLoading(true);
     await axios
-      .get(`${backendUrl}transactions/PNLHistoryTop/${wallet}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(`${backendUrl}transactions/PNLHistoryTop/${wallet}`)
       .then((response) => {
         setTopHundredHistoryData(response?.data?.data?.pnlHistory);
         setLoading(false);
