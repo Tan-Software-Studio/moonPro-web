@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import NoData from "../../components/common/NoData/noData";
 import { useTranslation } from "react-i18next";
 import SharePnLModal from "../common/tradingview/SharePnLModal";
+import { useRouter } from "next/navigation";
 const metaDataMainName = process.env.NEXT_PUBLIC_METADATA_MAIN_NAME || "Nexa";
 const PortfolioForOtherWallet = ({ wallet }) => {
   const [currentPnlDataToShow, setCurrentPnlDataToShow] = useState({});
@@ -19,6 +20,7 @@ const PortfolioForOtherWallet = ({ wallet }) => {
   const [currentPnlDataToShowSymbol, setCurrentPnlDataToShowSymbol] =
     useState(null);
   const dispatch = useDispatch();
+  const router = useRouter();
   const activeTab = useSelector((state) => state?.setPnlData?.pnlTableData);
   // history data from redux
   const historyData = useSelector(
@@ -45,6 +47,11 @@ const PortfolioForOtherWallet = ({ wallet }) => {
     (state) => state?.setPnlData?.loadingForAnotherWallet
   );
   useEffect(() => {
+    const solWalletFromLocalStorage = localStorage.getItem("walletAddress");
+    if (wallet == solWalletFromLocalStorage) {
+      router.push("/portfolio");
+      return;
+    }
     if (wallet) {
       dispatch(fetchPNLDataForAnotherWallet(wallet));
       dispatch(fetchPNLDataHistoryForAnotherWallet(wallet));
