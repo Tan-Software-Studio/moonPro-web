@@ -118,6 +118,7 @@ const userDataSlice = createSlice({
         );
         if (findPrimaryWallet) {
           state.activeSolanaWallet = findPrimaryWallet;
+          localStorage.setItem("walletAddress", findPrimaryWallet?.wallet);
         }
       })
       .addCase(fetchUserWalletBalances.fulfilled, (state, { payload }) => {

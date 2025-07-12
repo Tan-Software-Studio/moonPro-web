@@ -3,12 +3,11 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { IoClose, IoCopyOutline, IoWalletOutline } from "react-icons/io5";
 import Image from "next/image";
-import { profileImage } from "@/app/Images";
 import { PiShare } from "react-icons/pi";
 import { FaCaretDown, FaCheck } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { lang } from "@/app/contsants/lang";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Link from "next/link";
 import { setSolWalletAddress } from "@/app/redux/states";
 import { updatePnlTableData } from "@/app/redux/holdingDataSlice/holdingData.slice";
@@ -18,7 +17,6 @@ import {
   makeUserEmptyOnLogout,
   resetActiveWalletAddress,
 } from "@/app/redux/userDataSlice/UserData.slice";
-import { MdEdit } from "react-icons/md";
 import EditReferralCode from "./EditReferralCode";
 import getPointsToNextTitle from "@/components/referral/getPointsToNextTitle";
 const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL;
@@ -35,7 +33,6 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
   const { i18n } = useTranslation();
 
   const referralLink = `${WEB_URL}/referral/${userDetails?.referralId || ""}`;
-  console.log("userDetails", userDetails);
   const { currentTitle } = getPointsToNextTitle(userDetails);
 
   const getDisplayName = () => {
