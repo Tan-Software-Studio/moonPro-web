@@ -12,7 +12,6 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { openCloseLoginRegPopup } from "@/app/redux/states";
 import { useMediaQuery } from "react-responsive";
 import {
   setIsLargeScreen,
@@ -65,7 +64,7 @@ const Sidebar = () => {
     },
     {
       id: 4,
-      pathname: `/portfolio/${activeSolWalletAddress.wallet}`,
+      pathname: `/portfolio`,
       pagename: sidebarPage?.holdings,
       tag: "New",
       img: holdings,
@@ -130,15 +129,6 @@ const Sidebar = () => {
     isLargeScreenData && dispatch(setIsSidebarOpen(true));
   }, [isLargeScreenData, isLargeScreen, isSmallScreenData]);
 
-  const handleNeedLoginClick = (e, hrefLink) => {
-    if (hrefLink === `/portfolio/${activeSolWalletAddress.wallet}` || hrefLink === "/referral") {
-      if (!activeSolWalletAddress.wallet) {
-        e.preventDefault();
-        return dispatch(openCloseLoginRegPopup(true))
-      }
-    }
-  }
-
   return (
     <>
       <div
@@ -158,8 +148,6 @@ const Sidebar = () => {
                   alt="logotext"
                   src={`${process.env.NEXT_PUBLIC_SIDE_BIG_SCREEN}`}
                   className={`cursor-pointer h-[40px] w-[120px]`}
-                  width={120}
-                  height={40}
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = logotext;
@@ -173,8 +161,6 @@ const Sidebar = () => {
                 alt="full-logo"
                 src={`${process.env.NEXT_PUBLIC_NAV_LOGO}`}
                 className="cursor-pointer w-[40px] h-[35px]"
-                width={40}
-                height={35}
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = logo;
@@ -221,7 +207,7 @@ const Sidebar = () => {
               </div>
             </div>
             {sidebardata?.map((data) => (
-              <Link key={data.id} href={data?.pathname} onClick={(e) => {handleNeedLoginClick(e, data?.pathname)}}>
+              <Link key={data.id} href={data?.pathname}>
                 <div
                   className={`font-[400] p-2 transition-all border-[1px] border-transparent duration-300 ease-in-out text-[14px] mx-3 cursor-pointer text-[#ffffff] ${
                     data.pathname === pathname

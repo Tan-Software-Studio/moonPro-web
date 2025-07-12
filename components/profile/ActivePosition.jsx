@@ -13,18 +13,21 @@ import Tooltip from "../common/Tooltip/ToolTip";
 import { FaArrowUp } from "react-icons/fa6";
 
 const ActivePosition = ({
-  pnlData,
   filteredActivePosition,
   activePositionSearchQuery,
   handleShowPnlCard,
-  userOwnsPortfolio,
-  hasFetchedPnlData
+  quicksell,
+  currentTabData,
+  initialLoading,
+  isDataLoaded,
+  hasAttemptedLoad,
 }) => {
   const router = useRouter();
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [quickSellTokenData, setQuickSellTokenData] = useState({});
   const dispatch = useDispatch();
+
   const { t } = useTranslation();
   const referral = t("referral");
 
@@ -37,14 +40,21 @@ const ActivePosition = ({
   };
 
   const shouldShowLoading =
-    !hasFetchedPnlData
+    initialLoading || (!hasAttemptedLoad && !isDataLoaded);
   const shouldShowData =
-    pnlData?.length > 0 &&
+    !initialLoading &&
+    isDataLoaded &&
+    currentTabData?.length > 0 &&
     filteredActivePosition?.length > 0;
   const shouldShowNoData =
-    pnlData?.length === 0;
+    !initialLoading &&
+    hasAttemptedLoad &&
+    isDataLoaded &&
+    currentTabData?.length === 0;
   const shouldNoSearchData =
-    pnlData?.length > 0 &&
+    !initialLoading &&
+    isDataLoaded &&
+    currentTabData?.length > 0 &&
     filteredActivePosition.length === 0;
 
   function pnlDollarCalc(item) {
@@ -87,7 +97,9 @@ const ActivePosition = ({
                     Remaining
                   </th>
                   <th className="px-4 py-2 text-slate-300 font-medium">PnL</th>
-                  <th className="px-4 py-2 text-slate-300 font-medium">Action</th>
+                  <th className="px-4 py-2 text-slate-300 font-medium">
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -228,7 +240,7 @@ const ActivePosition = ({
                     {/* Action */}
                     <td className="px-4 py-2">
                       <div className="flex items-center justify-center gap-2">
-                        {userOwnsPortfolio &&
+                        {quicksell ? (
                           <Tooltip body={"Sell"}>
                             <div
                               onClick={(e) => {
@@ -245,7 +257,7 @@ const ActivePosition = ({
                               <FaArrowUp />
                             </div>
                           </Tooltip>
-                        }
+                        ) : null}
                         <Tooltip body={"Share PnL"}>
                           <button
                             onClick={(e) => {

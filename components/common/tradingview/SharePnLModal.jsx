@@ -57,9 +57,15 @@ const SharePnLModal = ({
   const { pnlAmount, isPositivePnL, pnlPercent, invested, position, holdings } =
     useMemo(() => {
       if (overridePnlData != null) {
-        const pnlAmt = solIsActive ? overridePnlData?.pnlSolAmount : overridePnlData?.pnlAmount;
-        const investAmt = solIsActive ? overridePnlData?.investedSol : overridePnlData?.invested;
-        const pos = solIsActive ? overridePnlData?.positionSol : overridePnlData?.position;
+        const pnlAmt = solIsActive
+          ? overridePnlData?.pnlSolAmount
+          : overridePnlData?.pnlAmount;
+        const investAmt = solIsActive
+          ? overridePnlData?.investedSol
+          : overridePnlData?.invested;
+        const pos = solIsActive
+          ? overridePnlData?.positionSol
+          : overridePnlData?.position;
 
         const newPnL = {
           pnlAmount: pnlAmt,
@@ -67,11 +73,11 @@ const SharePnLModal = ({
           pnlPercent: overridePnlData?.pnlPercent,
           invested: investAmt,
           position: pos,
-          holdings: overridePnlData?.holdings
+          holdings: overridePnlData?.holdings,
         };
         previousPnLRef.current = newPnL;
         return newPnL;
-      } 
+      }
       if (
         !currentTokenPnLData ||
         Object.keys(currentTokenPnLData).length === 0
@@ -92,7 +98,7 @@ const SharePnLModal = ({
 
       const holdings = solIsActive
         ? currentTokenPnLData?.holdingSolInCurrentPrice
-        : currentTokenPnLData?.holdingsUsdInCurrentPrice || 0
+        : currentTokenPnLData?.holdingsUsdInCurrentPrice || 0;
 
       const isPositive =
         currentTokenPnLData?.isPositivePnL != null
@@ -127,7 +133,7 @@ const SharePnLModal = ({
         pnlPercent: pnlPerc,
         invested: investAmt,
         position: pos,
-        holdings
+        holdings,
       };
 
       // Save for future fallback
@@ -137,11 +143,27 @@ const SharePnLModal = ({
     }, [currentTokenPnLData, solIsActive, overridePnlData]);
 
   const handleShareToX = () => {
-    const tweetText = encodeURIComponent(`💰💰${isPositivePnL ? "Earn" : "Loss"} ${formatNumber(pnlAmount, true, !solIsActive)}${solIsActive ? " SOL" : ""}(${pnlPercent?.toFixed(2)}%), ${walletAddress?.slice(0, 4) + "..." + walletAddress?.slice(-4) } -- at ${tokenSymbol}, holding ${formatNumber(holdings, false, !solIsActive)}${solIsActive ? " SOL" : ""}, Discover faster, trade faster with ${process.env.NEXT_PUBLIC_METADATA_MAIN_NAME?.toUpperCase()}! #${tokenSymbol} #${process.env.NEXT_PUBLIC_METADATA_MAIN_NAME?.toUpperCase()}`);
-    const tweetUrl = encodeURIComponent(`${process.env.NEXT_PUBLIC_WEB_URL}/portfolio/${walletAddress}`); // optional
+    const tweetText = encodeURIComponent(
+      `💰💰${isPositivePnL ? "Earn" : "Loss"} ${formatNumber(
+        pnlAmount,
+        true,
+        !solIsActive
+      )}${solIsActive ? " SOL" : ""}(${pnlPercent?.toFixed(2)}%), ${
+        walletAddress?.slice(0, 4) + "..." + walletAddress?.slice(-4)
+      } -- at ${tokenSymbol}, holding ${formatNumber(
+        holdings,
+        false,
+        !solIsActive
+      )}${
+        solIsActive ? " SOL" : ""
+      }, Discover faster, trade faster with ${process.env.NEXT_PUBLIC_METADATA_MAIN_NAME?.toUpperCase()}! #${tokenSymbol} #${process.env.NEXT_PUBLIC_METADATA_MAIN_NAME?.toUpperCase()}`
+    );
+    const tweetUrl = encodeURIComponent(
+      `${process.env.NEXT_PUBLIC_WEB_URL}/portfolio/${walletAddress}`
+    ); // optional
     const intentUrl = `https://twitter.com/intent/tweet?text=${tweetText}&url=${tweetUrl}`;
 
-    window.open(intentUrl, '_blank', 'noopener,noreferrer');
+    window.open(intentUrl, "_blank", "noopener,noreferrer");
   };
 
   const handleCopy = async () => {
@@ -306,7 +328,7 @@ const SharePnLModal = ({
               <p>{solIsActive ? "SOL" : "USD"}</p>
             </button>
             <div className="flex gap-2">
-              {walletAddress && 
+              {walletAddress && (
                 <button
                   onClick={(event) => {
                     event.stopPropagation();
@@ -317,7 +339,7 @@ const SharePnLModal = ({
                   <FaXTwitter />
                   <p>Share to X</p>
                 </button>
-              }
+              )}
               <button
                 onClick={(event) => {
                   event.stopPropagation();

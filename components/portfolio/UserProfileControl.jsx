@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import ActivityTable from "@/components/profile/ActivityTable";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import ActivePosition from "@/components/profile/ActivePosition";
@@ -9,43 +8,42 @@ import History from "../profile/History";
 import TopHundred from "../profile/TopHundred";
 import { useTranslation } from "react-i18next";
 import RealizedPnLChart from "./PNLChart";
-import Image from "next/image";
 import NoData from "../common/NoData/noData";
-import { getSolanaBalanceAndPrice } from "@/utils/solanaNativeBalance";
 
-const UserProfileControl = ({ 
-  walletAddress, 
-  handleShowPnlCard, 
+const UserProfileControl = ({
+  handleShowPnlCard,
   handleShowPnlHistoricalCard,
-  pnlData,
-  pnlDataHistory,
+  quicksell,
+  solBalanceShow,
+  activeSolWalletAddress,
+  historyData,
+  currentTabData,
+  initialLoading,
+  isDataLoaded,
+  hasAttemptedLoad,
   performance,
-  userOwnsPortfolio,
-  hasFetchedPnlData
+  loading,
 }) => {
   const { t, i18n } = useTranslation();
   const portfolio = t("portfolio", { returnObjects: true });
   const [leftTableTab, setLeftTableTab] = useState(portfolio?.activePosition);
   const [rightTableTab, setRightTableTab] = useState(portfolio?.activity);
-  const [availableBalance, setActiveBalance] = useState(0);
   const [activePositionSearchQuery, setActivePositionSearchQuery] =
     useState("");
   const [activitySearchQuery, setActivitySearchQuery] = useState("");
   const [mobileActiveTab, setMobileActiveTab] = useState(
     portfolio?.activePosition
   );
-  const loading = pnlData?.loading;
-
 
   // total value calculation
-  const totalValue = pnlData.reduce((acc, item) => {
+  const totalValue = currentTabData?.reduce((acc, item) => {
     const value =
       (item?.activeQtyHeld - item?.quantitySold) * item?.current_price;
     return acc + value;
   }, 0);
 
   // unrealized pnl calculation
-  const UnrealizedPNL = pnlData.reduce((acc, item) => {
+  const UnrealizedPNL = currentTabData?.reduce((acc, item) => {
     const pnl =
       (item?.activeQtyHeld - item?.quantitySold) *
       (item.current_price - item.averageBuyPrice);
@@ -54,7 +52,7 @@ const UserProfileControl = ({
 
   // search active position
   const hasSearch = activePositionSearchQuery.trim() !== "";
-  const filteredData = pnlData.filter(
+  const filteredData = currentTabData?.filter(
     (item) =>
       item?.token
         .toLowerCase()
@@ -66,7 +64,7 @@ const UserProfileControl = ({
         ?.toLowerCase()
         ?.includes(activePositionSearchQuery.toLowerCase())
   );
-  const filteredActivePosition = hasSearch ? filteredData : pnlData;
+  const filteredActivePosition = hasSearch ? filteredData : currentTabData;
 
   const performanceData = [
     {
@@ -104,13 +102,13 @@ const UserProfileControl = ({
       rangeId: null,
     },
   ];
-  const counts = performanceData.map((item) => {
+  const counts = performanceData?.map((item) => {
     const match = performance?.performance?.find((p) => p._id === item.rangeId);
     return match ? match.count : 0;
   });
 
-  const totalCount = counts.reduce((sum, c) => sum + c, 0) || 1;
-  const percentages = counts.map((count) => (count / totalCount) * 100);
+  const totalCount = counts?.reduce((sum, c) => sum + c, 0) || 1;
+  const percentages = counts?.map((count) => (count / totalCount) * 100);
 
   useEffect(() => {
     const updatedPortfolio = t("portfolio", { returnObjects: true });
@@ -118,14 +116,6 @@ const UserProfileControl = ({
     setRightTableTab(updatedPortfolio?.activity);
     setMobileActiveTab(updatedPortfolio?.activePosition);
   }, [i18n.language]);
-
-  useEffect(() => {
-    const availableBalance = async () => {
-      const balance = Number(await getSolanaBalanceAndPrice(walletAddress) || 0)?.toFixed(5) || 0;
-      setActiveBalance(balance);
-    } 
-    availableBalance();
-  }, [])
 
   return (
     <>
@@ -168,7 +158,8 @@ const UserProfileControl = ({
                   ).toFixed(5)}`}
                 </p>
               </div>
-              {userOwnsPortfolio && 
+
+              {solBalanceShow ? (
                 <div className="py-2">
                   <div className="flex items-center gap-2 mb-2">
                     <p className="text-sm text-gray-400">
@@ -177,10 +168,13 @@ const UserProfileControl = ({
                   </div>
                   <p className="text-base font-semibold tracking-wider text-emerald-500">
                     SOL{" "}
-                    {`${availableBalance}`}
+                    {`${
+                      Number(activeSolWalletAddress?.balance || 0).toFixed(5) ||
+                      0
+                    }`}
                   </p>
                 </div>
-              }
+              ) : null}
             </div>
           </div>
 
@@ -341,23 +335,31 @@ const UserProfileControl = ({
               {leftTableTab === portfolio?.activePosition && (
                 <div>
                   <ActivePosition
-                    pnlData={pnlData}
                     filteredActivePosition={filteredActivePosition}
                     activePositionSearchQuery={activePositionSearchQuery}
                     handleShowPnlCard={handleShowPnlCard}
-                    userOwnsPortfolio={userOwnsPortfolio}
-                    hasFetchedPnlData={hasFetchedPnlData}
+                    quicksell={quicksell}
+                    currentTabData={currentTabData}
+                    initialLoading={initialLoading}
+                    isDataLoaded={isDataLoaded}
+                    hasAttemptedLoad={hasAttemptedLoad}
                   />
                 </div>
               )}
               {leftTableTab === portfolio?.history && (
                 <div>
-                  <History handleShowPnlHistoricalCard={handleShowPnlHistoricalCard} historyData={pnlDataHistory}/>
+                  <History
+                    handleShowPnlHistoricalCard={handleShowPnlHistoricalCard}
+                    historyData={historyData}
+                  />
                 </div>
               )}
               {leftTableTab === portfolio?.top100 && (
                 <div>
-                  <TopHundred handleShowPnlHistoricalCard={handleShowPnlHistoricalCard} walletAddress={walletAddress}/>
+                  <TopHundred
+                    handleShowPnlHistoricalCard={handleShowPnlHistoricalCard}
+                    wallet={activeSolWalletAddress?.wallet}
+                  />
                 </div>
               )}
             </div>
@@ -394,7 +396,10 @@ const UserProfileControl = ({
                   </div>
                 </div>
               </div>
-              <ActivityTable activitySearchQuery={activitySearchQuery} walletAddress={walletAddress} />
+              <ActivityTable
+                activitySearchQuery={activitySearchQuery}
+                wallet={activeSolWalletAddress?.wallet}
+              />
             </div>
           </div>
 
@@ -442,28 +447,39 @@ const UserProfileControl = ({
             {mobileActiveTab == portfolio?.activePosition && (
               <div>
                 <ActivePosition
-                  pnlData={pnlData}
                   filteredActivePosition={filteredActivePosition}
                   activePositionSearchQuery={activePositionSearchQuery}
                   handleShowPnlCard={handleShowPnlCard}
-                  userOwnsPortfolio={userOwnsPortfolio}
-                  hasFetchedPnlData={hasFetchedPnlData}
+                  quicksell={quicksell}
+                  currentTabData={currentTabData}
+                  initialLoading={initialLoading}
+                  isDataLoaded={isDataLoaded}
+                  hasAttemptedLoad={hasAttemptedLoad}
                 />
               </div>
             )}
             {mobileActiveTab == portfolio?.activity && (
               <div>
-                <ActivityTable activitySearchQuery={activitySearchQuery} walletAddress={walletAddress} />
+                <ActivityTable
+                  activitySearchQuery={activitySearchQuery}
+                  wallet={activeSolWalletAddress?.wallet}
+                />
               </div>
             )}
             {mobileActiveTab === portfolio?.history && (
               <div>
-                <History handleShowPnlHistoricalCard={handleShowPnlHistoricalCard} historyData={pnlDataHistory} />
+                <History
+                  handleShowPnlHistoricalCard={handleShowPnlHistoricalCard}
+                  historyData={historyData}
+                />
               </div>
             )}
             {mobileActiveTab === portfolio?.top100 && (
               <div>
-                <TopHundred handleShowPnlHistoricalCard={handleShowPnlHistoricalCard} walletAddress={walletAddress} />
+                <TopHundred
+                  handleShowPnlHistoricalCard={handleShowPnlHistoricalCard}
+                  wallet={activeSolWalletAddress?.wallet}
+                />
               </div>
             )}
           </div>

@@ -1,41 +1,56 @@
 "use client";
-
-import { updatePnlTableData } from "@/app/redux/holdingDataSlice/holdingData.slice";
+import {
+  fetchPerformanceHistoryForAnotherWallet,
+  fetchPNLDataForAnotherWallet,
+  fetchPNLDataHistoryForAnotherWallet,
+  updatePnlTableData,
+} from "@/app/redux/holdingDataSlice/holdingData.slice";
 import UserProfileControl from "@/components/portfolio/UserProfileControl";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import WalletManagement from "./WalletManagement";
 import NoData from "../../components/common/NoData/noData";
 import { useTranslation } from "react-i18next";
 import SharePnLModal from "../common/tradingview/SharePnLModal";
 const metaDataMainName = process.env.NEXT_PUBLIC_METADATA_MAIN_NAME || "Nexa";
-const PortfolioMainPage = () => {
+const PortfolioForOtherWallet = ({ wallet }) => {
   const [currentPnlDataToShow, setCurrentPnlDataToShow] = useState({});
   const [currentPnlOverride, setCurrentPnlOverride] = useState(null);
   const [isSharePnLModalActive, setIsSharePnLModalActive] = useState(false);
   const [currentPnlDataToShowSymbol, setCurrentPnlDataToShowSymbol] =
     useState(null);
   const dispatch = useDispatch();
-  const activeSolWalletAddress = useSelector(
-    (state) => state?.userData?.activeSolanaWallet
-  );
   const activeTab = useSelector((state) => state?.setPnlData?.pnlTableData);
   // history data from redux
-  const historyData = useSelector((state) => state?.setPnlData?.PnlDataHistory);
+  const historyData = useSelector(
+    (state) => state?.setPnlData?.PnlDataHistoryAnotherWallet
+  );
   // all data related to pnl
   const currentTabData = useSelector(
-    (state) => state?.setPnlData?.PnlData || []
+    (state) => state?.setPnlData?.PnlDataForAnotherWallet || []
   );
   const initialLoading = useSelector(
-    (state) => state?.setPnlData?.initialLoading
+    (state) => state?.setPnlData?.initialLoadingForAnotherWallet
   );
-  const isDataLoaded = useSelector((state) => state?.setPnlData?.isDataLoaded);
+  const isDataLoaded = useSelector(
+    (state) => state?.setPnlData?.isDataLoadedForAnotherWallet
+  );
   const hasAttemptedLoad = useSelector(
-    (state) => state?.setPnlData?.hasAttemptedLoad
+    (state) => state?.setPnlData?.hasAttemptedLoadForAnotherWallet
   );
   // performance state
-  const performance = useSelector((state) => state?.setPnlData?.performance);
-  const loading = useSelector((state) => state?.setPnlData?.loading);
+  const performance = useSelector(
+    (state) => state?.setPnlData?.performanceForAnotherWallet
+  );
+  const loading = useSelector(
+    (state) => state?.setPnlData?.loadingForAnotherWallet
+  );
+  useEffect(() => {
+    if (wallet) {
+      dispatch(fetchPNLDataForAnotherWallet(wallet));
+      dispatch(fetchPNLDataHistoryForAnotherWallet(wallet));
+      dispatch(fetchPerformanceHistoryForAnotherWallet(wallet));
+    }
+  }, []);
   useEffect(() => {
     document.title = `${metaDataMainName} | Portfolio`;
   }, []);
@@ -137,7 +152,7 @@ const PortfolioMainPage = () => {
 
   return (
     <>
-      {activeSolWalletAddress?.wallet ? (
+      {wallet ? (
         <>
           <div className="overflow-y-scroll h-[95vh]">
             <div className="flex items-center gap-5 p-5">
@@ -149,33 +164,21 @@ const PortfolioMainPage = () => {
               >
                 {portfolio?.spots}
               </div>
-              <div
-                className={`text-xl font-bold cursor-pointer ${
-                  activeTab == "portfolio" ? "text-white" : "text-gray-400"
-                }`}
-                onClick={() => dispatch(updatePnlTableData("portfolio"))}
-              >
-                {portfolio?.wallets}
-              </div>
             </div>
-
-            {activeTab == "profile" && (
-              <UserProfileControl
-                handleShowPnlCard={handleShowPnlCard}
-                handleShowPnlHistoricalCard={handleShowPnlHistoricalCard}
-                quicksell={true}
-                solBalanceShow={true}
-                activeSolWalletAddress={activeSolWalletAddress}
-                historyData={historyData}
-                currentTabData={currentTabData}
-                initialLoading={initialLoading}
-                isDataLoaded={isDataLoaded}
-                hasAttemptedLoad={hasAttemptedLoad}
-                loading={loading}
-                performance={performance}
-              />
-            )}
-            {activeTab == "portfolio" && <WalletManagement />}
+            <UserProfileControl
+              handleShowPnlCard={handleShowPnlCard}
+              handleShowPnlHistoricalCard={handleShowPnlHistoricalCard}
+              quicksell={false}
+              solBalanceShow={false}
+              activeSolWalletAddress={{ wallet: wallet }}
+              historyData={historyData}
+              currentTabData={currentTabData}
+              initialLoading={initialLoading}
+              isDataLoaded={isDataLoaded}
+              hasAttemptedLoad={hasAttemptedLoad}
+              loading={loading}
+              performance={performance}
+            />
           </div>
           <SharePnLModal
             currentTokenPnLData={currentPnlDataToShow}
@@ -184,7 +187,7 @@ const PortfolioMainPage = () => {
               setIsSharePnLModalActive(false);
             }}
             tokenSymbol={currentPnlDataToShowSymbol}
-            walletAddress={activeSolWalletAddress?.wallet || null}
+            walletAddress={wallet || null}
             overridePnlData={currentPnlOverride}
           />
         </>
@@ -200,4 +203,4 @@ const PortfolioMainPage = () => {
   );
 };
 
-export default PortfolioMainPage;
+export default PortfolioForOtherWallet;
