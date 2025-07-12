@@ -15,7 +15,7 @@ const truncateString = (str, start = 4, end = 4) => {
   return `${str.slice(0, start)}...${str.slice(-end)}`;
 };
 
-const ActivityTable = ({ activitySearchQuery }) => {
+const ActivityTable = ({ activitySearchQuery, wallet }) => {
   const [transactionData, setTransactionData] = useState([]);
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,9 +29,6 @@ const ActivityTable = ({ activitySearchQuery }) => {
 
   const solWalletAddress = useSelector(
     (state) => state?.AllStatesData?.solWalletAddress
-  );
-  const activeSolWalletAddress = useSelector(
-    (state) => state?.userData?.activeSolanaWallet
   );
 
   async function getData() {
@@ -89,7 +86,7 @@ const ActivityTable = ({ activitySearchQuery }) => {
     }
         `,
           variables: {
-            wallet: activeSolWalletAddress?.wallet || solWalletAddress,
+            wallet: wallet || solWalletAddress,
           },
         },
         {
@@ -167,9 +164,7 @@ const ActivityTable = ({ activitySearchQuery }) => {
   }
 
   const navigateToChartSreen = (item, img) => {
-    router.push(
-      `/meme/${item?.Trade?.Currency?.MintAddress}`
-    );
+    router.push(`/meme/${item?.Trade?.Currency?.MintAddress}`);
     localStorage.setItem("chartTokenImg", img);
     dispatch(setChartSymbolImage(img));
   };
@@ -191,7 +186,7 @@ const ActivityTable = ({ activitySearchQuery }) => {
 
   useEffect(() => {
     getData();
-  }, [activeSolWalletAddress?.wallet]);
+  }, [wallet]);
 
   return (
     <>
@@ -224,15 +219,15 @@ const ActivityTable = ({ activitySearchQuery }) => {
               {!transactionData?.length > 0
                 ? referral?.refMata?.noHistory
                 : !filteredActivityData?.length > 0
-                  ? `No results found for "${activitySearchQuery}"`
-                  : "No data"}
+                ? `No results found for "${activitySearchQuery}"`
+                : "No data"}
             </p>
             <p className="text-slate-500 text-sm">
               {!transactionData?.length > 0
                 ? referral?.refMata?.infoWillAppear
                 : !filteredActivityData?.length > 0
-                  ? referral?.refMata?.adjustSearch
-                  : null}
+                ? referral?.refMata?.adjustSearch
+                : null}
             </p>
           </div>
         ) : (
@@ -279,15 +274,17 @@ const ActivityTable = ({ activitySearchQuery }) => {
                         )
                       }
                       key={index}
-                      className={`${index % 2 === 0 ? "bg-gray-800/20" : ""
-                        } border-b border-slate-700/20 hover:bg-slate-800/30 transition-colors duration-200 cursor-pointer whitespace-nowrap`}
+                      className={`${
+                        index % 2 === 0 ? "bg-gray-800/20" : ""
+                      } border-b border-slate-700/20 hover:bg-slate-800/30 transition-colors duration-200 cursor-pointer whitespace-nowrap`}
                     >
                       <td className=" w-16  px-2 py-2  ">
                         <div
-                          className={`font-semibold flex items-center justify-center text-center px-2 py-1 rounded-full text-sm  ${item?.Trade?.Side?.Type == "sell"
+                          className={`font-semibold flex items-center justify-center text-center px-2 py-1 rounded-full text-sm  ${
+                            item?.Trade?.Side?.Type == "sell"
                               ? "text-red-400 bg-red-900/20"
                               : "text-emerald-400 bg-emerald-900/20"
-                            } font-medium`}
+                          } font-medium`}
                         >
                           {item?.Trade?.Side?.Type}
                         </div>

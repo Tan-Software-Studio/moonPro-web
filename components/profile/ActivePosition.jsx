@@ -15,23 +15,18 @@ import { FaArrowUp } from "react-icons/fa6";
 const ActivePosition = ({
   filteredActivePosition,
   activePositionSearchQuery,
-  handleShowPnlCard
+  handleShowPnlCard,
+  quicksell,
+  currentTabData,
+  initialLoading,
+  isDataLoaded,
+  hasAttemptedLoad,
 }) => {
   const router = useRouter();
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [quickSellTokenData, setQuickSellTokenData] = useState({});
   const dispatch = useDispatch();
-  const currentTabData = useSelector(
-    (state) => state?.setPnlData?.PnlData || []
-  );
-  const initialLoading = useSelector(
-    (state) => state?.setPnlData?.initialLoading
-  );
-  const isDataLoaded = useSelector((state) => state?.setPnlData?.isDataLoaded);
-  const hasAttemptedLoad = useSelector(
-    (state) => state?.setPnlData?.hasAttemptedLoad
-  );
 
   const { t } = useTranslation();
   const referral = t("referral");
@@ -102,7 +97,9 @@ const ActivePosition = ({
                     Remaining
                   </th>
                   <th className="px-4 py-2 text-slate-300 font-medium">PnL</th>
-                  <th className="px-4 py-2 text-slate-300 font-medium">Action</th>
+                  <th className="px-4 py-2 text-slate-300 font-medium">
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -243,22 +240,24 @@ const ActivePosition = ({
                     {/* Action */}
                     <td className="px-4 py-2">
                       <div className="flex items-center justify-center gap-2">
-                        <Tooltip body={"Sell"}>
-                          <div
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              e.preventDefault();
-                              setQuickSellTokenData({
-                                tokenData: item,
-                                index: index,
-                              });
-                              setIsOpen(true);
-                            }}
-                            className={`text-red-500 hover:bg-red-500/10 flex items-center justify-center px-2 w-fit py-2 rounded-md`}
-                          >
-                            <FaArrowUp />
-                          </div>
-                        </Tooltip>
+                        {quicksell ? (
+                          <Tooltip body={"Sell"}>
+                            <div
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                setQuickSellTokenData({
+                                  tokenData: item,
+                                  index: index,
+                                });
+                                setIsOpen(true);
+                              }}
+                              className={`text-red-500 hover:bg-red-500/10 flex items-center justify-center px-2 w-fit py-2 rounded-md`}
+                            >
+                              <FaArrowUp />
+                            </div>
+                          </Tooltip>
+                        ) : null}
                         <Tooltip body={"Share PnL"}>
                           <button
                             onClick={(e) => {

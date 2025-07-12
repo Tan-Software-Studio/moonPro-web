@@ -24,9 +24,48 @@ export const fetchPNLData = createAsyncThunk(
     }
   }
 );
+export const fetchPNLDataForAnotherWallet = createAsyncThunk(
+  "PnlDataForAnotherWallet",
+  async (solWalletAddress) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `${baseUrl}transactions/PNLSolana/${solWalletAddress}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return res?.data?.data?.pnl;
+    } catch (err) {
+      throw err;
+    }
+  }
+);
 
 export const fetchPNLDataHistory = createAsyncThunk(
   "fetchPNLDataHistory",
+  async (solWalletAddress) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `${baseUrl}transactions/PNLHistory/${solWalletAddress}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return res?.data?.data?.pnlHistory;
+    } catch (err) {
+      throw err;
+    }
+  }
+);
+
+export const fetchPNLDataHistoryForAnotherWallet = createAsyncThunk(
+  "fetchPNLDataHistoryForAnotherWallet",
   async (solWalletAddress) => {
     try {
       const token = localStorage.getItem("token");
@@ -64,18 +103,45 @@ export const fetchPerformanceHistory = createAsyncThunk(
     }
   }
 );
+export const fetchPerformanceHistoryForAnotherWallet = createAsyncThunk(
+  "fetchPerformanceHistoryForAnotherWallet",
+  async (action) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `${baseUrl}transactions/PNLPerformance/${action}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response?.data?.data?.performance;
+    } catch (err) {
+      throw err;
+    }
+  }
+);
 
 const holdingData = createSlice({
   name: "PnlData",
   initialState: {
     PnlData: [],
+    PnlDataForAnotherWallet: [],
     PnlDataHistory: [],
+    PnlDataHistoryAnotherWallet: [],
     performance: {},
+    performanceForAnotherWallet: {},
     loading: true,
+    loadingForAnotherWallet: true,
     initialLoading: false,
+    initialLoadingForAnotherWallet: false,
     isDataLoaded: false,
+    isDataLoadedForAnotherWallet: false,
     hasAttemptedLoad: false,
+    hasAttemptedLoadForAnotherWallet: false,
     error: null,
+    errorForAnotherWallet: null,
     pnlTableData: "profile",
   },
   reducers: {
@@ -440,12 +506,44 @@ const holdingData = createSlice({
         state.PnlData = [];
         state.error = payload;
       })
+      .addCase(fetchPNLDataForAnotherWallet.pending, (state) => {
+        state.initialLoadingForAnotherWallet = true;
+        state.isDataLoadedForAnotherWallet = false;
+        state.hasAttemptedLoadForAnotherWallet = true;
+        state.errorForAnotherWallet = null;
+      })
+      .addCase(fetchPNLDataForAnotherWallet.fulfilled, (state, { payload }) => {
+        state.initialLoadingForAnotherWallet = false;
+        state.isDataLoadedForAnotherWallet = true;
+        state.hasAttemptedLoadForAnotherWallet = true;
+        state.PnlDataForAnotherWallet = payload || [];
+        state.errorForAnotherWallet = null;
+      })
+      .addCase(fetchPNLDataForAnotherWallet.rejected, (state, { payload }) => {
+        state.initialLoadingForAnotherWallet = false;
+        state.isDataLoadedForAnotherWallet = true;
+        state.hasAttemptedLoadForAnotherWallet = true;
+        state.PnlDataForAnotherWallet = [];
+        state.errorForAnotherWallet = payload;
+      })
       .addCase(fetchPNLDataHistory.fulfilled, (state, { payload }) => {
         state.PnlDataHistory = payload || [];
       })
       .addCase(fetchPNLDataHistory.rejected, (state, { payload }) => {
         state.PnlDataHistory = [];
       })
+      .addCase(
+        fetchPNLDataHistoryForAnotherWallet.fulfilled,
+        (state, { payload }) => {
+          state.PnlDataHistoryAnotherWallet = payload || [];
+        }
+      )
+      .addCase(
+        fetchPNLDataHistoryForAnotherWallet.rejected,
+        (state, { payload }) => {
+          state.PnlDataHistoryAnotherWallet = [];
+        }
+      )
       .addCase(fetchPerformanceHistory.fulfilled, (state, { payload }) => {
         state.performance = payload;
         state.loading = false;
@@ -453,7 +551,21 @@ const holdingData = createSlice({
       .addCase(fetchPerformanceHistory.rejected, (state, { payload }) => {
         state.performance = [];
         state.loading = false;
-      });
+      })
+      .addCase(
+        fetchPerformanceHistoryForAnotherWallet.fulfilled,
+        (state, { payload }) => {
+          state.performanceForAnotherWallet = payload;
+          state.loadingForAnotherWallet = false;
+        }
+      )
+      .addCase(
+        fetchPerformanceHistoryForAnotherWallet.rejected,
+        (state, { payload }) => {
+          state.performanceForAnotherWallet = [];
+          state.loadingForAnotherWallet = false;
+        }
+      );
   },
 });
 

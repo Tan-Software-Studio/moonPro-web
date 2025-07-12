@@ -9,17 +9,13 @@ import { FiUpload } from "react-icons/fi";
 import Tooltip from "../common/Tooltip/ToolTip";
 import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
 
-const History = ({ handleShowPnlHistoricalCard }) => {
+const History = ({ handleShowPnlHistoricalCard, historyData }) => {
   const router = useRouter();
   const [copiedIndex, setCopiedIndex] = useState(null);
   const dispatch = useDispatch();
-  // history data from redux
-  const historyData = useSelector((state) => state?.setPnlData?.PnlDataHistory);
   const navigateToChartSreen = (item) => {
     dispatch(setActiveChartToken({ symbol: item?.symbol, img: item?.img }));
-    router.push(
-      `/meme/${item?.token}`
-    );
+    router.push(`/meme/${item?.token}`);
   };
 
   const handleCopy = (address, index, e) => {
@@ -46,7 +42,9 @@ const History = ({ handleShowPnlHistoricalCard }) => {
                   </th>
                   <th className="px-4 py-2 text-slate-300 font-medium">Sold</th>
                   <th className="px-4 py-2 text-slate-300 font-medium">PnL</th>
-                  <th className="px-4 py-2 text-slate-300 font-medium">Action</th>
+                  <th className="px-4 py-2 text-slate-300 font-medium">
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -54,8 +52,9 @@ const History = ({ handleShowPnlHistoricalCard }) => {
                   <tr
                     onClick={() => navigateToChartSreen(item)}
                     key={index}
-                    className={`${index % 2 === 0 ? "bg-gray-800/20" : ""
-                      } border- b -slate-700/20 hover:bg-slate-800/30 cursor-pointer transition - colors duration - 200`}
+                    className={`${
+                      index % 2 === 0 ? "bg-gray-800/20" : ""
+                    } border- b -slate-700/20 hover:bg-slate-800/30 cursor-pointer transition - colors duration - 200`}
                   >
                     <td className="px-4 py-2">
                       <div className="flex items-center gap-3">
@@ -119,18 +118,20 @@ const History = ({ handleShowPnlHistoricalCard }) => {
 
                     <td className="px-4 py-2 ">
                       <div
-                        className={`flex items-center gap-0.5 text-base font-semibold whitespace-nowrap break-keep ${pnlPercentage(item?.sellPrice, item?.buyPrice) >= 0
-                          ? "text-emerald-500"
-                          : "text-red-500"
-                          }`}
+                        className={`flex items-center gap-0.5 text-base font-semibold whitespace-nowrap break-keep ${
+                          pnlPercentage(item?.sellPrice, item?.buyPrice) >= 0
+                            ? "text-emerald-500"
+                            : "text-red-500"
+                        }`}
                       >
                         <p className="">
-                          {`${(item?.buyPrice - item.sellPrice) * item.qty >= 0
-                            ? "-$"
-                            : "$"
-                            }${Math.abs(
-                              (item?.buyPrice - item.sellPrice) * item.qty
-                            ).toFixed(2)}`}
+                          {`${
+                            (item?.buyPrice - item.sellPrice) * item.qty >= 0
+                              ? "-$"
+                              : "$"
+                          }${Math.abs(
+                            (item?.buyPrice - item.sellPrice) * item.qty
+                          ).toFixed(2)}`}
                         </p>
                         <p className={``}>
                           (
@@ -141,17 +142,17 @@ const History = ({ handleShowPnlHistoricalCard }) => {
                     </td>
                     {/* Action */}
                     <td className="px-4 py-2">
-                        <Tooltip body={"Share PnL"}>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleShowPnlHistoricalCard(item);
-                            }}
-                            className="flex cursor-pointer items-center justify-center text-slate-400 text-lg hover:bg-slate-700 p-1 rounded-lg"
-                          >
-                            <FiUpload />
-                          </button>
-                        </Tooltip>
+                      <Tooltip body={"Share PnL"}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleShowPnlHistoricalCard(item);
+                          }}
+                          className="flex cursor-pointer items-center justify-center text-slate-400 text-lg hover:bg-slate-700 p-1 rounded-lg"
+                        >
+                          <FiUpload />
+                        </button>
+                      </Tooltip>
                     </td>
                   </tr>
                 ))}

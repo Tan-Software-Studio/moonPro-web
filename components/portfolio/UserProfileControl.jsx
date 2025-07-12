@@ -9,10 +9,22 @@ import History from "../profile/History";
 import TopHundred from "../profile/TopHundred";
 import { useTranslation } from "react-i18next";
 import RealizedPnLChart from "./PNLChart";
-import Image from "next/image";
 import NoData from "../common/NoData/noData";
 
-const UserProfileControl = ({ handleShowPnlCard, handleShowPnlHistoricalCard }) => {
+const UserProfileControl = ({
+  handleShowPnlCard,
+  handleShowPnlHistoricalCard,
+  quicksell,
+  solBalanceShow,
+  activeSolWalletAddress,
+  historyData,
+  currentTabData,
+  initialLoading,
+  isDataLoaded,
+  hasAttemptedLoad,
+  performance,
+  loading,
+}) => {
   const { t, i18n } = useTranslation();
   const portfolio = t("portfolio", { returnObjects: true });
   const [leftTableTab, setLeftTableTab] = useState(portfolio?.activePosition);
@@ -23,24 +35,16 @@ const UserProfileControl = ({ handleShowPnlCard, handleShowPnlHistoricalCard }) 
   const [mobileActiveTab, setMobileActiveTab] = useState(
     portfolio?.activePosition
   );
-  const performance = useSelector((state) => state?.setPnlData?.performance);
-  const loading = useSelector((state) => state?.setPnlData?.loading);
-  const currentTabData = useSelector(
-    (state) => state?.setPnlData?.PnlData || []
-  );
-  const activeSolWalletAddress = useSelector(
-    (state) => state?.userData?.activeSolanaWallet
-  );
 
   // total value calculation
-  const totalValue = currentTabData.reduce((acc, item) => {
+  const totalValue = currentTabData?.reduce((acc, item) => {
     const value =
       (item?.activeQtyHeld - item?.quantitySold) * item?.current_price;
     return acc + value;
   }, 0);
 
   // unrealized pnl calculation
-  const UnrealizedPNL = currentTabData.reduce((acc, item) => {
+  const UnrealizedPNL = currentTabData?.reduce((acc, item) => {
     const pnl =
       (item?.activeQtyHeld - item?.quantitySold) *
       (item.current_price - item.averageBuyPrice);
@@ -49,7 +53,7 @@ const UserProfileControl = ({ handleShowPnlCard, handleShowPnlHistoricalCard }) 
 
   // search active position
   const hasSearch = activePositionSearchQuery.trim() !== "";
-  const filteredData = currentTabData.filter(
+  const filteredData = currentTabData?.filter(
     (item) =>
       item?.token
         .toLowerCase()
@@ -99,13 +103,13 @@ const UserProfileControl = ({ handleShowPnlCard, handleShowPnlHistoricalCard }) 
       rangeId: null,
     },
   ];
-  const counts = performanceData.map((item) => {
+  const counts = performanceData?.map((item) => {
     const match = performance?.performance?.find((p) => p._id === item.rangeId);
     return match ? match.count : 0;
   });
 
-  const totalCount = counts.reduce((sum, c) => sum + c, 0) || 1;
-  const percentages = counts.map((count) => (count / totalCount) * 100);
+  const totalCount = counts?.reduce((sum, c) => sum + c, 0) || 1;
+  const percentages = counts?.map((count) => (count / totalCount) * 100);
 
   useEffect(() => {
     const updatedPortfolio = t("portfolio", { returnObjects: true });
@@ -156,19 +160,22 @@ const UserProfileControl = ({ handleShowPnlCard, handleShowPnlHistoricalCard }) 
                 </p>
               </div>
 
-              <div className="py-2">
-                <div className="flex items-center gap-2 mb-2">
-                  <p className="text-sm text-gray-400">
-                    {portfolio?.availableBalance}
+              {solBalanceShow ? (
+                <div className="py-2">
+                  <div className="flex items-center gap-2 mb-2">
+                    <p className="text-sm text-gray-400">
+                      {portfolio?.availableBalance}
+                    </p>
+                  </div>
+                  <p className="text-base font-semibold tracking-wider text-emerald-500">
+                    SOL{" "}
+                    {`${
+                      Number(activeSolWalletAddress?.balance || 0).toFixed(5) ||
+                      0
+                    }`}
                   </p>
                 </div>
-                <p className="text-base font-semibold tracking-wider text-emerald-500">
-                  SOL{" "}
-                  {`${
-                    Number(activeSolWalletAddress?.balance || 0).toFixed(5) || 0
-                  }`}
-                </p>
-              </div>
+              ) : null}
             </div>
           </div>
 
@@ -332,17 +339,28 @@ const UserProfileControl = ({ handleShowPnlCard, handleShowPnlHistoricalCard }) 
                     filteredActivePosition={filteredActivePosition}
                     activePositionSearchQuery={activePositionSearchQuery}
                     handleShowPnlCard={handleShowPnlCard}
+                    quicksell={quicksell}
+                    currentTabData={currentTabData}
+                    initialLoading={initialLoading}
+                    isDataLoaded={isDataLoaded}
+                    hasAttemptedLoad={hasAttemptedLoad}
                   />
                 </div>
               )}
               {leftTableTab === portfolio?.history && (
                 <div>
-                  <History handleShowPnlHistoricalCard={handleShowPnlHistoricalCard}/>
+                  <History
+                    handleShowPnlHistoricalCard={handleShowPnlHistoricalCard}
+                    historyData={historyData}
+                  />
                 </div>
               )}
               {leftTableTab === portfolio?.top100 && (
                 <div>
-                  <TopHundred handleShowPnlHistoricalCard={handleShowPnlHistoricalCard}/>
+                  <TopHundred
+                    handleShowPnlHistoricalCard={handleShowPnlHistoricalCard}
+                    wallet={activeSolWalletAddress?.wallet}
+                  />
                 </div>
               )}
             </div>
@@ -379,7 +397,10 @@ const UserProfileControl = ({ handleShowPnlCard, handleShowPnlHistoricalCard }) 
                   </div>
                 </div>
               </div>
-              <ActivityTable activitySearchQuery={activitySearchQuery} />
+              <ActivityTable
+                activitySearchQuery={activitySearchQuery}
+                wallet={activeSolWalletAddress?.wallet}
+              />
             </div>
           </div>
 
@@ -429,22 +450,37 @@ const UserProfileControl = ({ handleShowPnlCard, handleShowPnlHistoricalCard }) 
                 <ActivePosition
                   filteredActivePosition={filteredActivePosition}
                   activePositionSearchQuery={activePositionSearchQuery}
+                  handleShowPnlCard={handleShowPnlCard}
+                  quicksell={quicksell}
+                  currentTabData={currentTabData}
+                  initialLoading={initialLoading}
+                  isDataLoaded={isDataLoaded}
+                  hasAttemptedLoad={hasAttemptedLoad}
                 />
               </div>
             )}
             {mobileActiveTab == portfolio?.activity && (
               <div>
-                <ActivityTable activitySearchQuery={activitySearchQuery} />
+                <ActivityTable
+                  activitySearchQuery={activitySearchQuery}
+                  wallet={activeSolWalletAddress?.wallet}
+                />
               </div>
             )}
             {mobileActiveTab === portfolio?.history && (
               <div>
-                <History />
+                <History
+                  handleShowPnlHistoricalCard={handleShowPnlHistoricalCard}
+                  historyData={historyData}
+                />
               </div>
             )}
             {mobileActiveTab === portfolio?.top100 && (
               <div>
-                <TopHundred />
+                <TopHundred
+                  handleShowPnlHistoricalCard={handleShowPnlHistoricalCard}
+                  wallet={activeSolWalletAddress?.wallet}
+                />
               </div>
             )}
           </div>
