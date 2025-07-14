@@ -12,7 +12,9 @@ import NoData from "../../components/common/NoData/noData";
 import { useTranslation } from "react-i18next";
 import SharePnLModal from "../common/tradingview/SharePnLModal";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 const metaDataMainName = process.env.NEXT_PUBLIC_METADATA_MAIN_NAME || "Nexa";
+const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 const PortfolioForOtherWallet = ({ wallet }) => {
   const [currentPnlDataToShow, setCurrentPnlDataToShow] = useState({});
   const [currentPnlOverride, setCurrentPnlOverride] = useState(null);
@@ -49,13 +51,20 @@ const PortfolioForOtherWallet = ({ wallet }) => {
   useEffect(() => {
     const solWalletFromLocalStorage = localStorage.getItem("walletAddress");
     if (wallet == solWalletFromLocalStorage) {
-      router.push("/portfolio");
+      router.replace("/portfolio");
       return;
     }
     if (wallet) {
-      dispatch(fetchPNLDataForAnotherWallet(wallet));
-      dispatch(fetchPNLDataHistoryForAnotherWallet(wallet));
-      dispatch(fetchPerformanceHistoryForAnotherWallet(wallet));
+      axios
+        .get(`${baseUrl}user/checkWallet/${wallet}`)
+        .then((res) => {
+          dispatch(fetchPNLDataForAnotherWallet(wallet));
+          dispatch(fetchPNLDataHistoryForAnotherWallet(wallet));
+          dispatch(fetchPerformanceHistoryForAnotherWallet(wallet));
+        })
+        .catch((err) => {
+          router.replace("/portfolio");
+        });
     }
   }, []);
   useEffect(() => {
