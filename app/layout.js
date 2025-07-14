@@ -37,6 +37,25 @@ export const metadata = {
     ?.toString()
     ?.toUpperCase()} is the premier gateway to seamless on-chain trading and rapid asset discovery.`,
 
+   openGraph: {
+    title:`${metaDataMainName
+      ?.toString()
+      ?.toUpperCase()} is the premier gateway to seamless on-chain trading and rapid asset discovery.`,
+    description:`${metaDataMainName
+      ?.toString()
+      ?.toUpperCase()} is the premier gateway to seamless on-chain trading and rapid asset discovery.`,
+    url: process.env.NEXT_PUBLIC_WEB_URL,
+    type: 'website',
+    images: [
+      {
+        url: `${process.env.NEXT_PUBLIC_WEB_URL}/assets/SharePnL/x-card.webp`,
+        width: 680,
+        height: 340,
+        alt: `${metaDataMainName} Logo`,
+      },
+    ],
+  },
+
   twitter: {
     card: 'summary_large_image', // or 'summary_large_image' if you have a larger preview image
     title: `${metaDataMainName

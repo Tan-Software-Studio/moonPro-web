@@ -147,7 +147,9 @@ const Sidebar = () => {
                 <Image
                   alt="logotext"
                   src={`${process.env.NEXT_PUBLIC_SIDE_BIG_SCREEN}`}
-                  className={`cursor-pointer h-[40px] w-[120px]`}
+                  height={40}
+                  width={120}
+                  className={`cursor-pointer`}
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = logotext;
@@ -160,7 +162,9 @@ const Sidebar = () => {
               <Image
                 alt="full-logo"
                 src={`${process.env.NEXT_PUBLIC_NAV_LOGO}`}
-                className="cursor-pointer w-[40px] h-[35px]"
+                width={40}
+                height={35}
+                className="cursor-pointer"
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = logo;

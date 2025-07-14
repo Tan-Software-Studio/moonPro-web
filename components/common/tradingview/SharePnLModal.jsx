@@ -80,7 +80,7 @@ const SharePnLModal = ({
       }
       if (
         !currentTokenPnLData ||
-        Object.keys(currentTokenPnLData).length === 0
+        Object.keys(currentTokenPnLData)?.length === 0
       ) {
         previousPnLRef.current.position = 0;
         return previousPnLRef.current;
@@ -102,7 +102,7 @@ const SharePnLModal = ({
 
       const isPositive =
         currentTokenPnLData?.isPositivePnL != null
-          ? currentTokenPnLData.isPositivePnL
+          ? currentTokenPnLData?.isPositivePnL
           : (currentTokenPnLData?.pastPnlPrice ?? 0) >= 0;
 
       const nonPastInvestmentAmount = solIsActive

@@ -263,6 +263,8 @@ const Navbar = () => {
               <div className={`md:hidden flex w-9 h-auto`}>
                 <Image
                   src={`${process.env.NEXT_PUBLIC_NAV_LOGO}`}
+                  width={36}
+                  height={36}
                   alt="logo"
                   className="w-full h-full"
                   onError={(e) => {
