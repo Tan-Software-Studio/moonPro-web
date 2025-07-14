@@ -19,6 +19,7 @@ const PortfolioForOtherWallet = ({ wallet }) => {
   const [currentPnlDataToShow, setCurrentPnlDataToShow] = useState({});
   const [currentPnlOverride, setCurrentPnlOverride] = useState(null);
   const [isSharePnLModalActive, setIsSharePnLModalActive] = useState(false);
+  const [walletExist, isWalletExist] = useState(false);
   const [currentPnlDataToShowSymbol, setCurrentPnlDataToShowSymbol] =
     useState(null);
   const dispatch = useDispatch();
@@ -58,12 +59,13 @@ const PortfolioForOtherWallet = ({ wallet }) => {
       axios
         .get(`${baseUrl}user/checkWallet/${wallet}`)
         .then((res) => {
+          isWalletExist(true);
           dispatch(fetchPNLDataForAnotherWallet(wallet));
           dispatch(fetchPNLDataHistoryForAnotherWallet(wallet));
           dispatch(fetchPerformanceHistoryForAnotherWallet(wallet));
         })
         .catch((err) => {
-          router.replace("/404");
+          isWalletExist(false);
         });
     }
   }, []);
@@ -168,7 +170,7 @@ const PortfolioForOtherWallet = ({ wallet }) => {
 
   return (
     <>
-      {wallet ? (
+      {walletExist ? (
         <>
           <div className="overflow-y-scroll h-[95vh]">
             <div className="flex items-center gap-5 p-5">
@@ -209,10 +211,7 @@ const PortfolioForOtherWallet = ({ wallet }) => {
         </>
       ) : (
         <div className="flex flex-col h-[70vh] w-full items-center justify-center mt-5">
-          <NoData
-            title={portfolio?.loginRequired}
-            description={portfolio?.pleaseLogin}
-          />
+          <NoData title={portfolio?.walletNotFound} description={""} />
         </div>
       )}
     </>

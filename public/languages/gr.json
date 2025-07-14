@@ -56,7 +56,7 @@
     },
     "tableheaders": {
       "aicall": "KI-Aufruf",
-"aicalltooltip": "Dies zeigt die Zeit an, zu der unser KI-Signal gegeben wurde",
+      "aicalltooltip": "Dies zeigt die Zeit an, zu der unser KI-Signal gegeben wurde",
       "pairinfo": "Paar-Info",
       "pairinfotooltip": "Token-Name, Alter und soziale Netzwerke.",
       "created": "Erstellt",
@@ -71,28 +71,26 @@
       "auditrestooltip": "Schnelle Sicherheitsprüfungen: Zeigt, ob das Token wieder gemintet, eingefroren werden kann oder ob das Token 10 Inhaber hat.",
       "quickbuy": "SCHNELL KAUFEN",
       "search": "Suche nach Ticker oder Name",
-"display": "Anzeige"
-
+      "display": "Anzeige"
     },
-    "display" : {
-  "MC_77K": "MK 77K",
-  "Small": "Klein",
-  "Large": "Groß",
-  "HideSearchBar": "Suchleiste ausblenden",
-  "CircleImage": "Kreisbild",
-  "ProgressBarRing": "Fortschrittsring",
-  "CustomizeRows": "Zeilen anpassen",
-  "MarketCap": "Marktkapitalisierung",
-  "Volume": "Volumen",
-  "Socials": "Soziale Medien",
-  "Holders": "Inhaber",
-  "Top10Holders": "Top 10 Inhaber",
+    "display": {
+      "MC_77K": "MK 77K",
+      "Small": "Klein",
+      "Large": "Groß",
+      "HideSearchBar": "Suchleiste ausblenden",
+      "CircleImage": "Kreisbild",
+      "ProgressBarRing": "Fortschrittsring",
+      "CustomizeRows": "Zeilen anpassen",
+      "MarketCap": "Marktkapitalisierung",
+      "Volume": "Volumen",
+      "Socials": "Soziale Medien",
+      "Holders": "Inhaber",
+      "Top10Holders": "Top 10 Inhaber",
       "progressBarLine": "Fortschrittsbalken Linie",
-    "squareImage": "Quadratisches Bild",
-    "showSearchBar": "Suchleiste anzeigen",
-     "metrics": "Metriken"
-}
-
+      "squareImage": "Quadratisches Bild",
+      "showSearchBar": "Suchleiste anzeigen",
+      "metrics": "Metriken"
+    }
   },
   "recentcalls": {
     "mainHeader": {
@@ -220,7 +218,7 @@
       "status": "Status",
       "statustool": "Gibt an, ob Sie berechtigt sind, Ihren Empfehlungsbonus zu erhalten."
     },
-     "refMata": {
+    "refMata": {
       "nextLevel": "Nächstes Level:",
       "rewardsRate": "2,5-fache Belohnungsrate für Punkte und SOL",
       "silver": "Silber",
@@ -234,10 +232,10 @@
       "dateJoined": "Beitrittsdatum",
       "noReferralsFound": "Keine Empfehlungen gefunden.",
       "tradeMessage": "Du bist fast am Ziel! Handle 20 SOL, um es zu erreichen",
-       "noHistory": "Du hast noch keine Transaktionshistorie.",
-    "infoWillAppear": "Transaktionsinformationen werden hier angezeigt, sobald sie verfügbar sind",
-    "noData": "Keine Daten verfügbar",
-    "adjustSearch": "Versuchen Sie, Ihre Suchbegriffe anzupassen."
+      "noHistory": "Du hast noch keine Transaktionshistorie.",
+      "infoWillAppear": "Transaktionsinformationen werden hier angezeigt, sobald sie verfügbar sind",
+      "noData": "Keine Daten verfügbar",
+      "adjustSearch": "Versuchen Sie, Ihre Suchbegriffe anzupassen."
     }
   },
   "alphapicks": {
@@ -662,7 +660,7 @@
       "positions": "Positionen",
       "holders": "Inhaber",
       "topTraders": "Top-Händler",
-       "noData": "Keine Daten gefunden"   
+      "noData": "Keine Daten gefunden"
     }
   },
   "navbar": {
@@ -731,24 +729,23 @@
       "warningPrivate": "WARNUNG: Dieser Wiederherstellungsschlüssel ist der einzige Weg, auf Ihre Wallet zuzugreifen, wenn Sie Ihre Zugangsdaten verlieren. Bewahren Sie ihn sicher auf und teilen Sie ihn niemandem mit."
     },
     "acountandsecurity": {
-  "acountandsecurity": "Konto und Sicherheit",
-  "level1": "Belohnungsstufe",
-  "level2": "Letzter Login",
-  "level3": "Empfehlungscode",
-  "recoveryKey": "Wiederherstellungsschlüssel",
-  "language": "Sprache",
-  "wallets": "Wallets",
-  "rewards": "Belohnungen",
-  "manageWallets": "Wallets verwalten",
-  "earnRewards": "Belohnungen verdienen",
-  "logOut": "Abmelden",
-  "msg1": "Melden Sie sich von Ihrem Konto ab",
-  "msg2": "Greifen Sie auf Ihre Seed-Phrase zu, um Ihre Konten zu exportieren. NICHT TEILEN!",
-  "msg3": "Sprache der Anwendung ändern",
-  "msg4": "Externe Wallet-Konten hinzufügen oder verwalten",
-  "msg5": "Verdienen Sie kostenloses SOL. Besuchen Sie die Belohnungsseite, um zu starten"
-}
-
+      "acountandsecurity": "Konto und Sicherheit",
+      "level1": "Belohnungsstufe",
+      "level2": "Letzter Login",
+      "level3": "Empfehlungscode",
+      "recoveryKey": "Wiederherstellungsschlüssel",
+      "language": "Sprache",
+      "wallets": "Wallets",
+      "rewards": "Belohnungen",
+      "manageWallets": "Wallets verwalten",
+      "earnRewards": "Belohnungen verdienen",
+      "logOut": "Abmelden",
+      "msg1": "Melden Sie sich von Ihrem Konto ab",
+      "msg2": "Greifen Sie auf Ihre Seed-Phrase zu, um Ihre Konten zu exportieren. NICHT TEILEN!",
+      "msg3": "Sprache der Anwendung ändern",
+      "msg4": "Externe Wallet-Konten hinzufügen oder verwalten",
+      "msg5": "Verdienen Sie kostenloses SOL. Besuchen Sie die Belohnungsseite, um zu starten"
+    }
   },
   "accountPopup": {
     "security": {
@@ -793,10 +790,10 @@
       "Cancel": "Abbrechen",
       "Save": "Speichern",
       "token": "Token",
-    "marketCap": "Marktkapitalisierung",
-    "volume1h": "1H Volumen",
-    "liquidity": "Liquidität",
-    "actions": "Aktionen"
+      "marketCap": "Marktkapitalisierung",
+      "volume1h": "1H Volumen",
+      "liquidity": "Liquidität",
+      "actions": "Aktionen"
     }
   },
   "newProfile": {
@@ -822,7 +819,7 @@
     "SellAll": "Alles verkaufen"
   },
   "portfolio": {
- "Show": "Archivierte anzeigen",
+    "Show": "Archivierte anzeigen",
     "Import": "Importieren",
     "CreateWallet": "Wallet erstellen",
     "Balance": "Kontostand",
@@ -843,8 +840,9 @@
     "spots": "Spots",
     "perfomance": "Leistung",
     "search": "Suche nach Adresse, Name oder Symbol",
-      "pleaseLogin": "Bitte melden Sie sich an, um Ihr Portfolio und Profil zu sehen.",
-  "loginRequired": "Anmeldung erforderlich",
-  "noWalletsFound": "Keine Wallets gefunden"
+    "pleaseLogin": "Bitte melden Sie sich an, um Ihr Portfolio und Profil zu sehen.",
+    "loginRequired": "Anmeldung erforderlich",
+    "noWalletsFound": "Keine Wallets gefunden",
+    "walletNotFound": "Keine Wallet-Aktivität gefunden."
   }
 }

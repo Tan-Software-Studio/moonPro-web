@@ -56,7 +56,7 @@
     },
     "tableheaders": {
       "aicall": "Chiamata AI",
-"aicalltooltip": "Questo indica l'ora in cui è stato dato il nostro segnale AI",
+      "aicalltooltip": "Questo indica l'ora in cui è stato dato il nostro segnale AI",
       "pairinfo": "Info Coppia",
       "pairinfotooltip": "Nome token, età e social.",
       "created": "Creato",
@@ -71,28 +71,26 @@
       "auditrestooltip": "Controlli di sicurezza rapidi: mostra se il token può essere coniato di nuovo, congelato o se ha 10 holder.",
       "quickbuy": "ACQUISTO RAPIDO",
       "search": "Cerca per ticker o nome",
-"display": "Visualizza"
-
+      "display": "Visualizza"
     },
-    "display" : {
-  "MC_77K": "Cap. di mercato 77K",
-  "Small": "Piccolo",
-  "Large": "Grande",
-  "HideSearchBar": "Nascondi barra di ricerca",
-  "CircleImage": "Immagine circolare",
-  "ProgressBarRing": "Anello di avanzamento",
-  "CustomizeRows": "Personalizza righe",
-  "MarketCap": "Capitalizzazione",
-  "Volume": "Volume",
-  "Socials": "Social",
-  "Holders": "Titolari",
-  "Top10Holders": "Top 10 Titolari",
+    "display": {
+      "MC_77K": "Cap. di mercato 77K",
+      "Small": "Piccolo",
+      "Large": "Grande",
+      "HideSearchBar": "Nascondi barra di ricerca",
+      "CircleImage": "Immagine circolare",
+      "ProgressBarRing": "Anello di avanzamento",
+      "CustomizeRows": "Personalizza righe",
+      "MarketCap": "Capitalizzazione",
+      "Volume": "Volume",
+      "Socials": "Social",
+      "Holders": "Titolari",
+      "Top10Holders": "Top 10 Titolari",
       "progressBarLine": "Linea barra di progresso",
-    "squareImage": "Immagine quadrata",
-    "showSearchBar": "Mostra barra di ricerca",
-     "metrics": "Metriche"
-}
-
+      "squareImage": "Immagine quadrata",
+      "showSearchBar": "Mostra barra di ricerca",
+      "metrics": "Metriche"
+    }
   },
   "recentcalls": {
     "mainHeader": {
@@ -220,7 +218,7 @@
       "status": "Stato",
       "statustool": "Indica se sei idoneo a richiedere il tuo bonus di referenza."
     },
-     "refMata": {
+    "refMata": {
       "nextLevel": "Prossimo livello:",
       "rewardsRate": "Tasso di ricompensa 2,5X per Punti e SOL",
       "silver": "Argento",
@@ -234,10 +232,10 @@
       "dateJoined": "Data di iscrizione",
       "noReferralsFound": "Nessuna referenza trovata.",
       "tradeMessage": "Ci sei quasi! Scambia 20 SOL per raggiungere",
-       "noHistory": "Non hai ancora una cronologia delle transazioni.",
-    "infoWillAppear": "Le informazioni sulle transazioni appariranno qui quando disponibili",
-    "noData": "Nessun dato disponibile",
-    "adjustSearch": "Prova a modificare i termini di ricerca."
+      "noHistory": "Non hai ancora una cronologia delle transazioni.",
+      "infoWillAppear": "Le informazioni sulle transazioni appariranno qui quando disponibili",
+      "noData": "Nessun dato disponibile",
+      "adjustSearch": "Prova a modificare i termini di ricerca."
     }
   },
   "alphapicks": {
@@ -657,7 +655,7 @@
         }
       }
     },
-     "table2": {
+    "table2": {
       "trades": "Operazioni",
       "positions": "Posizioni",
       "holders": "Detentori",
@@ -731,24 +729,23 @@
       "warningPrivate": "ATTENZIONE: Questa chiave di recupero è l'unico modo per accedere al tuo wallet se perdi le tue credenziali. Conservala in un posto sicuro e non condividerla con nessuno."
     },
     "acountandsecurity": {
-  "acountandsecurity": "Account e Sicurezza",
-  "level1": "Livello Ricompense",
-  "level2": "Ultimo Accesso",
-  "level3": "Codice di Riferimento",
-  "recoveryKey": "Chiave di Recupero",
-  "language": "Lingua",
-  "wallets": "Portafogli",
-  "rewards": "Ricompense",
-  "manageWallets": "Gestisci Portafogli",
-  "earnRewards": "Guadagna Ricompense",
-  "logOut": "Esci",
-  "msg1": "Esci dal tuo account",
-  "msg2": "Accedi alla frase di recupero per esportare i tuoi account. NON CONDIVIDERE!",
-  "msg3": "Cambia la lingua dell'applicazione",
-  "msg4": "Aggiungi o gestisci i tuoi account wallet esterni",
-  "msg5": "Guadagna SOL gratuito. Visita la pagina delle ricompense per iniziare"
-}
-
+      "acountandsecurity": "Account e Sicurezza",
+      "level1": "Livello Ricompense",
+      "level2": "Ultimo Accesso",
+      "level3": "Codice di Riferimento",
+      "recoveryKey": "Chiave di Recupero",
+      "language": "Lingua",
+      "wallets": "Portafogli",
+      "rewards": "Ricompense",
+      "manageWallets": "Gestisci Portafogli",
+      "earnRewards": "Guadagna Ricompense",
+      "logOut": "Esci",
+      "msg1": "Esci dal tuo account",
+      "msg2": "Accedi alla frase di recupero per esportare i tuoi account. NON CONDIVIDERE!",
+      "msg3": "Cambia la lingua dell'applicazione",
+      "msg4": "Aggiungi o gestisci i tuoi account wallet esterni",
+      "msg5": "Guadagna SOL gratuito. Visita la pagina delle ricompense per iniziare"
+    }
   },
   "accountPopup": {
     "security": {
@@ -792,11 +789,11 @@
       "watchlist": "Lista di osservazione",
       "Cancel": "Annulla",
       "Save": "Salva",
-       "token": "Token",
-    "marketCap": "Capitalizzazione di mercato",
-    "volume1h": "Volume 1H",
-    "liquidity": "Liquidità",
-    "actions": "Azioni"
+      "token": "Token",
+      "marketCap": "Capitalizzazione di mercato",
+      "volume1h": "Volume 1H",
+      "liquidity": "Liquidità",
+      "actions": "Azioni"
     }
   },
   "newProfile": {
@@ -822,7 +819,7 @@
     "SellAll": "Vendi tutto"
   },
   "portfolio": {
-   "Show": "Mostra archiviati",
+    "Show": "Mostra archiviati",
     "Import": "Importa",
     "CreateWallet": "Crea Wallet",
     "Balance": "Saldo",
@@ -843,8 +840,9 @@
     "spots": "Spot",
     "perfomance": "Prestazione",
     "search": "Cerca per Indirizzo, Nome o Simbolo",
-      "pleaseLogin": "Effettua il login per visualizzare il tuo portfolio e il tuo profilo.",
-  "loginRequired": "Accesso richiesto",
-  "noWalletsFound": "Nessun portafoglio trovato"
+    "pleaseLogin": "Effettua il login per visualizzare il tuo portfolio e il tuo profilo.",
+    "loginRequired": "Accesso richiesto",
+    "noWalletsFound": "Nessun portafoglio trovato",
+    "walletNotFound": "Nessuna attività del portafoglio trovata."
   }
 }

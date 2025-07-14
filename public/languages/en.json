@@ -842,6 +842,7 @@
     "search": "Search by Address, Name or Symbol",
     "pleaseLogin": "Please login to view your portfolio and profile.",
     "loginRequired": "Login Required",
-    "noWalletsFound": "No wallets found"
+    "noWalletsFound": "No wallets found",
+    "walletNotFound": "No wallet activity found."
   }
 }

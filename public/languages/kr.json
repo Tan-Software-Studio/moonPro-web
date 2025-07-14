@@ -69,28 +69,26 @@
       "auditrestooltip": "빠른 안전 점검: 토큰이 더 이상 민트될 수 있는지, 동결될 수 있는지, 또는 토큰에 10명의 홀더가 있는지 표시",
       "quickbuy": "빠른 구매",
       "search": "티커 또는 이름으로 검색",
-"display": "표시"
-
+      "display": "표시"
     },
-    "display" : {
-  "MC_77K": "시가총액 77K",
-  "Small": "작음",
-  "Large": "큼",
-  "HideSearchBar": "검색창 숨기기",
-  "CircleImage": "원형 이미지",
-  "ProgressBarRing": "진행률 링",
-  "CustomizeRows": "행 사용자 지정",
-  "MarketCap": "시가총액",
-  "Volume": "거래량",
-  "Socials": "소셜",
-  "Holders": "보유자",
-  "Top10Holders": "상위 10명 보유자",
+    "display": {
+      "MC_77K": "시가총액 77K",
+      "Small": "작음",
+      "Large": "큼",
+      "HideSearchBar": "검색창 숨기기",
+      "CircleImage": "원형 이미지",
+      "ProgressBarRing": "진행률 링",
+      "CustomizeRows": "행 사용자 지정",
+      "MarketCap": "시가총액",
+      "Volume": "거래량",
+      "Socials": "소셜",
+      "Holders": "보유자",
+      "Top10Holders": "상위 10명 보유자",
       "progressBarLine": "진행 표시줄 선",
-    "squareImage": "정사각형 이미지",
-    "showSearchBar": "검색창 표시",
-     "metrics": "지표"
-}
-
+      "squareImage": "정사각형 이미지",
+      "showSearchBar": "검색창 표시",
+      "metrics": "지표"
+    }
   },
   "recentcalls": {
     "mainHeader": {
@@ -220,7 +218,7 @@
       "status": "상태",
       "statustool": "추천 보너스를 받을 자격이 있는지 여부를 나타냅니다."
     },
-      "refMata": {
+    "refMata": {
       "nextLevel": "다음 단계:",
       "rewardsRate": "포인트 및 SOL에 대한 2.5배 보상률",
       "silver": "실버",
@@ -233,11 +231,11 @@
       "emailWallet": "이메일/지갑",
       "dateJoined": "가입일",
       "noReferralsFound": "추천인이 없습니다.",
-    "tradeMessage": "거의 다 왔어요! 목표 달성을 위해 20 SOL을 거래하세요",
-     "noHistory": "아직 거래 내역이 없습니다.",
-    "infoWillAppear": "거래 정보는 이용 가능할 때 여기에 표시됩니다",
-    "noData": "데이터가 없습니다",
-    "adjustSearch": "검색어를 조정해 보세요."
+      "tradeMessage": "거의 다 왔어요! 목표 달성을 위해 20 SOL을 거래하세요",
+      "noHistory": "아직 거래 내역이 없습니다.",
+      "infoWillAppear": "거래 정보는 이용 가능할 때 여기에 표시됩니다",
+      "noData": "데이터가 없습니다",
+      "adjustSearch": "검색어를 조정해 보세요."
     }
   },
   "alphapicks": {
@@ -657,7 +655,7 @@
         }
       }
     },
-     "table2": {
+    "table2": {
       "trades": "거래",
       "positions": "포지션",
       "holders": "보유자",
@@ -731,24 +729,23 @@
       "warningPrivate": "경고: 이 복구 키는 자격 증명을 잃어버린 경우 지갑에 액세스할 수 있는 유일한 방법입니다. 안전한 곳에 보관하고 다른 사람과 공유하지 마세요."
     },
     "acountandsecurity": {
-  "acountandsecurity": "계정 및 보안",
-  "level1": "보상 레벨",
-  "level2": "마지막 로그인",
-  "level3": "추천 코드",
-  "recoveryKey": "복구 키",
-  "language": "언어",
-  "wallets": "지갑",
-  "rewards": "보상",
-  "manageWallets": "지갑 관리",
-  "earnRewards": "보상 받기",
-  "logOut": "로그아웃",
-  "msg1": "계정에서 로그아웃",
-  "msg2": "시드 문구에 액세스하여 계정을 내보내세요. 절대 공유하지 마세요!",
-  "msg3": "앱 언어 변경",
-  "msg4": "외부 지갑 계정 추가 또는 관리",
-  "msg5": "무료 SOL 획득. 보상 페이지 방문하여 시작하세요"
-}
-
+      "acountandsecurity": "계정 및 보안",
+      "level1": "보상 레벨",
+      "level2": "마지막 로그인",
+      "level3": "추천 코드",
+      "recoveryKey": "복구 키",
+      "language": "언어",
+      "wallets": "지갑",
+      "rewards": "보상",
+      "manageWallets": "지갑 관리",
+      "earnRewards": "보상 받기",
+      "logOut": "로그아웃",
+      "msg1": "계정에서 로그아웃",
+      "msg2": "시드 문구에 액세스하여 계정을 내보내세요. 절대 공유하지 마세요!",
+      "msg3": "앱 언어 변경",
+      "msg4": "외부 지갑 계정 추가 또는 관리",
+      "msg5": "무료 SOL 획득. 보상 페이지 방문하여 시작하세요"
+    }
   },
   "accountPopup": {
     "security": {
@@ -792,11 +789,11 @@
       "watchlist": "즐겨찾기",
       "Cancel": "취소",
       "Save": "저장",
-    "token": "토큰",
-    "marketCap": "시가 총액",
-    "volume1h": "1시간 거래량",
-    "liquidity": "유동성",
-    "actions": "작업"
+      "token": "토큰",
+      "marketCap": "시가 총액",
+      "volume1h": "1시간 거래량",
+      "liquidity": "유동성",
+      "actions": "작업"
     }
   },
   "newProfile": {
@@ -822,7 +819,7 @@
     "SellAll": "모두 판매"
   },
   "portfolio": {
-   "Show": "보관된 항목 표시",
+    "Show": "보관된 항목 표시",
     "Import": "가져오기",
     "CreateWallet": "지갑 만들기",
     "Balance": "잔액",
@@ -843,8 +840,9 @@
     "spots": "스팟",
     "perfomance": "성능",
     "search": "주소, 이름 또는 심볼로 검색",
-      "pleaseLogin": "포트폴리오와 프로필을 보려면 로그인하세요.",
-  "loginRequired": "로그인이 필요합니다",
-  "noWalletsFound": "지갑을 찾을 수 없습니다"
+    "pleaseLogin": "포트폴리오와 프로필을 보려면 로그인하세요.",
+    "loginRequired": "로그인이 필요합니다",
+    "noWalletsFound": "지갑을 찾을 수 없습니다",
+    "walletNotFound": "지갑 활동을 찾을 수 없습니다."
   }
 }

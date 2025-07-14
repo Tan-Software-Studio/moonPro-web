@@ -71,28 +71,26 @@
       "auditrestooltip": "Snabba säkerhetskontroller: visar om token kan mintas igen, frysas eller om token har 10 innehavare.",
       "quickbuy": "SNABBT KÖP",
       "search": "Sök med ticker eller namn",
-"display": "Visa"
-
+      "display": "Visa"
     },
-    "display" : {
-  "MC_77K": "MK 77K",
-  "Small": "Liten",
-  "Large": "Stor",
-  "HideSearchBar": "Dölj sökfält",
-  "CircleImage": "Cirkulär bild",
-  "ProgressBarRing": "Framstegsringsindikator",
-  "CustomizeRows": "Anpassa rader",
-  "MarketCap": "Marknadsvärde",
-  "Volume": "Volym",
-  "Socials": "Sociala medier",
-  "Holders": "Innehavare",
-  "Top10Holders": "Topp 10 Innehavare",
+    "display": {
+      "MC_77K": "MK 77K",
+      "Small": "Liten",
+      "Large": "Stor",
+      "HideSearchBar": "Dölj sökfält",
+      "CircleImage": "Cirkulär bild",
+      "ProgressBarRing": "Framstegsringsindikator",
+      "CustomizeRows": "Anpassa rader",
+      "MarketCap": "Marknadsvärde",
+      "Volume": "Volym",
+      "Socials": "Sociala medier",
+      "Holders": "Innehavare",
+      "Top10Holders": "Topp 10 Innehavare",
       "progressBarLine": "Framstegslinje",
-    "squareImage": "Fyrkantig bild",
-    "showSearchBar": "Visa sökfält",
-    "metrics": "Mått"
-}
-
+      "squareImage": "Fyrkantig bild",
+      "showSearchBar": "Visa sökfält",
+      "metrics": "Mått"
+    }
   },
   "recentcalls": {
     "mainHeader": {
@@ -220,7 +218,7 @@
       "status": "Status",
       "statustool": "Anger om du är berättigad att begära din referral bonus."
     },
-     "refMata": {
+    "refMata": {
       "nextLevel": "Nästa nivå:",
       "rewardsRate": "2,5x belöningsgrad för poäng och SOL",
       "silver": "Silver",
@@ -234,10 +232,10 @@
       "dateJoined": "Datum ansluten",
       "noReferralsFound": "Inga rekommendationer hittades.",
       "tradeMessage": "Du är nästan där! Handla 20 SOL för att nå målet",
-       "noHistory": "Du har ännu ingen transaktionshistorik.",
-    "infoWillAppear": "Transaktionsinformation kommer att visas här när den är tillgänglig",
-    "noData": "Ingen data tillgänglig",
-    "adjustSearch": "Försök att justera dina sökord."
+      "noHistory": "Du har ännu ingen transaktionshistorik.",
+      "infoWillAppear": "Transaktionsinformation kommer att visas här när den är tillgänglig",
+      "noData": "Ingen data tillgänglig",
+      "adjustSearch": "Försök att justera dina sökord."
     }
   },
   "alphapicks": {
@@ -657,7 +655,7 @@
         }
       }
     },
-        "table2": {
+    "table2": {
       "trades": "Affärer",
       "positions": "Positioner",
       "holders": "Innehavare",
@@ -731,24 +729,23 @@
       "warningPrivate": "VARNING: Denna återställningsnyckel är det enda sättet att komma åt din plånbok om du förlorar dina autentiseringsuppgifter. Förvara den på en säker plats och dela den inte med någon."
     },
     "acountandsecurity": {
-  "acountandsecurity": "Konto och Säkerhet",
-  "level1": "Belöningsnivå",
-  "level2": "Senaste Inloggning",
-  "level3": "Rekommendationskod",
-  "recoveryKey": "Återställningsnyckel",
-  "language": "Språk",
-  "wallets": "Plånböcker",
-  "rewards": "Belöningar",
-  "manageWallets": "Hantera Plånböcker",
-  "earnRewards": "Tjäna Belöningar",
-  "logOut": "Logga Ut",
-  "msg1": "Logga ut från ditt konto",
-  "msg2": "Få åtkomst till din seed phrase för att exportera dina konton. DELA INTE!",
-  "msg3": "Byt applikationsspråk",
-  "msg4": "Lägg till eller hantera dina externa plånbokskonton",
-  "msg5": "Tjäna gratis SOL. Besök belöningssidan för att börja"
-}
-
+      "acountandsecurity": "Konto och Säkerhet",
+      "level1": "Belöningsnivå",
+      "level2": "Senaste Inloggning",
+      "level3": "Rekommendationskod",
+      "recoveryKey": "Återställningsnyckel",
+      "language": "Språk",
+      "wallets": "Plånböcker",
+      "rewards": "Belöningar",
+      "manageWallets": "Hantera Plånböcker",
+      "earnRewards": "Tjäna Belöningar",
+      "logOut": "Logga Ut",
+      "msg1": "Logga ut från ditt konto",
+      "msg2": "Få åtkomst till din seed phrase för att exportera dina konton. DELA INTE!",
+      "msg3": "Byt applikationsspråk",
+      "msg4": "Lägg till eller hantera dina externa plånbokskonton",
+      "msg5": "Tjäna gratis SOL. Besök belöningssidan för att börja"
+    }
   },
   "accountPopup": {
     "security": {
@@ -792,11 +789,11 @@
       "watchlist": "Bevakningslista",
       "Cancel": "Avbryt",
       "Save": "Spara",
-    "token": "Token",
-    "marketCap": "Marknadsvärde",
-    "volume1h": "1H Volym",
-    "liquidity": "Likviditet",
-    "actions": "Åtgärder"
+      "token": "Token",
+      "marketCap": "Marknadsvärde",
+      "volume1h": "1H Volym",
+      "liquidity": "Likviditet",
+      "actions": "Åtgärder"
     }
   },
   "newProfile": {
@@ -822,7 +819,7 @@
     "SellAll": "Sälj allt"
   },
   "portfolio": {
-     "Show": "Visa arkiverade",
+    "Show": "Visa arkiverade",
     "Import": "Importera",
     "CreateWallet": "Skapa plånbok",
     "Balance": "Saldo",
@@ -843,8 +840,9 @@
     "spots": "Spots",
     "perfomance": "Prestanda",
     "search": "Sök efter Adress, Namn eller Symbol",
-      "pleaseLogin": "Vänligen logga in för att se din portfölj och profil.",
-  "loginRequired": "Inloggning krävs",
-  "noWalletsFound": "Inga plånböcker hittades"
+    "pleaseLogin": "Vänligen logga in för att se din portfölj och profil.",
+    "loginRequired": "Inloggning krävs",
+    "noWalletsFound": "Inga plånböcker hittades",
+    "walletNotFound": "Ingen plånboksaktivitet hittades."
   }
 }

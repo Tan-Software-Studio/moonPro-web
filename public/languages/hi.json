@@ -71,28 +71,26 @@
       "auditrestooltip": "त्वरित सुरक्षा जांच: दिखाता है कि टोकन को फिर से मिंट किया जा सकता है, फ्रीज़ किया जा सकता है, या क्या टोकन के पास 10 धारक हैं।",
       "quickbuy": "त्वरित खरीद",
       "search": "टिकर या नाम से खोजें",
-"display": "प्रदर्शित करें"
-
+      "display": "प्रदर्शित करें"
     },
-    "display" : {
-  "MC_77K": "MC 77K",
-  "Small": "छोटा",
-  "Large": "बड़ा",
-  "HideSearchBar": "सर्च बार छुपाएं",
-  "CircleImage": "वृत्ताकार छवि",
-  "ProgressBarRing": "प्रगति रिंग",
-  "CustomizeRows": "पंक्तियाँ अनुकूलित करें",
-  "MarketCap": "बाजार पूंजी",
-  "Volume": "वॉल्यूम",
-  "Socials": "सोशल",
-  "Holders": "होल्डर्स",
-  "Top10Holders": "शीर्ष 10 होल्डर्स",
-    "progressBarLine": "प्रगति पट्टी रेखा",
-    "squareImage": "चौकोर छवि",
-    "showSearchBar": "खोज पट्टी दिखाएं",
-     "metrics": "मीट्रिक्स"
-}
-
+    "display": {
+      "MC_77K": "MC 77K",
+      "Small": "छोटा",
+      "Large": "बड़ा",
+      "HideSearchBar": "सर्च बार छुपाएं",
+      "CircleImage": "वृत्ताकार छवि",
+      "ProgressBarRing": "प्रगति रिंग",
+      "CustomizeRows": "पंक्तियाँ अनुकूलित करें",
+      "MarketCap": "बाजार पूंजी",
+      "Volume": "वॉल्यूम",
+      "Socials": "सोशल",
+      "Holders": "होल्डर्स",
+      "Top10Holders": "शीर्ष 10 होल्डर्स",
+      "progressBarLine": "प्रगति पट्टी रेखा",
+      "squareImage": "चौकोर छवि",
+      "showSearchBar": "खोज पट्टी दिखाएं",
+      "metrics": "मीट्रिक्स"
+    }
   },
   "recentcalls": {
     "mainHeader": {
@@ -220,7 +218,7 @@
       "status": "स्थिति",
       "statustool": "यह दर्शाता है कि क्या आप अपनी रेफ़रल बोनस प्राप्त करने के पात्र हैं।"
     },
-     "refMata": {
+    "refMata": {
       "nextLevel": "अगला स्तर:",
       "rewardsRate": "पॉइंट्स और SOL के लिए 2.5 गुना रिवॉर्ड दर",
       "silver": "रजत",
@@ -233,11 +231,11 @@
       "emailWallet": "ईमेल/वॉलेट",
       "dateJoined": "शामिल होने की तारीख",
       "noReferralsFound": "कोई रेफ़रल नहीं मिला।",
-       "tradeMessage": "आप लगभग पहुंच ही गए हैं! पहुंचने के लिए 20 SOL ट्रेड करें",
-         "noHistory": "आपका अभी तक कोई लेनदेन इतिहास नहीं है।",
-    "infoWillAppear": "जब लेनदेन उपलब्ध होगा, तो जानकारी यहां दिखाई देगी",
-    "noData": "कोई डेटा उपलब्ध नहीं है",
-    "adjustSearch": "अपने खोज शब्दों को समायोजित करने का प्रयास करें।"
+      "tradeMessage": "आप लगभग पहुंच ही गए हैं! पहुंचने के लिए 20 SOL ट्रेड करें",
+      "noHistory": "आपका अभी तक कोई लेनदेन इतिहास नहीं है।",
+      "infoWillAppear": "जब लेनदेन उपलब्ध होगा, तो जानकारी यहां दिखाई देगी",
+      "noData": "कोई डेटा उपलब्ध नहीं है",
+      "adjustSearch": "अपने खोज शब्दों को समायोजित करने का प्रयास करें।"
     }
   },
   "alphapicks": {
@@ -657,7 +655,7 @@
         }
       }
     },
-        "table2": {
+    "table2": {
       "trades": "व्यापार",
       "positions": "स्थिति",
       "holders": "धारक",
@@ -791,11 +789,11 @@
       "watchlist": "वॉचलिस्ट",
       "Cancel": "कैंसल करें",
       "Save": "सेव करें",
-          "token": "टोकन",
-    "marketCap": "बाजार पूंजीकरण",
-    "volume1h": "1H वॉल्यूम",
-    "liquidity": "तरलता",
-    "actions": "क्रियाएँ"
+      "token": "टोकन",
+      "marketCap": "बाजार पूंजीकरण",
+      "volume1h": "1H वॉल्यूम",
+      "liquidity": "तरलता",
+      "actions": "क्रियाएँ"
     }
   },
   "newProfile": {
@@ -822,28 +820,29 @@
   },
   "portfolio": {
     "Show": "पुरालेख दिखाएं",
-  "Import": "आयात करें",
-  "CreateWallet": "वॉलेट बनाएं",
-  "Balance": "शेष राशि",
-  "Holdings": "धारणाएं",
-  "Actions": "क्रियाएं",
-  "Wallet": "वॉलेट",
-  "activity": "गतिविधि",
-  "history": "इतिहास",
-  "top100": "शीर्ष 100",
-  "activePosition": "सक्रिय स्थिति",
-  "comingSoon": "जल्द आ रहा है..",
-  "availableBalance": "उपलब्ध शेष राशि",
-  "unrealizedPNL": "अवास्तविक लाभ/हानि",
-  "totalValue": "कुल मूल्य",
-  "pnlAnalysis": "लाभ/हानि विश्लेषण",
-  "balance": "शेष राशि",
-  "wallets": "वॉलेट्स",
-  "spots": "स्पॉट्स",
-  "perfomance": "प्रदर्शन",
-  "search": "पते, नाम या प्रतीक द्वारा खोजें",
-      "pleaseLogin": "कृपया अपना पोर्टफोलियो और प्रोफ़ाइल देखने के लिए लॉगिन करें।",
+    "Import": "आयात करें",
+    "CreateWallet": "वॉलेट बनाएं",
+    "Balance": "शेष राशि",
+    "Holdings": "धारणाएं",
+    "Actions": "क्रियाएं",
+    "Wallet": "वॉलेट",
+    "activity": "गतिविधि",
+    "history": "इतिहास",
+    "top100": "शीर्ष 100",
+    "activePosition": "सक्रिय स्थिति",
+    "comingSoon": "जल्द आ रहा है..",
+    "availableBalance": "उपलब्ध शेष राशि",
+    "unrealizedPNL": "अवास्तविक लाभ/हानि",
+    "totalValue": "कुल मूल्य",
+    "pnlAnalysis": "लाभ/हानि विश्लेषण",
+    "balance": "शेष राशि",
+    "wallets": "वॉलेट्स",
+    "spots": "स्पॉट्स",
+    "perfomance": "प्रदर्शन",
+    "search": "पते, नाम या प्रतीक द्वारा खोजें",
+    "pleaseLogin": "कृपया अपना पोर्टफोलियो और प्रोफ़ाइल देखने के लिए लॉगिन करें।",
     "loginRequired": "लॉगिन आवश्यक है",
-    "noWalletsFound": "कोई वॉलेट नहीं मिला"
+    "noWalletsFound": "कोई वॉलेट नहीं मिला",
+    "walletNotFound": "वॉलेट की कोई गतिविधि नहीं मिली।"
   }
 }
