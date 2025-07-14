@@ -63,7 +63,7 @@ const PortfolioForOtherWallet = ({ wallet }) => {
           dispatch(fetchPerformanceHistoryForAnotherWallet(wallet));
         })
         .catch((err) => {
-          router.replace("/portfolio");
+          router.replace("/404");
         });
     }
   }, []);
