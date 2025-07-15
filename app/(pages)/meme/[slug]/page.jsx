@@ -11,6 +11,7 @@ import {
   formatDecimal,
   capitalizeFirstLetter,
   formatNumber,
+  toNumber
 } from "@/utils/basicFunctions";
 import TokenDetails from "@/components/common/tradingview/TokenDetails";
 import UserPnL from "@/components/common/tradingview/UserPnL";
@@ -655,6 +656,7 @@ const Tradingview = ({ params }) => {
                 currentTokenPnLData={currentTokenPnLData}
                 isPnlUsdSolActive={isPnlUsdSolActive}
                 onClickPnlUsdActiveToggle={handleClickPnlUsdActive}
+                tokenLiquidity={toNumber(chartTokenData?.Liqudity || 0)}
               />
             </div>
           </div>

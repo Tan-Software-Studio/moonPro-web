@@ -25,6 +25,7 @@ import { FaTelegramPlane } from "react-icons/fa";
 import NoData from "../NoData/noData";
 import TrendingImage from "./TrendingImage";
 import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
+import { toNumber } from "@/utils/basicFunctions";
 
 const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
   const pathname = usePathname();
@@ -446,7 +447,8 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
                             name: row?.name,
                             symbol: row?.symbol,
                             img: row?.img || null,
-                          }
+                          },
+                          toNumber(row?.liquidity || 0)
                         )
                       }
                     >

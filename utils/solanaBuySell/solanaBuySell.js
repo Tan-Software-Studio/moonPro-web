@@ -151,7 +151,8 @@ const buySolanaTokensQuickBuyHandler = async (
   programAddress,
   dispatch,
   tokenPrice,
-  metaData
+  metaData,
+  tokenLiquidity
 ) => {
   e && e.stopPropagation();
   const token = localStorage.getItem("token");
@@ -160,6 +161,9 @@ const buySolanaTokensQuickBuyHandler = async (
   }
   if (amt <= 0) {
     return showToaster("Invalid amount");
+  }
+  if (tokenLiquidity < 1) {
+    return showToaster("Unavailable due to low liquidity.");
   }
   if (nativeTokenbalance < 0.005) {
     return showToaster("Minimum wallet balance is 0.005 SOL");

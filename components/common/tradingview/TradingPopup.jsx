@@ -49,6 +49,7 @@ const TradingPopup = ({
   currentTokenPnLData,
   isPnlUsdSolActive,
   onClickPnlUsdActiveToggle,
+  tokenLiquidity
 }) => {
   const [tokenBalance, setTokenBalance] = useState(0);
   const [loaderSwap, setLoaderSwap] = useState(false);
@@ -260,6 +261,9 @@ const TradingPopup = ({
   // buy handler
   async function buyHandler(instantTradePrice = null) {
     if (walletAddress) {
+      if (tokenLiquidity < 1) {
+        return showToaster("Unavailable due to low liquidity.");
+      }
       if (nativeTokenbalance < 0.005) {
         return showToaster("Minimum wallet balance is 0.005 SOL");
       }

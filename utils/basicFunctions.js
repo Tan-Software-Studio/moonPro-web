@@ -146,6 +146,25 @@ const formatNumber = (amount, addSign = true, addDollar = true) => {
     return str.length > length ? str.slice(0, length).trim() + '...' : str;
   }
 
+  function toNumber(value) {
+    if (typeof value === 'number') {
+      return !isNaN(value) ? value : 0;
+    }
+    if (typeof value === 'string') {
+      const lower = value.toLowerCase().trim();
+      let multiplier = 1;
+      if (lower.includes('b')) multiplier = 1_000_000_000;
+      else if (lower.includes('m')) multiplier = 1_000_000;
+      else if (lower.includes('k')) multiplier = 1_000;
+
+      const numberPart = lower.replace(/[^0-9.]/g, '');
+      const parsed = Number(numberPart);
+      const finalNumber = !isNaN(parsed) ? parsed * multiplier : 0;
+      return finalNumber;
+    }
+    return 0;
+  }
+
 export {
   humanReadableFormat,
   decimalConvert,
@@ -156,5 +175,6 @@ export {
   numberFormated,
   capitalizeFirstLetter,
   formatNumber,
-  shortenText
+  shortenText,
+  toNumber
 };
