@@ -74,6 +74,76 @@ export const fetchTradesData = createAsyncThunk(
     }
   }
 );
+export const fetchRemovedLiquidity = createAsyncThunk(
+  "fetchRemovedLiquidity",
+  async (tokenCA) => {
+    try {
+      const response = await axios.post(
+        "https://streaming.bitquery.io/eap",
+        {
+          query: `query removeLiq($token: String){
+  Solana {
+    DEXPools(
+      where: {Instruction: {Program: {Method: {is: "decreaseLiquidity"}}, Accounts: {includes: {Token: {Mint: {is: $token}}}}}}
+      orderBy: {descending: Block_Time}
+      limit: {count: 10}
+    ) {
+      Block {
+        Time
+      }
+      Pool {
+        Market {
+          MarketAddress
+          BaseCurrency {
+            MintAddress
+            Symbol
+            Name
+          }
+          QuoteCurrency {
+            MintAddress
+            Symbol
+            Name
+          }
+        }
+        Dex {
+          ProtocolFamily
+          ProtocolName
+          ProgramAddress
+        }
+        Base {
+          ChangeAmount
+          PostAmount
+        }
+        Quote {
+          ChangeAmount
+          PostAmount
+          PriceInUSD
+          PostAmountInUSD
+        }
+      }
+      Transaction {
+        Signature
+      }
+    }
+  }
+}`,
+          variables: { token: tokenCA },
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_STREAM_BITQUERY_API}`,
+          },
+        }
+      );
+      return response?.data?.data?.Solana?.DEXPools || [];
+    } catch (error) {
+      console.error("🚀 ~ fetchRemovedLiquidity error:", error?.message);
+      return []; // Return empty array on error to keep state predictable
+    }
+  }
+);
+
 export const fetchChartAllData = createAsyncThunk(
   "fetchChartAllData",
   async ({ tokenaddress, pairAddress, setDataLoaderForChart }) => {
@@ -101,6 +171,7 @@ const allCharTokenData = createSlice({
     tradesForWalletTracking: [],
     chartData: {},
     activeChartToken: {},
+    removedLiquidity: [],
   },
   reducers: {
     resetChartDataState: (state, action) => {
@@ -149,6 +220,13 @@ const allCharTokenData = createSlice({
     resetChartTokenState: (state, action) => {
       state.latestTrades = [];
     },
+    addRemovedLiquidity: (state, { payload }) => {
+      state.removedLiquidity.unshift(...payload);
+      state.removedLiquidity = state.removedLiquidity.slice(0, 50);
+    },
+    resetRemovedLiquidity: (state) => {
+      state.removedLiquidity = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -167,6 +245,9 @@ const allCharTokenData = createSlice({
             pairAddress: payload?.pairaddress || null,
           };
         }
+      })
+      .addCase(fetchRemovedLiquidity.fulfilled, (state, { payload }) => {
+        state.removedLiquidity = payload;
       });
   },
 });
@@ -176,5 +257,7 @@ export const {
   resetChartTokenState,
   resetChartDataState,
   setActiveChartToken,
+  addRemovedLiquidity,
+  resetRemovedLiquidity, 
 } = allCharTokenData.actions;
 export default allCharTokenData.reducer;

@@ -16,6 +16,7 @@ import CircularProgressChart from "../common/HolderTableChart/CircularProgressCh
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchTradesData,
+  fetchRemovedLiquidity,
   resetChartDataState,
   setActiveChartToken,
 } from "@/app/redux/chartDataSlice/chartData.slice.js";
@@ -49,7 +50,7 @@ const Table = ({
   const { t } = useTranslation();
   const tragindViewPagePage = t("tragindViewPage");
   const dispatch = useDispatch();
-  const latestTradesData = useSelector((state) => state.allCharTokenData);
+  const { latestTrades, removedLiquidity } = useSelector((state) => state.allCharTokenData);
   const [loader, setLoader] = useState(false);
   const [devTokensData, setDevTokensData] = useState([]);
   const [topHoldingData, setTopHoldingData] = useState([]);
@@ -65,11 +66,19 @@ const Table = ({
   const [descTimeActive, setdescTimeActive] = useState(true);
   const [migratedPercent, setMigratedPercent] = useState(0);
   const [currentTokenAddress, setCurrentTokenAddress] = useState(null);
+  const [tradesData, setTradesData] = useState([]);
   const router = useRouter();
 
   const solanaLivePrice = useSelector(
     (state) => state?.AllStatesData?.solanaLivePrice
   );
+
+  useEffect(() => {
+    const combined = [...latestTrades, ...removedLiquidity];
+    combined.sort((a, b) => new Date(b.Block.Time) - new Date(a.Block.Time));
+    const latest50 = combined.slice(0, 50);
+    setTradesData(latest50)
+  }, [latestTrades, removedLiquidity]);
 
   useEffect(() => {
     if (tokenCA !== currentTokenAddress) {
@@ -347,7 +356,7 @@ const Table = ({
     const currentTime = date.toISOString();
     // Try to find the most recent trade time
     const mostRecentDate =
-      latestTradesData?.latestTrades?.reduce((latest, trade) => {
+      latestTrades?.reduce((latest, trade) => {
         const time = new Date(trade?.Block?.Time);
         return !isNaN(time) && (!latest || time > latest) ? time : latest;
       }, null) || new Date(currentTime); // fallback to current time if no valid trades
@@ -871,6 +880,7 @@ const Table = ({
   useEffect(() => {
     dispatch(resetChartDataState());
     dispatch(fetchTradesData(tokenCA));
+    dispatch(fetchRemovedLiquidity(tokenCA));
     if (tokenSupply === undefined) {
       setMarketCapActive(false);
     }
@@ -888,7 +898,7 @@ const Table = ({
     <>
       <div
         className={`${
-          latestTradesData?.latestTrades?.length > 0 ? "" : ""
+          latestTrades?.length > 0 ? "" : ""
         } relative bg-[#141414] md:h-auto h-svh  w-full overflow-hidden`}
       >
         {/* table header */}
@@ -906,7 +916,7 @@ const Table = ({
         <div
           className={`onest ${
             (activeTab === "Transactions" &&
-              latestTradesData?.latestTrades?.length > 0) ||
+              latestTrades?.length > 0) ||
             topTraderData?.length > 0 ||
             topHoldingData?.BalanceUpdates?.length > 0
               ? "visibleScroll"
@@ -915,7 +925,7 @@ const Table = ({
         >
           <div>
             {activeTab === "Trades" &&
-            latestTradesData?.latestTrades?.length > 0 ? (
+            tradesData.length > 0 ? (
               <div className="lg:h-[85vh] h-svh overflow-y-scroll visibleScroll">
                 <table className="min-w-[100%] table-auto overflow-y-scroll">
                   <thead className="bg-[#08080E] sticky top-0">
@@ -948,7 +958,7 @@ const Table = ({
                     </tr>
                   </thead>
                   <tbody className="bg-transparent">
-                    {[...latestTradesData?.latestTrades]
+                    {[...tradesData]
                       ?.sort((a, b) => {
                         if (!a?.Block?.Time || !b?.Block?.Time) return 0;
                         const aTime = new Date(a.Block.Time).getTime();
@@ -993,69 +1003,118 @@ const Table = ({
                             key={index}
                             className={`capitalize bg-[#08080E] text-[#F6F6F6] font-normal text-xs leading-4 onest border-b border-[#404040]`}
                           >
-                            <td className="text-center px-6 py-4">
-                              {readableTime}
-                            </td>
-                            <td className="flex items-center justify-center">
-                              <div
-                                className={`min-w-8 rounded px-3 py-1.5 text-center ${
-                                  isBuy ? "text-[#21CB6B]" : "text-[#ed1b26]"
-                                }`}
-                              >
-                                {data?.Trade?.Side?.Type || ""}
-                              </div>
-                            </td>
-                            <td className="text-center px-6 py-4">
-                              {data?.Trade?.PriceInUSD
-                                ? showPrice >= 1 || showPrice <= -1
-                                  ? "$" +
-                                    humanReadableFormatWithNoDollar(
-                                      showPrice,
-                                      2
+                            {data?.Trade ? 
+                              <>
+                              <td className="text-center px-6 py-4">
+                                {readableTime}
+                              </td>
+                              <td className="flex items-center justify-center">
+                                <div
+                                  className={`min-w-8 rounded px-3 py-1.5 text-center ${
+                                    isBuy ? "text-[#21CB6B]" : "text-[#ed1b26]"
+                                  }`}
+                                >
+                                  {data?.Trade?.Side?.Type || ""}
+                                </div>
+                              </td>
+                              <td className="text-center px-6 py-4">
+                                {data?.Trade?.PriceInUSD
+                                  ? showPrice >= 1 || showPrice <= -1
+                                    ? "$" +
+                                      humanReadableFormatWithNoDollar(
+                                        showPrice,
+                                        2
+                                      )
+                                    : "$" + formatDecimal(showPrice, 1)
+                                  : "N/A"}
+                              </td>
+                              <td className="text-center px-6 py-4">
+                                {data?.Trade?.Amount
+                                  ? humanReadableFormatWithOutUsd(
+                                      data.Trade.Amount
                                     )
-                                  : "$" + formatDecimal(showPrice, 1)
-                                : "N/A"}
-                            </td>
-                            <td className="text-center px-6 py-4">
-                              {data?.Trade?.Amount
-                                ? humanReadableFormatWithOutUsd(
-                                    data.Trade.Amount
-                                  )
-                                : "N/A"}
-                            </td>
-                            <td
-                              className={`text-center px-6 py-4 
-                            ${isBuy ? "text-[#21CB6B]" : "text-[#ed1b26]"}`}
-                            >
-                              <div className="flex items-center justify-center gap-1">
-                                {!totalUsdActive && (
-                                  <Image
-                                    src={solana}
-                                    width={15}
-                                    height={15}
-                                    alt="solana"
-                                  />
-                                )}
-                                <p>
-                                  {(totalUsdActive ? "$" : "") +
-                                    readableTotalPrice}
-                                </p>
-                              </div>
-                            </td>
-                            <td className="flex items-center justify-center px-6 py-4 text-white text-center gap-2">
-                              {data?.Transaction?.Signer
-                                ? `${data?.Transaction?.Signer.slice(
-                                    0,
-                                    3
-                                  )}...${data?.Transaction?.Signer.slice(-3)}`
-                                : "N/A"}
-                              <a
-                                href={`https://solscan.io/tx/${data?.Transaction?.Signature}`}
-                                target="_blank"
+                                  : "N/A"}
+                              </td>
+                              <td
+                                className={`text-center px-6 py-4 
+                              ${isBuy ? "text-[#21CB6B]" : "text-[#ed1b26]"}`}
                               >
-                                <CiShare1 className="text-[18px]" />
-                              </a>
-                            </td>
+                                <div className="flex items-center justify-center gap-1">
+                                  {!totalUsdActive && (
+                                    <Image
+                                      src={solana}
+                                      width={15}
+                                      height={15}
+                                      alt="solana"
+                                    />
+                                  )}
+                                  <p>
+                                    {(totalUsdActive ? "$" : "") +
+                                      readableTotalPrice}
+                                  </p>
+                                </div>
+                              </td>
+                              <td className="flex items-center justify-center px-6 py-4 text-white text-center gap-2">
+                                {data?.Transaction?.Signer
+                                  ? `${data?.Transaction?.Signer.slice(
+                                      0,
+                                      3
+                                    )}...${data?.Transaction?.Signer.slice(-3)}`
+                                  : "N/A"}
+                                <a
+                                  href={`https://solscan.io/tx/${data?.Transaction?.Signature}`}
+                                  target="_blank"
+                                >
+                                  <CiShare1 className="text-[18px]" />
+                                </a>
+                              </td>
+                            </>
+                            :
+                            (data?.Pool && 
+                              <>
+                                <td className="text-center px-6 py-4">
+                                  {readableTime}
+                                </td>
+                                <td className="flex items-center justify-center">
+                                  <div
+                                    className={`min-w-8 rounded px-3 py-1.5 text-center text-[#ed1b26] italic`}
+                                  >
+                                    Remove
+                                  </div>
+                                </td>
+                                <td className="text-center px-6 py-4">
+                                  -
+                                </td>
+                                <td className="text-center px-6 py-4">
+                                  -
+                                </td>
+                                <td
+                                  className={`text-center px-6 py-4 "text-[#ed1b26]"}`}
+                                >
+                                  <div className="flex items-center justify-center gap-1">
+                                    {!totalUsdActive && (
+                                      <Image
+                                        src={solana}
+                                        width={15}
+                                        height={15}
+                                        alt="solana"
+                                      />
+                                    )}
+                                    <p>
+                                      {(totalUsdActive ? `${formatNumber(Math.abs(data?.Pool?.Base?.ChangeAmount), false, false)}` : `${formatNumber(Math.abs(data?.Pool?.Quote?.ChangeAmount), false, false)}`)}
+                                    </p>
+                                  </div>
+                                </td>
+                                <td className="flex items-center justify-center px-6 py-4 text-white text-center gap-2">
+                                  <a
+                                    href={`https://solscan.io/tx/${data?.Transaction?.Signature}`}
+                                    target="_blank"
+                                  >
+                                    <CiShare1 className="text-[18px]" />
+                                  </a>
+                                </td>
+                              </>
+                            )} 
                           </tr>
                         );
                       })}
