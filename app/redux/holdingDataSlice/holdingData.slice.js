@@ -176,13 +176,14 @@ const holdingData = createSlice({
         const tokenQty = +(payload?.amountInDollar / payload?.price).toFixed(
           10
         );
+        const recQty = payload?.recQty || tokenQty;
         if (state?.PnlData?.length > 0) {
           const findTokenIndex = state?.PnlData?.findIndex(
             (item) => item?.token == payload?.token
           );
           if (findTokenIndex >= 0) {
             state.PnlData[findTokenIndex]?.lots?.push({
-              qty: tokenQty,
+              qty: recQty,
               price: payload?.price,
               solPrice: payload?.solPrice,
             });
@@ -201,8 +202,8 @@ const holdingData = createSlice({
               ).toFixed(10)
             );
             state.PnlData[findTokenIndex].averageSolBuyPrice = averageSolPrice;
-            state.PnlData[findTokenIndex].totalBoughtQty += tokenQty;
-            state.PnlData[findTokenIndex].activeQtyHeld += tokenQty;
+            state.PnlData[findTokenIndex].totalBoughtQty += recQty;
+            state.PnlData[findTokenIndex].activeQtyHeld += recQty;
             state.PnlData[findTokenIndex].totalBuyAmount = Number(
               weightedBuyAmount.toFixed(10)
             );
@@ -215,23 +216,23 @@ const holdingData = createSlice({
               token: payload?.token,
               lots: [
                 {
-                  qty: tokenQty,
+                  qty: recQty,
                   price: payload?.price,
                   solPrice: payload?.solPrice,
                 },
               ],
               realizedProfit: 0,
-              activeQtyHeld: tokenQty,
-              totalBoughtQty: tokenQty,
+              activeQtyHeld: recQty,
+              totalBoughtQty: recQty,
               quantitySold: 0,
-              totalBuyAmount: tokenQty,
+              totalBuyAmount: recQty,
               averageBuyPrice: payload?.price,
               averageHistoricalSellPrice: 0,
               current_price: payload?.price,
               name: payload?.name,
               symbol: payload?.symbol,
               img: payload?.img,
-              chainBalance: tokenQty,
+              chainBalance: recQty,
               averageSolBuyPrice: payload?.solPrice,
               averageSolSellPrice: 0,
             });
@@ -241,23 +242,23 @@ const holdingData = createSlice({
             token: payload?.token,
             lots: [
               {
-                qty: tokenQty,
+                qty: recQty,
                 price: payload?.price,
                 solPrice: payload?.solPrice,
               },
             ],
             realizedProfit: 0,
-            activeQtyHeld: tokenQty,
-            totalBoughtQty: tokenQty,
+            activeQtyHeld: recQty,
+            totalBoughtQty: recQty,
             quantitySold: 0,
-            totalBuyAmount: tokenQty,
+            totalBuyAmount: recQty,
             averageBuyPrice: payload?.price,
             averageHistoricalSellPrice: 0,
             current_price: payload?.price,
             name: payload?.name,
             symbol: payload?.symbol,
             img: payload?.img,
-            chainBalance: tokenQty,
+            chainBalance: recQty,
             averageSolBuyPrice: payload?.solPrice,
             averageSolSellPrice: 0,
           });
