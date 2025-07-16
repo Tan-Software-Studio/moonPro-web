@@ -25,7 +25,7 @@ import { FaTelegramPlane } from "react-icons/fa";
 import NoData from "../NoData/noData";
 import TrendingImage from "./TrendingImage";
 import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
-import { toNumber } from "@/utils/basicFunctions";
+import { formatNumber, toNumber } from "@/utils/basicFunctions";
 
 const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
   const pathname = usePathname();
@@ -270,7 +270,7 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
                   {/* Column 3: Liquidity */}
                   <td className="whitespace-nowrap w-32 py-2 md:px-6 px-3">
                     <span className="text-white text-[15px] font-medium">
-                      {humanReadableFormat(row?.liquidity || 0)}
+                      {formatNumber(row?.liquidity || 0, false, true)}
                     </span>
                   </td>
 
@@ -449,7 +449,7 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
                             img: row?.img || null,
                             decimal: row?.decimals,
                           },
-                          toNumber(row?.liquidity || 0)
+                          row?.liquidity || 0
                         )
                       }
                     >

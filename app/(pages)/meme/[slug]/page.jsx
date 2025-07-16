@@ -300,7 +300,7 @@ const Tradingview = ({ params }) => {
     },
     {
       label: capitalizeFirstLetter(tragindViewPage?.right?.tokeninfo?.liq),
-      price: chartTokenData?.Liqudity || 0,
+      price: formatNumber(chartTokenData?.rawLiquidity || 0, false, true),
     },
     {
       label: capitalizeFirstLetter(tragindViewPage?.right?.tokeninfo?.supply),
@@ -656,7 +656,7 @@ const Tradingview = ({ params }) => {
                 currentTokenPnLData={currentTokenPnLData}
                 isPnlUsdSolActive={isPnlUsdSolActive}
                 onClickPnlUsdActiveToggle={handleClickPnlUsdActive}
-                tokenLiquidity={toNumber(chartTokenData?.Liqudity || 0)}
+                tokenLiquidity={chartTokenData?.rawLiquidity || 0}
               />
             </div>
           </div>
