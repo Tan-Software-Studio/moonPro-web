@@ -81,7 +81,7 @@ const buySolanaTokens = async (
       price: Number(solanaLivePrice),
       tokenPrice: Number(tokenPrice),
       programAddress: programAddress,
-      metaData: metaData || null,
+      metaData: metaData || {},
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -97,6 +97,7 @@ const buySolanaTokens = async (
           token: toToken,
           type: "buy",
           amountInDollar: Number(Number(amt) * solanaLivePrice),
+          recQty: res?.data?.data?.transaction?.recQty || null,
           price: Number(tokenPrice),
           name: metaData?.name,
           symbol: metaData?.symbol,
@@ -215,7 +216,7 @@ const buySolanaTokensQuickBuyHandler = async (
       price: Number(solanaLivePrice),
       programAddress: programAddress,
       tokenPrice: tokenPrice,
-      metaData: metaData || null,
+      metaData: metaData || {},
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -231,6 +232,7 @@ const buySolanaTokensQuickBuyHandler = async (
           token: toToken,
           type: "buy",
           amountInDollar: Number(Number(amt) * solanaLivePrice),
+          recQty: res?.data?.data?.transaction?.recQty || null,
           price: Number(tokenPrice),
           name: metaData?.name,
           symbol: metaData?.symbol,

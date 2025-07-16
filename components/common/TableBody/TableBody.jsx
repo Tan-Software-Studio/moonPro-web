@@ -447,6 +447,7 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
                             name: row?.name,
                             symbol: row?.symbol,
                             img: row?.img || null,
+                            decimal: row?.decimals,
                           },
                           toNumber(row?.liquidity || 0)
                         )

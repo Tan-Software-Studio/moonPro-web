@@ -412,6 +412,7 @@ const MscopePumpTable = ({
                                         name: block?.name,
                                         symbol: block?.symbol,
                                         img: block?.img || null,
+                                        decimal: block?.decimals,
                                       }
                                     );
                                   }}
