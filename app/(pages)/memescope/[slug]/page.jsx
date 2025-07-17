@@ -497,6 +497,7 @@ const Memescope = () => {
                 dynamicImg={false}
                 url={`${BASE_URL_MOON_STREAM}newpump`}
                 tableName="newLaunch"
+                skipLiqCheck={true}
               />
             </div>
           </div>

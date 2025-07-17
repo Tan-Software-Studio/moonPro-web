@@ -53,6 +53,7 @@ const MscopePumpTable = ({
   isChartHide,
   dynamicImg,
   url,
+  skipLiqCheck = false,
 }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoverRow, sethoverRow] = useState(false);
@@ -414,7 +415,7 @@ const MscopePumpTable = ({
                                         img: block?.img || null,
                                         decimal: block?.decimals,
                                       },
-                                      block?.liquidity || 0
+                                      (skipLiqCheck ? 10 : (block?.liquidity ?? 0))
                                     );
                                   }}
                                 >
