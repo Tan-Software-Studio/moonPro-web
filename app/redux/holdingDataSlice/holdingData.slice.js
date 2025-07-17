@@ -471,8 +471,8 @@ const holdingData = createSlice({
       const findTokenIndex = state?.PnlData?.findIndex(
         (item) => item?.token == payload?.token
       );
-      if (findTokenIndex > 0) {
-        state.PnlData[findTokenIndex].chainBalance += payload?.balance;
+      if (findTokenIndex >= 0) {
+        state.PnlData[findTokenIndex].chainBalance = payload?.balance;
       }
     },
     resetPnlDataState: (state) => {
