@@ -414,7 +414,7 @@ const MscopePumpTable = ({
                                         img: block?.img || null,
                                         decimal: block?.decimals,
                                       },
-                                      block?.liquidity 
+                                      block?.liquidity || 0
                                     );
                                   }}
                                 >
