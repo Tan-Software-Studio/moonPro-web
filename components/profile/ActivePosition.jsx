@@ -158,11 +158,14 @@ const ActivePosition = ({
                       <p className="font-semibold  text-emerald-500 ">
                         $
                         {Number(
-                          item?.activeQtyHeld * item?.averageBuyPrice
+                          (item?.chainBalance + item?.quantitySold) *
+                            item?.averageBuyPrice
                         ).toFixed(2)}
                       </p>
                       <p className="text-slate-400 text-xs ">
-                        {Number(item?.activeQtyHeld).toFixed(2)}{" "}
+                        {Number(
+                          item?.chainBalance + item?.quantitySold
+                        ).toFixed(2)}{" "}
                         {item?.symbol?.length > 5
                           ? item?.symbol.slice(0, 5) + "..."
                           : item?.symbol}
@@ -190,12 +193,18 @@ const ActivePosition = ({
                       <p className="font-semibold text-white">
                         $
                         {(
-                          (item?.activeQtyHeld - item?.quantitySold) *
+                          (item?.chainBalance +
+                            item?.quantitySold -
+                            item?.quantitySold) *
                           item?.current_price
                         ).toFixed(2)}
                       </p>
                       <p className="text-slate-400 text-xs  ">
-                        {(item?.activeQtyHeld - item?.quantitySold).toFixed(2)}{" "}
+                        {(
+                          item?.chainBalance +
+                          item?.quantitySold -
+                          item?.quantitySold
+                        ).toFixed(2)}{" "}
                         {item?.symbol?.length > 5
                           ? item?.symbol.slice(0, 5) + "..."
                           : item?.symbol}
