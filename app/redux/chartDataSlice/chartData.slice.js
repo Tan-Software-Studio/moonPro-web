@@ -181,7 +181,7 @@ const allCharTokenData = createSlice({
       state.activeChartToken = {
         symbol: payload?.symbol,
         img: payload?.img,
-        pairAddress: payload?.pairAddres || null,
+        pairAddress: payload?.pairAddress || null,
       };
     },
     addNewTransaction: (state, { payload }) => {

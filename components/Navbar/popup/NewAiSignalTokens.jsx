@@ -28,7 +28,7 @@ const NewAiSignalTokens = () => {
   };
 
   const navigateToChartScreen = (item, index) => {
-    dispatch(setActiveChartToken({ symbol: item?.symbol, img: item?.img }));
+    dispatch(setActiveChartToken({ symbol: item?.symbol, pairAddress: item?.pairAddress, img: item?.img }));
     router.push(`/meme/${item?.address}`);
     localStorage.setItem("chartTokenAddress", item?.address);
     setIsOpen(false);

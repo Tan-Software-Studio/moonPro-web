@@ -19,6 +19,7 @@ import Link from "next/link";
 // import { IoSearchSharp } from "react-icons/io5";
 import { FaXTwitter } from "react-icons/fa6";
 import { setActiveChartToken } from "@/app/redux/chartDataSlice/chartData.slice";
+import { formatNumber } from "@/utils/basicFunctions";
 // import { humanReadableFormat } from "@/utils/basicFunctions";
 
 const SearchResultData = ({ searchResult, searchLoader }) => {
@@ -55,19 +56,6 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
     }, 3000);
   };
 
-  function formatNumber(num) {
-    if (num >= 1e12) {
-      return (num / 1e12).toFixed(2) + "T"; // Trillions
-    } else if (num >= 1e9) {
-      return (num / 1e9).toFixed(2) + "B"; // Billions
-    } else if (num >= 1e6) {
-      return (num / 1e6).toFixed(2) + "M"; // Millions
-    } else if (num >= 1e3) {
-      return (num / 1e3).toFixed(2) + "K"; // Thousands
-    } else {
-      return num.toString(); // Less than a thousand
-    }
-  }
   function getDaysDiff(isoString) {
     const inputDate = new Date(isoString);
     const today = new Date();
@@ -87,7 +75,7 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
       setActiveChartToken({
         symbol: e?.Trade?.Currency?.Symbol,
         img: e?.img || e?.dexImg,
-        pairAddress: e?.Trade?.Market?.MarketAddress,
+        pairAddress: e?.Trade?.Market?.MarketAddress || e?.liquidity?.Pool?.Market?.MarketAddress,
       })
     );
     dispatch(setIsSearchPopup(false));
@@ -268,14 +256,14 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                             Mkt Cap:
                           </span>
                           <span className="text-sm font-semibold text-[#FFFFFF">
-                            {` $ ${formatNumber(parseInt(MarketCap)) || null}`}
+                            {` ${formatNumber(parseFloat(MarketCap), false, true) || null}`}
                           </span>
                         </div>
                         <div className="lg:flex hidden gap-1 items-center justify-center">
                           <span className="text-[#B2B2B7] text-xs">Liq: </span>
                           <span className="text-sm font-semibold text-[#FFFFFF]">
-                            {` $ ${
-                              formatNumber(parseInt(e?.liquidityUSD || 0)) || null
+                            {` ${
+                              formatNumber(parseFloat(e?.liquidityUSD || 0), false, true) || null
                             }`}
                           </span>
                         </div>
@@ -284,8 +272,8 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                             24h Vol:{" "}
                           </span>
                           <span className="text-sm font-semibold text-[#FFFFFF]">
-                            {` $ ${
-                              formatNumber(parseInt(e?.traded_volume_total)) ||
+                            {` ${
+                              formatNumber(parseFloat(e?.traded_volume_total), false, true) ||
                               null
                             }`}
                           </span>
@@ -302,14 +290,14 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                             Mkt Cap:
                           </span>
                           <span className="text-sm text-[#D5D5DA] ml-1">
-                            {` $ ${formatNumber(parseInt(MarketCap)) || null}`}
+                            {` ${formatNumber(parseInt(MarketCap), false, true) || null}`}
                           </span>
                         </div>
                         <div className="flex flex-1 items-center justify-center border border-gray-700 rounded h-6 px-[0.375rem]">
                           <span className="text-[#B2B2B7] text-xs">Liq: </span>
                           <span className="text-sm text-[#D5D5DA] ml-1">
-                            {` $ ${
-                              formatNumber(parseInt(e?.liquidityUSD || 0)) || null
+                            {` ${
+                              formatNumber(parseInt(e?.liquidityUSD || 0), false, true) || null
                             }`}
                           </span>
                         </div>
@@ -320,8 +308,8 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                             24h Vol:{" "}
                           </span>
                           <span className="text-sm text-[#D5D5DA] ml-1">
-                            {` $ ${
-                              formatNumber(parseInt(e?.traded_volume_total)) ||
+                            {` ${
+                              formatNumber(parseInt(e?.traded_volume_total), false, true) ||
                               null
                             }`}
                           </span>

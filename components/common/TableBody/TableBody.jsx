@@ -67,7 +67,7 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
   //   chainName !== "Solana" ? Array(9).fill(null) : Array(8).fill(null);
   const SkeletonInnerData = Array(isTimeCreated ? 8 : 7).fill(null);
   async function navigateToChartScreen(row) {
-    dispatch(setActiveChartToken({ symbol: row?.symbol, img: row?.img }));
+    dispatch(setActiveChartToken({ symbol: row?.symbol, pairAddress: row?.pairAddress, img: row?.img }));
     router.push(`/meme/${row?.address}`);
     localStorage.setItem("silectChainName", getNetwork);
   }

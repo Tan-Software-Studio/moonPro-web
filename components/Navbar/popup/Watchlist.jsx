@@ -102,7 +102,7 @@ const Watchlist = ({ setIsWatchlistPopup }) => {
   };
 
   const navigateToChartSreen = (item) => {
-    dispatch(setActiveChartToken({ symbol: item?.symbol, item: item?.img }));
+    dispatch(setActiveChartToken({ symbol: item?.symbol, pairAddress: item?.pairaddress, item: item?.img }));
     router.push(`/meme/${item?.tokenAddress}`);
     setIsWatchlistPopup(false);
     localStorage.setItem("chartTokenImg", item?.img);

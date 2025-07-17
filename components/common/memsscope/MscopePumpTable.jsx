@@ -147,7 +147,7 @@ const MscopePumpTable = ({
 
   const [copied, setCopied] = useState(false);
   function navigateToChartSreen(block) {
-    dispatch(setActiveChartToken({ symbol: block?.symbol, img: block?.img }));
+    dispatch(setActiveChartToken({ symbol: block?.symbol, pairAddress: block?.pair_address, img: block?.img }));
   }
 
   const SkeletonData = Array(8).fill(null);
