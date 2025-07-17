@@ -204,6 +204,7 @@ const holdingData = createSlice({
             state.PnlData[findTokenIndex].averageSolBuyPrice = averageSolPrice;
             state.PnlData[findTokenIndex].totalBoughtQty += recQty;
             state.PnlData[findTokenIndex].activeQtyHeld += recQty;
+            state.PnlData[findTokenIndex].chainBalance += recQty;
             state.PnlData[findTokenIndex].totalBuyAmount = Number(
               weightedBuyAmount.toFixed(10)
             );
@@ -466,6 +467,14 @@ const holdingData = createSlice({
       //   console.log("🚀 ~ state:", JSON.parse(JSON.stringify(state.PnlData)))
       // );
     },
+    updateChainBalance: (state, { payload }) => {
+      const findTokenIndex = state?.PnlData?.findIndex(
+        (item) => item?.token == payload?.token
+      );
+      if (findTokenIndex >= 0) {
+        state.PnlData[findTokenIndex].chainBalance = payload?.balance;
+      }
+    },
     resetPnlDataState: (state) => {
       state.initialLoading = false;
       state.isDataLoaded = false;
@@ -574,6 +583,7 @@ export const {
   setPnlData,
   updatePnlDataPriceOnly,
   updatePnlTableData,
+  updateChainBalance,
   resetPnlDataState,
   updateHoldingsDataWhileBuySell,
   updatePercentageCountData,

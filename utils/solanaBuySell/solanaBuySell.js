@@ -10,6 +10,7 @@ import { addMark } from "@/utils/tradingViewChartServices/mark";
 import { getLatestBarTime } from "../tradingViewChartServices/latestBarTime";
 import {
   setBuyAndSellCountInPerformance,
+  updateChainBalance,
   updateHoldingsDataWhileBuySell,
 } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import { showToaster } from "../toaster/toaster.style";
@@ -127,7 +128,15 @@ const buySolanaTokens = async (
             address,
             toToken
           );
-          setTokenBalance(tokenBalanceUpdate);
+          if (tokenBalanceUpdate > 0) {
+            dispatch(
+              updateChainBalance({
+                token: toToken,
+                balance: tokenBalanceUpdate,
+              })
+            );
+            setTokenBalance(tokenBalanceUpdate);
+          }
         }, 5000);
       }
     })
@@ -241,6 +250,22 @@ const buySolanaTokensQuickBuyHandler = async (
         })
       );
       dispatch(setBuyAndSellCountInPerformance("buy"));
+      if (address) {
+        setTimeout(async () => {
+          const tokenBalanceUpdate = await getSoalanaTokenBalance(
+            address,
+            toToken
+          );
+          if (tokenBalanceUpdate > 0) {
+            dispatch(
+              updateChainBalance({
+                token: toToken,
+                balance: tokenBalanceUpdate,
+              })
+            );
+          }
+        }, 5000);
+      }
     })
     .catch(async (err) => {
       await toast.error("Somthing went wrong please try again later.", {
