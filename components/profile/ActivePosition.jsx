@@ -158,14 +158,14 @@ const ActivePosition = ({
                       <p className="font-semibold  text-emerald-500 ">
                         $
                         {Number(
-                          item?.chainBalance * item?.averageBuyPrice
+                          item?.activeQtyHeld * item?.averageBuyPrice
                         ).toFixed(2)}
                       </p>
                       <p className="text-slate-400 text-xs ">
-                        {Number(item.chainBalance).toFixed(2)}{" "}
+                        {Number(item?.activeQtyHeld).toFixed(2)}{" "}
                         {item?.symbol?.length > 5
-                          ? item.symbol.slice(0, 5) + "..."
-                          : item.symbol}
+                          ? item?.symbol.slice(0, 5) + "..."
+                          : item?.symbol}
                       </p>
                     </td>
 
@@ -178,10 +178,10 @@ const ActivePosition = ({
                         ).toFixed(2)}
                       </p>
                       <p className="text-slate-400 text-xs ">
-                        {Number(item.quantitySold).toFixed(2)}{" "}
+                        {Number(item?.quantitySold).toFixed(2)}{" "}
                         {item?.symbol?.length > 5
-                          ? item.symbol.slice(0, 5) + "..."
-                          : item.symbol}
+                          ? item?.symbol.slice(0, 5) + "..."
+                          : item?.symbol}
                       </p>
                     </td>
 
@@ -190,15 +190,15 @@ const ActivePosition = ({
                       <p className="font-semibold text-white">
                         $
                         {(
-                          (item.chainBalance - item.quantitySold) *
+                          (item?.activeQtyHeld - item?.quantitySold) *
                           item?.current_price
                         ).toFixed(2)}
                       </p>
                       <p className="text-slate-400 text-xs  ">
-                        {(item.chainBalance - item.quantitySold).toFixed(2)}{" "}
+                        {(item?.activeQtyHeld - item?.quantitySold).toFixed(2)}{" "}
                         {item?.symbol?.length > 5
-                          ? item.symbol.slice(0, 5) + "..."
-                          : item.symbol}
+                          ? item?.symbol.slice(0, 5) + "..."
+                          : item?.symbol}
                       </p>
                     </td>
 
