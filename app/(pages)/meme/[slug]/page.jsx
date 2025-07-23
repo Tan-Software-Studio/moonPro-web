@@ -41,6 +41,7 @@ const Tradingview = ({ params }) => {
   const [activeTab, setActiveTab] = useState("buy");
   const [isSharePnLModalActive, setIsSharePnLModalActive] = useState(false);
   const [dataLoaderForChart, setDataLoaderForChart] = useState(false);
+  const hasDispatched = useRef(false);
   const latestTradesData = useSelector((state) => state?.allCharTokenData);
   const decimalFindInArray = latestTradesData?.latestTrades?.find(
     (item) => item?.Trade?.Currency?.Decimals
@@ -487,7 +488,8 @@ const Tradingview = ({ params }) => {
   ];
   // Token Chart Data (Right Side)
   useEffect(() => {
-    if (tokenaddress) {
+    if (!hasDispatched.current && tokenaddress) {
+      hasDispatched.current = true;
       setDataLoaderForChart(true);
       dispatch(resetChartTokenState());
       dispatch(
@@ -627,12 +629,15 @@ const Tradingview = ({ params }) => {
                 tragindViewPage={tragindViewPage}
                 data={tradeData}
                 timeframes={timeframesTrade}
+                chartTokenData={chartTokenData}
+                liquidity={chartTokenData?.rawLiquidity || null}
               />
             </div>
 
             <div className="p-1 w-full border border-[#4D4D4D] lg:border-t-0 md:border-l-0 md:border-r-0 md:border-b-0">
               <TradingPopup
                 tragindViewPage={tragindViewPage}
+                chartTokenData={chartTokenData}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
                 token={tokenaddress}

@@ -3,6 +3,7 @@ import { humanReadableFormatWithNoDollar } from "@/utils/basicFunctions";
 import React, { useEffect, useState } from "react";
 import Infotip from "@/components/common/Tooltip/Infotip.jsx";
 import { ClipLoader } from "react-spinners";
+import { IoWarning } from "react-icons/io5";
 
 // Utility function to calculate percentage
 const calculatePercentage = (value1, value2) => {
@@ -111,7 +112,7 @@ const DataRow = ({
   </div>
 );
 
-const TradingStats = ({ tragindViewPage, data, timeframes }) => {
+const TradingStats = ({ tragindViewPage, data, timeframes, liquidity }) => {
   const [selectedTimeframe, setSelectedTimeframe] = useState("5M");
   const [currentData, setCurrentData] = useState(data[selectedTimeframe]);
   const [percentages, setPercentages] = useState({});
@@ -135,6 +136,15 @@ const TradingStats = ({ tragindViewPage, data, timeframes }) => {
 
   return (
     <div className="bg-[#08080E] text-white h-fit p-[24px] w-full mx-auto xl:p-4 md:p-3">
+      {liquidity != null && liquidity < 4000 &&
+         <div className="bg-[#483200] flex items-center rounded-md text-xs px-3 py-2 gap-2 mb-4">
+        <IoWarning  color="#fec033" size={18} />
+        <div className="flex flex-col gap-2">
+          <p className="text-[#ffe9b2]">This token has very little liquidity</p>
+        </div>
+      </div>
+      }
+     
       <div className="flex justify-between gap-[1px] mb-4">
         {timeframes.map(({ label, value }) => (
           <div
