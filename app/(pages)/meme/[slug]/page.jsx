@@ -630,7 +630,14 @@ const Tradingview = ({ params }) => {
                 data={tradeData}
                 timeframes={timeframesTrade}
                 chartTokenData={chartTokenData}
-                liquidity={chartTokenData?.rawLiquidity || null}
+                liquidity={
+                  (
+                    !(typeof chartTokenData === 'object' && Object.keys(chartTokenData).length === 0) &&
+                    !Object.values(chartTokenData || {}).some(val => Number.isNaN(val))
+                  )
+                    ? (chartTokenData?.rawLiquidity || 0)
+                    : null
+                }              
               />
             </div>
 

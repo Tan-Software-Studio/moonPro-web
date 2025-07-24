@@ -262,8 +262,11 @@ const TradingPopup = ({
   // buy handler
   async function buyHandler(instantTradePrice = null) {
     if (walletAddress) {
-      if (chartTokenData?.mintaddress == undefined) {
-        return showToaster("Trading Data Not yet loaded, Try again")
+      if (
+        (typeof chartTokenData === 'object' && Object.keys(chartTokenData).length === 0) || 
+        Object.values(chartTokenData || {}).some(val => Number.isNaN(val))
+      ) {
+        return showToaster("Trading Data Not yet loaded, Try again");
       }
       if (tokenLiquidity < 1) {
         return showToaster("Unavailable due to low liquidity.");
@@ -312,8 +315,11 @@ const TradingPopup = ({
   // sell handler
   async function sellHandler(instantTradePrice = null) {
     if (walletAddress) {
-      if (chartTokenData?.mintaddress == undefined) {
-        return showToaster("Trading Data Not yet loaded, Try again")
+      if (
+        (typeof chartTokenData === 'object' && Object.keys(chartTokenData).length === 0) || 
+        Object.values(chartTokenData || {}).some(val => Number.isNaN(val))
+      ) {
+        return showToaster("Trading Data Not yet loaded, Try again");
       }
       if (nativeTokenbalance < 0.005) {
         return showToaster("Minimum wallet balance is 0.005 SOL");
