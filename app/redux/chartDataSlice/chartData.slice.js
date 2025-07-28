@@ -74,19 +74,58 @@ export const fetchTradesData = createAsyncThunk(
     }
   }
 );
+
+const removeLiqMethods = {
+    "Eo7WjKq67rjJQSZxS6z3YkapzY3eMj6Xy8X5EQVn5UaB": [
+      "removeLiquiditySingleSide",
+      "removeBalanceLiquidity"
+    ],
+    "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK": [
+      "decreaseLiquidityV2"
+    ],
+    "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG": [
+      "remove_liquidity",
+      "remove_all_liquidity"
+    ],
+    "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA": [
+      "withdraw"
+    ],
+    "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8": [
+      "withdraw"
+    ],
+    "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C": [
+      "withdraw"
+    ],
+    "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc": [
+      "decreaseLiquidity",
+      "decreaseLiquidityV2"
+    ],
+    "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo": [
+      "RemoveLiquidity",
+      "removeLiquidityByRange2",
+      "removeLiquidityByRange",
+      "removeLiquidity2",
+      "removeLiquidity",
+      "removeAllLiquidity"
+    ]
+  };
+
 export const fetchRemovedLiquidity = createAsyncThunk(
   "fetchRemovedLiquidity",
-  async (tokenCA) => {
+  async ({ pairAddress, programAddress }) => {
+    const removeMethods = removeLiqMethods[programAddress];
+    console.log(removeMethods);
+    console.log(pairAddress);
     try {
       const response = await axios.post(
         "https://streaming.bitquery.io/eap",
         {
-          query: `query removeLiq($token: String){
+          query: `query removeLiq($pairAddress: String, $removeMethods: [String!]) {
   Solana {
     DEXPools(
-      where: {Instruction: {Program: {Method: {is: "decreaseLiquidity"}}, Accounts: {includes: {Token: {Mint: {is: $token}}}}}}
+      where: {Instruction: {Program: {Method: {in: $removeMethods}}, Accounts: {includes: {Address: {includes: $pairAddress}}}}}
       orderBy: {descending: Block_Time}
-      limit: {count: 10}
+      limit: {count: 30}
     ) {
       Block {
         Time
@@ -126,8 +165,9 @@ export const fetchRemovedLiquidity = createAsyncThunk(
       }
     }
   }
-}`,
-          variables: { token: tokenCA },
+}
+`,
+          variables: { pairAddress, removeMethods },
         },
         {
           headers: {

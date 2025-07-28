@@ -594,9 +594,9 @@ const Tradingview = ({ params }) => {
                 tokenCA={tokenaddress}
                 pairAddress={
                   chartTokenData?.pairaddress ||
-                  chartTokenDataState?.pairAddress ||
                   null
                 }
+                programAddress={chartTokenData?.programAddress}
                 address={activeSolWalletAddress?.wallet}
                 scrollPosition={scrollPosition}
                 solWalletAddress={activeSolWalletAddress?.wallet}
