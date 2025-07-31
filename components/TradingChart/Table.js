@@ -39,6 +39,7 @@ const Table = ({
   scrollPosition,
   tokenCA,
   pairAddress,
+  programAddress,
   solWalletAddress,
   tokenSupply,
   currentUsdPrice,
@@ -880,11 +881,16 @@ const Table = ({
   useEffect(() => {
     dispatch(resetChartDataState());
     dispatch(fetchTradesData(tokenCA));
-    dispatch(fetchRemovedLiquidity(tokenCA));
     if (tokenSupply === undefined) {
       setMarketCapActive(false);
     }
   }, [tokenCA]);
+
+  useEffect(() => {
+    if (pairAddress && programAddress) {
+      dispatch(fetchRemovedLiquidity({pairAddress, programAddress}))
+    }
+  }, [pairAddress, programAddress])
 
   useEffect(() => {
     if (tokenSupply === undefined) {
