@@ -3,9 +3,8 @@
 let bookTickerSocket;
 let tradesSocket;
 let markPrice;
-let chartSocket;
 
-const aster_dex_url = `wss://fstream.asterdex.com/ws/`;
+const aster_dex_url = "wss://fstream.asterdex.com/ws/";
 
 // orderbook socket
 export function connectBookTicker(symbol, setOrders) {

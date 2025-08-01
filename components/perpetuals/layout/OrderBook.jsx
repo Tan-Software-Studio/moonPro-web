@@ -1,19 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect } from "react";
 
 const MAX_ENTRIES = 10;
 
-const OrderBook = ({ orders, selectedToken, asks, setAsks, bids, setBids }) => {
-
-    // console.log({
-    //     bids: orders?.b,
-    //     bidsPrice: orders?.B,
-    //     asks: orders?.a,
-    //     asksPrice: orders?.A
-
-    // })
-
-
+function OrderBook({ orders, selectedToken, asks, setAsks, bids, setBids }) {
     useEffect(() => {
         if (!orders?.b || !orders?.a) return;
 
@@ -133,4 +123,4 @@ const OrderBook = ({ orders, selectedToken, asks, setAsks, bids, setBids }) => {
     );
 };
 
-export default OrderBook;
+export default memo(OrderBook);;

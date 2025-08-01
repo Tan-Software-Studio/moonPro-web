@@ -21,13 +21,10 @@ const Perpetual = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [allToken, setAllToken] = useState([])
   const [selectedToken, setSelectedToken] = useState(null);
-  const [isTokenChanged, setIsTokenChanged] = useState(null);
-  const [chartData, setChartData] = useState([])
-
+  const [isTokenChanged, setIsTokenChanged] = useState(null);  
   const [activeTab, setActiveTab] = useState('orders');
   const [trades, setTrades] = useState([])
   const [orders, setOrders] = useState([])
-
   const [bids, setBids] = useState([]);
   const [asks, setAsks] = useState([]);
 
@@ -127,11 +124,11 @@ const Perpetual = () => {
 
 
   return (
-    <div className="w-full bg-[#0a0a0a] overflow-y-scroll h-[95vh] p-1 ">
+    <div className="w-full bg-[#0a0a0a] overflow-y-scroll h-[95vh] p-1 font-poppins ">
       {/* Token Dropdown */}
 
       <div className='w-full grid grid-cols-1 lg:grid-cols-5 gap-1'>
-        <div className=" col-span-1 lg:col-span-3 relative h-full lg:h-[600px]   w-full text-left ">
+        <div className="relative col-span-1 lg:col-span-3   h-full lg:h-[600px]   w-full text-left ">
           <Header
             setIsOpen={setIsOpen}
             isOpen={isOpen}
@@ -190,7 +187,7 @@ const Perpetual = () => {
         </div>
 
         <div className='w-full bg-[#1a1a1a]   lg:max-h-[600px] h-full lg:h-[600px] col-span-1 lg:col-span-1 order-1 lg:order-2'>
-          <BuySell />
+          <BuySell  selectedSymbol={selectedToken?.symbol} />
         </div>
 
       </div>

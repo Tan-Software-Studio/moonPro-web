@@ -1,13 +1,17 @@
 import React, { useState } from 'react'
 import { ChevronDown, Info } from 'lucide-react'
 
-const BuySell = () => {
+const BuySell = ({ selectedSymbol }) => {
+    let symbol = selectedSymbol?.slice(0, 4)
     const [activeTab, setActiveTab] = useState('buy')
     const [orderType, setOrderType] = useState('Market')
     const [size, setSize] = useState(32)
     const [reduceOnly, setReduceOnly] = useState(false)
     const [tpSl, setTpSl] = useState(false)
     const [hiddenOrder, setHiddenOrder] = useState(false)
+    const [selectedSymbolDropdown, setSelectedSymbolDropdown] = useState(symbol || "USDT");
+    const [isOpen, setIsOpen] = useState(false);
+
 
     return (
         <div className=" overflow-auto max-h-full text-white p-4 max-w-sm mx-auto">
@@ -34,9 +38,9 @@ const BuySell = () => {
             </div>
 
             {/* Order Type Selector */}
-            <div className="flex  mt-2 text-sm">
+            <div className="flex gap-1.5  mt-2 text-sm">
                 <button
-                    className={` text-base font-medium py-1 mr-3 ${orderType === 'Market'
+                    className={` text-sm font-medium py-1   ${orderType === 'Market'
                         ? 'text-white'
                         : 'text-gray-400 hover:text-white'
                         }`}
@@ -45,7 +49,7 @@ const BuySell = () => {
                     Market
                 </button>
                 <button
-                    className={`px-3 text-base font-medium py-1 mr-3 ${orderType === 'Limit'
+                    className={`px-3 text-sm font-medium py-1 ${orderType === 'Limit'
                         ? 'text-white'
                         : 'text-gray-400 hover:text-white'
                         }`}
@@ -54,7 +58,7 @@ const BuySell = () => {
                     Limit
                 </button>
                 <button
-                    className={`px-3 text-base font-medium py-1 text-gray-400 hover:text-white flex items-center ${orderType === 'Stop Limit' ? 'text-white' : ''}`}
+                    className={`px-3 text-sm font-medium py-1 text-gray-400 hover:text-white flex items-center ${orderType === 'Stop Limit' ? 'text-white' : ''}`}
                     onClick={() => setOrderType('Stop Limit')}
                 >
                     Stop Limit
@@ -64,17 +68,17 @@ const BuySell = () => {
             </div>
 
             {/* Available Balance */}
-            <div className="flex justify-between items-center mt-2 text-sm">
-                <div className='flex items-center gap-1'>
+            <div className="flex justify-between items-center mt-3 text-sm">
+                <div className='flex items-center gap-1 text-sm'>
                     <span className="text-gray-400">Avbl</span>
                     <div className="flex items-center">
                         <span className="text-white mr-2">0.00 USDT</span>
                         <Info className="w-3 h-3 text-gray-500" />
                     </div>
                 </div>
-                <div className="flex items-center">
-                    <span className="text-gray-400 mr-2">Cross</span>
-                    <span className="text-white">20x</span>
+                <div className="flex text-[#3b82f6] gap-2 items-center text-sm">
+                    <span className="">Cross</span>
+                    <span className="">20x</span>
                 </div>
             </div>
 
@@ -82,11 +86,11 @@ const BuySell = () => {
             {orderType === 'Stop Limit' && (
                 <div className="mt-2">
                     <div className="relative">
-                        <div className='flex items-center justify-between w-full bg-[#1a1a1a] border-gray-600 border rounded px-3 py-2 text-white text-sm'>
+                        <div className='flex items-center justify-between w-full bg-[#232323] rounded px-3 py-2 text-white text-sm'>
                             <input
                                 type="text"
                                 placeholder='Stop Price'
-                                className=" focus:outline-none focus:border-none   bg-[#1a1a1a] text-white border-none"
+                                className=" focus:outline-none focus:border-none   bg-[#232323] text-white border-none"
                             />
                             <div className="flex items-center">
                                 <span className="text-white text-sm mr-2">Mark</span>
@@ -102,11 +106,11 @@ const BuySell = () => {
             {(orderType === 'Limit' || orderType === 'Stop Limit') && (
                 <div className="mt-2">
                     <div className="relative">
-                        <div className='flex items-center justify-between w-full bg-[#1a1a1a] border border-gray-600 rounded px-3 py-2 text-white text-sm'>
+                        <div className='flex items-center justify-between w-full bg-[#232323] rounded px-3 py-2 text-white text-sm'>
                             <input
                                 type="text"
                                 placeholder='price'
-                                className=" focus:outline-none focus:border-none   bg-[#1a1a1a] text-white border-none"
+                                className=" focus:outline-none focus:border-none   bg-[#232323] text-white border-none"
                             />
                             <div className="text-white w-fit text-sm">USDT</div>
                         </div>
@@ -118,23 +122,40 @@ const BuySell = () => {
             <div className="mt-2">
 
                 {/* Size Input */}
-                <div className="relative mt-2">
-                    <div className='flex items-center justify-between  w-full bg-[#1a1a1a] border border-gray-600 rounded px-3 py-2 text-white text-sm '>
+                <div className="relative mt-2 w-full">
+                    <div className='flex items-center justify-between bg-[#232323] rounded px-3 py-2 text-white text-sm'>
                         <input
                             type="text"
-                            value={size}
+                            value={`${size}%`}
                             onChange={(e) => setSize(e.target.value)}
-                            className="focus:outline-none w-full bg-[#1a1a1a] focus:border-none"
+                            className="focus:outline-none w-full bg-[#232323] text-white"
                             placeholder="Size"
                         />
-                        <div className="flex justify-between items-center gap-1">
-                            <span className="text-gray-400 text-sm">Size</span>
-                            <div className="flex items-center">
-                                <span className="text-white text-sm mr-2">BTC</span>
-                                <ChevronDown className="w-3 h-3 text-gray-400 ml-1" />
-                            </div>
+                        <div
+                            className="flex items-center cursor-pointer relative"
+                            onClick={() => setIsOpen(!isOpen)}
+                        >
+                            <span className="text-white text-sm mr-2">{selectedSymbolDropdown}</span>
+                            <ChevronDown className={`w-3 h-3 text-gray-400 ml-1 transition-transform ${isOpen ? "rotate-180" : ""}`} />
                         </div>
                     </div>
+
+                    {isOpen && (
+                        <div className="absolute right-3 top-[100%] mt-1 z-10 w-auto bg-[#1e1e1e] border border-[#333] rounded shadow-lg">
+                            {[symbol, "USDT"].map((symbol) => (
+                                <div
+                                    key={symbol}
+                                    onClick={() => {
+                                        setSelectedSymbolDropdown(symbol);
+                                        setIsOpen(false);
+                                    }}
+                                    className="px-3 py-2 text-sm text-white hover:bg-[#333] cursor-pointer"
+                                >
+                                    {symbol}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Slider */}
@@ -145,19 +166,19 @@ const BuySell = () => {
                         max="100"
                         value={size}
                         onChange={(e) => setSize(e.target.value)}
-                        className="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
+                        className="w-full h-1 bg-[#232323] rounded-lg appearance-none cursor-pointer slider"
                     />
                     <div className="flex justify-between mt-1 text-xs text-gray-500">
-                        <span>0%=0.0</span>
+                        <span>{size}%=0.0</span>
                         <span>Max 0.0</span>
                     </div>
                     {/* Slider markers */}
                     <div className="flex justify-between absolute top-0 w-full pointer-events-none">
                         <div className="w-1 h-1 bg-yellow-500 rounded-full"></div>
-                        <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
-                        <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
-                        <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
-                        <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
+                        <div className="w-1 h-1 bg-gray-500 rounded-full"></div>
+                        <div className="w-1 h-1 bg-gray-500 rounded-full"></div>
+                        <div className="w-1 h-1 bg-gray-500 rounded-full"></div>
+                        <div className="w-1 h-1 bg-gray-500 rounded-full"></div>
                     </div>
                 </div>
             </div>
@@ -184,14 +205,13 @@ const BuySell = () => {
                 </div>
             )}
 
-            {/* Checkboxes */}
             <div className="mt-4 space-y-3">
                 <label className="flex items-center cursor-pointer">
                     <input
                         type="checkbox"
                         checked={reduceOnly}
                         onChange={(e) => setReduceOnly(e.target.checked)}
-                        className="w-4 h-4 text-green-600 bg-[#1a1a1a] border-gray-600 rounded focus:ring-green-500"
+                        className="appearance-none w-4 h-4 border p-[1px] border-gray-500 bg-[#1a1a1a] checked:bg-gray-500 checked:border-gray-500 rounded-none"
                     />
                     <span className="ml-2 text-sm text-white">Reduce-Only</span>
                 </label>
@@ -200,11 +220,12 @@ const BuySell = () => {
                         type="checkbox"
                         checked={tpSl}
                         onChange={(e) => setTpSl(e.target.checked)}
-                        className="w-4 h-4 text-green-600 bg-[#1a1a1a] border-gray-600 rounded focus:ring-green-500"
+                        className="appearance-none w-4 h-4 border border-gray-500 bg-[#1a1a1a] checked:bg-gray-500 checked:border-gray-500 rounded-none"
                     />
                     <span className="ml-2 text-sm text-white">TP/SL</span>
                 </label>
             </div>
+
 
             {/* TP/SL Section - only show if TP/SL is checked */}
             {tpSl && (
@@ -212,11 +233,11 @@ const BuySell = () => {
                     {/* TP (Take Profit) */}
                     <div className='flex items-center '>
                         <div className="relative">
-                            <div className='flex items-center justify-between w-fit bg-[#1a1a1a] border-gray-600 border rounded px-3 py-2 text-white text-sm'>
+                            <div className='flex items-center justify-between w-fit bg-[#232323] border-gray-600 border rounded px-3 py-2 text-white text-sm'>
                                 <input
                                     type="text"
                                     placeholder='TP'
-                                    className=" focus:outline-none focus:border-none   bg-[#1a1a1a] text-white border-none"
+                                    className=" focus:outline-none focus:border-none   bg-[#232323] text-white border-none"
                                 />
                                 <div className="flex items-center">
                                     <span className="text-white text-sm mr-2">Mark</span>
@@ -244,11 +265,11 @@ const BuySell = () => {
                     {/* SL (Stop Loss) */}
                     <div className='flex items-center '>
                         <div className="relative">
-                            <div className='flex items-center justify-between w-fit bg-[#1a1a1a] border-gray-600 border rounded px-3 py-2 text-white text-sm'>
+                            <div className='flex items-center justify-between w-fit bg-[#232323] border-gray-600 border rounded px-3 py-2 text-white text-sm'>
                                 <input
                                     type="text"
                                     placeholder='SL'
-                                    className=" focus:outline-none focus:border-none   bg-[#1a1a1a] text-white border-none"
+                                    className=" focus:outline-none focus:border-none   bg-[#232323] text-white border-none"
                                 />
                                 <div className="flex items-center">
                                     <span className="text-white text-sm mr-2">Mark</span>

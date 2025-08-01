@@ -1,26 +1,36 @@
-import React, { useState } from 'react'
+import React, { memo, useState } from 'react'
 import FundingCountdown from '../FundingCountdown';
 import { FaCaretDown } from 'react-icons/fa6';
 
-const Header = ({ setIsOpen, isOpen, allToken, handleTokenSelect, selectedToken }) => {
+function Header({ setIsOpen, isOpen, allToken, handleTokenSelect, selectedToken }) {
     const [searchTerm, setSearchTerm] = useState('');
 
     const filteredTokens = allToken.filter(token =>
         token.symbol.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-
     function formatFundingRate(fundingRate) {
         const rate = parseFloat(fundingRate);
         if (isNaN(rate)) return "--";
         return (rate * 100).toFixed(4) + "%";
     }
+
+    function formatVolume(volume) {
+        const vol = Number(volume);
+        if (vol >= 1000000) {
+            return (vol / 1000000).toFixed(2) + 'M';
+        } else if (vol >= 1000) {
+            return (vol / 1000).toFixed(2) + 'K';
+        }
+        return vol.toFixed(0);
+    }
+
     return (
-        <div className='flex overflow-scroll items-center  p-4 w-full h-[70px] gap-10 bg-[#1a1a1a]'>
-            <div className=''>
+        <div className='flex overflow-scroll items-center py-2 px-4 w-full h-[70px] gap-10 bg-[#1a1a1a]'>
+            <div className='border-r flex items-center  border-r-gray-500 pr-2.5 h-full'>
                 <button
                     onClick={() => setIsOpen((prev) => !prev)}
-                    className="px-3 flex items-center gap-1.5 w-fit h-fit    text-[#ffffff] rounded-md text-sm font-bold transition-colors cursor-pointer"
+                    className="px-3 flex items-center gap-1.5 text-[#ffffff]  text-sm font-semibold transition-colors cursor-pointer"
                 >
                     <span className="capitalize">
                         {selectedToken?.symbol || "Tokens"}
@@ -32,53 +42,78 @@ const Header = ({ setIsOpen, isOpen, allToken, handleTokenSelect, selectedToken 
                     </div>
                 </button>
                 {isOpen && (
-                    <div className="absolute z-50 mt-3 left-0 md:w-[500px] w-full max-w-[500px] bg-[#18181a] border border-gray-700 rounded-lg max-h-[75vh] animate-in slide-in-from-top-2 duration-300 overflow-hidden backdrop-blur-sm">
-                        <div className="p-2">
-                            <h1 className='p-2 font-medium text-lg'>Symbol</h1>
+                    <div className="absolute z-50 mt-3 top-10 left-0 md:w-[600px] w-full max-w-[600px] bg-[#1a1a1a] border border-gray-700 rounded-lg max-h-[75vh] animate-in slide-in-from-top-2 duration-300 overflow-hidden backdrop-blur-sm">
+                        <div className="p-3 border-b border-gray-700">
                             <input
                                 type="text"
                                 placeholder="Search by symbol (e.g. BTCUSDT)"
-                                className="w-full rounded-sm px-3 py-1.5 bg-[#2a2a2a] text-sm text-white placeholder-gray-400 outline-none border border-gray-600 focus:ring-[1px] focus:ring-blue-500"
+                                className="w-full rounded-sm px-3 py-2 bg-[#2a2a2a] text-sm text-white placeholder-gray-400 outline-none border border-gray-600 focus:ring-[1px] focus:ring-blue-500"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
 
-                        <div className="grid grid-cols-5 py-1 gap-4 items-center ">
-                            <div className="col-span-2 text-gray-400 text-xs font-medium px-2">Symbols</div>
-                            <div className="col-span-1 text-gray-400 text-xs font-medium">Last Price</div>
-                            <div className="col-span-1 text-gray-400 text-xs font-medium">24h Change</div>
-                            <div className="col-span-1 text-gray-400 text-xs font-medium">24h Volume</div>
+                        {/* Header row matching main design */}
+                        <div className="bg-[#1a1a1a] px-4 py-3 border-b border-gray-700">
+                            <div className="grid grid-cols-12 gap-4 items-center text-xs font-medium text-gray-400">
+                                <div className="col-span-3">Symbol</div>
+                                <div className="col-span-2  ">Last Price</div>
+                                <div className="col-span-2  *:">24h Change</div>
+                                <div className="col-span-2 ">Index</div>
+                                <div className="col-span-3 ">24h Volume</div>
+                            </div>
                         </div>
 
                         <div className="overflow-y-auto max-h-[55vh] custom-scrollbar">
                             {allToken?.length > 0 ? (
                                 filteredTokens.map((item, ind) => {
+                                    const priceChange = Number(item?.priceChangePercent);
+                                    const isPositive = priceChange > 0;
+
                                     return (
                                         <div
                                             key={ind}
                                             onClick={() => handleTokenSelect(item, ind)}
-                                            className={`group cursor-pointer relative bg-[#18181a] hover:bg-[#2a2a2a] px-2 py-3 transition-all duration-300`}
+                                            className={`group cursor-pointer relative bg-[#1a1a1a] hover:bg-[#2a2a2a] px-4 py-3 border-b border-gray-800/50 transition-all duration-200`}
                                         >
-                                            <div className="grid grid-cols-5 gap-4 items-center">
-                                                <div className="col-span-2 flex items-center gap-4">
-                                                    <div className="flex-1 mt-0.5 min-w-0">
-                                                        <div className="flex items-center gap-2 text-white font-medium text-sm">
-                                                            <span className="truncate">{item?.symbol}</span>
+                                            <div className="grid grid-cols-12 gap-4 items-center">
+                                                {/* Symbol */}
+                                                <div className="col-span-3 flex items-center gap-2">
+                                                    <div>
+                                                        <div className="text-white font-medium text-sm truncate">
+                                                            {item?.symbol}
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="col-span-1 text-start">
-                                                    <div className="text-white text-sm font-medium">{item?.lastPrice}</div>
+
+                                                {/* Last Price */}
+                                                <div className="col-span-2 ">
+                                                    <div className="text-white text-sm font-medium">
+                                                        {Number(item?.lastPrice).toFixed(item?.lastPrice > 1 ? 2 : 6)}
+                                                    </div>
                                                 </div>
-                                                <div className="col-span-1 text-start">
-                                                    <div className={`text-sm font-medium ${Number(item?.priceChangePercent) > 0 ? "text-green-500" : "text-red-500"}`}>{item?.priceChangePercent}%</div>
+
+                                                {/* 24h Change */}
+                                                <div className="col-span-2 ">
+                                                    <div className={`text-sm font-medium ${isPositive ? "text-green-500" : "text-red-500"}`}>
+                                                        {isPositive ? '+' : ''}{item?.priceChangePercent}%
+                                                    </div>
                                                 </div>
-                                                <div className="col-span-1 text-start">
-                                                    <div className="text-white text-sm font-medium">{Number(item.quoteVolume).toFixed(0)}</div>
+
+                                                {/* Index Price */}
+                                                <div className="col-span-2 ">
+                                                    <div className="text-white text-sm font-medium">
+                                                        {Number(item?.indexPrice || item?.lastPrice).toFixed(item?.lastPrice > 1 ? 2 : 6)}
+                                                    </div>
+                                                </div>
+
+                                                {/* 24h Volume */}
+                                                <div className="col-span-3  ">
+                                                    <div className="text-white text-sm font-medium">
+                                                        {formatVolume(item?.quoteVolume || item?.volume)}
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="absolute inset-0 bg-gradient-to-r from-[#1d73fc]/5 to-[#2563eb]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                                         </div>
                                     );
                                 })
@@ -91,30 +126,32 @@ const Header = ({ setIsOpen, isOpen, allToken, handleTokenSelect, selectedToken 
                     </div>
                 )}
             </div>
-            <div>
-                <span className="text-sm text-gray-400 font-medium">Mkt price:</span>
-                <div className="font-bold text-white text-sm">${Number(selectedToken?.markPrice).toFixed(2) || "--"}</div>
+
+            {/* Main header info - matching your existing design */}
+            <div className=''>
+                <div className="font-medium text-white text-sm">${Number(selectedToken?.markPrice || selectedToken?.lastPrice).toFixed(2) || "--"}</div>
+                <span className="text-xs text-gray-400 font-normal">Mark</span>
             </div>
             <div>
-                <span className="text-sm text-gray-400 font-medium">Index:</span>
                 <div className={`font-medium text-sm text-white`}>
-                    {Number(selectedToken?.indexPrice).toFixed(2) || "--"}
+                    {Number(selectedToken?.indexPrice || selectedToken?.lastPrice).toFixed(2) || "--"}
                 </div>
+                <span className="text-xs text-gray-400 font-normal">Index</span>
             </div>
             <div className='col-span-2'>
-                <span className="text-sm text-gray-400 font-medium">Funding/Countdown</span>
-                <div className="font-bold text-white text-sm flex items-center gap-2">
-                    {formatFundingRate(selectedToken?.lastFundingRate) || '--'} /  <FundingCountdown nextFundingTime={selectedToken?.nextFundingTime} />
+                <div className="font-medium text-white text-sm flex items-center gap-2">
+                    {formatFundingRate(selectedToken?.lastFundingRate) || '--'} / <FundingCountdown nextFundingTime={selectedToken?.nextFundingTime} />
                 </div>
+                <span className="text-xs text-gray-400 font-normal">Funding/Countdown</span>
             </div>
             <div className=''>
-                <span className="text-sm text-gray-400 font-medium">24h Volume</span>
-                <div className="font-bold text-white text-sm flex items-center gap-2">
-                    {selectedToken?.oneDayVolume || '--'}
+                <div className="font-medium text-white text-sm flex items-center gap-2">
+                    {formatVolume(selectedToken?.oneDayVolume || selectedToken?.quoteVolume) || '--'}
                 </div>
+                <span className="text-xs text-gray-400 font-normal">24h Volume</span>
             </div>
         </div>
     )
 }
 
-export default Header
+export default memo(Header)

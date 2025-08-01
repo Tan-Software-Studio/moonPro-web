@@ -25,13 +25,13 @@ function Chart({ selectedSymbol }) {
       fullscreen: false,
       autosize: true,
       timezone: "Asia/Kolkata",
-      studies_overrides: {}, 
-      theme: "Dark",
-      // toolbar_bg: "#08080E",
+      studies_overrides: {},
+      theme: "dark",
+      // toolbar_bg: "#1a1a1a",
       overrides: {
-        "paneProperties.background": "#08080E",
-        "paneProperties.backgroundGradientStartColor": "#08080E",
-        "paneProperties.backgroundGradientEndColor": "#08080E",
+        "paneProperties.backgroundType": "#1a1a1a",
+        "paneProperties.background": "#1a1a1a",
+        "paneProperties.backgroundType": "solid", 
         "paneProperties.vertGridProperties.color": "#1f1f1f",
         "paneProperties.horzGridProperties.color": "#1f1f1f",
         "scalesProperties.textColor": "#FFFFFF",
@@ -46,6 +46,7 @@ function Chart({ selectedSymbol }) {
     };
 
     const tvWidget = new widget(widgetOptions);
+    window.tvWidget = tvWidget;
     tvWidgetRef.current = tvWidget;
 
     tvWidget.onChartReady(() => {
@@ -61,7 +62,7 @@ function Chart({ selectedSymbol }) {
   }, [selectedSymbol]);
 
 
-  return <div ref={chartContainerRef} className="bg-[#08080E]" style={{ height: "100%", width: "100%", background : "#08080E"}} />;
+  return <div ref={chartContainerRef} style={{ height: "100%", width: "100%", }} />;
 };
 
 export default memo(Chart);;

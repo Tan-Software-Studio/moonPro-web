@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 function FundingCountdown({ nextFundingTime }) {
-    
     const [timeLeft, setTimeLeft] = useState(getTimeRemaining(nextFundingTime));
 
     useEffect(() => {
@@ -28,8 +27,6 @@ function getTimeRemaining(nextFundingTime) {
     const hours = Math.floor(diff / 3600000);
     const minutes = Math.floor((diff % 3600000) / 60000);
     const seconds = Math.floor((diff % 60000) / 1000);
-
-
 
     return { hours, minutes, seconds };
 }
