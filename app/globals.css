@@ -590,3 +590,13 @@ input[type="search"]::-webkit-search-cancel-button {
     transform: scale(var(--scale_path_3, 1));
   }
 }
+
+/* Add to your global CSS */
+.tv-lightweight-charts, .chart-page {
+    background-color: #08080E !important;
+    color: white !important;
+}
+.tv-floating-toolbar, .tv-header {
+    background-color: #08080E !important;
+    border-color: #08080E !important;
+}

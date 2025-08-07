@@ -100,7 +100,7 @@ const Navbar = () => {
         setSolPhrase(decodeKey);
         setOpenRecovery(true);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }
 
   // login signup
@@ -231,11 +231,11 @@ const Navbar = () => {
     }
   }, [solWalletAddress, userDetails?.email]);
 
-  const handleCopyAddress = async (e) => {
+  const handleCopyAddress = async (e, copyWalletAddress, name) => {
     e.stopPropagation();
     try {
-      await navigator.clipboard.writeText(activeSolWalletAddress?.wallet);
-      setToastMessage("SOL address copied to clipboard");
+      await navigator.clipboard.writeText(copyWalletAddress);
+      setToastMessage(`${name} address copied to clipboard`);
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
     } catch (err) {
@@ -277,18 +277,15 @@ const Navbar = () => {
                 <NewAiSignalTokens />
                 {/* Search bar */}
                 <div
-                  className={`md:flex items-center  gap-2  border ${
-                    isSidebarOpen ? "ml-1 " : "ml-5"
-                  } border-[#333333] ${
-                    isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
-                  } rounded-lg h-8 px-2 bg-[#191919] hidden `}
+                  className={`md:flex items-center  gap-2  border ${isSidebarOpen ? "ml-1 " : "ml-5"
+                    } border-[#333333] ${isSidebarOpen && path ? "mx-0 lg:mx-0 md:mx-0" : " "
+                    } rounded-lg h-8 px-2 bg-[#191919] hidden `}
                   onClick={() => dispatch(setIsSearchPopup(true))}
                 >
                   <LuSearch className="h-4 w-4 text-[#A8A8A8]" />
                   <input
-                    className={` ${
-                      isSidebarOpen ? "w-0 lg:w-56" : "lg:w-56 w-9"
-                    } bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
+                    className={` ${isSidebarOpen ? "w-0 lg:w-56" : "lg:w-56 w-9"
+                      } bg-transparent outline-none text-[#404040] text-sm font-thin placeholder-[#6E6E6E] bg-[#141414] placeholder:text-xs `}
                     placeholder={navbar?.profile?.search}
                   />
                 </div>
@@ -371,12 +368,21 @@ const Navbar = () => {
                               <div className="flex items-center gap-2 cursor-pointer ">
                                 <div
                                   className="flex items-center gap-1 text-xs text-[#898989] hover:bg-[#404040] p-1 rounded-md"
-                                  onClick={handleCopyAddress}
+                                  onClick={(e) => handleCopyAddress(e, activeSolWalletAddress?.wallet, "SOL")}
                                 >
                                   <button className="flex items-center gap-1 rounded text-xs transition-colors">
                                     <FaCopy className="w-3 h-3" />
                                   </button>
                                   <span>Solana</span>
+                                </div>
+                                <div
+                                  className="flex items-center gap-1 text-xs text-[#898989] hover:bg-[#404040] p-1 rounded-md"
+                                  onClick={(e) => handleCopyAddress(e, userDetails?.perpsWallet, "Perps")}
+                                >
+                                  <button className="flex items-center gap-1 rounded text-xs transition-colors">
+                                    <FaCopy className="w-3 h-3" />
+                                  </button>
+                                  <span>Perps</span>
                                 </div>
                               </div>
                             </div>
@@ -385,7 +391,7 @@ const Navbar = () => {
                               $
                               {(
                                 Number(activeSolWalletAddress?.balance) *
-                                  (solanaLivePrice || 0) +
+                                (solanaLivePrice || 0) +
                                 Number(usdcBalance) * 1
                               ).toFixed(2)}
                             </div>

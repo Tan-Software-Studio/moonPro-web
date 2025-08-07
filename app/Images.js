@@ -88,7 +88,7 @@ import proWallet from "../public/assets/Sidebar/proWallet.svg";
 import proWalletColor from "../public/assets/Sidebar/proWalletColor.svg";
 // import NoDataFish from "../public/assets/NoDataImages/qwe.svg";
 import NoDataFish from "../public/assets/NoDataImages/NoDataImages.svg";
-import NoDataLogo from "../public/assets/NoDataImages/nexapro-noData1.webp"; 
+import NoDataLogo from "../public/assets/NoDataImages/nexapro-noData1.webp";
 import CryptoWithoutColor from "../public/assets/crypto-Stack/CryptoWithoutColor.svg";
 import CryptoColor from "../public/assets/crypto-Stack/CryptoColor.svg";
 
@@ -158,6 +158,10 @@ import sharePnlBg from "../public/assets/SharePnL/share-pnl-bg.webp"
 
 // sol logo 
 import solWhiteBg from "../public/assets/Trending/solWhiteBg.webp"
+
+// perpetuals 
+import usdcPerps from "../public/assets/perpetuals/usdc-perps.svg"
+
 
 
 export {
@@ -308,5 +312,8 @@ export {
   nexaText,
   sharePnlBg,
   solWhiteBg,
-  NoDataLogo
+  NoDataLogo,
+
+  // perpetuals
+  usdcPerps
 };

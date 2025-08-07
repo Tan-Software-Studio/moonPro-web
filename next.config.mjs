@@ -8,6 +8,11 @@ const nextConfig = {
         pathname: "/**",
       },
       {
+        protocol: "http",
+        hostname: "192.168.29.204",
+        pathname: "/**",
+      },
+      {
         protocol: "https",
         hostname: "ipfs.io",
         pathname: "/**",
