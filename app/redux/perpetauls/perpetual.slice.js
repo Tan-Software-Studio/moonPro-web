@@ -21,35 +21,68 @@ export const orderPositions = createAsyncThunk(
     }
 );
 
-
-export const getAllTokenList = createAsyncThunk(
-    "getAllTokenList",
-    async () => {
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URLS
-
-        try {
-            const response = await axios.get(`${baseUrl}perpetual/getPerpetualTokens`);
-            return response?.data?.data
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
-)
 const perpetualsData = createSlice({
     name: "perpetuals",
     initialState: {
         orderPositionsData: [],
         initialLoading: true,
-        allTokenList: [],
-        selectedToken: {}, 
+        selectedToken: {},
+        isTokenChanged: {},
+        perpsTokenList: []
 
 
     },
     reducers: {
-        setSelectedToken: (state, action) => {
-            state.selectedToken = action.payload
+        setSelectedToken: (state, { payload }) => {
+            state.selectedToken = {
+                ...state.selectedToken,
+                ...payload,
+                dayBaseVlm: payload?.dayBaseVlm,
+                dayNtlVlm: payload?.dayNtlVlm,
+                funding: payload?.funding,
+                markPx: payload?.markPx,
+                midPx: payload?.midPx,
+                openInterest: payload?.openInterest,
+                oraclePx: payload?.oraclePx,
+                premium: payload?.premium,
+                prevDayPx: payload?.prevDayPx,
+                priceChangePercent:
+                    ((payload?.markPx - payload?.prevDayPx) / payload?.prevDayPx) * 100,
+                priceChangeAbs: (payload?.markPx - payload?.prevDayPx)
+            };
+        },
+        setPerpsTokenList: (state, { payload }) => {
+            state.perpsTokenList = payload
+        },
+        setIsTokenChanged: (state, { payload }) => {
+            state.isTokenChanged = payload
         }
+        // setPerpsTokenList: (state, { payload }) => {
+        //     state.perpsTokenList = {
+        //         ...state.perpsTokenList,
+        //         ...payload,
+        //         ...payload.map(token => {
+        //             if (token.name === coin) {
+        //                 const updated = {
+        //                     ...token,
+        //                     ...payload,
+        //                     priceChangePercent:
+        //                         ((payload?.markPx - payload?.prevDayPx) /
+        //                             payload?.prevDayPx) *
+        //                         100,
+        //                     priceChangeAbs:
+        //                         payload?.markPx - payload?.prevDayPx,
+        //                 };
+        //                 return updated;
+        //             }
+        //             return token;
+        //         }),
+
+        //     }
+        // }
+
+
+
     },
     extraReducers: (builder) => {
         builder
@@ -60,15 +93,11 @@ const perpetualsData = createSlice({
             .addCase(orderPositions.rejected, (state) => {
                 state.initialLoading = false;
             })
-            .addCase(getAllTokenList.fulfilled, (state, { payload }) => {
-                state.allTokenList = payload;
-                state.selectedToken = state.allTokenList[0] 
-            });
     },
 })
 
 
 
-export const { setSelectedToken, setIsTokenChanged } = perpetualsData.actions;
+export const { setSelectedToken, setPerpsTokenList, } = perpetualsData.actions;
 
 export default perpetualsData.reducer;

@@ -1,3 +1,4 @@
+import { setPerpsTokenList, setSelectedToken } from "@/app/redux/perpetauls/perpetual.slice";
 
 
 let tradesSocket;
@@ -78,8 +79,7 @@ export function orderBookSocketConnect(coin, setBidsData, setAsksData) {
     };
 }
 
-export function marketPriceSocketConnect(coin, setSelectedToken) {
-
+export function marketPriceSocketConnect(coin, dispatch) {
     marketPriceSocket = new WebSocket(WS_URL);
 
     marketPriceSocket.onopen = () => {
@@ -96,22 +96,7 @@ export function marketPriceSocketConnect(coin, setSelectedToken) {
     marketPriceSocket.onmessage = (event) => {
         const data = JSON.parse(event.data);
         const marketPrice = data?.data?.ctx;
-        setSelectedToken(prev => ({
-            ...prev,
-            dayBaseVlm: marketPrice?.dayBaseVlm,
-            dayNtlVlm: marketPrice?.dayNtlVlm,
-            funding: marketPrice?.funding,
-            markPx: marketPrice?.markPx,
-            midPx: marketPrice?.midPx,
-            openInterest: marketPrice?.openInterest,
-            oraclePx: marketPrice?.oraclePx,
-            premium: marketPrice?.premium,
-            prevDayPx: marketPrice?.prevDayPx,
-            priceChangePercent: ((marketPrice?.markPx - marketPrice?.prevDayPx) / marketPrice?.prevDayPx) * 100,
-            priceChangeAbs: (marketPrice?.markPx - marketPrice?.prevDayPx)
-        }));
-
-        // console.log("🚀 ~ marketPriceSocketConnect ~ marketPrice:", marketPrice)
+        dispatch(setSelectedToken(marketPrice));
     };
 
     marketPriceSocket.onerror = (err) => {
@@ -123,58 +108,58 @@ export function marketPriceSocketConnect(coin, setSelectedToken) {
     };
 }
 
-export function marketPriceSocketConnectAllTokens(tokenList, setAllTokenList) {
-    marketPriceSocketAllTokens = new WebSocket(WS_URL);
+// export function marketPriceSocketConnectAllTokens(tokenList, dispatch) {
+//     marketPriceSocketAllTokens = new WebSocket(WS_URL);
 
-    marketPriceSocketAllTokens.onopen = () => {
-        console.log("✅ marketPriceSocketAllTokens connected to ALL tokens");
-        tokenList.forEach(token => {
-            const subMsg = {
-                method: "subscribe",
-                subscription: {
-                    type: "activeAssetCtx",
-                    coin: token.name,
-                },
-            };
-            marketPriceSocketAllTokens.send(JSON.stringify(subMsg));
-        });
-    };
+//     marketPriceSocketAllTokens.onopen = () => {
+//         console.log("✅ marketPriceSocketAllTokens connected to ALL tokens");
+//         tokenList.forEach(token => {
+//             const subMsg = {
+//                 method: "subscribe",
+//                 subscription: {
+//                     type: "activeAssetCtx",
+//                     coin: token.name,
+//                 },
+//             };
+//             marketPriceSocketAllTokens.send(JSON.stringify(subMsg));
+//         });
+//     };
 
-    marketPriceSocketAllTokens.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        const marketPrice = data?.data?.ctx;
-        const coin = data?.data?.coin; // <-- confirm this field exists in your actual response
+//     marketPriceSocketAllTokens.onmessage = (event) => {
+//         const data = JSON.parse(event.data);
+//         const marketPrice = data?.data?.ctx;
+//         const coin = data?.data?.coin; // <-- confirm this field exists in your actual response
 
-        if (!coin || !marketPrice) return;
+//         if (!coin || !marketPrice) return;
+//         dispatch(setPerpsTokenList({ coin, marketPrice }))
+//         // setAllTokenList(prevList =>
+//         //     prevList.map(token => {
+//         //         if (token.name === coin) {
+//         //             const updated = {
+//         //                 ...token,
+//         //                 ...marketPrice,
+//         //                 priceChangePercent:
+//         //                     ((marketPrice?.markPx - marketPrice?.prevDayPx) /
+//         //                         marketPrice?.prevDayPx) *
+//         //                     100,
+//         //                 priceChangeAbs:
+//         //                     marketPrice?.markPx - marketPrice?.prevDayPx,
+//         //             };
+//         //             return updated;
+//         //         }
+//         //         return token;
+//         //     })
+//         // );
+//     };
 
-        setAllTokenList(prevList =>
-            prevList.map(token => {
-                if (token.name === coin) {
-                    const updated = {
-                        ...token,
-                        ...marketPrice,
-                        priceChangePercent:
-                            ((marketPrice?.markPx - marketPrice?.prevDayPx) /
-                                marketPrice?.prevDayPx) *
-                            100,
-                        priceChangeAbs:
-                            marketPrice?.markPx - marketPrice?.prevDayPx,
-                    };
-                    return updated;
-                }
-                return token;
-            })
-        );
-    };
+//     marketPriceSocketAllTokens.onerror = err => {
+//         console.error("❌ marketPriceSocketAllTokens error", err);
+//     };
 
-    marketPriceSocketAllTokens.onerror = err => {
-        console.error("❌ marketPriceSocketAllTokens error", err);
-    };
-
-    marketPriceSocketAllTokens.onclose = () => {
-        console.log("📴 marketPriceSocketAllTokens connection closed.");
-    };
-}
+//     marketPriceSocketAllTokens.onclose = () => {
+//         console.log("📴 marketPriceSocketAllTokens connection closed.");
+//     };
+// }
 
 export function disconnectAllTokens() {
     if (marketPriceSocketAllTokens) {

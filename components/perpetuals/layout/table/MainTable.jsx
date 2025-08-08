@@ -5,8 +5,8 @@ const MainTable = () => {
     return (
         <div>
 
-            <div className='border-b border-gray-400 font-sans  w-full'>
-                <div className='py-3 px-5 flex items-center gap-6 w-full overflow-x-auto'>
+            <div className=' font-sans  w-full'>
+                <div className='py-2 px-5 flex items-center gap-6 w-full overflow-x-auto border-b border-gray-800'>
                     {[
                         'Positions',
                         'Open orders',
@@ -19,9 +19,8 @@ const MainTable = () => {
                                 {item}
                             </div>
                         ))}
-                </div>
-
-                {/* {selectedTab == "Positions" ? <Positions /> : null} */}
+                </div> 
+                {selectedTab == "Positions" ? <Positions /> : null}
 
 
             </div>

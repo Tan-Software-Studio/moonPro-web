@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import Chart from './layout/Chart'
 import axios from 'axios'
-import Header from './layout/Header'
+import Header from './layout/Header/Header'
 import {
     disconnectAllTokens,
     disconnectMarketPriceSocket,
@@ -19,13 +19,10 @@ import Trades from './layout/Trades'
 import BuySell from './layout/BuySell'
 import MainTable from './layout/table/MainTable'
 import { useDispatch, useSelector } from 'react-redux'
-import { orderPositions } from '@/app/redux/perpetauls/perpetual.slice'
+import { orderPositions, setIsTokenChanged, setPerpsTokenList, setSelectedToken } from '@/app/redux/perpetauls/perpetual.slice'
 const url = process.env.NEXT_PUBLIC_BASE_URLS
 const Perpetuals = () => {
 
-    const [allTokenList, setAllTokenList] = useState([]);
-    const [selectedToken, setSelectedToken] = useState(null);
-    const [isTokenChanged, setIsTokenChanged] = useState(null);
     const [activeTab, setActiveTab] = useState('orders');
     const [tradesData, setTradesData] = useState([]);
     const [bidsData, setBidsData] = useState([]);
@@ -33,42 +30,34 @@ const Perpetuals = () => {
     const [isOpen, setIsOpen] = useState(false);
     const dispatch = useDispatch();
 
+    const selectedToken = useSelector(
+        (state) => state?.perpetualsData?.selectedToken
+    );
+    const perpsTokenList = useSelector(
+        (state) => state?.perpetualsData?.perpsTokenList
+    );
+    const isTokenChanged = useSelector(
+        (state) => state?.perpetualsData?.isTokenChanged
+    );
+    const userDetails = useSelector((state) => state?.userData?.userDetails);
 
-    // const allTokenList = useSelector(
-    //     (state) => state?.perpetualsData?.allTokenList
-    // );
-    // const selectedToken = useSelector(
-    //     (state) => state?.perpetualsData?.selectedToken
-    // );
-    ;
-
-
-
-    // console.log("🚀 ~ Perpetuals ~ orderPositionsData:", orderPositionsData)
-
-    // const userDetails = useSelector((state) => state?.userData?.userDetails);
-    // console.log("🚀 ~ Perpetuals ~ userDetails:", userDetails?.perpsWallet)
-
-
-
-    async function getAllTokenList() {
+    async function getPerpsTokenList() {
         try {
             const response = await axios.get(`${url}perpetual/getPerpetualTokens`);
-            setAllTokenList(response?.data?.data);
-            setSelectedToken(response?.data?.data[0]);
-            setIsTokenChanged(response?.data?.data[0]);
+            dispatch(setPerpsTokenList(response?.data?.data));
+            dispatch(setSelectedToken(response?.data?.data[0]));
+            dispatch(setIsTokenChanged(response?.data?.data[0]));
         } catch (error) {
             console.error(error)
         }
     }
 
-
-
+    // Socket interegration
     useEffect(() => {
         if (isTokenChanged) {
             tradesSocketConnect(selectedToken?.name, setTradesData)
             orderBookSocketConnect(selectedToken?.name, setBidsData, setAsksData)
-            marketPriceSocketConnect(selectedToken?.name, setSelectedToken)
+            marketPriceSocketConnect(selectedToken?.name, dispatch)
         }
         return () => {
             disconnectTradesSocket()
@@ -78,25 +67,27 @@ const Perpetuals = () => {
 
     }, [isTokenChanged])
 
-    useEffect(() => {
-        if (allTokenList.length > 0) {
-            marketPriceSocketConnectAllTokens(allTokenList, setAllTokenList);
-        }
-        return () => {
-            disconnectAllTokens();
-        };
-    }, [isTokenChanged]);
+    // All tokens update in dropdown
+    // useEffect(() => {
+    //     if (perpsTokenList.length > 0) {
+    //         marketPriceSocketConnectAllTokens(perpsTokenList, dispatch);
+    //     }
+    //     return () => {
+    //         disconnectAllTokens();
+    //     };
+    // }, [isTokenChanged]);
 
-
+    // PerpsToken list 
     useEffect(() => {
-        getAllTokenList();
+        getPerpsTokenList();
     }, [])
 
 
     useEffect(() => {
-        const staticAddress = "0xf58b673c1633ccef0ac58263cdc95ed80f817fc7"
-        dispatch(orderPositions(staticAddress));
-    }, []);
+        if (userDetails?.perpsWallet) {
+            dispatch(orderPositions(userDetails?.perpsWallet));
+        }
+    }, [userDetails]);
 
     return (
         <div className="w-full bg-[#0a0a0a] overflow-y-scroll h-[95vh]  font-poppins ">
@@ -107,18 +98,13 @@ const Perpetuals = () => {
                     <div className='w-full grid lg:grid-cols-4  grid-cols-3'>
                         <div className="relative col-span-1 lg:col-span-3 h-full lg:h-[600px]   w-full text-left ">
                             <div className='border-b-[1px]   border-b-[#404040]  w-full h-[70px] flex items-center justify-center'>
-
                                 <Header
-                                    allTokenList={allTokenList}
-                                    selectedToken={selectedToken}
                                     setIsOpen={setIsOpen}
                                     isOpen={isOpen}
-                                    setIsTokenChanged={setIsTokenChanged}
-                                    setSelectedToken={setSelectedToken}
                                 />
                             </div>
                             {selectedToken?.name ?
-                                <div className='   w-full h-svh lg:h-[526px] flex items-center justify-center'>
+                                <div className='w-full h-svh lg:h-[526px] flex items-center justify-center'>
                                     <Chart selectedSymbol={selectedToken?.name} />
                                 </div> :
                                 null
@@ -171,8 +157,7 @@ const Perpetuals = () => {
                 </div>
                 <div className='w-full border-l-[1px] border-l-[#404040]   h-full col-span-1'>
                     {selectedToken ?
-                        <BuySell selectedToken={selectedToken} />
-                        : null}
+                        <BuySell /> : null}
                 </div>
             </div>
         </div>

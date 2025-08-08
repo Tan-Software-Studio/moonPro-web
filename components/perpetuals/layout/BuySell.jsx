@@ -1,17 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import SwapPopup from '../popup/SwapPopup'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { humanReadableFormatWithNoDollar } from '@/utils/basicFunctions'
 import { spotClearinghouseState } from '@/services/hyperLiquid/spotClearinghouseState '
 import { IoSwapHorizontal } from 'react-icons/io5'
 import LeaveragePopup from '../popup/LeaveragePopup'
 import SlippagePopup from '../popup/SlippagePopup'
 import PerpsSpotPopup from '../popup/PerpsSpotPopup'
-const BuySell = ({ selectedToken }) => {
+import { openCloseLoginRegPopup, setLoginRegPopupAuth } from '@/app/redux/states'
+const BuySell = () => {
+    const selectedToken = useSelector(
+        (state) => state?.perpetualsData?.selectedToken
+    );
+    const solWalletAddress = useSelector(
+        (state) => state?.AllStatesData?.solWalletAddress
+    );
+
+    const dispatch = useDispatch();
+
     let symbol = selectedToken?.name?.slice(0, 4)
     const leverage = selectedToken?.maxLeverage || 100;
-
-    const [symbolSelected, setSymbolSelected] = useState(symbol)
     const [spotBalance, setSpotBalance] = useState({});
 
     // Tabs
@@ -37,6 +45,7 @@ const BuySell = ({ selectedToken }) => {
     const activeSolWalletAddress = useSelector(
         (state) => state?.userData?.activeSolanaWallet
     );
+    const userDetails = useSelector((state) => state?.userData?.userDetails);
 
     const perpsBalance = orderPositionsData ? humanReadableFormatWithNoDollar(Number(orderPositionsData?.crossMarginSummary?.accountValue), 2) : 0
     const perpsBalanceNum = Number(orderPositionsData?.crossMarginSummary?.accountValue)
@@ -71,7 +80,7 @@ const BuySell = ({ selectedToken }) => {
 
     async function spotApi() {
         try {
-            const response = await spotClearinghouseState("0xf58b673c1633ccef0ac58263cdc95ed80f817fc7");
+            const response = await spotClearinghouseState(userDetails?.perpsWallet);
             const spot = response?.find((item) => item?.coin == "USDC")
             setSpotBalance(spot)
         } catch (err) {
@@ -79,8 +88,10 @@ const BuySell = ({ selectedToken }) => {
         }
     }
     useEffect(() => {
-        spotApi()
-    }, []);
+        if (userDetails?.perpsWallet) {
+            spotApi()
+        }
+    }, [userDetails]);
 
 
     return (
@@ -145,7 +156,7 @@ const BuySell = ({ selectedToken }) => {
                     </div>
                     <div className="flex justify-between ">
                         <div className="text-gray-400">Current Position</div>
-                        <div className="text-white">{symbolSelected}</div>
+                        <div className="text-white">{symbol}</div>
                     </div>
                 </div>
 
@@ -157,7 +168,7 @@ const BuySell = ({ selectedToken }) => {
                     <div className=" bg-[#1D1E26] rounded-lg px-4 py-3 text-white text-sm">
                         <div className='flex justify-between items-center'>
                             <div className="text-xs text-gray-400">Buy Amount</div>
-                            <div>{symbolSelected || "usdt"}</div>
+                            <div>{symbol || "usdt"}</div>
                         </div>
                         <div className="flex flex-col">
                             <input
@@ -306,20 +317,34 @@ const BuySell = ({ selectedToken }) => {
 
                 {/* Deposit Button */}
                 <button
-                    onClick={() => setIsSwapPopup(!isSwapPopup)}
+                    onClick={() => {
+                        solWalletAddress ?
+                            setIsSwapPopup(!isSwapPopup) :
+                            dispatch(openCloseLoginRegPopup(true));
+                        dispatch(setLoginRegPopupAuth("signup"));
+
+                    }}
                     className={`w-full ${activeTab == "buy" ? "bg-[#1F73FC]" : "bg-[#ED1B24]"} py-2 rounded mt-8 text-sm font-medium transition-colors `}>
                     Deposite
                 </button>
 
                 <div className='flex items-center gap-3'>
                     <button
-                        onClick={() => setPerpsSpotPopup(true)}
-                        className={`w-full flex items-center justify-center gap-2 text-[#1F73FC] border border-[#1F73FC]  py-2 rounded mt-3 text-sm font-medium transition-colors `}>
+                        onClick={() => {
+                            solWalletAddress ?
+                                setPerpsSpotPopup(true)
+                                :
+                                dispatch(openCloseLoginRegPopup(true));
+                            dispatch(setLoginRegPopupAuth("signup"));
+                        }}
+                        className={`w-full flex items-center justify-center gap-2  text-[#1F73FC] border border-[#1F73FC]  py-2 rounded mt-3 text-sm font-medium transition-colors `}>
                         <span> Perps </span>
                         <IoSwapHorizontal />
                         <span> Spot </span>
                     </button>
                     <button
+
+
                         className={`w-full  bg-[#1F73FC]  py-2 rounded mt-3 text-sm font-medium transition-colors `}>
                         Withdraw
                     </button>
@@ -421,4 +446,4 @@ const BuySell = ({ selectedToken }) => {
     )
 }
 
-export default BuySell
+export default memo(BuySell)
