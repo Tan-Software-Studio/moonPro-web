@@ -6,17 +6,18 @@ import { spotClearinghouseState } from '@/services/hyperLiquid/spotClearinghouse
 import { IoSwapHorizontal } from 'react-icons/io5'
 import LeaveragePopup from '../popup/LeaveragePopup'
 import SlippagePopup from '../popup/SlippagePopup'
+import PerpsSpotPopup from '../popup/PerpsSpotPopup'
 const BuySell = ({ selectedToken }) => {
     let symbol = selectedToken?.name?.slice(0, 4)
     const leverage = selectedToken?.maxLeverage || 100;
 
     const [symbolSelected, setSymbolSelected] = useState(symbol)
     const [spotBalance, setSpotBalance] = useState({});
-    
+
     // Tabs
     const [activeTab, setActiveTab] = useState('buy')
     const [orderType, setOrderType] = useState('Market')
-    
+
     // inputs  
     const [maxLeverage, setMaxLeverage] = useState(leverage / 2);
     const [usdcAmount, setUsdcAmount] = useState(0)
@@ -25,6 +26,7 @@ const BuySell = ({ selectedToken }) => {
 
     // popups // dropdowna
     const [tpSl, setTpSl] = useState(false);
+    const [perpsSpotPopup, setPerpsSpotPopup] = useState(false)
     const [isSlippagePopup, setIsSlippagePopup] = useState(false)
     const [isLeaveragePopup, setIsLeaveragePopup] = useState(false)
     const [isSwapPopup, setIsSwapPopup] = useState(false)
@@ -36,8 +38,8 @@ const BuySell = ({ selectedToken }) => {
         (state) => state?.userData?.activeSolanaWallet
     );
 
-    const usdcBalance = orderPositionsData ? humanReadableFormatWithNoDollar(Number(orderPositionsData?.crossMarginSummary?.accountValue), 2) : 0
-    const usdcBalanceNum = Number(orderPositionsData?.crossMarginSummary?.accountValue)
+    const perpsBalance = orderPositionsData ? humanReadableFormatWithNoDollar(Number(orderPositionsData?.crossMarginSummary?.accountValue), 2) : 0
+    const perpsBalanceNum = Number(orderPositionsData?.crossMarginSummary?.accountValue)
 
 
     function handleAmountInput(e) {
@@ -51,9 +53,9 @@ const BuySell = ({ selectedToken }) => {
                 setUsdcAmount('');
                 setSize(0);
             } else if (!isNaN(num)) {
-                const clampedValue = Math.min(num, usdcBalanceNum);
+                const clampedValue = Math.min(num, perpsBalanceNum);
                 setUsdcAmount(clampedValue);
-                const newSize = (clampedValue / usdcBalanceNum) * 100;
+                const newSize = (clampedValue / perpsBalanceNum) * 100;
                 setSize(newSize);
             }
         }
@@ -63,13 +65,13 @@ const BuySell = ({ selectedToken }) => {
         const percent = parseFloat(e.target.value);
         setSize(percent);
 
-        const calculatedAmount = ((percent / 100) * usdcBalanceNum).toFixed(4);
+        const calculatedAmount = ((percent / 100) * perpsBalanceNum).toFixed(4);
         setUsdcAmount(parseFloat(calculatedAmount));
     }
 
     async function spotApi() {
         try {
-            const response = await spotClearinghouseState("0xf58b673c1633ccef0ac58263cdc95ed80f817fc7                                                                                                                                                                                                                                                                                                  ");
+            const response = await spotClearinghouseState("0xf58b673c1633ccef0ac58263cdc95ed80f817fc7");
             const spot = response?.find((item) => item?.coin == "USDC")
             setSpotBalance(spot)
         } catch (err) {
@@ -135,6 +137,18 @@ const BuySell = ({ selectedToken }) => {
                         Leverage: {maxLeverage || 0}x
                     </div>
                 </div>
+
+                <div className="space-y-3 mt-5 text-xs border-t-gray-600 pt-5 border-t">
+                    <div className="flex justify-between ">
+                        <div className="text-gray-400">Available to Trade</div>
+                        <div className="text-white">{perpsBalance || "N/A"}</div>
+                    </div>
+                    <div className="flex justify-between ">
+                        <div className="text-gray-400">Current Position</div>
+                        <div className="text-white">{symbolSelected}</div>
+                    </div>
+                </div>
+
 
 
                 {/* Size Controls */}
@@ -264,8 +278,8 @@ const BuySell = ({ selectedToken }) => {
                 }
 
                 <button
-                    disabled={usdcAmount >= 2 && usdcBalance}
-                    className={`w-full mt-20 ${usdcAmount >= 2 && usdcBalance ? "bg-[#1F73FC]" : "bg-[#1F73FC]/50"}  py-2 rounded  text-sm font-medium transition-colors `}>
+                    disabled={usdcAmount >= 2 && perpsBalanceNum}
+                    className={`w-full mt-20 ${usdcAmount >= 2 && perpsBalanceNum ? "bg-[#1F73FC]" : "bg-[#1F73FC]/50"}  py-2 rounded  text-sm font-medium transition-colors `}>
                     Place order
                 </button>
 
@@ -299,6 +313,7 @@ const BuySell = ({ selectedToken }) => {
 
                 <div className='flex items-center gap-3'>
                     <button
+                        onClick={() => setPerpsSpotPopup(true)}
                         className={`w-full flex items-center justify-center gap-2 text-[#1F73FC] border border-[#1F73FC]  py-2 rounded mt-3 text-sm font-medium transition-colors `}>
                         <span> Perps </span>
                         <IoSwapHorizontal />
@@ -327,14 +342,14 @@ const BuySell = ({ selectedToken }) => {
                     </div>
                     <div className="flex justify-between">
                         <div className="text-gray-400">Perps</div>
-                        <div className="text-white">{usdcBalance} USDC</div>
+                        <div className="text-white">{perpsBalance} USDC</div>
                     </div>
 
 
                     <div className='text-sm'>Perps Overview</div>
                     <div className="flex justify-between">
                         <div className="text-gray-400">Balance</div>
-                        <div className="text-white">{usdcBalance} USDC</div>
+                        <div className="text-white">{perpsBalance} USDC</div>
                     </div>
 
                     <div className="flex justify-between">
@@ -375,7 +390,7 @@ const BuySell = ({ selectedToken }) => {
             </div >
 
             {isSwapPopup ?
-                <SwapPopup onClose={setIsSwapPopup} usdcBalance={usdcBalance} SolBalance={activeSolWalletAddress?.balance} /> : null
+                <SwapPopup onClose={setIsSwapPopup} perpsBalance={perpsBalance} SolBalance={activeSolWalletAddress?.balance} /> : null
             }
 
             {isLeaveragePopup ?
@@ -388,10 +403,18 @@ const BuySell = ({ selectedToken }) => {
 
             {isSlippagePopup ?
                 <SlippagePopup
-                    onClose={setIsSlippagePopup} 
+                    onClose={setIsSlippagePopup}
                     setSlippageAmount={setSlippageAmount}
                     slippageAmount={slippageAmount}
-                    /> : null
+                /> : null
+            }
+
+            {perpsSpotPopup ?
+                <PerpsSpotPopup
+                    onClose={setPerpsSpotPopup}
+                    spotBalance={Number(spotBalance?.total)}
+                    PerpsBalance={Number(perpsBalanceNum)}
+                /> : null
             }
 
         </>

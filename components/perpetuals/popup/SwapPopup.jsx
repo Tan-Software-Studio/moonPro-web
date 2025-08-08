@@ -1,11 +1,11 @@
 import { Solana, usdcPerps } from '@/app/Images'
 import { ArrowUpDown, X } from 'lucide-react'
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
 import { motion } from "framer-motion";
 import { useSelector } from 'react-redux';
 
-const SwapPopup = ({ onClose, usdcBalance, SolBalance }) => {
+const SwapPopup = ({ onClose, perpsBalance, SolBalance }) => {
 
     // const solanaLivePrice = useSelector(
     //     (state) => state?.AllStatesData?.solanaLivePrice
@@ -18,8 +18,24 @@ const SwapPopup = ({ onClose, usdcBalance, SolBalance }) => {
     // const SolToUsd = SolBalance * solanaLivePrice;
     // const usdcToUsd = usdcBalance * usdcLivePrice;
 
+    const SOL_PRICE_IN_USDC = 170; // You can later fetch this from API or Redux
 
 
+    const [solInputAmount, setSolInputAmount] = useState(0);
+    const [usdcInputAmount, setUsdcInputAmount] = useState(0);
+    console.log("🚀 ~ SwapPopup ~ solInputAmount:", solInputAmount)
+
+    function handleSolInputAmount(e) {
+        const maxAmount = 50;
+        let val = e.target.value
+        if (!/^\d*\.?\d*$/.test(val)) return;
+        if (Number(val) > maxAmount) {
+            val = maxAmount.toString();
+        }
+        setSolInputAmount(val);
+        setUsdcInputAmount(val ? (Number(val) * SOL_PRICE_IN_USDC).toFixed(2) : 0);
+
+    }
 
     return (
         <>
@@ -66,7 +82,9 @@ const SwapPopup = ({ onClose, usdcBalance, SolBalance }) => {
                                     <div className="flex items-center justify-between">
                                         <input
                                             type="number"
+                                            value={solInputAmount}
                                             placeholder={`0.0`}
+                                            onChange={handleSolInputAmount}
                                             className="bg-transparent text-base  font-medium focus:outline-none placeholder-gray-400"
                                         />
                                         <div className='flex items-center gap-2 mt-2'>
@@ -89,12 +107,14 @@ const SwapPopup = ({ onClose, usdcBalance, SolBalance }) => {
                                 <div className=" bg-[#1D1E26] rounded-lg px-4 py-3 text-white text-sm">
                                     <div className='flex justify-between items-center'>
                                         <div className="text-gray-400 text-xs font-medium">Gaining</div>
-                                        <div className="text-gray-400 text-xs font-medium">Balance: {usdcBalance}</div>
+                                        <div className="text-gray-400 text-xs font-medium">Balance: {perpsBalance}</div>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <input
                                             type="number"
                                             placeholder={`0.0`}
+                                            value={usdcInputAmount}
+                                            disabled
                                             className="bg-transparent text-base  font-medium focus:outline-none placeholder-gray-400"
                                         />
                                         <div className='flex items-center gap-2  mt-2'>
