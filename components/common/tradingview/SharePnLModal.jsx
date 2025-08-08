@@ -220,6 +220,7 @@ const SharePnLModal = ({
             alt="Share PNL Background"
             fill
             className="object-cover rounded-lg border border-[#323542]"
+            unoptimized
           />
           <div className="text-white flex flex-col items-center relative">
             <div className="flex gap-[15px] justify-center mb-10">

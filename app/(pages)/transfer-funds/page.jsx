@@ -66,6 +66,7 @@ const TransferFunds = () => {
                       src={transform}
                       className={`h-4 w-4 rotate-90 md:rotate-0`}
                       alt="Transfer Icon"
+                      unoptimized
                     />
                   </div>
                   <div className={``}>
@@ -110,6 +111,7 @@ const TransferFunds = () => {
                       src={transform}
                       className={` h-4 w-4 rotate-90 md:rotate-0`}
                       alt="Transfer Icon"
+                      unoptimized
                     />
                   </div>
                   <div className={``}>

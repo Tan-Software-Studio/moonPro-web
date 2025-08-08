@@ -22,6 +22,7 @@ const MemescopeImages = memo(
         onError={(e) => {
           setImageStates((prev) => ({ ...prev, [address]: false }));
         }}
+        unoptimized
       />
     ) : (
       <div

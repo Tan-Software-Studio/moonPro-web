@@ -85,15 +85,16 @@ const Setting = ({ setIsSettingPopup }) => {
               accountPopupLng?.setting?.quickSell,
               accountPopupLng?.setting?.approve,
               accountPopupLng?.setting?.autoBuy,
-              accountPopupLng?.setting?.autosell
+              accountPopupLng?.setting?.autosell,
             ].map((item, index) => (
               <div
                 onClick={() => setIsActive(item)}
                 key={index}
-                className={`${isActive == item
-                  ? "border-b-[1px] border-[#1F73FC] text-[#1F73FC] "
-                  : "text-[#A8A8A8] border-b-[1px] border-transparent "
-                  } py-3 transition-all sm:text-base text-sm duration-500 cursor-pointer ease-in-out sm:font-semibold`}
+                className={`${
+                  isActive == item
+                    ? "border-b-[1px] border-[#1F73FC] text-[#1F73FC] "
+                    : "text-[#A8A8A8] border-b-[1px] border-transparent "
+                } py-3 transition-all sm:text-base text-sm duration-500 cursor-pointer ease-in-out sm:font-semibold`}
               >
                 {item}
               </div>
@@ -129,7 +130,7 @@ const Setting = ({ setIsSettingPopup }) => {
               <div>
                 <div>{accountPopupLng?.setting?.Customize}</div>
                 <div className="text-[#6E6E6E] ">
-                  {accountPopupLng?.setting?.CustomizeDesc} 
+                  {accountPopupLng?.setting?.CustomizeDesc}
                 </div>
               </div>
             </div>
@@ -146,7 +147,13 @@ const Setting = ({ setIsSettingPopup }) => {
                       className="bg-transparent text-white w-full outline-none text-right"
                       placeholder="0"
                     />
-                    <Image src={solana} alt="solana" width={20} height={20} />
+                    <Image
+                      src={solana}
+                      alt="solana"
+                      width={20}
+                      height={20}
+                      unoptimized
+                    />
                   </div>
                 ))}
             </div>
@@ -159,7 +166,6 @@ const Setting = ({ setIsSettingPopup }) => {
                 className="py-2 px-5 border-[1px] border-[#ED1B24] text-[#ED1B24] hover:bg-[#ED1B24] hover:text-[#FFFFFF] rounded-md transition-all duration-500 ease-in-out "
               >
                 {accountPopupLng?.setting?.cancel}
-
               </button>
               <button
                 onClick={() => setIsSettingPopup(false)}

@@ -115,6 +115,7 @@ export default function Tooltip({ body, children }) {
                     width={12}
                     height={6}
                     className="rotate-180 shadow-2xl"
+                    unoptimized
                   />
                 )}
 
@@ -129,6 +130,7 @@ export default function Tooltip({ body, children }) {
                     width={12}
                     height={6}
                     className="shadow-2xl"
+                    unoptimized
                   />
                 )}
               </motion.div>

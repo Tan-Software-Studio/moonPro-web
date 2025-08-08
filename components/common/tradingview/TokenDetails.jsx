@@ -283,6 +283,7 @@ const TokenDetails = ({
                             height={18}
                             className="cursor-pointer"
                             onClick={() => handleCopy(tokenaddress)}
+                            unoptimized
                           />
                         )}
                       </div>
@@ -310,6 +311,7 @@ const TokenDetails = ({
                                 src={matchedIcon?.icon}
                                 alt={matchedIcon?.title}
                                 className="mx-auto text-white"
+                                unoptimized
                               />
                             )}
                           </div>
@@ -425,6 +427,7 @@ const TokenDetails = ({
                     width={28}
                     height={24}
                     className="sm:w-7 sm:h-6 w-5 h-4"
+                    unoptimized
                   />
                 </button> */}
             </div>

@@ -154,6 +154,7 @@ const Sidebar = () => {
                     e.target.onerror = null;
                     e.target.src = logotext;
                   }}
+                  unoptimized
                 />
               </Link>
             </>
@@ -169,6 +170,7 @@ const Sidebar = () => {
                   e.target.onerror = null;
                   e.target.src = logo;
                 }}
+                unoptimized
               />
             </Link>
           )}
@@ -235,6 +237,7 @@ const Sidebar = () => {
                         src={data.img}
                         alt={data.pagename}
                         className={` mx-auto ${data.size}`}
+                        unoptimized
                       />
                     </div>
                     <span

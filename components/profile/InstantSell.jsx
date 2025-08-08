@@ -207,6 +207,7 @@ const InstantSell = ({ tokenData, index, setIsOpen }) => {
                         alt="Token Logo"
                         width={20}
                         height={20}
+                        unoptimized
                       />
                     </div>
                     <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-md px-3 py-2">

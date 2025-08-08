@@ -85,6 +85,7 @@ export default function Tooltip({
           alt="Info Icon"
           width={iconSize}
           height={iconSize}
+          unoptimized
         />
       </div>
 
@@ -113,6 +114,7 @@ export default function Tooltip({
                   width={12}
                   height={6}
                   className='rotate-180 shadow-2xl'
+                  unoptimized
                 />
                 }
                 <div className='w-full bg-[#1F1F1F] text-[12px] font-bold leading-3 text-[#FFFFFF] rounded-[4px] p-2 flex flex-col justify-start gap-1 onest shadow-2xl'>
@@ -134,6 +136,7 @@ export default function Tooltip({
                   width={12}
                   height={6}
                   className='shadow-2xl'
+                  unoptimized
                 />
                 }
               </motion.div>

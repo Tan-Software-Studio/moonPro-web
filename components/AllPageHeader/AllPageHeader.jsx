@@ -38,6 +38,7 @@ const AllPageHeader = ({ HeaderData }) => {
             src={HeaderData?.newPairsIcon?.menuIcon}
             alt="newPairsIcon"
             className="my-auto"
+            unoptimized
           />
           <h2 className="text-[#3E9FD6] font-semibold text-base">
             {HeaderData?.newPairsIcon?.headTitle}
@@ -53,6 +54,7 @@ const AllPageHeader = ({ HeaderData }) => {
             src={HeaderData?.Filter?.menuIcon}
             alt="newPairsIcon"
             className="my-auto"
+            unoptimized
           />
           {HeaderData?.Filter?.menuTitle}
         </div>
@@ -61,6 +63,7 @@ const AllPageHeader = ({ HeaderData }) => {
             src={HeaderData?.Advanced?.menuIcon}
             alt="newPairsIcon"
             className="my-auto"
+            unoptimized
           />
           {HeaderData?.Advanced?.menuTitle}
         </div>
@@ -70,6 +73,7 @@ const AllPageHeader = ({ HeaderData }) => {
               src={HeaderData?.Buy?.menuIcon}
               alt={HeaderData?.Buy?.menuTitle}
               className="my-auto"
+              unoptimized
             />
             {HeaderData?.Buy?.menuTitle}
           </span>
@@ -88,6 +92,7 @@ const AllPageHeader = ({ HeaderData }) => {
             src={HeaderData?.coin?.menuIcon}
             alt="newPairsIcon"
             className="my-auto"
+            unoptimized
           />
         </div>
       </div>

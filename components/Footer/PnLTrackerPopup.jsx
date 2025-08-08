@@ -121,6 +121,7 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
           alt="PnL Background"
           fill
           style={{ objectFit: "cover" }}
+          unoptimized
         />
       </div>
 
@@ -200,6 +201,7 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
                 width={18}
                 height={18}
                 alt="solanasollogo"
+                unoptimized
               />
               <div className="text-white text-2xl font-bold">
                 ${Number(activeSolWalletAddress?.balance || 0).toFixed(5) || 0}
@@ -215,6 +217,7 @@ const PnLTrackerPopup = ({ isOpen, onClose }) => {
                 width={18}
                 height={18}
                 alt="solanasollogo"
+                unoptimized
               />
               <div
                 className={`text-2xl font-bold ${

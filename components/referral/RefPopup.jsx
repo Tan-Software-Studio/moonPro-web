@@ -111,7 +111,12 @@ function RefPopup({ Available, address, onClose, setAddClaimed }) {
             <div>{(Number(Available) || 0).toFixed(5)}</div>
 
             <div className="flex items-center gap-1 text-sm text-gray-300">
-              <Image src={solana} className="w-5 h-5" alt="solana" />
+              <Image
+                src={solana}
+                className="w-5 h-5"
+                alt="solana"
+                unoptimized
+              />
               <span>SOL</span>
             </div>
           </div>

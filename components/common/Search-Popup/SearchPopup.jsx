@@ -212,7 +212,7 @@ const SearchPopup = () => {
                       className="appearance-none inline-flex items-center justify-center select-none whitespace-nowrap rounded-[0.375rem] h-6 min-w-6 text-xs px-2 border border-[rgba(255,255,255,0.16)] text-[rgba(255,255,255,0.92)] mr-3 gap-1"
                     >
                       {/* <span className="inline-flex items-center flex-shrink-0"> */}
-                      <Image src={Clear} alt="Clear" />
+                      <Image src={Clear} alt="Clear" unoptimized />
                       {/* </span> */}
                       Clear
                     </button>
@@ -248,6 +248,7 @@ const SearchPopup = () => {
                               src={solana}
                               alt="solana"
                               className="absolute w-3 h-3 right-0 bottom-0"
+                              unoptimized
                             />
                           </div>
                           <span>{recentData?.Trade?.Currency?.Symbol}</span>

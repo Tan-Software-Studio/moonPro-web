@@ -322,6 +322,7 @@ const MscopePumpTable = ({
                                             src={matchedIcon?.icon}
                                             alt={matchedIcon?.title}
                                             className="mx-auto text-white"
+                                            unoptimized
                                           />
                                         )}
                                       </div>
@@ -441,7 +442,7 @@ const MscopePumpTable = ({
                                 body={`Number of Holders: ${block?.holders}`}
                               >
                                 <div className="flex items-center gap-[4px]">
-                                  <Image src={Users} alt="user" />
+                                  <Image src={Users} alt="user" unoptimized/>
                                   <div className="text-[#F1F0F0] text-xs md:text-[12px] font-400">
                                     {block?.holders}
                                   </div>
@@ -461,7 +462,7 @@ const MscopePumpTable = ({
                               }`}
                             >
                               <div className="flex items-center gap-[4px]">
-                                <Image src={Vol} alt="volume" />
+                                <Image src={Vol} alt="volume" unoptimized />
                                 <div className="text-[#F1F0F0] text-xs md:text-[12px] font-400">
                                   {block?.volume
                                     ? humanReadableFormat(
@@ -488,6 +489,7 @@ const MscopePumpTable = ({
                                       ? `w-[${selectedMetric}px] h-[${selectedMetric}px]`
                                       : null
                                   }
+                                  unoptimized
                                 />
                                 <div
                                   className={`text-xs md:font-[400]`}
@@ -519,6 +521,7 @@ const MscopePumpTable = ({
                                     <Image
                                       src={matchedData?.icon}
                                       alt={matchedData?.title}
+                                      unoptimized
                                     />
                                   )}
                                   <div

@@ -229,7 +229,7 @@ const WalletSwapButton = () => {
                           className="w-4 h-4 flex items-center justify-center text-xs transition-colors duration-200 hover:bg-gray-600 rounded"
                           onClick={(event) => {
                             event.stopPropagation();
-                            handleCopy
+                            handleCopy;
                           }}
                           title={
                             copiedWallet === wallet.wallet
@@ -254,6 +254,7 @@ const WalletSwapButton = () => {
                         width={16}
                         height={16}
                         alt="solana"
+                        unoptimized
                       />
                       <span className="text-sm font-medium">
                         {getWalletBalance(wallet.wallet)}

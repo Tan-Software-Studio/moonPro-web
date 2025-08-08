@@ -454,7 +454,7 @@ const TableBody = ({ isLoading, data, img, isTimeCreated, BASE_URL }) => {
                       }
                     >
                       <span>
-                        <Image src={Lightning} alt="" />
+                        <Image src={Lightning} alt="" unoptimized />
                       </span>
                       <span>
                         {quickBuy > 0

@@ -271,6 +271,7 @@ const Navbar = () => {
                     e.target.onerror = null;
                     e.target.src = logo;
                   }}
+                  unoptimized
                 />
               </div>
               <div className="relative flex items-center gap-2 ">
@@ -338,6 +339,7 @@ const Navbar = () => {
                           height={30}
                           width={30}
                           className="rounded-full"
+                          unoptimized
                         />
                         <div className="sm:flex hidden">
                           {Number(activeSolWalletAddress?.balance || 0).toFixed(
@@ -407,6 +409,7 @@ const Navbar = () => {
                                 width={20}
                                 height={20}
                                 className="rounded-full"
+                                unoptimized
                               />
                               <span className="text-lg font-semibold text-white">
                                 {Number(
@@ -418,7 +421,7 @@ const Navbar = () => {
                             {/* <div className="text-[#666666] text-lg">⇄</div>
 
                             <div className="flex items-center gap-2">
-                              <Image src={usdc} alt="usdc" width={20} height={20} className="rounded-full" />
+                              <Image src={usdc} alt="usdc" width={20} height={20} className="rounded-full" unoptimized/>
                               <span className="text-lg font-semibold text-white">
                                 {Number(usdcBalance || 0).toFixed(2)}
                               </span>
