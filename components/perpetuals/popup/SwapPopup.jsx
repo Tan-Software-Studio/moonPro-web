@@ -11,7 +11,7 @@ import { orderPositions } from '@/app/redux/perpetauls/perpetual.slice';
 const SwapPopup = ({ onClose, perpsBalance, SolBalance }) => {
 
     const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
-    const SOL_PRICE_IN_USDC = 170; 
+    const SOL_PRICE_IN_USDC = 170;
     const activeSolWalletAddress = useSelector(
         (state) => state?.userData?.activeSolanaWallet
     );
@@ -40,7 +40,7 @@ const SwapPopup = ({ onClose, perpsBalance, SolBalance }) => {
         try {
             setBtnLoading(true)
             const response = await axiosInstanceAuth.post(`${baseUrl}hyper/deposit`, {
-                amount: Number(usdcInputAmount),
+                amount: Number(solInputAmount),
             })
             dispatch(orderPositions(userDetails?.perpsWallet))
             showToasterSuccess(response?.data?.message || "Successfully transfer");
@@ -156,16 +156,16 @@ const SwapPopup = ({ onClose, perpsBalance, SolBalance }) => {
                                     <button
                                         onClick={handleConfirmConvert}
                                         className="w-full bg-[#1d73fc] hover:bg-[#438bff] py-3 rounded-lg font-bold text-sm text-[#FFFFFF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                        disabled={usdcInputAmount < 7 || btnLoading}
+                                        disabled={usdcInputAmount <  7 || btnLoading}
                                     >
-                                        Confirm
-                                    </button>
+                                Confirm
+                            </button>
                                 }
-                            </div>
                         </div>
                     </div>
-                </motion.div>
-            </motion.div >
+                </div>
+            </motion.div>
+        </motion.div >
         </>
     )
 }

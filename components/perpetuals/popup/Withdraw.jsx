@@ -17,11 +17,11 @@ const PerpWithdrawPopup = ({ onClose, perpsBalance }) => {
     );
     console.log("🚀 ~ SwapPopup ~ activeSolWalletAddress:", activeSolWalletAddress)
 
-    const SolBalance = activeSolWalletAddress?.balance 
+    const SolBalance = activeSolWalletAddress?.balance
     const [solInputAmount, setSolInputAmount] = useState(0);
     const [usdcInputAmount, setUsdcInputAmount] = useState(0);
-    const [btnLoading, setBtnLoading] = useState(false) 
-     
+    const [btnLoading, setBtnLoading] = useState(false)
+
 
 
     function handleSolInputAmount(e) {
@@ -37,7 +37,10 @@ const PerpWithdrawPopup = ({ onClose, perpsBalance }) => {
     const handleConfirmConvert = async () => {
         try {
             setBtnLoading(true)
-           
+            const response = await axiosInstanceAuth.post(`${baseUrl}hyper/withdraw`, {
+                amount: Number(usdcInputAmount),
+            })
+            console.log("🚀 ~ handleConfirmConvert ~ response:", response)
             // setBtnLoading(false)
             onClose(false);
         } catch (error) {
