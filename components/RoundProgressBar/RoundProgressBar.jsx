@@ -62,7 +62,12 @@ const RoundProgressBar = ({
           className={`absolute rounded-full bg-black border -top-1.5 -left-2.1 !z-10`}
           style={{ borderColor: progressColor }}
         >
-          <Image src={capsuleImg ? capsuleImg : pump_img} alt="pump_img" className="w-4" />
+          <Image
+            src={capsuleImg ? capsuleImg : pump_img}
+            alt="pump_img"
+            className="w-4"
+            unoptimized
+          />
         </div>
       </div>
     </div>

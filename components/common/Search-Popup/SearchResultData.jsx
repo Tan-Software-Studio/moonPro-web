@@ -152,6 +152,7 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                         src={solana}
                         alt="solana"
                         className="w-[15px] lg:w-5 h-[15px] lg:h-5"
+                        unoptimized
                       />
                       {e?.dexImg ? (
                         <img
@@ -235,6 +236,7 @@ const SearchResultData = ({ searchResult, searchLoader }) => {
                                 height={15}
                                 width={15}
                                 className="mx-auto text-white"
+                                unoptimized
                               />
                             </Link>
                             <Link

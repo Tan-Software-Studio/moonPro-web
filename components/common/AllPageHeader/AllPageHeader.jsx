@@ -409,6 +409,7 @@ const AllPageHeader = ({
                 src={HeaderData?.Filter?.menuIcon}
                 alt="newPairsIcon"
                 className="my-auto"
+                unoptimized
               />
               {HeaderData?.Filter?.menuTitle}
             </button>
@@ -614,7 +615,7 @@ const AllPageHeader = ({
                   <span>{totalWallets}</span>
 
                   {/* Solana Icon */}
-                  <Image src={solana} width={20} height={20} alt="solana" />
+                  <Image src={solana} width={20} height={20} alt="solana" unoptimized />
                   <span>{primaryWallet?.balance?.toFixed(5) || "0"}</span>
 
                   {/* Dropdown Icon */}
@@ -697,6 +698,7 @@ const AllPageHeader = ({
                                 width={16}
                                 height={16}
                                 alt="solana"
+                                unoptimized
                               />
                               <span className="text-sm font-medium">
                                 {wallet.balance?.toFixed(6) || "0"}
@@ -736,12 +738,12 @@ const AllPageHeader = ({
                   className="flex items-center gap-1 pl-3 pr-8  py-1 border-l border-[#26262e] cursor-pointer"
                   onClick={() => dispatch(setOpenOrderSetting(true))}
                 >
-                  <Image src={solana} width={16} height={16} alt="solana" />
+                  <Image src={solana} width={16} height={16} alt="solana" unoptimized />
                   <span className="text-white text-xs">{presist}</span>
                 </div>
               ) : (
                 <div className="px-3 py-1 border-l border-[#26262e]">
-                  <Image src={solana} width={16} height={16} alt="solana" />
+                  <Image src={solana} width={16} height={16} alt="solana" unoptimized />
                 </div>
               )}
             </div>

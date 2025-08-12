@@ -297,6 +297,7 @@ const ActivePosition = ({
                 width={200}
                 height={100}
                 className="text-slate-400 object-contain md:w-[200px] sm:w-[180px] w-[120px] h-auto"
+                unoptimized
               />
             </div>
             <p className="text-slate-400 text-lg  break-words break-all">{`${

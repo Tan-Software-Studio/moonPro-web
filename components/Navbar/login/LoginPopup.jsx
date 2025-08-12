@@ -528,6 +528,7 @@ const LoginPopup = ({ authName }) => {
                     width={20}
                     height={20}
                     className="w-5 h-5 object-contain"
+                    unoptimized
                   />
                   <span className="text-[#1F1F1F] font-semibold ml-3">
                     {navbar?.loginPopup?.continueGoogle}
@@ -548,6 +549,7 @@ const LoginPopup = ({ authName }) => {
                     width={20}
                     height={20}
                     className="w-5 h-5 object-contain"
+                    unoptimized
                   />
                   <span className="text-[#1F1F1F] font-semibold ml-3">
                     {getPhantomButtonText()}

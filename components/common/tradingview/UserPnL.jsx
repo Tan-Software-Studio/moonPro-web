@@ -74,37 +74,69 @@ const UserPnL = ({ currentTokenPnLData, isPnlUsdSolActive, onClickToggle, tokenS
           onClickWholeDiv();
         }
       }}
-      className={`${customBgColor ? customBgColor : `bg-[#08080E]`} border-t w-full py-1 ${customBorderColor ? customBorderColor : "border-[#4D4D4D]"} flex flex-wrap justify-between items-center`}
+      className={`${
+        customBgColor ? customBgColor : `bg-[#08080E]`
+      } border-t w-full py-1 ${
+        customBorderColor ? customBorderColor : "border-[#4D4D4D]"
+      } flex flex-wrap justify-between items-center`}
       style={{ boxSizing: "border-box" }}
     >
       {sections.map((section, index) => (
         <React.Fragment key={section.title}>
           <div
-            className={`select-none outline-none flex items-center justify-center flex-1 ${customHeight ? customHeight : `h-[64px]`} rounded-[4px] ease-linear duration-200 group`}
+            className={`select-none outline-none flex items-center justify-center flex-1 ${
+              customHeight ? customHeight : `h-[64px]`
+            } rounded-[4px] ease-linear duration-200 group`}
             style={{
-              minWidth: section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.pnl ? "30%" : "20%",
-              maxWidth: section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.pnl ? "35%" : "25%",
+              minWidth:
+                section.title ===
+                wallettracker?.pnlpopup?.bottom?.activeposition?.pnl
+                  ? "30%"
+                  : "20%",
+              maxWidth:
+                section.title ===
+                wallettracker?.pnlpopup?.bottom?.activeposition?.pnl
+                  ? "35%"
+                  : "25%",
               boxSizing: "border-box",
-              padding: section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.pnl ? "0 6px" : "0 2px",
+              padding:
+                section.title ===
+                wallettracker?.pnlpopup?.bottom?.activeposition?.pnl
+                  ? "0 6px"
+                  : "0 2px",
             }}
           >
             <div className="flex flex-col items-center justify-center h-full">
-              {useTitle &&
+              {useTitle && (
                 <div
-                onClick={() => {
-                  if (section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.pnl) {
-                    onClickToggle();
-                  }
-                }} 
-                className={`${section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.pnl && "group/title"} flex items-center justify-center gap-1 h-[14px]`}>
-                  <span className={`${section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.pnl && "group-hover/title:text-white"} text-center text-[#A8A8A8] font-[400] sm:text-base text-sm  xl:text-[12px] 2xl:text-[14px]`}>
+                  onClick={() => {
+                    if (
+                      section.title ===
+                      wallettracker?.pnlpopup?.bottom?.activeposition?.pnl
+                    ) {
+                      onClickToggle();
+                    }
+                  }}
+                  className={`${
+                    section.title ===
+                      wallettracker?.pnlpopup?.bottom?.activeposition?.pnl &&
+                    "group/title"
+                  } flex items-center justify-center gap-1 h-[14px]`}
+                >
+                  <span
+                    className={`${
+                      section.title ===
+                        wallettracker?.pnlpopup?.bottom?.activeposition?.pnl &&
+                      "group-hover/title:text-white"
+                    } text-center text-[#A8A8A8] font-[400] sm:text-base text-sm  xl:text-[12px] 2xl:text-[14px]`}
+                  >
                     {section.title}
                   </span>
                   {section.icon && (
                     <div className="flex items-center">{section.icon}</div>
                   )}
                 </div>
-              }
+              )}
               <div
                 className={`flex items-center justify-center text-center font-[500] ${section.color} sm:text-base text-sm lg:text-[8px] xl:text-[12px] 2xl:text-[14px]`}
                 style={{
@@ -116,11 +148,19 @@ const UserPnL = ({ currentTokenPnLData, isPnlUsdSolActive, onClickToggle, tokenS
                   maxWidth: "100%",
                 }}
               >
-                {section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.pnl ? (
+                {section.title ===
+                wallettracker?.pnlpopup?.bottom?.activeposition?.pnl ? (
                   <div className="flex items-center">
-                    {!isPnlUsdSolActive && 
-                      <Image className="flex flex-shrink-0" src={solana} width={15} height={15} alt="solana" />
-                    }
+                    {!isPnlUsdSolActive && (
+                      <Image
+                        className="flex flex-shrink-0"
+                        src={solana}
+                        width={15}
+                        height={15}
+                        alt="solana"
+                        unoptimized
+                      />
+                    )}
                     <span>
                       {section?.addSign && section.addSign}
                       {isPnlUsdSolActive && section.hasDollar && "$"}
@@ -132,23 +172,33 @@ const UserPnL = ({ currentTokenPnLData, isPnlUsdSolActive, onClickToggle, tokenS
                   </div>
                 ) : (
                   <>
-                    {!isPnlUsdSolActive && 
-                      <Image className="flex flex-shrink-0" src={solana} width={15} height={15} alt="solana" />
-                    }
+                    {!isPnlUsdSolActive && (
+                      <Image
+                        className="flex flex-shrink-0"
+                        src={solana}
+                        width={15}
+                        height={15}
+                        alt="solana"
+                        unoptimized
+                      />
+                    )}
                     <span
                       className={
-                        section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.remaining ? "group-hover:hidden" : ""
+                        section.title ===
+                        wallettracker?.pnlpopup?.bottom?.activeposition
+                          ?.remaining
+                          ? "group-hover:hidden"
+                          : ""
                       }
                     >
                       {isPnlUsdSolActive && section.hasDollar && "$"}
                       {section.value > 1 || section.value < -1
                         ? humanReadableFormatWithNoDollar(section.value, 2)
-                        : formatDecimal(
-                            section.value,
-                            1
-                          )}
+                        : formatDecimal(section.value, 1)}
                     </span>
-                    {section.title === wallettracker?.pnlpopup?.bottom?.activeposition?.remaining && (
+                    {section.title ===
+                      wallettracker?.pnlpopup?.bottom?.activeposition
+                        ?.remaining && (
                       <span className="hidden group-hover:inline font-medium ml-1">
                         {section.hoverValue}
                       </span>
@@ -160,7 +210,13 @@ const UserPnL = ({ currentTokenPnLData, isPnlUsdSolActive, onClickToggle, tokenS
           </div>
           {index < sections.length - 1 && (
             <div
-              className={`w-[1px] ${customLineSeparatorHeight ? customLineSeparatorHeight : 'h-12'} ${customLineSeparatorColor ? customLineSeparatorColor : 'bg-[#4D4D4D]'} `}
+              className={`w-[1px] ${
+                customLineSeparatorHeight ? customLineSeparatorHeight : "h-12"
+              } ${
+                customLineSeparatorColor
+                  ? customLineSeparatorColor
+                  : "bg-[#4D4D4D]"
+              } `}
               style={{ flexShrink: 0 }}
             />
           )}

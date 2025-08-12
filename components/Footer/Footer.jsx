@@ -153,8 +153,6 @@ const Footer = () => {
     }
   };
 
-
-
   // Handle external links
   const handleDiscordClick = () => {
     window.open("https://discord.gg/", "_blank");
@@ -171,7 +169,12 @@ const Footer = () => {
   return (
     <>
       <footer
-        className={`${(isSidebarOpen && isLargeScreen) || (isSidebarOpen && isSmallScreenData) ? "md:ml-48  " : "md:ml-[66px] lg:ml-[64px]"} hidden md:block fixed bottom-0 left-0 right-0  bg-[#0A0A0F] border-t ${borderColor}  py-1`}
+        className={`${
+          (isSidebarOpen && isLargeScreen) ||
+          (isSidebarOpen && isSmallScreenData)
+            ? "md:ml-48  "
+            : "md:ml-[66px] lg:ml-[64px]"
+        } hidden md:block fixed bottom-0 left-0 right-0  bg-[#0A0A0F] border-t ${borderColor}  py-1`}
       >
         <div className="flex items-center justify-between md:gap-0 gap-10 text-xs">
           {activeSolWalletAddress?.wallet && (
@@ -202,7 +205,13 @@ const Footer = () => {
                     <LuWalletMinimal size={16} />
                     <span>{reduxWallets?.length}</span>
 
-                    <Image src={solana} width={16} height={16} alt="solana" />
+                    <Image
+                      src={solana}
+                      width={16}
+                      height={16}
+                      alt="solana"
+                      unoptimized
+                    />
                     <span>{getPrimaryWalletBalance()}</span>
 
                     <FaAngleDown size={14} />
@@ -233,8 +242,9 @@ const Footer = () => {
                         return (
                           <div
                             key={wallet._id || wallet.id || idx}
-                            className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${wallet.active ? "bg-[#18181a]" : ""
-                              }`}
+                            className={`flex items-center justify-between p-3 hover:bg-[#2a2a2a] ${
+                              wallet.active ? "bg-[#18181a]" : ""
+                            }`}
                           >
                             <div className="flex items-center gap-3">
                               <input
@@ -248,10 +258,11 @@ const Footer = () => {
                               <div className="flex flex-col">
                                 <div className="flex items-center gap-2 text-sm">
                                   <span
-                                    className={`font-medium ${wallet.primary
+                                    className={`font-medium ${
+                                      wallet.primary
                                         ? "text-orange-400"
                                         : "text-white"
-                                      }`}
+                                    }`}
                                   >
                                     {idx === 0
                                       ? "Nexa Pro Main"
@@ -286,6 +297,7 @@ const Footer = () => {
                                   width={16}
                                   height={16}
                                   alt="solana"
+                                  unoptimized
                                 />
                                 <span className="text-sm font-medium">
                                   {getWalletBalance(wallet.wallet)}
@@ -315,6 +327,7 @@ const Footer = () => {
                     height={16}
                     width={16}
                     className="rounded-sm opacity-80"
+                    unoptimized
                   />
                   <span className="font-medium text-sm truncate max-w-[100px] overflow-hidden text-ellipsis">
                     PnL Tracker
@@ -327,15 +340,15 @@ const Footer = () => {
                 {/* 
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-1 text-orange-400 font-medium">
-                  <Image src={bitcoinIcon} alt="bitcoinIcon" height={16} width={16} className="rounded-full" />
+                  <Image src={bitcoinIcon} alt="bitcoinIcon" height={16} width={16} className="rounded-full" unoptimized />
                   <span>$106.0K</span>
                 </div>
                 <div className="flex items-center space-x-1 text-blue-400 font-medium">
-                  <Image src={eth} alt="eth" height={16} width={16} className="rounded-full" />
+                  <Image src={eth} alt="eth" height={16} width={16} className="rounded-full" unoptimized />
                   <span>$262.0</span>
                 </div>
                 <div className="flex items-center space-x-1 text-green-400 font-medium">
-                  <Image src={Solana} alt="Solana" height={16} width={16} className="rounded-full" />
+                  <Image src={Solana} alt="Solana" height={16} width={16} className="rounded-full" unoptimized />
                   <span>$164.91</span>
                 </div>
               </div>
@@ -367,6 +380,7 @@ const Footer = () => {
                   height={20}
                   width={20}
                   className="rounded-full w-[20px] h-[20px]"
+                  unoptimized
                 />
               </button>
               <button
@@ -379,6 +393,7 @@ const Footer = () => {
                   height={20}
                   width={20}
                   className="rounded-full w-[20px] h-[20px]"
+                  unoptimized
                 />
               </button>
               <button

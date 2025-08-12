@@ -328,6 +328,7 @@ const RightModalOpenSetting = ({
                     src={solana}
                     className="w-[30px] h-[18px] rounded-full bg-cover"
                     alt=""
+                    unoptimized
                   />
                 }
               </div>
@@ -385,6 +386,7 @@ const RightModalOpenSetting = ({
                   src={solana}
                   className="w-[30px] h-[18px] rounded-full bg-cover"
                   alt=""
+                  unoptimized
                 />
               </div>
             </div>

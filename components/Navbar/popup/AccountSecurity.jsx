@@ -393,6 +393,7 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                       alt="lang"
                       src={language.img}
                       className="w-[16px] h-[16px] rounded-full flex-shrink-0"
+                      unoptimized
                     />
                     <span className="uppercase flex-1 truncate">
                       {language?.lang || "English"}
@@ -416,6 +417,7 @@ const AccountSecurity = ({ setIsAccountPopup, handlePhrase, userDetails }) => {
                                   alt="lang"
                                   src={item.img}
                                   className="w-full h-full object-cover"
+                                  unoptimized
                                 />
                               </div>
                               <span className="text-xs text-[#A8A8A8] truncate">

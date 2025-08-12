@@ -21,6 +21,7 @@ const TrendingImage = ({ name, address, url }) => {
         onError={(e) => {
           setIsImageError(true);
         }}
+        unoptimized
       />
     </div>
   );

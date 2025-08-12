@@ -32,7 +32,7 @@ import {
 import AISignalsButton from "../Navbar/ai-signalBtn/AiSignalBtn";
 import { setIsChartByDefault } from "@/app/redux/memescopeData/Memescope";
 import { IoClose, IoPieChartOutline } from "react-icons/io5";
-import { fetchAiSignalData } from "@/app/redux/AiSignalDataSlice/AiSignal.slice"; 
+import { fetchAiSignalData } from "@/app/redux/AiSignalDataSlice/AiSignal.slice";
 
 const Sidebar = () => {
   const { t } = useTranslation();
@@ -66,7 +66,7 @@ const Sidebar = () => {
       id: 9,
       pathname: `/perpetuals`,
       pagename: "Perpetuals",
-      icon: <IoPieChartOutline  size={20}/>,
+      icon: <IoPieChartOutline size={20} />,
       size: "w-5 h-5",
     },
     {
@@ -153,6 +153,7 @@ const Sidebar = () => {
                     e.target.onerror = null;
                     e.target.src = logotext;
                   }}
+                  unoptimized
                 />
               </Link>
             </>
@@ -168,6 +169,7 @@ const Sidebar = () => {
                   e.target.onerror = null;
                   e.target.src = logo;
                 }}
+                unoptimized
               />
             </Link>
           )}
@@ -232,9 +234,10 @@ const Sidebar = () => {
                           src={data.img}
                           alt={data.pagename}
                           className={` mx-auto ${data.size}`}
+                          unoptimized
                         />
                         :
-                      data?.icon
+                        data?.icon
 
                       }
                     </div>

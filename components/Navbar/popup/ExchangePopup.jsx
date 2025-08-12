@@ -248,12 +248,12 @@ const ExchangePopup = ({ isOpen, onClose }) => {
                       <div className="flex items-center gap-2">
                         {isSwapped ? (
                           <>
-                            <Image src={usdc} alt="usdc" height={20} width={20} className="rounded-full" />
+                            <Image src={usdc} alt="usdc" height={20} width={20} className="rounded-full" unoptimized />
                             <span className="text-white font-medium">USDC</span>
                           </>
                         ) : (
                           <>
-                            <Image src={Solana} alt="solana" height={20} width={20} className="rounded-full" />
+                            <Image src={Solana} alt="solana" height={20} width={20} className="rounded-full" unoptimized />
                             <span className="text-white font-medium">SOL</span>
                           </>
                         )}
@@ -290,12 +290,12 @@ const ExchangePopup = ({ isOpen, onClose }) => {
                       <div className="flex items-center gap-2">
                         {isSwapped ? (
                           <>
-                            <Image src={Solana} alt="solana" height={20} width={20} className="rounded-full" />
+                            <Image src={Solana} alt="solana" height={20} width={20} className="rounded-full" unoptimized />
                             <span className="text-white font-medium">SOL</span>
                           </>
                         ) : (
                           <>
-                            <Image src={usdc} alt="usdc" height={20} width={20} className="rounded-full" />
+                            <Image src={usdc} alt="usdc" height={20} width={20} className="rounded-full" unoptimized />
                             <span className="text-white font-medium">USDC</span>
                           </>
                         )}
@@ -328,6 +328,7 @@ const ExchangePopup = ({ isOpen, onClose }) => {
                       height={20}
                       width={20}
                       className="rounded-full"
+                      unoptimized
                     />
                     <span className="text-white text-sm">Solana</span>
                   </div>
@@ -403,7 +404,7 @@ const ExchangePopup = ({ isOpen, onClose }) => {
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-2">
-                    <Image src={Solana} alt="solana" height={20} width={20} className="rounded-full" />
+                    <Image src={Solana} alt="solana" height={20} width={20} className="rounded-full" unoptimized />
                     <span className="text-white text-sm">Solana</span>
                   </div>
                   <span className="text-white text-sm">
@@ -428,7 +429,7 @@ const ExchangePopup = ({ isOpen, onClose }) => {
                         placeholder="0.0"
                       />
                       <div className="flex items-center gap-2 ml-4">
-                        <Image src={Solana} alt="solana" height={24} width={24} className="rounded-full" />
+                        <Image src={Solana} alt="solana" height={24} width={24} className="rounded-full" unoptimized />
                         <span className="text-white font-medium">SOL</span>
                       </div>
                     </div>

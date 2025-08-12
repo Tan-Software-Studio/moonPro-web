@@ -51,7 +51,9 @@ const Table = ({
   const { t } = useTranslation();
   const tragindViewPagePage = t("tragindViewPage");
   const dispatch = useDispatch();
-  const { latestTrades, removedLiquidity } = useSelector((state) => state.allCharTokenData);
+  const { latestTrades, removedLiquidity } = useSelector(
+    (state) => state.allCharTokenData
+  );
   const [loader, setLoader] = useState(false);
   const [devTokensData, setDevTokensData] = useState([]);
   const [topHoldingData, setTopHoldingData] = useState([]);
@@ -78,7 +80,7 @@ const Table = ({
     const combined = [...latestTrades, ...removedLiquidity];
     combined.sort((a, b) => new Date(b.Block.Time) - new Date(a.Block.Time));
     const latest50 = combined.slice(0, 50);
-    setTradesData(latest50)
+    setTradesData(latest50);
   }, [latestTrades, removedLiquidity]);
 
   useEffect(() => {
@@ -513,10 +515,14 @@ const Table = ({
   };
 
   useEffect(() => {
-    if (pairAddress != null && activeTab === "Holders" && topHoldingData.length <= 0) {
+    if (
+      pairAddress != null &&
+      activeTab === "Holders" &&
+      topHoldingData.length <= 0
+    ) {
       topHoldersApiCall();
     }
-  }, [pairAddress, activeTab])
+  }, [pairAddress, activeTab]);
 
   // top traders api call
   const toptradersApiCall = async () => {
@@ -888,9 +894,9 @@ const Table = ({
 
   useEffect(() => {
     if (pairAddress && programAddress) {
-      dispatch(fetchRemovedLiquidity({pairAddress, programAddress}))
+      dispatch(fetchRemovedLiquidity({ pairAddress, programAddress }));
     }
-  }, [pairAddress, programAddress])
+  }, [pairAddress, programAddress]);
 
   useEffect(() => {
     if (tokenSupply === undefined) {
@@ -921,8 +927,7 @@ const Table = ({
         {/* table body */}
         <div
           className={`onest ${
-            (activeTab === "Transactions" &&
-              latestTrades?.length > 0) ||
+            (activeTab === "Transactions" && latestTrades?.length > 0) ||
             topTraderData?.length > 0 ||
             topHoldingData?.BalanceUpdates?.length > 0
               ? "visibleScroll"
@@ -930,8 +935,7 @@ const Table = ({
           } `}
         >
           <div>
-            {activeTab === "Trades" &&
-            tradesData.length > 0 ? (
+            {activeTab === "Trades" && tradesData.length > 0 ? (
               <div className="lg:h-[85vh] h-svh overflow-y-scroll visibleScroll">
                 <table className="min-w-[100%] table-auto overflow-y-scroll">
                   <thead className="bg-[#08080E] sticky top-0">
@@ -1009,93 +1013,43 @@ const Table = ({
                             key={index}
                             className={`capitalize bg-[#08080E] text-[#F6F6F6] font-normal text-xs leading-4 onest border-b border-[#404040]`}
                           >
-                            {data?.Trade ? 
-                              <>
-                              <td className="text-center px-6 py-4">
-                                {readableTime}
-                              </td>
-                              <td className="flex items-center justify-center">
-                                <div
-                                  className={`min-w-8 rounded px-3 py-1.5 text-center ${
-                                    isBuy ? "text-[#21CB6B]" : "text-[#ed1b26]"
-                                  }`}
-                                >
-                                  {data?.Trade?.Side?.Type || ""}
-                                </div>
-                              </td>
-                              <td className="text-center px-6 py-4">
-                                {data?.Trade?.PriceInUSD
-                                  ? showPrice >= 1 || showPrice <= -1
-                                    ? "$" +
-                                      humanReadableFormatWithNoDollar(
-                                        showPrice,
-                                        2
-                                      )
-                                    : "$" + formatDecimal(showPrice, 1)
-                                  : "N/A"}
-                              </td>
-                              <td className="text-center px-6 py-4">
-                                {data?.Trade?.Amount
-                                  ? humanReadableFormatWithOutUsd(
-                                      data.Trade.Amount
-                                    )
-                                  : "N/A"}
-                              </td>
-                              <td
-                                className={`text-center px-6 py-4 
-                              ${isBuy ? "text-[#21CB6B]" : "text-[#ed1b26]"}`}
-                              >
-                                <div className="flex items-center justify-center gap-1">
-                                  {!totalUsdActive && (
-                                    <Image
-                                      src={solana}
-                                      width={15}
-                                      height={15}
-                                      alt="solana"
-                                    />
-                                  )}
-                                  <p>
-                                    {(totalUsdActive ? "$" : "") +
-                                      readableTotalPrice}
-                                  </p>
-                                </div>
-                              </td>
-                              <td className="flex items-center justify-center px-6 py-4 text-white text-center gap-2">
-                                {data?.Transaction?.Signer
-                                  ? `${data?.Transaction?.Signer.slice(
-                                      0,
-                                      3
-                                    )}...${data?.Transaction?.Signer.slice(-3)}`
-                                  : "N/A"}
-                                <a
-                                  href={`https://solscan.io/tx/${data?.Transaction?.Signature}`}
-                                  target="_blank"
-                                >
-                                  <CiShare1 className="text-[18px]" />
-                                </a>
-                              </td>
-                            </>
-                            :
-                            (data?.Pool && 
+                            {data?.Trade ? (
                               <>
                                 <td className="text-center px-6 py-4">
                                   {readableTime}
                                 </td>
                                 <td className="flex items-center justify-center">
                                   <div
-                                    className={`min-w-8 rounded px-3 py-1.5 text-center text-[#ed1b26] italic`}
+                                    className={`min-w-8 rounded px-3 py-1.5 text-center ${
+                                      isBuy
+                                        ? "text-[#21CB6B]"
+                                        : "text-[#ed1b26]"
+                                    }`}
                                   >
-                                    Remove
+                                    {data?.Trade?.Side?.Type || ""}
                                   </div>
                                 </td>
                                 <td className="text-center px-6 py-4">
-                                  -
+                                  {data?.Trade?.PriceInUSD
+                                    ? showPrice >= 1 || showPrice <= -1
+                                      ? "$" +
+                                        humanReadableFormatWithNoDollar(
+                                          showPrice,
+                                          2
+                                        )
+                                      : "$" + formatDecimal(showPrice, 1)
+                                    : "N/A"}
                                 </td>
                                 <td className="text-center px-6 py-4">
-                                  -
+                                  {data?.Trade?.Amount
+                                    ? humanReadableFormatWithOutUsd(
+                                        data.Trade.Amount
+                                      )
+                                    : "N/A"}
                                 </td>
                                 <td
-                                  className={`text-center px-6 py-4 "text-[#ed1b26]"}`}
+                                  className={`text-center px-6 py-4 
+                              ${isBuy ? "text-[#21CB6B]" : "text-[#ed1b26]"}`}
                                 >
                                   <div className="flex items-center justify-center gap-1">
                                     {!totalUsdActive && (
@@ -1104,14 +1058,24 @@ const Table = ({
                                         width={15}
                                         height={15}
                                         alt="solana"
+                                        unoptimized
                                       />
                                     )}
                                     <p>
-                                      {(totalUsdActive ? `${formatNumber(Math.abs(data?.Pool?.Base?.ChangeAmount), false, false)}` : `${formatNumber(Math.abs(data?.Pool?.Quote?.ChangeAmount), false, false)}`)}
+                                      {(totalUsdActive ? "$" : "") +
+                                        readableTotalPrice}
                                     </p>
                                   </div>
                                 </td>
                                 <td className="flex items-center justify-center px-6 py-4 text-white text-center gap-2">
+                                  {data?.Transaction?.Signer
+                                    ? `${data?.Transaction?.Signer.slice(
+                                        0,
+                                        3
+                                      )}...${data?.Transaction?.Signer.slice(
+                                        -3
+                                      )}`
+                                    : "N/A"}
                                   <a
                                     href={`https://solscan.io/tx/${data?.Transaction?.Signature}`}
                                     target="_blank"
@@ -1120,7 +1084,64 @@ const Table = ({
                                   </a>
                                 </td>
                               </>
-                            )} 
+                            ) : (
+                              data?.Pool && (
+                                <>
+                                  <td className="text-center px-6 py-4">
+                                    {readableTime}
+                                  </td>
+                                  <td className="flex items-center justify-center">
+                                    <div
+                                      className={`min-w-8 rounded px-3 py-1.5 text-center text-[#ed1b26] italic`}
+                                    >
+                                      Remove
+                                    </div>
+                                  </td>
+                                  <td className="text-center px-6 py-4">-</td>
+                                  <td className="text-center px-6 py-4">-</td>
+                                  <td
+                                    className={`text-center px-6 py-4 "text-[#ed1b26]"}`}
+                                  >
+                                    <div className="flex items-center justify-center gap-1">
+                                      {!totalUsdActive && (
+                                        <Image
+                                          src={solana}
+                                          width={15}
+                                          height={15}
+                                          alt="solana"
+                                          unoptimized
+                                        />
+                                      )}
+                                      <p>
+                                        {totalUsdActive
+                                          ? `${formatNumber(
+                                              Math.abs(
+                                                data?.Pool?.Base?.ChangeAmount
+                                              ),
+                                              false,
+                                              false
+                                            )}`
+                                          : `${formatNumber(
+                                              Math.abs(
+                                                data?.Pool?.Quote?.ChangeAmount
+                                              ),
+                                              false,
+                                              false
+                                            )}`}
+                                      </p>
+                                    </div>
+                                  </td>
+                                  <td className="flex items-center justify-center px-6 py-4 text-white text-center gap-2">
+                                    <a
+                                      href={`https://solscan.io/tx/${data?.Transaction?.Signature}`}
+                                      target="_blank"
+                                    >
+                                      <CiShare1 className="text-[18px]" />
+                                    </a>
+                                  </td>
+                                </>
+                              )
+                            )}
                           </tr>
                         );
                       })}
@@ -1183,6 +1204,7 @@ const Table = ({
                               width={15}
                               height={15}
                               alt="solana"
+                              unoptimized
                             />
                             <p>0</p>
                           </div>
@@ -1353,6 +1375,7 @@ const Table = ({
                                   width={15}
                                   height={15}
                                   alt="solana"
+                                  unoptimized
                                 />
                                 <p>0</p>
                               </div>
@@ -1838,6 +1861,7 @@ const Table = ({
                         width={100}
                         height={50}
                         className="rounded-lg"
+                        unoptimized
                       />
                     </div> */}
                     <p className="mt-2 text-[15px] text-[#b5b7da] font-bold">

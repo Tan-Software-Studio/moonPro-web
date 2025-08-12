@@ -185,7 +185,13 @@ const WithdrawPopup = ({
           <div className="500px flex flex-col">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2 bg-[#1A1A1A] rounded-lg py-2 px-3">
-                <Image src={solana} width={16} height={16} alt="solana" />
+                <Image
+                  src={solana}
+                  width={16}
+                  height={16}
+                  alt="solana"
+                  unoptimized
+                />
                 <span className="text-sm text-white">Solana</span>
               </div>
               <span className="text-white text-sm">
@@ -239,7 +245,13 @@ const WithdrawPopup = ({
                     placeholder="0.0"
                   />
                   <div className="flex items-center gap-2">
-                    <Image src={solana} width={16} height={16} alt="solana" />
+                    <Image
+                      src={solana}
+                      width={16}
+                      height={16}
+                      alt="solana"
+                      unoptimized
+                    />
                     <span className="text-white font-medium">
                       {tokenSymbol}
                     </span>
@@ -267,7 +279,13 @@ const WithdrawPopup = ({
             </div>
             <div className="mb-4">
               <div className="flex items-center gap-2 bg-[#1A1A1A] rounded-lg py-2 px-3">
-                <Image src={solana} width={16} height={16} alt="solana" />
+                <Image
+                  src={solana}
+                  width={16}
+                  height={16}
+                  alt="solana"
+                  unoptimized
+                />
                 <span className="text-sm text-white">Solana</span>
               </div>
             </div>
@@ -303,7 +321,13 @@ const WithdrawPopup = ({
                     placeholder="0.0"
                   />
                   <div className="flex items-center gap-2">
-                    <Image src={solana} width={16} height={16} alt="solana" />
+                    <Image
+                      src={solana}
+                      width={16}
+                      height={16}
+                      alt="solana"
+                      unoptimized
+                    />
                     <span className="text-white font-medium">
                       {tokenSymbol}
                     </span>

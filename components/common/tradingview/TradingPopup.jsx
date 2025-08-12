@@ -426,11 +426,13 @@ const TradingPopup = ({
   return (
     <div className="w-full h-fit relative">
       {/* Blur overlay */}
-      {chartTokenData?.migratedPair && !chartTokenData?.migrationIsFinished &&
+      {chartTokenData?.migratedPair && !chartTokenData?.migrationIsFinished && (
         <div className="absolute w-full h-full backdrop-blur-sm z-10 flex items-center justify-center xl:p-4 md:p-3 text-center text-sm">
-          <p>This pair is currently migrating. This may take up to 30 minutes.</p>
+          <p>
+            This pair is currently migrating. This may take up to 30 minutes.
+          </p>
         </div>
-      }
+      )}
       <div className="bg-[#08080E] flex flex-col h-fit w-full text-white xl:p-4 md:p-3">
         {/* Buy/Sell Toggle */}
         <div className="flex items-center w-full justify-between mb-2">
@@ -479,7 +481,9 @@ const TradingPopup = ({
           </div>
         </div>
         {/* preset settings big screen  */}
-        <div className={`lg:flex hidden items-center justify-between mb-[16px]`}>
+        <div
+          className={`lg:flex hidden items-center justify-between mb-[16px]`}
+        >
           <div className="flex items-center gap-[8px]">
             <FaCog className="text-[16px]" />
             <h1 className="text-[#F6F6F6] text-[12px] font-[400]">
@@ -536,6 +540,7 @@ const TradingPopup = ({
                 height={20}
                 alt="solana"
                 className="w-[35px] h-[20px] rounded-full bg-cover"
+                unoptimized
               />
             ) : (
               <img
@@ -807,6 +812,7 @@ const TradingPopup = ({
                 src={solWhiteBg}
                 alt="solana"
                 className="w-[22px] !h-[15px] rounded-full bg-cover"
+                unoptimized
               />
             </button>
           )
@@ -830,6 +836,7 @@ const TradingPopup = ({
               src={solWhiteBg}
               alt="solana"
               className="w-[22px] !h-[15px] rounded-full bg-cover"
+              unoptimized
             />
           </button>
         )}
@@ -874,7 +881,10 @@ const TradingPopup = ({
                     <PiPencilLineBold size={12} />
                   </button>
                 ) : (
-                  <button onClick={() => saveEditedValue(true)} className="px-2">
+                  <button
+                    onClick={() => saveEditedValue(true)}
+                    className="px-2"
+                  >
                     <FaCheck size={12} />
                   </button>
                 )}
@@ -889,7 +899,13 @@ const TradingPopup = ({
               <div className="flex justify-between text-[#9b9999] text-sm font-[550] items-center">
                 <p>Buy</p>
                 <div className="flex items-center justify-center gap-1">
-                  <Image src={solana} width={15} height={15} alt="solana" />
+                  <Image
+                    src={solana}
+                    width={15}
+                    height={15}
+                    alt="solana"
+                    unoptimized
+                  />
                   <p>{Number(nativeTokenbalance).toFixed(5) || 0}</p>
                 </div>
               </div>
@@ -935,7 +951,13 @@ const TradingPopup = ({
                   <p>•</p>
                   <p>{formatNumber(tokenBalance * price, false, true)}</p>
                   <p>•</p>
-                  <Image src={solana} width={15} height={15} alt="solana" />
+                  <Image
+                    src={solana}
+                    width={15}
+                    height={15}
+                    alt="solana"
+                    unoptimized
+                  />
                   <p className="text-[#9b9999] text-sm font-semibold">
                     {Number((tokenBalance * price) / solanaLivePrice).toFixed(
                       5
