@@ -33,12 +33,11 @@ const Perpetuals = () => {
     const selectedToken = useSelector(
         (state) => state?.perpetualsData?.selectedToken
     );
-    const perpsTokenList = useSelector(
-        (state) => state?.perpetualsData?.perpsTokenList
-    );
+
     const isTokenChanged = useSelector(
         (state) => state?.perpetualsData?.isTokenChanged
     );
+
     const userDetails = useSelector((state) => state?.userData?.userDetails);
 
     async function getPerpsTokenList() {

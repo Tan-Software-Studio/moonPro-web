@@ -1,12 +1,22 @@
 import React, { useState } from 'react';
 import { motion } from "framer-motion";
 import { X, ArrowLeftRight } from 'lucide-react';
+import axiosInstanceAuth from '@/apiInstance/axiosInstanceAuth';
+import { useDispatch, useSelector } from 'react-redux';
+import { orderPositions } from '@/app/redux/perpetauls/perpetual.slice';
+import { spotClearinghouseState } from '@/services/hyperLiquid/spotClearinghouseState ';
+import { showToaster, showToasterSuccess } from '@/utils/toaster/toaster.style'; 
 
-const PerpsSpotPopup = ({ onClose, PerpsBalance, spotBalance, }) => {
+const PerpsSpotPopup = ({ onClose, PerpsBalance, spotBalance, setSpotBalance }) => {
     const [direction, setDirection] = useState(true);
     const [amount, setAmount] = useState("");
     const [error, setError] = useState("");
+    const dispatch = useDispatch();
+    const [btnLoading, setBtnLoading] = useState(false)
+    const userDetails = useSelector((state) => state?.userData?.userDetails);
 
+
+    const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
     const maxAmount = direction === true ? PerpsBalance : spotBalance;
 
     const handleMaxClick = () => {
@@ -16,30 +26,47 @@ const PerpsSpotPopup = ({ onClose, PerpsBalance, spotBalance, }) => {
 
     const handleAmountChange = (e) => {
         let val = e.target.value;
-
         if (!/^\d*\.?\d*$/.test(val)) return;
-
         if (Number(val) > maxAmount) {
             val = maxAmount.toString();
         }
-
         setAmount(val);
         setError("");
     };
 
+    const spotBalanceUpdate = async () => {
+        try {
+            const response = await spotClearinghouseState(userDetails?.perpsWallet);
+            const spot = response?.find((item) => item?.coin == "USDC")
+            setSpotBalance(spot)
+        } catch (error) {
+        }
+    }
 
-    const handleConfirm = () => {
-        if (!amount || isNaN(amount) || Number(amount) <= 0) {
-            setError("Enter a valid amount");
-            return;
-        }
-        if (Number(amount) > maxAmount) {
-            setError("Amount exceeds available balance");
-            return;
-        }
-        setError("");
-        // onTransfer(direction, Number(amount));
-        onClose(false);
+
+    const handleConfirm = async () => {
+        try {
+            if (!amount || isNaN(amount) || Number(amount) <= 0) {
+                setError("Enter a valid amount");
+                return;
+            }
+            if (Number(amount) > maxAmount) {
+                setError("Amount exceeds available balance");
+                return;
+            }
+            setError("");
+            setBtnLoading(true)
+            const response = await axiosInstanceAuth.post(`${baseUrl}hyper/perpstospot`, {
+                amount: Number(amount),
+                toPerp: direction ? "no" : "yes"
+            })
+            await Promise.allSettled([dispatch(orderPositions(userDetails?.perpsWallet)), spotBalanceUpdate()])
+            showToasterSuccess(response?.data?.message || "Successfully transfer");
+            setBtnLoading(false)
+            onClose(false);
+        } catch (error) {
+            showToaster(error?.response?.data?.message || "Please try again!");
+        } 
     };
 
     return (
@@ -108,7 +135,7 @@ const PerpsSpotPopup = ({ onClose, PerpsBalance, spotBalance, }) => {
 
                             <button
                                 onClick={handleMaxClick}
-                                className="text-xs text-[#1F73FC] hover:underline truncate"
+                                className="text-xs text-[#1F73FC] hover:underline"
                             >
                                 MAX: {maxAmount}
                             </button>
@@ -117,13 +144,21 @@ const PerpsSpotPopup = ({ onClose, PerpsBalance, spotBalance, }) => {
                         {error && <div className="text-xs text-red-500 mt-2">{error}</div>}
                     </div>
 
-                    <button
-                        onClick={handleConfirm}
-                        className="w-full mt-6 py-3 rounded-lg font-medium bg-[#1F73FC] text-[#FFFFFF]  transition disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={!amount || Number(amount) <= 0}
-                    >
-                        Confirm
-                    </button>
+                    {btnLoading ?
+                        <button className="w-full mb-4 mt-6 py-3 rounded-lg font-medium bg-[#1F73FC] text-[#FFFFFF]  transition opacity-50 cursor-not-allowed">
+                            <div className="flex justify-center py-2.5 items-center gap-2">
+                                <div className="loaderPopup"></div>
+                            </div>
+                        </button> :
+
+                        <button
+                            onClick={handleConfirm}
+                            className="w-full mb-4 mt-6 py-3 rounded-lg font-medium bg-[#1F73FC] text-[#FFFFFF]  transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={!amount || Number(amount) <= 0 || btnLoading}
+                        >
+                            Confirm
+                        </button>
+                    }
                 </div>
             </motion.div>
         </motion.div >

@@ -3,9 +3,7 @@ import React, { useEffect, useRef, memo } from "react";
 import { widget } from "@/public/charting_library";
 import hyperliquidDatafeed from "@/utils/tradingViewChartServices/hyperliquidDatafeed";
 function Chart({ selectedSymbol }) {
-    const chartContainerRef = useRef(null);
-
-
+    const chartContainerRef = useRef(null); 
     const tvWidgetRef = useRef(null);
 
     useEffect(() => {

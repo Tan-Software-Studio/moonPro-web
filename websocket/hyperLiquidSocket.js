@@ -20,7 +20,7 @@ export function tradesSocketConnect(coin, setTradesData) {
             },
         };
         tradesSocket.send(JSON.stringify(subMsg));
-        console.log("✅ tradesSocket connected");
+        // console.log("✅ tradesSocket connected");
     };
 
     tradesSocket.onmessage = (event) => {
@@ -39,7 +39,7 @@ export function tradesSocketConnect(coin, setTradesData) {
     };
 
     tradesSocket.onclose = () => {
-        console.log("📴 tradesSocket connection closed.");
+        // console.log("📴 tradesSocket connection closed.");
     };
 }
 
@@ -59,7 +59,7 @@ export function orderBookSocketConnect(coin, setBidsData, setAsksData) {
             },
         };
         orderBookSocket.send(JSON.stringify(subMsg));
-        console.log("✅ orderBookSocket connected", coin);
+        // console.log("✅ orderBookSocket connected", coin);
     };
     orderBookSocket.onmessage = (event) => {
         const orderBook = JSON.parse(event.data);
@@ -75,7 +75,7 @@ export function orderBookSocketConnect(coin, setBidsData, setAsksData) {
     };
 
     orderBookSocket.onclose = () => {
-        console.log("📴 orderBookSocket connection closed.");
+        // console.log("📴 orderBookSocket connection closed.");
     };
 }
 
@@ -91,7 +91,7 @@ export function marketPriceSocketConnect(coin, dispatch) {
             },
         };
         marketPriceSocket.send(JSON.stringify(subMsg));
-        console.log("✅ marketPriceSocket connected", coin);
+        // console.log("✅ marketPriceSocket connected", coin);
     };
     marketPriceSocket.onmessage = (event) => {
         const data = JSON.parse(event.data);
@@ -104,7 +104,8 @@ export function marketPriceSocketConnect(coin, dispatch) {
     };
 
     marketPriceSocket.onclose = () => {
-        console.log("📴 marketPriceSocket connection closed.");
+        // console.log("📴 marketPriceSocket connection close
+        // d.");
     };
 }
 

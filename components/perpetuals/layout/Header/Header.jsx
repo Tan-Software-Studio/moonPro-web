@@ -87,21 +87,21 @@ const Header = ({ setIsOpen, isOpen, }) => {
 
             {/* Main header info - matching your existing design */}
             <div className=''>
-                <div className="font-medium text-white text-sm">{selectedToken ? Number(selectedToken?.markPx).toFixed(2) : "--"}</div>
+                <div className="font-medium text-white text-sm">{selectedToken ? Number(selectedToken?.markPx).toFixed(2) : "0"}</div>
                 <span className="text-xs text-gray-400 font-normal">Mark</span>
             </div>
 
             <div>
                 <div className={`font-medium text-sm text-white`}>
-                    {selectedToken ? Number(selectedToken?.oraclePx).toFixed(2) : "--"}
+                    {selectedToken ? Number(selectedToken?.oraclePx).toFixed(2) : "0"}
                 </div>
                 <span className="text-xs text-gray-400 font-normal">Oracle</span>
             </div>
 
             <div className='col-span-2'>
                 <div className={`font-medium text-sm flex items-center gap-1 ${Number(selectedToken?.priceChangePercent) > 0 ? "text-green-400" : "text-red-400"}`}>
-                    <div>{selectedToken ? Number(selectedToken?.priceChangeAbs)?.toFixed(2) : "--"}</div> /
-                    <div>{selectedToken ? Number(selectedToken?.priceChangePercent)?.toFixed(2) : "--"}%</div>
+                    <div>{selectedToken ? Number(selectedToken?.priceChangeAbs)?.toFixed(2) : "0"}</div> /
+                    <div>{selectedToken ? Number(selectedToken?.priceChangePercent)?.toFixed(2) : "0"}%</div>
                 </div>
                 <span className="text-xs text-gray-400 font-normal">24h Change</span>
             </div>
@@ -109,7 +109,7 @@ const Header = ({ setIsOpen, isOpen, }) => {
 
             <div className='col-span-2'>
                 <div className="font-medium text-white text-sm flex items-center gap-2">
-                    {selectedToken ? humanReadableFormatWithNoDollar(selectedToken?.dayNtlVlm, 2) : "--"}
+                    {selectedToken ? humanReadableFormatWithNoDollar(selectedToken?.dayNtlVlm, 2) : "0"}
                 </div>
                 <span className="text-xs text-gray-400 font-normal">24h Volume</span>
             </div>
@@ -117,14 +117,14 @@ const Header = ({ setIsOpen, isOpen, }) => {
 
             <div className='col-span-2'>
                 <div className="font-medium text-white text-sm flex items-center gap-2">
-                    {selectedToken ? humanReadableFormatWithNoDollar(selectedToken?.openInterest, 2) : "--"}
+                    {selectedToken ? humanReadableFormatWithNoDollar(selectedToken?.openInterest, 2) : "0"}
                 </div>
                 <span className="text-xs text-gray-400 font-normal">Open Interest</span>
             </div>
 
             <div className='col-span-2'>
                 <div className="font-medium text-white text-sm flex items-center gap-2">
-                    {selectedToken ? selectedToken?.funding : "--"}
+                    {selectedToken ? selectedToken?.funding : "0"}
                 </div>
                 <span className="text-xs text-gray-400 font-normal">Funding/Countdown</span>
             </div>

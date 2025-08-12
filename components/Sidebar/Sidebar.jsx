@@ -31,9 +31,8 @@ import {
 } from "@/app/redux/holdingDataSlice/holdingData.slice";
 import AISignalsButton from "../Navbar/ai-signalBtn/AiSignalBtn";
 import { setIsChartByDefault } from "@/app/redux/memescopeData/Memescope";
-import { IoClose } from "react-icons/io5";
-import { fetchAiSignalData } from "@/app/redux/AiSignalDataSlice/AiSignal.slice";
-import { FaChartPie } from "react-icons/fa6";
+import { IoClose, IoPieChartOutline } from "react-icons/io5";
+import { fetchAiSignalData } from "@/app/redux/AiSignalDataSlice/AiSignal.slice"; 
 
 const Sidebar = () => {
   const { t } = useTranslation();
@@ -64,6 +63,13 @@ const Sidebar = () => {
       size: "",
     },
     {
+      id: 9,
+      pathname: `/perpetuals`,
+      pagename: "Perpetuals",
+      icon: <IoPieChartOutline  size={20}/>,
+      size: "w-5 h-5",
+    },
+    {
       id: 4,
       pathname: `/portfolio`,
       pagename: sidebarPage?.holdings,
@@ -84,13 +90,6 @@ const Sidebar = () => {
       pagename: sidebarPage?.referral,
       img: referral,
       size: "",
-    },
-    {
-      id: 9,
-      pathname: `/perpetuals`,
-      pagename: "Perpetuals",
-      icon: <FaChartPie size={20}/>,
-      size: "w-5 h-5",
     },
   ];
 

@@ -57,31 +57,6 @@ const perpetualsData = createSlice({
         setIsTokenChanged: (state, { payload }) => {
             state.isTokenChanged = payload
         }
-        // setPerpsTokenList: (state, { payload }) => {
-        //     state.perpsTokenList = {
-        //         ...state.perpsTokenList,
-        //         ...payload,
-        //         ...payload.map(token => {
-        //             if (token.name === coin) {
-        //                 const updated = {
-        //                     ...token,
-        //                     ...payload,
-        //                     priceChangePercent:
-        //                         ((payload?.markPx - payload?.prevDayPx) /
-        //                             payload?.prevDayPx) *
-        //                         100,
-        //                     priceChangeAbs:
-        //                         payload?.markPx - payload?.prevDayPx,
-        //                 };
-        //                 return updated;
-        //             }
-        //             return token;
-        //         }),
-
-        //     }
-        // }
-
-
 
     },
     extraReducers: (builder) => {
@@ -98,6 +73,6 @@ const perpetualsData = createSlice({
 
 
 
-export const { setSelectedToken, setPerpsTokenList, } = perpetualsData.actions;
+export const { setSelectedToken, setPerpsTokenList, setIsTokenChanged } = perpetualsData.actions;
 
 export default perpetualsData.reducer;

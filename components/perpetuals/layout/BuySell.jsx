@@ -8,6 +8,7 @@ import LeaveragePopup from '../popup/LeaveragePopup'
 import SlippagePopup from '../popup/SlippagePopup'
 import PerpsSpotPopup from '../popup/PerpsSpotPopup'
 import { openCloseLoginRegPopup, setLoginRegPopupAuth } from '@/app/redux/states'
+import PerpWithdrawPopup from '../popup/Withdraw'
 const BuySell = () => {
     const selectedToken = useSelector(
         (state) => state?.perpetualsData?.selectedToken
@@ -37,7 +38,8 @@ const BuySell = () => {
     const [perpsSpotPopup, setPerpsSpotPopup] = useState(false)
     const [isSlippagePopup, setIsSlippagePopup] = useState(false)
     const [isLeaveragePopup, setIsLeaveragePopup] = useState(false)
-    const [isSwapPopup, setIsSwapPopup] = useState(false)
+    const [isSwapPopup, setIsSwapPopup] = useState(false);
+    const [isWithdrawPopup, setIsWithdrawPopup] = useState(false)
 
     const orderPositionsData = useSelector(
         (state) => state?.perpetualsData?.orderPositionsData
@@ -343,8 +345,13 @@ const BuySell = () => {
                         <span> Spot </span>
                     </button>
                     <button
-
-
+                        onClick={() => {
+                            solWalletAddress ?
+                                setIsWithdrawPopup(true)
+                                :
+                                dispatch(openCloseLoginRegPopup(true));
+                            dispatch(setLoginRegPopupAuth("signup"));
+                        }}
                         className={`w-full  bg-[#1F73FC]  py-2 rounded mt-3 text-sm font-medium transition-colors `}>
                         Withdraw
                     </button>
@@ -396,8 +403,8 @@ const BuySell = () => {
                 </div>
 
                 <style jsx>{`
-      input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
+             input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
         height: 12px;
         width: 12px;
         background: #526FFF;
@@ -415,7 +422,7 @@ const BuySell = () => {
             </div >
 
             {isSwapPopup ?
-                <SwapPopup onClose={setIsSwapPopup} perpsBalance={perpsBalance} SolBalance={activeSolWalletAddress?.balance} /> : null
+                <SwapPopup onClose={setIsSwapPopup} perpsBalance={perpsBalance} /> : null
             }
 
             {isLeaveragePopup ?
@@ -439,8 +446,14 @@ const BuySell = () => {
                     onClose={setPerpsSpotPopup}
                     spotBalance={Number(spotBalance?.total)}
                     PerpsBalance={Number(perpsBalanceNum)}
+                    setSpotBalance={setSpotBalance}
                 /> : null
             }
+            {isWithdrawPopup ? <PerpWithdrawPopup
+                onClose={setIsWithdrawPopup}
+                perpsBalance={perpsBalance}
+
+            /> : null}
 
         </>
     )
