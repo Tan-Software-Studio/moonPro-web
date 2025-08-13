@@ -2,14 +2,15 @@ import React, { useState } from 'react'
 import { motion } from "framer-motion";
 import { X } from 'lucide-react';
 
-const LeaveragePopup = ({ onClose, maxLeverage, leverage, setMaxLeverage }) => {
-    // const leverage = selectedToken?.maxLeverage || 100;
-    // const [size, setSize] = useState(maxLeverage / 2);
+const LeaveragePopup = ({ onClose, leverage, setMaxLeverage, maxLeverage }) => {
+    const [tempLeverage, setTempLeverage] = useState(maxLeverage);
 
-    function handleSliderChange(e) {
-        const percent = parseFloat(e.target.value);
-        setMaxLeverage(percent);
+
+    function handleMaxLeverage() {
+        setMaxLeverage(tempLeverage);
+        onClose(false);
     }
+
 
     return (
         <motion.div
@@ -18,7 +19,7 @@ const LeaveragePopup = ({ onClose, maxLeverage, leverage, setMaxLeverage }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            onClick={() => onClose()}
+            onClick={() => onClose(false)}
             className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[999999]"
         >
             <motion.div
@@ -32,7 +33,7 @@ const LeaveragePopup = ({ onClose, maxLeverage, leverage, setMaxLeverage }) => {
             >
                 <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700">
                     <h2 className="text-white text-lg font-semibold">Adjust Leverage</h2>
-                    <button onClick={() => onClose()} className="text-gray-400 hover:text-white transition">
+                    <button onClick={() => onClose(false)} className="text-gray-400 hover:text-white transition">
                         <X size={20} />
                     </button>
                 </div>
@@ -44,36 +45,25 @@ const LeaveragePopup = ({ onClose, maxLeverage, leverage, setMaxLeverage }) => {
 
                     <div className="mt-6">
                         <div className="flex items-center justify-between mb-2 text-sm text-gray-300">
-                            <span>Leverage: <span className="text-white font-medium">{maxLeverage}x</span></span>
-                            <span className="text-xs text-gray-500">{Math.round((maxLeverage / leverage) * 100)}%</span>
+                            <span>Leverage: <span className="text-white font-medium">{tempLeverage}x</span></span>
+                            <span className="text-xs text-gray-500">Max: {leverage}X</span>
                         </div>
 
                         <input
                             type="range"
-                            min="0"
+                            min="1"
                             max={leverage}
-                            value={maxLeverage}
-                            onChange={handleSliderChange}
+                            value={tempLeverage}
+                            onChange={(e) => setTempLeverage(e.target.value)}
                             className="w-full h-2 appearance-none cursor-pointer bg-[#1F2937] rounded-full outline-none transition"
                             style={{
-                                background: `linear-gradient(to right, #1F73FC 0%, #1F73FC ${((maxLeverage / leverage) * 100)}%, #1F2937 ${((maxLeverage / leverage) * 100)}%, #1F2937 100%)`
+                                background: `linear-gradient(to right, #1F73FC 0%, #1F73FC ${(tempLeverage / leverage) * 100}%, #1F2937 ${(tempLeverage / leverage) * 100}%, #1F2937 100%)`
                             }}
                         />
-
-                        <div className="flex justify-between text-xs text-gray-400 mt-2 px-1">
-                            <span>0%</span>
-                            <span>25%</span>
-                            <span>50%</span>
-                            <span>75%</span>
-                            <span>100%</span>
-                        </div>
                     </div>
 
                     <button
-                        onClick={() => {
-                            setMaxLeverage(maxLeverage)
-                            onClose()
-                        }}
+                        onClick={handleMaxLeverage}
                         className="w-full mt-8 bg-[#1F73FC] hover:bg-[#155EE0] text-white text-sm font-medium py-2.5 rounded-md transition"
                     >
                         Update Leverage

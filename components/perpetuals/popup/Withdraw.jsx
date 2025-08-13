@@ -4,47 +4,58 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from 'react-redux';
-import { showToaster, showToasterSuccess } from '@/utils/toaster/toaster.style';
 import axiosInstanceAuth from '@/apiInstance/axiosInstanceAuth';
 import { orderPositions } from '@/app/redux/perpetauls/perpetual.slice';
+import toast from 'react-hot-toast';
+import { showToastLoader } from '@/components/common/toastLoader/ToastLoder';
 
 const PerpWithdrawPopup = ({ onClose, perpsBalance }) => {
 
     const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
     const SOL_PRICE_IN_USDC = 170;
-    const activeSolWalletAddress = useSelector(
-        (state) => state?.userData?.activeSolanaWallet
-    );
-    console.log("🚀 ~ SwapPopup ~ activeSolWalletAddress:", activeSolWalletAddress)
+    const dispatch = useDispatch()
 
-    const SolBalance = activeSolWalletAddress?.balance
     const [solInputAmount, setSolInputAmount] = useState(0);
     const [usdcInputAmount, setUsdcInputAmount] = useState(0);
     const [btnLoading, setBtnLoading] = useState(false)
 
+    const activeSolWalletAddress = useSelector(
+        (state) => state?.userData?.activeSolanaWallet
+    );
 
+    const userDetails = useSelector((state) => state?.userData?.userDetails);
 
     function handleSolInputAmount(e) {
         let val = e.target.value
+        if (Number(perpsBalance) < 2) return;
         if (!/^\d*\.?\d*$/.test(val)) return;
         if (Number(val) > perpsBalance) {
             val = perpsBalance.toString();
         }
         setUsdcInputAmount(val);
-        setSolInputAmount(val ? (Number(val) / SOL_PRICE_IN_USDC).toFixed(2) : 0);
+        const solValue = val ? ((Number(val) - 1) / SOL_PRICE_IN_USDC).toFixed(2) : 0
+        setSolInputAmount(Number(solValue) > 2 ? solValue : 0);
     }
 
     const handleConfirmConvert = async () => {
         try {
             setBtnLoading(true)
+            showToastLoader("Transaction proccessing", "transation-toast");
             const response = await axiosInstanceAuth.post(`${baseUrl}hyper/withdraw`, {
                 amount: Number(usdcInputAmount),
             })
-            console.log("🚀 ~ handleConfirmConvert ~ response:", response)
-            // setBtnLoading(false)
+            toast.success(response?.data?.message || "Order placed successfully...", {
+                id: "transation-toast",
+                duration: 2000,
+            });
+            dispatch(orderPositions(userDetails?.perpsWallet))
+            setBtnLoading(false)
             onClose(false);
         } catch (error) {
-            // showToaster(error?.response?.data?.message || "Please try again!");
+            toast.error(error?.response?.data?.message || "Please try again!", {
+                id: "transation-toast",
+                duration: 2000,
+            });
             setBtnLoading(false)
         } finally {
             setBtnLoading(false)
@@ -121,7 +132,7 @@ const PerpWithdrawPopup = ({ onClose, perpsBalance }) => {
                                 <div className=" bg-[#1D1E26] rounded-lg px-4 py-3 text-white text-sm">
                                     <div className='flex justify-between items-center'>
                                         <div className="text-gray-400 text-xs font-medium">Converting</div>
-                                        <div className="text-gray-400 text-xs font-medium">Balance: {SolBalance}</div>
+                                        <div className="text-gray-400 text-xs font-medium">Balance: {activeSolWalletAddress?.balance}</div>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <input
@@ -139,10 +150,10 @@ const PerpWithdrawPopup = ({ onClose, perpsBalance }) => {
                                 </div>
                             </div>
                             <div className="text-right text-[#A8A8A8] text-xs my-3">
-                                {`1 SOL ≈ ${SOL_PRICE_IN_USDC} USDC`}
+                                {`${SOL_PRICE_IN_USDC} USDC ≈ 1 SOL `}
                             </div>
 
-                            {/* <div className='text-[#A8A8A8] text-[10px] mb-4 mt-4 break-all'>NOTE: Exchange Native Solana for USDC on Hyperliquid. The minimum deposit is 7 USDC.</div> */}
+                            <div className='text-[#A8A8A8] text-[10px] mb-4 mt-4 break-all'>NOTE: Exchange USDC for  Native Solana  on Hyperliquid. The minimum withdraw is 2 USDC.</div>
 
 
                             <div className="mt-auto">
@@ -156,7 +167,7 @@ const PerpWithdrawPopup = ({ onClose, perpsBalance }) => {
                                     <button
                                         onClick={handleConfirmConvert}
                                         className="w-full bg-[#1d73fc] hover:bg-[#438bff] py-3 rounded-lg font-bold text-sm text-[#FFFFFF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                        disabled={usdcInputAmount < 7 || btnLoading}
+                                        disabled={usdcInputAmount < 2 || btnLoading}
                                     >
                                         Confirm
                                     </button>

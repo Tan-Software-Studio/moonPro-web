@@ -16,7 +16,7 @@ function Chart({ selectedSymbol }) {
         const Datafeed = hyperliquidDatafeed(selectedSymbol)
         const widgetOptions = {
             symbol: selectedSymbol,
-            interval: "1",
+            interval: "5",
             container: chartContainerRef.current,
             library_path: "/charting_library/",
             datafeed: Datafeed,

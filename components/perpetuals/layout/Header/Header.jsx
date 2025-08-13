@@ -1,9 +1,8 @@
-import { setSelectedToken } from '@/app/redux/perpetauls/perpetual.slice';
 import { humanReadableFormatWithNoDollar } from '@/utils/basicFunctions';
-import React, { act, memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import { FaCaretDown } from 'react-icons/fa6';
 import { IoIosSearch } from 'react-icons/io';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import PerpsTokens from './PerpsTokens';
 const Header = ({ setIsOpen, isOpen, }) => {
 
@@ -32,7 +31,7 @@ const Header = ({ setIsOpen, isOpen, }) => {
     }, [isOpen]);
 
     return (
-        <div className='flex overflow-scroll items-center py-2 px-4 w-full h-[70px] gap-10  '>
+        <div className='flex overflow-scroll items-center py-2 px-4 w-full h-[70px] lg:gap-10 gap-5 break-keep whitespace-nowrap'>
             <div className='border-r flex items-center  border-r-gray-500 pr-2.5 h-full'>
                 <button
                     onClick={() => setIsOpen((prev) => !prev)}
@@ -68,8 +67,9 @@ const Header = ({ setIsOpen, isOpen, }) => {
                         <div className='w-full border-b border-gray-400 py-1.5 flex items-center gap-4 px-3'>
                             {["Perps", "Spot"].map((item, index) => (
                                 <div
-                                    className={`${activeTab == item ? "text-white" : "text-gray-400 hover:text-white"} cursor-pointer text-xs`}
-                                    onClick={() => setActiveTab(item)}
+                                    // hover:text-white cursor-pointer
+                                    className={`${activeTab == item ? "text-white" : "text-gray-400 cursor-not-allowed"}   text-xs`}
+                                    onClick={() => item == "Perps" ? setActiveTab(item) : null}
                                     key={index}>
                                     {item}
                                 </div>
@@ -87,21 +87,21 @@ const Header = ({ setIsOpen, isOpen, }) => {
 
             {/* Main header info - matching your existing design */}
             <div className=''>
-                <div className="font-medium text-white text-sm">{selectedToken ? Number(selectedToken?.markPx).toFixed(2) : "0"}</div>
+                <div className="font-medium text-white text-sm">{Number(selectedToken?.markPx ?? 0).toFixed(2) || "0"}</div>
                 <span className="text-xs text-gray-400 font-normal">Mark</span>
             </div>
 
             <div>
                 <div className={`font-medium text-sm text-white`}>
-                    {selectedToken ? Number(selectedToken?.oraclePx).toFixed(2) : "0"}
+                    {Number(selectedToken?.oraclePx ?? 0).toFixed(2) || "0"}
                 </div>
                 <span className="text-xs text-gray-400 font-normal">Oracle</span>
             </div>
 
             <div className='col-span-2'>
-                <div className={`font-medium text-sm flex items-center gap-1 ${Number(selectedToken?.priceChangePercent) > 0 ? "text-green-400" : "text-red-400"}`}>
-                    <div>{selectedToken ? Number(selectedToken?.priceChangeAbs)?.toFixed(2) : "0"}</div> /
-                    <div>{selectedToken ? Number(selectedToken?.priceChangePercent)?.toFixed(2) : "0"}%</div>
+                <div className={`font-medium text-sm flex items-center gap-1 ${Number(selectedToken?.priceChangePercent ?? 0) > 0 ? "text-green-400" : "text-red-400"}`}>
+                    <div>{Number(selectedToken?.priceChangeAbs ?? 0)?.toFixed(2) || "0"}</div> /
+                    <div>{Number(selectedToken?.priceChangePercent ?? 0)?.toFixed(2) || "0"}%</div>
                 </div>
                 <span className="text-xs text-gray-400 font-normal">24h Change</span>
             </div>

@@ -53,7 +53,7 @@ const Perpetuals = () => {
 
     // Socket interegration
     useEffect(() => {
-        if (isTokenChanged) {
+        if (isTokenChanged && selectedToken?.name) {
             tradesSocketConnect(selectedToken?.name, setTradesData)
             orderBookSocketConnect(selectedToken?.name, setBidsData, setAsksData)
             marketPriceSocketConnect(selectedToken?.name, dispatch)
@@ -89,77 +89,84 @@ const Perpetuals = () => {
     }, [userDetails]);
 
     return (
-        <div className="w-full bg-[#0a0a0a] overflow-y-scroll h-[95vh]  font-poppins ">
+        <div className="w-full bg-[#0a0a0a] h-svh font-poppins">
             {/* Token Dropdown */}
 
-            <div className='grid grid-cols-5'>
-                <div className='col-span-4 w-full'>
-                    <div className='w-full grid lg:grid-cols-4  grid-cols-3'>
-                        <div className="relative col-span-1 lg:col-span-3 h-full lg:h-[600px]   w-full text-left ">
-                            <div className='border-b-[1px]   border-b-[#404040]  w-full h-[70px] flex items-center justify-center'>
-                                <Header
-                                    setIsOpen={setIsOpen}
-                                    isOpen={isOpen}
-                                />
+            <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-5">
+                {/* LEFT CONTENT */}
+                <div className="lg:col-span-3 xl:col-span-4 w-full  overflow-y-auto">
+                    <div className="w-full grid-cols-1 grid xl:grid-cols-4 lg:grid-cols-3">
+                        {/* CHART */}
+                        <div className="relative lg:col-span-2 xl:col-span-3 h-full lg:h-[600px] w-full text-left">
+                            <div className="border-b border-b-[#404040] w-full h-[70px] flex items-center justify-center">
+                                <Header setIsOpen={setIsOpen} isOpen={isOpen} />
                             </div>
-                            {selectedToken?.name ?
-                                <div className='w-full h-svh lg:h-[526px] flex items-center justify-center'>
+
+                            {selectedToken?.name && (
+                                <div className="w-full h-[600px] lg:h-[526px] flex items-center justify-center">
                                     <Chart selectedSymbol={selectedToken?.name} />
-                                </div> :
-                                null
-                            }
+                                </div>
+                            )}
+
+                            {/* Buy/Sell on small screens */}
+                            <div className="lg:hidden border-t border-[#404040]">
+                                {selectedToken && <BuySell />}
+                            </div>
                         </div>
 
-                        {/* Order book / trades */}
-                        <div className='w-full col-span-1 lg:col-span-1 border-l-[1px] border-l-[#404040]  lg:max-h-[600px] overflow-scroll h-full lg:h-[600px] '>
-                            <div className=" backdrop-blur-sm">
-                                <div className="backdrop-blur-sm">
-                                    <div className="flex  items-center ">
-                                        <button
-                                            onClick={() => setActiveTab('orders')}
-                                            className={` px-4 py-1.5 text-sm font-medium cursor-pointer transition-all duration-200 ${activeTab === 'orders'
-                                                ? 'text-white '
-                                                : 'text-gray-400 hover:text-white  '
-                                                }`}
-                                        >
-                                            Order Book
-                                        </button>
-                                        <button
-                                            onClick={() => setActiveTab('trades')}
-                                            className={`  px-4 py-1.5 text-sm font-medium cursor-pointer transition-all duration-200 ${activeTab === 'trades'
-                                                ? 'text-white  '
-                                                : 'text-gray-400 hover:text-white  '
-                                                }`}
-                                        >
-                                            Trades
-                                        </button>
-                                    </div>
-
-                                    {selectedToken && (
-                                        <div className="h-full">
-                                            {activeTab === 'orders' && (
-                                                <OrderBook asksData={asksData} bidsData={bidsData} selectedToken={selectedToken} />
-                                            )}
-
-                                            {activeTab === 'trades' && (
-                                                <Trades trades={tradesData} />
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
+                        {/* ORDER BOOK / TRADES */}
+                        <div className="w-full lg:col-span-1 xl:col-span-1 border-l border-l-[#404040] lg:max-h-[600px]   h-full lg:h-[600px]">
+                            {/* Tabs always at top */}
+                            <div className="flex items-center sticky top-0 bg-[#0a0a0a] z-10">
+                                <button
+                                    onClick={() => setActiveTab('orders')}
+                                    className={`px-4 py-1.5 text-sm font-medium cursor-pointer transition-all duration-200 ${activeTab === 'orders'
+                                        ? 'text-white'
+                                        : 'text-gray-400 hover:text-white'
+                                        }`}
+                                >
+                                    Order Book
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab('trades')}
+                                    className={`px-4 py-1.5 text-sm font-medium cursor-pointer transition-all duration-200 ${activeTab === 'trades'
+                                        ? 'text-white'
+                                        : 'text-gray-400 hover:text-white'
+                                        }`}
+                                >
+                                    Trades
+                                </button>
                             </div>
+
+                            {selectedToken && (
+                                <div className="h-full">
+                                    {activeTab === 'orders' && (
+                                        <OrderBook
+                                            asksData={asksData}
+                                            bidsData={bidsData}
+                                            selectedToken={selectedToken}
+                                        />
+                                    )}
+                                    {activeTab === 'trades' && <Trades trades={tradesData} />}
+                                </div>
+                            )}
                         </div>
                     </div>
-                    <div className='w-full h-[200px] lg:h-[250px]  border-t-[1px] border-t-[#404040]'>
+
+                    {/* MAIN TABLE */}
+                    <div className="w-full h-[200px] lg:h-[250px] border-t border-t-[#404040]">
                         <MainTable />
                     </div>
                 </div>
-                <div className='w-full border-l-[1px] border-l-[#404040]   h-full col-span-1'>
-                    {selectedToken ?
-                        <BuySell /> : null}
+
+                {/* BUY/SELL on large screens */}
+                <div className="hidden lg:block border-l border-l-[#404040] h-full lg:col-span-1 xl:col-span-1">
+                    {selectedToken && <BuySell />}
                 </div>
             </div>
         </div>
+
+
     )
 }
 

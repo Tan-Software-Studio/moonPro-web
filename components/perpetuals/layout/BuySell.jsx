@@ -9,7 +9,13 @@ import SlippagePopup from '../popup/SlippagePopup'
 import PerpsSpotPopup from '../popup/PerpsSpotPopup'
 import { openCloseLoginRegPopup, setLoginRegPopupAuth } from '@/app/redux/states'
 import PerpWithdrawPopup from '../popup/Withdraw'
+import axiosInstanceAuth from '@/apiInstance/axiosInstanceAuth'
+import { orderPositions, setOpenOrdersData } from '@/app/redux/perpetauls/perpetual.slice'
+import toast from 'react-hot-toast'
+import { showToastLoader } from '@/components/common/toastLoader/ToastLoder'
+import { getOpenOrders } from '@/services/hyperLiquid/getOpenOrders'
 const BuySell = () => {
+    const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
     const selectedToken = useSelector(
         (state) => state?.perpetualsData?.selectedToken
     );
@@ -20,18 +26,21 @@ const BuySell = () => {
     const dispatch = useDispatch();
 
     let symbol = selectedToken?.name?.slice(0, 4)
-    const leverage = selectedToken?.maxLeverage || 100;
+    const leverage = selectedToken?.maxLeverage;
     const [spotBalance, setSpotBalance] = useState({});
+    const [btnLoading, setBtnLoading] = useState(false)
 
     // Tabs
     const [activeTab, setActiveTab] = useState('buy')
     const [orderType, setOrderType] = useState('Market')
 
     // inputs  
-    const [maxLeverage, setMaxLeverage] = useState(leverage / 2);
+    const [maxLeverage, setMaxLeverage] = useState(1);
     const [usdcAmount, setUsdcAmount] = useState(0)
     const [size, setSize] = useState(0)
     const [slippageAmount, setSlippageAmount] = useState(8);
+
+
 
     // popups // dropdowna
     const [tpSl, setTpSl] = useState(false);
@@ -53,14 +62,46 @@ const BuySell = () => {
     const perpsBalanceNum = Number(orderPositionsData?.crossMarginSummary?.accountValue)
 
 
+    async function handleOrderPlace() {
+        try {
+            setBtnLoading(true)
+            showToastLoader("Submitting your request..", "transation-toast");
+            const response = await axiosInstanceAuth.post(`${baseUrl}hyper/placeOrder`, {
+                amount: Number(usdcAmount) * Number(maxLeverage),
+                tokenName: selectedToken?.name,
+                tokenPrice: Number(selectedToken?.markPx),
+                isBuy: activeTab == "buy" ? 'yes' : 'no'
+            })
+
+            dispatch(orderPositions(userDetails?.perpsWallet));
+
+            const data = await getOpenOrders(userDetails?.perpsWallet);
+
+            dispatch(setOpenOrdersData(data));
+
+            toast.success(response?.data?.message || "Order placed successfully.", {
+                id: "transation-toast",
+                duration: 2000,
+            });
+            setBtnLoading(false)
+        } catch (error) {
+            toast.error(error?.response?.data?.message || "Please try again!", {
+                id: "transation-toast",
+                duration: 2000,
+            });
+            setBtnLoading(false)
+            console.log("🚀 ~ handleOrderPlace ~ error:", error)
+        }
+    }
+
     function handleAmountInput(e) {
         const value = e.target.value;
         const regex = /^\d*\.?\d*$/;
 
-        if (value === '' || regex.test(value)) {
+        if (value == '' || regex.test(value)) {
             const num = parseFloat(value);
 
-            if (value === '') {
+            if (value == '') {
                 setUsdcAmount('');
                 setSize(0);
             } else if (!isNaN(num)) {
@@ -96,9 +137,12 @@ const BuySell = () => {
     }, [userDetails]);
 
 
+
+
     return (
         <>
-            <div className=" overflow-auto max-h-[90vh] text-white p-4 max-w-sm mx-auto">
+            <div className="lg:overflow-auto lg:max-h-[90vh] h-full text-white xl:p-4 p-1.5 w-full lg:max-w-sm mx-auto">
+
                 {/* Buy/Sell Tabs */}
                 <div className="flex border border-[#22242D] rounded p-[1px] ">
                     <button
@@ -175,7 +219,7 @@ const BuySell = () => {
                         <div className="flex flex-col">
                             <input
                                 type="number"
-                                value={usdcAmount}
+                                value={+(Number(usdcAmount) * Number(maxLeverage)).toFixed(2)}
                                 placeholder='0.0 USDC'
                                 onChange={(e) => handleAmountInput(e)}
                                 className="bg-transparent text-lg font-medium  focus:outline-none placeholder-gray-400"
@@ -290,18 +334,35 @@ const BuySell = () => {
                 )
                 }
 
-                <button
-                    disabled={usdcAmount >= 2 && perpsBalanceNum}
-                    className={`w-full mt-20 ${usdcAmount >= 2 && perpsBalanceNum ? "bg-[#1F73FC]" : "bg-[#1F73FC]/50"}  py-2 rounded  text-sm font-medium transition-colors `}>
-                    Place order
-                </button>
+
+                {btnLoading ?
+                    <button className="w-full mt-20 py-2 rounded-lg font-medium bg-[#1F73FC] text-[#FFFFFF]  transition opacity-50 cursor-not-allowed">
+                        <div className="flex justify-center py-2.5 items-center gap-2">
+                            <div className="loaderPopup"></div>
+                        </div>
+                    </button>
+                    :
+                    <button
+                        disabled={(Number(usdcAmount) * Number(maxLeverage)) < 2}
+                        onClick={() => {
+                            solWalletAddress ?
+                                handleOrderPlace()
+                                :
+                                dispatch(openCloseLoginRegPopup(true));
+                            dispatch(setLoginRegPopupAuth("signup"));
+
+                        }}
+                        className={`w-full mt-20 ${(usdcAmount * maxLeverage) > 2 ? "bg-[#1F73FC] cursor-pointer" : "bg-[#1F73FC]/50 cursor-not-allowed"}  py-2 rounded  text-sm font-medium transition-colors `}>
+                        Place order
+                    </button>
+                }
 
                 {/* <div className='border-b-gray-600 border-b'></div> */}
 
                 <div className="space-y-3 mt-5 text-xs border-t-gray-600 pt-5 border-t">
                     <div className="flex justify-between ">
                         <div className="text-gray-400">Order Value</div>
-                        <div className="text-white">{usdcAmount ? usdcAmount : "N/A"}</div>
+                        <div className="text-white">{usdcAmount ? (usdcAmount * maxLeverage).toFixed(2) : "N/A"}</div>
 
                     </div>
                     <div className="flex justify-between">
@@ -326,7 +387,7 @@ const BuySell = () => {
                         dispatch(setLoginRegPopupAuth("signup"));
 
                     }}
-                    className={`w-full ${activeTab == "buy" ? "bg-[#1F73FC]" : "bg-[#ED1B24]"} py-2 rounded mt-8 text-sm font-medium transition-colors `}>
+                    className={`w-full py-2 rounded bg-[#1F73FC] text-[#FFFFFF] mt-8 text-sm font-medium transition-colors `}>
                     Deposite
                 </button>
 
@@ -403,20 +464,20 @@ const BuySell = () => {
                 </div>
 
                 <style jsx>{`
-             input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-        height: 12px;
-        width: 12px;
-        background: #526FFF;
-        border-radius: 9999px;
-        cursor: pointer;
-        margin-top: -6px;
-      }
-      input[type="range"]::-webkit-slider-runnable-track {
-        height: 2px;
-        background: #444;
-        border-radius: 9999px;
-      }
+                    input[type="range"]::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    height: 12px;
+                    width: 12px;
+                    background: #526FFF;
+                    border-radius: 9999px;
+                    cursor: pointer;
+                    margin-top: -6px;
+                }
+                    input[type="range"]::-webkit-slider-runnable-track {
+                    height: 2px;
+                    background: #444;
+                    border-radius: 9999px;
+                 }
     `}</style>
 
             </div >

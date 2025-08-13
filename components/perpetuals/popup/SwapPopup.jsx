@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { showToaster, showToasterSuccess } from '@/utils/toaster/toaster.style';
 import axiosInstanceAuth from '@/apiInstance/axiosInstanceAuth';
 import { orderPositions } from '@/app/redux/perpetauls/perpetual.slice';
+import { showToastLoader } from '@/components/common/toastLoader/ToastLoder';
 
 const SwapPopup = ({ onClose, perpsBalance, SolBalance }) => {
 
@@ -15,7 +16,6 @@ const SwapPopup = ({ onClose, perpsBalance, SolBalance }) => {
     const activeSolWalletAddress = useSelector(
         (state) => state?.userData?.activeSolanaWallet
     );
-    console.log("🚀 ~ SwapPopup ~ activeSolWalletAddress:", activeSolWalletAddress)
 
 
     const dispatch = useDispatch();
@@ -39,6 +39,7 @@ const SwapPopup = ({ onClose, perpsBalance, SolBalance }) => {
     const handleConfirmConvert = async () => {
         try {
             setBtnLoading(true)
+            showToastLoader("Transaction proccessing", "transation-toast");
             const response = await axiosInstanceAuth.post(`${baseUrl}hyper/deposit`, {
                 amount: Number(solInputAmount),
             })
@@ -156,16 +157,16 @@ const SwapPopup = ({ onClose, perpsBalance, SolBalance }) => {
                                     <button
                                         onClick={handleConfirmConvert}
                                         className="w-full bg-[#1d73fc] hover:bg-[#438bff] py-3 rounded-lg font-bold text-sm text-[#FFFFFF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                        disabled={usdcInputAmount <  7 || btnLoading}
+                                        disabled={usdcInputAmount < 7 || btnLoading}
                                     >
-                                Confirm
-                            </button>
+                                        Confirm
+                                    </button>
                                 }
+                            </div>
                         </div>
                     </div>
-                </div>
-            </motion.div>
-        </motion.div >
+                </motion.div>
+            </motion.div >
         </>
     )
 }

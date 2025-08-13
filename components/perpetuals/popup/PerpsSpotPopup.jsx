@@ -5,7 +5,7 @@ import axiosInstanceAuth from '@/apiInstance/axiosInstanceAuth';
 import { useDispatch, useSelector } from 'react-redux';
 import { orderPositions } from '@/app/redux/perpetauls/perpetual.slice';
 import { spotClearinghouseState } from '@/services/hyperLiquid/spotClearinghouseState ';
-import { showToaster, showToasterSuccess } from '@/utils/toaster/toaster.style'; 
+import { showToaster, showToasterSuccess } from '@/utils/toaster/toaster.style';
 
 const PerpsSpotPopup = ({ onClose, PerpsBalance, spotBalance, setSpotBalance }) => {
     const [direction, setDirection] = useState(true);
@@ -65,8 +65,9 @@ const PerpsSpotPopup = ({ onClose, PerpsBalance, spotBalance, setSpotBalance }) 
             setBtnLoading(false)
             onClose(false);
         } catch (error) {
+            setBtnLoading(false)
             showToaster(error?.response?.data?.message || "Please try again!");
-        } 
+        }
     };
 
     return (
@@ -77,7 +78,7 @@ const PerpsSpotPopup = ({ onClose, PerpsBalance, spotBalance, setSpotBalance }) 
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={() => onClose(false)}
-            className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[999999]"
+            className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
         >
             <motion.div
                 key="modal"
@@ -104,16 +105,17 @@ const PerpsSpotPopup = ({ onClose, PerpsBalance, spotBalance, setSpotBalance }) 
 
                     {/* Direction Switch */}
                     <div className="flex items-center justify-center">
-                        <div className="flex items-center justify-center gap-2 mb-3 bg-[#1D1E26] w-fit rounded">
+                        <div
+                            onClick={() => {
+                                setDirection(!direction)
+                                setAmount(0)
+                            }}
+                            className="flex items-center justify-center gap-2 mb-3 bg-[#1D1E26] w-fit rounded">
                             <button className={`px-3 py-1 rounded-md text-sm font-medium transition text-white`} >
                                 {direction == true ? "Perps" : "Spot"}
                             </button>
 
                             <ArrowLeftRight
-                                onClick={() => {
-                                    setDirection(!direction)
-                                    setAmount(0)
-                                }}
                                 size={18} className="text-gray-400 cursor-pointer" />
 
                             <button className={`px-3 py-1 rounded-md text-sm font-medium transition text-white `}>

@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 
-function Trades({ trades, }) {
+function Trades({ trades }) {
     return (
         <div>
             <div className="grid grid-cols-3 py-1 gap-4 items-center border-b border-gray-700 bg-[#1a1a1a]">

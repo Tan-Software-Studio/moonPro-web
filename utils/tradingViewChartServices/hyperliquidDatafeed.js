@@ -34,6 +34,7 @@ export default function hyperliquidDatafeed(selectedSymbol) {
                         has_intraday: true,
                         visible_plots_set: 'ohlcv',
                         has_weekly_and_monthly: true,
+                        has_empty_bars: false,
                         supported_resolutions: configurationData.supported_resolutions,
                         volume_precision: 2,
                         data_status: 'streaming',
@@ -46,6 +47,7 @@ export default function hyperliquidDatafeed(selectedSymbol) {
 
         getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
             try {
+                console.log("🚀 ~ hyperliquidDatafeed ~ symbolInfo:",)
                 const { from, to } = periodParams;
                 const resolutionMap = {
                     "1": "1m",
@@ -58,9 +60,9 @@ export default function hyperliquidDatafeed(selectedSymbol) {
                     "1W": "1w",
                 };
                 const interval = resolutionMap[resolution] || "1m";
-
+                // "BTCUSDT",
                 const params = {
-                    symbol: "BTCUSDT",
+                    symbol: `${symbolInfo?.name}USDT`,
                     interval,
                     startTime: from * 1000,
                     endTime: to * 1000,
@@ -120,7 +122,7 @@ export default function hyperliquidDatafeed(selectedSymbol) {
                     method: "subscribe",
                     subscription: {
                         type: "candle",
-                        coin: "BTC",
+                        coin: symbolInfo?.name,
                         interval,
                     },
                 };
@@ -143,21 +145,21 @@ export default function hyperliquidDatafeed(selectedSymbol) {
                         onRealtimeCallback(bar);
                     }
                 } catch (err) {
-                    console.error("WebSocket message parse error", err);
+                    console.error("Chart WebSocket message parse error", err);
                 }
             };
 
             socket.onerror = (err) => {
-                console.error("WebSocket error", err);
+                console.error("Chart WebSocket error", err);
             };
 
             socket.onclose = () => {
-                console.log("📴 WebSocket connection closed.");
+                // console.log("📴 WebSocket connection closed.");
             };
         },
 
         unsubscribeBars: (subscriberUID) => {
-            console.log("❌ Unsubscribing...");
+            // console.log("❌ Unsubscribing...");
             if (socket) {
                 socket.close();
                 socket = null;
