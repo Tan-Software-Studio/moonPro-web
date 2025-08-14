@@ -2,82 +2,84 @@ import axios from "axios";
 
 const { createSlice, createAsyncThunk } = require("@reduxjs/toolkit");
 
-
 const url = "https://api.hyperliquid.xyz/info";
 
 export const orderPositions = createAsyncThunk(
-    "orderPositions",
-    async (walletAddress) => {
-        const params = {
-            type: "clearinghouseState",
-            user: walletAddress,
-        };
-        try {
-            const response = await axios.post(url, params);
-            return response?.data;
-        } catch (err) {
-            throw err;
-        }
+  "orderPositions",
+  async (walletAddress) => {
+    const params = {
+      type: "clearinghouseState",
+      user: walletAddress,
+    };
+    try {
+      const response = await axios.post(url, params);
+      return response?.data;
+    } catch (err) {
+      throw err;
     }
+  }
 );
 
 const perpetualsData = createSlice({
-    name: "perpetuals",
-    initialState: {
-        orderPositionsData: [],
-        initialLoading: true,
-        selectedToken: {},
-        isTokenChanged: {},
-        perpsTokenList: [],
-        OpenOrdersData: [],
-
-
-
+  name: "perpetuals",
+  initialState: {
+    orderPositionsData: [],
+    initialLoading: true,
+    selectedToken: {},
+    isTokenChanged: {},
+    perpsTokenList: [],
+    OpenOrdersData: [],
+  },
+  reducers: {
+    setSelectedToken: (state, { payload }) => {
+      state.selectedToken = {
+        ...state.selectedToken,
+        ...payload,
+        dayBaseVlm: payload?.dayBaseVlm,
+        dayNtlVlm: payload?.dayNtlVlm,
+        funding: payload?.funding,
+        markPx: payload?.markPx,
+        midPx: payload?.midPx,
+        openInterest: payload?.openInterest,
+        oraclePx: payload?.oraclePx,
+        premium: payload?.premium,
+        prevDayPx: payload?.prevDayPx,
+        priceChangePercent:
+          ((payload?.markPx - payload?.prevDayPx) / payload?.prevDayPx) * 100,
+        priceChangeAbs: payload?.markPx - payload?.prevDayPx,
+      };
     },
-    reducers: {
-        setSelectedToken: (state, { payload }) => {
-            state.selectedToken = {
-                ...state.selectedToken,
-                ...payload,
-                dayBaseVlm: payload?.dayBaseVlm,
-                dayNtlVlm: payload?.dayNtlVlm,
-                funding: payload?.funding,
-                markPx: payload?.markPx,
-                midPx: payload?.midPx,
-                openInterest: payload?.openInterest,
-                oraclePx: payload?.oraclePx,
-                premium: payload?.premium,
-                prevDayPx: payload?.prevDayPx,
-                priceChangePercent:
-                    ((payload?.markPx - payload?.prevDayPx) / payload?.prevDayPx) * 100,
-                priceChangeAbs: (payload?.markPx - payload?.prevDayPx)
-            };
-        },
-        setPerpsTokenList: (state, { payload }) => {
-            state.perpsTokenList = payload
-        },
-        setIsTokenChanged: (state, { payload }) => {
-            state.isTokenChanged = payload
-        },
-        setOpenOrdersData: (state, { payload }) => {
-            state.OpenOrdersData = payload
-        }
-
+    setPerpsTokenList: (state, { payload }) => {
+      state.perpsTokenList = payload;
     },
-    extraReducers: (builder) => {
-        builder
-            .addCase(orderPositions.fulfilled, (state, { payload }) => {
-                state.orderPositionsData = payload;
-                state.initialLoading = false;
-            })
-            .addCase(orderPositions.rejected, (state) => {
-                state.initialLoading = false;
-            })
+    setIsTokenChanged: (state, { payload }) => {
+      state.isTokenChanged = payload;
     },
-})
+    setOpenOrdersData: (state, { payload }) => {
+      state.OpenOrdersData = payload;
+    },
+    updateOpenOrdersData: (state, { payload }) => {
+      state.OpenOrdersData.splice(payload, 1);
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(orderPositions.fulfilled, (state, { payload }) => {
+        state.orderPositionsData = payload;
+        state.initialLoading = false;
+      })
+      .addCase(orderPositions.rejected, (state) => {
+        state.initialLoading = false;
+      });
+  },
+});
 
-
-
-export const { setSelectedToken, setPerpsTokenList, setIsTokenChanged, setOpenOrdersData } = perpetualsData.actions;
+export const {
+  setSelectedToken,
+  setPerpsTokenList,
+  setIsTokenChanged,
+  setOpenOrdersData,
+  updateOpenOrdersData,
+} = perpetualsData.actions;
 
 export default perpetualsData.reducer;
