@@ -12,6 +12,31 @@ const MainTable = () => {
     const [openOrdersLoading, setOpenOrdersLoading] = useState(false)
 
     const userDetails = useSelector((state) => state?.userData?.userDetails);
+    const orderPositionsData = useSelector(
+        (state) => state?.perpetualsData?.orderPositionsData
+    );
+
+    const OpenOrdersData = useSelector(
+        (state) => state?.perpetualsData?.OpenOrdersData
+    );
+
+    const Trades = [
+
+        {
+            title: 'Positions',
+            name: `Positions (${orderPositionsData?.assetPositions?.length})`,
+
+        },
+        {
+            title: 'Open orders',
+            name: `Open orders (${OpenOrdersData?.length != undefined ? OpenOrdersData?.length : 0}) `,
+        },
+        {
+            title: 'Trades',
+            name: 'Trades',
+        }
+    ]
+
 
 
     async function handleOpenOrders() {
@@ -23,7 +48,6 @@ const MainTable = () => {
 
         } catch (error) {
             setOpenOrdersLoading(false)
-            console.log("🚀 ~ OpenOrders ~ error:", error)
         }
     }
 
@@ -38,18 +62,15 @@ const MainTable = () => {
 
             <div className=' font-sans  w-full'>
                 <div className='py-2 px-5 flex items-center gap-6 w-full overflow-x-auto border-b border-gray-800'>
-                    {[
-                        'Positions',
-                        'Open orders',
-                        'Trades'].map((item, index) => (
-                            <div
-                                key={index}
-                                className={`${selectedTab == item ? "text-white" : "text-gray-400 hover:text-white"} font-semibold cursor-pointer text-sm`}
-                                onClick={() => setSelectedTab(item)}
-                            >
-                                {item}
-                            </div>
-                        ))}
+                    {Trades.map((item, index) => (
+                        <div
+                            key={index}
+                            className={`${selectedTab == item?.title ? "text-white" : "text-gray-400 hover:text-white"} font-semibold cursor-pointer text-sm`}
+                            onClick={() => setSelectedTab(item?.title)}
+                        >
+                            {item?.name}
+                        </div>
+                    ))}
                 </div>
                 {selectedTab == "Positions" ? <Positions /> : selectedTab == 'Open orders' ? <OpenOrders openOrdersLoading={openOrdersLoading} /> : null}
 

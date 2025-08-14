@@ -46,8 +46,7 @@ export default function hyperliquidDatafeed(selectedSymbol) {
         },
 
         getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
-            try {
-                console.log("🚀 ~ hyperliquidDatafeed ~ symbolInfo:",)
+            try { 
                 const { from, to } = periodParams;
                 const resolutionMap = {
                     "1": "1m",
@@ -127,7 +126,7 @@ export default function hyperliquidDatafeed(selectedSymbol) {
                     },
                 };
                 socket.send(JSON.stringify(subMsg));
-                console.log("✅ WebSocket connected");
+                // console.log("✅ WebSocket connected");
             };
             socket.onmessage = (event) => {
                 try {

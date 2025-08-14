@@ -117,7 +117,7 @@ const Perpetuals = () => {
                         {/* ORDER BOOK / TRADES */}
                         <div className="w-full lg:col-span-1 xl:col-span-1 border-l border-l-[#404040] lg:max-h-[600px]   h-full lg:h-[600px]">
                             {/* Tabs always at top */}
-                            <div className="flex items-center sticky top-0 bg-[#0a0a0a] z-10">
+                            <div className="flex items-center   bg-[#0a0a0a] ">
                                 <button
                                     onClick={() => setActiveTab('orders')}
                                     className={`px-4 py-1.5 text-sm font-medium cursor-pointer transition-all duration-200 ${activeTab === 'orders'

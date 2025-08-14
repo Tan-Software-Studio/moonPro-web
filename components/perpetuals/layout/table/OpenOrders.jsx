@@ -28,7 +28,14 @@ const OpenOrders = ({ openOrdersLoading }) => {
     if (openOrdersLoading) {
         return (
             <div className="flex items-center justify-center h-[300px] w-full">
-                <LoaderPopup />
+                <div
+                    className="snippet flex justify-center mt-20   "
+                    data-title=".dot-spin"
+                >
+                    <div className="stage">
+                        <div className="dot-spin"></div>
+                    </div>
+                </div>
             </div>
         );
     }
@@ -36,7 +43,7 @@ const OpenOrders = ({ openOrdersLoading }) => {
     if (!openOrdersLoading && (!OpenOrdersData || OpenOrdersData.length === 0)) {
         return (
             <div className="flex items-center flex-col  justify-center h-[300px] w-full">
-                <NoData title="No open positions yet" />
+                <NoData title="No open orders yet" />
             </div>
         );
     }

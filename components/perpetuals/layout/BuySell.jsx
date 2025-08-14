@@ -36,7 +36,11 @@ const BuySell = () => {
 
     // inputs  
     const [maxLeverage, setMaxLeverage] = useState(1);
-    const [usdcAmount, setUsdcAmount] = useState(0)
+    const [usdcAmount, setUsdcAmount] = useState(0);
+    const [limitPriceInput, setLimitPriceInput] = useState(
+        selectedToken?.markPx || 1
+    );
+
     const [size, setSize] = useState(0)
     const [slippageAmount, setSlippageAmount] = useState(8);
 
@@ -53,9 +57,7 @@ const BuySell = () => {
     const orderPositionsData = useSelector(
         (state) => state?.perpetualsData?.orderPositionsData
     );
-    const activeSolWalletAddress = useSelector(
-        (state) => state?.userData?.activeSolanaWallet
-    );
+
     const userDetails = useSelector((state) => state?.userData?.userDetails);
 
     const perpsBalance = orderPositionsData ? humanReadableFormatWithNoDollar(Number(orderPositionsData?.crossMarginSummary?.accountValue), 2) : 0
@@ -65,11 +67,13 @@ const BuySell = () => {
     async function handleOrderPlace() {
         try {
             setBtnLoading(true)
+            const tokenPrice = orderType == "Limit" ? Number(limitPriceInput) : Number(selectedToken?.markPx)
+
             showToastLoader("Submitting your request..", "transation-toast");
             const response = await axiosInstanceAuth.post(`${baseUrl}hyper/placeOrder`, {
                 amount: Number(usdcAmount) * Number(maxLeverage),
                 tokenName: selectedToken?.name,
-                tokenPrice: Number(selectedToken?.markPx),
+                tokenPrice: tokenPrice,
                 isBuy: activeTab == "buy" ? 'yes' : 'no'
             })
 
@@ -109,6 +113,21 @@ const BuySell = () => {
                 setUsdcAmount(clampedValue);
                 const newSize = (clampedValue / perpsBalanceNum) * 100;
                 setSize(newSize);
+            }
+        }
+    }
+
+    function handleLimitPriceInput(e) {
+        const value = e.target.value;
+        const regex = /^\d*\.?\d*$/;
+
+        if (value === '' || regex.test(value)) {
+            const num = parseFloat(value);
+
+            if (value === '') {
+                setLimitPriceInput('');
+            } else if (!isNaN(num)) {
+                setLimitPriceInput(num < 1 ? 1 : num);
             }
         }
     }
@@ -206,7 +225,28 @@ const BuySell = () => {
                     </div>
                 </div>
 
-
+                {/* Price - show for Limit and Stop Limit */}
+                {
+                    (orderType === 'Limit') && (
+                        <div className="mt-2">
+                            <div className=" bg-[#1D1E26] rounded-lg px-4 py-3 text-white text-sm">
+                                <div className='flex justify-between items-center'>
+                                    <div className="text-xs text-gray-400">Limit Price</div>
+                                    <div className='text-gray-400'>{selectedToken ? selectedToken?.markPx : "0"}</div>
+                                </div>
+                                <div className="flex flex-col">
+                                    <input
+                                        value={limitPriceInput}
+                                        onChange={handleLimitPriceInput}
+                                        type="number"
+                                        placeholder={`$${selectedToken?.markPx}`}
+                                        className="bg-transparent text-sm font-medium focus:outline-none placeholder-gray-400"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
 
                 {/* Size Controls */}
                 <div className="mt-2 w-full">
@@ -249,28 +289,6 @@ const BuySell = () => {
                     </div>
                 </div>
 
-
-
-                {/* Price - show for Limit and Stop Limit */}
-                {
-                    (orderType === 'Limit') && (
-                        <div className="mt-2">
-                            <div className=" bg-[#1D1E26] rounded-lg px-4 py-3 text-white text-sm">
-                                <div className='flex justify-between items-center'>
-                                    <div className="text-xs text-gray-400">Limit Price</div>
-                                    <div className='text-gray-400'>{selectedToken ? selectedToken?.markPx : "--"}</div>
-                                </div>
-                                <div className="flex flex-col">
-                                    <input
-                                        type="number"
-                                        placeholder={`$${selectedToken?.markPx}`}
-                                        className="bg-transparent text-sm font-medium focus:outline-none placeholder-gray-400"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    )
-                }
 
                 <div className="mt-4 space-y-3">
                     <div className='flex items-center justify-between'>
