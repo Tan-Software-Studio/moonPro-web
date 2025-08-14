@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useLayoutEffect, useState } from "react";
 import SwapPopup from "../popup/SwapPopup";
 import { useDispatch, useSelector } from "react-redux";
 import { humanReadableFormatWithNoDollar } from "@/utils/basicFunctions";
@@ -42,7 +42,6 @@ const BuySell = () => {
   const [orderType, setOrderType] = useState("Market");
 
   // inputs
-  const [maxLeverage, setMaxLeverage] = useState(1);
   const [usdcAmount, setUsdcAmount] = useState(0);
   const [limitPriceInput, setLimitPriceInput] = useState(
     selectedToken?.markPx || 1
@@ -87,7 +86,9 @@ const BuySell = () => {
       const response = await axiosInstanceAuth.post(
         `${baseUrl}hyper/placeOrder`,
         {
-          amount: Number(usdcAmount) * Number(maxLeverage),
+          amount:
+            Number(usdcAmount) *
+            Number(leverageDataState?.[selectedToken?.name] || leverage),
           tokenName: selectedToken?.name,
           tokenPrice: tokenPrice,
           isBuy: activeTab == "buy" ? "yes" : "no",
@@ -237,10 +238,7 @@ const BuySell = () => {
             className="border border-[#22242D] bg-[#22242D] p-[3px] rounded-md text-xs cursor-pointer"
           >
             Leverage:{" "}
-            {leverageDataState?.[selectedToken?.name]
-              ? leverageDataState?.[selectedToken?.name]
-              : leverage || 0}
-            x
+            {leverageDataState?.[selectedToken?.name] || leverage || 0}x
           </div>
         </div>
 
@@ -284,12 +282,17 @@ const BuySell = () => {
           <div className=" bg-[#1D1E26] rounded-lg px-4 py-3 text-white text-sm">
             <div className="flex justify-between items-center">
               <div className="text-xs text-gray-400">Buy Amount</div>
-              <div>{symbol || "usdt"}</div>
+              <div>USD</div>
             </div>
             <div className="flex flex-col">
               <input
                 type="number"
-                value={+(Number(usdcAmount) * Number(maxLeverage)).toFixed(2)}
+                value={
+                  +(
+                    Number(usdcAmount) *
+                    Number(leverageDataState?.[selectedToken?.name] || leverage)
+                  ).toFixed(2)
+                }
                 placeholder="0.0 USDC"
                 onChange={(e) => handleAmountInput(e)}
                 className="bg-transparent text-lg font-medium  focus:outline-none placeholder-gray-400"
@@ -387,7 +390,11 @@ const BuySell = () => {
           </button>
         ) : (
           <button
-            disabled={Number(usdcAmount) * Number(maxLeverage) < 2}
+            disabled={
+              Number(usdcAmount) *
+                Number(leverageDataState?.[selectedToken?.name] || leverage) <
+              2
+            }
             onClick={() => {
               solWalletAddress
                 ? handleOrderPlace()
@@ -395,10 +402,12 @@ const BuySell = () => {
               dispatch(setLoginRegPopupAuth("signup"));
             }}
             className={`w-full mt-20 ${
-              usdcAmount * maxLeverage > 2
+              Number(usdcAmount) *
+                Number(leverageDataState?.[selectedToken?.name] || leverage) >
+              2
                 ? "bg-[#1F73FC] cursor-pointer"
                 : "bg-[#1F73FC]/50 cursor-not-allowed"
-            }  py-2 rounded  text-sm font-medium transition-colors `}
+            } py-2 rounded  text-sm font-medium transition-colors `}
           >
             Place order
           </button>
@@ -410,7 +419,12 @@ const BuySell = () => {
           <div className="flex justify-between ">
             <div className="text-gray-400">Order Value</div>
             <div className="text-white">
-              {usdcAmount ? (usdcAmount * maxLeverage).toFixed(2) : "N/A"}
+              {usdcAmount
+                ? (
+                    Number(usdcAmount) *
+                    Number(leverageDataState?.[selectedToken?.name] || leverage)
+                  ).toFixed(2)
+                : "N/A"}
             </div>
           </div>
           <div className="flex justify-between">
@@ -538,11 +552,9 @@ const BuySell = () => {
 
       {isLeaveragePopup ? (
         <LeaveragePopup
-          maxLeverage={
-            leverageDataState?.[selectedToken?.name]
-              ? leverageDataState?.[selectedToken?.name]
-              : leverage || 0
-          }
+          maxLeverage={Number(
+            leverageDataState?.[selectedToken?.name] || leverage
+          )}
           setLeverageDataState={setLeverageDataState}
           leverageDataState={leverageDataState}
           leverage={leverage}
