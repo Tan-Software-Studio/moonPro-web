@@ -5,12 +5,12 @@ import NoData from '@/components/common/NoData/noData';
 
 const Positions = () => {
     const [isClosePositionOpen, setisClosePositionOpen] = useState(false)
-    const [closeSize, setCloseSize] = useState(0)
+    const [closeOrderToken, setcloseOrderToken] = useState(0)
     const [orderType, setorderType] = useState('')
 
     function handleClosePosition(item) {
         setisClosePositionOpen(true)
-        setCloseSize(item?.position)
+        setcloseOrderToken(item?.position)
 
     }
 
@@ -109,8 +109,7 @@ const Positions = () => {
             {isClosePositionOpen &&
                 <ClosePositionPopup
                     onClose={setisClosePositionOpen}
-                    closeSize={closeSize}
-                    setCloseSize={setCloseSize}
+                    closeOrderToken={closeOrderToken} 
                     orderType={orderType}
                 />
             }

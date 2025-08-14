@@ -2,18 +2,29 @@ import { X } from 'lucide-react';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import axiosInstanceAuth from '@/apiInstance/axiosInstanceAuth';
+import { showToastLoader } from '@/components/common/toastLoader/ToastLoder';
+import { orderPositions } from '@/app/redux/perpetauls/perpetual.slice';
+import { useDispatch, useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
 
-const ClosePositionPopup = ({ onClose, closeSize, orderType }) => {
+const ClosePositionPopup = ({ onClose, closeOrderToken, orderType }) => {
     const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL
-    const fullUSD = closeSize?.positionValue;
+    const fullUSD = closeOrderToken?.positionValue;
+
+    const dispatch = useDispatch()
+
     const [usdAmount, setUsdAmount] = useState(fullUSD);
-
-
     const [percentage, setPercentage] = useState(100);
-
     const [limitPriceInput, setLimitPriceInput] = useState(1)
+    const [isBtnLoading, setIsBtnLoading] = useState(false)
 
-    const currentSize = (closeSize?.szi * percentage) / 100;
+    const selectedToken = useSelector(
+        (state) => state?.perpetualsData?.selectedToken
+    );
+    const userDetails = useSelector((state) => state?.userData?.userDetails);
+
+
+    const currentSize = (closeOrderToken?.szi * percentage) / 100;
 
     function handleLimitPriceInput(e) {
         const value = e.target.value;
@@ -58,24 +69,34 @@ const ClosePositionPopup = ({ onClose, closeSize, orderType }) => {
     }
 
     async function handleConfirm() {
-
-        console.log({
-            tokenName: closeSize?.coin,
-            size: currentSize,
-            limit: orderType == "Limit" ? limitPriceInput : null,
-            isBuy: Number(closeSize?.szi) > 0 ? "yes" : "no"
-
-        })
-        // try {
-        //     const response = await axiosInstanceAuth.post(`${baseUrl}hyper/closeOrder`, {
-        //         tokenName: closeSize?.coin,
-        //         size: closeSize?.szi,
-        //         limit: orderType == "Limit" ? limitPriceInput : null,
-        //         isBuy: Number(item?.position?.szi) > 0 ? "yes" : "no"
-
-        //     })
-        // } catch (error) {
-        // }
+        setIsBtnLoading(true)
+        showToastLoader("Transaction proccessing", "transation-toast");
+        try {
+            const response = await axiosInstanceAuth.post(`${baseUrl}hyper/closeOrder`, {
+                tokenName: closeOrderToken?.coin,
+                size: currentSize,
+                limit: orderType == "Limit" ? "yes" : "no",
+                price: orderType == "Limit" ? limitPriceInput : Number(selectedToken?.markPx),
+                isBuy: Number(closeOrderToken?.szi) > 0 ? "yes" : "no"
+            })
+            toast.success(response?.data?.message || "Order closed successfully...", {
+                id: "transation-toast",
+                duration: 2000,
+            });
+            dispatch(orderPositions(userDetails?.perpsWallet))
+            setIsBtnLoading(false)
+            onClose(false)
+        } catch (error) {
+            console.log("🚀 ~ handleConfirm ~ error:", error)
+            toast.error(error?.response?.data?.message || "Please try again!", {
+                id: "transation-toast",
+                duration: 2000,
+            });
+            setIsBtnLoading(false)
+        }
+        finally {
+            setIsBtnLoading(false)
+        }
     }
 
 
@@ -87,7 +108,7 @@ const ClosePositionPopup = ({ onClose, closeSize, orderType }) => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={() => onClose(false)}
-            className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[999999]"
+            className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
         >
             <motion.div
                 key="modal"
@@ -119,7 +140,7 @@ const ClosePositionPopup = ({ onClose, closeSize, orderType }) => {
                     <div className="flex items-center mb-4 justify-between">
                         <div className="text-sm font-medium text-white">Size</div>
                         <div className="text-red-500 text-xs">
-                            {currentSize.toFixed(8)} {closeSize?.coin || "BTC"}
+                            {currentSize.toFixed(8)} {closeOrderToken?.coin || "BTC"}
                         </div>
                     </div>
 
@@ -189,12 +210,25 @@ const ClosePositionPopup = ({ onClose, closeSize, orderType }) => {
                     </div>
 
                     {/* Confirm Button */}
-                    <button
-                        className="w-full bg-[#1F73FC] hover:bg-[#1557D0] text-white font-medium py-3 px-4 rounded-lg transition-colors"
-                        onClick={handleConfirm}
-                    >
-                        {orderType} Close
-                    </button>
+                    {isBtnLoading ?
+
+                        <button
+                            className="w-full bg-[#1F73FC]/50 cursor-not-allowed text-white font-medium py-3 px-4 rounded-lg transition-colors"
+                        >
+                            <div className="flex justify-center py-2 items-center gap-2">
+                                <div className="loaderPopup"></div>
+                            </div>
+                        </button>
+
+                        :
+                        <button
+                            disabled={currentSize <= 0}
+                            className={`w-full  ${currentSize <= 0 ? "bg-[#1F73FC]/50 cursor-not-allowed" : "bg-[#1F73FC] hover:bg-[#1557D0]  cursor-pointer"} text-white font-medium py-3 px-4 rounded-lg transition-colors`}
+                            onClick={handleConfirm}
+                        >
+                            {orderType} Close
+                        </button>
+                    }
                 </div>
             </motion.div>
         </motion.div>
