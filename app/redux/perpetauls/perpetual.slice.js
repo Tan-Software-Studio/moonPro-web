@@ -24,7 +24,7 @@ const perpetualsData = createSlice({
   name: "perpetuals",
   initialState: {
     orderPositionsData: [],
-    initialLoading: true,
+    initialLoading: false,
     selectedToken: {},
     isTokenChanged: {},
     perpsTokenList: [],
@@ -64,11 +64,16 @@ const perpetualsData = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(orderPositions.pending, (state, { payload }) => {
+        state.orderPositionsData = [];
+        state.initialLoading = true;
+      })
       .addCase(orderPositions.fulfilled, (state, { payload }) => {
         state.orderPositionsData = payload;
         state.initialLoading = false;
       })
       .addCase(orderPositions.rejected, (state) => {
+        state.orderPositionsData = [];
         state.initialLoading = false;
       });
   },

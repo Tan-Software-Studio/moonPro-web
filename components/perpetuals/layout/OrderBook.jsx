@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 
 const OrderBook = ({ asksData, bidsData, selectedToken }) => {
   const maxBidTotal = Math.max(...bidsData.map((b) => b.n));
@@ -83,4 +83,4 @@ const OrderBook = ({ asksData, bidsData, selectedToken }) => {
   )
 }
 
-export default OrderBook
+export default memo(OrderBook)

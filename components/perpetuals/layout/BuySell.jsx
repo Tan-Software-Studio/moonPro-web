@@ -20,21 +20,19 @@ import {
 import toast from "react-hot-toast";
 import { showToastLoader } from "@/components/common/toastLoader/ToastLoder";
 import { getOpenOrders } from "@/services/hyperLiquid/getOpenOrders";
+const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 const BuySell = () => {
-  const [leverageDataState, setLeverageDataState] = useState({});
-  const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
-  const selectedToken = useSelector(
-    (state) => state?.perpetualsData?.selectedToken
-  );
-  const solWalletAddress = useSelector(
-    (state) => state?.AllStatesData?.solWalletAddress
-  );
-
   const dispatch = useDispatch();
 
-  let symbol = selectedToken?.name?.slice(0, 4);
-  const leverage = selectedToken?.maxLeverage;
+  const selectedToken = useSelector((state) => state?.perpetualsData?.selectedToken);
+  const solWalletAddress = useSelector((state) => state?.AllStatesData?.solWalletAddress);
+  const orderPositionsData = useSelector((state) => state?.perpetualsData?.orderPositionsData);
+  const userDetails = useSelector((state) => state?.userData?.userDetails);
+  
+  // spotbalance data
   const [spotBalance, setSpotBalance] = useState({});
+
+  // Loading
   const [btnLoading, setBtnLoading] = useState(false);
 
   // Tabs
@@ -43,14 +41,12 @@ const BuySell = () => {
 
   // inputs
   const [usdcAmount, setUsdcAmount] = useState(0);
-  const [limitPriceInput, setLimitPriceInput] = useState(
-    selectedToken?.markPx || 1
-  );
-
+  const [limitPriceInput, setLimitPriceInput] = useState(selectedToken?.markPx || 1);
+  const [leverageDataState, setLeverageDataState] = useState({});
   const [size, setSize] = useState(0);
   const [slippageAmount, setSlippageAmount] = useState(8);
 
-  // popups // dropdowna
+  // popups // dropdown
   const [tpSl, setTpSl] = useState(false);
   const [perpsSpotPopup, setPerpsSpotPopup] = useState(false);
   const [isSlippagePopup, setIsSlippagePopup] = useState(false);
@@ -58,22 +54,63 @@ const BuySell = () => {
   const [isSwapPopup, setIsSwapPopup] = useState(false);
   const [isWithdrawPopup, setIsWithdrawPopup] = useState(false);
 
-  const orderPositionsData = useSelector(
-    (state) => state?.perpetualsData?.orderPositionsData
-  );
+  // Selected tokens total leverage 
+  const leverage = selectedToken?.maxLeverage;
 
-  const userDetails = useSelector((state) => state?.userData?.userDetails);
+  // perps balance in human readable form
+  const perpsBalance = orderPositionsData ?
+    humanReadableFormatWithNoDollar(Number(orderPositionsData?.crossMarginSummary?.accountValue), 2) : 0;
 
-  const perpsBalance = orderPositionsData
-    ? humanReadableFormatWithNoDollar(
-        Number(orderPositionsData?.crossMarginSummary?.accountValue),
-        2
-      )
-    : 0;
-  const perpsBalanceNum = Number(
-    orderPositionsData?.crossMarginSummary?.accountValue
-  );
+  // perps balance in raw
+  const perpsBalanceNum = Number(orderPositionsData?.crossMarginSummary?.accountValue);
 
+
+  // Handle market price input
+  function handleAmountInput(e) {
+    const value = e.target.value;
+    const regex = /^\d*\.?\d*$/;
+
+    if (value == "" || regex.test(value)) {
+      const num = parseFloat(value);
+
+      if (value == "") {
+        setUsdcAmount("");
+        setSize(0);
+      } else if (!isNaN(num)) {
+        const clampedValue = Math.min(num, perpsBalanceNum);
+        setUsdcAmount(clampedValue);
+        const newSize = (clampedValue / perpsBalanceNum) * 100;
+        setSize(newSize);
+      }
+    }
+  }
+
+  // Handle Limit price input
+  function handleLimitPriceInput(e) {
+    const value = e.target.value;
+    const regex = /^\d*\.?\d*$/;
+
+    if (value === "" || regex.test(value)) {
+      const num = parseFloat(value);
+
+      if (value === "") {
+        setLimitPriceInput("");
+      } else if (!isNaN(num)) {
+        setLimitPriceInput(num < 1 ? 1 : num);
+      }
+    }
+  }
+
+  // Handle slider input
+  function handleSliderChange(e) {
+    const percent = parseFloat(e.target.value);
+    setSize(percent);
+
+    const calculatedAmount = ((percent / 100) * perpsBalanceNum).toFixed(4);
+    setUsdcAmount(parseFloat(calculatedAmount));
+  }
+
+  // Place order api call
   async function handleOrderPlace() {
     try {
       setBtnLoading(true);
@@ -96,9 +133,7 @@ const BuySell = () => {
       );
 
       dispatch(orderPositions(userDetails?.perpsWallet));
-
       const data = await getOpenOrders(userDetails?.perpsWallet);
-
       dispatch(setOpenOrdersData(data));
 
       toast.success(response?.data?.message || "Order placed successfully.", {
@@ -112,52 +147,10 @@ const BuySell = () => {
         duration: 2000,
       });
       setBtnLoading(false);
-      console.log("🚀 ~ handleOrderPlace ~ error:", error);
     }
   }
 
-  function handleAmountInput(e) {
-    const value = e.target.value;
-    const regex = /^\d*\.?\d*$/;
-
-    if (value == "" || regex.test(value)) {
-      const num = parseFloat(value);
-
-      if (value == "") {
-        setUsdcAmount("");
-        setSize(0);
-      } else if (!isNaN(num)) {
-        const clampedValue = Math.min(num, perpsBalanceNum);
-        setUsdcAmount(clampedValue);
-        const newSize = (clampedValue / perpsBalanceNum) * 100;
-        setSize(newSize);
-      }
-    }
-  }
-
-  function handleLimitPriceInput(e) {
-    const value = e.target.value;
-    const regex = /^\d*\.?\d*$/;
-
-    if (value === "" || regex.test(value)) {
-      const num = parseFloat(value);
-
-      if (value === "") {
-        setLimitPriceInput("");
-      } else if (!isNaN(num)) {
-        setLimitPriceInput(num < 1 ? 1 : num);
-      }
-    }
-  }
-
-  function handleSliderChange(e) {
-    const percent = parseFloat(e.target.value);
-    setSize(percent);
-
-    const calculatedAmount = ((percent / 100) * perpsBalanceNum).toFixed(4);
-    setUsdcAmount(parseFloat(calculatedAmount));
-  }
-
+  // spot balance api call
   async function spotApi() {
     try {
       const response = await spotClearinghouseState(userDetails?.perpsWallet);
@@ -167,6 +160,7 @@ const BuySell = () => {
       console.error("❌ API Error:", err?.response?.data || err.message);
     }
   }
+
   useEffect(() => {
     const leverageTokenData = JSON.parse(
       localStorage.getItem("leverageTokenData")
@@ -175,6 +169,7 @@ const BuySell = () => {
       setLeverageDataState(leverageTokenData);
     }
   }, [selectedToken?.name]);
+
   useEffect(() => {
     if (userDetails?.perpsWallet) {
       spotApi();
@@ -187,21 +182,19 @@ const BuySell = () => {
         {/* Buy/Sell Tabs */}
         <div className="flex border border-[#22242D] rounded p-[1px] ">
           <button
-            className={`flex-1 py-2 px-4 text-sm font-medium transition-all ${
-              activeTab === "buy"
-                ? "bg-[#1F73FC] rounded text-white"
-                : "bg-[#08080E]  text-gray-400 hover:text-white"
-            }`}
+            className={`flex-1 py-2 px-4 text-sm font-medium transition-all ${activeTab === "buy"
+              ? "bg-[#1F73FC] rounded text-white"
+              : "bg-[#08080E]  text-gray-400 hover:text-white"
+              }`}
             onClick={() => setActiveTab("buy")}
           >
             Buy
           </button>
           <button
-            className={`flex-1 py-2 px-4 text-sm font-medium transition-all ${
-              activeTab === "sell"
-                ? "bg-[#ED1B24] rounded"
-                : "bg-[#08080E]  text-gray-400 hover:text-white"
-            }`}
+            className={`flex-1 py-2 px-4 text-sm font-medium transition-all ${activeTab === "sell"
+              ? "bg-[#ED1B24] rounded"
+              : "bg-[#08080E]  text-gray-400 hover:text-white"
+              }`}
             onClick={() => setActiveTab("sell")}
           >
             Sell
@@ -212,21 +205,19 @@ const BuySell = () => {
         <div className="flex gap-1.5  justify-between mt-4 text-sm">
           <div className="flex gap-1.5 ">
             <button
-              className={` text-xs font-medium py-1   ${
-                orderType === "Market"
-                  ? "text-white"
-                  : "text-gray-400 hover:text-white"
-              }`}
+              className={` text-xs font-medium py-1   ${orderType === "Market"
+                ? "text-white"
+                : "text-gray-400 hover:text-white"
+                }`}
               onClick={() => setOrderType("Market")}
             >
               Market
             </button>
             <button
-              className={`px-3 text-xs font-medium py-1 ${
-                orderType === "Limit"
-                  ? "text-white"
-                  : "text-gray-400 hover:text-white"
-              }`}
+              className={`px-3 text-xs font-medium py-1 ${orderType === "Limit"
+                ? "text-white"
+                : "text-gray-400 hover:text-white"
+                }`}
               onClick={() => setOrderType("Limit")}
             >
               Limit
@@ -249,7 +240,7 @@ const BuySell = () => {
           </div>
           <div className="flex justify-between ">
             <div className="text-gray-400">Current Position</div>
-            <div className="text-white">{symbol}</div>
+            <div className="text-white">{selectedToken?.name?.slice(0, 4)}</div>
           </div>
         </div>
 
@@ -392,7 +383,7 @@ const BuySell = () => {
           <button
             disabled={
               Number(usdcAmount) *
-                Number(leverageDataState?.[selectedToken?.name] || leverage) <
+              Number(leverageDataState?.[selectedToken?.name] || leverage) <
               2
             }
             onClick={() => {
@@ -401,13 +392,12 @@ const BuySell = () => {
                 : dispatch(openCloseLoginRegPopup(true));
               dispatch(setLoginRegPopupAuth("signup"));
             }}
-            className={`w-full mt-20 ${
-              Number(usdcAmount) *
-                Number(leverageDataState?.[selectedToken?.name] || leverage) >
+            className={`w-full mt-20 ${Number(usdcAmount) *
+              Number(leverageDataState?.[selectedToken?.name] || leverage) >
               2
-                ? "bg-[#1F73FC] cursor-pointer"
-                : "bg-[#1F73FC]/50 cursor-not-allowed"
-            } py-2 rounded  text-sm font-medium transition-colors `}
+              ? "bg-[#1F73FC] cursor-pointer"
+              : "bg-[#1F73FC]/50 cursor-not-allowed"
+              } py-2 rounded  text-sm font-medium transition-colors `}
           >
             Place order
           </button>
@@ -421,9 +411,9 @@ const BuySell = () => {
             <div className="text-white">
               {usdcAmount
                 ? (
-                    Number(usdcAmount) *
-                    Number(leverageDataState?.[selectedToken?.name] || leverage)
-                  ).toFixed(2)
+                  Number(usdcAmount) *
+                  Number(leverageDataState?.[selectedToken?.name] || leverage)
+                ).toFixed(2)
                 : "N/A"}
             </div>
           </div>
@@ -484,13 +474,6 @@ const BuySell = () => {
 
         {/* Trading Info */}
         <div className="space-y-3 mt-5 text-xs">
-          {/* <div className="flex justify-between border-b-gray-600 pb-5 border-b">
-                        <div className="text-gray-400">Available Margin</div>
-                        <div onClick={() => setIsSwapPopup(!isSwapPopup)} className="text-[#6683ff] bg-[#22242D80] cursor-pointer p-0.5 rounded">
-                            {orderPositionsData ? humanReadableFormatWithNoDollar(Number(orderPositionsData?.crossMarginSummary?.accountValue), 2) : "--"} USDC
-                        </div>
-                    </div> */}
-
           <div className="text-sm">Account Equity</div>
           <div className="flex justify-between">
             <div className="text-gray-400">Spot</div>

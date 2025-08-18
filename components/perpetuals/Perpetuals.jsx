@@ -59,6 +59,9 @@ const Perpetuals = () => {
             marketPriceSocketConnect(selectedToken?.name, dispatch)
         }
         return () => {
+            setTradesData([])
+            setBidsData([])
+            setAsksData([])
             disconnectTradesSocket()
             disconnectOrderBookSocket()
             disconnectMarketPriceSocket()
@@ -89,7 +92,7 @@ const Perpetuals = () => {
     }, [userDetails]);
 
     return (
-        <div className="w-full bg-[#0a0a0a] h-svh font-poppins">
+        <div className="w-full bg-[#0a0a0a] h-svh overflow-auto font-poppins">
             {/* Token Dropdown */}
 
             <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-5">

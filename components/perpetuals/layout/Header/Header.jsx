@@ -9,14 +9,22 @@ const Header = ({ setIsOpen, isOpen, }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState("Perps")
     const dropdownRef = useRef(null);
+    const btnRef = useRef(null);
+
 
     const selectedToken = useSelector(
         (state) => state?.perpetualsData?.selectedToken
     );
 
+
     useEffect(() => {
         function handleClickOutside(event) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target) &&
+                btnRef.current &&
+                !btnRef.current.contains(event.target)
+            ) {
                 setIsOpen(false);
             }
         }
@@ -34,6 +42,7 @@ const Header = ({ setIsOpen, isOpen, }) => {
         <div className='flex overflow-scroll items-center py-2 px-4 w-full h-[70px] lg:gap-10 gap-5 break-keep whitespace-nowrap'>
             <div className='border-r flex items-center  border-r-gray-500 pr-2.5 h-full'>
                 <button
+                    ref={btnRef} 
                     onClick={() => setIsOpen((prev) => !prev)}
                     className="px-3 flex items-center gap-1.5 text-[#ffffff]  text-sm font-semibold transition-colors cursor-pointer"
                 >

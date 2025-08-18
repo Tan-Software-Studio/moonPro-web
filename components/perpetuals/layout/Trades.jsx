@@ -1,3 +1,4 @@
+import NoData from '@/components/common/NoData/noData'
 import React, { memo } from 'react'
 
 function Trades({ trades }) {
@@ -21,16 +22,18 @@ function Trades({ trades }) {
                                 {item?.px}
                             </div>
                             <div className="text-white text-sm text-center">
-                                {parseFloat(item?.sz).toFixed(4)}
+                                {item?.sz && parseFloat(item?.sz).toFixed(4)}
                             </div>
                             <div className="text-gray-300 text-sm text-right">
-                                {new Date(item?.time).toLocaleTimeString()}
+                                {item?.time && new Date(item?.time).toLocaleTimeString() }
                             </div>
                         </div>
                     ))
                 ) : (
-                    <div className="flex items-center h-full justify-center text-gray-400 py-16">
-                        <div>Loading trades...</div>
+                    <div className="flex items-center justify-center h-full w-full">
+                        <NoData
+                            imageTagClass="!md:w-[180px] !sm:w-[120px] !w-[100px] !h-auto"
+                            title="No Trades Data yet" />
                     </div>
                 )}
             </div>

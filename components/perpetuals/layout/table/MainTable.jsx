@@ -7,8 +7,7 @@ import { setOpenOrdersData } from '@/app/redux/perpetauls/perpetual.slice';
 const MainTable = () => {
 
     const [selectedTab, setSelectedTab] = useState('Positions');
-    const dispatch = useDispatch()
-    // const [OpenOrdersData, setOpenOrdersData] = useState([])
+    const dispatch = useDispatch() 
     const [openOrdersLoading, setOpenOrdersLoading] = useState(false)
 
     const userDetails = useSelector((state) => state?.userData?.userDetails);
@@ -18,18 +17,18 @@ const MainTable = () => {
 
     const OpenOrdersData = useSelector(
         (state) => state?.perpetualsData?.OpenOrdersData
-    );
+    ); 
 
     const Trades = [
 
         {
             title: 'Positions',
-            name: `Positions (${orderPositionsData?.assetPositions?.length})`,
+            name: `Positions (${orderPositionsData?.assetPositions?.length || 0})`,
 
         },
         {
             title: 'Open orders',
-            name: `Open orders (${OpenOrdersData?.length != undefined ? OpenOrdersData?.length : 0}) `,
+            name: `Open orders (${OpenOrdersData?.length ? OpenOrdersData?.length : 0}) `,
         },
         {
             title: 'Trades',

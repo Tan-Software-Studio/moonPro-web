@@ -8,7 +8,8 @@ const NoData = ({
     description,
     imageClass,
     titleClass,
-    descriptionClass
+    descriptionClass,
+    imageTagClass
 
 }) => {
     return (
@@ -16,8 +17,8 @@ const NoData = ({
             <div className={`flex items-center justify-center   ${imageClass}`} style={{ maxWidth: "200px", maxHeight: "150px" }}>
                 <Image
                     src={imageSrc || NoDataLogo}
-                    alt="No Data Available" 
-                    className="text-slate-400 object-contain md:w-[200px] sm:w-[180px] w-[120px] h-auto"
+                    alt="No Data Available"
+                    className={`text-slate-400 object-contain md:w-[200px] sm:w-[180px] w-[120px] h-auto ${imageTagClass}`}
                     unoptimized
                 />
             </div>

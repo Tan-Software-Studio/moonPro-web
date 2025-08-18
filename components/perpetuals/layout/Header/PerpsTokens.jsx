@@ -1,6 +1,6 @@
 import { setIsTokenChanged, setSelectedToken } from '@/app/redux/perpetauls/perpetual.slice';
 import { humanReadableFormatWithNoDollar } from '@/utils/basicFunctions';
-import React from 'react'
+import React, { memo } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
 const PerpsTokens = ({ setIsOpen, searchTerm }) => {
@@ -89,4 +89,4 @@ const PerpsTokens = ({ setIsOpen, searchTerm }) => {
         </>
     )
 }
-export default PerpsTokens
+export default memo(PerpsTokens)

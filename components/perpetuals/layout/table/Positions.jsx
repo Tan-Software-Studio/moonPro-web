@@ -22,33 +22,6 @@ const Positions = () => {
         (state) => state?.perpetualsData?.initialLoading
     );
 
-
-
-    if (initialLoading) {
-        return (
-            <div className="flex items-center justify-center h-[300px] w-full">
-                <div
-                    className="snippet flex justify-center mt-20   "
-                    data-title=".dot-spin"
-                >
-                    <div className="stage">
-                        <div className="dot-spin"></div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    if (!initialLoading && (!orderPositionsData || orderPositionsData.length === 0)) {
-        return (
-            <div className="flex items-center flex-col  justify-center h-[300px] w-full">
-                <NoData title="No positions yet" />
-            </div>
-        );
-    }
-
-
-
     return (
         <>
             <div className="overflow-x-auto">
@@ -68,40 +41,57 @@ const Positions = () => {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-800 text-white overflow-y-scroll h-full">
-                        {orderPositionsData?.assetPositions?.map((item, index) => {
-                            return (
-                                <tr key={index}>
-                                    <td className="px-4 py-2">{item?.position?.coin}</td>
-                                    <td className={`px-4 py-2 ${Number(item?.position?.szi) > 0 ? "text-green-500" : "text-red-500"} `}>{item?.position?.szi}</td>
-                                    <td className="px-4 py-2">{item?.position?.positionValue}</td>
-                                    <td className="px-4 py-2">{Number(item?.position?.entryPx).toFixed(2)}</td>
-                                    <td className="px-4 py-2">---</td>
-                                    <td className="px-4 py-2">{Number(item?.position?.unrealizedPnl).toFixed(2)}</td>
-                                    <td className="px-4 py-2">{Number(item?.position?.liquidationPx).toFixed(2)}</td>
-                                    <td className="px-4 py-2">{Number(item?.position?.marginUsed).toFixed(2)}</td>
-                                    <td className="px-4 py-2">{Number(item?.position?.cumFunding?.allTime).toFixed(2)}</td>
-                                    <td className="px-4 py-2 cursor-pointer text-[#1F73FC]"
-                                    >
-                                        <div className='flex items-center gap-5 text-xs'>
-                                            <div onClick={() => {
-                                                setorderType("Limit")
-                                                handleClosePosition(item)
-                                            }}>
-                                                Limit
-                                            </div>
-                                            <div
-                                                onClick={() => {
-                                                    setorderType("Market")
-                                                    handleClosePosition(item)
+                        {initialLoading ?
+                            <div className="flex items-center justify-center h-[300px] w-full">
+                                <div
+                                    className="snippet flex justify-center mt-20   "
+                                    data-title=".dot-spin"
+                                >
+                                    <div className="stage">
+                                        <div className="dot-spin"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            :
+                            orderPositionsData ?
+                                orderPositionsData?.assetPositions?.map((item, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            <td className="px-4 py-2">{item?.position?.coin}</td>
+                                            <td className={`px-4 py-2 ${Number(item?.position?.szi) > 0 ? "text-green-500" : "text-red-500"} `}>{item?.position?.szi}</td>
+                                            <td className="px-4 py-2">{item?.position?.positionValue}</td>
+                                            <td className="px-4 py-2">{Number(item?.position?.entryPx).toFixed(2)}</td>
+                                            <td className="px-4 py-2">---</td>
+                                            <td className="px-4 py-2">{Number(item?.position?.unrealizedPnl).toFixed(2)}</td>
+                                            <td className="px-4 py-2">{Number(item?.position?.liquidationPx).toFixed(2)}</td>
+                                            <td className="px-4 py-2">{Number(item?.position?.marginUsed).toFixed(2)}</td>
+                                            <td className="px-4 py-2">{Number(item?.position?.cumFunding?.allTime).toFixed(2)}</td>
+                                            <td className="px-4 py-2 cursor-pointer text-[#1F73FC]"
+                                            >
+                                                <div className='flex items-center gap-5 text-xs'>
+                                                    <div onClick={() => {
+                                                        setorderType("Limit")
+                                                        handleClosePosition(item)
+                                                    }}>
+                                                        Limit
+                                                    </div>
+                                                    <div
+                                                        onClick={() => {
+                                                            setorderType("Market")
+                                                            handleClosePosition(item)
 
-                                                }}>
-                                                Market
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )
-                        })}
+                                                        }}>
+                                                        Market
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )
+                                })
+                                :
+                                <div className="flex items-center flex-col  justify-center h-[300px] w-full">
+                                    <NoData title="No positions yet" />
+                                </div>}
                     </tbody>
                 </table>
             </div>
@@ -109,7 +99,7 @@ const Positions = () => {
             {isClosePositionOpen &&
                 <ClosePositionPopup
                     onClose={setisClosePositionOpen}
-                    closeOrderToken={closeOrderToken} 
+                    closeOrderToken={closeOrderToken}
                     orderType={orderType}
                 />
             }
