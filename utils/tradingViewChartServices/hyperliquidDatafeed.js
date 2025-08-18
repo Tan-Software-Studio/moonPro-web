@@ -46,7 +46,7 @@ export default function hyperliquidDatafeed(selectedSymbol) {
         },
 
         getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
-            try { 
+            try {
                 const { from, to } = periodParams;
                 const resolutionMap = {
                     "1": "1m",
@@ -59,46 +59,42 @@ export default function hyperliquidDatafeed(selectedSymbol) {
                     "1W": "1w",
                 };
                 const interval = resolutionMap[resolution] || "1m";
-                // "BTCUSDT",
-                const params = {
-                    symbol: `${symbolInfo?.name}USDT`,
-                    interval,
-                    startTime: from * 1000,
-                    endTime: to * 1000,
-                    limit: 1000,
+
+                const url = "https://api.hyperliquid.xyz/info";
+
+                const payload = {
+                    type: "candleSnapshot",
+                    req: {
+                        coin: symbolInfo?.name,
+                        interval,
+                        startTime: 0,          
+                        endTime: Date.now()
+                    }
                 };
 
-                const { data } = await axios.get("https://fapi.asterdex.com/fapi/v1/klines", {
-                    params,
-                    headers: {
-                        apiKey: "4c266fd53bf07ed37834538e6d4ab33961a4efc736d88d688252c77b39eb28c3",
-                        secretKey: "51412dd92f82b54be5c70dd2e02145a826af31caeb1803520b34998879bcb72ds",
-                    },
-                });
+                const { data } = await axios.post(url, payload);
 
-                if (!Array.isArray(data) || data.length === 0) {
+                if (data?.length) {
+                    const bars = data.map(candle => ({
+                        time: candle.t,                     // start time in ms
+                        open: parseFloat(candle.o),
+                        high: parseFloat(candle.h),
+                        low: parseFloat(candle.l),
+                        close: parseFloat(candle.c),
+                        volume: parseFloat(candle.v)
+                    }));
+
+                    onHistoryCallback(bars, { noData: false });
+                } else {
                     onHistoryCallback([], { noData: true });
-                    return;
                 }
-
-                const bars = data.map(d => ({
-                    time: d[0],
-                    open: parseFloat(d[1]),
-                    high: parseFloat(d[2]),
-                    low: parseFloat(d[3]),
-                    close: parseFloat(d[4]),
-                    volume: parseFloat(d[5]),
-                }));
-
-                bars.sort((a, b) => a.time - b.time);
-                latestBar = bars[bars.length - 1];
-                onHistoryCallback(bars, { noData: false });
 
             } catch (err) {
                 console.error("getBars error", err);
                 onErrorCallback(err);
             }
-        },
+        }
+        ,
 
         subscribeBars: (symbolInfo, resolution, onRealtimeCallback, subscribeUID, onResetCacheNeededCallback) => {
 

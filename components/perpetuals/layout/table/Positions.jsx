@@ -11,7 +11,6 @@ const Positions = () => {
     function handleClosePosition(item) {
         setisClosePositionOpen(true)
         setcloseOrderToken(item?.position)
-
     }
 
     const orderPositionsData = useSelector(
@@ -42,18 +41,19 @@ const Positions = () => {
                     </thead>
                     <tbody className="divide-y divide-gray-800 text-white overflow-y-scroll h-full">
                         {initialLoading ?
-                            <div className="flex items-center justify-center h-[300px] w-full">
-                                <div
-                                    className="snippet flex justify-center mt-20   "
-                                    data-title=".dot-spin"
-                                >
-                                    <div className="stage">
-                                        <div className="dot-spin"></div>
+                            <tr>
+                                <td colSpan={10} className="py-10">
+                                    <div className="flex items-center justify-center h-[200px] w-full">
+                                        <div className="snippet flex justify-center" data-title=".dot-spin">
+                                            <div className="stage">
+                                                <div className="dot-spin"></div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
+                                </td>
+                            </tr>
                             :
-                            orderPositionsData ?
+                            orderPositionsData && orderPositionsData?.assetPositions?.length > 0 ?
                                 orderPositionsData?.assetPositions?.map((item, index) => {
                                     return (
                                         <tr key={index}>
@@ -89,9 +89,14 @@ const Positions = () => {
                                     )
                                 })
                                 :
-                                <div className="flex items-center flex-col  justify-center h-[300px] w-full">
-                                    <NoData title="No positions yet" />
-                                </div>}
+                                <tr>
+                                    <td colSpan={10} className="py-10">
+                                        <div className="flex items-center flex-col justify-center h-[200px] w-full">
+                                            <NoData title="No positions yet" />
+                                        </div>
+                                    </td>
+                                </tr>
+                        }
                     </tbody>
                 </table>
             </div>
