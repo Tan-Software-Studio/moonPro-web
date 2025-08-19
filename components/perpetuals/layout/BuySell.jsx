@@ -2,7 +2,6 @@ import React, { memo, useEffect, useLayoutEffect, useState } from "react";
 import SwapPopup from "../popup/SwapPopup";
 import { useDispatch, useSelector } from "react-redux";
 import { humanReadableFormatWithNoDollar } from "@/utils/basicFunctions";
-import { spotClearinghouseState } from "@/services/hyperLiquid/spotClearinghouseState ";
 import { IoSwapHorizontal } from "react-icons/io5";
 import LeaveragePopup from "../popup/LeaveragePopup";
 import SlippagePopup from "../popup/SlippagePopup";
@@ -19,7 +18,7 @@ import {
 } from "@/app/redux/perpetauls/perpetual.slice";
 import toast from "react-hot-toast";
 import { showToastLoader } from "@/components/common/toastLoader/ToastLoder";
-import { getOpenOrders } from "@/services/hyperLiquid/getOpenOrders";
+import { fetchHyperliquidData } from "@/services/hyperLiquid/hyperLiquidApi";
 const baseUrl = process.env.NEXT_PUBLIC_MOONPRO_BASE_URL;
 const BuySell = () => {
   const dispatch = useDispatch();
@@ -28,7 +27,7 @@ const BuySell = () => {
   const solWalletAddress = useSelector((state) => state?.AllStatesData?.solWalletAddress);
   const orderPositionsData = useSelector((state) => state?.perpetualsData?.orderPositionsData);
   const userDetails = useSelector((state) => state?.userData?.userDetails);
-  
+
   // spotbalance data
   const [spotBalance, setSpotBalance] = useState({});
 
@@ -129,11 +128,12 @@ const BuySell = () => {
           tokenName: selectedToken?.name,
           tokenPrice: tokenPrice,
           isBuy: activeTab == "buy" ? "yes" : "no",
+          limit: orderType == "Limit" ? "yes" : "no"
         }
       );
 
       dispatch(orderPositions(userDetails?.perpsWallet));
-      const data = await getOpenOrders(userDetails?.perpsWallet);
+      const data = await fetchHyperliquidData("openOrders", userDetails?.perpsWallet)
       dispatch(setOpenOrdersData(data));
 
       toast.success(response?.data?.message || "Order placed successfully.", {
@@ -153,8 +153,8 @@ const BuySell = () => {
   // spot balance api call
   async function spotApi() {
     try {
-      const response = await spotClearinghouseState(userDetails?.perpsWallet);
-      const spot = response?.find((item) => item?.coin == "USDC");
+      const response = await fetchHyperliquidData("spotClearinghouseState", userDetails?.perpsWallet)
+      const spot = response?.balances?.find((item) => item?.coin == "USDC");
       setSpotBalance(spot);
     } catch (err) {
       console.error("❌ API Error:", err?.response?.data || err.message);

@@ -23,9 +23,9 @@ const Positions = () => {
 
     return (
         <>
-            <div className="overflow-x-auto">
+            <div className="overflow-auto max-h-[500px] max-w-full">
                 <table className="min-w-full divide-y divide-gray-800 text-sm">
-                    <thead className=" text-gray-400">
+                    <thead className=" text-gray-400 sticky top-0 bg-black">
                         <tr>
                             <th className="px-4 py-2 text-left text-xs font-medium ">Coin ↑</th>
                             <th className="px-4 py-2 text-left text-xs font-medium ">Size</th>
@@ -39,8 +39,8 @@ const Positions = () => {
                             <th className="px-4 py-2 text-left text-xs font-medium ">Close All</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-800 text-white overflow-y-scroll h-full">
-                        {initialLoading ?
+                    <tbody className="divide-y divide-gray-800 text-white">
+                        {initialLoading && !orderPositionsData ?
                             <tr>
                                 <td colSpan={10} className="py-10">
                                     <div className="flex items-center justify-center h-[200px] w-full">
@@ -91,7 +91,7 @@ const Positions = () => {
                                 :
                                 <tr>
                                     <td colSpan={10} className="py-10">
-                                        <div className="flex items-center flex-col justify-center h-[200px] w-full">
+                                        <div className="flex items-center flex-col justify-center h-[400px] w-full">
                                             <NoData title="No positions yet" />
                                         </div>
                                     </td>

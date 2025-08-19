@@ -30,7 +30,7 @@ const OpenOrders = ({ openOrdersLoading }) => {
 
   if (openOrdersLoading) {
     return (
-      <div className="flex items-center justify-center h-[300px] w-full">
+      <div className="flex items-center justify-center h-[500px] w-full">
         <div
           className="snippet flex justify-center mt-20   "
           data-title=".dot-spin"
@@ -45,7 +45,7 @@ const OpenOrders = ({ openOrdersLoading }) => {
 
   if (!openOrdersLoading && (!OpenOrdersData || OpenOrdersData.length === 0)) {
     return (
-      <div className="flex items-center flex-col  justify-center h-[300px] w-full">
+      <div className="flex items-center flex-col  justify-center h-[500px] w-full">
         <NoData title="No open orders yet" />
       </div>
     );
@@ -85,7 +85,7 @@ const OpenOrders = ({ openOrdersLoading }) => {
   }
   return (
     <>
-      <div className="overflow-auto max-h-[200px] max-w-full">
+      <div className="overflow-auto max-h-[500px] max-w-full">
         <table className="min-w-full divide-y divide-gray-800 text-sm">
           <thead className="text-gray-400 sticky top-0 bg-black">
             <tr>

@@ -2,9 +2,12 @@ import { humanReadableFormatWithNoDollar } from '@/utils/basicFunctions';
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { FaCaretDown } from 'react-icons/fa6';
 import { IoIosSearch } from 'react-icons/io';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PerpsTokens from './PerpsTokens';
-const Header = ({ setIsOpen, isOpen, }) => {
+import axios from 'axios';
+import { setSpotTokenList } from '@/app/redux/perpetauls/perpetual.slice';
+import SpotTokens from './SpotTokens';
+const Header = ({ setIsOpen, isOpen, }) => { 
 
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState("Perps")
@@ -15,7 +18,6 @@ const Header = ({ setIsOpen, isOpen, }) => {
     const selectedToken = useSelector(
         (state) => state?.perpetualsData?.selectedToken
     );
-
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -42,7 +44,7 @@ const Header = ({ setIsOpen, isOpen, }) => {
         <div className='flex overflow-scroll items-center py-2 px-4 w-full h-[70px] lg:gap-10 gap-5 break-keep whitespace-nowrap'>
             <div className='border-r flex items-center  border-r-gray-500 pr-2.5 h-full'>
                 <button
-                    ref={btnRef} 
+                    ref={btnRef}
                     onClick={() => setIsOpen((prev) => !prev)}
                     className="px-3 flex items-center gap-1.5 text-[#ffffff]  text-sm font-semibold transition-colors cursor-pointer"
                 >
@@ -75,10 +77,9 @@ const Header = ({ setIsOpen, isOpen, }) => {
                         </div>
                         <div className='w-full border-b border-gray-400 py-1.5 flex items-center gap-4 px-3'>
                             {["Perps", "Spot"].map((item, index) => (
-                                <div
-                                    // hover:text-white cursor-pointer
-                                    className={`${activeTab == item ? "text-white" : "text-gray-400 cursor-not-allowed"}   text-xs`}
-                                    onClick={() => item == "Perps" ? setActiveTab(item) : null}
+                                <div 
+                                    className={`${activeTab == item ? "text-white" : "text-gray-400 hover:text-white"} cursor-pointer   text-xs`}
+                                    onClick={() => setActiveTab(item)}
                                     key={index}>
                                     {item}
                                 </div>
@@ -87,7 +88,7 @@ const Header = ({ setIsOpen, isOpen, }) => {
                         {activeTab == "Perps" ?
                             <PerpsTokens setIsOpen={setIsOpen} searchTerm={searchTerm} />
                             :
-                            <div className='max-h-[35vh] h-[35vh] flex items-center md:w-[600px] w-full max-w-[600px] justify-center '>Spot tokens data</div>
+                            <SpotTokens setIsOpen={setIsOpen} searchTerm={searchTerm} />
                         }
 
                     </div>
@@ -137,7 +138,7 @@ const Header = ({ setIsOpen, isOpen, }) => {
                 </div>
                 <span className="text-xs text-gray-400 font-normal">Funding/Countdown</span>
             </div>
-        </div>
+        </div >
     )
 }
 

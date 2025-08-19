@@ -21,9 +21,7 @@ const ClosePositionPopup = ({ onClose, closeOrderToken, orderType }) => {
     const selectedToken = useSelector(
         (state) => state?.perpetualsData?.selectedToken
     );
-    const userDetails = useSelector((state) => state?.userData?.userDetails);
-
-
+    const userDetails = useSelector((state) => state?.userData?.userDetails);  
     const currentSize = (closeOrderToken?.szi * percentage) / 100;
 
     function handleLimitPriceInput(e) {
@@ -83,7 +81,7 @@ const ClosePositionPopup = ({ onClose, closeOrderToken, orderType }) => {
                 id: "transation-toast",
                 duration: 2000,
             });
-            dispatch(orderPositions(userDetails?.perpsWallet))
+            dispatch(orderPositions(userDetails?.perpsWallet));
             setIsBtnLoading(false)
             onClose(false)
         } catch (error) {

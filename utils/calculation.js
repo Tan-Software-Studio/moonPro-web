@@ -199,6 +199,24 @@ function calculateRecAmountSolToAnytoken(
   }
 }
 
+function convertTimestamp(timestamp) {
+  const date = new Date(timestamp);
+
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  let ampm = hours >= 12 ? "PM" : "AM";
+
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+
+  return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+}
+
 export {
   convertToRelativeTime,
   calculateTimeDifference,
@@ -210,4 +228,5 @@ export {
   convertUTCToLocalTimeString,
   UpdateTimeViaUTCWithCustomTime,
   calculateRecAmountSolToAnytoken,
+  convertTimestamp
 };

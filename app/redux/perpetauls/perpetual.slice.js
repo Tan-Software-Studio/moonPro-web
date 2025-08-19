@@ -28,7 +28,9 @@ const perpetualsData = createSlice({
     selectedToken: {},
     isTokenChanged: {},
     perpsTokenList: [],
+    spotTokenList: [],
     OpenOrdersData: [],
+
   },
   reducers: {
     setSelectedToken: (state, { payload }) => {
@@ -61,6 +63,9 @@ const perpetualsData = createSlice({
     updateOpenOrdersData: (state, { payload }) => {
       state.OpenOrdersData.splice(payload, 1);
     },
+    setSpotTokenList: (state, { payload }) => {
+      state.spotTokenList = payload
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -85,6 +90,7 @@ export const {
   setIsTokenChanged,
   setOpenOrdersData,
   updateOpenOrdersData,
+  setSpotTokenList
 } = perpetualsData.actions;
 
 export default perpetualsData.reducer;

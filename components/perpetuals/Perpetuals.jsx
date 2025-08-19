@@ -19,7 +19,7 @@ import Trades from './layout/Trades'
 import BuySell from './layout/BuySell'
 import MainTable from './layout/table/MainTable'
 import { useDispatch, useSelector } from 'react-redux'
-import { orderPositions, setIsTokenChanged, setPerpsTokenList, setSelectedToken } from '@/app/redux/perpetauls/perpetual.slice'
+import { orderPositions, setIsTokenChanged, setPerpsTokenList, setSelectedToken, setSpotTokenList } from '@/app/redux/perpetauls/perpetual.slice'
 const url = process.env.NEXT_PUBLIC_BASE_URLS
 const Perpetuals = () => {
 
@@ -50,6 +50,18 @@ const Perpetuals = () => {
             console.error(error)
         }
     }
+
+
+    async function getSpotTokensList() {
+        try {
+            const response = await axios.get(`${url}perpetual/merged-spot-meta`)
+            dispatch(setSpotTokenList(response?.data?.data))
+        } catch (error) {
+            console.log("🚀 ~ SpotTokens ~ error:", error)
+        }
+    }
+
+
 
     // Socket interegration
     useEffect(() => {
@@ -82,6 +94,7 @@ const Perpetuals = () => {
     // PerpsToken list 
     useEffect(() => {
         getPerpsTokenList();
+        getSpotTokensList()
     }, [])
 
 

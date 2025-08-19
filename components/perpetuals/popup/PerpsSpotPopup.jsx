@@ -3,11 +3,12 @@ import { motion } from "framer-motion";
 import { X, ArrowLeftRight } from 'lucide-react';
 import axiosInstanceAuth from '@/apiInstance/axiosInstanceAuth';
 import { useDispatch, useSelector } from 'react-redux';
-import { orderPositions } from '@/app/redux/perpetauls/perpetual.slice';
-import { spotClearinghouseState } from '@/services/hyperLiquid/spotClearinghouseState ';
+import { orderPositions } from '@/app/redux/perpetauls/perpetual.slice'; 
 import { showToaster, showToasterSuccess } from '@/utils/toaster/toaster.style';
+import { fetchHyperliquidData } from '@/services/hyperLiquid/hyperLiquidApi';
 
 const PerpsSpotPopup = ({ onClose, PerpsBalance, spotBalance, setSpotBalance }) => {
+    console.log("🚀 ~ PerpsSpotPopup ~ spotBalance:", spotBalance)
     const [direction, setDirection] = useState(true);
     const [amount, setAmount] = useState("");
     const [error, setError] = useState("");
@@ -36,10 +37,11 @@ const PerpsSpotPopup = ({ onClose, PerpsBalance, spotBalance, setSpotBalance }) 
 
     const spotBalanceUpdate = async () => {
         try {
-            const response = await spotClearinghouseState(userDetails?.perpsWallet);
-            const spot = response?.find((item) => item?.coin == "USDC")
+            const response = await fetchHyperliquidData("spotClearinghouseState", userDetails?.perpsWallet)
+            const spot = response?.balances?.find((item) => item?.coin == "USDC")
             setSpotBalance(spot)
         } catch (error) {
+        console.log("🚀 ~ spotBalanceUpdate ~ error:", error)
         }
     }
 
